@@ -33,7 +33,6 @@ import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -64,9 +63,6 @@ import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
-import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
-import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerEvent;
-import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -102,7 +98,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -196,22 +191,22 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       //IDE.getInstance().addControl(new ShowProjectExplorerControl(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
 
-      IDE.EVENT_BUS.addHandler(ShowProjectExplorerEvent.TYPE, this);
+      IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
-      IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(RefreshBrowserEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(SwitchVFSEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemLockedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemUnlockedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(AddItemTreeIconEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(RemoveItemTreeIconEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewActivatedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(OpenProjectEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(RefreshBrowserEvent.TYPE, this);
+      IDE.addHandler(SwitchVFSEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ItemLockedEvent.TYPE, this);
+      IDE.addHandler(ItemUnlockedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
+      IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(OpenProjectEvent.TYPE, this);
 
       /*
       handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
@@ -335,7 +330,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
          }
 
          selectedItems = display.getSelectedItems();
-         IDE.EVENT_BUS.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
       }
    };
 
@@ -353,7 +348,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
 
       if (item instanceof File)
       {
-         IDE.EVENT_BUS.fireEvent(new OpenFileEvent((FileModel)item));
+         IDE.fireEvent(new OpenFileEvent((FileModel)item));
       }
    }
 
@@ -452,8 +447,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
                   itemToSelect = null;
                   foldersToRefresh.clear();
                   exception.printStackTrace();
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
-                  IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
+                  IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
                }
 
                @Override
@@ -498,7 +493,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
 
    private void folderContentReceived(Folder folder)
    {
-      IDE.EVENT_BUS.fireEvent(new FolderRefreshedEvent(folder));
+      IDE.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
       //TODO if will be some value - display system items or not, then add check here:
       List<Item> children =
@@ -618,8 +613,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       display.getBrowserTree().setValue(null);
       selectedItems.clear();
 
-      IDE.EVENT_BUS.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
-      IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+      IDE.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       try
       {
@@ -633,12 +628,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
             @Override
             protected void onSuccess(VirtualFileSystemInfo result)
             {
-               IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
-               IDE.EVENT_BUS.fireEvent(new VfsChangedEvent(result));
+               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
+               IDE.fireEvent(new VfsChangedEvent(result));
 
                display.asView().setViewVisible();
 
-               IDE.EVENT_BUS.fireEvent(new ViewVisibilityChangedEvent((View)display));
+               IDE.fireEvent(new ViewVisibilityChangedEvent((View)display));
 
                display.getBrowserTree().setValue(result.getRoot());
                display.selectItem(result.getRoot().getId());
@@ -661,8 +656,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
                itemToSelect = null;
                foldersToRefresh.clear();
 
-               IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
-               IDE.EVENT_BUS.fireEvent(new VfsChangedEvent(null));
+               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
+               IDE.fireEvent(new VfsChangedEvent(null));
             }
          });
       }
@@ -700,26 +695,26 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
          // "Ctrl+C" hotkey handling
          if (String.valueOf(keyCode).toUpperCase().equals("C"))
          {
-            IDE.EVENT_BUS.fireEvent(new CopyItemsEvent());
+            IDE.fireEvent(new CopyItemsEvent());
          }
 
          // "Ctrl+X" hotkey handling         
          else if (String.valueOf(keyCode).toUpperCase().equals("X"))
          {
-            IDE.EVENT_BUS.fireEvent(new CutItemsEvent());
+            IDE.fireEvent(new CutItemsEvent());
          }
 
          // "Ctrl+V" hotkey handling
          else if (String.valueOf(keyCode).toUpperCase().equals("V"))
          {
-            IDE.EVENT_BUS.fireEvent(new PasteItemsEvent());
+            IDE.fireEvent(new PasteItemsEvent());
          }
       }
 
       // "Delete" hotkey handling
       else if (keyCode == KeyCodes.KEY_DELETE)
       {
-         IDE.EVENT_BUS.fireEvent(new DeleteItemEvent());
+         IDE.fireEvent(new DeleteItemEvent());
       }
 
       // "Enter" hotkey handling - impossible to handle Enter key pressing event within the TreeGrid and ListGrid in the SmartGWT 2.2 because of bug when Enter keypress is not caugth. http://code.google.com/p/smartgwt/issues/detail?id=430 
@@ -839,7 +834,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       display.selectItem(openedProject.getId());
       selectedItems = display.getSelectedItems();
       
-      IDE.EVENT_BUS.fireEvent(new ProjectOpenedEvent(event.getProject()));
+      IDE.fireEvent(new ProjectOpenedEvent(event.getProject()));
       
       navigatorSelectedItems.clear();
       navigatorSelectedItems.add(openedProject);

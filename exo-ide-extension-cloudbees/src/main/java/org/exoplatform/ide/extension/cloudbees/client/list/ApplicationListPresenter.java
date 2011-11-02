@@ -18,15 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.list;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -41,7 +33,13 @@ import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -59,21 +57,18 @@ public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicat
       HasApplicationListActions getAppListGrid();
    }
 
-   private HandlerManager evenBus;
-
    private Display display;
 
    private HandlerRegistration outputHandler;
 
    /**
-    * @param evenBus
+    *
     */
-   public ApplicationListPresenter(HandlerManager evenBus)
+   public ApplicationListPresenter()
    {
       super();
-      this.evenBus = evenBus;
-      evenBus.addHandler(ViewClosedEvent.TYPE, this);
-      evenBus.addHandler(ShowApplicationListEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowApplicationListEvent.TYPE, this);
    }
 
    /**
@@ -105,7 +100,7 @@ public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicat
          @Override
          public void onSelection(SelectionEvent<ApplicationInfo> event)
          {
-            evenBus.fireEvent(new ApplicationInfoEvent(event.getSelectedItem()));
+            IDE.fireEvent(new ApplicationInfoEvent(event.getSelectedItem()));
          }
       });
 
@@ -115,8 +110,8 @@ public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicat
          @Override
          public void onSelection(SelectionEvent<ApplicationInfo> event)
          {
-            outputHandler = evenBus.addHandler(OutputEvent.TYPE, ApplicationListPresenter.this);
-            evenBus.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getId(), event.getSelectedItem()
+            outputHandler = IDE.addHandler(OutputEvent.TYPE, ApplicationListPresenter.this);
+            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getId(), event.getSelectedItem()
                .getTitle()));
          }
       });
@@ -130,7 +125,7 @@ public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicat
    private void getOrUpdateAppList()
    {
       CloudBeesClientService.getInstance().applicationList(
-         new CloudBeesAsyncRequestCallback<List<ApplicationInfo>>(evenBus, new LoggedInHandler()
+         new CloudBeesAsyncRequestCallback<List<ApplicationInfo>>(IDE.eventBus(), new LoggedInHandler()
          {
 
             @Override

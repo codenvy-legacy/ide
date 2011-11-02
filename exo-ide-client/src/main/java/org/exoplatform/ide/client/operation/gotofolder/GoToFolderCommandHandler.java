@@ -56,9 +56,9 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
    {
       IDE.getInstance().addControl(new GoToFolderControl());      
 
-      IDE.EVENT_BUS.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(GoToFolderEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(GoToFolderEvent.TYPE, this);
    }
 
    public void onVfsChanged(VfsChangedEvent event)
@@ -149,7 +149,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
          protected void onFailure(Throwable exception)
          {
             exception.printStackTrace();
-            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_FAILURE));
+            IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_FAILURE));
          }
       });
    }

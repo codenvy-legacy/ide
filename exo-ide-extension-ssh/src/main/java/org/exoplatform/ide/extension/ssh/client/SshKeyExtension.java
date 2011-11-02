@@ -48,8 +48,8 @@ public class SshKeyExtension extends Extension implements InitializeServicesHand
    {
       IDE.getInstance().addControl(new SshKeyManagerControl());
       new SshKeyManagerPresenter();
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ShowPublicSshKeyEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(ShowPublicSshKeyEvent.TYPE, this);
    }
 
    /**

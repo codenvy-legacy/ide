@@ -54,7 +54,7 @@ public class SwitchAccountControl extends SimpleControl implements IDEControl
    /**
     * @param id
     */
-   public SwitchAccountControl(HandlerManager eventBus)
+   public SwitchAccountControl()
    {
       super(ID);
       setTitle(SWITCH_TITLE);

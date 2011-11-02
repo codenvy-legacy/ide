@@ -43,9 +43,11 @@ import java.util.List;
  * @version $
  */
 
-public class OutlineViewExtended extends ViewImpl implements
+public class OutlineView extends ViewImpl implements
    org.exoplatform.ide.client.outline.OutlinePresenter.Display
 {
+
+   private static final String ID = "ideOutlineView";
 
    /**
     * Initial width of this view
@@ -62,9 +64,9 @@ public class OutlineViewExtended extends ViewImpl implements
          + " style='position: relative; top: 2px' width='20px;'><img width='15px;' src='"
          + UIHelper.getGadgetImagesURL() + GWTLoader.LOADER_PROGRESSIMAGE + "'></img></span>";
    
-   private static OutlineViewExtendedUiBinder uiBinder = GWT.create(OutlineViewExtendedUiBinder.class);
+   private static OutlineViewUiBinder uiBinder = GWT.create(OutlineViewUiBinder.class);
 
-   interface OutlineViewExtendedUiBinder extends UiBinder<Widget, OutlineViewExtended>
+   interface OutlineViewUiBinder extends UiBinder<Widget, OutlineView>
    {
    }
 
@@ -81,7 +83,7 @@ public class OutlineViewExtended extends ViewImpl implements
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outlineTitle();
    
-   public OutlineViewExtended()
+   public OutlineView()
    {
       super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.outline()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));

@@ -37,9 +37,6 @@ import org.exoplatform.ide.client.versioning.event.RestoreToVersionEvent;
 import org.exoplatform.ide.client.versioning.event.RestoreToVersionHandler;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
-import org.exoplatform.ide.client.versioning.event.VersionRestoredEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -52,19 +49,15 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
    
    private static final String ASK_DIALOG_TITLE = IDE.VERSIONS_CONSTANT.restoreToVersionDialogTitle();
    
-   private HandlerManager eventBus;
-
    private Version activeVersion;
 
    private Map<String, String> lockTokens;
 
-   public RestoreToVersionCommandHandler(HandlerManager eventBus)
+   public RestoreToVersionCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
-      eventBus.addHandler(RestoreToVersionEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ShowVersionContentEvent.TYPE, this);
+      IDE.addHandler(RestoreToVersionEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

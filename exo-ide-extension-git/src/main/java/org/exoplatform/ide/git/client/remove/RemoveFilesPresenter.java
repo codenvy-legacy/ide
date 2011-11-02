@@ -40,7 +40,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for view for removing files from working tree and Git index.
@@ -90,11 +89,9 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
    /**
     * @param eventBus event handlers
     */
-   public RemoveFilesPresenter(HandlerManager eventBus)
+   public RemoveFilesPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(RemoveFilesEvent.TYPE, this);
+      IDE.addHandler(RemoveFilesEvent.TYPE, this);
    }
 
    /**
@@ -176,7 +173,7 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
          protected void onFailure(Throwable exception)
          {
             String errorMassage = (exception.getMessage() != null) ? exception.getMessage() :GitExtension.MESSAGES.statusFailed();
-            eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
          }
       });
    }
@@ -203,7 +200,7 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
             protected void onSuccess(String result)
             {
                IDE.getInstance().closeView(display.asView().getId());
-               eventBus.fireEvent(new RefreshBrowserEvent());
+               IDE.fireEvent(new RefreshBrowserEvent());
             }
 
             @Override
@@ -211,7 +208,7 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
             {
                String errorMassage =
                   (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.removeFilesFailed();
-               eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
             }
          });
    }

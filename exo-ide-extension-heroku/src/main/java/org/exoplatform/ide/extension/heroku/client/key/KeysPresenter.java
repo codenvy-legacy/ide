@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
@@ -30,8 +31,6 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for actions with keys (add, clear).
@@ -42,10 +41,6 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
 
    /**
     * Shows what action user tried to do before log in method.
@@ -53,14 +48,12 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
    private boolean clearKeys = false;
 
    /**
-    * @param eventBus events handler
+    *
     */
-   public KeysPresenter(HandlerManager eventBus)
+   public KeysPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(AddKeyEvent.TYPE, this);
-      eventBus.addHandler(ClearKeysEvent.TYPE, this);
+      IDE.addHandler(AddKeyEvent.TYPE, this);
+      IDE.addHandler(ClearKeysEvent.TYPE, this);
    }
 
    /**
@@ -78,12 +71,12 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
    protected void addKeys()
    {
       clearKeys = false;
-      HerokuClientService.getInstance().addKey(new HerokuAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().addKey(new HerokuAsyncRequestCallback(IDE.eventBus(), this)
       {
          @Override
          protected void onSuccess(List<Property> result)
          {
-            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.addKeysSuccess(), Type.INFO));
+            IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.addKeysSuccess(), Type.INFO));
          }
       });
    }
@@ -115,12 +108,12 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
    protected void clearKeys()
    {
       clearKeys = true;
-      HerokuClientService.getInstance().clearKeys(new HerokuAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().clearKeys(new HerokuAsyncRequestCallback(IDE.eventBus(), this)
       {
          @Override
          protected void onSuccess(List<Property> result)
          {
-            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysSuccess(), Type.INFO));
+            IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysSuccess(), Type.INFO));
          }
       });
    }
@@ -131,7 +124,7 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          if (clearKeys)

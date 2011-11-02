@@ -18,18 +18,17 @@
  */
 package org.exoplatform.ide.git.client;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import java.util.List;
 
 /**
  * Used as base for the most presenters, which work with Git.
@@ -44,10 +43,6 @@ import java.util.List;
  */
 public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHandler
 {
-   /**
-    * Events handler.
-    */
-   protected HandlerManager eventBus;
 
    /**
     * Selected items in browser tree.
@@ -62,11 +57,10 @@ public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHa
    /**
     * @param eventBus
     */
-   public GitPresenter(HandlerManager eventBus)
+   public GitPresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**

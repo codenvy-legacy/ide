@@ -41,7 +41,7 @@ public class DeployGroovySandboxCommand extends SimpleControl implements IDECont
 
    private static final String ID = "Run/Deploy to Sandbox";
 
-   public DeployGroovySandboxCommand(HandlerManager eventBus)
+   public DeployGroovySandboxCommand()
    {
       super(ID);
       setTitle("Deploy to Sandbox");
@@ -49,7 +49,6 @@ public class DeployGroovySandboxCommand extends SimpleControl implements IDECont
       setIcon(Images.Controls.DEPLOY_SANDBOX);
       //setImages(GroovyPluginImageBundle.INSTANCE.deployGroovy(), GroovyPluginImageBundle.INSTANCE.deployGroovyDisabled());
       setEvent(new DeployGroovyScriptSandboxEvent());
-      
    }
    
    /**

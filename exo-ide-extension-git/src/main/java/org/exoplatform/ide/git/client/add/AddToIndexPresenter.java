@@ -18,14 +18,6 @@
  */
 package org.exoplatform.ide.git.client.add;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -39,6 +31,13 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for add changes to index view.
@@ -90,10 +89,9 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
    /**
     * @param eventBus events handler
     */
-   public AddToIndexPresenter(HandlerManager eventBus)
+   public AddToIndexPresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(AddFilesEvent.TYPE, this);
+      IDE.addHandler(AddFilesEvent.TYPE, this);
    }
 
    /**
@@ -193,8 +191,8 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
                @Override
                protected void onSuccess(String result)
                {
-                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
-                  eventBus.fireEvent(new RefreshBrowserEvent());
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
+                  IDE.fireEvent(new RefreshBrowserEvent());
                }
 
                @Override
@@ -217,7 +215,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
    {
       String errorMessage =
          (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.addFailed();
-      eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
+   
 }

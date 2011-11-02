@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.framework.control.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.RegisterControlHandler;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -54,18 +53,14 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
 
    private List<String> statusBarControls = new ArrayList<String>();
 
-   private HandlerManager eventBus;
-
    private List<ControlsFormatter> controlsFormatters = new ArrayList<ControlsFormatter>();
 
-   public ControlsRegistration(HandlerManager eventBus)
+   public ControlsRegistration()
    {
-      this.eventBus = eventBus;
-
       toolbarDefaultControls.add("");
       statusBarControls.add("");
-      eventBus.addHandler(RegisterControlEvent.TYPE, this);
-      eventBus.addHandler(AddControlsFormatterEvent.TYPE, this);
+      IDE.addHandler(RegisterControlEvent.TYPE, this);
+      IDE.addHandler(AddControlsFormatterEvent.TYPE, this);
    }
 
    public List<Control> getRegisteredControls()
@@ -87,13 +82,14 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
    {
       if (!(event.getControl() instanceof IDEControl))
       {
-         Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.controlsRegistration() + " " + event.getControl().getClass());
+         Dialogs.getInstance().showError(
+            IDE.ERRORS_CONSTANT.controlsRegistration() + " " + event.getControl().getClass());
          return;
       }
-      
+
       registeredControls.add(event.getControl());
 
-      if (event.getDocking()  == Docking.TOOLBAR)
+      if (event.getDocking() == Docking.TOOLBAR)
       {
          addControl(event.getControl(), toolbarDefaultControls, event.isRightDocking());
       }
@@ -102,26 +98,26 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
          addControl(event.getControl(), statusBarControls, event.isRightDocking());
       }
    }
-   
-   public void addControl(Control<?> control, Docking docking, boolean  rightDocking)
+
+   public void addControl(Control<?> control, Docking docking, boolean rightDocking)
    {
       if (!(control instanceof IDEControl))
       {
          Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.controlsRegistration() + " " + control.getClass());
          return;
       }
-      
+
       registeredControls.add(control);
-      
+
       switch (docking)
       {
          case TOOLBAR :
             addControl(control, toolbarDefaultControls, rightDocking);
             break;
-            
-          case STATUSBAR:
-             addControl(control, statusBarControls, rightDocking);
-             break;
+
+         case STATUSBAR :
+            addControl(control, statusBarControls, rightDocking);
+            break;
          default :
             break;
       }
@@ -169,7 +165,7 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       {
          if (control instanceof IDEControl)
          {
-            ((IDEControl)control).initialize(eventBus);
+            ((IDEControl)control).initialize(IDE.eventBus());
          }
       }
    }
@@ -224,13 +220,19 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       controlsFormatters.add(event.getControlsFormatter());
    }
 
+   public void addControlsFormatter(ControlsFormatter formatter)
+   {
+      controlsFormatters.add(formatter);
+   }
+
    public void formatControls()
    {
       for (ControlsFormatter formatter : controlsFormatters)
       {
          formatter.format(registeredControls);
       }
-      eventBus.fireEvent(new ControlsUpdatedEvent(registeredControls));
+
+      IDE.fireEvent(new ControlsUpdatedEvent(registeredControls));
    }
 
 }

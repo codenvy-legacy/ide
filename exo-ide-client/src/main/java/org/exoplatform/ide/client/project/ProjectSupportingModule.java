@@ -47,8 +47,6 @@ import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -60,20 +58,16 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    MigrateTemplatesHandler
 {
    
-   private HandlerManager eventBus;
-   
    private TemplatesMigratedCallback callback;
    
-   public ProjectSupportingModule(HandlerManager eventBus) {
-      this.eventBus = eventBus;
-      
+   public ProjectSupportingModule() {
       IDE.getInstance().addControl(new CreateProjectFromTemplateControl());
 //      IDE.getInstance().addControl(new CreateProjectTemplateControl());      
       IDE.getInstance().addControl(new NewProjectControl());
       
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       
-      eventBus.addHandler(MigrateTemplatesEvent.TYPE, this);
+      IDE.addHandler(MigrateTemplatesEvent.TYPE, this);
       
       new CreateProjectFromTemplatePresenter();
       new CreateProjectTemplatePresenter();
@@ -92,7 +86,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    {
       if (TemplateService.getInstance() == null)
       {
-         new TemplateServiceImpl(eventBus, IDELoader.getInstance(), event.getConfiguration().getRegistryURL() + "/"
+         new TemplateServiceImpl(IDE.eventBus(), IDELoader.getInstance(), event.getConfiguration().getRegistryURL() + "/"
             + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration().getContext());
       }
       //only for test, will be removed
@@ -101,14 +95,14 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    
    private void moveTemplatesFromRegistryToPlainText()
    {
-      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>(eventBus)
+      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>(IDE.eventBus())
       {
          @Override
          protected void onSuccess(TemplateList result)
          {
             if (result.getTemplates().size() == 0)
             {
-               eventBus.fireEvent(new TemplatesMigratedEvent());
+               IDE.fireEvent(new TemplatesMigratedEvent());
                callback.onTemplatesMigrated();
             }
             else
@@ -139,22 +133,22 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
          }
       }
       
-      TemplateService.getInstance().addFileTemplateList(fileTemplates, new AsyncRequestCallback<String>(eventBus)
+      TemplateService.getInstance().addFileTemplateList(fileTemplates, new AsyncRequestCallback<String>(IDE.eventBus())
       {
          @Override
          protected void onSuccess(String result)
          {
-            TemplateService.getInstance().addProjectTemplateList(projectTemplates, new AsyncRequestCallback<String>(eventBus)
+            TemplateService.getInstance().addProjectTemplateList(projectTemplates, new AsyncRequestCallback<String>(IDE.eventBus())
             {
                @Override
                protected void onSuccess(String result)
                {
-                  TemplateService.getInstance().deleteTemplatesFromRegistry(new AsyncRequestCallback<String>(eventBus)
+                  TemplateService.getInstance().deleteTemplatesFromRegistry(new AsyncRequestCallback<String>(IDE.eventBus())
                   {
                      @Override
                      protected void onSuccess(String result)
                      {
-                        eventBus.fireEvent(new TemplatesMigratedEvent());
+                        IDE.fireEvent(new TemplatesMigratedEvent());
                         if (callback != null)
                         {
                            callback.onTemplatesMigrated();

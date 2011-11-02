@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -45,16 +44,12 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -90,8 +85,6 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
    }
 
-   private HandlerManager eventBus;
-
    /**
     * Display's instance.
     */
@@ -112,15 +105,13 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
     * 
     * @param eventBus
     */
-   public LoginPresenter(HandlerManager eventBus)
+   public LoginPresenter()
    {
-      this.eventBus = eventBus;
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ExceptionThrownEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
 
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
-      
       /*
       // Uncomment this to show Image at the top of IDE to see how the Login Window looks.
       Image showLoginImage = new Image(IDEImageBundle.INSTANCE.browser());
@@ -135,7 +126,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
          }
       });
       */
-      
+
    }
 
    @Override
@@ -195,7 +186,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-      
+
       KeyPressHandler textFieldsKeyPressHandler = new KeyPressHandler()
       {
          @Override
@@ -203,15 +194,18 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
          {
             if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
             {
-               try {
-                  doLogin(asyncRequest);               
-               } catch (Exception e) {
+               try
+               {
+                  doLogin(asyncRequest);
+               }
+               catch (Exception e)
+               {
                   e.printStackTrace();
                }
-            }         
+            }
          }
-      };      
-      
+      };
+
       display.getLoginField().addValueChangeHandler(valueChangeHandler);
       display.getLoginField().addKeyPressHandler(textFieldsKeyPressHandler);
       display.getPasswordField().addValueChangeHandler(valueChangeHandler);
@@ -223,7 +217,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
       IDE.getInstance().openView(display.asView());
    }
-   
+
    /**
     * Handle changing of the text in text fields.
     */
@@ -358,13 +352,13 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    {
       login = event.getUserInfo().getName();
    }
-   
+
    private native String getAuthorizationPageURL() /*-{
-      return $wnd.authorizationPageURL;
-   }-*/;
-   
+                                                   return $wnd.authorizationPageURL;
+                                                   }-*/;
+
    private native String getSecurityCheckURL() /*-{
-      return $wnd.securityCheckURL;
-   }-*/;
+                                               return $wnd.securityCheckURL;
+                                               }-*/;
 
 }

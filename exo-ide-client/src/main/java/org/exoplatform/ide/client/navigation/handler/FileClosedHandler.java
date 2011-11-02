@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -32,8 +32,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
@@ -43,18 +42,14 @@ import java.util.Map;
 public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
 
-   private HandlerManager eventBus;
-
    private Map<String, String> lockTokens;
    
    private static final String UNLOCK_FAILURE_MSG = IDE.ERRORS_CONSTANT.fileClosedUnlockFailure();
 
-   public FileClosedHandler(HandlerManager eventBus)
+   public FileClosedHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    /**
@@ -78,20 +73,20 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
                @Override
                protected void onSuccess(Object result)
                {
-                  eventBus.fireEvent(new ItemUnlockedEvent(event.getFile()));
+                  IDE.fireEvent(new ItemUnlockedEvent(event.getFile()));
                }
                
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));    
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));    
                }
             });
          }
          catch (RequestException e)
          {
             e.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG)); 
+            IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG)); 
          } 
          
       }

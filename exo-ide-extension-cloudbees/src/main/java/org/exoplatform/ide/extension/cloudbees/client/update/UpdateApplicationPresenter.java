@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.update;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -34,8 +35,6 @@ import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandle
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import java.util.Map;
 
 /**
  * Presenter for updating application on CloudBees.
@@ -65,11 +64,9 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    /**
     * @param eventBus
     */
-   public UpdateApplicationPresenter(HandlerManager eventBus)
+   public UpdateApplicationPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(UpdateApplicationEvent.TYPE, this);
+      IDE.addHandler(UpdateApplicationEvent.TYPE, this);
    }
 
    /**
@@ -124,7 +121,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, new LoggedInHandler()
+         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()
@@ -153,7 +150,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
       }
 
       CloudBeesClientService.getInstance().updateApplication(appId, vfs.getId(), projectId, warUrl, updateMessage,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, new LoggedInHandler()
+         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
          {
 
             @Override
@@ -167,7 +164,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
             @Override
             protected void onSuccess(Map<String, String> result)
             {
-               eventBus.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
                   .applicationUpdatedMsg(appTitle), Type.INFO));
             }
          });
@@ -179,7 +176,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    @Override
    public void onApplicationBuilt(ApplicationBuiltEvent event)
    {
-      eventBus.removeHandler(event.getAssociatedType(), this);
+      IDE.removeHandler(event.getAssociatedType(), this);
       if (event.getJobStatus().getArtifactUrl() != null)
       {
          warUrl = event.getJobStatus().getArtifactUrl();
@@ -189,8 +186,8 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
    private void buildApplication()
    {
-      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
-      eventBus.fireEvent(new BuildApplicationEvent());
+      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildApplicationEvent());
    }
 
 }

@@ -18,16 +18,11 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -58,11 +53,15 @@ import org.exoplatform.ide.vfs.client.marshal.VFSListUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -119,11 +118,6 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    private Display display;
 
    /**
-    * Event Bus
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Current Workspace, used by IDE
     */
    private String workingWorkspace;
@@ -154,17 +148,15 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
     */
    private List<VirtualFileSystemInfo> workspaceList = new ArrayList<VirtualFileSystemInfo>();
 
-   public SelectWorkspacePresenter(HandlerManager eventBus)
+   public SelectWorkspacePresenter()
    {
-      this.eventBus = eventBus;
-
       IDE.getInstance().addControl(new SelectWorkspaceControl());
 
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(SelectWorkspaceEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(SelectWorkspaceEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -241,14 +233,14 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -424,8 +416,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
                {
                   if (!file.isPersisted())
                   {
-                     eventBus
-                        .fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
+                     IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
                   }
                   else
                   {
@@ -444,7 +435,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
                }
                else
                {
-                  eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+                  IDE.fireEvent(new EditorCloseFileEvent(file, true));
                   closeNextFile();
                }
             }
@@ -454,7 +445,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       }
       else
       {
-         eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+         IDE.fireEvent(new EditorCloseFileEvent(file, true));
          closeNextFile();
       }
    }
@@ -471,7 +462,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       {
          workingWorkspace = selectedWorkspace.getId();
          IDE.getInstance().closeView(display.asView().getId());
-         eventBus.fireEvent(new SwitchVFSEvent(selectedWorkspace.getId()));
+         IDE.fireEvent(new SwitchVFSEvent(selectedWorkspace.getId()));
       }
    }
 

@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
@@ -31,8 +32,6 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for updating public key on OpenShift.
@@ -46,18 +45,11 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
 {
 
    /**
-    * Handlers manager.
+    *
     */
-   private HandlerManager eventBus;
-
-   /**
-    * @param eventBus events handler manager
-    */
-   public UpdatePublicKeyCommandHandler(HandlerManager eventBus)
+   public UpdatePublicKeyCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(UpdatePublicKeyEvent.TYPE, this);
+      IDE.addHandler(UpdatePublicKeyEvent.TYPE, this);
    }
 
    /**
@@ -96,11 +88,11 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
                         && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
-                  eventBus.fireEvent(new LoginEvent());
+                  IDE.fireEvent(new LoginEvent());
                   return;
                }
             }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                .getUserInfoFail()));
          }
       });
@@ -111,7 +103,7 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
     */
    protected void addLoggedInHandler()
    {
-      eventBus.addHandler(LoggedInEvent.TYPE, this);
+      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -120,7 +112,7 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getUserInfo();
@@ -140,7 +132,7 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(),
+            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(),
                Type.INFO));
          }
 
@@ -157,11 +149,11 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
                         && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
-                  eventBus.fireEvent(new LoginEvent());
+                  IDE.fireEvent(new LoginEvent());
                   return;
                }
             }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                .updatePublicKeyFailed()));
          }
       });

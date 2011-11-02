@@ -55,7 +55,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
 {
 
    private JavaCodeAssistant groovyCodeAssistant;
-   
+
    private static final Images IMAGES = GWT.create(Images.class);
 
    /**
@@ -64,11 +64,11 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    @Override
    public void initialize()
    {
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object",
-            Images.CHROMATTIC, MimeType.CHROMATTIC_DATA_OBJECT).setGroup(2));
+         new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object", Images.CHROMATTIC,
+            MimeType.CHROMATTIC_DATA_OBJECT).setGroup(2));
    }
 
    /**
@@ -79,23 +79,20 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    {
       CodeAssistantService service;
       if (GroovyCodeAssistantService.get() == null)
-         service = new GroovyCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
-            event.getLoader());
+         service = new GroovyCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
       else
-      service = GroovyCodeAssistantService.get();
+         service = GroovyCodeAssistantService.get();
       groovyCodeAssistant =
-         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/groovy/class-doc?fqn="), this);
-      
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", IMAGES.CHROMATTIC(), true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
-            setParser(new GroovyParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new GroovyAutocompleteHelper()).
-            setCodeAssistant(groovyCodeAssistant).
-            setCodeValidator(new GroovyCodeValidator())
-      ));
+         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+            + "/ide/code-assistant/groovy/class-doc?fqn="), this);
+
+      IDE.getInstance().addEditor(
+         new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", IMAGES
+            .CHROMATTIC(), true, new CodeMirrorConfiguration()
+            .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+            .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
+            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(new GroovyCodeValidator())));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyOutlineItemCreator());
    }
@@ -116,11 +113,11 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
             outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
          }
 
-         IDE.EVENT_BUS.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
+         IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
       }
    }
 

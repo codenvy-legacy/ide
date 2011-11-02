@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.ssh.client.keymanager.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -58,6 +57,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UploadSshKeyView extends ViewImpl implements Display
 {
+
+   /**
+    * ID of View
+    */
+   private static final String ID = "ideUploadSshKeyView";
 
    private static UploadSshKeyUiBinder uiBinder = GWT.create(UploadSshKeyUiBinder.class);
 

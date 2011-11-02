@@ -116,10 +116,10 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
    {
       IDE.getInstance().addControl(new OpenFileByURLControl());
 
-      IDE.EVENT_BUS.addHandler(OpenFileByURLEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(OpenFileByURLEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -277,7 +277,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
       try
       {
          EditorProducer editorProducer = IDE.getInstance().getEditor(file.getMimeType());
-         IDE.EVENT_BUS.fireEvent(new EditorOpenFileEvent(file, editorProducer));
+         IDE.fireEvent(new EditorOpenFileEvent(file, editorProducer));
          IDE.getInstance().closeView(display.asView().getId());
       }
       catch (EditorNotFoundException e)

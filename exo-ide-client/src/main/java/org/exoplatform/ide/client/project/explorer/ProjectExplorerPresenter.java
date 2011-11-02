@@ -60,9 +60,9 @@ public class ProjectExplorerPresenter implements ShowProjectExplorerHandler, Vie
    public ProjectExplorerPresenter() {
       IDE.getInstance().addControl(new ShowProjectExplorerControl(), Docking.TOOLBAR, false);
       
-      IDE.EVENT_BUS.addHandler(ShowProjectExplorerEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    @Override

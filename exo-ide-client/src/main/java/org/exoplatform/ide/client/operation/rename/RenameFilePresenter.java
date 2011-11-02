@@ -121,12 +121,12 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    public RenameFilePresenter()
    {
-      IDE.EVENT_BUS.addHandler(RenameItemEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(RenameItemEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -248,7 +248,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    private void completeMove()
    {
-      IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(renamedFile.getParent(), renamedFile));
+      IDE.fireEvent(new RefreshBrowserEvent(renamedFile.getParent(), renamedFile));
 
       closeView();
    }
@@ -308,7 +308,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  IDE.EVENT_BUS
+                  IDE
                      .fireEvent(new ExceptionThrownEvent(exception,
                         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
                }
@@ -317,12 +317,12 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e,
+         IDE.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
       }
       catch (Exception e)
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
       }
 
@@ -352,7 +352,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
                      openedFiles.remove(item.getId());
                      openedFiles.put(file.getId(), file);
 
-                     IDE.EVENT_BUS.fireEvent(new EditorReplaceFileEvent(item, file));
+                     IDE.fireEvent(new EditorReplaceFileEvent(item, file));
                   }
 
                   completeMove();
@@ -361,14 +361,14 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
 
    }
@@ -381,7 +381,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    {
       if (selectedItems == null || selectedItems.isEmpty())
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(SELECT_ITEM_TO_RENAME));
+         IDE.fireEvent(new ExceptionThrownEvent(SELECT_ITEM_TO_RENAME));
          return;
       }
       if (selectedItems.get(0) instanceof FileModel)
@@ -441,7 +441,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Display RenameFile must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Display RenameFile must be null"));
       }
    }
 

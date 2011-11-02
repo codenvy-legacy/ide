@@ -18,14 +18,7 @@
  */
 package org.exoplatform.ide.git.client.history;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -45,7 +38,13 @@ import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for history view.
@@ -170,11 +169,10 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
    /**
     * @param eventBus event handler
     */
-   public HistoryPresenter(HandlerManager eventBus)
+   public HistoryPresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(ShowInHistoryEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowInHistoryEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -326,7 +324,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
             nothingToDisplay(null);
             String errorMessage =
                (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
    }
@@ -404,7 +402,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
                nothingToDisplay(revision);
                String errorMessage =
                   (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
             }
          });
    }
@@ -440,7 +438,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
                   nothingToDisplay(revision);
                   String errorMessage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
-                  eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
                }
             });
       }

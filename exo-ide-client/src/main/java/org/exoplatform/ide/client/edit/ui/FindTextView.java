@@ -46,6 +46,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class FindTextView extends ViewImpl implements org.exoplatform.ide.client.edit.FindTextPresenter.Display
 {
+   
+   private static final String ID = "ideFindReplaceTextView";   
 
    private static final int DEFAULT_WIDTH = 470;
 

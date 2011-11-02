@@ -112,6 +112,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
    ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
    ConfigurationReceivedSuccessfullyHandler, ViewActivatedHandler, ShowNavigatorHandler
 {
+   
    public interface Display extends IsView
    {
 
@@ -186,22 +187,22 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
    public NavigatorPresenter()
    {
-      IDE.EVENT_BUS.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
 
-      IDE.EVENT_BUS.addHandler(RefreshBrowserEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemUnlockedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemLockedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(SwitchVFSEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(SelectItemEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(AddItemTreeIconEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(RemoveItemTreeIconEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(RefreshBrowserEvent.TYPE, this);
+      IDE.addHandler(ItemUnlockedEvent.TYPE, this);
+      IDE.addHandler(ItemLockedEvent.TYPE, this);
+      IDE.addHandler(SwitchVFSEvent.TYPE, this);
+      IDE.addHandler(SelectItemEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
+      IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       
-      IDE.EVENT_BUS.addHandler(ShowNavigatorEvent.TYPE, this);
+      IDE.addHandler(ShowNavigatorEvent.TYPE, this);
       
       IDE.getInstance().addControl(new ShowNavigatorControl());
 
@@ -269,7 +270,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
    }
    
    private void openRootFolder() {
-      IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
+      IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
 
       display.getBrowserTree().setValue(rootFolder);
       display.selectItem(rootFolder.getId());
@@ -323,7 +324,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
          }
 
          selectedItems = display.getSelectedItems();
-         IDE.EVENT_BUS.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
       }
    };
 
@@ -340,11 +341,11 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       Item item = selectedItems.get(0);
       if (item instanceof File)
       {
-         IDE.EVENT_BUS.fireEvent(new OpenFileEvent((FileModel)item));
+         IDE.fireEvent(new OpenFileEvent((FileModel)item));
       }
       else if (item instanceof ProjectModel)
       {
-         IDE.EVENT_BUS.fireEvent(new OpenProjectEvent((ProjectModel)item));
+         IDE.fireEvent(new OpenProjectEvent((ProjectModel)item));
       }
    }
 
@@ -440,8 +441,8 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
                   itemToSelect = null;
                   foldersToRefresh.clear();
                   exception.printStackTrace();
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
-                  IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
+                  IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
                }
 
                @Override
@@ -486,7 +487,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
    private void folderContentReceived(Folder folder)
    {
-      IDE.EVENT_BUS.fireEvent(new FolderRefreshedEvent(folder));
+      IDE.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
       //TODO if will be some value - display system items or not, then add check here:
       List<Item> children =
@@ -606,9 +607,9 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       display.getBrowserTree().setValue(null);
       selectedItems.clear();
       selectedItems.clear();
-      IDE.EVENT_BUS.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
 
-      IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+      IDE.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       // TODO [IDE-307] check appConfig["entryPoint"] property
       //      final Folder rootFolder = new Folder(event.getEntryPoint());
@@ -625,12 +626,12 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
             @Override
             protected void onSuccess(VirtualFileSystemInfo result)
             {
-               IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
-               IDE.EVENT_BUS.fireEvent(new VfsChangedEvent(result));
+               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
+               IDE.fireEvent(new VfsChangedEvent(result));
 
                display.asView().setViewVisible();
 
-               IDE.EVENT_BUS.fireEvent(new ViewVisibilityChangedEvent((View)display));
+               IDE.fireEvent(new ViewVisibilityChangedEvent((View)display));
 
                rootFolder = result.getRoot();
                
@@ -655,8 +656,8 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
                itemToSelect = null;
                foldersToRefresh.clear();
 
-               IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
-               IDE.EVENT_BUS.fireEvent(new VfsChangedEvent(null));
+               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
+               IDE.fireEvent(new VfsChangedEvent(null));
             }
          });
       }
@@ -690,26 +691,26 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
          // "Ctrl+C" hotkey handling
          if (String.valueOf(keyCode).toUpperCase().equals("C"))
          {
-            IDE.EVENT_BUS.fireEvent(new CopyItemsEvent());
+            IDE.fireEvent(new CopyItemsEvent());
          }
 
          // "Ctrl+X" hotkey handling         
          else if (String.valueOf(keyCode).toUpperCase().equals("X"))
          {
-            IDE.EVENT_BUS.fireEvent(new CutItemsEvent());
+            IDE.fireEvent(new CutItemsEvent());
          }
 
          // "Ctrl+V" hotkey handling
          else if (String.valueOf(keyCode).toUpperCase().equals("V"))
          {
-            IDE.EVENT_BUS.fireEvent(new PasteItemsEvent());
+            IDE.fireEvent(new PasteItemsEvent());
          }
       }
 
       // "Delete" hotkey handling
       else if (keyCode == KeyCodes.KEY_DELETE)
       {
-         IDE.EVENT_BUS.fireEvent(new DeleteItemEvent());
+         IDE.fireEvent(new DeleteItemEvent());
       }
 
       // "Enter" hotkey handling - impossible to handle Enter key pressing event within the TreeGrid and ListGrid in the SmartGWT 2.2 because of bug when Enter keypress is not caugth. http://code.google.com/p/smartgwt/issues/detail?id=430 

@@ -18,16 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.rename;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -41,6 +31,15 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Presenter for rename operation with application.
@@ -97,12 +96,10 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    /**
     * The new name of application.
     */
-   public RenameApplicationPresenter(HandlerManager eventbus)
+   public RenameApplicationPresenter()
    {
-      super(eventbus);
-
-      eventBus.addHandler(RenameApplicationEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(RenameApplicationEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -166,7 +163,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
       CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, appInfoLoggedInHandler, null)
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), appInfoLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)
@@ -204,13 +201,13 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
       final String newName = display.getRenameField().getValue();
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       CloudFoundryClientService.getInstance().renameApplication(vfs.getId(), projectId, applicationName, null, newName,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, renameAppLoggedInHandler, null)
+         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), renameAppLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
                closeView();
-               eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
+               IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
                   applicationName, newName)));
             }
          });

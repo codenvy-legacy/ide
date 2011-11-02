@@ -46,7 +46,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateProperties
 import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * CloudFoundry extention for IDE.
@@ -57,10 +56,6 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class CloudFoundryExtension extends Extension implements InitializeServicesHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
 
    public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(CloudFoundryLocalizationConstant.class);
@@ -76,7 +71,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new CloudFoundryClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new CloudFoundryClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
@@ -85,8 +80,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    @Override
    public void initialize()
    {
-      eventBus = IDE.EVENT_BUS;
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new CloudFoundryControl());
       IDE.getInstance().addControl(new CreateApplicationControl());
@@ -107,15 +101,15 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       IDE.getInstance().addControl(new SwitchAccountControl());
       IDE.getInstance().addControl(new ApplicationsControl());
 
-      new CreateApplicationPresenter(eventBus);
-      new LoginPresenter(eventBus);
-      new StartApplicationPresenter(eventBus);
-      new ApplicationInfoPresenter(eventBus);
-      new UpdateApplicationPresenter(eventBus);
-      //      new RenameApplicationPresenter(eventBus);
-      new DeleteApplicationPresenter(eventBus);
-      new UnmapUrlPresenter(eventBus);
-      new UpdatePropertiesPresenter(eventBus);
+      new CreateApplicationPresenter();
+      new LoginPresenter();
+      new StartApplicationPresenter();
+      new ApplicationInfoPresenter();
+      new UpdateApplicationPresenter();
+      //      new RenameApplicationPresenter();
+      new DeleteApplicationPresenter();
+      new UnmapUrlPresenter();
+      new UpdatePropertiesPresenter();
       new ApplicationsPresenter();
    }
 

@@ -18,19 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.location;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -66,8 +55,18 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * TODO: this presenter duplicates some functionality from
@@ -123,8 +122,6 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
 
    private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    /**
@@ -149,14 +146,12 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
 
    private String vfsBaseUrl;
 
-   public SelectLocationPresenter(HandlerManager eventBus)
+   public SelectLocationPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(SelectLocationEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(SelectLocationEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    private void bindDisplay()
@@ -214,7 +209,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowSamplesEvent());
+            IDE.fireEvent(new ShowSamplesEvent());
             closeView();
          }
       });
@@ -434,7 +429,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Select Location View must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Select Location View must be null"));
       }
    }
 
@@ -447,14 +442,14 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    {
       if (selectedItems == null || selectedItems.isEmpty())
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorParentFolderNotSelected()));
+         IDE.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorParentFolderNotSelected()));
          return;
       }
 
       final String newFolderName = display.getFolderNameField().getValue();
       if (newFolderName == null || newFolderName.isEmpty())
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorFolderNameEmpty()));
+         IDE.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorFolderNameEmpty()));
          return;
       }
       final FolderModel baseFolder = (FolderModel)selectedItems.get(0);
@@ -477,14 +472,14 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception, lb.selectLocationErrorCantCreateFolder()));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, lb.selectLocationErrorCantCreateFolder()));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e, lb.selectLocationErrorCantCreateFolder()));
+         IDE.fireEvent(new ExceptionThrownEvent(e, lb.selectLocationErrorCantCreateFolder()));
       }
    }
 
@@ -507,9 +502,9 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
                @Override
                protected void onSuccess(String result)
                {
-                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   Folder folder = (Folder)selectedItems.get(0);
-                  eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(folder), folder));
+                  IDE.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(folder), folder));
                }
 
                @Override
@@ -530,7 +525,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    {
       String errorMessage =
          (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
-      eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 
    /**

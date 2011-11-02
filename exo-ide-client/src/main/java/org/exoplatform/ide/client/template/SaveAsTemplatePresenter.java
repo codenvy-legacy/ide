@@ -18,15 +18,6 @@
  */
 package org.exoplatform.ide.client.template;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -43,6 +34,14 @@ import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
+
 /**
  * Presenter for Save as Template view.
  * 
@@ -55,6 +54,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewClosedHandler, TemplatesMigratedHandler,
    EditorActiveFileChangedHandler
 {
+   
    public interface Display extends IsView
    {
 
@@ -86,8 +86,6 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
 
    private Template templateToCreate;
    
-   private HandlerManager eventBus;
-   
    private FileModel activeFile;
    
    /**
@@ -95,14 +93,12 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
     */
    private boolean isTemplatesMigrated = false;
    
-   public SaveAsTemplatePresenter(HandlerManager eventBus)
+   public SaveAsTemplatePresenter()
    {
-      this.eventBus = eventBus;
-      
-      eventBus.addHandler(SaveFileAsTemplateEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
+      IDE.addHandler(SaveFileAsTemplateEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -166,7 +162,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
       templateToCreate = new FileTemplate(activeFile.getMimeType(), name, description, activeFile.getContent(), null);
       
       TemplateServiceImpl.getInstance().addFileTemplate((FileTemplate)templateToCreate,
-         new AsyncRequestCallback<FileTemplate>(eventBus)
+         new AsyncRequestCallback<FileTemplate>(IDE.eventBus())
          {
             @Override
             protected void onSuccess(FileTemplate result)
@@ -194,7 +190,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
       }
       else
       {
-         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         IDE.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
          {
             @Override
             public void onTemplatesMigrated()
@@ -209,7 +205,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
    {
       if (activeFile == null)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(OPEN_FILE_FOR_TEMPLATE));
+         IDE.fireEvent(new ExceptionThrownEvent(OPEN_FILE_FOR_TEMPLATE));
          return;
       }
       if (display == null)
@@ -221,7 +217,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Display SaveAsTemplate must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Display SaveAsTemplate must be null"));
       }
    }
 

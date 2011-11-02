@@ -53,7 +53,6 @@ import com.google.gwt.user.client.ui.Image;
 public class NetvibesExtension extends Extension implements InitializeServicesHandler, PreviewNetvibesHandler,
    EditorActiveFileChangedHandler, ViewClosedHandler
 {
-   private HandlerManager eventBus;
 
    /**
     * IDE application configuration.
@@ -75,22 +74,19 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    @Override
    public void initialize()
    {
-      this.eventBus = IDE.EVENT_BUS;
-
-  
       IDE.getInstance().addControl(new DeployUwaWidgetControl(), Docking.TOOLBAR, true);
       IDE.getInstance().addControl(new ShowNetvibesPreviewControl(), Docking.TOOLBAR, true);
 
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      eventBus.addHandler(PreviewNetvibesEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(PreviewNetvibesEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
 
       new DeployUwaWidgetPresenter();
 
       NetvibesClientBundle.INSTANCE.css().ensureInjected();
 
-      eventBus.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET,
+      IDE.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET,
          "http://dev.netvibes.com/doc/uwa/documentation"));
    }
 
@@ -101,7 +97,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    public void onInitializeServices(InitializeServicesEvent event)
    {
       configuration = event.getApplicationConfiguration();
-      new DeployWidgetServiceImpl(eventBus, configuration.getContext(), event.getLoader());
+      new DeployWidgetServiceImpl(IDE.eventBus(), configuration.getContext(), event.getLoader());
    }
 
    /**

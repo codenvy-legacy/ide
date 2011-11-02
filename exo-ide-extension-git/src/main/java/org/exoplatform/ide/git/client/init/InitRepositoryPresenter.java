@@ -18,14 +18,6 @@
  */
 package org.exoplatform.ide.git.client.init;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -36,6 +28,13 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for Init Repository view.
@@ -82,10 +81,9 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
    /**
     * @param eventBus
     */
-   public InitRepositoryPresenter(HandlerManager eventBus)
+   public InitRepositoryPresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(InitRepositoryEvent.TYPE, this);
+      IDE.addHandler(InitRepositoryEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -144,8 +142,8 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                @Override
                protected void onSuccess(String result)
                {
-                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                  eventBus.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
                }
 
                @Override
@@ -154,7 +152,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                   String errorMessage =
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                         : GitExtension.MESSAGES.initFailed();
-                  eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
                }
             });
       }
@@ -163,7 +161,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
          String errorMessage =
             (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
                .initFailed();
-         eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
       IDE.getInstance().closeView(display.asView().getId());
    }

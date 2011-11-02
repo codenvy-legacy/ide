@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.client.versioning;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -28,8 +27,8 @@ import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * 
@@ -45,8 +44,6 @@ public class VersionContentPresenter implements ShowVersionContentHandler
    public interface Display extends IsView
    {
 
-      String ID = "ideVersionContentView";
-
       String getEditorId();
 
       void setVersionContent(String content);
@@ -60,8 +57,6 @@ public class VersionContentPresenter implements ShowVersionContentHandler
    
    private static final String VERSIONS_PREFIX = IDE.VERSIONS_CONSTANT.versionsDisplayPrefix();
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    /**
@@ -72,10 +67,9 @@ public class VersionContentPresenter implements ShowVersionContentHandler
 
    private Version version;
 
-   public VersionContentPresenter(HandlerManager eventBus)
+   public VersionContentPresenter()
    {
-      this.eventBus = eventBus;
-      handlerRegistrations.put(ShowVersionContentEvent.TYPE, eventBus.addHandler(ShowVersionContentEvent.TYPE, this));
+      handlerRegistrations.put(ShowVersionContentEvent.TYPE, IDE.addHandler(ShowVersionContentEvent.TYPE, this));
    }
 
    public void bindDisplay(Display d)

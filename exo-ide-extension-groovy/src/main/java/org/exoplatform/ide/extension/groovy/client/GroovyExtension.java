@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Image;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -67,8 +64,10 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS.
@@ -80,8 +79,6 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    InitializeServicesHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler,
    PreviewGroovyTemplateHandler, ViewClosedHandler
 {
-
-   private HandlerManager eventBus;
 
    /**
     * Used to remove handlers when they are no longer needed.
@@ -112,8 +109,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    @Override
    public void initialize()
    {
-      this.eventBus = IDE.EVENT_BUS;
-      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(InitializeServicesEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(InitializeServicesEvent.TYPE, this));
 
       IDE.getInstance().addControl(new SetAutoloadCommand(), Docking.TOOLBAR, true);
       IDE.getInstance().addControl(new ConfigureBuildPathCommand());
@@ -121,32 +117,32 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       IDE.getInstance().addControl(new DeployGroovyCommand(), Docking.TOOLBAR, true);
       IDE.getInstance().addControl(new UndeployGroovyCommand(), Docking.TOOLBAR, true);
       IDE.getInstance().addControl(new RunGroovyServiceCommand(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new DeployGroovySandboxCommand(eventBus), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new UndeployGroovySandboxCommand(eventBus), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployGroovySandboxCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new UndeployGroovySandboxCommand(), Docking.TOOLBAR, true);
 
       new LaunchRestServicePresenter();
 
       IDE.getInstance().addControl(new PreviewGroovyTemplateControl(), Docking.TOOLBAR, true);
 
       handlerRegistrations.put(InitializeServicesEvent.TYPE,
-         eventBus.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
-      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(SetAutoloadEvent.TYPE, this));
+         IDE.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(SetAutoloadEvent.TYPE, this));
 
       //handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewWadlOutputEvent.TYPE, this));
 
       handlerRegistrations.put(InitializeServicesEvent.TYPE,
-         eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE,
-         eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
+         IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
       handlerRegistrations
-         .put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewGroovyTemplateEvent.TYPE, this));
-      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(ViewClosedEvent.TYPE, this));
+         .put(InitializeServicesEvent.TYPE, IDE.addHandler(PreviewGroovyTemplateEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(ViewClosedEvent.TYPE, this));
 
-      new RunGroovyServiceCommandHandler(eventBus);
-      new ValidateGroovyCommandHandler(eventBus);
-      new DeployGroovyCommandHandler(eventBus);
-      new UndeployGroovyCommandHandler(eventBus);
-      new ConfigureBuildPathPresenter(eventBus);
+      new RunGroovyServiceCommandHandler();
+      new ValidateGroovyCommandHandler();
+      new DeployGroovyCommandHandler();
+      new UndeployGroovyCommandHandler();
+      new ConfigureBuildPathPresenter();
       new AvailableDependenciesPresenter();
 
       GroovyClientBundle.INSTANCE.css().ensureInjected();
@@ -155,8 +151,8 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    public void onInitializeServices(InitializeServicesEvent event)
    {
       configuration = event.getApplicationConfiguration();
-      new GroovyServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
-      new WadlServiceImpl(eventBus, event.getLoader());
+      new GroovyServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
+      new WadlServiceImpl(IDE.eventBus(), event.getLoader());
    }
 
    /**
@@ -169,7 +165,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
          String response = event.getOutput().getResponseAsHtmlString();
 
          OutputEvent outputEvent = new OutputEvent(response, OutputMessage.Type.OUTPUT);
-         eventBus.fireEvent(outputEvent);
+         IDE.fireEvent(outputEvent);
       }
       else
       {
@@ -182,7 +178,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
                   + exception.getStatusText() + "<hr>" + exception.getMessage();
 
             OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
-            eventBus.fireEvent(errorEvent);
+            IDE.fireEvent(errorEvent);
          }
          else
          {
@@ -190,7 +186,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
                "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;"
                   + exception.getStatusText();
             OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
-            eventBus.fireEvent(errorEvent);
+            IDE.fireEvent(errorEvent);
          }
       }
    }

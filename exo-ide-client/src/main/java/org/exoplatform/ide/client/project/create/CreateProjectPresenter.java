@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.project.create;
 
+import java.util.List;
+import java.util.Set;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -32,15 +35,10 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.HasValue;
@@ -53,27 +51,23 @@ import com.google.gwt.user.client.ui.Widget;
 */
 public class CreateProjectPresenter
 {
-   
-   private final HandlerManager eventBus;
 
    private final Display display;
 
    private final List<Item> selectedItems;
 
    private final VirtualFileSystem vfs;
-   
+
    public interface ErrorMessage extends Constants
    {
       @Key("project.cantCreateProjectIfMultiselectionParent")
       @DefaultStringValue("Can't create project you must select only one parent folder")
       String cantCreateProjectIfMultiselectionParent();
-      
+
       @Key("project.cantCreateProjectIfProjectNameNotSet")
       //@DefaultStringValue("Project name can't be empty or null")
       String cantCreateProjectIfProjectNameNotSet();
    }
-   
-   
 
    public interface Display extends IsView
    {
@@ -92,17 +86,16 @@ public class CreateProjectPresenter
       Widget asWidget();
 
    }
-   
+
    private ErrorMessage errorMessage = GWT.create(ErrorMessage.class);
 
-   public CreateProjectPresenter(HandlerManager eventBus, VirtualFileSystem vfs, Display display,
-      final List<Item> selectedItems)
+   public CreateProjectPresenter(VirtualFileSystem vfs, Display display, final List<Item> selectedItems)
    {
-      this.eventBus = eventBus;
       this.display = display;
-      IDE.getInstance().openView(display.asView());
       this.selectedItems = selectedItems;
       this.vfs = vfs;
+
+      IDE.getInstance().openView(display.asView());
       bind();
    }
 
@@ -110,7 +103,6 @@ public class CreateProjectPresenter
    {
       display.getCreateButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -127,7 +119,6 @@ public class CreateProjectPresenter
          }
       });
 
-     
       setProjectTypes(ProjectResolver.getProjectsTypes());
    }
 
@@ -138,18 +129,17 @@ public class CreateProjectPresenter
 
       if (selectedItems.size() > 1)
       {
-         eventBus
-            .fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfMultiselectionParent()));
+         IDE.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfMultiselectionParent()));
          return;
       }
       if (selectedItems.get(0).getItemType() == ItemType.FILE)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Can't create project you must select as parent folder"));
+         IDE.fireEvent(new ExceptionThrownEvent("Can't create project you must select as parent folder"));
          return;
       }
       if (display.getProjectName().getValue() == null || display.getProjectName().getValue().length() == 0)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfProjectNameNotSet())); //"Project name can't be empty or null"));
+         IDE.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfProjectNameNotSet())); //"Project name can't be empty or null"));
          return;
       }
 
@@ -162,21 +152,19 @@ public class CreateProjectPresenter
          vfs.createProject((Folder)selectedItems.get(0), new AsyncRequestCallback<ProjectModel>(
             new ProjectUnmarshaller(model))
          {
-
             @Override
             protected void onSuccess(ProjectModel result)
             {
                IDE.getInstance().closeView(display.asView().getId());
-               eventBus.fireEvent(new RefreshBrowserEvent(result.getParent()));
+               IDE.fireEvent(new RefreshBrowserEvent(result.getParent()));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception,
+               IDE.fireEvent(new ExceptionThrownEvent(exception,
                   "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
             }
-
          });
       }
       catch (RequestException e)
@@ -184,7 +172,7 @@ public class CreateProjectPresenter
          e.printStackTrace();
       }
    }
-   
+
    /**
     * Set default project name ("NewProject").
     * 
@@ -194,7 +182,7 @@ public class CreateProjectPresenter
    {
       display.setProjectName(name);
    }
-   
+
    /**
     * Set available types of project
     * 
@@ -204,7 +192,7 @@ public class CreateProjectPresenter
    {
       display.setProjectType(set);
    }
-   
+
    /**
     * Replace instance of Error Messages. Technically it need for with pure JUnit.  
     * 
@@ -214,6 +202,5 @@ public class CreateProjectPresenter
    {
       this.errorMessage = errorMessage;
    }
-
 
 }

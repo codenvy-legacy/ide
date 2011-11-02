@@ -59,15 +59,16 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    @Override
    public void initialize()
    {
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service", Images.REST_SERVICE,
             MimeType.GROOVY_SERVICE).setGroup(2));
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.GROOVY, MimeType.APPLICATION_GROOVY).setGroup(2));
+         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.GROOVY, MimeType.APPLICATION_GROOVY)
+            .setGroup(2));
    }
 
    /**
@@ -78,40 +79,27 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    {
       GroovyCodeAssistantService service;
       if (GroovyCodeAssistantService.get() == null)
-         service = new GroovyCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
-            event.getLoader());
+         service = new GroovyCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
       else
-        service = GroovyCodeAssistantService.get();
-      
+         service = GroovyCodeAssistantService.get();
+
       groovyCodeAssistant =
-         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/groovy/class-doc?fqn="), this);
+         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+            + "/ide/code-assistant/groovy/class-doc?fqn="), this);
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.INSTANCE.groovy(), true,
-            new CodeMirrorConfiguration().
-               setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
-               setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
-               setParser(new GroovyParser()).
-               setCanBeOutlined(true).
-               setAutocompleteHelper(new GroovyAutocompleteHelper()).
-               setCodeAssistant(groovyCodeAssistant).
-               setCodeValidator(new GroovyCodeValidator())         
-         )
-      );
-
+         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.INSTANCE
+            .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+            .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
+            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(new GroovyCodeValidator())));
 
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", Images.INSTANCE.groovy(), true,          
-            new CodeMirrorConfiguration().
-               setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
-               setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
-               setParser(new GroovyParser()).
-               setCanBeOutlined(true).
-               setAutocompleteHelper(new GroovyAutocompleteHelper()).
-               setCodeAssistant(groovyCodeAssistant).
-               setCodeValidator(new GroovyCodeValidator())         
-         )
-      );
-      
+         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", Images.INSTANCE
+            .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+            .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
+            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(new GroovyCodeValidator())));
+
       GroovyOutlineItemCreator groovyOutlineItemCreator = new GroovyOutlineItemCreator();
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_GROOVY, groovyOutlineItemCreator);
       IDE.getInstance().addOutlineItemCreator(MimeType.GROOVY_SERVICE, groovyOutlineItemCreator);
@@ -134,11 +122,11 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
             outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
          }
 
-         IDE.EVENT_BUS.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
+         IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
       }
    }
 

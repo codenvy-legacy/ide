@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.List;
+import com.google.gwt.http.client.URL;
 
 /**
  * Presenter updating memory and number of instances of application.
@@ -49,12 +49,10 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private String instances;
 
-   public UpdatePropertiesPresenter(HandlerManager eventbus)
+   public UpdatePropertiesPresenter()
    {
-      super(eventbus);
-
-      eventBus.addHandler(UpdateMemoryEvent.TYPE, this);
-      eventBus.addHandler(UpdateInstancesEvent.TYPE, this);
+      IDE.addHandler(UpdateMemoryEvent.TYPE, this);
+      IDE.addHandler(UpdateInstancesEvent.TYPE, this);
    }
 
    public void bindDisplay(List<Framework> frameworks)
@@ -94,7 +92,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
             projectId,
             null,
             null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, getOldMemoryValueLoggedInHandler,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), getOldMemoryValueLoggedInHandler,
                null)
             {
                @Override
@@ -128,7 +126,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                   catch (NumberFormatException e)
                   {
                      String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryInvalidNumberMessage();
-                     eventBus.fireEvent(new ExceptionThrownEvent(msg));
+                     IDE.fireEvent(new ExceptionThrownEvent(msg));
                   }
                }
             }
@@ -152,13 +150,13 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
       CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, updateMemoryLoggedInHandler, null)
+         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), updateMemoryLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
                String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemorySuccess(String.valueOf(memory));
-               eventBus.fireEvent(new OutputEvent(msg));
+               IDE.fireEvent(new OutputEvent(msg));
             }
          });
    }
@@ -193,7 +191,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
          projectId,
          null,
          null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, getOldInstancesValueLoggedInHandler,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), getOldInstancesValueLoggedInHandler,
             null)
          {
             @Override
@@ -230,7 +228,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                   catch (NumberFormatException e)
                   {
                      String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesInvalidValueMessage();
-                     eventBus.fireEvent(new ExceptionThrownEvent(msg));
+                     IDE.fireEvent(new ExceptionThrownEvent(msg));
                   }
                }
             }
@@ -261,13 +259,13 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
       String encodedExp = URL.encodePathSegment(instancesExpression);
 
       CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, encodedExp,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, updateInstancesLoggedInHandler, null)
+         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), updateInstancesLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
                CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, null, null)
+                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), null, null)
                   {
                      @Override
                      protected void onSuccess(CloudfoundryApplication result)
@@ -275,7 +273,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                         String msg =
                            CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(String.valueOf(result
                               .getInstances()));
-                        eventBus.fireEvent(new OutputEvent(msg));
+                        IDE.fireEvent(new OutputEvent(msg));
                      }
                   });
             }

@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -45,12 +49,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -59,7 +57,6 @@ import java.util.Map;
 public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
-   private HandlerManager eventBus;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -69,16 +66,14 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
 
    private static final String UNTITLED_FILE_NAME = IDE.NAVIGATION_CONSTANT.createFileUntitledFileName();
 
-   public CreateFileCommandHandler(HandlerManager eventBus)
+   public CreateFileCommandHandler()
    {
-      this.eventBus = eventBus;
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-
-      eventBus.addHandler(CreateNewFileEvent.TYPE, this);
+      IDE.addHandler(CreateNewFileEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -136,7 +131,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
          String defaultEditorDescription = defaultEditors.get(event.getMimeType());
          //         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
          EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription);
-         eventBus.fireEvent(new EditorOpenFileEvent(newFile, producer));
+         IDE.fireEvent(new EditorOpenFileEvent(newFile, producer));
       }
       catch (EditorNotFoundException e)
       {

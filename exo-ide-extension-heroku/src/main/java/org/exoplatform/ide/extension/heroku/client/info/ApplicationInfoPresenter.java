@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.extension.heroku.client.info;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -38,10 +37,10 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for getting and displaying application's information.
@@ -112,11 +111,10 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    /**
     * @param eventBus events handler
     */
-   public ApplicationInfoPresenter(HandlerManager eventBus)
+   public ApplicationInfoPresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(ShowApplicationInfoEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowApplicationInfoEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -166,7 +164,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
-         new HerokuAsyncRequestCallback(eventBus, this)
+         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
          {
 
             @Override
@@ -205,7 +203,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getApplicationInfo();

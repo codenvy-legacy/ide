@@ -50,7 +50,7 @@ public abstract class RequestStatusHandlerBase implements RequestStatusHandler
    {
       Job job = new Job(id, JobStatus.ERROR);
       job.setError(exception);
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
 }

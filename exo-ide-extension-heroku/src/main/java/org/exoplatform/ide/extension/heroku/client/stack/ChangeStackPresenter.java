@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide.extension.heroku.client.stack;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -43,7 +37,12 @@ import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
  * Presenter for changing Heroku application's stack.
@@ -74,14 +73,12 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
    private Display display;
 
    /**
-    * @param eventBus
+    *
     */
-   public ChangeStackPresenter(HandlerManager eventBus)
+   public ChangeStackPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ChangeApplicationStackEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ChangeApplicationStackEvent.TYPE, this);
    }
 
    /**
@@ -147,7 +144,7 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
    public void getStacks()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      HerokuClientService.getInstance().getStackList(null, vfs.getId(), projectId, new StackListAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().getStackList(null, vfs.getId(), projectId, new StackListAsyncRequestCallback(IDE.eventBus(), this)
       {
          @Override
          protected void onSuccess(List<Stack> result)
@@ -170,7 +167,7 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getStacks();
@@ -187,7 +184,7 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
          return;
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       HerokuClientService.getInstance().migrateStack(null, vfs.getId(), projectId, stack.getName(),
-         new StackMigrationAsyncRequestCallback(eventBus, this)
+         new StackMigrationAsyncRequestCallback(IDE.eventBus(), this)
          {
 
             @Override
@@ -197,7 +194,7 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
                String output =
                   (result.getResult() != null && !result.getResult().isEmpty()) ? result.getResult().replace("\n",
                      "<br>") : "";
-               eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+               IDE.fireEvent(new OutputEvent(output, Type.INFO));
             }
          });
    }

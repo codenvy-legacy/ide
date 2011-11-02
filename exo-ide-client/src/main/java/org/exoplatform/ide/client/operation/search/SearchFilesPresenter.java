@@ -88,11 +88,11 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
    {
       IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR, false);      
       
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(SearchFilesEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(SearchFilesEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -177,21 +177,21 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
                protected void onSuccess(List<Item> result)
                {
                   folder.getChildren().setItems(result);
-                  IDE.EVENT_BUS.fireEvent(new SearchResultReceivedEvent(folder));
+                  IDE.fireEvent(new SearchResultReceivedEvent(folder));
                   IDE.getInstance().closeView(display.asView().getId());
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
+         IDE.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
       }
    }
 

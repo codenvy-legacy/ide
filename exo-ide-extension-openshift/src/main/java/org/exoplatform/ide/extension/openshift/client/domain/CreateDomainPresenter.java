@@ -41,7 +41,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -89,16 +88,13 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
 
    private Display display;
 
-   private HandlerManager eventBus;
-
    /**
-    * @param eventBus events handler
+    *
     */
-   public CreateDomainPresenter(HandlerManager eventBus)
+   public CreateDomainPresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(CreateDomainEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(CreateDomainEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -179,7 +175,7 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(
+            IDE.fireEvent(new OutputEvent(
                OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName), Type.INFO));
             IDE.getInstance().closeView(display.asView().getId());
          }
@@ -197,11 +193,11 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
                         && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
-                  eventBus.fireEvent(new LoginEvent());
+                  IDE.fireEvent(new LoginEvent());
                   return;
                }
             }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainFail(domainName)));
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainFail(domainName)));
          }
       });
    }
@@ -211,7 +207,7 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
     */   
    protected void addLoggedInHandler()
    {
-      eventBus.addHandler(LoggedInEvent.TYPE, this);
+      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -220,7 +216,7 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          createDomain();

@@ -18,17 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.createfolder;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -46,8 +37,16 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -83,9 +82,9 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    {
       IDE.getInstance().addControl(new CreateFolderControl());
 
-      IDE.EVENT_BUS.addHandler(CreateFolderEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(CreateFolderEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -142,13 +141,13 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
                protected void onSuccess(FolderModel result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
-                  IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(baseFolder, result));
+                  IDE.fireEvent(new RefreshBrowserEvent(baseFolder, result));
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception,
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
 
                }
@@ -157,7 +156,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e,
+         IDE.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
       }
    }
@@ -170,7 +169,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    {
       if (selectedItems == null || selectedItems.isEmpty())
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(IDE.ERRORS_CONSTANT.createFolderSelectParentFolder()));
+         IDE.fireEvent(new ExceptionThrownEvent(IDE.ERRORS_CONSTANT.createFolderSelectParentFolder()));
          return;
       }
 

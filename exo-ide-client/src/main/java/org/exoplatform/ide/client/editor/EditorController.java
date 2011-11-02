@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -96,12 +96,11 @@ import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -119,8 +118,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
       .editorControllerAskCloseFile();
-
-   private HandlerManager eventBus;
 
    /**
     * Used to remove handlers when they are no longer needed.
@@ -150,45 +147,44 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    public EditorController()
    {
-      this.eventBus = IDE.EVENT_BUS;
       handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE,
-         eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
+         IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
       //eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
 
-      handlerRegistrations.put(EditorOpenFileEvent.TYPE, eventBus.addHandler(EditorOpenFileEvent.TYPE, this));
+      handlerRegistrations.put(EditorOpenFileEvent.TYPE, IDE.addHandler(EditorOpenFileEvent.TYPE, this));
 
-      handlerRegistrations.put(EditorReplaceFileEvent.TYPE, eventBus.addHandler(EditorReplaceFileEvent.TYPE, this));
+      handlerRegistrations.put(EditorReplaceFileEvent.TYPE, IDE.addHandler(EditorReplaceFileEvent.TYPE, this));
 
-      handlerRegistrations.put(RefreshHotKeysEvent.TYPE, eventBus.addHandler(RefreshHotKeysEvent.TYPE, this));
+      handlerRegistrations.put(RefreshHotKeysEvent.TYPE, IDE.addHandler(RefreshHotKeysEvent.TYPE, this));
 
-      handlerRegistrations.put(EditorFindTextEvent.TYPE, eventBus.addHandler(EditorFindTextEvent.TYPE, this));
-      handlerRegistrations.put(EditorReplaceTextEvent.TYPE, eventBus.addHandler(EditorReplaceTextEvent.TYPE, this));
+      handlerRegistrations.put(EditorFindTextEvent.TYPE, IDE.addHandler(EditorFindTextEvent.TYPE, this));
+      handlerRegistrations.put(EditorReplaceTextEvent.TYPE, IDE.addHandler(EditorReplaceTextEvent.TYPE, this));
       handlerRegistrations.put(EditorReplaceAndFindTextEvent.TYPE,
-         eventBus.addHandler(EditorReplaceAndFindTextEvent.TYPE, this));
+         IDE.addHandler(EditorReplaceAndFindTextEvent.TYPE, this));
 
       handlerRegistrations.put(EditorContentChangedEvent.TYPE,
-         eventBus.addHandler(EditorContentChangedEvent.TYPE, this));
-      handlerRegistrations.put(EditorSaveContentEvent.TYPE, eventBus.addHandler(EditorSaveContentEvent.TYPE, this));
+         IDE.addHandler(EditorContentChangedEvent.TYPE, this));
+      handlerRegistrations.put(EditorSaveContentEvent.TYPE, IDE.addHandler(EditorSaveContentEvent.TYPE, this));
       handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE,
-         eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
-      handlerRegistrations.put(EditorCloseFileEvent.TYPE, eventBus.addHandler(EditorCloseFileEvent.TYPE, this));
-      handlerRegistrations.put(EditorUndoTypingEvent.TYPE, eventBus.addHandler(EditorUndoTypingEvent.TYPE, this));
-      handlerRegistrations.put(EditorRedoTypingEvent.TYPE, eventBus.addHandler(EditorRedoTypingEvent.TYPE, this));
-      handlerRegistrations.put(FileSavedEvent.TYPE, eventBus.addHandler(FileSavedEvent.TYPE, this));
-      handlerRegistrations.put(EditorFormatTextEvent.TYPE, eventBus.addHandler(EditorFormatTextEvent.TYPE, this));
-      handlerRegistrations.put(ShowLineNumbersEvent.TYPE, eventBus.addHandler(ShowLineNumbersEvent.TYPE, this));
+         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+      handlerRegistrations.put(EditorCloseFileEvent.TYPE, IDE.addHandler(EditorCloseFileEvent.TYPE, this));
+      handlerRegistrations.put(EditorUndoTypingEvent.TYPE, IDE.addHandler(EditorUndoTypingEvent.TYPE, this));
+      handlerRegistrations.put(EditorRedoTypingEvent.TYPE, IDE.addHandler(EditorRedoTypingEvent.TYPE, this));
+      handlerRegistrations.put(FileSavedEvent.TYPE, IDE.addHandler(FileSavedEvent.TYPE, this));
+      handlerRegistrations.put(EditorFormatTextEvent.TYPE, IDE.addHandler(EditorFormatTextEvent.TYPE, this));
+      handlerRegistrations.put(ShowLineNumbersEvent.TYPE, IDE.addHandler(ShowLineNumbersEvent.TYPE, this));
       handlerRegistrations.put(EditorChangeActiveFileEvent.TYPE,
-         eventBus.addHandler(EditorChangeActiveFileEvent.TYPE, this));
+         IDE.addHandler(EditorChangeActiveFileEvent.TYPE, this));
       handlerRegistrations.put(EditorDeleteCurrentLineEvent.TYPE,
-         eventBus.addHandler(EditorDeleteCurrentLineEvent.TYPE, this));
-      handlerRegistrations.put(EditorGoToLineEvent.TYPE, eventBus.addHandler(EditorGoToLineEvent.TYPE, this));
-      handlerRegistrations.put(EditorSetFocusEvent.TYPE, eventBus.addHandler(EditorSetFocusEvent.TYPE, this));
-      handlerRegistrations.put(SaveFileAsEvent.TYPE, eventBus.addHandler(SaveFileAsEvent.TYPE, this));
+         IDE.addHandler(EditorDeleteCurrentLineEvent.TYPE, this));
+      handlerRegistrations.put(EditorGoToLineEvent.TYPE, IDE.addHandler(EditorGoToLineEvent.TYPE, this));
+      handlerRegistrations.put(EditorSetFocusEvent.TYPE, IDE.addHandler(EditorSetFocusEvent.TYPE, this));
+      handlerRegistrations.put(SaveFileAsEvent.TYPE, IDE.addHandler(SaveFileAsEvent.TYPE, this));
       handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE,
-         eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
-      handlerRegistrations.put(ClosingViewEvent.TYPE, eventBus.addHandler(ClosingViewEvent.TYPE, this));
-      handlerRegistrations.put(EditorFocusReceivedEvent.TYPE, eventBus.addHandler(EditorFocusReceivedEvent.TYPE, this));
-      handlerRegistrations.put(VersionRestoredEvent.TYPE, eventBus.addHandler(VersionRestoredEvent.TYPE, this));
+         IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this));
+      handlerRegistrations.put(ClosingViewEvent.TYPE, IDE.addHandler(ClosingViewEvent.TYPE, this));
+      handlerRegistrations.put(EditorFocusReceivedEvent.TYPE, IDE.addHandler(EditorFocusReceivedEvent.TYPE, this));
+      handlerRegistrations.put(VersionRestoredEvent.TYPE, IDE.addHandler(VersionRestoredEvent.TYPE, this));
 
    }
 
@@ -253,8 +249,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
       activeFile.setContent(editor.getText());
       updateTabTitle(activeFile);
-      eventBus
-         .fireEvent(new EditorFileContentChangedEvent(activeFile, editor.hasUndoChanges(), editor.hasRedoChanges()));
+      IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, editor.hasUndoChanges(), editor.hasRedoChanges()));
    }
 
    public void onEditorFocusReceived(EditorFocusReceivedEvent event)
@@ -292,11 +287,11 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       file.setContent(getEditorFromView(file.getId()).getText());
       if (!file.isPersisted())
       {
-         eventBus.fireEvent(new SaveFileAsEvent());
+         IDE.fireEvent(new SaveFileAsEvent());
       }
       else
       {
-         eventBus.fireEvent(new SaveFileEvent());
+         IDE.fireEvent(new SaveFileEvent());
       }
    }
 
@@ -320,10 +315,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          ignoreContentChangedList.remove(file.getId());
       }
 
-      eventBus.fireEvent(new EditorFileClosedEvent(file, editorDescription, openedFiles));
+      IDE.fireEvent(new EditorFileClosedEvent(file, editorDescription, openedFiles));
       if (editorsViews.isEmpty())
       {
-         eventBus.fireEvent(new EditorActiveFileChangedEvent(null, null));
+         IDE.fireEvent(new EditorActiveFileChangedEvent(null, null));
       }
    }
 
@@ -356,7 +351,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       if (!file.isPersisted())
       {
          closeFileAfterSaving = true;
-         eventBus.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.EXTENDED,
+         IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.EXTENDED,
             new EditorCloseFileEvent(file, true), null));
       }
       else
@@ -377,7 +372,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
                if (value)
                {
                   file.setContent(getEditorFromView(file.getId()).getText());
-                  eventBus.fireEvent(new SaveFileEvent());
+                  IDE.fireEvent(new SaveFileEvent());
                }
                else
                {
@@ -473,10 +468,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       openedFiles.put(file.getId(), file);
       openedEditorsDescription.put(file.getId(), event.getEditorProducer().getDescription());
 
-      List<Editor> supportedEditors = getSupportedEditors(event.getEditorProducer(), file, eventBus);
+      List<Editor> supportedEditors = getSupportedEditors(event.getEditorProducer(), file);
 
       EditorView editorView =
-         new EditorView(file, isReadOnly(file), this.eventBus, supportedEditors,
+         new EditorView(file, isReadOnly(file), IDE.eventBus(), supportedEditors,
             getNumberOfEditorToShow(event.getEditorProducer()) - 1);
 
       if (editorsViews.containsKey(file.getId()))
@@ -492,7 +487,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
       activeFile = file;
 
-      eventBus.fireEvent(new EditorFileOpenedEvent(file, event.getEditorProducer().getDescription(), openedFiles));
+      IDE.fireEvent(new EditorFileOpenedEvent(file, event.getEditorProducer().getDescription(), openedFiles));
    }
 
    /**
@@ -569,7 +564,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          // call activeFileChanged event after the SaveFileAs operation
          if (!savedFile.getId().equals(activeFile.getId()) && isAfterSaveAs)
          {
-            eventBus.fireEvent(new EditorActiveFileChangedEvent(savedFile, oldFileEditorView.getEditor()));
+            IDE.fireEvent(new EditorActiveFileChangedEvent(savedFile, oldFileEditorView.getEditor()));
          }
       }
 
@@ -604,7 +599,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       {
          e.printStackTrace();
       }
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
+      IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
       oldFileEditorView.setContent(newFile.getContent());
 
       updateTabTitle(newFile);
@@ -636,7 +631,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    {
       boolean isFound =
          getEditorFromView(event.getFileId()).findAndSelect(event.getFindText(), event.isCaseSensitive());
-      eventBus.fireEvent(new EditorTextFoundEvent(isFound));
+      IDE.fireEvent(new EditorTextFoundEvent(isFound));
    }
 
    /**
@@ -669,7 +664,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       Editor editor = getEditorFromView(event.getFileId());
       editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
       boolean isFound = editor.findAndSelect(event.getFindText(), event.isCaseSensitive());
-      eventBus.fireEvent(new EditorTextFoundEvent(isFound));
+      IDE.fireEvent(new EditorTextFoundEvent(isFound));
    }
 
    /**
@@ -717,7 +712,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          {
             return;
          }
-         eventBus.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
+         IDE.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
       }
    }
 
@@ -746,7 +741,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
                   {
                      return;
                   }
-                  eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, editorView.getEditor()));
+                  IDE.fireEvent(new EditorActiveFileChangedEvent(activeFile, editorView.getEditor()));
                }
                catch (Exception e)
                {
@@ -781,7 +776,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
             return;
          }
          event.cancelClosing();
-         eventBus.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
+         IDE.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
       }
 
    }
@@ -805,7 +800,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       return null;
    }
 
-   private List<Editor> getSupportedEditors(EditorProducer editorProducer, FileModel file, HandlerManager eventBus)
+   private List<Editor> getSupportedEditors(EditorProducer editorProducer, FileModel file)
    {
       boolean isLineNumbers = true;
       if (applicationSettings.getValueAsBoolean("line-numbers") != null)
@@ -827,7 +822,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          params.put(EditorParameters.IS_SHOW_LINE_NUMER, isLineNumbers);
          params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
 
-         Editor editor = supportedEditorProducer.createEditor(file.getContent(), eventBus, params);
+         Editor editor = supportedEditorProducer.createEditor(file.getContent(), IDE.eventBus(), params);
 
          supportedEditors.add(editor);
          DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");

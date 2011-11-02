@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.openshift.client.info;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
@@ -37,15 +41,10 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
@@ -60,6 +59,7 @@ import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler,
    LoggedInHandler
 {
+   
    interface Display extends IsView
    {
       HasClickHandlers getOkButton();
@@ -70,14 +70,12 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    private Display display;
 
    /**
-    * @param eventBus events handler
+    *
     */
-   public ApplicationInfoPresenter(HandlerManager eventBus)
+   public ApplicationInfoPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ShowApplicationInfoEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowApplicationInfoEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -167,11 +165,11 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                      && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                   {
                      addLoggedInHandler();
-                     eventBus.fireEvent(new LoginEvent());
+                     IDE.fireEvent(new LoginEvent());
                      return;
                   }
                }
-               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                   .getApplicationInfoFail()));
             }
 
@@ -183,7 +181,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
     */
    protected void addLoggedInHandler()
    {
-      eventBus.addHandler(LoggedInEvent.TYPE, this);
+      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -192,7 +190,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getApplicationInfo();

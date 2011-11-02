@@ -18,18 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation.template;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -65,10 +57,17 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for form "Create file from template"
@@ -166,8 +165,6 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private static final String UNTITLED_FILE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT
@@ -188,16 +185,14 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    private boolean isTemplatesMigrated = false;
 
-   public CreateFileFromTemplatePresenter(HandlerManager eventBus)
+   public CreateFileFromTemplatePresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(CreateFileFromTemplateEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
+      IDE.addHandler(CreateFileFromTemplateEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
    }
 
    @Override
@@ -245,7 +240,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       }
       else
       {
-         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         IDE.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
          {
             @Override
             public void onTemplatesMigrated()
@@ -264,10 +259,10 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    {
       if (display != null)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Display " + display.asView().getId() + " is not null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Display " + display.asView().getId() + " is not null"));
       }
 
-      TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(eventBus)
+      TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(IDE.eventBus())
       {
          @Override
          protected void onSuccess(FileTemplateList result)
@@ -363,7 +358,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       //      newFile.setNewFile(true);
       //      newFile.setContentChanged(true);
       //      newFile.setContent(selectedTemplate.getContent());
-      eventBus.fireEvent(new OpenFileEvent(newFile));
+      IDE.fireEvent(new OpenFileEvent(newFile));
 
       closeView();
    }
@@ -563,7 +558,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     */
    private void refreshTemplateList()
    {
-      TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(eventBus)
+      TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(IDE.eventBus())
       {
          @Override
          protected void onSuccess(FileTemplateList result)
@@ -580,7 +575,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
@@ -633,7 +628,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       if (usedProjectTemplates.size() == 0)
       {
          TemplateService.getInstance().deleteFileTemplate(selectedTemplate.getName(),
-            new AsyncRequestCallback<String>(eventBus)
+            new AsyncRequestCallback<String>(IDE.eventBus())
             {
 
                @Override
@@ -671,7 +666,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
                if (value)
                {
                   TemplateService.getInstance().deleteFileTemplate(selectedTemplate.getName(),
-                     new AsyncRequestCallback<String>(eventBus)
+                     new AsyncRequestCallback<String>(IDE.eventBus())
                      {
 
                         @Override

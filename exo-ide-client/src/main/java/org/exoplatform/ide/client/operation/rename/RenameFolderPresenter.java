@@ -18,18 +18,9 @@
  */
 package org.exoplatform.ide.client.operation.rename;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -55,9 +46,18 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for renaming folders and files form.
@@ -104,12 +104,12 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
 
    public RenameFolderPresenter()
    {
-      IDE.EVENT_BUS.addHandler(RenameItemEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(RenameItemEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -225,7 +225,7 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
    private void completeMove()
    {
       FolderModel folder = (FolderModel)renamedItem;
-      IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(folder.getParent(), renamedItem));
+      IDE.fireEvent(new RefreshBrowserEvent(folder.getParent(), renamedItem));
       closeView();
    }
 
@@ -252,18 +252,18 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
       catch (Exception e)
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
       }
    }
@@ -304,7 +304,7 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Display RenameFolder must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Display RenameFolder must be null"));
       }
    }
 

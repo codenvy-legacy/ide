@@ -80,10 +80,10 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    */
    public SshKeyManagerPresenter()
    {
-      IDE.EVENT_BUS.addHandler(ShowSshKeyManagerEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ShowSshKeyManagerEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       //add hendler to handle Upload ssh key form closing, and refresh list of ssh keys
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -120,7 +120,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
             }
             catch (UnmarshallerException e)
             {
-               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+               IDE.fireEvent(new ExceptionThrownEvent(e));
             }
          }
 
@@ -128,7 +128,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          public void onFailure(Throwable exception)
          {
             getLoader().hide();
-            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
@@ -156,7 +156,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          public void onSelection(SelectionEvent<KeyItem> event)
          {
             if (event.getSelectedItem().getPublicKeyURL() != null)
-               IDE.EVENT_BUS.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
+               IDE.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
          }
       });
 
@@ -211,7 +211,6 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
       Dialogs.getInstance().ask("IDE", "Do you want to delete ssh keys for <b>" + keyItem.getHost() + "</b> host?",
          new BooleanValueReceivedHandler()
          {
-
             @Override
             public void booleanValueReceived(Boolean value)
             {
@@ -230,7 +229,6 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    {
       SshKeyService.get().deleteKey(keyItem, new JsonpAsyncCallback<Void>()
       {
-
          @Override
          public void onSuccess(Void result)
          {
@@ -242,7 +240,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          public void onFailure(Throwable exception)
          {
             getLoader().hide();
-            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
@@ -251,7 +249,6 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    {
       SshKeyService.get().generateKey(new GenKeyRequest(host, null, null), new AsyncRequestCallback<GenKeyRequest>()
       {
-
          @Override
          protected void onSuccess(GenKeyRequest result)
          {
@@ -261,7 +258,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          @Override
          protected void onFailure(Throwable exception)
          {
-            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }

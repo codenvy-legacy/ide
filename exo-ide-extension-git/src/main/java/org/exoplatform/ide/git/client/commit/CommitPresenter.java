@@ -18,18 +18,7 @@
  */
 package org.exoplatform.ide.git.client.commit;
 
-import com.google.gwt.http.client.RequestException;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.Date;
 
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -45,7 +34,16 @@ import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.Date;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for commit view. 
@@ -107,13 +105,11 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
    private Display display;
 
    /**
-    * @param eventBus events handler
+    * 
     */
-   public CommitPresenter(HandlerManager eventBus)
+   public CommitPresenter()
    {
-      super(eventBus);
-      
-      eventBus.addHandler(CommitEvent.TYPE, this);
+      IDE.addHandler(CommitEvent.TYPE, this);
    }
 
    /**
@@ -196,8 +192,8 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
                message +=
                   (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
                      .getName().length() > 0) ? " " +GitExtension.MESSAGES.commitUser(result.getCommitter().getName()) : "";
-               eventBus.fireEvent(new OutputEvent(message, Type.INFO));
-               eventBus.fireEvent(new RefreshBrowserEvent());
+               IDE.fireEvent(new OutputEvent(message, Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent());
             }
 
             @Override
@@ -206,7 +202,7 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
                String errorMessage =
                   (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                      : GitExtension.MESSAGES.commitFailed();
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
             }
          });
       }

@@ -77,9 +77,9 @@ ViewClosedHandler, SearchResultReceivedHandler
 
    public SearchResultsPresenter()
    {
-      IDE.EVENT_BUS.addHandler(SearchResultReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(SearchResultReceivedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    @Override
@@ -182,7 +182,7 @@ ViewClosedHandler, SearchResultReceivedHandler
       Item item = selectedItems.get(0);
       if (item instanceof File)
       {
-         IDE.EVENT_BUS.fireEvent(new OpenFileEvent((FileModel)item));
+         IDE.fireEvent(new OpenFileEvent((FileModel)item));
       }
    }
 
@@ -212,7 +212,7 @@ ViewClosedHandler, SearchResultReceivedHandler
          }
          
          selectedItems = display.getSelectedItems();
-         IDE.EVENT_BUS.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
       }
    };
 

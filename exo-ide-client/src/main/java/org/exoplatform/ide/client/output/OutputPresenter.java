@@ -34,7 +34,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -61,10 +60,10 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
 
    private List<OutputMessage> messages = new ArrayList<OutputMessage>();
 
-   public OutputPresenter(HandlerManager eventBus)
+   public OutputPresenter()
    {
-      eventBus.addHandler(OutputEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(OutputEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -88,7 +87,6 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
    {
       try
       {
-
          if (display == null)
          {
             display = GWT.create(Display.class);
@@ -108,13 +106,11 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
 
          messages.add(message);
          display.outMessage(message);
-
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
-
    }
 
    /**

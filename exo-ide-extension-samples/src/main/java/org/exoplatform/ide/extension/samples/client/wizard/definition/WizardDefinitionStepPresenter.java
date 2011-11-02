@@ -18,15 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.definition;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -38,6 +29,14 @@ import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinish
 import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for Step2 (Definition) of Wizard for creation Java Project.
@@ -69,8 +68,6 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
    
    private static final String[] TYPES;
    
-   private HandlerManager eventBus;
-   
    private Display display;
    
    private ProjectProperties projectProperties;
@@ -86,12 +83,10 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
       TYPES[1] = ProjectProperties.ProjectType.SPRING;
    }
    
-   public WizardDefinitionStepPresenter(HandlerManager eventBus)
+   public WizardDefinitionStepPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectCreationFinishedEvent.TYPE, this);
    }
    
    /**
@@ -117,7 +112,7 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ProjectCreationFinishedEvent(true));
+            IDE.fireEvent(new ProjectCreationFinishedEvent(true));
             closeView();
          }
       });
@@ -213,7 +208,7 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Show Wizard Definition must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Show Wizard Definition must be null"));
       }
    }
    

@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -59,14 +58,14 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
 
    private FileModel file;
 
-   public PropertiesPresenter(HandlerManager eventBus)
+   public PropertiesPresenter()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
-      eventBus.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
-      eventBus.addHandler(ShowPropertiesEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(FileSavedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+      IDE.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
+      IDE.addHandler(ShowPropertiesEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(FileSavedEvent.TYPE, this);
       
       IDE.getInstance().addControl(new ShowPropertiesControl(), Docking.TOOLBAR, true);
    }

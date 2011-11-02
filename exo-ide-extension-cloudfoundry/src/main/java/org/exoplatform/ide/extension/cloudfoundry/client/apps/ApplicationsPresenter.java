@@ -90,9 +90,9 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     */
    public ApplicationsPresenter()
    {
-      IDE.EVENT_BUS.addHandler(ShowApplicationsEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(OutputEvent.TYPE, this);
+      IDE.addHandler(ShowApplicationsEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(OutputEvent.TYPE, this);
    }
 
    /**
@@ -124,7 +124,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onSelection(SelectionEvent<CloudfoundryApplication> event)
          {
-            IDE.EVENT_BUS.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
+            IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
          }
       });
 
@@ -134,7 +134,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onSelection(SelectionEvent<CloudfoundryApplication> event)
          {
-            IDE.EVENT_BUS.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
+            IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
          }
       });
 
@@ -144,7 +144,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onSelection(SelectionEvent<CloudfoundryApplication> event)
          {
-            IDE.EVENT_BUS.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
+            IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
          }
       });
 
@@ -154,7 +154,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onSelection(SelectionEvent<CloudfoundryApplication> event)
          {
-            IDE.EVENT_BUS.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName()));
+            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName()));
          }
       });
    }
@@ -222,7 +222,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
    private void getApplicationList(final String server)
    {
       CloudFoundryClientService.getInstance().getApplicationList(server,
-         new CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>>(IDE.EVENT_BUS, //
+         new CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>>(IDE.eventBus(), //
             new LoggedInHandler()//
             {
                @Override

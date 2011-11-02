@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.delete;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -39,6 +32,12 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for delete application operation.
@@ -87,12 +86,10 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     */
    private String appName;
 
-   public DeleteApplicationPresenter(HandlerManager eventbus)
+   public DeleteApplicationPresenter()
    {
-      super(eventbus);
-
-      eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(DeleteApplicationEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -145,7 +142,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, appInfoLoggedInHandler, null)
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), appInfoLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)
@@ -174,13 +171,13 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
          projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       }
       CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, null,
-         isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(eventBus, deleteAppLoggedInHandler, null)
+         isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), deleteAppLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
                closeView();
-               eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
                   .applicationDeletedMsg(appName), Type.INFO));
             }
          });

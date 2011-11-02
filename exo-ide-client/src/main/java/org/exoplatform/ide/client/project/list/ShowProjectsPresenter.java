@@ -83,10 +83,10 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    {
       IDE.getInstance().addControl(new ShowProjectsControl());
 
-      IDE.EVENT_BUS.addHandler(ShowProjectsEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ShowProjectsEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 
    @Override
@@ -193,14 +193,14 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
       }
    }
 
@@ -212,7 +212,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       }
 
       ProjectModel project = (ProjectModel)display.getSelectedItems().get(0);
-      IDE.EVENT_BUS.fireEvent(new OpenProjectEvent(project));
+      IDE.fireEvent(new OpenProjectEvent(project));
    }
 
    @Override

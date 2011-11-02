@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.delete;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -30,8 +31,6 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import java.util.Map;
 
 /**
  * Presenter for deleting application from CloudBees.
@@ -53,11 +52,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    /**
     * @param eventBus
     */
-   public DeleteApplicationPresenter(HandlerManager eventBus)
+   public DeleteApplicationPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
+      IDE.addHandler(DeleteApplicationEvent.TYPE, this);
    }
 
    /**
@@ -87,7 +84,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, new LoggedInHandler()
+         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()
@@ -146,7 +143,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
          projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       }
       CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<String>(eventBus, new LoggedInHandler()
+         new CloudBeesAsyncRequestCallback<String>(IDE.eventBus(), new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()
@@ -158,7 +155,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
                   .applicationDeletedMsg(appTitle), Type.INFO));
             }
          });

@@ -62,9 +62,9 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
    {
       IDE.getInstance().addControl(new GetItemURLControl());
       
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(GetItemURLEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(GetItemURLEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    @Override

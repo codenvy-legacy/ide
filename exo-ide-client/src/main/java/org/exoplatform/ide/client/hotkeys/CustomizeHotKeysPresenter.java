@@ -54,7 +54,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -115,8 +114,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    
    private static final IdePreferencesLocalizationConstant CONSTANTS = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT;
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private List<HotKeyItem> hotKeys = new ArrayList<HotKeyItem>();
@@ -127,16 +124,16 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
    private List<Control> controls;
 
-   public CustomizeHotKeysPresenter(HandlerManager eventBus)
+   public CustomizeHotKeysPresenter()
    {
-      this.eventBus = eventBus;
+      IDE.getInstance().addControl(new CustomizeHotKeysControl());
+      
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
 
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
-
-      eventBus.addHandler(CustomizeHotKeysEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(CustomizeHotKeysEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    @Override
@@ -526,13 +523,13 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
             protected void onSuccess(ApplicationSettings result)
             {
                IDE.getInstance().closeView(display.asView().getId());
-               eventBus.fireEvent(new RefreshHotKeysEvent(keys));
+               IDE.fireEvent(new RefreshHotKeysEvent(keys));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(CANT_SAVE_HOTKEYS));
+               IDE.fireEvent(new ExceptionThrownEvent(CANT_SAVE_HOTKEYS));
             }
          });
    }

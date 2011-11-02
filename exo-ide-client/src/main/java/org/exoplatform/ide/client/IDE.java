@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
@@ -34,14 +35,14 @@ import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.framework.control.AddControlsFormatterEvent;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
-import org.exoplatform.ide.client.hotkeys.HotKeyManagementModule;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeLocalizationMessages;
@@ -52,7 +53,6 @@ import org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeVersionsLocalizationConstant;
-import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.outline.OutlinePresenter;
 import org.exoplatform.ide.client.outline.ui.OutlineItemCreatorFactory;
@@ -67,6 +67,7 @@ import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
@@ -80,8 +81,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
 
    private ControlsRegistration controlsRegistration;
-
-   private ApplicationContext context;
 
    private IDEPresenter presenter;
    
@@ -126,65 +125,80 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       //new PopupWindowLogger();
 
       /*
-       * Initialise SeleniumTestsHelper
+       * Initialize SeleniumTestsHelper
        */
-      new SeleniumTestsHelper(EVENT_BUS);
+      new SeleniumTestsHelper();
 
-      context = new ApplicationContext();
-
-      new ExceptionThrownEventHandler(EVENT_BUS);
+      new ExceptionThrownEventHandler();
 
       //new CookieManager(eventBus);
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
-      controlsRegistration = new ControlsRegistration(EVENT_BUS);
+      controlsRegistration = new ControlsRegistration();
+      controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
+      controlsRegistration.addControlsFormatter(new NewItemControlsFormatter());
 
-      EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new MainMenuControlsFormatter()));
-      EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
-
-      new AskForValueDialog(EVENT_BUS);
+      new AskForValueDialog();
 
       IDEForm ideForm = new IDEForm();
-      presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
+      presenter = new IDEPresenter(ideForm, controlsRegistration);
 
-      new LoginPresenter(EVENT_BUS);
+      new LoginPresenter();
 
-      new DownloadForm(EVENT_BUS);
-      new ViewHighlightManager(EVENT_BUS);
-      new ApplicationStateSnapshotListener(EVENT_BUS);
+      new DownloadForm();
+      
+      new ViewHighlightManager(IDE.eventBus());
+      
+      new ApplicationStateSnapshotListener();
 
       // MODULES INITIALIZATION
-      new NavigationModule(EVENT_BUS, context);
-      new ProjectSupportingModule(EVENT_BUS);
-      new TextEditModule(EVENT_BUS);
+      new NavigationModule();
+      new ProjectSupportingModule();
+      new TextEditModule();
       
-      new PropertiesPresenter(EVENT_BUS);
-      new OutlinePresenter(EVENT_BUS);
+      new PropertiesPresenter();
+      new OutlinePresenter();
       new PreviewHTMLPresenter();
-      new DocumentationPresenter(EVENT_BUS);
-      new OutputPresenter(EVENT_BUS);
+      new DocumentationPresenter();
+      new OutputPresenter();
 
-      new PreferencesModule(EVENT_BUS);
-      new HotKeyManagementModule(EVENT_BUS);
+      new PreferencesModule();
+      
+
+      /*
+       * selected items is needed for creation of CreateProjectPresenter
+       */
+      
+      final List<Item> selectedItems = new ArrayList<Item>();
+      ItemsSelectedHandler itemsSelectedHandler = new ItemsSelectedHandler()
+      {
+         @Override
+         public void onItemsSelected(ItemsSelectedEvent event)
+         {
+            selectedItems.clear();
+            selectedItems.addAll(event.getSelectedItems());
+         }
+      };
+      
+      addHandler(ItemsSelectedEvent.TYPE, itemsSelectedHandler);
       
       /*
        * What is this???
        */
-      EVENT_BUS.addHandler(CreateProjectEvent.TYPE, new CreateProjectHandler()
+      IDE.addHandler(CreateProjectEvent.TYPE, new CreateProjectHandler()
       {
          @Override
          public void onCreateProject(CreateProjectEvent event)
          {
             new CreateProjectPresenter(
-               EVENT_BUS,
                VirtualFileSystem.getInstance(), 
                (org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display)GWT.create(org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display.class),
-               context.getSelectedItems());
+               selectedItems);
          }
       });
       
       //initialize extensions
-      for (Extension ext : extensions)
+      for (Extension ext : extensions())
       {
          ext.initialize();
       }

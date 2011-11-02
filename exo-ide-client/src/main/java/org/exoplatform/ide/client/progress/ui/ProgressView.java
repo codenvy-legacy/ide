@@ -48,6 +48,8 @@ import java.util.Map;
 public class ProgressView extends ViewImpl implements Display
 {
 
+   private static final String ID = "ideRequestNotificationView";
+
    private static RequestNotificationViewUiBinder uiBinder = GWT.create(RequestNotificationViewUiBinder.class);
 
    interface RequestNotificationViewUiBinder extends UiBinder<Widget, ProgressView>

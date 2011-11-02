@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 
 import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 
@@ -37,19 +34,11 @@ import com.google.gwt.user.client.Element;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class ShellLinkUpdater implements ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler
+public class ShellLinkUpdater implements ItemsSelectedHandler
 {
    
-   private IDEConfiguration ideConfiguration;
-   
-   public ShellLinkUpdater(HandlerManager eventBus) {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-   }
-   
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      ideConfiguration = event.getConfiguration();
+   public ShellLinkUpdater() {
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
    
    @Override

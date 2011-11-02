@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -43,7 +38,11 @@ import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticS
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.LinkedHashMap;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for deploy node type view.
@@ -54,6 +53,7 @@ import java.util.LinkedHashMap;
  */
 public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorActiveFileChangedHandler
 {
+   
    interface Display extends IsView
    {
       /**
@@ -98,6 +98,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
        * @param values
        */
       void setBehaviorIfExistValues(LinkedHashMap<String, String> values);
+      
    }
 
    /**
@@ -106,21 +107,14 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
    private Display display;
 
    /**
-    * Handler manager.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Active file at the moment.
     */
    private FileModel activeFile;
 
-   public DeployNodeTypePresenter(HandlerManager eventBus)
+   public DeployNodeTypePresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(DeployNodeTypeEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(DeployNodeTypeEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
    
    private void closeView()
@@ -226,7 +220,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
             @Override
             protected void onSuccess(GenerateNodeTypeResult result)
             {
-               eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
+               IDE.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
                String generatedNodeType = result.getNodeTypeDefinition();
                doDeploy(generatedNodeType);
             }
@@ -237,7 +231,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
                NodeTypeGenerationResultReceivedEvent event =
                   new NodeTypeGenerationResultReceivedEvent(this.getResult());
                event.setException(exception);
-               eventBus.fireEvent(event);
+               IDE.fireEvent(event);
                if (exception.getMessage() != null && exception.getMessage().startsWith("startup failed"))
                {
                   showErrorInOutput(exception.getMessage());
@@ -291,7 +285,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
    private void showErrorInOutput(String errorMessage)
    {
       errorMessage = errorMessage.replace("\n", "<br>");
-      eventBus.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
    }
 
    /**

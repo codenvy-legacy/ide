@@ -42,7 +42,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for view to work with remote repository list (view, add and delete).
@@ -105,12 +104,10 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
     */
    private Display display;
 
-   public RemotePresenter(HandlerManager eventBus)
+   public RemotePresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ShowRemotesEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowRemotesEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -253,7 +250,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
          {
             String errorMessage =
                (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteAddFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
    }
@@ -306,7 +303,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
          {
             String errorMessage =
                (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteDeleteFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
    }

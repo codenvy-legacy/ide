@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -37,6 +30,12 @@ import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeRes
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for generating new node type definition view.
@@ -85,11 +84,6 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
    private Display display;
 
    /**
-    * Handler manager.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Active file in editor.
     */
    private FileModel activeFile;
@@ -97,12 +91,11 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
    /**
     * @param eventBus handler manager
     */
-   public GenerateNodeTypePresenter(HandlerManager eventBus)
+   public GenerateNodeTypePresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(GenerateNodeTypeEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      new GeneratedNodeTypePreviewPresenter(eventBus);
+      IDE.addHandler(GenerateNodeTypeEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      new GeneratedNodeTypePreviewPresenter();
    }
 
    /**
@@ -168,7 +161,7 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
             @Override
             protected void onSuccess(GenerateNodeTypeResult result)
             {
-               eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
+               IDE.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
                closeView();
             }
 
@@ -178,7 +171,7 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
                NodeTypeGenerationResultReceivedEvent event =
                   new NodeTypeGenerationResultReceivedEvent(this.getResult());
                event.setException(exception);
-               eventBus.fireEvent(event);
+               IDE.fireEvent(event);
                closeView();
             }
          });

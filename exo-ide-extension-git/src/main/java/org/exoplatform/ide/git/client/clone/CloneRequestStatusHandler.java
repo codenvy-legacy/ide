@@ -52,7 +52,7 @@ public class CloneRequestStatusHandler extends RequestStatusHandlerBase
    {
       Job job = new Job(id, JobStatus.STARTED);
       job.setStartMessage(GitExtension.MESSAGES.cloneStarted(projectName, remoteUri));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
    /**
@@ -63,7 +63,7 @@ public class CloneRequestStatusHandler extends RequestStatusHandlerBase
    {
       Job job = new Job(id, JobStatus.FINISHED);
       job.setFinishMessage(GitExtension.MESSAGES.cloneFinished(projectName, remoteUri));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
 }

@@ -62,6 +62,7 @@ import java.util.HashMap;
  */
 public class HistoryView extends ViewImpl implements HistoryPresenter.Display
 {
+   
    public static final String ID = "ideHistoryView";
 
    private Editor editor;
@@ -242,7 +243,7 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
       params.put(EditorParameters.IS_SHOW_LINE_NUMER, false);
       params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
 
-      editor = editorProducer.createEditor(content, IDE.EVENT_BUS, params);
+      editor = editorProducer.createEditor(content, IDE.eventBus(), params);
       editorPanel.add(editor);
       return editor;
    }

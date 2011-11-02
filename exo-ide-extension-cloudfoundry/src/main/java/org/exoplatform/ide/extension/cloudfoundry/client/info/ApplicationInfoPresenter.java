@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.info;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -36,6 +30,11 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for showing application info.
@@ -78,12 +77,10 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    /**
     * @param eventBus events handler
     */
-   public ApplicationInfoPresenter(HandlerManager eventBus)
+   public ApplicationInfoPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ApplicationInfoEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationInfoEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -117,7 +114,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    private void showApplicationInfo(final String projectId)
    {
       CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, new LoggedInHandler()
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()

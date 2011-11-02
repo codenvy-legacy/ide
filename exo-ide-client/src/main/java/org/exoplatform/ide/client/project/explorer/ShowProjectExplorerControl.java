@@ -65,9 +65,9 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
       
       setEnabled(true);
       setVisible(true);

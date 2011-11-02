@@ -61,7 +61,7 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
    @Override
    public void initialize()
    {
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", Images.PHP,MimeType.APPLICATION_PHP).setGroup(2));

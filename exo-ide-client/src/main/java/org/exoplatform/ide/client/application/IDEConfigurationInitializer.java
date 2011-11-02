@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
@@ -47,8 +47,7 @@ import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -57,7 +56,6 @@ import java.util.List;
  */
 public class IDEConfigurationInitializer implements ApplicationSettingsReceivedHandler, VfsChangedHandler
 {
-   private final HandlerManager eventBus;
 
    private IDEConfiguration applicationConfiguration;
 
@@ -74,14 +72,13 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
    {
       super();
       this.controls = controls;
-      eventBus = IDE.EVENT_BUS;
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handler = eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      handler = IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    public void loadConfiguration()
    {
-      new IDEConfigurationLoader(eventBus, IDELoader.getInstance())
+      new IDEConfigurationLoader(IDE.eventBus(), IDELoader.getInstance())
          .loadConfiguration(new AsyncRequestCallback<IDEInitializationConfiguration>()
          {
 
@@ -93,9 +90,9 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                   applicationConfiguration = result.getIdeConfiguration();
                   applicationSettings = result.getSettings();
 
-                  eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
+                  IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
 
-                  new SettingsServiceImpl(eventBus, applicationConfiguration.getRegistryURL(), result.getUserInfo()
+                  new SettingsServiceImpl(IDE.eventBus(), applicationConfiguration.getRegistryURL(), result.getUserInfo()
                      .getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
 
                   SettingsService.getInstance().restoreFromCookies(applicationSettings);
@@ -103,9 +100,9 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                   if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0)
                   {
                      controls.initControls(result.getUserInfo().getRoles());
-                     eventBus.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
-                     eventBus.fireEvent(new IsDiscoverableResultReceivedEvent(result.isDiscoverable()));
-                     eventBus.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
+                     IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
+                     IDE.fireEvent(new IsDiscoverableResultReceivedEvent(result.isDiscoverable()));
+                     IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
                      checkEntryPoint();
                   }
                   else
@@ -137,7 +134,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       if (applicationSettings.getValueAsString("entry-point") != null)
       {
          String entryPoint = applicationSettings.getValueAsString("entry-point");
-         eventBus.fireEvent(new SwitchVFSEvent(entryPoint));
+         IDE.fireEvent(new SwitchVFSEvent(entryPoint));
       }
       else
       {
@@ -157,7 +154,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       }
       else
       {
-         new RestoreOpenedFilesPhase(eventBus, applicationSettings);
+         new RestoreOpenedFilesPhase(IDE.eventBus(), applicationSettings);
       }
    }
 
@@ -172,7 +169,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             {
                if (value)
                {
-                  eventBus.fireEvent(new SelectWorkspaceEvent());
+                  IDE.fireEvent(new SelectWorkspaceEvent());
                }
             }
          });
@@ -198,12 +195,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
    private void initServices()
    {
-      eventBus.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
+      IDE.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
 
       /*
        * Updating top menu
        */
-      eventBus.fireEvent(new RefreshMenuEvent());
+      IDE.fireEvent(new RefreshMenuEvent());
 
       List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
       if (toolbarItems == null)
@@ -212,10 +209,9 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
          toolbarItems.addAll(controls.getToolbarDefaultControls());
       }
 
-      eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
-      eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
+      IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
+      IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
          .getRegisteredControls()));
    }
-
 
 }

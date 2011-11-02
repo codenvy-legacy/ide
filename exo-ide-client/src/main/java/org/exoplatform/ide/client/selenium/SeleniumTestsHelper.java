@@ -18,24 +18,24 @@
  */
 package org.exoplatform.ide.client.selenium;
 
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.List;
 
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.List;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This class sets hidden values to DOM which allows to do faster time passing the test.
@@ -70,11 +70,11 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
     */
    private Widget selectedFile;
 
-   public SeleniumTestsHelper(HandlerManager eventBus)
+   public SeleniumTestsHelper()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorOpenFileEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorOpenFileEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 
       debugPanel = new AbsolutePanel();
       debugPanel.getElement().setId("debug-panel");

@@ -39,8 +39,6 @@ import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettin
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -48,15 +46,11 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettingsReceivedHandler
 {
-   private HandlerManager eventBus;
 
    private ApplicationSettings applicationSettings;
 
-   public TextEditModule(HandlerManager eventBus)
+   public TextEditModule()
    {
-      this.eventBus = eventBus;
-
-      
       IDE.getInstance().addControl(new UndoTypingControl(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR, false);
@@ -69,13 +63,13 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       IDE.getInstance().addControl(new EditorCursorPositionControl(), Docking.STATUSBAR, true);
       IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR, false);
 
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
-      eventBus.addHandler(ShowLineNumbersEvent.TYPE, this);
+      IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
       
-      new LockUnlockFileHandler(eventBus);
-      new FindTextPresenter(eventBus);
-      new GoToLinePresenter(eventBus);
+      new LockUnlockFileHandler();
+      new FindTextPresenter();
+      new GoToLinePresenter();
    }
 
    /**
@@ -88,7 +82,7 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       /*
        * fire event for show-hide line numbers command be able to update state.
        */
-      eventBus.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
+      IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

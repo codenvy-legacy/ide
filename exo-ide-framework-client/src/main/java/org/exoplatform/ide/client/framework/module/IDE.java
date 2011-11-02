@@ -28,7 +28,10 @@ import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -38,12 +41,32 @@ import com.google.gwt.event.shared.HandlerManager;
 public abstract class IDE
 {
    //public static final HandlerManager EVENT_BUS = new HandlerManager(null);
-   public static final HandlerManager EVENT_BUS = new SafeHandlerManager();
+   private static HandlerManager eventBus = new SafeHandlerManager();
 
-   protected static List<Extension> extensions = new ArrayList<Extension>();
+   private static List<Extension> extensions = new ArrayList<Extension>();
 
    private static IDE instance;
-   
+
+   public static <H extends EventHandler> HandlerRegistration addHandler(GwtEvent.Type<H> type, final H handler)
+   {
+      return eventBus.addHandler(type, handler);
+   }
+
+   public static <H extends EventHandler> void removeHandler(GwtEvent.Type<H> type, final H handler)
+   {
+      eventBus.removeHandler(type, handler);
+   }
+
+   public static void fireEvent(GwtEvent<?> event)
+   {
+      eventBus.fireEvent(event);
+   }
+
+   public static HandlerManager eventBus()
+   {
+      return eventBus;
+   }
+
    protected IDE()
    {
       instance = this;
@@ -62,6 +85,11 @@ public abstract class IDE
       extensions.add(extension);
    }
 
+   public static List<Extension> extensions()
+   {
+      return extensions;
+   }
+
    /**
     * Add control to main menu/tool bar or status bar
     * @param control
@@ -76,20 +104,20 @@ public abstract class IDE
     * @param control control to be added
     */
    public abstract void addControl(Control<?> control);
-   
+
    /**
     * Get list of controls.
     * 
     * @return
     */
    public abstract List<Control> getControls();
-   
+
    /**
     * Open {@link View}
     * @param view to open
-    */   
+    */
    public abstract void openView(View view);
-   
+
    /**
     * Close view
     * @param viewId ID of view
@@ -101,7 +129,7 @@ public abstract class IDE
     * @param editorProducer
     */
    public abstract void addEditor(EditorProducer editorProducer);
-   
+
    /**
     * Get EditorProducer for mimeType
     * @param mimeType of file
@@ -115,12 +143,12 @@ public abstract class IDE
     * @param outlineItemCreator
     */
    public abstract void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator);
-   
+
    /**
     * Get OutlineItemCreator for mimeType
     * @param mimeType of file
     * @return {@link OutlineItemCreator} for mimeType
     */
    public abstract OutlineItemCreator getOutlineItemCreator(String mimeType);
-   
+
 }

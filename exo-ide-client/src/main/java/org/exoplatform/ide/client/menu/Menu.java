@@ -22,8 +22,6 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -34,6 +32,6 @@ import com.google.gwt.event.shared.HandlerManager;
 public interface Menu
 {
    
-   void refresh(List<Control> commands, HandlerManager eventBus);
+   void refresh(List<Control> commands);
 
 }

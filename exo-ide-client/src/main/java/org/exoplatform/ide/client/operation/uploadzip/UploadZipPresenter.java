@@ -92,10 +92,10 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
    {
       IDE.getInstance().addControl(new UploadZipControl());
 
-      IDE.EVENT_BUS.addHandler(UploadZipEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(UploadZipEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    @Override
@@ -247,7 +247,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       {
          folder = (Folder)item;
       }
-      IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(folder));
+      IDE.fireEvent(new RefreshBrowserEvent(folder));
    }
 
    @Override

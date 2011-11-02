@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -39,8 +40,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Presenter for update application operation.
@@ -56,11 +56,9 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
     */
    private String warUrl;
 
-   public UpdateApplicationPresenter(HandlerManager eventbus)
+   public UpdateApplicationPresenter()
    {
-      super(eventbus);
-
-      eventBus.addHandler(UpdateApplicationEvent.TYPE, this);
+      IDE.addHandler(UpdateApplicationEvent.TYPE, this);
    }
 
    LoggedInHandler loggedInHandler = new LoggedInHandler()
@@ -89,19 +87,19 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       CloudFoundryClientService.getInstance().updateApplication(vfs.getId(), projectId, null, null, warUrl,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, loggedInHandler, null)
+         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), loggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
                CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, null, null)
+                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), null, null)
                   {
 
                      @Override
                      protected void onSuccess(CloudfoundryApplication result)
                      {
-                        eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
+                        IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
                            .updateApplicationSuccess(result.getName()), Type.INFO));
                      }
                   });
@@ -115,7 +113,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    @Override
    public void onApplicationBuilt(ApplicationBuiltEvent event)
    {
-      eventBus.removeHandler(event.getAssociatedType(), this);
+      IDE.removeHandler(event.getAssociatedType(), this);
       if (event.getJobStatus().getArtifactUrl() != null)
       {
          warUrl = event.getJobStatus().getArtifactUrl();
@@ -137,7 +135,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
       CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null, vfs.getId(), projectId,
-         0, 0, false, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
+         0, 0, false, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validateHandler, null)
          {
             @Override
             protected void onSuccess(String result)
@@ -177,8 +175,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
                   }
                   String msg =
                      CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationForbidden(project.getName());
-                  eventBus.fireEvent(new ExceptionThrownEvent(msg));
-
+                  IDE.fireEvent(new ExceptionThrownEvent(msg));
                }
 
                @Override
@@ -186,7 +183,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
                {
                   String msg =
                      CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationForbidden(project.getName());
-                  eventBus.fireEvent(new ExceptionThrownEvent(msg));
+                  IDE.fireEvent(new ExceptionThrownEvent(msg));
                }
             });
       }
@@ -198,7 +195,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
    private void buildApplication()
    {
-      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
-      eventBus.fireEvent(new BuildApplicationEvent());
+      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildApplicationEvent());
    }
 }

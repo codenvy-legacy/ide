@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.application;
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.ide.client.editor.EditorController;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
@@ -35,7 +36,6 @@ import org.exoplatform.ide.client.menu.Menu;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -62,19 +62,16 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
 
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private ControlsRegistration controlsRegistration;
 
-   public IDEPresenter(final HandlerManager eventBus, Display display, final ControlsRegistration controlsRegistration)
+   public IDEPresenter(Display display, final ControlsRegistration controlsRegistration)
    {
-      this.eventBus = eventBus;
       this.display = display;
       this.controlsRegistration = controlsRegistration;
 
-      eventBus.addHandler(RefreshMenuEvent.TYPE, this);
+      IDE.addHandler(RefreshMenuEvent.TYPE, this);
 
       display.getPerspective().addViewOpenedHandler(this);
       display.getPerspective().addClosingViewHandler(this);
@@ -84,7 +81,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
       EditorController editorController = new EditorController();
       //      display.getPerspective().addViewVisibilityChangedHandler(editorController);
 
-      new ToolbarBuilder(eventBus, display.getToolbar(), display.getStatusbar());
+      new ToolbarBuilder(IDE.eventBus(), display.getToolbar(), display.getStatusbar());
 
       new Timer()
       {
@@ -111,31 +108,31 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
    @Override
    public void onRefreshMenu(RefreshMenuEvent event)
    {
-      display.getMenu().refresh(controlsRegistration.getRegisteredControls(), eventBus);
+      display.getMenu().refresh(controlsRegistration.getRegisteredControls());
    }
 
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      eventBus.fireEvent(event);
+      IDE.fireEvent(event);
    }
 
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      eventBus.fireEvent(event);
+      IDE.fireEvent(event);
    }
 
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      eventBus.fireEvent(event);
+      IDE.fireEvent(event);
    }
 
    @Override
    public void onClosingView(ClosingViewEvent event)
    {
-      eventBus.fireEvent(event);
+      IDE.fireEvent(event);
    }
 
 }

@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -42,18 +41,11 @@ public class CompileGroovyCommandHandler implements CompileGroovyHandler
 {
 
    /**
-    * Event Bus.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * @param eventBus Event Bus
     */
-   public CompileGroovyCommandHandler(HandlerManager eventBus)
+   public CompileGroovyCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(CompileGroovyEvent.TYPE, this);
+      IDE.addHandler(CompileGroovyEvent.TYPE, this);
    }
 
    /**
@@ -68,13 +60,13 @@ public class CompileGroovyCommandHandler implements CompileGroovyHandler
          protected void onSuccess(String result)
          {
             String outputContent = "<b>" + result + "</b> compiled successfully.";
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
          }
 
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
 
             ServerException serverException = (ServerException)exception;
 
@@ -86,7 +78,7 @@ public class CompileGroovyCommandHandler implements CompileGroovyHandler
                outputContent += "<br />" + serverException.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
             }
 
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
          }
       });
    }

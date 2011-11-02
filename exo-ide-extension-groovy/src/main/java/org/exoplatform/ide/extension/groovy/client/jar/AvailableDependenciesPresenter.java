@@ -102,8 +102,8 @@ public class AvailableDependenciesPresenter implements ShowAvailableDependencies
    public AvailableDependenciesPresenter()
    {
       IDE.getInstance().addControl(new ShowAvailableDependenciesControl());
-      IDE.EVENT_BUS.addHandler(ShowAvailableDependenciesEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowAvailableDependenciesEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**

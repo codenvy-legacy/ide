@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.info;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -36,11 +36,10 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for showing application info.
@@ -63,12 +62,10 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    /**
     * @param eventBus events handler
     */
-   public ApplicationInfoPresenter(HandlerManager eventBus)
+   public ApplicationInfoPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ApplicationInfoEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationInfoEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -107,7 +104,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    private void showApplicationInfo(final String projectId)
    {
       CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, new LoggedInHandler()
+         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()

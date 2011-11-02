@@ -26,8 +26,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.gadget.client.controls.ShowGadgetPreviewControl;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetServiceImpl;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -36,23 +34,20 @@ import com.google.gwt.event.shared.HandlerManager;
 public class GadgetExtension extends Extension implements InitializeServicesHandler
 {
 
-   private HandlerManager eventBus;
-
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */
    @Override
    public void initialize()
    {
-      this.eventBus = IDE.EVENT_BUS;
       IDE.getInstance().addControl(new ShowGadgetPreviewControl(),  Docking.TOOLBAR, true);
-      new GadgetPluginEventHandler(eventBus);
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      new GadgetPluginEventHandler();
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new GadgetServiceImpl(eventBus, event.getLoader(), event.getApplicationConfiguration().getContext(), event
+      new GadgetServiceImpl(IDE.eventBus(), event.getLoader(), event.getApplicationConfiguration().getContext(), event
          .getApplicationConfiguration().getGadgetServer(), event.getApplicationConfiguration().getPublicContext());
    }
 

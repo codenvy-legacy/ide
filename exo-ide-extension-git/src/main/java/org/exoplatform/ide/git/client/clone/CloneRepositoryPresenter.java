@@ -18,16 +18,6 @@
  */
 package org.exoplatform.ide.git.client.clone;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -38,6 +28,15 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for Clone Repository View.
@@ -105,11 +104,9 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    /**
     * @param eventBus
     */
-   public CloneRepositoryPresenter(HandlerManager eventBus)
+   public CloneRepositoryPresenter()
    {
-      super(eventBus);
-      
-      eventBus.addHandler(CloneRepositoryEvent.TYPE, this);
+      IDE.addHandler(CloneRepositoryEvent.TYPE, this);
    }
 
    /**
@@ -184,8 +181,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-               eventBus.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
                
             }
             
@@ -195,7 +192,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                String errorMessage =
                         (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                            : GitExtension.MESSAGES.cloneFailed();
-                        eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));               
+                        IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));               
             }
          });
       }
@@ -205,7 +202,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          String errorMessage =
                   (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
                      : GitExtension.MESSAGES.cloneFailed();
-                  eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
       IDE.getInstance().closeView(display.asView().getId());
    }

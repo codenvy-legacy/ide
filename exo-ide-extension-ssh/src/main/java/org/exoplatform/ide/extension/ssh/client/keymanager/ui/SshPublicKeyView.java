@@ -44,6 +44,8 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter
 public class SshPublicKeyView extends ViewImpl implements Display
 {
 
+   private static final String ID = "ideSshPublicKeyView";
+
    private static final String TITLE = "Public Ssh Key: ";
 
    private static SshPublicKeyViewUiBinder uiBinder = GWT.create(SshPublicKeyViewUiBinder.class);

@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
@@ -44,8 +45,7 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyVa
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.user.client.Timer;
 
 /**
  * 
@@ -58,8 +58,6 @@ import java.util.Map;
 public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler, EditorActiveFileChangedHandler,
    EditorFileOpenedHandler, EditorFileClosedHandler, ExceptionThrownHandler, EditorInitializedHandler
 {
-
-   private HandlerManager eventBus;
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
@@ -101,16 +99,14 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
     */
    private int errColumnNumber;
 
-   public ValidateGroovyCommandHandler(HandlerManager eventBus)
+   public ValidateGroovyCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ValidateGroovyScriptEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
-      eventBus.addHandler(EditorInitializedEvent.TYPE, this);
+      IDE.addHandler(ValidateGroovyScriptEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ExceptionThrownEvent.TYPE, this);
+      IDE.addHandler(EditorInitializedEvent.TYPE, this);
 
       initGoToErrorFunction();
    }
@@ -127,7 +123,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
             @Override
             public void run()
             {
-               eventBus.fireEvent(new EditorGoToLineEvent(lineNumberToGo, columnNumberToGo));
+               IDE.fireEvent(new EditorGoToLineEvent(lineNumberToGo, columnNumberToGo));
             }
 
          }.schedule(200);
@@ -159,8 +155,8 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
          protected void onSuccess(FileModel result)
          {
             String outputContent = "<b>" + result.getName() + "</b> validated successfully.";
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-            eventBus.fireEvent(new GroovyValidateResultReceivedEvent(result.getName(), result.getId()));
+            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+            IDE.fireEvent(new GroovyValidateResultReceivedEvent(result.getName(), result.getId()));
          }
          
          @Override
@@ -187,16 +183,16 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
                      + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
                      + this.getResult().getPath() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
 
-               eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+               IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
             }
             else
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
             GroovyValidateResultReceivedEvent event =
                new GroovyValidateResultReceivedEvent(this.getResult().getName(), this.getResult().getId());
             event.setException(exception);
-            eventBus.fireEvent(event);
+            IDE.fireEvent(event);
          }
       });
    }
@@ -215,7 +211,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
    {
       if (activeFile != null && fileHref.equals(activeFile.getId()))
       {
-         eventBus.fireEvent(new EditorGoToLineEvent(lineNumber, columnNumber));
+         IDE.fireEvent(new EditorGoToLineEvent(lineNumber, columnNumber));
          return;
       }
 
@@ -229,13 +225,13 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       if (openedFiles != null && openedFiles.containsKey(fileHref))
       {
          isGoToPosition = true;
-         eventBus.fireEvent(new OpenFileEvent(openedFiles.get(fileHref)));
+         IDE.fireEvent(new OpenFileEvent(openedFiles.get(fileHref)));
       }
       else
       {
          errFileHref = fileHref;
          goToPositionAfterOpen = true;
-         eventBus.fireEvent(new OpenFileEvent(fileHref));
+         IDE.fireEvent(new OpenFileEvent(fileHref));
       }
    }
 
@@ -283,7 +279,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       if (goToPositionAfterOpen)
       {
          goToPositionAfterOpen = false;
-         eventBus.fireEvent(new EditorGoToLineEvent(lineNumberToGo, columnNumberToGo));
+         IDE.fireEvent(new EditorGoToLineEvent(lineNumberToGo, columnNumberToGo));
       }
    }
 

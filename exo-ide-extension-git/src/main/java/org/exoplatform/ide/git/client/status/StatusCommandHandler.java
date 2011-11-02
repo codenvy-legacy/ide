@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide.git.client.status;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.resources.client.ImageResource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
@@ -42,12 +44,9 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Handler to process actions with displaying the status of the Git work tree.
@@ -61,11 +60,10 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    /**
     * @param eventBus event handler
     */
-   public StatusCommandHandler(HandlerManager eventBus)
+   public StatusCommandHandler()
    {
-      super(eventBus);
-      eventBus.addHandler(ShowWorkTreeStatusEvent.TYPE, this);
-      eventBus.addHandler(FolderRefreshedEvent.TYPE, this);
+      IDE.addHandler(ShowWorkTreeStatusEvent.TYPE, this);
+      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
    }
 
    /**
@@ -116,7 +114,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                   return;
                String status = result.getWorkTreeStatus();
                status = status.replace("\n", "<br>");
-               eventBus.fireEvent(new OutputEvent(status, OutputMessage.Type.INFO));
+               IDE.fireEvent(new OutputEvent(status, OutputMessage.Type.INFO));
             }
 
             @Override
@@ -124,7 +122,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
             {
                String errorMessage =
                   (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
-               eventBus.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
             }
          });
    }
@@ -211,7 +209,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                }
                treeNodesToUpdate.put(item, map);
             }
-            eventBus.fireEvent(new AddItemTreeIconEvent(treeNodesToUpdate));
+            IDE.fireEvent(new AddItemTreeIconEvent(treeNodesToUpdate));
          }
 
          @Override

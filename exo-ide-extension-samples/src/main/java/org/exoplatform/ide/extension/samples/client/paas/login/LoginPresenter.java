@@ -18,15 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.login;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -37,6 +28,14 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for login view.
@@ -107,8 +106,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
 
    private Display display;
 
-   private HandlerManager eventBus;
-   
    private LoggedInHandler loggedIn;
    
    /**
@@ -116,11 +113,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
     */
    private SamplesClientService.Paas paas;
    
-   public LoginPresenter(HandlerManager eventBus)
+   public LoginPresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(LoginEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(LoginEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -222,11 +218,11 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          {
             if (paas == SamplesClientService.Paas.CLOUDBEES)
             {
-               eventBus.fireEvent(new OutputEvent(lb.loginSuccess("CloudBees"), Type.INFO));
+               IDE.fireEvent(new OutputEvent(lb.loginSuccess("CloudBees"), Type.INFO));
             }
             else
             {
-               eventBus.fireEvent(new OutputEvent(lb.loginSuccess("CloudFoundry"), Type.INFO));
+               IDE.fireEvent(new OutputEvent(lb.loginSuccess("CloudFoundry"), Type.INFO));
             }
             if (loggedIn != null)
             {
@@ -240,11 +236,11 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          {
             if (paas == SamplesClientService.Paas.CLOUDBEES)
             {
-               eventBus.fireEvent(new OutputEvent(lb.loginFail("CloudBees"), Type.INFO));
+               IDE.fireEvent(new OutputEvent(lb.loginFail("CloudBees"), Type.INFO));
             }
             else
             {
-               eventBus.fireEvent(new OutputEvent(lb.loginFail("CloudFoundry"), Type.INFO));
+               IDE.fireEvent(new OutputEvent(lb.loginFail("CloudFoundry"), Type.INFO));
             }
             super.onFailure(exception);
          }

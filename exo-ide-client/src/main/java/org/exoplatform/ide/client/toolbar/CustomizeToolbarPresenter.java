@@ -51,7 +51,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -110,11 +109,6 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
    private static final String SAVE_SETTINGS_FAILURE = IDE.ERRORS_CONSTANT.customizeToolbarSaveFailure();
 
    /**
-    * Instance of Event Bus.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Instance of binded display.
     */
    private Display display;
@@ -149,14 +143,12 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
     * 
     * @param eventBus Event Bus
     */
-   public CustomizeToolbarPresenter(HandlerManager eventBus)
+   public CustomizeToolbarPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(CustomizeToolbarEvent.TYPE, this);
+      IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(CustomizeToolbarEvent.TYPE, this);
 
       IDE.getInstance().addControl(new CustomizeToolbarCommand());
    }
@@ -586,14 +578,14 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
             @Override
             protected void onSuccess(ApplicationSettings result)
             {
-               eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
+               IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
                IDE.getInstance().closeView(display.asView().getId());
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
+               IDE.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
             }
          });
    }

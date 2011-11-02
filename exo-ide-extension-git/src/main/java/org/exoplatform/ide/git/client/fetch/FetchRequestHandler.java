@@ -58,7 +58,7 @@ public class FetchRequestHandler extends RequestStatusHandlerBase
    {
       Job job = new Job(id, JobStatus.STARTED);
       job.setStartMessage(GitExtension.MESSAGES.fetchStarted(projectName, localBranch, remoteBranch));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
    /**
@@ -69,7 +69,7 @@ public class FetchRequestHandler extends RequestStatusHandlerBase
    {
       Job job = new Job(id, JobStatus.FINISHED);
       job.setFinishMessage(GitExtension.MESSAGES.fetchFinished(projectName, localBranch, remoteBranch));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
 }

@@ -18,14 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptEvent;
@@ -37,6 +35,8 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUn
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import com.google.gwt.http.client.URL;
 
 /**
  * 
@@ -50,18 +50,14 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
    UndeployGroovyScriptSandboxHandler, GroovyUndeployResultReceivedHandler
 {
 
-   private HandlerManager eventBus;
-
    private FileModel activeFile;
 
-   public UndeployGroovyCommandHandler(HandlerManager eventBus)
+   public UndeployGroovyCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(UndeployGroovyScriptEvent.TYPE, this);
-      eventBus.addHandler(UndeployGroovyScriptSandboxEvent.TYPE, this);
-      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(UndeployGroovyScriptEvent.TYPE, this);
+      IDE.addHandler(UndeployGroovyScriptSandboxEvent.TYPE, this);
+      IDE.addHandler(GroovyUndeployResultReceivedEvent.TYPE, this);
    }
 
    /**
@@ -91,7 +87,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
    {
 
       String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> undeployed successfully.";
-      eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+      IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
       //      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
    }
 
@@ -110,11 +106,12 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(exc));
+         IDE.fireEvent(new ExceptionThrownEvent(exc));
       }
+      
       GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(href);
       event.setException(exc);
-      eventBus.fireEvent(event);
+      IDE.fireEvent(event);
    }
 
    /**
@@ -152,7 +149,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
           * Undeploy successfully
           */
          String outputContent = "<b>" + URL.decodePathSegment(event.getPath()) + "</b> undeployed successfully.";
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
       }
       else
       {
@@ -167,7 +164,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
          {
             outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
          }
-         eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
    }
 

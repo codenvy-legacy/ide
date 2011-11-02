@@ -31,7 +31,6 @@ import org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresente
 import org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,11 +42,6 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ChromatticExtension extends Extension implements InitializeServicesHandler
 {
 
-   /**
-    * Event Bus
-    */
-   private HandlerManager eventBus;
-
    public static final ChromatticLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(ChromatticLocalizationConstant.class);
    
    /**
@@ -56,18 +50,16 @@ public class ChromatticExtension extends Extension implements InitializeServices
    @Override
    public void initialize()
    {
-      this.eventBus = IDE.EVENT_BUS;
-
       IDE.getInstance().addControl(new GenerateNodeTypeControl(), Docking.TOOLBAR, true);
       IDE.getInstance().addControl(new DeployNodeTypeControl(), Docking.TOOLBAR, true);
 
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
       
-      new GenerateNodeTypePresenter(eventBus);
+      new GenerateNodeTypePresenter();
       
-      new DeployNodeTypePresenter(eventBus);
+      new DeployNodeTypePresenter();
       
-      new CompileGroovyCommandHandler(eventBus);
+      new CompileGroovyCommandHandler();
 
    }
 
@@ -78,7 +70,7 @@ public class ChromatticExtension extends Extension implements InitializeServices
     */
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new ChrommaticServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new ChrommaticServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
 }

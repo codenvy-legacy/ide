@@ -107,12 +107,12 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
    {
       IDE.getInstance().addControl(new DeleteItemCommand(), Docking.TOOLBAR, false);
       
-      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(DeleteItemEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(DeleteItemEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -250,21 +250,21 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                   @Override
                   protected void onSuccess(Object result)
                   {
-                     IDE.EVENT_BUS.fireEvent(new ItemUnlockedEvent(item));
+                     IDE.fireEvent(new ItemUnlockedEvent(item));
                      deleteItem(item);
                   }
 
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
+                     IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
                   }
                });
          }
          catch (RequestException e)
          {
             e.printStackTrace();
-            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
+            IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
          }
       }
       else
@@ -289,13 +289,13 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             protected void onSuccess(String result)
             {
                selectedItems.remove(0);
-               IDE.EVENT_BUS.fireEvent(new ItemDeletedEvent(item));
+               IDE.fireEvent(new ItemDeletedEvent(item));
 
                if (item instanceof FileModel)
                {
                   if (openedFiles.get(item.getId()) != null)
                   {
-                     IDE.EVENT_BUS.fireEvent(new EditorCloseFileEvent((FileModel)item, true));
+                     IDE.fireEvent(new EditorCloseFileEvent((FileModel)item, true));
                   }
                }
                else
@@ -315,7 +315,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                      if (file.getPath().startsWith(path) && file.isPersisted())
                      {
                         lockTokens.remove(file.getId());
-                        IDE.EVENT_BUS.fireEvent(new EditorCloseFileEvent(file, true));
+                        IDE.fireEvent(new EditorCloseFileEvent(file, true));
                      }
                   }
                }
@@ -326,7 +326,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             @Override
             protected void onFailure(Throwable exception)
             {
-               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, DELETE_FILE_FAILURE_MESSAGE));
+               IDE.fireEvent(new ExceptionThrownEvent(exception, DELETE_FILE_FAILURE_MESSAGE));
                IDE.getInstance().closeView(display.asView().getId());
             }
          });
@@ -334,7 +334,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e, DELETE_FILE_FAILURE_MESSAGE));
+         IDE.fireEvent(new ExceptionThrownEvent(e, DELETE_FILE_FAILURE_MESSAGE));
       }
    }
 
@@ -372,8 +372,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          folder = ((ItemContext)lastDeletedItem).getParent();
       }
-      IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(folder));
-      IDE.EVENT_BUS.fireEvent(new SelectItemEvent(folder.getId()));
+      IDE.fireEvent(new RefreshBrowserEvent(folder));
+      IDE.fireEvent(new SelectItemEvent(folder.getId()));
    }
 
    @Override

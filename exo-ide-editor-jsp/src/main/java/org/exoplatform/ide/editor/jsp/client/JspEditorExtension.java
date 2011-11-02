@@ -59,8 +59,8 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
    @Override
    public void initialize()
    {
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New JSP File", "JSP", "Create JSP", Images.JSP, MimeType.APPLICATION_JSP).setGroup(2));
@@ -75,7 +75,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
       CodeAssistantService service;
       if (JavaCodeAssistantService.get() == null)
          service =
-            new JavaCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
+            new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(),
                event.getLoader());
       else
          service = JavaCodeAssistantService.get();
@@ -125,11 +125,11 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
             outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
          }
 
-         IDE.EVENT_BUS.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
+         IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
       }
    }
 

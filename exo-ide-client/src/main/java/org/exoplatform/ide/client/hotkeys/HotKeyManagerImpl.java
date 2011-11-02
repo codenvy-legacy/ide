@@ -18,19 +18,18 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.edit.control.FindTextControl;
 import org.exoplatform.ide.client.edit.control.GoToLineControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
@@ -40,11 +39,12 @@ import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTempl
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -71,16 +71,12 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private HotKeyPressedListener hotKeyPressedListener;
 
-   private HandlerManager eventBus;
-
    private Map<String, String> hotKeys;
 
    private List<Control> registeredControls = new ArrayList<Control>();
 
-   public HotKeyManagerImpl(HandlerManager eventBus, List<Control> registeredControls,
-      ApplicationSettings applicationSettings)
+   public HotKeyManagerImpl(List<Control> registeredControls, ApplicationSettings applicationSettings)
    {
-      this.eventBus = eventBus;
       this.registeredControls = registeredControls;
 
       hotKeys = applicationSettings.getValueAsMap("hotkeys");
@@ -96,8 +92,8 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       Window.addWindowClosingHandler(closeListener);
       closeListener.init();
 
-      eventBus.addHandler(EditorHotKeyCalledEvent.TYPE, this);
-      eventBus.addHandler(RefreshHotKeysEvent.TYPE, this);
+      IDE.addHandler(EditorHotKeyCalledEvent.TYPE, this);
+      IDE.addHandler(RefreshHotKeysEvent.TYPE, this);
 
       refreshHotKeys();
    }
@@ -109,7 +105,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
          @Override
          public void run()
          {
-            eventBus.fireEvent(new RefreshHotKeysEvent(hotKeys));
+            IDE.fireEvent(new RefreshHotKeysEvent(hotKeys));
          }
       }.schedule(1000);
    }
@@ -205,7 +201,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
             && command.getId().equals(hotKeys.get(hotKey))
             && (command.isEnabled() || ((SimpleControl)command).isIgnoreDisable()))
          {
-            eventBus.fireEvent(((SimpleControl)command).getEvent());
+            IDE.fireEvent(((SimpleControl)command).getEvent());
             return;
          }
       }

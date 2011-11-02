@@ -64,8 +64,8 @@ public class ShowNavigatorControl extends SimpleControl implements IDEControl, V
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
       
       setEnabled(true);
       setVisible(true);

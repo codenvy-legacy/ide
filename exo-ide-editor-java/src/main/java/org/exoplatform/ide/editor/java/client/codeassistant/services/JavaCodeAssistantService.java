@@ -21,16 +21,15 @@ package org.exoplatform.ide.editor.java.client.codeassistant.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
 
-import org.exoplatform.ide.editor.api.codeassitant.Token;
+import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * Implementation of {@link CodeAssistantService}
@@ -48,9 +47,9 @@ public class JavaCodeAssistantService extends CodeAssistantService
    
 	private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-by-project/";
    
-   public JavaCodeAssistantService(HandlerManager eventBus, String restServiceContext, Loader loader)
+   public JavaCodeAssistantService(String restServiceContext, Loader loader)
    {
-      super(eventBus, restServiceContext, loader, "/ide/code-assistant/java/find?class=", // FIND_URL
+      super(restServiceContext, loader, "/ide/code-assistant/java/find?class=", // FIND_URL
          "/ide/code-assistant/java/class-description?fqn=", //GET_CLASS_URL
          "/ide/code-assistant/java/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
          "/ide/code-assistant/java/find-by-type/"
@@ -80,7 +79,7 @@ public class JavaCodeAssistantService extends CodeAssistantService
    
          FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
    
-         callback.setEventBus(eventBus);
+         callback.setEventBus(IDE.eventBus());
          callback.setPayload(unmarshaller);
             AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileRelPath).send(callback);
       }

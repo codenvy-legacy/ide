@@ -56,8 +56,8 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
       setText("&nbsp;");
       setTextAlignment(TextAlignment.CENTER);
       setEvent(new GoToLineEvent());
-      IDE.EVENT_BUS.addHandler(EditorCursorActivityEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**

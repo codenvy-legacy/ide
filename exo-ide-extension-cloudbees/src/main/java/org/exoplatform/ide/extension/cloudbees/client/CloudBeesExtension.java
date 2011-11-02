@@ -36,7 +36,6 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationPresenter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * CloudBees extention for IDE.
@@ -47,10 +46,6 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class CloudBeesExtension extends Extension implements InitializeServicesHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
    
    public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(CloudBeesLocalizationConstant.class);
 
@@ -60,7 +55,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new CloudBeesClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new CloudBeesClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
@@ -69,8 +64,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    @Override
    public void initialize()
    {
-      eventBus = IDE.EVENT_BUS;
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
       
       IDE.getInstance().addControl(new CloudBeesControl());
       IDE.getInstance().addControl(new InitializeApplicationControl());
@@ -79,12 +73,12 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(new DeleteApplicationControl());
       IDE.getInstance().addControl(new ApplicationListControl());
       
-      new InitializeApplicationPresenter(eventBus);
-      new LoginPresenter(eventBus);
-      new ApplicationInfoPresenter(eventBus);
-      new DeleteApplicationPresenter(eventBus);
-      new ApplicationListPresenter(eventBus);
-      new UpdateApplicationPresenter(eventBus);
+      new InitializeApplicationPresenter();
+      new LoginPresenter();
+      new ApplicationInfoPresenter();
+      new DeleteApplicationPresenter();
+      new ApplicationListPresenter();
+      new UpdateApplicationPresenter();
    }
 
 }

@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client.startpage;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.event.ConvertToProjectEvent;
@@ -33,6 +27,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for welcome view.
@@ -52,26 +51,21 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
       HasClickHandlers getConvertLink();
    }
    
-   private HandlerManager eventBus;
-   
    private Display display;
    
-   public StartPagePresenter(HandlerManager eventBus)
+   public StartPagePresenter()
    {
-      this.eventBus = eventBus;
-      
-      eventBus.addHandler(OpenStartPageEvent.TYPE, this);
+      IDE.addHandler(OpenStartPageEvent.TYPE, this);
    }
    
    private void bindDisplay()
    {
       display.getSamplesLink().addClickHandler(new ClickHandler()
       {
-         
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowSamplesEvent());
+            IDE.fireEvent(new ShowSamplesEvent());
          }
       });
       
@@ -80,7 +74,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowWizardEvent());
+            IDE.fireEvent(new ShowWizardEvent());
          }
       });
       
@@ -90,7 +84,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ConvertToProjectEvent());
+            IDE.fireEvent(new ConvertToProjectEvent());
          }
       });
    }
@@ -111,7 +105,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Start Page View must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Start Page View must be null"));
       }
    }
 

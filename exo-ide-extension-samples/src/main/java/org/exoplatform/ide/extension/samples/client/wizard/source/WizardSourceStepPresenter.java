@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.source;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -36,6 +29,12 @@ import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasValue;
+
 /**
  * Presenter for Step1 (Source) of Wizard for creation Java Project.
  * 
@@ -44,6 +43,7 @@ import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
  */
 public class WizardSourceStepPresenter implements ShowWizardHandler, ViewClosedHandler, WizardReturnable
 {
+   
    public interface Display extends IsView
    {
       HasClickHandlers getNextButton();
@@ -59,18 +59,14 @@ public class WizardSourceStepPresenter implements ShowWizardHandler, ViewClosedH
    
    private static final String SOURCE_IMPORT = "Import from GitHub";
    
-   private HandlerManager eventBus;
-   
    private Display display;
    
    private WizardContinuable wizard;
    
-   public WizardSourceStepPresenter(HandlerManager eventBus)
+   public WizardSourceStepPresenter()
    {
-      this.eventBus = eventBus;
-      
-      eventBus.addHandler(ShowWizardEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowWizardEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
    
    /**
@@ -103,7 +99,7 @@ public class WizardSourceStepPresenter implements ShowWizardHandler, ViewClosedH
             }
             else if (SOURCE_IMPORT.equals(display.getSelectSourceField().getValue()))
             {
-               eventBus.fireEvent(new ShowSamplesEvent());
+               IDE.fireEvent(new ShowSamplesEvent());
             }
             closeView();
          }
@@ -147,7 +143,7 @@ public class WizardSourceStepPresenter implements ShowWizardHandler, ViewClosedH
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Show Wizard must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Show Wizard must be null"));
       }
    }
    

@@ -43,7 +43,6 @@ import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPrese
 import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Heroku extension to be added to IDE Application.
@@ -54,10 +53,6 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class HerokuExtension extends Extension implements InitializeServicesHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
    
    public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
    
@@ -69,7 +64,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new HerokuClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new HerokuClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
@@ -78,8 +73,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
    @Override
    public void initialize()
    {
-      eventBus = IDE.EVENT_BUS;
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls
       IDE.getInstance().addControl(new HerokuControl());
@@ -91,19 +85,19 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new ShowLogsControl());
       IDE.getInstance().addControl(new RakeControl());
       IDE.getInstance().addControl(new AddKeyControl());
-      IDE.getInstance().addControl(new SwitchAccountControl(eventBus));
+      IDE.getInstance().addControl(new SwitchAccountControl());
       //IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
 
       //Add presenters
-      new CreateApplicationPresenter(eventBus);
-      new DeleteApplicationCommandHandler(eventBus);
-      new ApplicationInfoPresenter(eventBus);
-      new RenameApplicationPresenter(eventBus);
-      new LoginPresenter(eventBus);
-      new KeysPresenter(eventBus);
-      new RakeCommandPresenter(eventBus);
-      new ChangeStackPresenter(eventBus);
-      new LogsPresenter(eventBus); 
+      new CreateApplicationPresenter();
+      new DeleteApplicationCommandHandler();
+      new ApplicationInfoPresenter();
+      new RenameApplicationPresenter();
+      new LoginPresenter();
+      new KeysPresenter();
+      new RakeCommandPresenter();
+      new ChangeStackPresenter();
+      new LogsPresenter(); 
    }
 
 }

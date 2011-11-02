@@ -18,22 +18,14 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -56,14 +48,21 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.discovery.marshal.RestServicesUnmarshaller;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -75,6 +74,7 @@ import java.util.TreeMap;
 public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler,
    ViewClosedHandler
 {
+   
    public interface Display extends IsView
    {
 
@@ -104,8 +104,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private RestService currentRestService;
@@ -114,13 +112,11 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
    private Map<String, RestService> services = new TreeMap<String, RestService>();
 
-   public RestServicesDiscoveryPresenter(HandlerManager eventBus)
+   public RestServicesDiscoveryPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ShowRestServicesDiscoveryEvent.TYPE, this);
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowRestServicesDiscoveryEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
 
       IDE.getInstance().addControl(new RestServicesDiscoveryControl());
    }
@@ -352,7 +348,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          {
             public void onError(Request request, Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+               IDE.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
                   .restServicesDiscoveryGetWadlFailure()));
             }
 
@@ -371,12 +367,12 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
                   }
                   catch (IllegalWADLException e)
                   {
-                     eventBus.fireEvent(new ExceptionThrownEvent(e));
+                     IDE.fireEvent(new ExceptionThrownEvent(e));
                   }
                   catch (Exception e)
                   {
 
-                     eventBus.fireEvent(new ExceptionThrownEvent(new Exception(
+                     IDE.fireEvent(new ExceptionThrownEvent(new Exception(
                         org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.restServicesDiscoveryGetWadlFailure())));
                   }
                }
@@ -388,7 +384,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -408,7 +404,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
                      .restServicesDiscoveryGetRestServicesFailure()));
                }
             });
@@ -416,7 +412,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

@@ -86,7 +86,7 @@ public class JenkinsService
             + "&projectid=" + projectId;
       Job job = new Job();
       JenkinsJobUnmarshaller unmarshaller = new JenkinsJobUnmarshaller(job);
-      callback.setEventBus(IDE.EVENT_BUS);
+      callback.setEventBus(IDE.eventBus());
       callback.setPayload(unmarshaller);
       callback.setResult(job);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
@@ -100,7 +100,7 @@ public class JenkinsService
    public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<String> callback)
    {
       String url = restContext + JENKINS + "/job/build?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      callback.setEventBus(IDE.EVENT_BUS);
+      callback.setEventBus(IDE.eventBus());
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
@@ -114,7 +114,7 @@ public class JenkinsService
       String url =
          restContext + JENKINS + "/job/status?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
       JobStatus jobStatus = new JobStatus();
-      callback.setEventBus(IDE.EVENT_BUS);
+      callback.setEventBus(IDE.eventBus());
       callback.setResult(jobStatus);
       callback.setPayload(new JenkinsJobStatusUnmarshaller(jobStatus));
       AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);
@@ -124,7 +124,7 @@ public class JenkinsService
    {
       String url = restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid="
       + vfsId + "&projectid="+ projectId;
-      callback.setEventBus(IDE.EVENT_BUS);
+      callback.setEventBus(IDE.eventBus());
       callback.setPayload(new StringContentUnmarshaller(callback));
       AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);
    }

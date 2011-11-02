@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -38,9 +39,6 @@ import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErr
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaGwtTestCodeAssistant Mar 4, 2011 4:57:07 PM evgen $
@@ -48,7 +46,6 @@ import java.util.List;
  */
 public class JavaGwtTestCodeAssistant extends Base
 {
-   private HandlerManager eventBus = new HandlerManager(null);
 
    public void testJavaParseLineSpace()
    {
@@ -63,7 +60,7 @@ public class JavaGwtTestCodeAssistant extends Base
       {
          public JavaCodeAssist()
          {
-            super(new JavaCodeAssistantService(eventBus, "/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
+            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
             {
                @Override
                public void handleError(Throwable exception)
@@ -100,7 +97,7 @@ public class JavaGwtTestCodeAssistant extends Base
       {
          public JavaCodeAssist()
          {
-            super(new JavaCodeAssistantService(eventBus, "/rest", new EmptyLoader()),new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
+            super(new JavaCodeAssistantService("/rest", new EmptyLoader()),new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
             {
                @Override
                public void handleError(Throwable exception)
@@ -146,7 +143,7 @@ public class JavaGwtTestCodeAssistant extends Base
       {
          public JavaCodeAssist()
          {
-            super(new JavaCodeAssistantService(eventBus, "/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
+            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
             {
                @Override
                public void handleError(Throwable exception)
@@ -182,7 +179,7 @@ public class JavaGwtTestCodeAssistant extends Base
       {
          public JavaCodeAssist()
          {
-            super(new JavaCodeAssistantService(eventBus, "/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
+            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
             {
 
                @Override

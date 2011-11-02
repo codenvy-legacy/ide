@@ -18,14 +18,7 @@
  */
 package org.exoplatform.ide.extension.openshift.client.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -48,7 +41,13 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for creating new OpenShift application.
@@ -115,14 +114,12 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    private Display display;
 
    /**
-    * @param eventBus
+    *
     */
-   public CreateApplicationPresenter(HandlerManager eventBus)
+   public CreateApplicationPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(CreateApplicationEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(CreateApplicationEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -220,7 +217,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             protected void onSuccess(AppInfo result)
             {
                IDE.getInstance().closeView(display.asView().getId());
-               eventBus.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
+               IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
             }
 
             /**
@@ -236,11 +233,11 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                      && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                   {
                      addLoggedInHandler();
-                     eventBus.fireEvent(new LoginEvent());
+                     IDE.fireEvent(new LoginEvent());
                      return;
                   }
                }
-               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                   .createApplicationFail(applicationName)));
             }
          });
@@ -251,7 +248,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     */
    protected void addLoggedInHandler()
    {
-      eventBus.addHandler(LoggedInEvent.TYPE, this);
+      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -278,7 +275,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          doCreateApplication();

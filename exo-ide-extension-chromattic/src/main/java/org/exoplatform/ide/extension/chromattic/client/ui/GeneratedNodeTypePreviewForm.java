@@ -31,9 +31,7 @@ import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
@@ -51,11 +49,6 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
    static final String ID = "ideGeneratedTypePreviewView";
    
    /**
-    * Handlers manager.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Editor to display the content of node type definition.
     */
    private org.exoplatform.ide.editor.api.Editor editor;
@@ -63,10 +56,9 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
    /**
     * @param eventBus handler manager
     */
-   public GeneratedNodeTypePreviewForm(HandlerManager eventBus)
+   public GeneratedNodeTypePreviewForm()
    {
       super(ID, "operation", ChromatticExtension.LOCALIZATION_CONSTANT.generateNodeTypePreviewFormTitle(), new Image(ChromatticClientBundle.INSTANCE.previewNodeTypeControl()));
-      this.eventBus = eventBus;
       createEditor();
    }
 
@@ -81,7 +73,7 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
       params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
       try
       {
-         editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", eventBus, params);
+         editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", IDE.eventBus(), params);
       }
       catch (Exception e)
       {

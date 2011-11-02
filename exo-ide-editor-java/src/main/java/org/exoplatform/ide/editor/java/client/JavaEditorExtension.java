@@ -51,22 +51,22 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 {
 
    private JavaCodeAssistant javaCodeAssistant;
-   
+
    private JavaCodeValidator javaCodeValidator;
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
    @Override
    public void initialize()
    {
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Java Class", "Java Class", "Create Java Class", Images.JAVA,
             MimeType.APPLICATION_JAVA).setGroup(2));
-      
+
       JavaClientBundle.INSTANCE.css().ensureInjected();
    }
 
@@ -78,9 +78,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    {
       JavaCodeAssistantService service;
       if (JavaCodeAssistantService.get() == null)
-         service =
-            new JavaCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
-               event.getLoader());
+         service = new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
       else
          service = JavaCodeAssistantService.get();
 
@@ -89,18 +87,15 @@ public class JavaEditorExtension extends Extension implements InitializeServices
             + "/ide/code-assistant/java/class-doc?fqn="), this);
 
       javaCodeValidator = new JavaCodeValidator(service, this);
-      
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", JavaClientBundle.INSTANCE.java(), true,
-         new CodeMirrorConfiguration().
-         setGenericParsers("['parsejava.js', 'tokenizejava.js']").
-         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
-         setParser(new JavaParser()).
-         setCanBeOutlined(true).
-         setAutocompleteHelper(new JavaAutocompleteHelper()).
-         setCodeAssistant(javaCodeAssistant).
-         setCodeValidator(javaCodeValidator)
-      ));
-      
+
+      IDE.getInstance().addEditor(
+         new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java",
+            JavaClientBundle.INSTANCE.java(), true, new CodeMirrorConfiguration()
+               .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
+               .setParser(new JavaParser()).setCanBeOutlined(true).setAutocompleteHelper(new JavaAutocompleteHelper())
+               .setCodeAssistant(javaCodeAssistant).setCodeValidator(javaCodeValidator)));
+
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVA, new JavaOutlineItemCreator());
    }
 
@@ -120,11 +115,11 @@ public class JavaEditorExtension extends Extension implements InitializeServices
             outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
          }
 
-         IDE.EVENT_BUS.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
+         IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
       }
    }
 
@@ -134,11 +129,10 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() != null 
-             && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+      if (event.getFile() != null && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
          javaCodeAssistant.setactiveFileHref(event.getFile().getId());
-         
+
          javaCodeValidator.loadClassesFromProject(event.getFile().getId());
       }
    }

@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.download;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.navigation.event.DownloadFileEvent;
@@ -32,7 +33,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -55,12 +55,12 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
 
    private IDEConfiguration applicationConfiguration;
 
-   public DownloadForm(HandlerManager eventBus)
+   public DownloadForm()
    {
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      eventBus.addHandler(DownloadFileEvent.TYPE, this);
-      eventBus.addHandler(DownloadZippedFolderEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(DownloadFileEvent.TYPE, this);
+      IDE.addHandler(DownloadZippedFolderEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 
       panel = new AbsolutePanel();
       panel.getElement().getStyle().setWidth(1, Unit.PX);
@@ -74,11 +74,11 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
       //Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
       String fileName = selectedItem.getName();
 
-//      if (fileName.endsWith("/"))
-//      {
-//         fileName = fileName.substring(0, fileName.length() - 1);
-//      }
-//      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+      //      if (fileName.endsWith("/"))
+      //      {
+      //         fileName = fileName.substring(0, fileName.length() - 1);
+      //      }
+      //      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
 
       if (!(selectedItem instanceof FileModel))
       {

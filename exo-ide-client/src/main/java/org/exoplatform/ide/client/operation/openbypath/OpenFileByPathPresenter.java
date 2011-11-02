@@ -70,8 +70,8 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
    {
       IDE.getInstance().addControl(new OpenFileByPathCommand());
       
-      IDE.EVENT_BUS.addHandler(OpenFileByPathEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(OpenFileByPathEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    void bindDisplay(Display d)
@@ -146,7 +146,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          return;
       }
       
-      IDE.EVENT_BUS.fireEvent(new OpenFileEvent(filePath));
+      IDE.fireEvent(new OpenFileEvent(filePath));
       IDE.getInstance().closeView(display.asView().getId());
    }
    
@@ -177,7 +177,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Display OpenFileByPath must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Display OpenFileByPath must be null"));
       }
    }
    

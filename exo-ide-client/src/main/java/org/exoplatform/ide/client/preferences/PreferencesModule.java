@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.preferences;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.about.AboutIDEPresenter;
@@ -28,16 +28,16 @@ import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.discovery.RestDiscoveryService;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
 import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystemFactory;
-
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -49,40 +49,42 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
    ApplicationSettingsReceivedHandler
 {
 
-   private HandlerManager eventBus;
-
    private IDEConfiguration applicationConfiguration;
 
    private ApplicationSettings applicationSettings;
 
    private List<Control> controls;
 
-   public PreferencesModule(HandlerManager eventBus)
+   public PreferencesModule()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
       /*
        * Select Workspace ability.
        */
-      new SelectWorkspacePresenter(eventBus);
+      new SelectWorkspacePresenter();
 
       /*
        * Customizing of Toollbars.
        */
-      new CustomizeToolbarPresenter(eventBus);
+      new CustomizeToolbarPresenter();
 
       /*
        * About IDE.
        */
-      new AboutIDEPresenter(eventBus);
+      new AboutIDEPresenter();
 
       /*
        * Rest Services Discovery.
        */
-      new RestServicesDiscoveryPresenter(eventBus);
+      new RestServicesDiscoveryPresenter();
+      
+      /*
+       * Hot Keys customizing.
+       */
+      new CustomizeHotKeysPresenter();      
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -90,7 +92,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       applicationConfiguration = event.getApplicationConfiguration();
       new VirtualFileSystemFactory(applicationConfiguration.getContext());
       new RestDiscoveryService(applicationConfiguration.getContext());
-      new HotKeyManagerImpl(eventBus, controls, applicationSettings);
+      new HotKeyManagerImpl(controls, applicationSettings);
    }
 
    public void onControlsUpdated(ControlsUpdatedEvent event)

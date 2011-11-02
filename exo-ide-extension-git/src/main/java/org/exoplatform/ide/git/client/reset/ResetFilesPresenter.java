@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.git.client.reset;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
@@ -40,8 +37,10 @@ import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.shared.GitFile;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for view for reseting files from index.
@@ -91,11 +90,9 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    /**
     * @param eventBus events handler
     */
-   public ResetFilesPresenter(HandlerManager eventBus)
+   public ResetFilesPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ResetFilesEvent.TYPE, this);
+      IDE.addHandler(ResetFilesEvent.TYPE, this);
    }
 
    /**
@@ -176,7 +173,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
          protected void onFailure(Throwable exception)
          {
             String errorMassage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
-            eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
          }
       });
    }
@@ -203,8 +200,8 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
             protected void onSuccess(String result)
             {
                IDE.getInstance().closeView(display.asView().getId());
-               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.INFO));
-               eventBus.fireEvent(new RefreshBrowserEvent());
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent());
             }
 
             @Override
@@ -212,7 +209,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
             {
                String errorMassage =
                   (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFilesFailed();
-               eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
             }
          });
    }

@@ -89,7 +89,7 @@ public class SshKeyService
     */
    public void generateKey(GenKeyRequest genKey, AsyncRequestCallback<GenKeyRequest> callback)
    {
-      callback.setEventBus(IDE.EVENT_BUS);
+      callback.setEventBus(IDE.eventBus());
       callback.setResult(genKey);
       String url = restContext + "/ide/ssh-keys/gen";
       GenerateSshKeysMarshaller marshaller = new GenerateSshKeysMarshaller(genKey);

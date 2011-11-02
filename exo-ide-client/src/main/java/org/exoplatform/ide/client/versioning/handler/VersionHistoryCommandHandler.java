@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.versioning.handler;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
@@ -37,7 +36,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.framework.vfs.VersionsCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.versioning.VersionContentForm;
 import org.exoplatform.ide.client.versioning.event.OpenVersionEvent;
@@ -52,7 +50,6 @@ import org.exoplatform.ide.client.versioning.event.VersionRestoredEvent;
 import org.exoplatform.ide.client.versioning.event.VersionRestoredHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
@@ -71,8 +68,6 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    
    private static final String VERSION_TITLE = org.exoplatform.ide.client.IDE.VERSIONS_CONSTANT.versionTitle();
    
-   private HandlerManager eventBus;
-
    private Version version;
 
    private FileModel activeFile;
@@ -87,15 +82,14 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
 
    private VersionContentForm view;
 
-   public VersionHistoryCommandHandler(HandlerManager eventBus)
+   public VersionHistoryCommandHandler()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(OpenVersionEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ShowNextVersionEvent.TYPE, this);
-      eventBus.addHandler(ShowPreviousVersionEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(OpenVersionEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ShowNextVersionEvent.TYPE, this);
+      IDE.addHandler(ShowPreviousVersionEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -109,9 +103,9 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
       }
       else
       {
-         if (event.getVersion() == null)
+         if (event.getVersion() == null && view != null)
          {
-            IDE.getInstance().closeView((VersionContentForm.ID));
+            IDE.getInstance().closeView(view.getId());
          }
          else
          {
@@ -179,8 +173,10 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      IDE.getInstance().closeView(VersionContentForm.ID);
-      view = null;
+      if (view != null) {
+         IDE.getInstance().closeView(view.getId());
+         view = null;
+      }
    }
 
    /**
@@ -221,7 +217,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    {
       ignoreErrorCount = 3;
       versionToOpenOnError = version;
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+      IDE.fireEvent(new EnableStandartErrorsHandlingEvent(false));
       VirtualFileSystem.getInstance().getContent(version, new FileCallback()
       {
          @Override
@@ -236,7 +232,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
                return;
             }
 
-            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+            IDE.fireEvent(new EnableStandartErrorsHandlingEvent(false));
          }
 
          @Override
@@ -257,7 +253,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
       {
          if (view == null)
          {
-            view = new VersionContentForm(eventBus, version);
+            view = new VersionContentForm(version);
             view.setIcon(new Image(IDEImageBundle.INSTANCE.viewVersions()));
             view.setTitle(VERSION_TITLE);
             IDE.getInstance().openView(view);
@@ -272,17 +268,17 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
             @Override
             public void run()
             {
-               eventBus.fireEvent(new ShowVersionContentEvent(versionToShow));
+               IDE.fireEvent(new ShowVersionContentEvent(versionToShow));
             }
          };
          timer.schedule(2000);
       }
       else
       {
-         eventBus.fireEvent(new ShowVersionContentEvent(versionToShow));
+         IDE.fireEvent(new ShowVersionContentEvent(versionToShow));
       }
 
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+      IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
    }
 
    /**
@@ -318,13 +314,11 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getView().getId()))
-      {
+      if (event.getView() instanceof VersionContentForm) {
          isVersionPanelOpened = true;
-         eventBus.addHandler(FileSavedEvent.TYPE, this);
-         eventBus.addHandler(VersionRestoredEvent.TYPE, this);
+         IDE.addHandler(FileSavedEvent.TYPE, this);
+         IDE.addHandler(VersionRestoredEvent.TYPE, this);         
       }
-
    }
 
    /**
@@ -333,12 +327,12 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (VersionContentForm.ID.equals(event.getView().getId()))
+      if (event.getView() instanceof VersionContentForm)
       {
          isVersionPanelOpened = false;
          version = null;
-         eventBus.removeHandler(FileSavedEvent.TYPE, this);
-         eventBus.removeHandler(VersionRestoredEvent.TYPE, this);
+         IDE.removeHandler(FileSavedEvent.TYPE, this);
+         IDE.removeHandler(VersionRestoredEvent.TYPE, this);
          view = null;
       }
    }

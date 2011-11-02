@@ -49,7 +49,7 @@ public class AddRequestHandler extends RequestStatusHandlerBase
    {
       Job job = new Job(id, JobStatus.STARTED);
       job.setStartMessage(GitExtension.MESSAGES.addStarted(projectName));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
    /**
@@ -60,7 +60,7 @@ public class AddRequestHandler extends RequestStatusHandlerBase
    {
       Job job = new Job(id, JobStatus.FINISHED);
       job.setFinishMessage(GitExtension.MESSAGES.addFinished(projectName));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
 }

@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide.extension.samples.client.load;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -44,7 +38,12 @@ import org.exoplatform.ide.extension.samples.client.location.SelectLocationEvent
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
  * Presenter to show the list of samples, that stored on github.
@@ -71,8 +70,6 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    
    private static SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
    
-   private HandlerManager eventBus;
-   
    private Display display;
    
    List<Repository> sampleRepos;
@@ -81,13 +78,11 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    
    List<Item> selectedItems;
    
-   public ShowSamplesPresenter(HandlerManager eventBus)
+   public ShowSamplesPresenter()
    {
-      this.eventBus = eventBus;
-      
-      eventBus.addHandler(ShowSamplesEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ShowSamplesEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
    
    private void bindDisplay()
@@ -103,7 +98,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                Dialogs.getInstance().showError(lb.showSamplesErrorSelectRepository());
                return;
             }
-            eventBus.fireEvent(new SelectLocationEvent(selectedRepos.get(0)));
+            IDE.fireEvent(new SelectLocationEvent(selectedRepos.get(0)));
             closeView();
          }
       });
@@ -180,7 +175,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Show Samples View must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Show Samples View must be null"));
       }
    }
    

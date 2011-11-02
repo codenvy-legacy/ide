@@ -20,8 +20,7 @@ package org.exoplatform.ide.extension.openshift.client;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Handler for OpenShift exceptions.
@@ -36,11 +35,11 @@ import com.google.gwt.event.shared.HandlerManager;
 public class OpenShiftExceptionsHandler implements OpenShiftExceptionThrownHandler
 {
    /**
-    * @param eventBus events handler manager
+    *
     */
-   public OpenShiftExceptionsHandler(HandlerManager eventBus)
+   public OpenShiftExceptionsHandler()
    {
-      eventBus.addHandler(OpenShiftExceptionThrownEvent.TYPE, this);
+      IDE.addHandler(OpenShiftExceptionThrownEvent.TYPE, this);
    }
 
    /**

@@ -28,8 +28,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.command.ui.MenuItemControl;
 import org.exoplatform.gwtframework.ui.client.menu.MenuBar;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,7 +41,7 @@ public class MenuImpl extends MenuBar implements Menu
 {
 
    @Override
-   public void refresh(List<Control> commands, HandlerManager eventBus)
+   public void refresh(List<Control> commands)
    {
       Map<SimpleControl, MenuItem> createdMenuItems = new HashMap<SimpleControl, MenuItem>();
 
@@ -63,7 +62,7 @@ public class MenuImpl extends MenuBar implements Menu
       {
          SimpleControl control = controlIterator.next();
          MenuItem menuItem = createdMenuItems.get(control);
-         new MenuItemControl(eventBus, menuItem, control);
+         new MenuItemControl(IDE.eventBus(), menuItem, control);
       }
    }
 

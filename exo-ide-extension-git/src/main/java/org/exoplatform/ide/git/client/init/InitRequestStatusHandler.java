@@ -53,7 +53,7 @@ public class InitRequestStatusHandler implements RequestStatusHandler
    {
       Job job = new Job(id, JobStatus.STARTED);
       job.setStartMessage(GitExtension.MESSAGES.initStarted(workDir));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
    /**
@@ -64,7 +64,7 @@ public class InitRequestStatusHandler implements RequestStatusHandler
    {
       Job job = new Job(id, JobStatus.FINISHED);
       job.setFinishMessage(GitExtension.MESSAGES.initFinished(workDir));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
    /**
@@ -75,7 +75,7 @@ public class InitRequestStatusHandler implements RequestStatusHandler
    {
       Job job = new Job(id, JobStatus.ERROR);
       job.setError(exception);
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
 }

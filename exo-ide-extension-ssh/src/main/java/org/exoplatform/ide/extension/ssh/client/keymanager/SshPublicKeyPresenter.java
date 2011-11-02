@@ -46,7 +46,6 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
 
    public interface Display extends IsView
    {
-      String ID = "ideSshPublicKeyView";
 
       HasClickHandlers getCloseButton();
 
@@ -68,7 +67,7 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
    public SshPublicKeyPresenter(KeyItem keyItem)
    {
       this.keyItem = keyItem;
-      viewClosedHandler = IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      viewClosedHandler = IDE.addHandler(ViewClosedEvent.TYPE, this);
 
       display = GWT.create(Display.class);
 
@@ -101,7 +100,7 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
          public void onFailure(Throwable exception)
          {
             getLoader().hide();
-            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
@@ -113,14 +112,12 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
    {
       display.getCloseButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
-
    }
 
    /**

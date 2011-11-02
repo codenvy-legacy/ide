@@ -69,8 +69,8 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    public LogReaderPresenter()
    {
-      IDE.EVENT_BUS.addHandler(ShowLogReaderEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowLogReaderEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**

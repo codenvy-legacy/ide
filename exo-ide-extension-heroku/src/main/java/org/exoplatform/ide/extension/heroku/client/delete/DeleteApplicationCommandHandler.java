@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.heroku.client.delete;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
@@ -33,8 +34,6 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import java.util.List;
 
 /**
  * Presenter for deleting application from Heroku.
@@ -55,10 +54,9 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    /**
     * @param eventBus
     */
-   public DeleteApplicationCommandHandler(HandlerManager eventBus)
+   public DeleteApplicationCommandHandler()
    {
-      super(eventBus);
-      eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
+      IDE.addHandler(DeleteApplicationEvent.TYPE, this);
    }
 
    /**
@@ -80,7 +78,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    {
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), project.getId(), false,
-         new HerokuAsyncRequestCallback(eventBus, this)
+         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
          {
             @Override
             protected void onSuccess(List<Property> result)
@@ -131,12 +129,12 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void doDelete(String projectId)
    {
-      HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), projectId, new HerokuAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), projectId, new HerokuAsyncRequestCallback(IDE.eventBus(), this)
       {
          @Override
          protected void onSuccess(List<Property> result)
          {
-            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(),
+            IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(),
                Type.INFO));
          }
       });
@@ -148,7 +146,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getApplicationInfo();

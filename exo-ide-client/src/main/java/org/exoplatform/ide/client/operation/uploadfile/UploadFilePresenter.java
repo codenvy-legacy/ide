@@ -132,10 +132,10 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    public UploadFilePresenter()
    {
       IDE.getInstance().addControl(new UploadFileCommand());
-      IDE.EVENT_BUS.addHandler(UploadFileEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(UploadFileEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
    
    @Override
@@ -351,7 +351,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
                                  }
                                  else
                                  {
-                                    IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Can't find file: " + fileName));
+                                    IDE.fireEvent(new ExceptionThrownEvent("Can't find file: " + fileName));
                                  }
                               }
 
@@ -359,7 +359,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
                               protected void onFailure(Throwable exception)
                               {
                                  closeView();
-                                 IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+                                 IDE.fireEvent(new ExceptionThrownEvent(exception));
                                  exception.printStackTrace();
                               }
                            });
@@ -367,7 +367,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
                      catch (RequestException e)
                      {
                         display.setActionHiddedField("update");
-                        IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+                        IDE.fireEvent(new ExceptionThrownEvent(e));
                         e.printStackTrace();
                      }
                   }
@@ -391,9 +391,9 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       IDE.getInstance().closeView(display.asView().getId());
       
       if (selectedItems.get(0) instanceof FileModel) {
-         IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(((FileModel)selectedItems.get(0)).getParent()));
+         IDE.fireEvent(new RefreshBrowserEvent(((FileModel)selectedItems.get(0)).getParent()));
       } else if (selectedItems.get(0) instanceof FolderModel) {
-         IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent((FolderModel)selectedItems.get(0)));
+         IDE.fireEvent(new RefreshBrowserEvent((FolderModel)selectedItems.get(0)));
       }
    }
    

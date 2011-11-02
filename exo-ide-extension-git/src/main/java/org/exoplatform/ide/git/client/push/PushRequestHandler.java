@@ -58,7 +58,7 @@ public class PushRequestHandler extends RequestStatusHandlerBase
    {
       Job job = new Job(id, JobStatus.STARTED);
       job.setStartMessage(GitExtension.MESSAGES.pushStarted(projectName, localBranch, remoteBranch));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
    /**
@@ -69,7 +69,7 @@ public class PushRequestHandler extends RequestStatusHandlerBase
    {
       Job job = new Job(id, JobStatus.FINISHED);
       job.setFinishMessage(GitExtension.MESSAGES.pushFinished(projectName, localBranch, remoteBranch));
-      IDE.EVENT_BUS.fireEvent(new JobChangeEvent(job));
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
 }

@@ -49,13 +49,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -65,48 +63,43 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ProjectCreationTest extends TestCase
 {
-   
+
    private MockVirtualFileSystem vfs = new MockVirtualFileSystem("dev-monit");
-   
-   private HandlerManager eventBus;
-   
+
    private CreateProjectPresenter.Display display;
-   
+
    private String projectName;
-   
+
    private String error;
-   
-   
+
    public void setError(String error)
    {
       this.error = error;
    }
-   
+
    public String getError()
    {
       return error;
    }
-   
-   
+
    @SuppressWarnings("static-access")
-   protected void setUp() {
+   protected void setUp()
+   {
       new MockIde();
-      eventBus = IDE.getInstance().EVENT_BUS;
-      GWTMockUtilities.disarm(); 
-//      IsView view = EasyMock.createStrictMock(IsView.class);
-//      mockDisplay = EasyMock.createStrictMock(Display.class);
-//      EasyMock.replay(view,mockDisplay);
-      
+      GWTMockUtilities.disarm();
+      //      IsView view = EasyMock.createStrictMock(IsView.class);
+      //      mockDisplay = EasyMock.createStrictMock(Display.class);
+      //      EasyMock.replay(view,mockDisplay);
+
       display = new MockDisplay();
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, new MockExceptionThrownHandler());
+      IDE.addHandler(ExceptionThrownEvent.TYPE, new MockExceptionThrownHandler());
    }
-   
-   
+
    public void testCreateProject()
    {
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FolderModel());
-      CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
+      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
       presenter.setProjectName("test");
       presenter.setErrorMessage(new MockErrorMessages());
       Set<String> set = new HashSet<String>();
@@ -115,14 +108,13 @@ public class ProjectCreationTest extends TestCase
       presenter.doCreateProject();
       assertEquals(projectName, "test");
    }
-   
-   
+
    public void testCreateProjectFailifSelectToFolder() throws InterruptedException
    {
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FolderModel());
       selectedItems.add(new FolderModel());
-      CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
+      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
       presenter.setProjectName("test");
       presenter.setErrorMessage(new MockErrorMessages());
       Set<String> set = new HashSet<String>();
@@ -131,12 +123,12 @@ public class ProjectCreationTest extends TestCase
       presenter.doCreateProject();
       assertNotNull(getError());
    }
-   
+
    public void testCreateProjectFailEmptyProjectName() throws InterruptedException
    {
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FolderModel());
-      CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
+      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
       presenter.setProjectName(null);
       presenter.setErrorMessage(new MockErrorMessages());
       Set<String> set = new HashSet<String>();
@@ -145,12 +137,12 @@ public class ProjectCreationTest extends TestCase
       presenter.doCreateProject();
       assertNotNull(getError());
    }
-   
+
    public void testCreateProjectFailIfParenIfFile() throws InterruptedException
    {
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FileModel());
-      CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
+      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
       presenter.setProjectName(null);
       presenter.setErrorMessage(new MockErrorMessages());
       Set<String> set = new HashSet<String>();
@@ -159,34 +151,31 @@ public class ProjectCreationTest extends TestCase
       presenter.doCreateProject();
       assertNotNull(getError());
    }
-   
-   
+
    private class MockVirtualFileSystem extends VirtualFileSystem
    {
       public MockVirtualFileSystem(String workspaceURL)
       {
          super(workspaceURL);
       }
-      
+
       @Override
       public void createProject(Folder parent, AsyncRequestCallback<ProjectModel> callback) throws RequestException
       {
          projectName = callback.getPayload().getName();
       }
    }
-   
+
    @Override
    protected void tearDown() throws Exception
    {
       super.tearDown();
-      eventBus = null;
       GWTMockUtilities.restore();
    }
-   
-   
+
    //Mock Classes
    //TODO: need improve for use easymock framework.
-   
+
    private class MockErrorMessages implements ErrorMessage
    {
 
@@ -201,10 +190,9 @@ public class ProjectCreationTest extends TestCase
       {
          return "Project name can't be empty or null";
       }
-      
+
    }
-   
-  
+
    private class MockExceptionThrownHandler implements ExceptionThrownHandler
    {
 
@@ -213,13 +201,13 @@ public class ProjectCreationTest extends TestCase
       {
          setError(event.getErrorMessage());
       }
-      
+
    }
-   
+
    private class MockDisplay implements Display
    {
-      
-      private String projectName; 
+
+      private String projectName;
 
       @Override
       public View asView()
@@ -232,12 +220,12 @@ public class ProjectCreationTest extends TestCase
       {
          return new HasClickHandlers()
          {
-            
+
             @Override
             public void fireEvent(GwtEvent<?> event)
             {
             }
-            
+
             @Override
             public HandlerRegistration addClickHandler(ClickHandler handler)
             {
@@ -251,12 +239,12 @@ public class ProjectCreationTest extends TestCase
       {
          return new HasClickHandlers()
          {
-            
+
             @Override
             public void fireEvent(GwtEvent<?> event)
             {
             }
-            
+
             @Override
             public HandlerRegistration addClickHandler(ClickHandler handler)
             {
@@ -351,13 +339,12 @@ public class ProjectCreationTest extends TestCase
       {
          return null;
       }
-      
+
    }
-   
-   
-   private class MockIde extends IDE 
+
+   private class MockIde extends IDE
    {
-      
+
       @Override
       public void addControl(Control<?> control, Docking docking, boolean rightDocking)
       {
@@ -405,7 +392,7 @@ public class ProjectCreationTest extends TestCase
       {
          return null;
       }
-      
+
    }
 
 }

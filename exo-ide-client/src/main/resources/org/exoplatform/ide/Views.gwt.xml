@@ -55,7 +55,7 @@
       <when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.outline.ui.OutlineViewExtended">
+   <replace-with class="org.exoplatform.ide.client.outline.ui.OutlineView">
       <when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display" />
    </replace-with>
 

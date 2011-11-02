@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -35,11 +36,9 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Link;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -52,19 +51,15 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
    ApplicationSettingsReceivedHandler
 {
 
-   private HandlerManager eventBus;
-
    private FileModel activeFile;
 
    private Map<String, String> lockTokens;
 
-   public SaveFileCommandHandler(HandlerManager eventBus)
+   public SaveFileCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(SaveFileEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(SaveFileEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void onSaveFile(SaveFileEvent event)
@@ -73,7 +68,7 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
 
       if (!file.isPersisted())
       {
-         eventBus.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
+         IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
          return;
       }
 
@@ -95,7 +90,7 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Resource not found."));
                }
             });
@@ -103,7 +98,7 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
          catch (RequestException e)
          {
             e.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
+            IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
          }
          return;
       }
@@ -123,7 +118,7 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
          //            return;
          //         }
       }
-      eventBus.fireEvent(new FileSavedEvent(file, null));
+      IDE.fireEvent(new FileSavedEvent(file, null));
    }
 
    private void getProperties(final FileModel file)
@@ -137,20 +132,20 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
                @Override
                protected void onSuccess(FileModel result)
                {
-                  eventBus.fireEvent(new FileSavedEvent(result, null));
+                  IDE.fireEvent(new FileSavedEvent(result, null));
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

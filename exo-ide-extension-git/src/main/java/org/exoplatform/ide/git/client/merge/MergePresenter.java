@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide.git.client.merge;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -43,7 +37,12 @@ import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
  * Presenter to perform merge reference with current HEAD commit.
@@ -71,13 +70,12 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
    private Display display;
 
    /**
-    * @param eventBus
+    *
     */
-   public MergePresenter(HandlerManager eventBus)
+   public MergePresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(MergeEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(MergeEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -214,9 +212,9 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
          @Override
          protected void onSuccess(MergeResult result)
          {
-            eventBus.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
+            IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
             IDE.getInstance().closeView(display.asView().getId());
-            eventBus.fireEvent(new RefreshBrowserEvent());
+            IDE.fireEvent(new RefreshBrowserEvent());
          }
       });
    }

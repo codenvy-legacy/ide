@@ -107,7 +107,7 @@ public class LogReaderService
       LogReaderUnmarshaller unmarshaller = new LogReaderUnmarshaller(logEntry);
       callback.setPayload(unmarshaller);
       callback.setResult(logEntry);
-      callback.setEventBus(IDE.EVENT_BUS);
+      callback.setEventBus(IDE.eventBus());
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

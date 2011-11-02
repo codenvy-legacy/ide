@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -30,6 +34,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -47,12 +52,6 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Link;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -64,29 +63,25 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    EditorReplaceFileHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler
 {
 
-   private HandlerManager eventBus;
-
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
    private ApplicationSettings applicationSettings;
 
    private Map<String, String> lockTokens;
 
-   public ApplicationStateSnapshotListener(HandlerManager eventbus)
+   public ApplicationStateSnapshotListener()
    {
-      this.eventBus = eventbus;
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorReplaceFileEvent.TYPE, this);
-      eventBus.addHandler(ItemLockedEvent.TYPE, this);
-      eventBus.addHandler(ItemUnlockedEvent.TYPE, this);
-      eventBus.addHandler(ItemDeletedEvent.TYPE, this);
-      eventBus.addHandler(ItemMovedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(EditorReplaceFileEvent.TYPE, this);
+      IDE.addHandler(ItemLockedEvent.TYPE, this);
+      IDE.addHandler(ItemUnlockedEvent.TYPE, this);
+      IDE.addHandler(ItemDeletedEvent.TYPE, this);
+      IDE.addHandler(ItemMovedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

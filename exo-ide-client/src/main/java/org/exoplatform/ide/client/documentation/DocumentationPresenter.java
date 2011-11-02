@@ -40,7 +40,6 @@ import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -71,15 +70,14 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    /**
     * @param eventBus
     */
-   public DocumentationPresenter(HandlerManager eventBus)
+   public DocumentationPresenter()
    {
-
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ShowDocumentationEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(RegisterDocumentationEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ShowDocumentationEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(RegisterDocumentationEvent.TYPE, this);
 
       control = new ShowDocumentationControl();
       IDE.getInstance().addControl(control, Docking.TOOLBAR, false);

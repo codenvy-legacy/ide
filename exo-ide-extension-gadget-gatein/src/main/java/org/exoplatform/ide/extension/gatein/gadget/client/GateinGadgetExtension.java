@@ -49,8 +49,6 @@ public class GateinGadgetExtension extends Extension implements InitializeServic
 EditorActiveFileChangedHandler
 {
 
-   private HandlerManager eventBus;
-   
    private FileModel activeFile;
 
    private GateinGadgetService gateinGadgetService;
@@ -61,15 +59,14 @@ EditorActiveFileChangedHandler
    @Override
    public void initialize()
    {
-      this.eventBus = IDE.EVENT_BUS;
       IDE.getInstance().addControl(new DeployGadgetCommand(), Docking.TOOLBAR, true);
       IDE.getInstance().addControl(new UndeployGadgetCommand(), Docking.TOOLBAR, true);
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      gateinGadgetService = new GateinGadgetService(eventBus, event.getLoader(), event.getApplicationConfiguration().getContext(), event
+      gateinGadgetService = new GateinGadgetService(IDE.eventBus(), event.getLoader(), event.getApplicationConfiguration().getContext(), event
          .getApplicationConfiguration().getGadgetServer(), event.getApplicationConfiguration().getPublicContext());
    }
    
@@ -86,7 +83,7 @@ EditorActiveFileChangedHandler
          protected void onSuccess(String result)
          {
             String outputContent = "<b>" + result + "</b> deployed successfully.";
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));      
+            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));      
          }
          
          @Override
@@ -100,7 +97,7 @@ EditorActiveFileChangedHandler
             }
             else
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exc));
+               IDE.fireEvent(new ExceptionThrownEvent(exc));
             }  
          }
       });
@@ -119,7 +116,7 @@ EditorActiveFileChangedHandler
          protected void onSuccess(String result)
          {
             String outputContent = "<b>" + result + "</b> undeployed successfully.";
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
          }
          
          @Override
@@ -133,7 +130,7 @@ EditorActiveFileChangedHandler
             }
             else
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exc));
+               IDE.fireEvent(new ExceptionThrownEvent(exc));
             }
          }
       }); 
@@ -150,7 +147,8 @@ EditorActiveFileChangedHandler
       {
          message += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
       }
-      eventBus.fireEvent(new OutputEvent(message, OutputMessage.Type.ERROR));
+      
+      IDE.fireEvent(new OutputEvent(message, OutputMessage.Type.ERROR));
    }
 
    @Override

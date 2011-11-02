@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
@@ -41,6 +38,8 @@ import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Link;
 
+import com.google.gwt.user.client.ui.Image;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -50,8 +49,6 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
    ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
 {
 
-   private HandlerManager eventBus;
-
    private FileModel activeFile;
 
    private IDEConfiguration applicationConfiguration;
@@ -60,14 +57,12 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
 
    private GadgetPreviewPane gadgetPreviewPane;
 
-   public GadgetPluginEventHandler(HandlerManager eventBus)
+   public GadgetPluginEventHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(PreviewGadgetEvent.TYPE, this);
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(PreviewGadgetEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
 
@@ -110,7 +105,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }
@@ -150,7 +145,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
    }

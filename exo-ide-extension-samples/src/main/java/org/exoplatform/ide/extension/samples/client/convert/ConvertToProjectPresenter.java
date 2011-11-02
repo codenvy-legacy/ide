@@ -211,10 +211,10 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    public ConvertToProjectPresenter()
    {
-      IDE.EVENT_BUS.addHandler(ConvertToProjectEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ConvertToProjectEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -419,14 +419,14 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (Exception e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -459,14 +459,14 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
 
    }
@@ -490,20 +490,20 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
             protected void onSuccess(Object result)
             {
                IDE.getInstance().closeView(display.asView().getId());
-               IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(vfs.getRoot()));
+               IDE.fireEvent(new RefreshBrowserEvent(vfs.getRoot()));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
          });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

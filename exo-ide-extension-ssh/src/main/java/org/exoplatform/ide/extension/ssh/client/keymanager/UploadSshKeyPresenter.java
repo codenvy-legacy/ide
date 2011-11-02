@@ -50,10 +50,6 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
 {
    public interface Display extends IsView
    {
-      /**
-       * ID of View
-       */
-      String ID = "ideUploadSshKeyView";
 
       /**
        * Get host filed
@@ -119,14 +115,13 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
    public UploadSshKeyPresenter(String restContext)
    {
       this.restContext = restContext;
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
       display = GWT.create(Display.class);
 
       bind();
 
       IDE.getInstance().openView(display.asView());
-      viewClosedHandler = IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-
+      viewClosedHandler = IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -136,17 +131,15 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
    {
       display.getCancelButon().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
       display.getUploadButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -156,15 +149,14 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
 
       display.getFormPanel().addSubmitCompleteHandler(new SubmitCompleteHandler()
       {
-
          @Override
          public void onSubmitComplete(SubmitCompleteEvent event)
          {
             if(event.getResults().contains("Success"))
-               IDE.getInstance().closeView(Display.ID);
+               IDE.getInstance().closeView(display.asView().getId());
             else
             {
-               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(event.getResults()));
+               IDE.fireEvent(new ExceptionThrownEvent(event.getResults()));
             }
          }
       });
@@ -188,7 +180,6 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
       display.getFormPanel().setEncoding(FormPanel.ENCODING_MULTIPART);
       display.getFormPanel().setAction(restContext + "/ide/ssh-keys/add?host=" + host);
       display.getFormPanel().submit();
-
    }
 
    /**

@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.http.client.RequestException;
-
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -37,9 +38,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -52,20 +51,16 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
    EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
 
-   private HandlerManager eventBus;
-
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    private Map<String, String> lockTokens;
 
-   public SaveAllFilesCommandHandler(HandlerManager eventBus)
+   public SaveAllFilesCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      this.eventBus.addHandler(SaveAllFilesEvent.TYPE, this);
-      this.eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      this.eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      this.eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(SaveAllFilesEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    public void onSaveAllFiles(SaveAllFilesEvent event)
@@ -96,7 +91,7 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
                      //                     else
                      //                     {
 
-                     eventBus.fireEvent(new FileSavedEvent(file, null));
+                     IDE.fireEvent(new FileSavedEvent(file, null));
                      saveNextUnsavedFile();
                      //                     }
 
@@ -105,7 +100,7 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                     IDE.fireEvent(new ExceptionThrownEvent(exception,
                         "Service is not deployed.<br>Resource not found."));
                   }
                });
@@ -113,7 +108,7 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
             catch (RequestException e)
             {
                e.printStackTrace();
-               eventBus.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
+               IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
             }
 
             return;

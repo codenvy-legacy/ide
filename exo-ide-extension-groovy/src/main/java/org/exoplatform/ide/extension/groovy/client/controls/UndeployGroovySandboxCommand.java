@@ -41,7 +41,7 @@ public class UndeployGroovySandboxCommand extends SimpleControl implements IDECo
 
    public static final String ID = "Run/Undeploy from Sandbox";
 
-   public UndeployGroovySandboxCommand(HandlerManager eventBus)
+   public UndeployGroovySandboxCommand()
    {
       super(ID);
       setTitle("Undeploy from Sandbox");

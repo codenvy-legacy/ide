@@ -47,7 +47,6 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
 
    public interface Display extends IsView
    {
-      String ID = "ideRequestNotificationView";
 
       void updateJobs(LinkedHashMap<String, Job> jobs);
 
@@ -67,9 +66,9 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
     */
    public ProgressPresenter()
    {
-      IDE.EVENT_BUS.addHandler(JobChangeEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ShowProgressEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(JobChangeEvent.TYPE, this);
+      IDE.addHandler(ShowProgressEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
 
       control = new ProgressNotificationControl();
       control.setDelimiterBefore(true);

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.editor.groovy.client.codeassistant.service;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
 
@@ -37,9 +35,9 @@ public class GroovyCodeAssistantService extends CodeAssistantService
     * @param restServiceContext
     * @param loader
     */
-   public GroovyCodeAssistantService(HandlerManager eventBus, String restServiceContext, Loader loader)
+   public GroovyCodeAssistantService(String restServiceContext, Loader loader)
    {
-      super(eventBus, restServiceContext, loader, "/ide/code-assistant/groovy/find?class=", // FIND_URL
+      super(restServiceContext, loader, "/ide/code-assistant/groovy/find?class=", // FIND_URL
          "/ide/code-assistant/groovy/class-description?fqn=", //GET_CLASS_URL
          "/ide/code-assistant/groovy/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
          "/ide/code-assistant/groovy/find-by-type/" //FIND_TYPE

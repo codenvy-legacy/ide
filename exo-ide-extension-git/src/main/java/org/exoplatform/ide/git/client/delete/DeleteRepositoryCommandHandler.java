@@ -18,19 +18,19 @@
  */
 package org.exoplatform.ide.git.client.delete;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import com.google.gwt.http.client.URL;
 
 /**
  * Delete repository command handler, performs deleting Git repository.
@@ -42,13 +42,11 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 public class DeleteRepositoryCommandHandler extends GitPresenter implements DeleteRepositoryHandler
 {
    /**
-    * @param eventBus event handlers manager
+    *
     */
-   public DeleteRepositoryCommandHandler(HandlerManager eventBus)
+   public DeleteRepositoryCommandHandler()
    {
-      super(eventBus);
-
-      eventBus.addHandler(DeleteRepositoryEvent.TYPE, this);
+      IDE.addHandler(DeleteRepositoryEvent.TYPE, this);
    }
 
    /**
@@ -98,11 +96,11 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
+            IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
             String href = URL.decode(projectId);
             //TODO to fix this with encoding symbol "@"
             href = href.replaceAll("@", "%40");
-            eventBus.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+            IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
          }
       });
    }

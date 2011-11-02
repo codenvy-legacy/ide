@@ -57,7 +57,6 @@ import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Git extension to be added to IDE application.
@@ -71,16 +70,13 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 
    public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
 
-   private HandlerManager eventBus;
-
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
    @Override
    public void initialize()
    {
-      this.eventBus = IDE.EVENT_BUS;
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls:
       IDE.getInstance().addControl(new InitRepositoryControl());
@@ -103,23 +99,23 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new ShowStatusControl());
 
       //Create presenters:
-      new CloneRepositoryPresenter(eventBus);
-      new InitRepositoryPresenter(eventBus);
-      new StatusCommandHandler(eventBus);
-      new AddToIndexPresenter(eventBus);
-      new RemoveFilesPresenter(eventBus);
-      new ResetFilesPresenter(eventBus);
-      new ResetToCommitPresenter(eventBus);
-      new RemotePresenter(eventBus);
+      new CloneRepositoryPresenter();
+      new InitRepositoryPresenter();
+      new StatusCommandHandler();
+      new AddToIndexPresenter();
+      new RemoveFilesPresenter();
+      new ResetFilesPresenter();
+      new ResetToCommitPresenter();
+      new RemotePresenter();
 
-      new CommitPresenter(eventBus);
-      new PushToRemotePresenter(eventBus);
-      new BranchPresenter(eventBus);
-      new FetchPresenter(eventBus);
-      new PullPresenter(eventBus);
-      new HistoryPresenter(eventBus);
-      new DeleteRepositoryCommandHandler(eventBus);
-      new MergePresenter(eventBus);
+      new CommitPresenter();
+      new PushToRemotePresenter();
+      new BranchPresenter();
+      new FetchPresenter();
+      new PullPresenter();
+      new HistoryPresenter();
+      new DeleteRepositoryCommandHandler();
+      new MergePresenter();
    }
 
    /**
@@ -128,7 +124,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new GitClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new GitClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
 }

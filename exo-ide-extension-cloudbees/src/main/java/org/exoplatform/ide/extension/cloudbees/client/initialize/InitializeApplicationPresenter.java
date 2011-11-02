@@ -18,14 +18,10 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.initialize;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -43,10 +39,13 @@ import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -84,11 +83,10 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
 
    private String applicationId;
 
-   public InitializeApplicationPresenter(HandlerManager eventBus)
+   public InitializeApplicationPresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(InitializeApplicationEvent.TYPE, this);
    }
 
    /**
@@ -160,7 +158,7 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
    private void getDomains()
    {
       CloudBeesClientService.getInstance().getDomains(
-         new CloudBeesAsyncRequestCallback<List<String>>(eventBus, new LoggedInHandler()
+         new CloudBeesAsyncRequestCallback<List<String>>(IDE.eventBus(), new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()
@@ -181,8 +179,8 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
    {
       applicationId = display.getApplicationIdField().getValue();
 
-      IDE.EVENT_BUS.addHandler(ApplicationBuiltEvent.TYPE, this);
-      IDE.EVENT_BUS.fireEvent(new BuildApplicationEvent(((ItemContext)selectedItems.get(0)).getProject()));
+      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildApplicationEvent(((ItemContext)selectedItems.get(0)).getProject()));
       closeView();
    }
 
@@ -199,7 +197,7 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       CloudBeesClientService.getInstance().initializeApplication(applicationId, vfs.getId(), projectId, warUrl, null,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployWarLoggedInHandler, null)
+         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), deployWarLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(final Map<String, String> deployResult)
@@ -213,7 +211,7 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
                   Entry<String, String> entry = (Entry<String, String>)it.next();
                   output += entry.getKey() + " : " + entry.getValue() + "<br>";
                }
-               eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+               IDE.fireEvent(new OutputEvent(output, Type.INFO));
             }
 
             /**
@@ -222,7 +220,7 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
                   .deployApplicationFailureMessage(), Type.INFO));
                super.onFailure(exception);
             }
@@ -279,7 +277,7 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
    @Override
    public void onApplicationBuilt(ApplicationBuiltEvent event)
    {
-      IDE.EVENT_BUS.removeHandler(event.getAssociatedType(), this);
+      IDE.removeHandler(event.getAssociatedType(), this);
       if (event.getJobStatus().getArtifactUrl() != null)
       {
          warUrl = event.getJobStatus().getArtifactUrl();

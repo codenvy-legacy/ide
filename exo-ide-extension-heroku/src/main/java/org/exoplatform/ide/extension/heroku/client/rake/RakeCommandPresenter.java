@@ -18,16 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.rake;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -41,6 +31,15 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Presenter of the view for executing rake command.
@@ -107,14 +106,12 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    private boolean isHelp = false;
 
    /**
-    * @param eventBus event handlers manager
+    *
     */
-   public RakeCommandPresenter(HandlerManager eventBus)
+   public RakeCommandPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(RakeCommandEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(RakeCommandEvent.TYPE, this);
    }
 
    /**
@@ -219,13 +216,13 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       command = (command.startsWith("rake")) ? command : "rake " + command;
       isHelp = false;
-      HerokuClientService.getInstance().run(null, vfs.getId(), projectId, command, new RakeCommandAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().run(null, vfs.getId(), projectId, command, new RakeCommandAsyncRequestCallback(IDE.eventBus(), this)
       {
          @Override
          protected void onSuccess(RakeCommandResult result)
          {
             String message = formMessage(result.getResult());
-            eventBus.fireEvent(new OutputEvent(message, Type.OUTPUT));
+            IDE.fireEvent(new OutputEvent(message, Type.OUTPUT));
          }
       });
    }
@@ -237,14 +234,13 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    {
       isHelp = true;
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      HerokuClientService.getInstance().help(null, vfs.getId(), projectId, new RakeCommandAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().help(null, vfs.getId(), projectId, new RakeCommandAsyncRequestCallback(IDE.eventBus(), this)
       {
-
          @Override
          protected void onSuccess(RakeCommandResult result)
          {
             String message = formMessage(result.getResult());
-            eventBus.fireEvent(new OutputEvent(message, Type.INFO));
+            IDE.fireEvent(new OutputEvent(message, Type.INFO));
          }
       });
    }
@@ -255,7 +251,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          if (isHelp)

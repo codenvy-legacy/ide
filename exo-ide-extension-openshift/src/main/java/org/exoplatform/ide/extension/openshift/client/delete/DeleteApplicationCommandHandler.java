@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
@@ -35,8 +36,6 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for deleting application.
@@ -56,12 +55,11 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
 {
 
    /**
-    * @param eventBus
+    *
     */
-   public DeleteApplicationCommandHandler(HandlerManager eventBus)
+   public DeleteApplicationCommandHandler()
    {
-      super(eventBus);
-      eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
+      IDE.addHandler(DeleteApplicationEvent.TYPE, this);
    }
 
    /**
@@ -104,11 +102,11 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
                   && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
-                  eventBus.fireEvent(new LoginEvent());
+                  IDE.fireEvent(new LoginEvent());
                   return;
                }
             }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                .getApplicationInfoFail()));
          }
       });
@@ -119,7 +117,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void addLoggedInHandler()
    {
-      eventBus.addHandler(LoggedInEvent.TYPE, this);
+      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -128,7 +126,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getApplicationsInfo();
@@ -171,7 +169,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
+            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
                Type.INFO));
          }
 
@@ -181,7 +179,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                .deleteApplicationFail(name)));
          }
       });

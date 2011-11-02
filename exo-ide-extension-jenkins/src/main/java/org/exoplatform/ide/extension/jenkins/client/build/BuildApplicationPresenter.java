@@ -105,14 +105,13 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    private ProjectModel project;
 
    /**
-    * @param eventBus
+    *
     */
    public BuildApplicationPresenter()
    {
-      super(IDE.EVENT_BUS);
-      IDE.EVENT_BUS.addHandler(BuildApplicationEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(BuildApplicationEvent.TYPE, this);
+      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -371,7 +370,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
                if (status.getStatus() == Status.END)
                {
-                  IDE.EVENT_BUS.fireEvent(new ApplicationBuiltEvent(status));
+                  IDE.fireEvent(new ApplicationBuiltEvent(status));
 
                   JenkinsService.get().getJenkinsOutput(vfs.getId(), project.getId(), jobName,
                      new AsyncRequestCallback<String>()
@@ -424,7 +423,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                protected void onSuccess(String result)
                {
                   showBuildMessage(GitExtension.MESSAGES.initSuccess());
-                  eventBus.fireEvent(new RefreshBrowserEvent());
+                  IDE.fireEvent(new RefreshBrowserEvent());
                   createJob();
                }
 
@@ -435,7 +434,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                   String errorMessage =
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                         : GitExtension.MESSAGES.initFailed();
-                  eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
                }
             });
       }
@@ -445,7 +444,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          String errorMessage =
             (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
                .initFailed();
-         eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
    }
 

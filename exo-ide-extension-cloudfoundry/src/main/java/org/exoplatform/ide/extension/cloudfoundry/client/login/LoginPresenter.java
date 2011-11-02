@@ -18,14 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -40,7 +33,13 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for login view.
@@ -109,8 +108,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
 
    private Display display;
 
-   private HandlerManager eventBus;
-
    private LoggedInHandler loggedIn;
 
    private LoginCanceledHandler loginCanceled;
@@ -120,11 +117,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
     */
    private String server;
 
-   public LoginPresenter(HandlerManager eventBus)
+   public LoginPresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(LoginEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(LoginEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -296,7 +292,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          protected void onSuccess(String result)
          {
             server = enteredServer;
-            eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+            IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
             if (loggedIn != null)
             {
                loggedIn.onLoggedIn();
@@ -310,7 +306,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
+            IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
             super.onFailure(exception);
          }
       });

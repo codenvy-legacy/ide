@@ -18,18 +18,9 @@
  */
 package org.exoplatform.ide.extension.openshift.client.user;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -56,9 +47,17 @@ import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -120,14 +119,12 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
    private Display display;
 
    /**
-    * @param eventBus events handler
+    *
     */
-   public UserInfoPresenter(HandlerManager eventBus)
+   public UserInfoPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ShowUserInfoEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowUserInfoEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -242,11 +239,11 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
                   && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
-                  eventBus.fireEvent(new LoginEvent());
+                  IDE.fireEvent(new LoginEvent());
                   return;
                }
             }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                .getUserInfoFail()));
          }
       });
@@ -277,7 +274,7 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
     */
    protected void addLoggedInHandler()
    {
-      eventBus.addHandler(LoggedInEvent.TYPE, this);
+      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -286,7 +283,7 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getUserInfo();
@@ -330,7 +327,7 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT
                   .deleteApplicationSuccess(name), Type.INFO));
                getUserInfo();
             }
@@ -341,7 +338,7 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                   .deleteApplicationFail(name)));
             }
          });

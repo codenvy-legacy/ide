@@ -59,8 +59,8 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    @Override
    public void initialize()
    {
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Template", "Template", "Create Template", Images.GROOVY_TEMPLATE,
@@ -75,9 +75,7 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    {
       CodeAssistantService service;
       if (GroovyCodeAssistantService.get() == null)
-         service =
-            new GroovyCodeAssistantService(IDE.EVENT_BUS, event.getApplicationConfiguration().getContext(),
-               event.getLoader());
+         service = new GroovyCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
       else
          service = GroovyCodeAssistantService.get();
 
@@ -93,19 +91,17 @@ public class GtmplEditorExtension extends Extension implements InitializeService
                "gtmpl",
                Images.INSTANCE.groovyTemplate(),
                true,
-               new CodeMirrorConfiguration().
-                  setGenericParsers("['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']").
-                  setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH
-                     + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
-                     + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
-                  setParser(new GroovyTemplateParser()).
-                  setCanBeOutlined(true).
-                  setAutocompleteHelper(new GroovyTemplateAutocompleteHelper()).
-                  setCodeAssistant(templateCodeAssistant).
-                  setCodeValidator(new GroovyTemplateCodeValidator()).
-                  setCanHaveSeveralMimeTypes(true)
-            )
-         );
+               new CodeMirrorConfiguration()
+                  .setGenericParsers(
+                     "['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']")
+                  .setGenericStyles(
+                     "['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH
+                        + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
+                        + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+                  .setParser(new GroovyTemplateParser()).setCanBeOutlined(true)
+                  .setAutocompleteHelper(new GroovyTemplateAutocompleteHelper())
+                  .setCodeAssistant(templateCodeAssistant).setCodeValidator(new GroovyTemplateCodeValidator())
+                  .setCanHaveSeveralMimeTypes(true)));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.GROOVY_TEMPLATE, new HtmlOutlineItemCreator());
    }
@@ -126,11 +122,11 @@ public class GtmplEditorExtension extends Extension implements InitializeService
             outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
          }
 
-         IDE.EVENT_BUS.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
+         IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
       }
    }
 

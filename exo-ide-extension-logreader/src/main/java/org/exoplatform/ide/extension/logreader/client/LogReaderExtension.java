@@ -43,7 +43,7 @@ public class LogReaderExtension extends Extension implements InitializeServicesH
    @Override
    public void initialize()
    {
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.getInstance().addControl(new LogReaderControl());
       new LogReaderPresenter();
    }

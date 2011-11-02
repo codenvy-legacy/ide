@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services;
 
-import com.google.gwt.http.client.RequestBuilder;
-
-import com.google.gwt.event.shared.HandlerManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +26,13 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.ClassDescriptionUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
+
+import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * This service for auto-complete feature.
@@ -56,16 +55,13 @@ public abstract class CodeAssistantService
 
    protected String FIND_TYPE;
 
-   protected HandlerManager eventBus;
-
    protected Loader loader;
 
    protected String restServiceContext;
 
-   protected CodeAssistantService(HandlerManager eventBus, String restServiceContext, Loader loader, String findUrl,
+   protected CodeAssistantService(String restServiceContext, Loader loader, String findUrl,
       String getClassUrl, String findClassByPrefix, String findType)
    {
-      this.eventBus = eventBus;
       this.loader = loader;
       this.restServiceContext = restServiceContext;
 
@@ -91,7 +87,7 @@ public abstract class CodeAssistantService
 
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
 
-      callback.setEventBus(eventBus);
+      callback.setEventBus(IDE.eventBus());
       callback.setPayload(unmarshaller);
       if (fileHref == null)
       {
@@ -118,7 +114,7 @@ public abstract class CodeAssistantService
       callback.setResult(classInfo);
       ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
       int status[] = {HTTPStatus.NO_CONTENT, HTTPStatus.OK};
-      callback.setEventBus(eventBus);
+      callback.setEventBus(IDE.eventBus());
       callback.setPayload(unmarshaller);
       callback.setSuccessCodes(status);
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
@@ -138,7 +134,7 @@ public abstract class CodeAssistantService
       callback.setResult(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
 
-      callback.setEventBus(eventBus);
+      callback.setEventBus(IDE.eventBus());
       callback.setPayload(unmarshaller);
       if (fileHref == null)
       {
@@ -168,7 +164,7 @@ public abstract class CodeAssistantService
       callback.setResult(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
 
-      callback.setEventBus(eventBus);
+      callback.setEventBus(IDE.eventBus());
       callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }

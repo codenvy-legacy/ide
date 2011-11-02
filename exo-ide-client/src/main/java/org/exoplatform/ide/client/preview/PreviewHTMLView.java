@@ -44,6 +44,11 @@ public class PreviewHTMLView extends ViewImpl implements
    org.exoplatform.ide.client.preview.PreviewHTMLPresenter.Display
 {
 
+   /**
+    * ID of Preview View
+    */
+   private static final String ID = "idePreviewHTMLView";
+
    private static final int DEFAULT_WIDTH = 500;
 
    private static final int DEFAULT_HEIGHT = 300;

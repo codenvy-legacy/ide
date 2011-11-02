@@ -18,14 +18,7 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.deployment;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -44,7 +37,13 @@ import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinish
 import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for Step3 (Deployment) of Wizard for creation Java Project.
@@ -103,8 +102,6 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
    
    private static final String[] PAAS;
    
-   private HandlerManager eventBus;
-   
    private Display display;
    
    /**
@@ -125,12 +122,10 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
    
    private WizardReturnable wizardReturnable;
    
-   public WizardDeploymentStepPresenter(HandlerManager eventBus)
+   public WizardDeploymentStepPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectCreationFinishedEvent.TYPE, this);
    }
    
    /**
@@ -156,7 +151,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ProjectCreationFinishedEvent(true));
+            IDE.fireEvent(new ProjectCreationFinishedEvent(true));
             closeView();
          }
       });
@@ -359,7 +354,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
       }
    }
    
@@ -445,7 +440,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
    private void getListOfCloudBeesDomains()
    {
       SamplesClientService.getInstance().getDomains(
-         new CloudBeesAsyncRequestCallback<List<String>>(eventBus, domainsLoggedInHandler)
+         new CloudBeesAsyncRequestCallback<List<String>>(IDE.eventBus(), domainsLoggedInHandler)
          {
             @Override
             protected void onSuccess(List<String> result)
@@ -485,7 +480,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
    private void validateCloudFoundryParams()
    {
       SamplesClientService.getInstance().validateCloudfoundryAction(projectProperties.getProperties().get("target"), 
-         projectProperties.getProperties().get("cf-name"), null, new CloudFoundryAsyncRequestCallback<String>(eventBus, validationLoggedInHandler)
+         projectProperties.getProperties().get("cf-name"), null, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validationLoggedInHandler)
          {
             @Override
             protected void onSuccess(String result)

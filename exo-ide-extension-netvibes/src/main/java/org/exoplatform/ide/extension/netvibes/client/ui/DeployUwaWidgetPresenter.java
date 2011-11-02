@@ -232,8 +232,8 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
     */
    public DeployUwaWidgetPresenter()
    {
-      IDE.EVENT_BUS.addHandler(DeployUwaWidgetEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(DeployUwaWidgetEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -585,13 +585,13 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
                String message =
                   result.getDeployResult().isSuccess() ? "<b>" + result.getDeployWidget().getUrl() + "</b>"
                      + " deployed successfully." : result.getDeployResult().getMessage();
-               IDE.EVENT_BUS.fireEvent(new OutputEvent(message, responseType));
+               IDE.fireEvent(new OutputEvent(message, responseType));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Can't deploy widget"));
+               IDE.fireEvent(new ExceptionThrownEvent("Can't deploy widget"));
             }
          });
    }

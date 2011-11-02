@@ -56,7 +56,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -79,8 +78,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     */
    public interface Display extends IsView
    {
-
-      String ID = "ideOutlineView";
 
       /**
        * Get outline tree grid
@@ -121,8 +118,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       void clearOutlineTree();
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private List<TokenBeenImpl> tokens = null;
@@ -141,17 +136,15 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    
    private ApplicationSettings applicationSettings;
 
-   public OutlinePresenter(HandlerManager eventBus)
+   public OutlinePresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ShowOutlineEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);      
-      eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);
+      IDE.addHandler(ShowOutlineEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorContentChangedEvent.TYPE, this);
+      IDE.addHandler(EditorCursorActivityEvent.TYPE, this);      
+      IDE.addHandler(EditorTokenListPreparedEvent.TYPE, this);
       
       IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR, false);
    }
@@ -196,8 +189,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       if (!event.isShow() && display != null)
       {
-         IDE.getInstance().closeView(Display.ID);
-
+         IDE.getInstance().closeView(display.asView().getId());
          applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
          SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
 
@@ -313,7 +305,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       // restore focus on OutlinePanel
       lastFocusedElement = getActiveElement();
-      eventBus.fireEvent(new EditorGoToLineEvent(lineNumber < maxLineNumber ? lineNumber : maxLineNumber));
+      IDE.fireEvent(new EditorGoToLineEvent(lineNumber < maxLineNumber ? lineNumber : maxLineNumber));
    }
 
    public void onEditorContentChanged(EditorContentChangedEvent event)

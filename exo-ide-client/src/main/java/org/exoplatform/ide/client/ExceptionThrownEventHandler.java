@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,13 +33,13 @@ import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingHandler;
 
 public class ExceptionThrownEventHandler implements ExceptionThrownHandler, EnableStandartErrorsHandlingHandler
 {
-   
+
    private boolean showErrors = true;
 
-   public ExceptionThrownEventHandler(HandlerManager eventBus)
+   public ExceptionThrownEventHandler()
    {
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
-      eventBus.addHandler(EnableStandartErrorsHandlingEvent.TYPE, this);
+      IDE.addHandler(ExceptionThrownEvent.TYPE, this);
+      IDE.addHandler(EnableStandartErrorsHandlingEvent.TYPE, this);
    }
 
    /**

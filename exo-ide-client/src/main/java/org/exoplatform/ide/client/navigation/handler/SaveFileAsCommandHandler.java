@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -48,10 +49,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -63,8 +62,6 @@ import java.util.Map;
 public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelectedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 {
-
-   private HandlerManager eventBus;
 
    private String sourceId;
 
@@ -98,14 +95,12 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
     */
    private FileModel fileToSave;
 
-   public SaveFileAsCommandHandler(HandlerManager eventBus)
+   public SaveFileAsCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(SaveFileAsEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(SaveFileAsEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    /**
@@ -166,7 +161,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
          {
             if (eventFiredOnCancelButtonPressed != null)
             {
-               eventBus.fireEvent(eventFiredOnCancelButtonPressed);
+               IDE.fireEvent(eventFiredOnCancelButtonPressed);
             }
 
             return;
@@ -183,7 +178,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       {
          if (eventFiredOnNoButtonPressed != null)
          {
-            eventBus.fireEvent(eventFiredOnNoButtonPressed);
+            IDE.fireEvent(eventFiredOnNoButtonPressed);
          }
       }
    };
@@ -206,21 +201,21 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
                @Override
                protected void onSuccess(FileModel result)
                {
-                  eventBus.fireEvent(new FileSavedEvent(result, sourceId));
+                  IDE.fireEvent(new FileSavedEvent(result, sourceId));
                   refreshBrowser(result.getParent());
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
       //      saveContent(newFile, null, new FileContentSaveCallback()
       //      {
@@ -288,7 +283,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
 
    private void refreshBrowser(FolderModel folder)
    {
-      eventBus.fireEvent(new RefreshBrowserEvent(folder));
+      IDE.fireEvent(new RefreshBrowserEvent(folder));
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)

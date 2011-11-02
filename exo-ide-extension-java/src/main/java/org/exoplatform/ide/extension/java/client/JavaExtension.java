@@ -24,7 +24,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Java extention for IDE.
@@ -35,10 +34,6 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class JavaExtension extends Extension implements InitializeServicesHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
    
    public static final JavaLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(JavaLocalizationConstant.class);
 
@@ -48,7 +43,7 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new JavaClientService(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new JavaClientService(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
@@ -57,8 +52,7 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void initialize()
    {
-      eventBus = IDE.EVENT_BUS;
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
       
 //    IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB));
 //    IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING));

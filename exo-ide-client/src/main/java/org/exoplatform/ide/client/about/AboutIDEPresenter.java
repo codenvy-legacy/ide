@@ -27,7 +27,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
@@ -51,10 +50,10 @@ public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHand
 
    private HandlerRegistration okButtonClickHandlerRegistration;
 
-   public AboutIDEPresenter(HandlerManager eventBus)
+   public AboutIDEPresenter()
    {
-      eventBus.addHandler(ShowAboutDialogEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowAboutDialogEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
       
       IDE.getInstance().addControl(new ShowAboutControl());
    }

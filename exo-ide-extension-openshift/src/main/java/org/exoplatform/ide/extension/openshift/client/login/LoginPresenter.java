@@ -18,17 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.login;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -40,6 +29,16 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for login view.
@@ -96,13 +95,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
 
    private Display display;
 
-   private HandlerManager eventBus;
-
-   public LoginPresenter(HandlerManager eventBus)
+   public LoginPresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(LoginEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(LoginEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -210,8 +206,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          protected void onSuccess(String result)
          {
             IDE.getInstance().closeView(display.asView().getId());
-            eventBus.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
-            eventBus.fireEvent(new LoggedInEvent(false));
+            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+            IDE.fireEvent(new LoggedInEvent(false));
          }
 
          /**
@@ -220,8 +216,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new LoggedInEvent(true));
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+            IDE.fireEvent(new LoggedInEvent(true));
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                .loginFailed()));
          }
       });

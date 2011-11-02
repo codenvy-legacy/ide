@@ -27,9 +27,11 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public interface IDEControl
 {
+   
    /**
     * Initializes control.
     * @param eventBus event handler manager
     */
    void initialize(HandlerManager eventBus);
+   
 }

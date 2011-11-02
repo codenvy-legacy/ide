@@ -18,15 +18,7 @@
  */
 package org.exoplatform.ide.extension.heroku.client.rename;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -44,7 +36,14 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Presenter for rename application on Heroku.
@@ -110,12 +109,10 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    /**
     * @param eventBus events handler
     */
-   public RenameApplicationPresenter(HandlerManager eventBus)
+   public RenameApplicationPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(RenameApplicationEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(RenameApplicationEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -201,7 +198,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
-         new HerokuAsyncRequestCallback(eventBus, this)
+         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
          {
             @Override
             protected void onSuccess(List<Property> result)
@@ -233,7 +230,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getApplicationInfo();
@@ -248,13 +245,12 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
       final String newName = display.getRenameField().getValue();
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       HerokuClientService.getInstance().renameApplication(null, vfs.getId(), projectId, newName,
-         new HerokuAsyncRequestCallback(eventBus, this)
+         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
          {
-
             @Override
             protected void onSuccess(List<Property> result)
             {
-               eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
+               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
                   applicationName, newName), Type.INFO));
                IDE.getInstance().closeView(display.asView().getId());
             }

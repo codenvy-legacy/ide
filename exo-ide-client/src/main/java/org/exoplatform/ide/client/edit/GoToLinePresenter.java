@@ -18,15 +18,6 @@
  */
 package org.exoplatform.ide.client.edit;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
@@ -44,6 +35,14 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -54,7 +53,6 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
 
    public interface Display extends IsView
    {
-      String ID = "ideGoToLineForm";
       
       TextFieldItem getLineNumber();
 
@@ -75,9 +73,6 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
 
    private static final String CANT_PARSE_LINE_NUMBER = IDE.ERRORS_CONSTANT.goToLineCantParseLineNumber();
 
-   /* Variables */
-   private HandlerManager eventBus;
-
    private Display display;
 
    private int maxLineNumber;
@@ -88,13 +83,11 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
 
    private FileModel activeFile;
 
-   public GoToLinePresenter(HandlerManager eventBus)
+   public GoToLinePresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(GoToLineEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(GoToLineEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -103,7 +96,6 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
 
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
-
          public void onClick(ClickEvent arg0)
          {
             closeView();
@@ -150,7 +142,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
          if (line > 0 && line <= maxLineNumber)
          {
             closeView();
-            eventBus.fireEvent(new EditorGoToLineEvent(line));
+            IDE.fireEvent(new EditorGoToLineEvent(line));
          }
          else
          {
@@ -167,8 +159,8 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
    
    private void closeView()
    {
-      IDE.getInstance().closeView(Display.ID);
-      eventBus.fireEvent(new EditorSetFocusEvent());
+      IDE.getInstance().closeView(display.asView().getId());
+      IDE.fireEvent(new EditorSetFocusEvent());
    }
 
    /**
@@ -195,7 +187,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Display Go To Line must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Display Go To Line must be null"));
       }
    }
 

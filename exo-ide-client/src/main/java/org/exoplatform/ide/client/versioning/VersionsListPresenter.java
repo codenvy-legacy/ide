@@ -18,6 +18,23 @@
  */
 package org.exoplatform.ide.client.versioning;
 
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.client.versioning.event.OpenVersionEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
+import org.exoplatform.ide.client.versioning.event.ShowVersionListHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -26,28 +43,6 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.framework.vfs.VersionsCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.versioning.event.OpenVersionEvent;
-import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
-import org.exoplatform.ide.client.versioning.event.ShowVersionListHandler;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-
-import java.util.List;
 
 /**
  * Presenter for view of versions list.
@@ -61,6 +56,7 @@ public class VersionsListPresenter implements ShowVersionListHandler, EditorActi
    
    interface Display extends IsView
    {
+      
       HasClickHandlers getOpenVersionButton();
 
       HasClickHandlers getCloseButton();
@@ -81,17 +77,13 @@ public class VersionsListPresenter implements ShowVersionListHandler, EditorActi
    
    private FileModel activeFile;
 
-   private HandlerManager eventBus;
-
    private List<Version> versionHistory;
 
-   public VersionsListPresenter(HandlerManager eventBus)
+   public VersionsListPresenter()
    {
-      this.eventBus = eventBus;
-      
-      eventBus.addHandler(ShowVersionListEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowVersionListEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    private Display display;
@@ -154,7 +146,7 @@ public class VersionsListPresenter implements ShowVersionListHandler, EditorActi
       Version selectedVersion = display.getSelectedVersion();
       if (selectedVersion != null)
       {
-         eventBus.fireEvent(new OpenVersionEvent(selectedVersion, versionHistory));
+         IDE.fireEvent(new OpenVersionEvent(selectedVersion, versionHistory));
       }
       closeView();
    }
@@ -222,7 +214,7 @@ public class VersionsListPresenter implements ShowVersionListHandler, EditorActi
    {
       if (activeFile == null)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(OPEN_FILE_TO_VIEW_VERSIONS));
+         IDE.fireEvent(new ExceptionThrownEvent(OPEN_FILE_TO_VIEW_VERSIONS));
          return;
       }
       if (display == null)
@@ -233,7 +225,7 @@ public class VersionsListPresenter implements ShowVersionListHandler, EditorActi
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Display ViewVersions must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Display ViewVersions must be null"));
       }
    }
 

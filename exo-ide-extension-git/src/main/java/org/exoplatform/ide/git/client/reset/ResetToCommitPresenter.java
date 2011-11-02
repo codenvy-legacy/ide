@@ -18,15 +18,6 @@
  */
 package org.exoplatform.ide.git.client.reset;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
@@ -41,6 +32,14 @@ import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for view for reseting head to commit.
@@ -119,11 +118,9 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
    /**
     * @param eventBus event handlers
     */
-   public ResetToCommitPresenter(HandlerManager eventBus)
+   public ResetToCommitPresenter()
    {
-      super(eventBus);
-
-      eventBus.addHandler(ResetToCommitEvent.TYPE, this);
+      IDE.addHandler(ResetToCommitEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -196,7 +193,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
          protected void onFailure(Throwable exception)
          {
             String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
    }
@@ -217,7 +214,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.INFO));
+            IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.INFO));
             IDE.getInstance().closeView(display.asView().getId());
          }
 
@@ -225,7 +222,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
          protected void onFailure(Throwable exception)
          {
             String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFail();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
    }

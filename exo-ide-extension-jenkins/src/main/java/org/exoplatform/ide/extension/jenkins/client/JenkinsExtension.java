@@ -46,7 +46,7 @@ public class JenkinsExtension extends Extension implements InitializeServicesHan
    public void initialize()
    {
       //IDE.getInstance().addControl(new BuildControl(), DockTarget.NONE, false);
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
    }
 
    /**

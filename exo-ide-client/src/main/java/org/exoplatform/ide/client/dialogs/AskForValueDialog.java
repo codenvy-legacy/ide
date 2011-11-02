@@ -32,7 +32,6 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasText;
 
@@ -78,10 +77,10 @@ public class AskForValueDialog implements ViewClosedHandler
 
    private ValueDiscardCallback discardCallback;
 
-   public AskForValueDialog(HandlerManager eventBus)
+   public AskForValueDialog()
    {
       instance = this;
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void ask(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,

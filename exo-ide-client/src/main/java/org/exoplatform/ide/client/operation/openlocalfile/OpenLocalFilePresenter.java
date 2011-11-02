@@ -103,9 +103,9 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
 
    public OpenLocalFilePresenter()
    {
-      IDE.EVENT_BUS.addHandler(OpenLocalFileEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(OpenLocalFileEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       IDE.getInstance().addControl(new OpenLocalFileCommand());
    }
 
@@ -364,7 +364,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
    {
       FileModel submittedFile = new FileModel(file_name, file_mimeType, submittedFileContent, new FolderModel());
       submittedFile.setContentChanged(true);
-      IDE.EVENT_BUS.fireEvent(new OpenFileEvent(submittedFile));
+      IDE.fireEvent(new OpenFileEvent(submittedFile));
    }
 
 }

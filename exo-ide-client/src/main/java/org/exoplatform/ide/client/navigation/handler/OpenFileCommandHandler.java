@@ -61,7 +61,6 @@ import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Link;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 
 /**
@@ -73,7 +72,6 @@ import com.google.gwt.http.client.RequestException;
 public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    ApplicationSettingsReceivedHandler
 {
-   private HandlerManager eventBus;
 
    private String selectedEditor;
 
@@ -91,14 +89,12 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   public OpenFileCommandHandler(HandlerManager eventBus)
+   public OpenFileCommandHandler()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(OpenFileEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(OpenFileEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
    /**
@@ -159,7 +155,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Parent folder not found."));
                }
             });
@@ -167,7 +163,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Parent folder not found."));
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Parent folder not found."));
       }
    }
 
@@ -189,7 +185,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Resource not found."));
                }
             });
@@ -197,7 +193,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
       }
    }
 
@@ -215,7 +211,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
          }
 
          EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), selectedEditor);
-         eventBus.fireEvent(new EditorOpenFileEvent(file, producer));
+         IDE.fireEvent(new EditorOpenFileEvent(file, producer));
       }
       catch (EditorNotFoundException e)
       {

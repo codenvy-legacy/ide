@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -33,8 +34,6 @@ import org.exoplatform.ide.git.client.pull.PullPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Abstract presenter for displays, which has to show and work with branches 
@@ -50,14 +49,6 @@ public abstract class HasBranchesPresenter extends GitPresenter
     * The list of remote branches.
     */
    protected List<Branch> remoteBranches;
-
-   /**
-    * @param eventBus
-    */
-   public HasBranchesPresenter(HandlerManager eventBus)
-   {
-      super(eventBus);
-   }
 
    /**
     * Get the list of remote repositories for local one.
@@ -120,7 +111,7 @@ public abstract class HasBranchesPresenter extends GitPresenter
          {
             String errorMessage =
                (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.branchesListFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
    }

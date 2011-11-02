@@ -18,15 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -57,8 +50,14 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for creating application on CloudFoundry.
@@ -172,12 +171,10 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     */
    private AppData appData;
 
-   public CreateApplicationPresenter(HandlerManager eventbus)
+   public CreateApplicationPresenter()
    {
-      super(eventbus);
-
-      eventBus.addHandler(CreateApplicationEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(CreateApplicationEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -313,7 +310,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       if (selectedItems == null || selectedItems.size() == 0)
       {
          String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
-         eventBus.fireEvent(new ExceptionThrownEvent(msg));
+         IDE.fireEvent(new ExceptionThrownEvent(msg));
          return;
       }
       if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
@@ -329,7 +326,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       else
       {
          String msg = lb.createApplicationNotFolder(selectedItems.get(0).getName());
-         eventBus.fireEvent(new ExceptionThrownEvent(msg));
+         IDE.fireEvent(new ExceptionThrownEvent(msg));
          return;
       }
    }
@@ -352,7 +349,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    @Override
    public void onApplicationBuilt(ApplicationBuiltEvent event)
    {
-      eventBus.removeHandler(event.getAssociatedType(), this);
+      IDE.removeHandler(event.getAssociatedType(), this);
       if (event.getJobStatus().getArtifactUrl() != null)
       {
          warUrl = event.getJobStatus().getArtifactUrl();
@@ -397,7 +394,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url,
          vfs.getId(), project.getId(), app.instances, app.memory, app.nostart,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null, app.server)
+         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validateHandler, null, app.server)
          {
             @Override
             protected void onSuccess(String result)
@@ -420,7 +417,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       };
 
       CloudFoundryClientService.getInstance().getFrameworks(
-         new CloudFoundryAsyncRequestCallback<List<Framework>>(eventBus, getFrameworksLoggedInHandler, null)
+         new CloudFoundryAsyncRequestCallback<List<Framework>>(IDE.eventBus(), getFrameworksLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(List<Framework> result)
@@ -432,8 +429,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
    private void buildApplication()
    {
-      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
-      eventBus.fireEvent(new BuildApplicationEvent());
+      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildApplicationEvent());
    }
 
    private void createApplication(final AppData app)
@@ -450,7 +447,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       CloudFoundryClientService.getInstance().create(app.server, app.name, app.type, app.url, app.instances,
          app.memory, app.nostart, vfs.getId(), project.getId(), warUrl,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, createAppHandler, null, app.server)
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), createAppHandler, null, app.server)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)
@@ -467,13 +464,13 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                      msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
                   }
                }
-               eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+               IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+               IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
                super.onFailure(exception);
             }
          });
@@ -526,7 +523,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("View Create Cloudfoundry Application must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("View Create Cloudfoundry Application must be null"));
       }
    }
 
@@ -593,7 +590,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          }
          catch (NumberFormatException e)
          {
-            eventBus
+            IDE
                .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
          }
       }
@@ -620,7 +617,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
       catch (NumberFormatException e)
       {
-         eventBus
+         IDE
             .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
       }
       boolean nostart = !display.getIsStartAfterCreationCheckItem().getValue();
@@ -652,13 +649,13 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                         return;
                      }
                   }
-                  eventBus.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(project.getName())));
+                  IDE.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(project.getName())));
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Parent folder not found."));
                }
             });
@@ -666,7 +663,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

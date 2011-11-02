@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.finish;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -60,11 +58,12 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for Step1 (Source) of Wizard for creation Java Project.
@@ -109,12 +108,10 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
    
    private WizardReturnable wizard;
    
-   public WizardFinishStepPresenter(HandlerManager eventBus)
+   public WizardFinishStepPresenter()
    {
-      super(eventBus);
-      
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
    }
    
    /**
@@ -132,7 +129,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ProjectCreationFinishedEvent(true));
+            IDE.fireEvent(new ProjectCreationFinishedEvent(true));
             closeView();
          }
       });
@@ -198,7 +195,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
    @Override
    public void onApplicationBuilt(ApplicationBuiltEvent event)
    {
-      eventBus.removeHandler(event.getAssociatedType(), this);
+      IDE.removeHandler(event.getAssociatedType(), this);
       if (event.getJobStatus().getArtifactUrl() != null)
       {
          warUrl = event.getJobStatus().getArtifactUrl();
@@ -218,7 +215,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Show Wizard must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Show Wizard must be null"));
       }
    }
    
@@ -247,9 +244,9 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
                   buildApplication(project);
                }
                //TODO check this works:
-               eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
+               IDE.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
                //eventBus.fireEvent(new RefreshBrowserEvent(parent));
-               eventBus.fireEvent(new ProjectCreationFinishedEvent(false));
+               IDE.fireEvent(new ProjectCreationFinishedEvent(false));
                closeView();
             }
             
@@ -257,14 +254,14 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
             protected void onFailure(Throwable exception)
             {
                exception.printStackTrace();
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, lb.wizardFinishErrorCantCreateProject()));
+               IDE.fireEvent(new ExceptionThrownEvent(exception, lb.wizardFinishErrorCantCreateProject()));
             }
          });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e,
+         IDE.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
       }
       
@@ -305,7 +302,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
       final String applicationId =
          projectProperties.getProperties().get("cf-name") + "/" + projectProperties.getProperties().get("domain");
       
-      SamplesClientService.getInstance().createCloudBeesApplication(applicationId, vfs.getId(), project.getId(), warUrl, null, new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployToCloudBeesLoggedInHandler)
+      SamplesClientService.getInstance().createCloudBeesApplication(applicationId, vfs.getId(), project.getId(), warUrl, null, new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), deployToCloudBeesLoggedInHandler)
          {
             @Override
             protected void onSuccess(final Map<String, String> deployResult)
@@ -319,7 +316,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
                   Entry<String, String> entry = (Entry<String, String>)it.next();
                   output += entry.getKey() + " : " + entry.getValue() + "<br>";
                }
-               eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+               IDE.fireEvent(new OutputEvent(output, Type.INFO));
                projectProperties = null;
             }
 
@@ -329,7 +326,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new OutputEvent(lb.cloudBeesDeployFailure(), Type.INFO));
+               IDE.fireEvent(new OutputEvent(lb.cloudBeesDeployFailure(), Type.INFO));
                projectProperties = null;
                super.onFailure(exception);
             }
@@ -353,7 +350,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
       String server = projectProperties.getProperties().get("target");
       
       SamplesClientService.getInstance().createCloudFoundryApplication(server, name, url, project.getPath(),
-         warUrl, new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, deployToCloudFoundryLoggedInHandler)
+         warUrl, new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), deployToCloudFoundryLoggedInHandler)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)
@@ -371,14 +368,14 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
                         "<br>" + lb.cloudFoundryApplicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
                   }
                }
-               eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+               IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
                projectProperties = null;
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new OutputEvent(lb.cloudFoundryDeployFailure(), Type.INFO));
+               IDE.fireEvent(new OutputEvent(lb.cloudFoundryDeployFailure(), Type.INFO));
                projectProperties = null;
                super.onFailure(exception);
             }
@@ -387,8 +384,8 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
    
    private void buildApplication(ProjectModel projectModel)
    {
-      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
-      eventBus.fireEvent(new BuildApplicationEvent(projectModel));
+      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildApplicationEvent(projectModel));
    }
 
    /**

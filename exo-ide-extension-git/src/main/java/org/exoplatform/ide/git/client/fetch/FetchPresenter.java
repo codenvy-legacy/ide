@@ -18,15 +18,8 @@
  */
 package org.exoplatform.ide.git.client.fetch;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -41,8 +34,14 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.LinkedHashMap;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter of the view for fetching changes from remote repository.
@@ -138,12 +137,11 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
    private Display display;
 
    /**
-    * @param eventBus events handler
+    *
     */
-   public FetchPresenter(HandlerManager eventBus)
+   public FetchPresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(FetchEvent.TYPE, this);
+      IDE.addHandler(FetchEvent.TYPE, this);
    }
 
    /**
@@ -233,7 +231,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
                @Override
                protected void onSuccess(String result)
                {
-                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
                }
 
                @Override
@@ -254,7 +252,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
    private void handleError(Throwable t, String remoteUrl)
    {
       String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.fetchFail(remoteUrl);
-      eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 
    /**

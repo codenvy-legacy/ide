@@ -18,15 +18,8 @@
  */
 package org.exoplatform.ide.git.client.push;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -40,8 +33,14 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.LinkedHashMap;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter of view for pushing changes to remote repository.
@@ -128,12 +127,11 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    private Display display;
 
    /**
-    * @param eventBus events handler
+    *
     */
-   public PushToRemotePresenter(HandlerManager eventBus)
+   public PushToRemotePresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(PushToRemoteEvent.TYPE, this);
+      IDE.addHandler(PushToRemoteEvent.TYPE, this);
    }
 
    /**
@@ -235,7 +233,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                @Override
                protected void onSuccess(String result)
                {
-                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
                }
 
                @Override
@@ -257,9 +255,9 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    {
       String errorMessage =
                (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pushFail();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
+   
    /**
     * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#onRemotesReceived(java.util.List)
     */
@@ -306,4 +304,5 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       }
       display.setLocalBranches(values);
    }
+   
 }

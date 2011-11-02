@@ -18,16 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -46,8 +38,15 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Presenter for choosing source for class path.
@@ -101,20 +100,14 @@ public class ChooseSourcePathPresenter
     */
    private Display display;
 
-   /**
-    * Handler manager.
-    */
-   private HandlerManager eventBus;
-
    private VirtualFileSystemInfo vfs;
 
    /**
     * @param eventBus handler manager
     * @param restContext REST context
     */
-   public ChooseSourcePathPresenter(HandlerManager eventBus, VirtualFileSystemInfo vfs)
+   public ChooseSourcePathPresenter(VirtualFileSystemInfo vfs)
    {
-      this.eventBus = eventBus;
       this.vfs = vfs;
 
       if (display == null)
@@ -252,8 +245,7 @@ public class ChooseSourcePathPresenter
                @Override
                protected void onFailure(Throwable exception)
                {
-
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Parent folder not found."));
                }
             });
@@ -261,7 +253,7 @@ public class ChooseSourcePathPresenter
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -279,7 +271,7 @@ public class ChooseSourcePathPresenter
          classPathEntries.add(groovyClassPathEntry);
       }
 
-      eventBus.fireEvent(new AddSourceToBuildPathEvent(classPathEntries));
+      IDE.fireEvent(new AddSourceToBuildPathEvent(classPathEntries));
       closeView();
    }
 

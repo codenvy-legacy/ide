@@ -68,6 +68,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
 
    public interface Display extends IsView
    {
+      
       TreeGridItem<Template> getTemplateTreeGrid();
 
       HasValue<String> getNameField();
@@ -130,9 +131,9 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
 
    public CreateProjectTemplatePresenter()
    {
-      IDE.EVENT_BUS.addHandler(CreateProjectTemplateEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(TemplatesMigratedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(CreateProjectTemplateEvent.TYPE, this);
+      IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -278,7 +279,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
             addFileToProjectTemplate(fileTemplate);
          }
       };
-      IDE.EVENT_BUS.fireEvent(new CreateFileFromTemplateEvent(callback, IDE.TEMPLATE_CONSTANT.addFileButton(),
+      IDE.fireEvent(new CreateFileFromTemplateEvent(callback, IDE.TEMPLATE_CONSTANT.addFileButton(),
          IDE.IDE_LOCALIZATION_CONSTANT.addButton()));
    }
 
@@ -378,7 +379,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
             return;
          }
       }
-      TemplateService.getInstance().addProjectTemplate(projectTemplate, new AsyncRequestCallback<String>(IDE.EVENT_BUS)
+      TemplateService.getInstance().addProjectTemplate(projectTemplate, new AsyncRequestCallback<String>(IDE.eventBus())
       {
 
          @Override
@@ -430,7 +431,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Display CreateProjectTemplate must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Display CreateProjectTemplate must be null"));
       }
    }
 
@@ -446,7 +447,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
       }
       else
       {
-         IDE.EVENT_BUS.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         IDE.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
          {
             @Override
             public void onTemplatesMigrated()
@@ -460,7 +461,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
    private void createProjectTemplate()
    {
       templateList = new ArrayList<Template>();
-      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(IDE.EVENT_BUS)
+      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(IDE.eventBus())
       {
          @Override
          protected void onSuccess(ProjectTemplateList result)

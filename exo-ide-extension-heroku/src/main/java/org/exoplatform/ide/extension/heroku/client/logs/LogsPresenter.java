@@ -18,16 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.logs;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -40,6 +30,15 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.LogsResponse;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Presenter for application's logs view.
@@ -71,13 +70,12 @@ public class LogsPresenter extends GitPresenter implements ShowLogsHandler, Logg
    private Display display;
 
    /**
-    * @param eventBus events handler
+    *
     */
-   public LogsPresenter(HandlerManager eventBus)
+   public LogsPresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(ShowLogsEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowLogsEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -157,7 +155,7 @@ public class LogsPresenter extends GitPresenter implements ShowLogsHandler, Logg
       int logLines =
          (display != null && isCorrectValue()) ? Integer.parseInt(display.getLogLinesCount().getValue()) : 0;
          String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         HerokuClientService.getInstance().logs(null, vfs.getId(), projectId, logLines, new LogsAsyncRequestCallback(eventBus, this)
+         HerokuClientService.getInstance().logs(null, vfs.getId(), projectId, logLines, new LogsAsyncRequestCallback(IDE.eventBus(), this)
       {
          @Override
          protected void onSuccess(LogsResponse result)
@@ -192,7 +190,7 @@ public class LogsPresenter extends GitPresenter implements ShowLogsHandler, Logg
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getLogs();

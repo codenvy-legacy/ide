@@ -18,19 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.location;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -64,8 +53,18 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * 
@@ -125,8 +124,6 @@ public class WizardLocationStepPresenter implements ViewClosedHandler,
 
    private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    /**
@@ -146,14 +143,12 @@ public class WizardLocationStepPresenter implements ViewClosedHandler,
    
    private WizardReturnable wizardReturn;
 
-   public WizardLocationStepPresenter(HandlerManager eventBus)
+   public WizardLocationStepPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
-      eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectCreationFinishedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
    
    /**
@@ -219,7 +214,7 @@ public class WizardLocationStepPresenter implements ViewClosedHandler,
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ProjectCreationFinishedEvent(true));
+            IDE.fireEvent(new ProjectCreationFinishedEvent(true));
             closeView();
          }
       });
@@ -434,7 +429,7 @@ public class WizardLocationStepPresenter implements ViewClosedHandler,
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Select Location View must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Select Location View must be null"));
       }
    }
 
@@ -447,14 +442,14 @@ public class WizardLocationStepPresenter implements ViewClosedHandler,
    {
       if (selectedItems == null || selectedItems.isEmpty())
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorParentFolderNotSelected()));
+         IDE.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorParentFolderNotSelected()));
          return;
       }
 
       final String newFolderName = display.getFolderNameField().getValue();
       if (newFolderName == null || newFolderName.isEmpty())
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorFolderNameEmpty()));
+         IDE.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorFolderNameEmpty()));
          return;
       }
       final FolderModel baseFolder = (FolderModel)selectedItems.get(0);
@@ -477,14 +472,14 @@ public class WizardLocationStepPresenter implements ViewClosedHandler,
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception, lb.selectLocationErrorCantCreateFolder()));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, lb.selectLocationErrorCantCreateFolder()));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e, lb.selectLocationErrorCantCreateFolder()));
+         IDE.fireEvent(new ExceptionThrownEvent(e, lb.selectLocationErrorCantCreateFolder()));
       }
    }
 

@@ -161,9 +161,9 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
    public LaunchRestServicePresenter() {
       IDE.getInstance().addControl(new LaunchRestServiceCommand(), Docking.TOOLBAR, true);
       
-      IDE.EVENT_BUS.addHandler(PreviewWadlOutputEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(PreviewWadlOutputEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    /**
@@ -229,7 +229,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
          {
             ExceptionThrownEvent exc = new ExceptionThrownEvent(exception, "Service is not deployed.");
             exc.setException(exception);
-            IDE.EVENT_BUS.fireEvent(exc);
+            IDE.fireEvent(exc);
          }
       });
    }
@@ -256,7 +256,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
          {
             if(undeployOnCancel)
             {
-               IDE.EVENT_BUS.fireEvent(new UndeployGroovyScriptSandboxEvent());
+               IDE.fireEvent(new UndeployGroovyScriptSandboxEvent());
             }
             
             IDE.getInstance().closeView(display.asView().getId());
@@ -536,7 +536,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
                @Override
                protected void onSuccess(RestServiceOutput result)
                {
-                  IDE.EVENT_BUS.fireEvent(new RestServiceOutputReceivedEvent(result));
+                  IDE.fireEvent(new RestServiceOutputReceivedEvent(result));
                }
 
                @Override
@@ -546,7 +546,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
                   {
                      RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(this.getResult());
                      event.setException(exception);
-                     IDE.EVENT_BUS.fireEvent(event);
+                     IDE.fireEvent(event);
                      return;
                   }
                   

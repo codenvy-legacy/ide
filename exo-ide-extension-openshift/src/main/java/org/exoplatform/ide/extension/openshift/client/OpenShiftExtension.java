@@ -40,7 +40,6 @@ import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplication
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * OpenShift extenstion to be added to IDE.
@@ -58,18 +57,12 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       .create(OpenShiftLocalizationConstant.class);
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
    @Override
    public void initialize()
    {
-      this.eventBus = IDE.EVENT_BUS;
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls:
       IDE.getInstance().addControl(new OpenShiftControl());
@@ -81,17 +74,17 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(new ShowUserInfoControl());
       IDE.getInstance().addControl(new UpdatePublicKeyControl());
       
-      new OpenShiftExceptionsHandler(eventBus);
+      new OpenShiftExceptionsHandler();
       
       //Create presenters:
-      new LoginPresenter(eventBus);
-      new CreateDomainPresenter(eventBus);
-      new CreateApplicationPresenter(eventBus);
-      new DeleteApplicationCommandHandler(eventBus);
-      new ApplicationInfoPresenter(eventBus);
-      new PreviewApplicationPresenter(eventBus);
-      new UserInfoPresenter(eventBus);
-      new UpdatePublicKeyCommandHandler(eventBus);
+      new LoginPresenter();
+      new CreateDomainPresenter();
+      new CreateApplicationPresenter();
+      new DeleteApplicationCommandHandler();
+      new ApplicationInfoPresenter();
+      new PreviewApplicationPresenter();
+      new UserInfoPresenter();
+      new UpdatePublicKeyCommandHandler();
    }
 
    /**
@@ -100,6 +93,6 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new OpenShiftClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new OpenShiftClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 }

@@ -138,11 +138,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    private Display display;
 
    /**
-    * Handler manager.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Classpath file.
     */
    private FileModel classPathFile;
@@ -167,15 +162,14 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    /**
     * @param eventBus
     */
-   public ConfigureBuildPathPresenter(HandlerManager eventBus)
+   public ConfigureBuildPathPresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(ProjectCreatedEvent.TYPE, this);
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
-      eventBus.addHandler(AddSourceToBuildPathEvent.TYPE, this);
+      IDE.addHandler(ProjectCreatedEvent.TYPE, this);
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(AddSourceToBuildPathEvent.TYPE, this);
    }
 
    /**
@@ -430,14 +424,14 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -464,14 +458,14 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -480,7 +474,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     */
    private void doAddPath()
    {
-      new ChooseSourcePathPresenter(eventBus, vfsInfo);
+      new ChooseSourcePathPresenter(vfsInfo);
    }
 
    /**

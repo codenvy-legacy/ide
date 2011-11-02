@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.preview;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
@@ -42,6 +39,8 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
+import com.google.gwt.user.client.ui.Image;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -57,12 +56,11 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
 
    private boolean previewOpened = false;
 
-   public PreviewApplicationPresenter(HandlerManager eventBus)
+   public PreviewApplicationPresenter()
    {
-      super(eventBus);
-      eventBus.addHandler(PreviewApplicationEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(PreviewApplicationEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    @Override
@@ -100,11 +98,11 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
                      && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                   {
                      addLoggedInHandler();
-                     eventBus.fireEvent(new LoginEvent());
+                     IDE.fireEvent(new LoginEvent());
                      return;
                   }
                }
-               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                   .getApplicationInfoFail()));
             }
          });
@@ -112,7 +110,7 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
 
    private void addLoggedInHandler()
    {
-      eventBus.addHandler(LoggedInEvent.TYPE, this);
+      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -121,7 +119,7 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
    @Override
    public void onLoggedIn(LoggedInEvent event)
    {
-      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      IDE.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
          getApplicationInfo();

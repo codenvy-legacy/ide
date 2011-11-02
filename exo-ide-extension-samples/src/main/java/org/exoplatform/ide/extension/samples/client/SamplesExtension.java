@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -37,6 +34,8 @@ import org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishSt
 import org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter;
 
+import com.google.gwt.core.client.GWT;
+
 /**
  * Samples extension for IDE.
  * 
@@ -46,10 +45,6 @@ import org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceSt
  */
 public class SamplesExtension extends Extension implements InitializeServicesHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
    
    public static final SamplesLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(SamplesLocalizationConstant.class);
@@ -60,7 +55,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new SamplesClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new SamplesClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
@@ -70,19 +65,18 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    public void initialize()
    {
       SamplesClientBundle.INSTANCE.css().ensureInjected();
-      eventBus = IDE.EVENT_BUS;
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
       
-      new StartPagePresenter(eventBus);
-      new SelectLocationPresenter(eventBus);
-      new ShowSamplesPresenter(eventBus);
+      new StartPagePresenter();
+      new SelectLocationPresenter();
+      new ShowSamplesPresenter();
       new ConvertToProjectPresenter();
       
-      WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter(eventBus);
-      WizardLocationStepPresenter wizardLocationStep = new WizardLocationStepPresenter(eventBus);
-      WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter(eventBus);
-      WizardDeploymentStepPresenter wizardDeploymentStep = new WizardDeploymentStepPresenter(eventBus);
-      WizardFinishStepPresenter wizardFinishStep = new WizardFinishStepPresenter(eventBus);
+      WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter();
+      WizardLocationStepPresenter wizardLocationStep = new WizardLocationStepPresenter();
+      WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter();
+      WizardDeploymentStepPresenter wizardDeploymentStep = new WizardDeploymentStepPresenter();
+      WizardFinishStepPresenter wizardFinishStep = new WizardFinishStepPresenter();
       
       wizardSourceStep.setWizardContinuable(wizardLocationStep);
       wizardLocationStep.setWizardReturn(wizardSourceStep);
@@ -93,8 +87,8 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       wizardDeploymentStep.setWizardContinuable(wizardFinishStep);
       wizardFinishStep.setWizardReturnable(wizardDeploymentStep);
       
-      new LoginPresenter(eventBus);
+      new LoginPresenter();
       
-      eventBus.fireEvent(new OpenStartPageEvent());
+      IDE.fireEvent(new OpenStartPageEvent());
    }
 }
