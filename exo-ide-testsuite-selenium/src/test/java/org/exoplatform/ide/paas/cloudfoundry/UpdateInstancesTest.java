@@ -25,10 +25,10 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.TextUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 /**
  * 
@@ -103,7 +103,7 @@ public class UpdateInstancesTest extends CloudFoundryTest
       */
       
       waitForElementPresent("exoAskForValueDialog");
-      TextUtil.getInstance().typeToInput("//div[@id='exoAskForValueDialog']//input[@name='valueField']", "5", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.xpath("//div[@id='exoAskForValueDialog']//input[@name='valueField']")), "5", true);
       selenium().click("OkButton");
       waitForElementNotPresent("exoAskForValueDialog");
       Thread.sleep(1000);

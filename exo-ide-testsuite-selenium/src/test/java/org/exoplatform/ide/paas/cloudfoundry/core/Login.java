@@ -20,8 +20,7 @@
 package org.exoplatform.ide.paas.cloudfoundry.core;
 
 import org.exoplatform.ide.core.AbstractTestModule;
-import org.exoplatform.ide.core.Project.Locators;
-import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.openqa.selenium.By;
 
 /**
  * 
@@ -33,47 +32,53 @@ import org.exoplatform.ide.utils.AbstractTextUtil;
 
 public class Login extends AbstractTestModule
 {
-   
+
    public interface Locators
    {
-      
+
       String VIEW_ID = "ideLoginView";
-      
+
       String SERVER_FIELD_NAME = "ideLoginViewTargetField";
-      
+
       String EMAIL_FIELD_NAME = "ideLoginViewEmailField";
-      
+
       String PASSWORD_FIELD_NAME = "ideLoginViewPasswordField";
-      
+
       String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
-      
+
       String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
-      
+
    }
 
-   public boolean isLoginDialogOpened() {
+   public boolean isLoginDialogOpened()
+   {
       String locator = "//div[@view-id='" + Locators.VIEW_ID + "']";
       return selenium().isElementPresent(locator);
    }
 
-   public void waitFormLoginDialogClosed() throws Exception {
+   public void waitFormLoginDialogClosed() throws Exception
+   {
       String locator = "//div[@view-id='" + Locators.VIEW_ID + "']";
       waitForElementNotPresent(locator);
    }
 
-   public void typeEmail(String email) throws Exception {
-      AbstractTextUtil.getInstance().typeToInput(Locators.EMAIL_FIELD_NAME, email, true);
+   public void typeEmail(String email) throws Exception
+   {
+      IDE().INPUT.typeToElement(driver().findElement(By.name(Locators.EMAIL_FIELD_NAME)), email, true);
    }
 
-   public void typePassword(String password) throws Exception {
-      AbstractTextUtil.getInstance().typeToInput(Locators.PASSWORD_FIELD_NAME, password, true);
+   public void typePassword(String password) throws Exception
+   {
+      IDE().INPUT.typeToElement(driver().findElement(By.name(Locators.PASSWORD_FIELD_NAME)), password, true);
    }
 
-   public void clickLoginButton() {
+   public void clickLoginButton()
+   {
       selenium().click(Locators.LOGIN_BUTTON_ID);
    }
 
-   public void clickcancelButton() {
+   public void clickcancelButton()
+   {
       selenium().click(Locators.CANCEL_BUTTON_ID);
    }
 

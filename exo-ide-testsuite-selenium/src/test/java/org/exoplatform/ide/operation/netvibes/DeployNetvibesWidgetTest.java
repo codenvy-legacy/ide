@@ -26,10 +26,10 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import java.io.IOException;
 
@@ -43,45 +43,45 @@ import java.io.IOException;
 public class DeployNetvibesWidgetTest extends BaseTest
 {
    //----Ids of buttons, placed on Deploy UWA widget form-------------------
-   
+
    private static final String DEPLOY_BUTTON_ID = "ideDeployUwaWidgetFormDeployWidgetButton";
-   
+
    private static final String NEXT_BUTTON_ID = "ideDeployUwaWidgetFormNextStepButton";
-   
+
    private static final String CANCEL_BUTTON_ID = "ideDeployUwaWidgetFormCancelButton";
-   
+
    private static final String BACK_BUTTON_ID = "ideDeployUwaWidgetFormPrevStepButton";
-   
+
    //----Other elements of form-----------------
-   
+
    private static final String DEPLOY_WIDGET_FORM_ID = "ideDeployUwaWidgetForm";
-   
+
    private static final String URL_FIELD_NAME = "ideDeployUwaWidgetFormUrlField";
-   
+
    private static final String TITLE_FIELD_NAME = "ideDeployUwaWidgetFormTitleField";
-   
+
    private static final String DESCRIPTION_FIELD_NAME = "ideDeployUwaWidgetFormDescriptionField";
-   
+
    private static final String VERSION_FIELD_NAME = "ideDeployUwaWidgetFormVersionField";
-   
+
    private static final String KEYWORDS_FIELD_NAME = "ideDeployUwaWidgetFormKeywordsField";
-   
+
    private static final String TUMBNAIL_FIELD_NAME = "ideDeployUwaWidgetFormTumbnailField";
-   
+
    private static final String LANGUAGE_FIELD_NAME = "ideDeployUwaWidgetFormLanguageField";
-   
+
    private static final String REGION_FIELD_NAME = "ideDeployUwaWidgetFormRegionField";
-   
+
    private static final String CATEGORY_FIELD_NAME = "ideDeployUwaWidgetFormCategoryField";
-   
+
    private static final String LOGIN_FIELD_NAME = "ideDeployUwaWidgetFormLoginField";
-   
+
    private static final String PASSWORD_FIELD_NAME = "ideDeployUwaWidgetFormPasswordField";
-   
+
    private static final String API_KEY_FIELD_NAME = "ideDeployUwaWidgetFormApiKeyField";
-   
+
    private static final String SECRET_FIELD_NAME = "ideDeployUwaWidgetFormSecretField";
-   
+
    //----Test constants----------------
 
    private final static String FILE_NAME1 = DeployNetvibesWidgetTest.class.getSimpleName() + "1.html";
@@ -138,7 +138,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, false, false);
 
       //Set URL:
-      AbstractTextUtil.getInstance().typeToInput(URL_FIELD_NAME, "http://hello.com", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(URL_FIELD_NAME)), "http://hello.com", true);
       //Check buttons states
       checkButtonStateById(DEPLOY_BUTTON_ID, false, false);
       checkButtonStateById(CANCEL_BUTTON_ID, true, true);
@@ -148,7 +148,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       //Click "Next" button and go to step 2:
       selenium().click(NEXT_BUTTON_ID);
       waitForElementPresent(TITLE_FIELD_NAME);
-      
+
       checkStepTwoLayout();
       checkButtonStateById(DEPLOY_BUTTON_ID, false, false);
       checkButtonStateById(CANCEL_BUTTON_ID, true, true);
@@ -156,10 +156,10 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, true, true);
 
       //Fill requiered fields:
-      AbstractTextUtil.getInstance().typeToInput(TITLE_FIELD_NAME, "Title", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(TITLE_FIELD_NAME)), "Title", true);
       checkButtonStateById(NEXT_BUTTON_ID, true, false);
 
-      AbstractTextUtil.getInstance().typeToInput(DESCRIPTION_FIELD_NAME, "Description", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(DESCRIPTION_FIELD_NAME)), "Description", true);
       checkButtonStateById(NEXT_BUTTON_ID, true, true);
 
       //Click "Next" button and go to step 3:
@@ -172,16 +172,16 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, true, true);
 
       //Fill requiered fields:
-      AbstractTextUtil.getInstance().typeToInput(LOGIN_FIELD_NAME, "Login", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(LOGIN_FIELD_NAME)), "Login", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
 
-      AbstractTextUtil.getInstance().typeToInput(PASSWORD_FIELD_NAME, "Password", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(PASSWORD_FIELD_NAME)), "Password", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
 
-      AbstractTextUtil.getInstance().typeToInput(API_KEY_FIELD_NAME, "ApiKey", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(API_KEY_FIELD_NAME)), "ApiKey", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
 
-      AbstractTextUtil.getInstance().typeToInput(SECRET_FIELD_NAME, "SecreteKey", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(SECRET_FIELD_NAME)), "SecreteKey", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, true);
 
       selenium().click(CANCEL_BUTTON_ID);
@@ -193,13 +193,13 @@ public class DeployNetvibesWidgetTest extends BaseTest
    public void testDeployFormStepsNavigation() throws Exception
    {
       refresh();
-      
+
       IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      
+
       //Create new UWA widget
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       IDE.EDITOR.waitTabPresent(0);
@@ -222,7 +222,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, false, false);
 
       //Set URL:
-      AbstractTextUtil.getInstance().typeToInput(URL_FIELD_NAME, "http://example", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(URL_FIELD_NAME)), "http://example", true);
       //Check buttons states
       checkButtonStateById(DEPLOY_BUTTON_ID, false, false);
       checkButtonStateById(CANCEL_BUTTON_ID, true, true);
@@ -239,12 +239,12 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, true, true);
 
       //Fill requiered fields:
-      AbstractTextUtil.getInstance().typeToInput(TITLE_FIELD_NAME, "Test Title", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(TITLE_FIELD_NAME)), "Test Title", true);
       checkButtonStateById(NEXT_BUTTON_ID, true, false);
 
-      AbstractTextUtil.getInstance().typeToInput(DESCRIPTION_FIELD_NAME, "Test Description", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(DESCRIPTION_FIELD_NAME)), "Test Description", true);
 
-      AbstractTextUtil.getInstance().typeToInput(VERSION_FIELD_NAME, "1", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(VERSION_FIELD_NAME)), "1", true);
 
       checkButtonStateById(NEXT_BUTTON_ID, true, true);
 
@@ -258,11 +258,11 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, false, false);
 
       //Clear URL field:
-      AbstractTextUtil.getInstance().typeToInput(URL_FIELD_NAME, "", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(URL_FIELD_NAME)), "", true);
       checkButtonStateById(NEXT_BUTTON_ID, true, false);
 
       //Fill URL field again:
-      AbstractTextUtil.getInstance().typeToInput(URL_FIELD_NAME, "http://example2", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(URL_FIELD_NAME)), "http://example2", true);
       checkButtonStateById(NEXT_BUTTON_ID, true, true);
 
       //Click "Next" button and go to step 2:
@@ -289,16 +289,16 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, true, true);
 
       //Fill requiered fields:
-      AbstractTextUtil.getInstance().typeToInput(LOGIN_FIELD_NAME, "Login", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(LOGIN_FIELD_NAME)), "Login", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
 
-      AbstractTextUtil.getInstance().typeToInput(PASSWORD_FIELD_NAME, "Password", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(PASSWORD_FIELD_NAME)), "Password", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
 
-      AbstractTextUtil.getInstance().typeToInput(API_KEY_FIELD_NAME, "ApiKey", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(API_KEY_FIELD_NAME)), "ApiKey", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
 
-      AbstractTextUtil.getInstance().typeToInput(SECRET_FIELD_NAME, "SecreteKey", true);
+      IDE.INPUT.typeToElement(driver.findElement(By.name(SECRET_FIELD_NAME)), "SecreteKey", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, true);
 
       //Go back
@@ -396,8 +396,9 @@ public class DeployNetvibesWidgetTest extends BaseTest
 
    private void checkButtonEnabledById(String buttonId, boolean isEnabled)
    {
-      assertTrue(selenium().isElementPresent("//div[@id='" + DEPLOY_WIDGET_FORM_ID + "']//div[@id='" + buttonId
-         + "' and @button-enabled='" + isEnabled + "']"));
+      assertTrue(selenium().isElementPresent(
+         "//div[@id='" + DEPLOY_WIDGET_FORM_ID + "']//div[@id='" + buttonId + "' and @button-enabled='" + isEnabled
+            + "']"));
    }
 
    @AfterClass

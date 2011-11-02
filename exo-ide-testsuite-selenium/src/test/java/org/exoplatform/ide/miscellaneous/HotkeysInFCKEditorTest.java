@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.GoToLine;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -262,9 +261,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check Ctrl+C, Ctrl+V
       final String textForCopyPaste = "copy-paste text";
 
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, textForCopyPaste);
-      IDE.selectMainFrame();
+      IDE.EDITOR.typeTextIntoEditor(0, textForCopyPaste);
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.EDITOR.selectIFrameWithEditor(0);

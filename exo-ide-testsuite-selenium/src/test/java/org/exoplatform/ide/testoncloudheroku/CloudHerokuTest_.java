@@ -25,9 +25,7 @@ import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 import junit.framework.Assert;
 
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.utils.TextUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -213,7 +211,6 @@ public class CloudHerokuTest_
          selenium.windowMaximize();
          selenium.open(APPLICATION_URL);
          selenium.waitForPageToLoad("3000");
-         new TextUtil(selenium);
       }
       catch (Exception e)
       {

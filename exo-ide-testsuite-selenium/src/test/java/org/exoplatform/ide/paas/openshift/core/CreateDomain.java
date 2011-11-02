@@ -21,7 +21,7 @@ package org.exoplatform.ide.paas.openshift.core;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.AbstractTestModule;
-import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.openqa.selenium.By;
 
 /**
  * Created by The eXo Platform SAS .
@@ -68,7 +68,7 @@ public class CreateDomain extends AbstractTestModule
 
    public void typeDomainName(String domainName) throws Exception
    {
-      AbstractTextUtil.getInstance().typeToInput(Locators.DOMAIN_NAME_FIELD, domainName, true);
+      IDE().INPUT.typeToElement(driver().findElement(By.name(Locators.DOMAIN_NAME_FIELD)), domainName, true);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 

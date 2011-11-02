@@ -22,9 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.Editor;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
 /**
@@ -56,13 +54,13 @@ public class OpeningFilesTest extends BaseTest
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, file1Content);
-      saveAsUsingToolbarButton(file1Name);
+      IDE.EDITOR.typeTextIntoEditor(0, file1Content);
+      IDE.NAVIGATION.saveFileAs(file1Name);
       IDE.WORKSPACE.waitForRootItem();
       IDE.EDITOR.closeFile(0);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      saveAsUsingToolbarButton(file2Name);
+      IDE.NAVIGATION.saveFileAs(file2Name);
       IDE.WORKSPACE.waitForRootItem();
       IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);

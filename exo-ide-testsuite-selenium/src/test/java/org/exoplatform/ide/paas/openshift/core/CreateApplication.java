@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.AbstractTestModule;
-import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.openqa.selenium.By;
 
 /**
  * Created by The eXo Platform SAS .
@@ -83,7 +83,7 @@ public class CreateApplication extends AbstractTestModule
 
    public void typeApplicationName(String applicationName) throws Exception
    {
-      AbstractTextUtil.getInstance().typeToInput(Locators.APPLICATION_NAME_FIELD, applicationName, true);
+      IDE().INPUT.typeToElement(driver().findElement(By.name(Locators.APPLICATION_NAME_FIELD)), applicationName, true);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 

@@ -22,10 +22,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -52,9 +50,8 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
-      saveAsByTopMenu(UNDO_REDO_TXT);
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "1");
-
+      IDE.NAVIGATION.saveFileAs(UNDO_REDO_TXT);
+      IDE.EDITOR.typeTextIntoEditor(0, "1");
       //Thread.sleep(3000);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.REDO, false);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
@@ -62,9 +59,9 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "2");
+      IDE.EDITOR.typeTextIntoEditor(0, "2");
       //Thread.sleep(3000);
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "3");
+      IDE.EDITOR.typeTextIntoEditor(0, "3");
       //Thread.sleep(3000);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
@@ -151,7 +148,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "a");
+      IDE.EDITOR.typeTextIntoEditor(0, "a");
 
       //Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.REDO, false);

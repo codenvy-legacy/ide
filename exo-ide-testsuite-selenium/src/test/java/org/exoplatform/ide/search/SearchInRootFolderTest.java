@@ -25,7 +25,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -69,8 +68,8 @@ public class SearchInRootFolderTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.deleteLinesInEditor(14);
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, restFileContent);
-      saveAsByTopMenu(restFileName);
+      IDE.EDITOR.typeTextIntoEditor(0, restFileContent);
+      IDE.NAVIGATION.saveFileAs(restFileName);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folder1Name + "/" + restFileName);
 

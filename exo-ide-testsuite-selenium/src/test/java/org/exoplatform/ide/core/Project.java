@@ -19,7 +19,7 @@
 
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.openqa.selenium.By;
 
 /**
  * 
@@ -56,7 +56,7 @@ public class Project extends AbstractTestModule
    }
    
    public void typeProjectName(String projectName) throws Exception {
-      AbstractTextUtil.getInstance().typeToInput(Locators.PROJECT_NAME_FIELD_LOCATOR, projectName, true);
+      IDE().INPUT.typeToElement(driver().findElement(By.xpath(Locators.PROJECT_NAME_FIELD_LOCATOR)), projectName, true);
    }
    
    public String getProjectName() {

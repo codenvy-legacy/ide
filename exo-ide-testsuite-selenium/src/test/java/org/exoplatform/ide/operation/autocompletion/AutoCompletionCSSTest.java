@@ -22,11 +22,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.awt.event.KeyEvent;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -69,10 +66,7 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium().keyDown("//body[@class='editbox']", "\\35");
       selenium().keyDown("//body[@class='editbox']", "\\13");
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "<style>\n");
-      selenium().keyDown("//body[@class='editbox']", "\\13");
-      selenium().keyDown("//body[@class='editbox']", "\\13");
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "</style>");
+      IDE.EDITOR.typeTextIntoEditor(0, "<style>\n\n\n</style>");
       Thread.sleep(300);
 
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
@@ -96,14 +90,15 @@ public class AutoCompletionCSSTest extends BaseTest
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "<script>\n</script>");
+      IDE.EDITOR.typeTextIntoEditor(0, "<script>\n</script>");
+      
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "<style>\n\n</style>");
+      IDE.EDITOR.typeTextIntoEditor(0,"<style>\n\n</style>");
 
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 

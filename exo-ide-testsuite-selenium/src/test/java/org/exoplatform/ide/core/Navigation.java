@@ -27,7 +27,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.openqa.selenium.By;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -278,7 +278,7 @@ public class Navigation extends AbstractTestModule
       waitForElementPresent("ideCreateFolderFormCreateButton");
       waitForElementPresent("ideCreateFolderFormCancelButton");
 
-      AbstractTextUtil.getInstance().typeToInput("ideCreateFolderFormNameField", folderName, true);
+      IDE().INPUT.typeToElement(driver().findElement(By.name("ideCreateFolderFormNameField")), folderName, true);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium().click("ideCreateFolderFormCreateButton");

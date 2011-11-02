@@ -26,7 +26,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Preview;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -91,7 +90,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
             + " <Content type=\"html\">\n" + "<![CDATA[     \n" + " <div>" + "Hello,world!" + "</div>\n" + "]]>\n"
             + "</Content>\n" + "</Module>\n";
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, hello);
+      IDE.EDITOR.typeTextIntoEditor(0, hello);
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
       

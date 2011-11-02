@@ -19,7 +19,8 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.IDE;
-import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * Created by The eXo Platform SAS .
@@ -140,21 +141,9 @@ public class AskForValueDialog extends AbstractTestModule
     */
    public void setValue(String value) throws Exception
    {
-      AbstractTextUtil.getInstance().typeToInput(Locator.TEXT_FIELD_LOCATOR, value, true);
-//      if (value == "")
-//      {
-//         selenium().click(Locator.TEXT_FIELD_LOCATOR);
-//         selenium().controlKeyDown();
-//         selenium().keyPress(Locator.TEXT_FIELD_LOCATOR, "A");
-//         selenium().controlKeyUp();
-//         selenium().keyPress(Locator.TEXT_FIELD_LOCATOR, "\b");
-//         return;
-//      }
-//      
-//      selenium().type(Locator.TEXT_FIELD_LOCATOR, "");
-//      selenium().typeKeys(Locator.TEXT_FIELD_LOCATOR, value);
-      
-      
+      WebElement inputElement = driver().findElement(By.name(Locator.TEXT_FIELD_LOCATOR));
+      inputElement.clear();
+      inputElement.sendKeys(value);
    }
 
 }

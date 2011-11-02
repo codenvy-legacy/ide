@@ -31,6 +31,7 @@ import org.exoplatform.ide.core.FindReplace;
 import org.exoplatform.ide.core.Folder;
 import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
+import org.exoplatform.ide.core.Input;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
 import org.exoplatform.ide.core.Outline;
@@ -168,6 +169,8 @@ public class IDE
    public OpenShift OPENSHIFT = new OpenShift();
 
    public Project PROJECT = new Project();
+   
+   public Input INPUT = new Input();
 
    /**
     * Select main frame of IDE.

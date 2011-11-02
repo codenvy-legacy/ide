@@ -25,7 +25,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -140,8 +139,8 @@ public class SearchLoadFileTest extends BaseTest
 
       IDE.EDITOR.deleteLinesInEditor(7);
 
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, gadgetFileContent);
-      saveAsByTopMenu(gadgetFileName);
+      IDE.EDITOR.typeTextIntoEditor(0, gadgetFileContent);
+      IDE.NAVIGATION.saveFileAs(gadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
       IDE.EDITOR.closeFile(0);

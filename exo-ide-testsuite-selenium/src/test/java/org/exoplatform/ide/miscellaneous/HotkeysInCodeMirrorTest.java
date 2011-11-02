@@ -22,8 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -137,7 +135,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium().controlKeyUp();
 
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "\n");
+      IDE.EDITOR.typeTextIntoEditor(0, "\n");
 
       //paste text by pressing Ctrl+V
       selenium().controlKeyDown();
@@ -163,7 +161,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       selenium().controlKeyUp();
 
       final String textToCut = "text to cut";
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, textToCut);
+      IDE.EDITOR.typeTextIntoEditor(0, textToCut);
 
       //select all text
       selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
@@ -198,10 +196,10 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       final String textToRevert = "a";
 
       //----- 2 -------
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, textToRevert);
+      IDE.EDITOR.typeTextIntoEditor(0, textToRevert);
       //----- 3 -------
       //change text
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "5");
+      IDE.EDITOR.typeTextIntoEditor(0, "5");
 
       assertEquals(textToRevert + "5", selenium().getText("//body[@class='editbox']"));
       IDE.selectMainFrame();

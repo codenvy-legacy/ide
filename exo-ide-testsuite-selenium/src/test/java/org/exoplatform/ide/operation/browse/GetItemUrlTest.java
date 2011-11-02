@@ -25,7 +25,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
 
 /**
@@ -62,8 +61,8 @@ public class GetItemUrlTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.deleteLinesInEditor(7);
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content1);
-      saveAsUsingToolbarButton(file1Name);
+      IDE.EDITOR.typeTextIntoEditor(0, content1);
+      IDE.NAVIGATION.saveFileAs(file1Name);
 
       IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + file1Name);
@@ -72,9 +71,8 @@ public class GetItemUrlTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
 
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
-      saveAsUsingToolbarButton(file2Name);
-
+      IDE.EDITOR.typeTextIntoEditor(1, content2);
+      IDE.NAVIGATION.saveFileAs(file2Name);
       IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
