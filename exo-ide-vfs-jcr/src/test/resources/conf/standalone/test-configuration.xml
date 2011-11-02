@@ -28,16 +28,16 @@
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
    </component>
-   
-	<component>
-		<type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
-		<init-params>
-		 <values-param>
-		    <name>workspaces</name>
-		    <value>ws</value>
-		 </values-param>
-		</init-params>
-	</component>
+
+   <component>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
+      <init-params>
+         <values-param>
+            <name>workspaces</name>
+            <value>ws</value>
+         </values-param>
+      </init-params>
+   </component>
 
    <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>

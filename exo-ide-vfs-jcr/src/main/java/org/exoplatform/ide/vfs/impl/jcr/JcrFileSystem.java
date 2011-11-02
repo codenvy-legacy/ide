@@ -102,7 +102,7 @@ import javax.ws.rs.core.UriBuilder;
  */
 public class JcrFileSystem implements VirtualFileSystem
 {
-   public enum Resolver {
+   private enum Resolver {
       INSTANCE;
       /*=====================================*/
       private final MimeTypeResolver resolver;
@@ -122,26 +122,32 @@ public class JcrFileSystem implements VirtualFileSystem
 
    protected final Repository repository;
    protected final String workspaceName;
+   private final String rootNodePath;
    protected final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
    protected final URI baseUri;
 
    private VirtualFileSystemInfo vfsInfo;
-   private final String id;
+   private final String vfsID;
 
-   public JcrFileSystem(Repository repository, String workspaceName, String id,
+   public JcrFileSystem(Repository repository, String workspaceName, String rootNodePath, String vfsID,
       MediaType2NodeTypeResolver mediaType2NodeTypeResolver, URI baseUri)
    {
       this.repository = repository;
       this.workspaceName = workspaceName;
-      this.id = id;
+      if (rootNodePath != null && rootNodePath.length() > 1 && rootNodePath.endsWith("/"))
+      {
+         rootNodePath = rootNodePath.substring(0, rootNodePath.length() - 1);
+      }
+      this.rootNodePath = rootNodePath;
+      this.vfsID = vfsID;
       this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;
       this.baseUri = baseUri;
    }
 
-   public JcrFileSystem(Repository repository, String workspaceName, String id,
+   public JcrFileSystem(Repository repository, String workspaceName, String rootNodePath, String id,
       MediaType2NodeTypeResolver itemType2NodeTypeResolver)
    {
-      this(repository, workspaceName, id, itemType2NodeTypeResolver, URI.create(""));
+      this(repository, workspaceName, rootNodePath, id, itemType2NodeTypeResolver, URI.create(""));
    }
 
    /**
@@ -153,11 +159,11 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, ConstraintException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData object = getItemData(ses, id);
-         ItemData folder = getItemData(ses, parentId);
+         ItemData object = getItemData(session, id);
+         ItemData folder = getItemData(session, parentId);
          if (ItemType.FOLDER != folder.getType())
          {
             throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder. ");
@@ -167,7 +173,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -185,10 +191,10 @@ public class JcrFileSystem implements VirtualFileSystem
       VirtualFileSystemException
    {
       checkName(name);
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData parentData = getItemData(ses, parentId);
+         ItemData parentData = getItemData(session, parentId);
          if (ItemType.FOLDER != parentData.getType())
          {
             throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
@@ -204,7 +210,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -218,10 +224,10 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       checkName(name);
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData parentData = getItemData(ses, parentId);
+         ItemData parentData = getItemData(session, parentId);
          if (ItemType.FOLDER != parentData.getType())
          {
             throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
@@ -234,7 +240,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -253,10 +259,10 @@ public class JcrFileSystem implements VirtualFileSystem
       VirtualFileSystemException
    {
       checkName(name);
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData parentData = getItemData(ses, parentId);
+         ItemData parentData = getItemData(session, parentId);
          if (ItemType.FOLDER != parentData.getType())
          {
             throw new InvalidArgumentException("Unable to create project. Item specified as parent is not a folder. ");
@@ -279,7 +285,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -292,14 +298,14 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         getItemData(ses, id).delete(lockToken);
+         getItemData(session, id).delete(lockToken);
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -310,14 +316,14 @@ public class JcrFileSystem implements VirtualFileSystem
    public List<AccessControlEntry> getACL(@PathParam("id") String id) throws NotSupportedException,
       ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         return getItemData(ses, id).getACL();
+         return getItemData(session, id).getACL();
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -337,10 +343,10 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
       }
 
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemData(ses, folderId);
+         ItemData data = getItemData(session, folderId);
          if (ItemType.FOLDER != data.getType())
          {
             throw new InvalidArgumentException("Unable get children. Item " + data.getName() + " is not a folder. ");
@@ -372,7 +378,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -382,10 +388,10 @@ public class JcrFileSystem implements VirtualFileSystem
    public ContentStream getContent(String id) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemData(ses, id);
+         ItemData data = getItemData(session, id);
          if (ItemType.FILE != data.getType())
          {
             throw new InvalidArgumentException("Unable get content. Item " + data.getName() + " is not a file. ");
@@ -398,7 +404,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -409,10 +415,10 @@ public class JcrFileSystem implements VirtualFileSystem
    public ContentStream getContent(String path, String versionId) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemDataByPath(ses, path);
+         ItemData data = getItemDataByPath(session, path);
          if (ItemType.FILE != data.getType())
          {
             throw new InvalidArgumentException("Unable get content. Item " + data.getName() + " is not a file. ");
@@ -436,7 +442,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -477,18 +483,18 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             permissions.add(bp.value());
          }
-         Session ses = session();
+         Session session = session();
          Folder root;
          try
          {
-            root = (Folder)fromItemData(getItemDataByPath(ses, "/"), PropertyFilter.valueOf(PropertyFilter.ALL));
+            root = (Folder)fromItemData(getItemDataByPath(session, "/"), PropertyFilter.valueOf(PropertyFilter.ALL));
          }
          finally
          {
-            ses.logout();
+            session.logout();
          }
          vfsInfo =
-            new VirtualFileSystemInfo(this.id, true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
+            new VirtualFileSystemInfo(this.vfsID, true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
                org.exoplatform.services.security.IdentityConstants.ANY, permissions, ACLCapability.MANAGE,
                QueryCapability.BOTHCOMBINED, createUrlTemplates(), root);
       }
@@ -557,14 +563,14 @@ public class JcrFileSystem implements VirtualFileSystem
       @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
    ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         return fromItemData(getItemData(ses, id), propertyFilter);
+         return fromItemData(getItemData(session, id), propertyFilter);
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -579,10 +585,10 @@ public class JcrFileSystem implements VirtualFileSystem
       @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter) throws ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemDataByPath(ses, path);
+         ItemData data = getItemDataByPath(session, path);
          if (versionId != null && ItemType.FILE == data.getType())
          {
             FileData version = ((FileData)data).getVersion(versionId);
@@ -596,7 +602,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -607,10 +613,10 @@ public class JcrFileSystem implements VirtualFileSystem
    public ContentStream getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemData(ses, id);
+         ItemData data = getItemData(session, id);
          if (ItemType.FILE != data.getType())
          {
             throw new InvalidArgumentException("Object " + data.getName() + " is not a file. ");
@@ -623,7 +629,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -656,10 +662,10 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
       }
 
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemData(ses, id);
+         ItemData data = getItemData(session, id);
          if (ItemType.FILE != data.getType())
             throw new InvalidArgumentException("Object " + data.getName() + " is not a file. ");
 
@@ -689,7 +695,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -700,10 +706,10 @@ public class JcrFileSystem implements VirtualFileSystem
    public LockToken lock(@PathParam("id") String id) throws NotSupportedException, ItemNotFoundException,
       InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData itemData = getItemData(ses, id);
+         ItemData itemData = getItemData(session, id);
          if (ItemType.FILE != itemData.getType())
          {
             throw new InvalidArgumentException("Locking allowed for Files only. ");
@@ -712,7 +718,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -726,21 +732,21 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, ConstraintException, LockException, ItemAlreadyExistException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData object = getItemData(ses, id);
-         ItemData folder = getItemData(ses, parentId);
+         ItemData object = getItemData(session, id);
+         ItemData folder = getItemData(session, parentId);
          if (ItemType.FOLDER != folder.getType())
          {
             throw new InvalidArgumentException("Unable move. Item specified as parent is not a folder. ");
          }
          String movedId = object.moveTo((FolderData)folder, lockToken);
-         return fromItemData(getItemData(ses, movedId), PropertyFilter.ALL_FILTER);
+         return fromItemData(getItemData(session, movedId), PropertyFilter.ALL_FILTER);
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -756,10 +762,10 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemData(ses, id);
+         ItemData data = getItemData(session, id);
          MediaType currentMediaType = data.getMediaType();
          String[] removeMixinTypes = null;
          String[] addMixinTypes = null;
@@ -773,11 +779,11 @@ public class JcrFileSystem implements VirtualFileSystem
                   : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
          }
          String renamedId = data.rename(newname, newMediaType, lockToken, addMixinTypes, removeMixinTypes);
-         return fromItemData(getItemData(ses, renamedId), PropertyFilter.ALL_FILTER);
+         return fromItemData(getItemData(session, renamedId), PropertyFilter.ALL_FILTER);
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -834,10 +840,10 @@ public class JcrFileSystem implements VirtualFileSystem
 
       //System.out.println(">>>>> SQL: " + sql.toString());
 
-      Session ses = session();
+      Session session = session();
       try
       {
-         QueryManager queryManager = ses.getWorkspace().getQueryManager();
+         QueryManager queryManager = session.getWorkspace().getQueryManager();
          Query jcrQuery = queryManager.createQuery(sql.toString(), Query.SQL);
          QueryResult result = jcrQuery.execute();
 
@@ -872,9 +878,10 @@ public class JcrFileSystem implements VirtualFileSystem
          }
 
          List<Item> l = new ArrayList<Item>();
+         String rootPath = getJcrPath(session, "/");
          for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
          {
-            ItemData data = ItemData.fromNode(nodes.nextNode());
+            ItemData data = ItemData.fromNode(nodes.nextNode(), rootPath);
             if (namePattern == null || namePattern.matcher(data.getName()).matches())
             {
                l.add(fromItemData(data, propertyFilter));
@@ -898,7 +905,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -914,10 +921,10 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
       }
-      Session ses = session();
+      Session session = session();
       try
       {
-         QueryManager queryManager = ses.getWorkspace().getQueryManager();
+         QueryManager queryManager = session.getWorkspace().getQueryManager();
          Query query = queryManager.createQuery(statement, Query.SQL);
          QueryResult result = query.execute();
          NodeIterator nodes = result.getNodes();
@@ -942,9 +949,10 @@ public class JcrFileSystem implements VirtualFileSystem
             propertyFilterBuilder.append(n);
          }
          PropertyFilter propertyFilter = PropertyFilter.valueOf(propertyFilterBuilder.toString());
+         String rootPath = getJcrPath(session, "/");
          for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
          {
-            l.add(fromItemData(ItemData.fromNode(nodes.nextNode()), propertyFilter));
+            l.add(fromItemData(ItemData.fromNode(nodes.nextNode(), rootPath), propertyFilter));
          }
 
          ItemList<Item> il = new ItemList<Item>(l);
@@ -963,7 +971,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -976,10 +984,10 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws NotSupportedException, ItemNotFoundException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData itemData = getItemData(ses, id);
+         ItemData itemData = getItemData(session, id);
          if (itemData.getType() != ItemType.FILE)
          {
             throw new LockException("Object is not locked. "); // Folder can't be locked.
@@ -988,7 +996,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -1004,14 +1012,14 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws NotSupportedException, ItemNotFoundException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         getItemData(ses, id).updateACL(acl, override, lockToken);
+         getItemData(session, id).updateACL(acl, override, lockToken);
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -1028,10 +1036,10 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemData(ses, id);
+         ItemData data = getItemData(session, id);
          if (ItemType.FILE != data.getType())
          {
             throw new InvalidArgumentException("Object " + data.getName() + " is not file. ");
@@ -1040,7 +1048,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -1054,10 +1062,10 @@ public class JcrFileSystem implements VirtualFileSystem
       @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemData(ses, id);
+         ItemData data = getItemData(session, id);
          if (properties != null && properties.size() > 0)
          {
             String[] removeMixinTypes = null;
@@ -1088,7 +1096,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -1099,10 +1107,10 @@ public class JcrFileSystem implements VirtualFileSystem
    public InputStream exportZip(@PathParam("folderId") String folderId) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
    {
-      Session ses = session();
+      Session session = session();
       try
       {
-         ItemData data = getItemData(ses, folderId);
+         ItemData data = getItemData(session, folderId);
          if (ItemType.FOLDER != data.getType())
          {
             throw new InvalidArgumentException("Unable export to zip. Item is not a folder. ");
@@ -1177,7 +1185,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
       }
    }
 
@@ -1224,11 +1232,11 @@ public class JcrFileSystem implements VirtualFileSystem
       @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite //
    ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException, IOException
    {
-      Session ses = session();
+      Session session = session();
       ZipInputStream zip = new ZipInputStream(in);
       try
       {
-         ItemData data = getItemData(ses, parentId);
+         ItemData data = getItemData(session, parentId);
          if (ItemType.FOLDER != data.getType())
          {
             throw new InvalidArgumentException("Unable import from zip. Item specified as parent is not a folder. ");
@@ -1312,7 +1320,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         ses.logout();
+         session.logout();
          zip.closeEntry();
          zip.close();
       }
@@ -1409,6 +1417,33 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          return delegate.markSupported();
       }
+   }
+
+   /**
+    * Get JCR path from Virtual File System path.
+    * 
+    * @param session JCR session
+    * @param vfsPath Virtual File System path
+    * @return JCR path
+    */
+   protected final String getJcrPath(Session session, String vfsPath)
+   {
+      if (rootNodePath == null || rootNodePath.isEmpty() || "/".equals(rootNodePath))
+      {
+         // Not need to do anything if rootNodePath is not set.
+         return vfsPath;
+      }
+      String root = rootNodePath;
+      if (root.contains("${userId}"))
+      {
+         String userID = session.getUserID();
+         root = root.replace("${userId}", userID);
+      }
+      if ("/".equals(vfsPath))
+      {
+         return root;
+      }
+      return (root + vfsPath);
    }
 
    //-----------------------------------------
@@ -1572,7 +1607,7 @@ public class JcrFileSystem implements VirtualFileSystem
          }
       }
 
-      URI uri = uriBuilder.build(workspaceName);
+      URI uri = uriBuilder.build(vfsID);
 
       return uri.toString();
    }
@@ -1580,9 +1615,13 @@ public class JcrFileSystem implements VirtualFileSystem
    private ItemData getItemData(Session session, String id) throws ItemNotFoundException, PermissionDeniedException,
       VirtualFileSystemException
    {
+      if (id == null)
+      {
+         throw new NullPointerException("Object id may not be null. ");
+      }
       try
       {
-         return ItemData.fromNode(((ExtendedSession)session).getNodeByIdentifier(id));
+         return ItemData.fromNode(((ExtendedSession)session).getNodeByIdentifier(id), getJcrPath(session, "/"));
       }
       catch (javax.jcr.ItemNotFoundException e)
       {
@@ -1601,10 +1640,19 @@ public class JcrFileSystem implements VirtualFileSystem
    private ItemData getItemDataByPath(Session session, String path) throws ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException
    {
+      if (path == null)
+      {
+         throw new NullPointerException("Object path may not be null.");
+      }
       try
       {
-         return ItemData.fromNode(((path == null || path.length() == 0 || "/".equals(path)) //
-            ? session.getRootNode() : (Node)session.getItem((path.charAt(0) != '/') ? ("/" + path) : path)));
+         String jcrPath = getJcrPath(session, path);
+         javax.jcr.Item jcrItem = session.getItem(jcrPath);
+         if (!jcrItem.isNode())
+         {
+            throw new ItemNotFoundException("Object " + path + " does not exists. ");
+         }
+         return ItemData.fromNode((Node)jcrItem, getJcrPath(session, "/"));
       }
       catch (PathNotFoundException e)
       {

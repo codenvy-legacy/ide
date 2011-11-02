@@ -75,6 +75,6 @@ public class ImportTest extends JcrFileSystemTest
       Project project = (Project)getItem(importFolderId);
       assertEquals("spring", project.getProjectType());
       java.io.File unzip = ZipUtils.unzip(new ByteArrayInputStream(b));
-      new ZipUtils.TreeWalker(unzip, (FolderData)ItemData.fromNode(node)).walk();
+      new ZipUtils.TreeWalker(unzip, (FolderData)ItemData.fromNode(node, null)).walk();
    }
 }

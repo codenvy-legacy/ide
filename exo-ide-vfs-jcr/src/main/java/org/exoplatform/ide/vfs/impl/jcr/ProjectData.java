@@ -35,9 +35,9 @@ import javax.ws.rs.core.MediaType;
 
 class ProjectData extends FolderData
 {
-   ProjectData(Node node)
+   ProjectData(Node node, String rootNodePath) throws RepositoryException
    {
-      super(node);
+      super(node, rootNodePath);
    }
 
    final String getProjectType() throws ConstraintException, VirtualFileSystemException

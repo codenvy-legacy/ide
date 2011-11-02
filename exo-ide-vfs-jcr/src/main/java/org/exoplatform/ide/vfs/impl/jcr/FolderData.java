@@ -53,11 +53,13 @@ public class FolderData extends ItemData
 {
    private static class ChildrenIterator extends LazyIterator<ItemData>
    {
-      private NodeIterator i;
+      private final NodeIterator i;
+      private final String rootNodePath;
 
-      public ChildrenIterator(NodeIterator i)
+      public ChildrenIterator(NodeIterator i, String rootNodePath)
       {
          this.i = i;
+         this.rootNodePath = rootNodePath;
          fetchNext();
       }
 
@@ -72,7 +74,7 @@ public class FolderData extends ItemData
          {
             try
             {
-               next = ItemData.fromNode(i.nextNode());
+               next = ItemData.fromNode(i.nextNode(), rootNodePath);
             }
             catch (RepositoryException e)
             {
@@ -82,9 +84,9 @@ public class FolderData extends ItemData
       }
    }
 
-   FolderData(Node node)
+   FolderData(Node node, String rootNodePath) throws RepositoryException
    {
-      super(node, ItemType.FOLDER);
+      super(node, ItemType.FOLDER, rootNodePath);
    }
 
    final boolean isRootFolder() throws VirtualFileSystemException
@@ -133,7 +135,7 @@ public class FolderData extends ItemData
       try
       {
          NodeIterator nodes = node.getNodes();
-         return new ChildrenIterator(nodes);
+         return new ChildrenIterator(nodes, rootNodePath);
       }
       catch (AccessDeniedException e)
       {
@@ -161,7 +163,7 @@ public class FolderData extends ItemData
    {
       try
       {
-         return fromNode(node.getNode(name));
+         return fromNode(node.getNode(name), rootNodePath);
       }
       catch (PathNotFoundException e)
       {
@@ -211,7 +213,7 @@ public class FolderData extends ItemData
 
          Session session = node.getSession();
          session.save();
-         return (FileData)fromNode(fileNode);
+         return (FileData)fromNode(fileNode, rootNodePath);
       }
       catch (ItemExistsException e)
       {
@@ -300,7 +302,7 @@ public class FolderData extends ItemData
 
          Session session = node.getSession();
          session.save();
-         return (FolderData)fromNode(folderNode);
+         return (FolderData)fromNode(folderNode, rootNodePath);
       }
       catch (ItemExistsException e)
       {

@@ -52,13 +52,15 @@ class FileData extends ItemData
 {
    private static class FileVersionIterator extends LazyIterator<FileData>
    {
-      private javax.jcr.version.VersionIterator i;
+      private final javax.jcr.version.VersionIterator i;
+      private final String rootNodePath;
       private FileData latest;
 
-      FileVersionIterator(javax.jcr.version.VersionIterator i, FileData latest)
+      FileVersionIterator(javax.jcr.version.VersionIterator i, FileData latest, String rootNodePath)
       {
          i.next(); // skip jcr:rootVersion
          this.i = i;
+         this.rootNodePath = rootNodePath;
          this.latest = latest;
          fetchNext();
       }
@@ -75,7 +77,7 @@ class FileData extends ItemData
             Version version = i.nextVersion();
             try
             {
-               next = (FileData)ItemData.fromNode(version.getNode("jcr:frozenNode"));
+               next = (FileData)ItemData.fromNode(version.getNode("jcr:frozenNode"), rootNodePath);
             }
             catch (RepositoryException e)
             {
@@ -109,9 +111,9 @@ class FileData extends ItemData
 
    private static final String CURRENT_VERSION_ID = "0";
 
-   FileData(Node node)
+   FileData(Node node, String rootNodePath) throws RepositoryException
    {
-      super(node, ItemType.FILE);
+      super(node, ItemType.FILE, rootNodePath);
    }
 
    /**
@@ -227,7 +229,7 @@ class FileData extends ItemData
          }
          else
          {
-            return new FileVersionIterator(node.getVersionHistory().getAllVersions(), this);
+            return new FileVersionIterator(node.getVersionHistory().getAllVersions(), this, rootNodePath);
          }
       }
       catch (AccessDeniedException e)
@@ -256,7 +258,8 @@ class FileData extends ItemData
          }
          try
          {
-            return (FileData)fromNode(node.getVersionHistory().getVersion(versionId).getNode("jcr:frozenNode"));
+            return (FileData)fromNode(node.getVersionHistory().getVersion(versionId).getNode("jcr:frozenNode"),
+               rootNodePath);
          }
          catch (VersionException e)
          {

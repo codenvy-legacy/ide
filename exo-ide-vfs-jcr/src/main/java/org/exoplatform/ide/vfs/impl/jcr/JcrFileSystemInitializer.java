@@ -32,11 +32,9 @@ import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.jcr.RepositoryException;
 
@@ -51,36 +49,61 @@ public final class JcrFileSystemInitializer implements Startable
    private final RepositoryService repositoryService;
    private final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
    private final VirtualFileSystemRegistry vfsRegistry;
-   /** Names of JCR workspaces for which need have access via VFS. */
-   private final Set<String> workspaces = new HashSet<String>();
+   /** Configurations of JCR workspaces for which need have access via VFS. */
+   private final List<JcrFileSystemConfiguration> configurations = new ArrayList<JcrFileSystemConfiguration>();
 
    public JcrFileSystemInitializer(InitParams initParams, RepositoryService repositoryService,
       MediaType2NodeTypeResolver itemType2NodeTypeResolver, VirtualFileSystemRegistry vfsRegistry)
    {
-      this(repositoryService, itemType2NodeTypeResolver, getWorkspaces(initParams), vfsRegistry);
+      this(repositoryService, itemType2NodeTypeResolver, getConfigurations(initParams), vfsRegistry);
    }
 
-   private static Set<String> getWorkspaces(InitParams initParams)
+   @SuppressWarnings("rawtypes")
+   private static List<JcrFileSystemConfiguration> getConfigurations(InitParams initParams)
    {
+      List<JcrFileSystemConfiguration> configurations = new ArrayList<JcrFileSystemConfiguration>();
       if (initParams != null)
       {
-         ValuesParam workspacesParam = initParams.getValuesParam("workspaces");
-         if (workspacesParam != null)
+         // First check 'extended' configuration of Virtual File System 
+         List<JcrFileSystemConfiguration> objectParams =
+            initParams.getObjectParamValues(JcrFileSystemConfiguration.class);
+         if (objectParams != null && objectParams.size() > 0)
          {
-            @SuppressWarnings("rawtypes")
-            List l = workspacesParam.getValues();
+            for (JcrFileSystemConfiguration conf : objectParams)
+            {
+               String vfsId = conf.getId();
+               if (vfsId == null)
+               {
+                  // Use workspace name as ID if ID for Virtual File System is not specified in configuration .
+                  vfsId = conf.getWorkspace();
+                  conf.setId(vfsId);
+               }
+               configurations.add(conf);
+            }
+         }
+         // Check 'simple' configuration. Simple configuration should be defined by 'values-param' with name 'workspaces'.
+         // Configuration should contain set of names of workspaces which must be accessible over Virtual File Systems.
+         //
+         // <values-param>
+         //    <name>workspaces</name>
+         //    <value>dev-monit</value>
+         //    <value>production</value>
+         // </values-param>
+
+         ValuesParam workspacesParams = initParams.getValuesParam("workspaces");
+         if (workspacesParams != null)
+         {
+            List l = workspacesParams.getValues();
             if (l != null && l.size() > 0)
             {
-               Set<String> workspaces = new HashSet<String>(l.size());
                for (Object o : l)
                {
-                  workspaces.add((String)o);
+                  configurations.add(new JcrFileSystemConfiguration((String)o));
                }
-               return workspaces;
             }
          }
       }
-      return Collections.emptySet();
+      return configurations;
    }
 
    public JcrFileSystemInitializer(InitParams initParams, RepositoryService repositoryService,
@@ -89,14 +112,16 @@ public final class JcrFileSystemInitializer implements Startable
       this(initParams, repositoryService, new MediaType2NodeTypeResolver(), vfsRegistry);
    }
 
-   public JcrFileSystemInitializer(RepositoryService repositoryService, Collection<String> workspaces,
-      VirtualFileSystemRegistry vfsRegistry)
+   /* ================================================================== */
+
+   public JcrFileSystemInitializer(RepositoryService repositoryService,
+      Collection<JcrFileSystemConfiguration> configurations, VirtualFileSystemRegistry vfsRegistry)
    {
-      this(repositoryService, new MediaType2NodeTypeResolver(), workspaces, vfsRegistry);
+      this(repositoryService, new MediaType2NodeTypeResolver(), configurations, vfsRegistry);
    }
 
    public JcrFileSystemInitializer(RepositoryService repositoryService,
-      MediaType2NodeTypeResolver mediaType2NodeTypeResolver, Collection<String> workspaces,
+      MediaType2NodeTypeResolver mediaType2NodeTypeResolver, Collection<JcrFileSystemConfiguration> configurations,
       VirtualFileSystemRegistry vfsRegistry)
    {
       this.repositoryService = repositoryService;
@@ -106,9 +131,9 @@ public final class JcrFileSystemInitializer implements Startable
          throw new NullPointerException("MediaType2NodeTypeResolver may not be null. ");
       }
       this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;
-      if (workspaces != null && workspaces.size() > 0)
+      if (configurations != null && configurations.size() > 0)
       {
-         this.workspaces.addAll(workspaces);
+         this.configurations.addAll(configurations);
       }
    }
 
@@ -131,12 +156,12 @@ public final class JcrFileSystemInitializer implements Startable
 
    void initializeProviders()
    {
-      for (String ws : workspaces)
+      for (JcrFileSystemConfiguration conf : configurations)
       {
          try
          {
-            vfsRegistry.registerProvider(ws, new JcrFileSystemProvider(repositoryService, mediaType2NodeTypeResolver,
-               ws, ws));
+            vfsRegistry.registerProvider(conf.getId(), new JcrFileSystemProvider(repositoryService,
+               mediaType2NodeTypeResolver, conf.getWorkspace(), conf.getPath(), conf.getId()));
          }
          catch (VirtualFileSystemException e)
          {
@@ -148,7 +173,7 @@ public final class JcrFileSystemInitializer implements Startable
       try
       {
          vfsRegistry.registerProvider("default", new JcrFileSystemProvider(repositoryService,
-            mediaType2NodeTypeResolver, null, "default"));
+            mediaType2NodeTypeResolver, null, "/", "default"));
       }
       catch (VirtualFileSystemException e)
       {
@@ -161,17 +186,19 @@ public final class JcrFileSystemInitializer implements Startable
       private final RepositoryService repositoryService;
       private final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
       private final String workspace;
+      private final String rootNodePath;
       private final String id;
-   
+
       JcrFileSystemProvider(RepositoryService repositoryService, MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
-         String workspace, String id)
+         String workspace, String rootNodePath, String id)
       {
          this.repositoryService = repositoryService;
          this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;
          this.workspace = workspace;
+         this.rootNodePath = rootNodePath;
          this.id = id;
       }
-   
+
       @Override
       public VirtualFileSystem newInstance(RequestContext requestContext) throws VirtualFileSystemException
       {
@@ -189,7 +216,7 @@ public final class JcrFileSystemInitializer implements Startable
          {
             throw new VirtualFileSystemException(re.getMessage(), re);
          }
-         return new JcrFileSystem(repository, ws, id, mediaType2NodeTypeResolver, requestContext != null
+         return new JcrFileSystem(repository, ws, rootNodePath, id, mediaType2NodeTypeResolver, requestContext != null
             ? requestContext.getUriInfo().getBaseUri() : URI.create(""));
       }
    }

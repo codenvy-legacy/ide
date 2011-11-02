@@ -82,17 +82,17 @@ abstract class ItemData
       }
    };
 
-   static ItemData fromNode(Node node) throws RepositoryException
+   static ItemData fromNode(Node node, String rootNodePath) throws RepositoryException
    {
       if (node.isNodeType("nt:file") && node.getNode("jcr:content").isNodeType("nt:resource"))
-         return new FileData(node);
+         return new FileData(node, rootNodePath);
       if (node.isNodeType("nt:resource") && "jcr:content".equals(node.getName()))
-         return new FileData(node.getParent());
+         return new FileData(node.getParent(), rootNodePath);
       if (node.isNodeType("nt:frozenNode"))
-         return new VersionData(node);
+         return new VersionData(node, rootNodePath);
       if (node.isNodeType("vfs:project"))
-         return new ProjectData(node);
-      return new FolderData(node);
+         return new ProjectData(node, rootNodePath);
+      return new FolderData(node, rootNodePath);
    }
 
    /** Set of known JCR properties that should be skipped. */
@@ -102,11 +102,13 @@ abstract class ItemData
 
    Node node;
    final ItemType type;
+   final String rootNodePath;
 
-   ItemData(Node node, ItemType type)
+   ItemData(Node node, ItemType type, String rootNodePath) throws RepositoryException
    {
       this.node = node;
       this.type = type;
+      this.rootNodePath = rootNodePath;
    }
 
    /**
@@ -167,7 +169,17 @@ abstract class ItemData
    {
       try
       {
-         return node.getPath();
+         String path = node.getPath();
+         if (rootNodePath == null || rootNodePath.equals("/"))
+         {
+            return path;
+         }
+         if (path.equals(rootNodePath))
+         {
+            return "/";
+         }
+         path = path.substring(rootNodePath.length());
+         return path;
       }
       catch (RepositoryException e)
       {
@@ -187,7 +199,7 @@ abstract class ItemData
          {
             return null;
          }
-         return fromNode(node.getParent()).getId();
+         return fromNode(node.getParent(), rootNodePath).getId();
       }
       catch (RepositoryException e)
       {
@@ -757,12 +769,12 @@ abstract class ItemData
    {
       try
       {
-         String itemPath = getPath();
-         String destinationPath = folder.getPath();
+         String itemPath = node.getPath();
+         String destinationPath = folder.node.getPath();
          destinationPath += destinationPath.equals("/") ? getName() : ("/" + getName());
          Session session = node.getSession();
          session.getWorkspace().copy(itemPath, destinationPath);
-         return fromNode((Node)session.getItem(destinationPath));
+         return fromNode((Node)session.getItem(destinationPath), destinationPath);
       }
       catch (ItemExistsException e)
       {
@@ -802,8 +814,8 @@ abstract class ItemData
          {
             session.addLockToken(lockToken);
          }
-         String itemPath = getPath();
-         String destinationPath = folder.getPath();
+         String itemPath = node.getPath();
+         String destinationPath = folder.node.getPath();
          destinationPath += destinationPath.equals("/") ? getName() : ("/" + getName());
          session.getWorkspace().move(itemPath, destinationPath);
          node = (Node)session.getItem(destinationPath);

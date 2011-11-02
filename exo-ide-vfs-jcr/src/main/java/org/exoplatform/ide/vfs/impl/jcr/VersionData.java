@@ -42,9 +42,9 @@ final class VersionData extends FileData
 {
    private FileData latest;
 
-   VersionData(Node node)
+   VersionData(Node node, String rootNodePath) throws RepositoryException
    {
-      super(node);
+      super(node, rootNodePath);
    }
 
    /**
@@ -170,7 +170,7 @@ final class VersionData extends FileData
          Version versionNode = (Version)node.getParent();
          String versionableUUID = versionNode.getContainingHistory().getVersionableUUID();
          Session session = node.getSession();
-         latest = (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
+         latest = (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID), rootNodePath);
       }
       return latest;
    }
