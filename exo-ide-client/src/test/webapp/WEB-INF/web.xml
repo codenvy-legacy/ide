@@ -20,7 +20,7 @@
 
 -->
 <web-app>
-   <display-name>IDEall</display-name>
+   <display-name>IDE</display-name>
    <listener>
       <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener
       </listener-class>

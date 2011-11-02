@@ -270,6 +270,38 @@
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
       <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.davmount.WebDavFolderBinder</type>
+      <description>Bind WebDavFolder</description>
+      <init-params>
+         <value-param>
+            <name>priority</name>
+            <value>60</value>
+         </value-param>
+         <value-param>
+            <name>workspace-name</name>
+            <value>dev-monit</value>
+         </value-param>
+         <value-param>
+            <name>webdav-user</name>
+            <value>exo</value>
+         </value-param>
+         <value-param>
+            <name>webdav-password</name>
+            <value>exo</value>
+         </value-param>
+
+         <value-param>
+            <name>webdav-service-url</name>
+            <value>/rest/private/jcr</value>
+         </value-param>
+         <value-param>
+            <name>base-url</name>
+            <value>http://127.0.0.1:8080</value>
+         </value-param>
+      </init-params>
+   </component>
 
    <external-component-plugins>
       <target-component>org.exoplatform.services.organization.OrganizationService</target-component>

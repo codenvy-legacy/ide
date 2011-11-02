@@ -49,10 +49,6 @@ import javax.ws.rs.core.UriInfo;
 public class RepositoryDiscoveryService
 {
 
-   private final static String WEBDAV_CONTEXT = "jcr";
-
-   public static final String WEBDAV_SCHEME = "jcr-webdav";
-
    public static final String DEF_WS = "dev-monit";
 
    public static final String VFS_CONTEXT = "vfs/jcr";
@@ -85,11 +81,6 @@ public class RepositoryDiscoveryService
          entryPoint = DEF_WS;
 
       this.discoverable = discoverable;
-   }
-
-   public final static String getWebDavConetxt()
-   {
-      return WEBDAV_CONTEXT;
    }
 
    @GET

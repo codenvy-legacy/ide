@@ -21,9 +21,6 @@ package org.exoplatform.ide;
 import org.everrest.core.RequestHandler;
 import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.services.jcr.RepositoryService;
-
-import javax.jcr.Session;
 
 /**
  * Created by The eXo Platform SAS.

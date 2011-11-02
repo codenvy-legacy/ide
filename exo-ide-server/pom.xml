@@ -69,7 +69,7 @@
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.commons</artifactId>
             </exclusion>
-             <exclusion>
+            <exclusion>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.frameworks.json</artifactId>
             </exclusion>
@@ -105,7 +105,7 @@
                <groupId>javax.servlet</groupId>
                <artifactId>servlet-api</artifactId>
             </exclusion>
-             <exclusion>
+            <exclusion>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.core</artifactId>
             </exclusion>
@@ -121,11 +121,11 @@
                <groupId>org.wikbook</groupId>
                <artifactId>wikbook.docbkxstyle</artifactId>
             </exclusion>
-             <exclusion>
+            <exclusion>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.commons</artifactId>
             </exclusion>
-             <exclusion>
+            <exclusion>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.ext</artifactId>
             </exclusion>
@@ -199,22 +199,6 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.apache.tika</groupId>
-         <artifactId>tika-core</artifactId>
-         <version>0.7</version>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.tika</groupId>
-         <artifactId>tika-parsers</artifactId>
-         <version>0.7</version>
-         <exclusions>
-            <exclusion>
-               <groupId>org.apache.geronimo.specs</groupId>
-               <artifactId>geronimo-stax-api_1.0_spec</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
@@ -227,7 +211,6 @@
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-integration-exo</artifactId>
-         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
@@ -246,6 +229,11 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs-jcr</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava</artifactId>
+         <version>r09</version>
       </dependency>
    </dependencies>
    <build>

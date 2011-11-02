@@ -20,29 +20,15 @@ package org.exoplatform.ide.zip;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.exoplatform.commons.utils.MimeTypeResolver;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.download.NodeTypeUtil;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-import javax.jcr.AccessDeniedException;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.version.VersionException;
 
 /**
  * Manipulates with zip files: unzip folder and package folder as zip.
@@ -53,79 +39,6 @@ import javax.jcr.version.VersionException;
  */
 public class ZipUtils
 {
-   /**
-    * Unzip folder and creates structure of folders and files.
-    * 
-    * @param session - the session
-    * @param inputStream - input stream of zipped file
-    * @param parentFolderPath - path to parent folder. If archive will be unziped in root folder of 
-    * workspace, that parentFolderPath is null
-    * 
-    * @throws AccessDeniedException
-    * @throws ItemExistsException
-    * @throws ConstraintViolationException
-    * @throws InvalidItemStateException
-    * @throws VersionException
-    * @throws LockException
-    * @throws NoSuchNodeTypeException
-    * @throws RepositoryException
-    * @throws IOException
-    */
-   public static void unzip(Session session, InputStream inputStream, String parentFolderPath)
-      throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException,
-      VersionException, LockException, NoSuchNodeTypeException, RepositoryException, IOException, IllegalArgumentException
-   {
-      byte[] buf = new byte[1024];
-
-      ZipInputStream zin = new ZipInputStream(inputStream);
-
-      ZipEntry zipentry;
-
-      zipentry = zin.getNextEntry();
-      if (zipentry == null)
-         throw new IllegalArgumentException("Zip archive is empty");
-      
-      while (zipentry != null)
-      {
-         //for each entry to be extracted
-         String entryName = zipentry.getName();
-
-         if (zipentry.isDirectory())
-         {
-            Utils.putFolder(session, parentFolderPath, entryName);
-         }
-         else
-         {
-            if (entryName.indexOf("/") > 0) {
-               String path = entryName.substring(0, entryName.lastIndexOf("/"));
-               Utils.ensureFoldersCreated(session, parentFolderPath, path);               
-            }
-
-            int bytesRead;
-            ByteArrayOutputStream outS = new ByteArrayOutputStream();
-
-            while ((bytesRead = zin.read(buf, 0, 1024)) > -1)
-            {
-               outS.write(buf, 0, bytesRead);
-            }
-
-            ByteArrayInputStream data = new ByteArrayInputStream(outS.toByteArray());
-            outS.close();
-
-            MimeTypeResolver resolver = new MimeTypeResolver();
-            Utils.putFile(session, parentFolderPath, entryName, data, resolver.getMimeType(entryName), null, null);
-         }
-         
-         zin.closeEntry();
-         zipentry = zin.getNextEntry();
-
-      }//while
-
-      zin.close();
-
-      session.save();
-   }
-   
    /**
     * Writing packed folder content to output.
     * 

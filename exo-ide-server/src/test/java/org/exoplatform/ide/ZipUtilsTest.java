@@ -31,26 +31,16 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.jcr.AccessDeniedException;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.version.VersionException;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -85,77 +75,6 @@ public class ZipUtilsTest extends BaseTest
    }
    
    @Test
-   public void unzippingToRootFolder() throws Exception
-   {
-      Node rootNode = session.getRootNode();
-      
-      InputStream inputStream = new FileInputStream("src/test/resources/sample.zip");
-      
-      ZipUtils.unzip(session, inputStream, null);
-      Assert.assertTrue(rootNode.hasNode("sample.txt"));
-      Assert.assertTrue(rootNode.hasNode("test"));
-      Assert.assertTrue(rootNode.hasNode("test/exo"));
-      Assert.assertTrue(rootNode.hasNode("test/mine.xml"));
-      Assert.assertTrue(rootNode.hasNode("settings.xml"));
-      Assert.assertEquals("nt:folder", rootNode.getNode("test").getPrimaryNodeType().getName());
-      Assert.assertEquals("nt:folder", rootNode.getNode("test/exo").getPrimaryNodeType().getName());
-      Assert.assertEquals("nt:file", rootNode.getNode("sample.txt").getPrimaryNodeType().getName());
-      Assert.assertEquals("nt:file", rootNode.getNode("test/mine.xml").getPrimaryNodeType().getName());
-      Assert.assertEquals("nt:file", rootNode.getNode("settings.xml").getPrimaryNodeType().getName());
-   }
-   
-   
-   public void testUnzippingToNotRootFolder() throws Exception
-   {
-      final String folderNodeName = "test-folder";
-      Node rootNode = session.getRootNode();
-      rootNode.addNode(folderNodeName, "nt:folder");
-      session.save();
-      
-      Node folderNode = rootNode.getNode(folderNodeName);
-      
-      InputStream inputStream = new FileInputStream("src/test/resources/sample.zip");
-      
-      ZipUtils.unzip(session, inputStream, folderNodeName);
-      Assert.assertTrue(folderNode.hasNode("sample.txt"));
-      Assert.assertTrue(folderNode.hasNode("test"));
-      Assert.assertTrue(folderNode.hasNode("test/exo"));
-      Assert.assertTrue(folderNode.hasNode("test/mine.xml"));
-      Assert.assertTrue(folderNode.hasNode("settings.xml"));
-      Assert.assertEquals("nt:folder", folderNode.getNode("test").getPrimaryNodeType().getName());
-      Assert.assertEquals("nt:folder", folderNode.getNode("test/exo").getPrimaryNodeType().getName());
-      Assert.assertEquals("nt:file", folderNode.getNode("sample.txt").getPrimaryNodeType().getName());
-      Assert.assertEquals("nt:file", folderNode.getNode("test/mine.xml").getPrimaryNodeType().getName());
-      Assert.assertEquals("nt:file", folderNode.getNode("settings.xml").getPrimaryNodeType().getName());
-   }
-   
-   
-   public void testTryToUnzipNotArchiveFile() throws AccessDeniedException, ItemExistsException, 
-   ConstraintViolationException, InvalidItemStateException, VersionException, LockException, 
-   NoSuchNodeTypeException, RepositoryException, IOException
-   {
-      InputStream inputStream = null;
-      try
-      {
-         inputStream = new FileInputStream("src/test/resources/test.txt");
-      }
-      catch (FileNotFoundException e)
-      {
-         Assert.fail("Couldn't find input file");
-      }
-      
-      try
-      {
-         ZipUtils.unzip(session, inputStream, null);
-         Assert.fail("Must throws IllegalArgumentException");
-      }
-      catch (IllegalArgumentException e) 
-      {
-      }
-      
-   }
-   
-   
    public void testZippingFolder() throws RepositoryException, IOException
    {
       Node rootNode = session.getRootNode();
@@ -223,9 +142,6 @@ public class ZipUtilsTest extends BaseTest
       
       Assert.assertEquals(2, items.size());
    }
-   
-   
-   
    
    public void tearDown() throws Exception
    {

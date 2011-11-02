@@ -50,8 +50,6 @@ public class Utils
 
    public static final String DEFAULT_FILE_NODE_TYPE = "nt:file";
 
-   public static final String WEBDAV_CONTEXT = "/jcr/";
-
    /**
     * Read value param from init params.
     * @param initParams
@@ -213,31 +211,6 @@ public class Utils
             }
          }
       }
-   }
-
-   /**
-    * Parse JCR path to retrieve repository name, 
-    * workspace name and absolute path in repository.
-    * 
-    * @param baseUri base URI
-    * @param location file's location
-    * @return array of {@link String}, where elements contain repository name, workspace name and 
-    * the path to JCR node that contains file
-    */
-   public static String[] parseJcrLocation(String baseUri, String location)
-   {
-      baseUri += WEBDAV_CONTEXT;
-      if (!location.startsWith(baseUri))
-      {
-         return null;
-      }
-      String[] elements = new String[3];
-      location = location.substring(baseUri.length());
-      elements[0] = location.substring(0, location.indexOf('/'));
-      location = location.substring(location.indexOf('/') + 1);
-      elements[1] = location.substring(0, location.indexOf('/'));
-      elements[2] = location.substring(location.indexOf('/') + 1);
-      return elements;
    }
 
    /**

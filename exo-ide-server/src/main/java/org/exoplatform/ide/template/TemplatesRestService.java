@@ -107,8 +107,6 @@ public class TemplatesRestService
 
    public static final String PROJECT_TEMPLATE_FILE = "projectTemplates.js";
 
-   public static final String WEBDAV_SCHEME = "jcr-webdav";
-
    public static final String DEF_WS = "dev-monit";
 
    private static Log log = ExoLogger.getLogger(TemplatesRestService.class);

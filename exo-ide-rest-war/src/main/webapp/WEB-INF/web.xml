@@ -74,7 +74,7 @@
 
   <login-config>
 	  <auth-method>BASIC</auth-method> 
-	  <realm-name>exo-domain</realm-name> 		
+	  <realm-name>exo-git</realm-name> 		
 	</login-config>
 
   <security-role>
