@@ -23,6 +23,7 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
 import org.exoplatform.ide.shell.client.Environment;
+import org.exoplatform.ide.shell.client.EnvironmentVariables;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
@@ -99,6 +100,7 @@ public class CdCommand extends ClientCommand
                      if (result.getItem() instanceof Folder)
                      {
                         Environment.get().setCurrentFolder((Folder)result.getItem());
+                        Environment.get().saveValue(EnvironmentVariables.WORKDIR, result.getItem().getId());
                         CloudShell.console().printPrompt();
                      }
                      else
