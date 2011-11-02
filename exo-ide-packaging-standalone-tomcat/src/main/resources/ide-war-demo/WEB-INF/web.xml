@@ -44,7 +44,7 @@
    </listener>
    <servlet>
       <servlet-name>EverrestServlet</servlet-name>
-      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+      <servlet-class>org.exoplatform.ide.davmount.DavMountRestServlet</servlet-class>
    </servlet>
    <servlet-mapping>
       <servlet-name>EverrestServlet</servlet-name>
