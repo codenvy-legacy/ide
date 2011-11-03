@@ -99,7 +99,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -383,7 +382,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
       if (!display.asView().isActive() && !"ideWorkspaceView".equals(lastNavigatorId))
       {
-         Window.alert("Navigator is not active.");
          return;
       }
       
@@ -817,7 +815,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       rootFolder = event.getVfsInfo().getRoot();
       
       if (display != null) {
-         Window.alert("opening root folder.........");
          openRootFolder();
       }
       

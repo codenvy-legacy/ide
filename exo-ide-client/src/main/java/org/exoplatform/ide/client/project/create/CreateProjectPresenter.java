@@ -35,8 +35,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.project.event.CreateProjectEvent;
-import org.exoplatform.ide.client.project.event.CreateProjectHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -159,8 +157,6 @@ public class CreateProjectPresenter implements ItemsSelectedHandler, CreateProje
 //            return;
 //         }         
 //      }
-      
-      Window.alert("PARENT > " + parent.getPath());
       
       ProjectModel model = new ProjectModel();
       model.setName(display.getProjectName().getValue());

@@ -40,8 +40,6 @@ import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateCallback;
-import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
-import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
