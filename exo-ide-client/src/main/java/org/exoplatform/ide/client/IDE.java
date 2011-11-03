@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
@@ -34,12 +33,11 @@ import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
+import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
@@ -60,14 +58,9 @@ import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
-import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
-import org.exoplatform.ide.client.project.event.CreateProjectEvent;
-import org.exoplatform.ide.client.project.event.CreateProjectHandler;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.editor.api.EditorProducer;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
@@ -142,10 +135,12 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(ideForm, controlsRegistration);
+      
+      EditorController editorController = new EditorController();
 
       new LoginPresenter();
-
-      new DownloadForm();
+      
+      new DownloadForm();      
       
       new ViewHighlightManager(IDE.eventBus());
       
@@ -155,7 +150,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new NavigationModule();
       new ProjectSupportingModule();
       new TextEditModule();
-      
+
       new PropertiesPresenter();
       new OutlinePresenter();
       new PreviewHTMLPresenter();
@@ -163,39 +158,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new OutputPresenter();
 
       new PreferencesModule();
-      
-
-      /*
-       * selected items is needed for creation of CreateProjectPresenter
-       */
-      
-      final List<Item> selectedItems = new ArrayList<Item>();
-      ItemsSelectedHandler itemsSelectedHandler = new ItemsSelectedHandler()
-      {
-         @Override
-         public void onItemsSelected(ItemsSelectedEvent event)
-         {
-            selectedItems.clear();
-            selectedItems.addAll(event.getSelectedItems());
-         }
-      };
-      
-      addHandler(ItemsSelectedEvent.TYPE, itemsSelectedHandler);
-      
-      /*
-       * What is this???
-       */
-      IDE.addHandler(CreateProjectEvent.TYPE, new CreateProjectHandler()
-      {
-         @Override
-         public void onCreateProject(CreateProjectEvent event)
-         {
-            new CreateProjectPresenter(
-               VirtualFileSystem.getInstance(), 
-               (org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display)GWT.create(org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display.class),
-               selectedItems);
-         }
-      });
       
       //initialize extensions
       for (Extension ext : extensions())

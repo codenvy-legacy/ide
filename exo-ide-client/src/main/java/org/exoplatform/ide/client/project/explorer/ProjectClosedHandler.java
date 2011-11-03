@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,20 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.event;
+
+package org.exoplatform.ide.client.project.explorer;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface CreateProjectFromTemplateHandler extends EventHandler
+public interface ProjectClosedHandler extends EventHandler
 {
-
-   void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event);
+   
+   void onProjectClosed(ProjectClosedEvent event);
 
 }

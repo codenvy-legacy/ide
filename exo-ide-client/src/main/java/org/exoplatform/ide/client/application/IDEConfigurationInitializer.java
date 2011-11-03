@@ -47,7 +47,7 @@ import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -63,8 +63,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
    private ApplicationSettings applicationSettings;
 
-   private HandlerRegistration handler;
-
    /**
     * @param controls
     */
@@ -73,7 +71,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       super();
       this.controls = controls;
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handler = IDE.addHandler(VfsChangedEvent.TYPE, this);
+      //IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    public void loadConfiguration()
@@ -81,7 +79,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       new IDEConfigurationLoader(IDE.eventBus(), IDELoader.getInstance())
          .loadConfiguration(new AsyncRequestCallback<IDEInitializationConfiguration>()
          {
-
             @Override
             protected void onSuccess(IDEInitializationConfiguration result)
             {
@@ -89,25 +86,23 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                {
                   applicationConfiguration = result.getIdeConfiguration();
                   applicationSettings = result.getSettings();
-
-                  IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
-
-                  new SettingsServiceImpl(IDE.eventBus(), applicationConfiguration.getRegistryURL(), result.getUserInfo()
-                     .getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
-
-                  SettingsService.getInstance().restoreFromCookies(applicationSettings);
-
+                  
                   if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0)
                   {
                      controls.initControls(result.getUserInfo().getRoles());
+                     
+                     IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
+                     new SettingsServiceImpl(IDE.eventBus(), applicationConfiguration.getRegistryURL(), result
+                        .getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
+                     SettingsService.getInstance().restoreFromCookies(applicationSettings);
+
                      IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
                      IDE.fireEvent(new IsDiscoverableResultReceivedEvent(result.isDiscoverable()));
                      IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
                      checkEntryPoint();
-                  }
-                  else
-                  {
-                     Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.userHasNoRoles());
+
+                  } else {
+                     Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.userHasNoRoles());                     
                   }
                }
                catch (Exception e)
@@ -123,17 +118,35 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       /*
        * verify entry point
        */
-      if (applicationSettings.getValueAsString("entry-point") == null)
+      if (applicationSettings.getValueAsString("entry-point") == null && applicationConfiguration.getVfsId() != null)
       {
-         if (applicationConfiguration.getVfsId() != null)
-         {
-            applicationSettings.setValue("entry-point", applicationConfiguration.getVfsId(), Store.COOKIES);
-         }
+         applicationSettings.setValue("entry-point", applicationConfiguration.getVfsId(), Store.COOKIES);
       }
 
       if (applicationSettings.getValueAsString("entry-point") != null)
       {
          String entryPoint = applicationSettings.getValueAsString("entry-point");
+         
+//         System.out.println("entry point > " + entryPoint);
+//         
+//         int handlers = IDE.eventBus().getHandlerCount(SwitchVFSEvent.TYPE);
+//         System.out.println("SwitchVFSEvent handlers > " + handlers);
+//         for (int i = 0; i < handlers; i++) {
+//            System.out.println("handler > " + IDE.eventBus().getHandler(SwitchVFSEvent.TYPE, i));
+//         }
+//         
+//         int h2 = IDE.eventBus().getHandlerCount(VfsChangedEvent.TYPE);
+//         System.out.println("VfsChangedEvent handlers > " + h2);
+//         for (int i = 0; i < h2; i++) {
+//            System.out.println("handler > " + IDE.eventBus().getHandler(VfsChangedEvent.TYPE, i));
+//         }
+//
+//         int h3 = IDE.eventBus().getHandlerCount(SelectWorkspaceEvent.TYPE);
+//         System.out.println("SelectWorkspaceEvent handlers > " + h3);
+//         for (int i = 0; i < h3; i++) {
+//            System.out.println("handler > " + IDE.eventBus().getHandler(SelectWorkspaceEvent.TYPE, i));
+//         }
+         
          IDE.fireEvent(new SwitchVFSEvent(entryPoint));
       }
       else
@@ -144,10 +157,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      //      removeHandlers();
-      if (handler != null)
-         handler.removeHandler();
-
+      Window.alert("Remove this handler!!!!!!!!!1");
+      new Exception().printStackTrace();
+      
+      IDE.removeHandler(VfsChangedEvent.TYPE, this);
       if (event.getVfsInfo() == null || event.getVfsInfo().getId() == null)
       {
          promptToSelectEntryPoint();
@@ -162,8 +175,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
    {
       // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value
       Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetTitle(),
-         org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetText(),
-         new BooleanValueReceivedHandler()
+         org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetText(), new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)
             {

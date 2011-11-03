@@ -462,6 +462,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       {
          workingWorkspace = selectedWorkspace.getId();
          IDE.getInstance().closeView(display.asView().getId());
+         
          IDE.fireEvent(new SwitchVFSEvent(selectedWorkspace.getId()));
       }
    }

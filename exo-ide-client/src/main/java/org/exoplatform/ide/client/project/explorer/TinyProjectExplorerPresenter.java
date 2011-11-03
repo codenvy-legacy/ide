@@ -29,11 +29,16 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.event.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -98,22 +103,26 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
- * Created by The eXo Platform SAS.
+ * Created by The eXo Platform SAS .
  * 
- * Handlers of BrowserPanel events
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  * 
- * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
- * @version $Id: $
-*/
+ */
+
 public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, SwitchVFSHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
-   ConfigurationReceivedSuccessfullyHandler, ShowProjectExplorerHandler, ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler
+   ConfigurationReceivedSuccessfullyHandler, ShowProjectExplorerHandler, ItemsSelectedHandler, ViewActivatedHandler,
+   OpenProjectHandler, VfsChangedHandler, ProjectCreatedHandler, CloseProjectHandler
 {
    public interface Display extends IsView
    {
+      
+      void setProjectExplorerTreeVisible(boolean visible);
 
       /**
        * @return {@link TreeGridItem}
@@ -188,8 +197,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
 
    public TinyProjectExplorerPresenter()
    {
-      //IDE.getInstance().addControl(new ShowProjectExplorerControl(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
+      IDE.getInstance().addControl(new CloseProjectControl());
 
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
@@ -198,7 +207,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
-      IDE.addHandler(SwitchVFSEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ItemLockedEvent.TYPE, this);
       IDE.addHandler(ItemUnlockedEvent.TYPE, this);
@@ -207,10 +215,9 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
       IDE.addHandler(OpenProjectEvent.TYPE, this);
-
-      /*
-      handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
-      */
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectCreatedEvent.TYPE, this);
+      IDE.addHandler(CloseProjectEvent.TYPE, this);
    }
    
    @Override
@@ -222,14 +229,15 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
          return;
       }
 
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
+      showProjectExplorer();
 
       if (navigatorSelectedItems.size() == 0)
       {
+         display.setProjectExplorerTreeVisible(false);
          return;
       }
+      
+      display.setProjectExplorerTreeVisible(true);
 
       display.getBrowserTree().setValue(navigatorSelectedItems.get(0));
       display.asView().setTitle("&nbsp;" + navigatorSelectedItems.get(0).getName() + "&nbsp;");
@@ -246,7 +254,17 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       foldersToRefresh.add(folder);
       refreshNextFolder();
    }
-
+   
+   private void showProjectExplorer() {
+      if (display != null) {
+         return;
+      }
+      
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
+   }
+   
    public void bindDisplay()
    {
       display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
@@ -672,6 +690,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
+      System.out.println("TinyProjectExplorerPresenter.onApplicationSettingsReceived( >>>>>>>>>>>>>>>>>>> )");
+      
       //      applicationSettings = event.getApplicationSettings();
 
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
@@ -769,6 +789,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       if (event.getView() instanceof Display)
       {
          display = null;
+         openedProject = null;
          viewOpened = false;
       }
    }
@@ -779,7 +800,9 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
    @Override
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
-      this.vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();
+      System.out.println("TinyProjectExplorerPresenter.onConfigurationReceivedSuccessfully( >>>>>>>>>>>>>>>>>>>>>>> )");
+      this.vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();      
+      showProjectExplorer();
    }
 
    @Override
@@ -821,20 +844,28 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
          bindDisplay();         
       }
       
+      display.setProjectExplorerTreeVisible(true);
+      
       if (openedProject != null) {
          if (openedProject.getId().equals(event.getProject().getId())) {
             return;
          }
       }
       
-      openedProject = new ProjectModel(event.getProject());
+      doOpenProject(event.getProject());
+   }
+
+   private void doOpenProject(ProjectModel project) {
+      display.setProjectExplorerTreeVisible(true);
+      
+      openedProject = new ProjectModel(project);
       display.getBrowserTree().setValue(null);
       display.getBrowserTree().setValue(openedProject);
       display.asView().setTitle("&nbsp;" + openedProject.getName() + "&nbsp;");
       display.selectItem(openedProject.getId());
       selectedItems = display.getSelectedItems();
       
-      IDE.fireEvent(new ProjectOpenedEvent(event.getProject()));
+      IDE.fireEvent(new ProjectOpenedEvent(openedProject));
       
       navigatorSelectedItems.clear();
       navigatorSelectedItems.add(openedProject);
@@ -842,7 +873,62 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();
       foldersToRefresh.add(folder);
-      refreshNextFolder();
+      refreshNextFolder();      
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      if (display == null) {
+         return;
+      }
+      
+      display.setProjectExplorerTreeVisible(false);
+      
+      if (event.getVfsInfo() == null) {
+         return;
+      }
+   }
+
+   @Override
+   public void onProjectCreated(final ProjectCreatedEvent event)
+   {
+      if (openedProject == null) {
+         doOpenProject(event.getProject());
+         return;
+      }
+
+      Dialogs.getInstance().ask("IDE", "Open project " + event.getProject().getName() + " ?", new BooleanValueReceivedHandler()
+      {
+         @Override
+         public void booleanValueReceived(Boolean value)
+         {
+            if (true == value) {
+               doOpenProject(event.getProject());
+            }
+         }
+      });
+      
+   }
+
+   @Override
+   public void onCloseProject(CloseProjectEvent event)
+   {
+      if (openedProject == null || display == null) {
+         return;
+      }
+
+      ProjectClosedEvent projectClosedEvent = new ProjectClosedEvent(openedProject);
+      
+      openedProject = null;
+      
+      display.getBrowserTree().setValue(null);
+      display.asView().setTitle("&nbsp;Project Explorer&nbsp;");
+      display.setProjectExplorerTreeVisible(false);
+      
+      selectedItems.clear();
+      
+      IDE.fireEvent(projectClosedEvent);
    }
 
 }

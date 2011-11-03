@@ -17,9 +17,23 @@
 	<c:Border margin="1">
       <c:layer>
 		<g:ScrollPanel>
-			<n:ItemTree styleName="{style.itemsTree}" ui:field="treeGrid" prefixId="navigation-" treeGridId="ideProjectExplorerItemTreeGrid"></n:ItemTree>
-		</g:ScrollPanel>		
+
+			<g:FlowPanel>
+				
+				<n:ItemTree visible="false" styleName="{style.itemsTree}" ui:field="treeGrid" prefixId="navigation-" treeGridId="ideProjectExplorerItemTreeGrid"></n:ItemTree>
+
+                <g:HTMLPanel ui:field="projectNotOpenedPanel" width="100%" height="100%">
+                   <table style="width:100%; height:100%;">
+                      <tr style="vertical-align:middle;">
+                         <td style="text-align:center;">Project is not opened.</td>
+                      </tr>
+                   </table>
+                </g:HTMLPanel>
+                
+			</g:FlowPanel>
+			
+		</g:ScrollPanel>
       </c:layer>
 	</c:Border>
-	
+
 </ui:UiBinder>

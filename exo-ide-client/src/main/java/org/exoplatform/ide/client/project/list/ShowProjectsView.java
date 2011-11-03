@@ -58,12 +58,12 @@ public class ShowProjectsView extends ViewImpl implements org.exoplatform.ide.cl
    /**
     * Initial width of this view
     */
-   private static int WIDTH = 450;
+   private static int WIDTH = 500;
 
    /**
     * Initial height of this view
     */
-   private static int HEIGHT = 250;
+   private static int HEIGHT = 280;
    
    @UiField
    ProjectsListGrid projectsListGrid;

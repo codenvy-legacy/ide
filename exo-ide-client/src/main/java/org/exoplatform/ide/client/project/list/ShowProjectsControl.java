@@ -21,7 +21,11 @@ package org.exoplatform.ide.client.project.list;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -33,16 +37,19 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class ShowProjectsControl extends SimpleControl implements IDEControl
+public class ShowProjectsControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
-   
+
    public static final String ID = "Project/Open Project...";
 
-//   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplateTitleControl();
-//   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplatePromptControl();
+   //   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplateTitleControl();
+   //   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplatePromptControl();
 
    private static final String TITLE = "Open Project...";
+
    private static final String PROMPT = "Open Project...";
+
+   private VirtualFileSystemInfo vfsInfo;
 
    public ShowProjectsControl()
    {
@@ -56,8 +63,28 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl
    @Override
    public void initialize(HandlerManager eventBus)
    {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      update();
+   }
+
+   private void update()
+   {
+      if (vfsInfo == null)
+      {
+         setVisible(false);
+         setEnabled(false);
+         return;
+      }
+
       setEnabled(true);
       setVisible(true);
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      update();
    }
 
 }

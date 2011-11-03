@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.control;
-
-import com.google.gwt.event.shared.HandlerManager;
+package org.exoplatform.ide.client.project.fromtemplate;
 
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -26,8 +24,9 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommand;
-import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for create project from template command.
@@ -68,6 +67,9 @@ public class CreateProjectFromTemplateControl extends NewFileCommand implements 
     */
    public void onItemsSelected(ItemsSelectedEvent event)
    {
+      System.out.println("CreateProjectFromTemplateControl.onItemsSelected()");
+      System.out.println("selected items > " + (event.getSelectedItems() == null ? "none" : event.getSelectedItems().size()));
+      
       if (event.getSelectedItems().size() != 1)
       {
          folderItemSelected = false;

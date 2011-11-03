@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,50 +16,53 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.controls;
+package org.exoplatform.ide.client.project.create;
+
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.client.project.event.CreateProjectEvent;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
- * Control for calling the dialog for configuring classpath file.
- * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Jan 6, 2011 $
- *
- */
-public class ConfigureBuildPathCommand extends SimpleControl implements IDEControl, VfsChangedHandler
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+@RolesAllowed({"administrators", "developers"})
+public class CreateProjectControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
-   private static final String ID = "File/Configure Classpath...";
+   public static final String ID = "Project/New/Empty Project...";
 
-   private final String TITLE = "Configure Classpath...";
+   private static final String TITLE = "Empty Project...";
 
-   private final String PROMPT = "Configure Groovy Classpath...";
+   private static final String PROMPT = "Create Empty Project...";
+
+   private List<Item> selectedItems;
 
    private VirtualFileSystemInfo vfsInfo;
 
-   public ConfigureBuildPathCommand()
+   public CreateProjectControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setIcon(Images.Controls.CONFIGURE_BUILD_PATH);
-      setEvent(new ProjectCreatedEvent());
-      setDelimiterBefore(true);
+      setEvent(new CreateProjectEvent());
+      setImages(IDEImageBundle.INSTANCE.newProject(), IDEImageBundle.INSTANCE.newProjectDisabled());
+      setGroup(0);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
-    */
+   @Override
    public void initialize(HandlerManager eventBus)
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);

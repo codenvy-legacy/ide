@@ -73,7 +73,7 @@ public class NavigatorView extends ViewImpl implements
 
    public NavigatorView()
    {
-      super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
+      super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       treeGrid.setExpandProjects(false);
    }

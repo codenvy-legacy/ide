@@ -95,62 +95,62 @@ public class ProjectCreationTest extends TestCase
       IDE.addHandler(ExceptionThrownEvent.TYPE, new MockExceptionThrownHandler());
    }
 
-   public void testCreateProject()
-   {
-      List<Item> selectedItems = new ArrayList<Item>();
-      selectedItems.add(new FolderModel());
-      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
-      presenter.setProjectName("test");
-      presenter.setErrorMessage(new MockErrorMessages());
-      Set<String> set = new HashSet<String>();
-      set.add("Java Project");
-      presenter.setProjectTypes(set);
-      presenter.doCreateProject();
-      assertEquals(projectName, "test");
-   }
+//   public void testCreateProject()
+//   {
+//      List<Item> selectedItems = new ArrayList<Item>();
+//      selectedItems.add(new FolderModel());
+//      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
+//      presenter.setProjectName("test");
+//      presenter.setErrorMessage(new MockErrorMessages());
+//      Set<String> set = new HashSet<String>();
+//      set.add("Java Project");
+//      presenter.setProjectTypes(set);
+//      presenter.doCreateProject();
+//      assertEquals(projectName, "test");
+//   }
 
-   public void testCreateProjectFailifSelectToFolder() throws InterruptedException
-   {
-      List<Item> selectedItems = new ArrayList<Item>();
-      selectedItems.add(new FolderModel());
-      selectedItems.add(new FolderModel());
-      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
-      presenter.setProjectName("test");
-      presenter.setErrorMessage(new MockErrorMessages());
-      Set<String> set = new HashSet<String>();
-      set.add("Java Project");
-      presenter.setProjectTypes(set);
-      presenter.doCreateProject();
-      assertNotNull(getError());
-   }
+//   public void testCreateProjectFailifSelectToFolder() throws InterruptedException
+//   {
+//      List<Item> selectedItems = new ArrayList<Item>();
+//      selectedItems.add(new FolderModel());
+//      selectedItems.add(new FolderModel());
+//      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
+//      presenter.setProjectName("test");
+//      presenter.setErrorMessage(new MockErrorMessages());
+//      Set<String> set = new HashSet<String>();
+//      set.add("Java Project");
+//      presenter.setProjectTypes(set);
+//      presenter.doCreateProject();
+//      assertNotNull(getError());
+//   }
 
-   public void testCreateProjectFailEmptyProjectName() throws InterruptedException
-   {
-      List<Item> selectedItems = new ArrayList<Item>();
-      selectedItems.add(new FolderModel());
-      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
-      presenter.setProjectName(null);
-      presenter.setErrorMessage(new MockErrorMessages());
-      Set<String> set = new HashSet<String>();
-      set.add("Java Project");
-      presenter.setProjectTypes(set);
-      presenter.doCreateProject();
-      assertNotNull(getError());
-   }
+//   public void testCreateProjectFailEmptyProjectName() throws InterruptedException
+//   {
+//      List<Item> selectedItems = new ArrayList<Item>();
+//      selectedItems.add(new FolderModel());
+//      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
+//      presenter.setProjectName(null);
+//      presenter.setErrorMessage(new MockErrorMessages());
+//      Set<String> set = new HashSet<String>();
+//      set.add("Java Project");
+//      presenter.setProjectTypes(set);
+//      presenter.doCreateProject();
+//      assertNotNull(getError());
+//   }
 
-   public void testCreateProjectFailIfParenIfFile() throws InterruptedException
-   {
-      List<Item> selectedItems = new ArrayList<Item>();
-      selectedItems.add(new FileModel());
-      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
-      presenter.setProjectName(null);
-      presenter.setErrorMessage(new MockErrorMessages());
-      Set<String> set = new HashSet<String>();
-      set.add("Java Project");
-      presenter.setProjectTypes(set);
-      presenter.doCreateProject();
-      assertNotNull(getError());
-   }
+//   public void testCreateProjectFailIfParenIfFile() throws InterruptedException
+//   {
+//      List<Item> selectedItems = new ArrayList<Item>();
+//      selectedItems.add(new FileModel());
+//      CreateProjectPresenter presenter = new CreateProjectPresenter(vfs, display, selectedItems);
+//      presenter.setProjectName(null);
+//      presenter.setErrorMessage(new MockErrorMessages());
+//      Set<String> set = new HashSet<String>();
+//      set.add("Java Project");
+//      presenter.setProjectTypes(set);
+//      presenter.doCreateProject();
+//      assertNotNull(getError());
+//   }
 
    private class MockVirtualFileSystem extends VirtualFileSystem
    {

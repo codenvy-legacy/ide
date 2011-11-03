@@ -36,12 +36,11 @@ import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
-import org.exoplatform.ide.client.project.control.NewProjectControl;
-import org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter;
-import org.exoplatform.ide.client.project.create.CreateProjectTemplatePresenter;
+import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
+import org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
+import org.exoplatform.ide.client.project.template.CreateProjectTemplatePresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
@@ -60,23 +59,19 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    
    private TemplatesMigratedCallback callback;
    
-   public ProjectSupportingModule() {
-      IDE.getInstance().addControl(new CreateProjectFromTemplateControl());
-//      IDE.getInstance().addControl(new CreateProjectTemplateControl());      
-      IDE.getInstance().addControl(new NewProjectControl());
-      
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      
-      IDE.addHandler(MigrateTemplatesEvent.TYPE, this);
-      
+   public ProjectSupportingModule() {      
+      new CreateProjectPresenter();
+
       new CreateProjectFromTemplatePresenter();
+      
       new CreateProjectTemplatePresenter();
-      
-      //new ProjectExplorerPresenter();
-      new TinyProjectExplorerPresenter();
-      
+
       new ShowProjectsPresenter();
       
+      new TinyProjectExplorerPresenter();
+
+      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(MigrateTemplatesEvent.TYPE, this);
    }
    
    /**

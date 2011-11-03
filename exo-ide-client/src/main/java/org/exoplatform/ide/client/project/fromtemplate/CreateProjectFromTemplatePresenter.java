@@ -16,21 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.create;
+package org.exoplatform.ide.client.project.fromtemplate;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -52,8 +41,6 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
-import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
@@ -67,8 +54,18 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
@@ -86,8 +83,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     */
    public interface Display extends IsView
    {
-
-      String ID = "ideCreateProjectFromTemplateView";
 
       /**
        * Get cancel button for registration click handlers.
@@ -183,6 +178,8 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    public CreateProjectFromTemplatePresenter()
    {
+      IDE.getInstance().addControl(new CreateProjectFromTemplateControl());      
+      
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -246,7 +243,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       {
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -501,8 +498,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     */
    private void finishProjectCreation()
    {
-      IDE.getInstance().closeView(Display.ID);
-
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new RefreshBrowserEvent(baseFolder, projectFolder));
       IDE.fireEvent(new ProjectCreatedEvent(projectFolder));
    }

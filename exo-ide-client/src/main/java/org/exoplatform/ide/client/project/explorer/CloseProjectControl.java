@@ -20,14 +20,11 @@
 package org.exoplatform.ide.client.project.explorer;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -40,53 +37,47 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 @RolesAllowed({"administrators", "developers"})
-public class ShowProjectExplorerControl extends SimpleControl implements IDEControl, ViewOpenedHandler,
-   ViewClosedHandler
+public class CloseProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
 {
+   
+   public static final String ID = "Project/Close Project";
 
-   public static final String ID = "Window/Show View/Project Explorer";
+   private static final String TITLE = "Close Project";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerControlTitle();
-
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerControlPrompt();
-
-   public ShowProjectExplorerControl()
-   {
+   private static final String PROMPT = "Close Project";
+   
+   private ProjectModel openedProject;
+   
+   public CloseProjectControl() {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.projectExplorer(), IDEImageBundle.INSTANCE.projectExplorerDisabled());
-      setEvent(new ShowProjectExplorerEvent());
+      setImages(IDEImageBundle.INSTANCE.projectClosed(), IDEImageBundle.INSTANCE.projectClosedDisabled());
+      setEvent(new CloseProjectEvent());
    }
 
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-
-      setEnabled(true);
       setVisible(true);
+      setEnabled(false);
+      
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    @Override
-   public void onViewClosed(ViewClosedEvent event)
+   public void onProjectClosed(ProjectClosedEvent event)
    {
-      if (event.getView() instanceof TinyProjectExplorerPresenter.Display
-         || event.getView() instanceof ProjectExplorerPresenter.Display)
-      {
-         setSelected(false);
-      }
+      openedProject = null;
+      setEnabled(false);
    }
 
    @Override
-   public void onViewOpened(ViewOpenedEvent event)
+   public void onProjectOpened(ProjectOpenedEvent event)
    {
-      if (event.getView() instanceof ProjectExplorerPresenter.Display
-         || event.getView() instanceof TinyProjectExplorerPresenter.Display)
-      {
-         setSelected(true);
-      }
+      openedProject = event.getProject();
+      setEnabled(true);
    }
 
 }

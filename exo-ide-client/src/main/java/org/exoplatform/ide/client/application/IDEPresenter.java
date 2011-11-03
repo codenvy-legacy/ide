@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.application;
 
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
-import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.framework.ui.api.View;
@@ -78,10 +77,8 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
       display.getPerspective().addViewClosedHandler(this);
       display.getPerspective().addViewVisibilityChangedHandler(this);
 
-      EditorController editorController = new EditorController();
-      //      display.getPerspective().addViewVisibilityChangedHandler(editorController);
-
       new ToolbarBuilder(IDE.eventBus(), display.getToolbar(), display.getStatusbar());
+      new VirtualFileSystemSwitcher();
 
       new Timer()
       {

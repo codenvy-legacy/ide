@@ -22,7 +22,10 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -36,8 +39,10 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 @RolesAllowed({"administrators", "developers"})
-public class OpenFileByURLControl extends SimpleControl implements IDEControl
+public class OpenFileByURLControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
+
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * Creates a new instance of this control.
@@ -57,8 +62,28 @@ public class OpenFileByURLControl extends SimpleControl implements IDEControl
    @Override
    public void initialize(HandlerManager eventBus)
    {
-      setEnabled(true);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      update();
+   }
+
+   private void update()
+   {
+      if (vfsInfo == null)
+      {
+         setVisible(false);
+         setEnabled(false);
+         return;
+      }
+
       setVisible(true);
+      setEnabled(true);
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      update();
    }
 
 }

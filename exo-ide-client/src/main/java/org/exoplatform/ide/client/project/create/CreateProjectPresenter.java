@@ -18,22 +18,31 @@
  */
 package org.exoplatform.ide.client.project.create;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.project.event.CreateProjectEvent;
+import org.exoplatform.ide.client.project.event.CreateProjectHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,6 +50,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -49,14 +59,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class CreateProjectPresenter
+public class CreateProjectPresenter implements ItemsSelectedHandler, CreateProjectHandler, VfsChangedHandler, ViewClosedHandler
 {
-
-   private final Display display;
-
-   private final List<Item> selectedItems;
-
-   private final VirtualFileSystem vfs;
 
    public interface ErrorMessage extends Constants
    {
@@ -88,18 +92,24 @@ public class CreateProjectPresenter
    }
 
    private ErrorMessage errorMessage = GWT.create(ErrorMessage.class);
+   
+   private Display display;
 
-   public CreateProjectPresenter(VirtualFileSystem vfs, Display display, final List<Item> selectedItems)
-   {
-      this.display = display;
-      this.selectedItems = selectedItems;
-      this.vfs = vfs;
+   private List<Item> selectedItems = new ArrayList<Item>();
+   
+   private VirtualFileSystemInfo vfsInfo;
+   
+   public CreateProjectPresenter() {
+      IDE.getInstance().addControl(new NewProjectMenuGroup());
+      IDE.getInstance().addControl(new CreateProjectControl());
 
-      IDE.getInstance().openView(display.asView());
-      bind();
+      IDE.addHandler(CreateProjectEvent.TYPE, this);      
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-   private void bind()
+   private void bindDisplay()
    {
       display.getCreateButton().addClickHandler(new ClickHandler()
       {
@@ -119,43 +129,53 @@ public class CreateProjectPresenter
          }
       });
 
-      setProjectTypes(ProjectResolver.getProjectsTypes());
+      display.setProjectType(ProjectResolver.getProjectsTypes());
    }
 
    public void doCreateProject()
    {
-      if (selectedItems == null || selectedItems.get(0) == null)
-         return;
-
-      if (selectedItems.size() > 1)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfMultiselectionParent()));
-         return;
-      }
-      if (selectedItems.get(0).getItemType() == ItemType.FILE)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent("Can't create project you must select as parent folder"));
-         return;
-      }
       if (display.getProjectName().getValue() == null || display.getProjectName().getValue().length() == 0)
       {
          IDE.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfProjectNameNotSet())); //"Project name can't be empty or null"));
          return;
       }
 
+      FolderModel parent = (FolderModel)vfsInfo.getRoot();
+      
+//      Window.alert("Selected Items > " + selectedItems);
+//      
+//      if (selectedItems != null && selectedItems.size() > 0) {
+//         Window.alert("Selected Items Count > " + selectedItems.size());
+//         
+//         if (selectedItems.size() > 1)
+//         {
+//            IDE.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfMultiselectionParent()));
+//            return;
+//         }
+//         
+//         if (selectedItems.get(0).getItemType() == ItemType.FILE)
+//         {
+//            IDE.fireEvent(new ExceptionThrownEvent("Can't create project you must select as parent folder"));
+//            return;
+//         }         
+//      }
+      
+      Window.alert("PARENT > " + parent.getPath());
+      
       ProjectModel model = new ProjectModel();
       model.setName(display.getProjectName().getValue());
       model.setProjectType(display.getProjectType().getValue());
-      model.setParent((FolderModel)selectedItems.get(0));
+      model.setParent(parent);
       try
       {
-         vfs.createProject((Folder)selectedItems.get(0), new AsyncRequestCallback<ProjectModel>(
+         VirtualFileSystem.getInstance().createProject(parent, new AsyncRequestCallback<ProjectModel>(
             new ProjectUnmarshaller(model))
          {
             @Override
             protected void onSuccess(ProjectModel result)
             {
                IDE.getInstance().closeView(display.asView().getId());
+               IDE.fireEvent(new ProjectCreatedEvent(result));
                IDE.fireEvent(new RefreshBrowserEvent(result.getParent()));
             }
 
@@ -184,16 +204,6 @@ public class CreateProjectPresenter
    }
 
    /**
-    * Set available types of project
-    * 
-    * @param set
-    */
-   public void setProjectTypes(Set<String> set)
-   {
-      display.setProjectType(set);
-   }
-
-   /**
     * Replace instance of Error Messages. Technically it need for with pure JUnit.  
     * 
     * @param errorMessage
@@ -201,6 +211,38 @@ public class CreateProjectPresenter
    public void setErrorMessage(ErrorMessage errorMessage)
    {
       this.errorMessage = errorMessage;
+   }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+   }
+
+   @Override
+   public void onCreateProject(CreateProjectEvent event)
+   {
+      if (display != null) {
+         return;
+      }
+      
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();      
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display) {
+         display = null;
+      }
    }
 
 }

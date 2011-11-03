@@ -33,6 +33,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -68,12 +69,15 @@ public class TinyProjectExplorerView extends ViewImpl implements
    @UiField
    ItemTree treeGrid;
    
+   @UiField
+   HTMLPanel projectNotOpenedPanel;
+   
    private static final String TITLE = "Project Explorer";
 
    public TinyProjectExplorerView()
    {
-      super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+      super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
+      add(uiBinder.createAndBindUi(this));      
    }
 
    @Override
@@ -122,6 +126,13 @@ public class TinyProjectExplorerView extends ViewImpl implements
    public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
    {
       treeGrid.removeItemIcons(itemsIcons);
+   }
+
+   @Override
+   public void setProjectExplorerTreeVisible(boolean visible)
+   {
+      treeGrid.setVisible(visible);
+      projectNotOpenedPanel.setVisible(!visible);
    }
 
 }

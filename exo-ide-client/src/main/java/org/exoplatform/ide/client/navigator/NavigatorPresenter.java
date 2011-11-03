@@ -31,6 +31,7 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -98,6 +99,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -110,7 +112,7 @@ import com.google.gwt.user.client.Timer;
 public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
-   ConfigurationReceivedSuccessfullyHandler, ViewActivatedHandler, ShowNavigatorHandler
+   ConfigurationReceivedSuccessfullyHandler, ViewActivatedHandler, ShowNavigatorHandler, VfsChangedHandler
 {
    
    public interface Display extends IsView
@@ -195,19 +197,19 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(ItemUnlockedEvent.TYPE, this);
       IDE.addHandler(ItemLockedEvent.TYPE, this);
-      IDE.addHandler(SwitchVFSEvent.TYPE, this);
+      //IDE.addHandler(SwitchVFSEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      
       IDE.addHandler(ShowNavigatorEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
       
       IDE.getInstance().addControl(new ShowNavigatorControl());
 
-      display = GWT.create(Display.class);
-      bindDisplay();
+//      display = GWT.create(Display.class);
+//      bindDisplay();
    }
    
    @Override
@@ -271,8 +273,12 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
    
    private void openRootFolder() {
       IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
-
       display.getBrowserTree().setValue(rootFolder);
+      
+      if (rootFolder == null) {
+         return;
+      }
+
       display.selectItem(rootFolder.getId());
       selectedItems = display.getSelectedItems();
 
@@ -377,6 +383,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
       if (!display.asView().isActive() && !"ideWorkspaceView".equals(lastNavigatorId))
       {
+         Window.alert("Navigator is not active.");
          return;
       }
       
@@ -594,6 +601,8 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
     */
    public void onSwitchVFS(final SwitchVFSEvent event)
    {
+      new Exception().printStackTrace();
+
       if (display == null)
       {
          return;
@@ -606,9 +615,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
       display.getBrowserTree().setValue(null);
       selectedItems.clear();
-      selectedItems.clear();
       IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
-
       IDE.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       // TODO [IDE-307] check appConfig["entryPoint"] property
@@ -618,11 +625,16 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       {
          String workspaceUrl =
             (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + event.getVfs() : vfsBaseUrl + "/" + event.getVfs();
+            
+            System.out.println("workspace url 1 > " + workspaceUrl);
+            
+            workspaceUrl += "/uhome";            
+            System.out.println("workspace url 2 > " + workspaceUrl);
+            
          //TODO workspace URL consists of vfsBaseURL (taken from IDE init conf) and VFS id (path parameter)
          new VirtualFileSystem(workspaceUrl).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
             new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
-
             @Override
             protected void onSuccess(VirtualFileSystemInfo result)
             {
@@ -630,10 +642,10 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
                IDE.fireEvent(new VfsChangedEvent(result));
 
                display.asView().setViewVisible();
-
                IDE.fireEvent(new ViewVisibilityChangedEvent((View)display));
 
                rootFolder = result.getRoot();
+               System.out.println("root folder > " + rootFolder.getId());
                
                display.getBrowserTree().setValue(result.getRoot());
                display.selectItem(result.getRoot().getId());
@@ -647,7 +659,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
                {
                   e.printStackTrace();
                }
-
             }
 
             @Override
@@ -667,7 +678,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       }
    }
    
-
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
     */
@@ -680,7 +690,10 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
 
-      display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
+      if (display != null)
+      {
+         display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
+      }
    }
 
    // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5 seems because of SmartGWT issues
@@ -791,6 +804,23 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       {
          lastNavigatorId = "ideTinyProjectExplorerView";
       }
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      if (event.getVfsInfo() == null) {
+         rootFolder = null;
+         return;
+      }
+      
+      rootFolder = event.getVfsInfo().getRoot();
+      
+      if (display != null) {
+         Window.alert("opening root folder.........");
+         openRootFolder();
+      }
+      
    }
 
 }

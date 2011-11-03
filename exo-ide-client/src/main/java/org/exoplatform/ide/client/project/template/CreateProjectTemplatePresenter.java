@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.create;
+package org.exoplatform.ide.client.project.template;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +131,8 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
 
    public CreateProjectTemplatePresenter()
    {
+//    IDE.getInstance().addControl(new CreateProjectTemplateControl());            
+      
       IDE.addHandler(CreateProjectTemplateEvent.TYPE, this);
       IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);

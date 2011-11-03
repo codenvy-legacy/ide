@@ -108,7 +108,6 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
       {
          setVisible(false);
       }
-
    }
 
    /**
