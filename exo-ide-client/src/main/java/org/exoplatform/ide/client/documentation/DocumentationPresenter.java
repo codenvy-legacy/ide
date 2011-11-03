@@ -90,6 +90,9 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+      
+      if (settings == null)
+         return;
 
       boolean isDocumentationOpened =
          settings.getValueAsBoolean("documentation") == null ? false : settings.getValueAsBoolean("documentation");

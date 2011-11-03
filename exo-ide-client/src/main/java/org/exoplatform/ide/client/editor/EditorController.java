@@ -262,6 +262,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      if (event.getFile() == null)
+      {
+         return;
+      }
       if (activeFile == event.getFile())
       {
          getEditorFromView(event.getFile().getId()).setFocus();
@@ -726,6 +730,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       {
          if (!(event.getView() instanceof EditorView))
          {
+            IDE.fireEvent(new EditorActiveFileChangedEvent(null, null));
             return;
          }
          final EditorView editorView = (EditorView)event.getView();

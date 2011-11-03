@@ -130,8 +130,11 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
          files.add(file.getLinkByRelation(Link.REL_SELF).getHref());
       }
 
-      applicationSettings.setValue("opened-files", files, Store.COOKIES);
-      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+      if (applicationSettings != null)
+      {
+         applicationSettings.setValue("opened-files", files, Store.COOKIES);
+         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+      }
    }
 
    private void storeActiveFile(FileModel file)
@@ -142,8 +145,11 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
          activeFile = file.getPath();
       }
 
-      applicationSettings.setValue("active-file", activeFile, Store.COOKIES);
-      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+      if (applicationSettings != null)
+      {
+         applicationSettings.setValue("active-file", activeFile, Store.COOKIES);
+         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+      }
    }
 
    /**
