@@ -30,16 +30,23 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 /**
@@ -153,7 +160,11 @@ public abstract class BaseTest
       switch (BROWSER_COMMAND)
       {
          case GOOGLE_CHROME :
-            driver = new ChromeDriver();
+            
+            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+            capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
+            driver = new ChromeDriver(capabilities);
+            
             break;
          case IE_EXPLORE_PROXY :
             driver = new InternetExplorerDriver();
@@ -161,7 +172,7 @@ public abstract class BaseTest
          default :
             driver = new FirefoxDriver();
       }
-      
+
       selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
       
       IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/", driver);
@@ -637,17 +648,17 @@ public abstract class BaseTest
    public static void killFireFox()
    {
       driver.close();
-//      try
-//      {
-//         if (System.getProperty("os.name").equals("Linux"))
-//         {
-//            Runtime.getRuntime().exec("killall firefox");
-//         }
-//      }
-//      catch (IOException e)
-//      {
-//         e.printStackTrace();
-//      }
+      //      try
+      //      {
+      //         if (System.getProperty("os.name").equals("Linux"))
+      //         {
+      //            Runtime.getRuntime().exec("killall firefox");
+      //         }
+      //      }
+      //      catch (IOException e)
+      //      {
+      //         e.printStackTrace();
+      //      }
    }
 
    //   public enum IdeAddress {
@@ -938,7 +949,25 @@ public abstract class BaseTest
          }
       }
 
-      selenium().captureScreenshot("screenshots/" + this.getClass().getName() + "." + testMethodName + ".png");
+      byte[] sc = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
+      File parent = new File("target/screenshots");
+      parent.mkdirs();
+      try
+      {
+         File file = new File(parent, this.getClass().getName() + "." + testMethodName + ".png");
+         file.createNewFile();
+         FileOutputStream outputStream = new FileOutputStream(file);
+         outputStream.write(sc);
+         outputStream.close();
+      }
+      catch (FileNotFoundException e)
+      {
+         e.printStackTrace();
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
