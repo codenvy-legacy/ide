@@ -122,6 +122,9 @@ public class CodeAssistant extends AbstractTestModule
       input.clear();
    }
 
+   /**
+    * Close codeasstant by press Escape Button
+    */
    public void closeForm()
    {
       input.sendKeys(Keys.ESCAPE);

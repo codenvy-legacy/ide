@@ -20,9 +20,7 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -38,44 +36,20 @@ public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
 
-      //      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR,
-      //         );
       IDE.EDITOR.typeTextIntoEditor(0, "var a;\n \n function a() {\n}");
 
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_UP.toString());
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_UP.toString());
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.moveCursorUp(0, 2);
 
       IDE.CODEASSISTANT.openForm();
-      Thread.sleep(TestConstants.SLEEP);
-      
-      //      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      //      Thread.sleep(TestConstants.SLEEP);
-      //
-      //      IDE.CODEASSISTANT.openForm();
-      //      Thread.sleep(TestConstants.SLEEP);
-      //
-      //      IDE.CODEASSISTANT.checkElementPresent("a");
-      //      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
-      //
-      //      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //
-      //      IDE.CODEASSISTANT.openForm();
-      //      Thread.sleep(TestConstants.SLEEP);
-      //
-      //      IDE.CODEASSISTANT.checkElementPresent("a()");
-      //      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ESCAPE);
 
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      //      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.CODEASSISTANT.checkElementPresent("a");
+      IDE.CODEASSISTANT.closeForm();
+      IDE.EDITOR.moveCursorDown(0, 3);
+
+      IDE.CODEASSISTANT.openForm();
+
+      IDE.CODEASSISTANT.checkElementPresent("a()");
+      IDE.CODEASSISTANT.closeForm();
    }
 
 }
