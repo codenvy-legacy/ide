@@ -30,8 +30,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.awt.event.KeyEvent;
-
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 17, 2011 2:27:36 PM vereshchaka $
@@ -125,7 +123,7 @@ public class CodeAssistant extends AbstractTestModule
 
    public void closeForm()
    {
-      selenium().keyPressNative("" + KeyEvent.VK_ESCAPE);
+      input.sendKeys(Keys.ESCAPE);
       selenium().waitForCondition(
          "var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID + "\"); value == null", "5000");
    }
