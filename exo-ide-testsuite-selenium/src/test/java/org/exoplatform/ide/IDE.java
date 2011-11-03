@@ -84,7 +84,7 @@ public class IDE
 
    public Toolbar TOOLBAR = new Toolbar();
 
-   public Editor EDITOR = new Editor();
+   public Editor EDITOR;
 
    public Outline OUTLINE = new Outline();
 
@@ -163,6 +163,7 @@ public class IDE
       instance = this;
       
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
+      EDITOR = PageFactory.initElements(driver, Editor.class);
    }
 
    public Selenium getSelenium()
