@@ -21,14 +21,16 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.event.KeyEvent;
-
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.awt.event.KeyEvent;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -55,6 +57,9 @@ public class CodeAssistant extends AbstractTestModule
       public static final String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
    }
 
+   @FindBy(id = Locators.INPUT)
+   private WebElement input;
+
    /**
     * Type text to input field of autocompletion form.
     * 
@@ -63,10 +68,17 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void typeToInput(String text) throws Exception
    {
-      selenium().typeKeys(CodeAssistant.Locators.INPUT, text);
+      input.sendKeys(text);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
+   /**
+    * Type to input with cleaning previous value.
+    * 
+    * @param text text to type
+    * @param clearInput if <code>true</code> - clear input befor type
+    * @throws Exception
+    */
    public void typeToInput(String text, boolean clearInput) throws Exception
    {
       if (clearInput)
@@ -96,12 +108,11 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void moveCursorDown(int row) throws InterruptedException
    {
-      Thread.sleep(TestConstants.SLEEP_SHORT);
       for (int i = 0; i < row; i++)
       {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
+         input.sendKeys(Keys.DOWN.toString());
       }
+      Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
    /**
@@ -109,11 +120,7 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void clearInput()
    {
-      selenium().focus(Locators.INPUT);
-      selenium().controlKeyDown();
-      selenium().keyPress(Locators.INPUT, "97");
-      selenium().controlKeyUp();
-      selenium().keyPressNative("" + KeyEvent.VK_DELETE);
+      input.clear();
    }
 
    public void closeForm()
@@ -128,7 +135,9 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void insertSelectedItem()
    {
-      selenium().keyPressNative("" + KeyEvent.VK_ENTER);
+      //RETURN key is used instead of ENTER because 
+      //of issue http://code.google.com/p/selenium/issues/detail?id=2180
+      input.sendKeys(Keys.RETURN); 
    }
 
    /**

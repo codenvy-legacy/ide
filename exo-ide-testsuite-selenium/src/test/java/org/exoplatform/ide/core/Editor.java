@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import java.awt.Robot;
@@ -99,8 +100,7 @@ public class Editor extends AbstractTestModule
     */
    public void selectTab(int tabIndex) throws Exception
    {
-      selenium().clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + tabIndex + "]" + "/table",
-         "1,1");
+      selenium().clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + tabIndex + "]" + "/table", "1,1");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
@@ -503,15 +503,6 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Press Enter key in editor.
-    */
-   public void pressEnter()
-   {
-      selenium().keyDown("//body[@class='editbox']", "\\13");
-      selenium().keyUp("//body[@class='editbox']", "\\13");
-   }
-
-   /**
     * Type text to file, opened in tab.
     * 
     * Index of tabs begins from 0.
@@ -529,6 +520,66 @@ public class Editor extends AbstractTestModule
       selectIFrameWithEditor(tabIndex);
       driver().switchTo().activeElement().sendKeys(text);
       IDE().selectMainFrame();
+   }
+
+   /**
+    * Move cursor in editor down to pointed number of lines.
+    * 
+    * @param tabIndex index of the tab
+    * @param rows number of lines to move down
+    * @throws Exception 
+    */
+   public void moveCursorDown(int tabIndex, int rows) throws Exception
+   {
+      for (int i = 0; i < rows; i++)
+      {
+         typeTextIntoEditor(tabIndex, Keys.DOWN.toString());
+      }
+   }
+   
+   /**
+    * Move cursor in editor up to pointed number of lines.
+    * 
+    * @param tabIndex index of the tab
+    * @param rows number of lines to move up
+    * @throws Exception 
+    */
+   public void moveCursorUp(int tabIndex, int rows) throws Exception
+   {
+      for (int i = 0; i < rows; i++)
+      {
+         typeTextIntoEditor(tabIndex, Keys.UP.toString());
+      }
+   }
+   
+   /**
+    * Move cursor in editor left to pointed number of symbols.
+    * 
+    * @param tabIndex index of the tab
+    * @param rows number of symbols to move left
+    * @throws Exception 
+    */
+   public void moveCursorLeft(int tabIndex, int symbols) throws Exception
+   {
+      for (int i = 0; i < symbols; i++)
+      {
+         typeTextIntoEditor(tabIndex, Keys.LEFT.toString());
+      }
+   }
+   
+   /**
+    * Move cursor in editor right to pointed number of symbols.
+    * 
+    * @param tabIndex index of the tab
+    * @param rows number of symbols to move right
+    * @throws Exception 
+    */
+   public void moveCursorRight(int tabIndex, int symbols) throws Exception
+   {
+      for (int i = 0; i < symbols; i++)
+      {
+         typeTextIntoEditor(tabIndex, Keys.RIGHT.toString());
+      }
    }
 
    /**

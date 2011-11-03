@@ -265,7 +265,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // changeCssFile
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.typeTextIntoEditor(0, "Change file");
-      IDE.EDITOR.pressEnter();
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
       assertEquals(IDE.EDITOR.getTabTitle(0), CSS_FILE_NAME + " *");
 
       // changeGoogleGadgetFile

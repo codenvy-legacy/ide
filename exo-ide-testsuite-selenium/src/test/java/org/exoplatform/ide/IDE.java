@@ -56,6 +56,7 @@ import org.exoplatform.ide.core.Workspace;
 import org.exoplatform.ide.paas.heroku.core.Heroku;
 import org.exoplatform.ide.paas.openshift.core.OpenShift;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
 
 /**
  * 
@@ -79,27 +80,6 @@ public class IDE
       return instance;
    }
 
-   public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
-   {
-      System.out.println("\r\n\r\n\r\n\r\n" + "Initializing IDE ( Selenium )\r\n" + "Workspace URL > " + workspaceURL
-         + "\r\n\r\n\r\n");
-
-      this.selenium = selenium;
-      this.workspaceURL = workspaceURL;
-      this.driver = driver;
-      instance = this;
-   }
-
-   public Selenium getSelenium()
-   {
-      return selenium;
-   }
-
-   public WebDriver driver()
-   {
-      return driver;
-   }
-
    public Menu MENU = new Menu();
 
    public Toolbar TOOLBAR = new Toolbar();
@@ -112,7 +92,7 @@ public class IDE
 
    public Perspective PERSPECTIVE = new Perspective();
 
-   public CodeAssistant CODEASSISTANT = new CodeAssistant();
+   public CodeAssistant CODEASSISTANT;
 
    public Preview PREVIEW = new Preview();
 
@@ -171,7 +151,30 @@ public class IDE
    public Project PROJECT = new Project();
    
    public Input INPUT = new Input();
+   
+   public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
+   {
+      System.out.println("\r\n\r\n\r\n\r\n" + "Initializing IDE ( Selenium )\r\n" + "Workspace URL > " + workspaceURL
+         + "\r\n\r\n\r\n");
 
+      this.selenium = selenium;
+      this.workspaceURL = workspaceURL;
+      this.driver = driver;
+      instance = this;
+      
+      CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
+   }
+
+   public Selenium getSelenium()
+   {
+      return selenium;
+   }
+
+   public WebDriver driver()
+   {
+      return driver;
+   }
+   
    /**
     * Select main frame of IDE.
     * 
