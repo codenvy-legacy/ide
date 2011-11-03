@@ -25,6 +25,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -231,7 +232,7 @@ public class LockFileTest extends LockFileAbstract
       IDE.EDITOR.selectTab(0);
       //------------------------
 
-      IDE.EDITOR.checkEditorTabSelected(FILE_NAME_1, true);
+      Assert.assertTrue(IDE.EDITOR.isEditorTabSelected(FILE_NAME_1));
 
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);

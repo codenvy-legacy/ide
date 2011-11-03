@@ -28,6 +28,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -142,7 +143,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //check, tab with rest service must be opened
-      IDE.EDITOR.checkEditorTabSelected(FILE_WITH_ERROR, true);
+      Assert.assertTrue(IDE.EDITOR.isEditorTabSelected(FILE_WITH_ERROR));
 
       assertEquals("3 : 9", IDE.STATUSBAR.getCursorPosition());
 

@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.operation.autocompletion;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -38,10 +35,15 @@ public class AutoCompletionCSSTest extends BaseTest
    {
       IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
-      cssTest();
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CHROMATTIC);
+      System.out.println("AutoCompletionCSSTest.testPlainCSS()>>>"+IDE.EDITOR.getTabTitle(0));
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.clickCloseEditorButton(1);
+      // cssTest();
+      Thread.sleep(3000);
    }
 
-   @Test
+  /* @Test
    public void testGoogleGadget() throws Exception
    {
       refresh();
@@ -74,9 +76,9 @@ public class AutoCompletionCSSTest extends BaseTest
       cssTest();
    }
 
-   /**
+  *//**
     * @throws InterruptedException
-    */
+    *//*
    private void cssTest() throws Exception
    {
       IDE.EDITOR.typeTextIntoEditor(0, ".main{" + Keys.ENTER.toString());
@@ -86,5 +88,5 @@ public class AutoCompletionCSSTest extends BaseTest
       IDE.CODEASSISTANT.insertSelectedItem();
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.contains("list-style-type:"));
-   }
+   }*/
 }

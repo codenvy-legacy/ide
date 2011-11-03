@@ -25,7 +25,11 @@ import static org.junit.Assert.fail;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.Robot;
 import java.awt.event.InputEvent;
@@ -54,9 +58,18 @@ public class Editor extends AbstractTestModule
        */
       String CK_EDITOR = "//table[@class='cke_editor']";
 
-      String EDITOR_TABSET_LOCATOR = "//div[@panel-id='editor']";
+      String EDITOR_TABSET_LOCATOR = "//div[@id='editor']";
+
+      String TAB_LOCATOR = "//div[@tab-bar-index='%s']";
 
       String EDITOR_TAB_LOCATOR = "//div[@panel-id='editor' and @view-id='editor-%s' ]";
+
+      String EDITOR_VIEW_LOCATOR = "//div[@panel-id='editor' and @view-id='%s']";
+
+      String ACTIVE_EDITOR_TAB_LOCATOR = "//div[@panel-id='editor' and is-active='true']";
+
+      String SELECTED_EDITOR_TAB_LOCATOR =
+         "//div[contains(@class, 'gwt-TabLayoutPanelTab-selected') and contains(text(), '%s')]";
 
       String DEBUG_EDITOR_ACTIVE_FILE_URL = "debug-editor-active-file-url";
 
@@ -65,7 +78,11 @@ public class Editor extends AbstractTestModule
       String DESIGN_BUTTON_LOCATOR = "//div[@id='DesignButtonID']";
 
       String SOURCE_BUTTON_LOCATOR = "//div[@id='SourceButtonID']/span";
+
+      String CLOSE_BUTTON_LOCATOR = "//div[@button-name='close-tab']";
    }
+
+   private WebElement editor;
 
    /**
     * Returns the title of the tab with the pointed index.
@@ -76,18 +93,9 @@ public class Editor extends AbstractTestModule
     */
    public String getTabTitle(int index)
    {
-      return selenium().getText(getEditorTabScLocator(index));
-   }
-
-   /**
-    * Get smart GWT locator for editor tab.
-    * 
-    * @param tabIndex - index of tab
-    * @return {@link String}
-    */
-   public String getEditorTabScLocator(int tabIndex)
-   {
-      return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + tabIndex + "']";
+      WebElement tab =
+         editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, index)));
+      return tab.getText();
    }
 
    /**
@@ -100,7 +108,9 @@ public class Editor extends AbstractTestModule
     */
    public void selectTab(int tabIndex) throws Exception
    {
-      selenium().clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + tabIndex + "]" + "/table", "1,1");
+      WebElement tab =
+         editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR, tabIndex)));
+      tab.click();
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
@@ -112,74 +122,10 @@ public class Editor extends AbstractTestModule
     */
    public void clickCloseEditorButton(int tabIndex) throws Exception
    {
-      String tabLocator = getTabCloseButtonLocator(tabIndex);
-      selenium().click(tabLocator);
-      Thread.sleep(1);
-   }
-
-   //   /**
-   //    * In case tab with index as tabIndex is exist in editor, close it without saving. 
-   //    * 
-   //   * @param tabIndex
-   //   */
-   //   public void tryCloseTabWithNonSaving(int tabIndex) throws Exception
-   //   {
-   //      //if file is opened, close it
-   //      if (selenium().isElementPresent("//div[@panel-id='editor']//td[@tab-bar-index='" + tabIndex + "']"))
-   //      {
-   //         closeTabIgnoringChanges(tabIndex);
-   //      }
-   //   }
-
-   private String fileHrefToBeClosed;
-
-   public void rememberFileToBeClosed(int tabIndex)
-   {
-      /*
-       * Get HREF of file which will be closed.
-       */
-      String fileHrefLocator =
-         "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//td[@class='gwt-DecoratedTabBarPanel']"
-            + "/table[@class='gwt-DecoratedTabBar']//td[@tab-bar-index='"
-            + tabIndex
-            + "']//div[@class='tabMiddleCenterInner']//table//span@title";
-      fileHrefToBeClosed = selenium().getAttribute(fileHrefLocator);
-   }
-
-   public void waitForRememberFileClosed() throws Exception
-   {
-      /*
-       * Waiting for editor tab was closed.
-       */
-
-      String closedTabLocator =
-         "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//td[@class='gwt-DecoratedTabBarPanel']"
-            + "/table[@class='gwt-DecoratedTabBar']//div[@class='tabMiddleCenterInner']//table//span[@title='"
-            + fileHrefToBeClosed + "']";
-
-      //      String closedTabLocator = "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//td[@class='gwt-DecoratedTabBarPanel']" +
-      //      "/table[@class='gwt-DecoratedTabBar']//td[@tab-bar-index='" + tabIndex + "']//div[@class='tabMiddleCenterInner']//table//span[@title='" + fileHrefToClose + "']";      
-
-      long startTime = System.currentTimeMillis();
-      while (true)
-      {
-         String nowActiveFile = selenium().getText(Locators.DEBUG_EDITOR_ACTIVE_FILE_URL);
-         System.out.println("NOW ACTIVE FILE [" + nowActiveFile + "]");
-         if (!selenium().isElementPresent(closedTabLocator))
-         {
-            break;
-         }
-
-         long time = System.currentTimeMillis() - startTime;
-         if (time > TestConstants.TIMEOUT)
-         {
-            fail();
-         }
-
-         Thread.sleep(1);
-      }
-
-      Thread.sleep(1);
+      WebElement closeButton =
+         editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex)
+            + Locators.CLOSE_BUTTON_LOCATOR));
+      closeButton.click();
    }
 
    /**
@@ -189,27 +135,19 @@ public class Editor extends AbstractTestModule
     */
    public void closeFile(int tabIndex) throws Exception
    {
-      /*
-       * Remember file to be closed.
-       */
-      rememberFileToBeClosed(tabIndex);
+      selectTab(tabIndex);
+      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
+      clickCloseEditorButton(tabIndex);
 
-      /*
-       * Get tab's locator.
-       */
-      String tabLocator = getTabCloseButtonLocator(tabIndex);
+      new WebDriverWait(driver(), 2000).until(new ExpectedCondition<Boolean>()
+      {
 
-      /*
-       * Closing tab
-       */
-      selenium().click(tabLocator);
-      Thread.sleep(1);
-
-      /*
-       * Wait for remembered files to be closed.
-       */
-      waitForRememberFileClosed();
-      Thread.sleep(1);
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId))) == null;
+         }
+      });
    }
 
    /**
@@ -220,22 +158,9 @@ public class Editor extends AbstractTestModule
    */
    public void closeTabIgnoringChanges(int tabIndex) throws Exception
    {
-      rememberFileToBeClosed(tabIndex);
-
-      /*
-       * Return if tab is not exist.
-       */
-      String tabLocator = getTabCloseButtonLocator(tabIndex);
-      //      if (!selenium().isElementPresent(tabLocator))
-      //      {
-      //         return;
-      //      }
-
-      /*
-       * Closing tab
-       */
-      selenium().click(tabLocator);
-      Thread.sleep(500);
+      selectTab(tabIndex);
+      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
+      clickCloseEditorButton(tabIndex);
 
       /*
        * Closing ask dialogs if them is appears.
@@ -253,19 +178,15 @@ public class Editor extends AbstractTestModule
          fail("Dialog has been not found!");
       }
 
-      waitForRememberFileClosed();
-   }
+      new WebDriverWait(driver(), 2000).until(new ExpectedCondition<Boolean>()
+      {
 
-   /**
-    * Return locator for close icon of tab (tab with file) in editor tabset.
-    * 
-    * @param index - index of editor tab (numeration start with 0).
-    * 
-    * @return {@link String}
-    */
-   public static String getTabCloseButtonLocator(int index)
-   {
-      return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + index + "']//div[@button-name='close-tab']";
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId))) == null;
+         }
+      });
    }
 
    /**
@@ -277,7 +198,7 @@ public class Editor extends AbstractTestModule
    public boolean isFileContentChanged(int tabIndex)
    {
       //check, that file is unsaved
-      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
+      final String tabName = getTabTitle(tabIndex);
       return tabName.endsWith("*");
    }
 
@@ -294,15 +215,10 @@ public class Editor extends AbstractTestModule
     */
    public void saveAndCloseFile(int tabIndex, String newFileName) throws Exception
    {
-      rememberFileToBeClosed(tabIndex);
+      selectTab(tabIndex);
+      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
 
-      String tabLocator = getTabCloseButtonLocator(tabIndex);
-
-      /*
-       * Closing tab
-       */
-      selenium().click(tabLocator);
-      Thread.sleep(1);
+      clickCloseEditorButton(tabIndex);
 
       /*
        * Saving file
@@ -324,28 +240,28 @@ public class Editor extends AbstractTestModule
          fail();
       }
 
-      waitForRememberFileClosed();
+      new WebDriverWait(driver(), 2000).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
-   public void checkEditorTabSelected(String tabTitle, boolean isSelected)
+   public boolean isEditorTabSelected(String tabTitle)
    {
-      String locator = Locators.EDITOR_TABSET_LOCATOR;
-      if (isSelected)
-      {
-         //used //td[contains(@class, 'tabTitleSelected')] locator, instead of equals,
-         //because after refreshing tab is overed by mouse and there is no 'tabTitleSelected'
-         //class, but there is 'tabTitleSelectedOver'.
-         locator +=
-            "//td[contains(@class, 'gwt-TabBarItem-wrapper-selected')]//span[contains(text(), '" + tabTitle + "')]";
-      }
-      else
-      {
-         locator += "//div[@role='tab']//span[contains(text(), '" + tabTitle + "')]";
-      }
-
-      System.out.println("locator [" + locator + "]");
-
-      assertTrue(selenium().isElementPresent(locator));
+      return editor.findElement(By.xpath(String.format(Locators.SELECTED_EDITOR_TAB_LOCATOR, tabTitle))) != null;
    }
 
    /**
@@ -361,37 +277,38 @@ public class Editor extends AbstractTestModule
     */
    public void checkIsTabPresentInEditorTabset(String tabTitle, boolean isOpened)
    {
-      if (isOpened)
-      {
-         for (int i = 0; i < 50; i++)
-         {
-            if (selenium().isElementPresent(getEditorTabScLocator(i)))
-            {
-               if (tabTitle.equals(getTabTitle(i)))
-                  return;
-            }
-            else
-            {
-               break;
-            }
-         }
-         fail("Can't find " + tabTitle + " in tab titles");
-      }
-      else
-      {
-         for (int i = 0; i < 50; i++)
-         {
-            if (selenium().isElementPresent(getEditorTabScLocator(i)))
-            {
-               if (tabTitle.equals(getTabTitle(i)))
-                  fail(tabTitle + " is present in tab titles");
-            }
-            else
-            {
-               return;
-            }
-         }
-      }
+      /*  if (isOpened)
+        {
+           for (int i = 0; i < 50; i++)
+           {
+              if (selenium().isElementPresent(getEditorTabScLocator(i)))
+              {
+                 if (tabTitle.equals(getTabTitle(i)))
+                    return;
+              }
+              else
+              {
+                 break;
+              }
+           }
+           fail("Can't find " + tabTitle + " in tab titles");
+        }
+        else
+        {
+           for (int i = 0; i < 50; i++)
+           {
+              if (selenium().isElementPresent(getEditorTabScLocator(i)))
+              {
+                 if (tabTitle.equals(getTabTitle(i)))
+                    fail(tabTitle + " is present in tab titles");
+              }
+              else
+              {
+                 return;
+              }
+           }
+        }*/
+      //TODO
    }
 
    /**
@@ -536,7 +453,7 @@ public class Editor extends AbstractTestModule
          typeTextIntoEditor(tabIndex, Keys.DOWN.toString());
       }
    }
-   
+
    /**
     * Move cursor in editor up to pointed number of lines.
     * 
@@ -551,7 +468,7 @@ public class Editor extends AbstractTestModule
          typeTextIntoEditor(tabIndex, Keys.UP.toString());
       }
    }
-   
+
    /**
     * Move cursor in editor left to pointed number of symbols.
     * 
@@ -566,7 +483,7 @@ public class Editor extends AbstractTestModule
          typeTextIntoEditor(tabIndex, Keys.LEFT.toString());
       }
    }
-   
+
    /**
     * Move cursor in editor right to pointed number of symbols.
     * 

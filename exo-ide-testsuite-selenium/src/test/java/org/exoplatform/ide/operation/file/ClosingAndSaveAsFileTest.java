@@ -173,10 +173,13 @@ public class ClosingAndSaveAsFileTest extends BaseTest
        *     - File must be present in the tree.
        */
       
-      IDE.EDITOR.rememberFileToBeClosed(0);
+     /* 
+      * FIXME
+      * 
+      * IDE.EDITOR.rememberFileToBeClosed(0);
       IDE.ASK_FOR_VALUE_DIALOG.setValue("new XML file.xml");
       IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
-      IDE.EDITOR.waitForRememberFileClosed();
+      IDE.EDITOR.waitForRememberFileClosed();*/
       
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/new XML file.xml");
       
