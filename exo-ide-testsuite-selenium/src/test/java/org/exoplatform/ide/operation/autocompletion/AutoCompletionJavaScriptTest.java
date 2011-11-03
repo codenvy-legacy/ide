@@ -139,7 +139,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
 
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
 
       IDE.EDITOR.typeTextIntoEditor(0, " <script>");
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());

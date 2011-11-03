@@ -59,7 +59,7 @@ public class GetItemUrlTest extends BaseTest
       //Create first file
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.deleteLinesInEditor(7);
+      IDE.EDITOR.deleteLinesInEditor(0, 7);
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
       IDE.EDITOR.typeTextIntoEditor(0, content1);
       IDE.NAVIGATION.saveFileAs(file1Name);

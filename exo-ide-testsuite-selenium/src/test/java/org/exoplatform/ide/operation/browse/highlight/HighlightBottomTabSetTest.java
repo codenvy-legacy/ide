@@ -79,7 +79,7 @@ public class HighlightBottomTabSetTest extends BaseTest
       IDE.PERSPECTIVE.checkViewIsActive("ideFilePropertiesView");
       
       
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       
 
       //TODO should be completed after fix problem highlighting in codeeditor after setting cursor in text

@@ -90,14 +90,14 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
             + "import javax.ws.rs.PathParam\n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
 
       // Empty line 14, type "B" symbol and then click on Ctrl+Space. Then select "BitSet" class item from default package and press "Enter" key.
       goToLine(14);
-      IDE.EDITOR.deleteLinesInEditor(1);
+      IDE.EDITOR.deleteLinesInEditor(0, 1);
       IDE.EDITOR.typeTextIntoEditor(0, "B");
       IDE.CODEASSISTANT.openForm();
       selenium().clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
@@ -105,14 +105,14 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
             + "import javax.ws.rs.PathParam\n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
 
       // Empty line 14 and then click on Ctrl+Space. Then select "HelloWorld" class item with current class name and press "Enter" key.
       goToLine(14);
-      IDE.EDITOR.deleteLinesInEditor(1);
+      IDE.EDITOR.deleteLinesInEditor(0, 1);
       IDE.EDITOR.typeTextIntoEditor(0, " ");
       IDE.CODEASSISTANT.openForm();
       selenium().clickAt(getErrorCorrectionListItemLocator("HelloWorld"), "");
@@ -120,7 +120,7 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
             + "import javax.ws.rs.PathParam\n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
@@ -149,7 +149,7 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(1)
          .startsWith(
             "<html>" + "   <head>" + "     <%" + "       import javax.ws.rs.Path" + "       import javax.ws.rs.GET"
@@ -158,7 +158,7 @@ public class ImportStatementInsertionTest extends BaseTest
 
       // Empty line 15, type "B" symbol and then click on Ctrl+Space. Then select "BitSet" class item from default package and press "Enter" key.
       goToLine(15);
-      IDE.EDITOR.deleteLinesInEditor(1);
+      IDE.EDITOR.deleteLinesInEditor(0, 1);
       IDE.EDITOR.typeTextIntoEditor(1, "B");
       IDE.CODEASSISTANT.openForm();
       selenium().clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
@@ -166,7 +166,7 @@ public class ImportStatementInsertionTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(1)
          .startsWith(
             "<html>" + "   <head>" + "     <%" + "       import javax.ws.rs.Path" + "       import javax.ws.rs.GET"

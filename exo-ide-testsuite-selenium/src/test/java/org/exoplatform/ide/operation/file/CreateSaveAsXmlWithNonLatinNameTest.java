@@ -115,7 +115,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
 
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
 
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
 
@@ -141,7 +141,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.EDITOR.checkCodeEditorOpened(0);
 
       //change file content
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
 
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
 

@@ -153,7 +153,7 @@ public class FindReplaceTest extends BaseTest
       selenium().fireEvent("//", "focus");
 
       // Make system mouse click on editor space
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals(wordToFind1, getSelectedText());
@@ -189,7 +189,7 @@ public class FindReplaceTest extends BaseTest
 
       // Step 9
       IDE.FINDREPLACE.clickCaseSensitiveField();
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
 
       IDE.FINDREPLACE.clickFindButton();
 
@@ -257,7 +257,7 @@ public class FindReplaceTest extends BaseTest
       // Check "Case sensitive"
       IDE.FINDREPLACE.clickCaseSensitiveField();
       // Put cursor at the start of file and click "Find" button.
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals(wordToFind3, getSelectedText());
@@ -298,7 +298,7 @@ public class FindReplaceTest extends BaseTest
       IDE.FINDREPLACE.typeInFindField("panel");
 
       // Put cursor at the start of file and click "Find" button.
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       // Step 9 Click find button
       IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
@@ -326,12 +326,12 @@ public class FindReplaceTest extends BaseTest
       IDE.FINDREPLACE.typeInReplaceField("");
 
       // Put cursor at the start of file and click "Find" button.
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       // Step 13 Click "Replace All" button.
       IDE.FINDREPLACE.clickReplaceAllButton();
 
       // Step 14
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       IDE.FINDREPLACE.clickFindButton();
       // Check buttons enabled
       IDE.FINDREPLACE.checkStateWhenTextNotFound();
@@ -381,7 +381,7 @@ public class FindReplaceTest extends BaseTest
       IDE.FINDREPLACE.typeInFindField("html");
       IDE.FINDREPLACE.checkFindFieldNotEmptyState();
       // Make system mouse click on editor space
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
 
       IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
@@ -408,7 +408,7 @@ public class FindReplaceTest extends BaseTest
       //Print "define" in replace field, 
       IDE.FINDREPLACE.typeInReplaceField("define");
       //Put cursor at start and click on "Find" button
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(1);
       assertEquals("import", getSelectedText());
@@ -423,7 +423,7 @@ public class FindReplaceTest extends BaseTest
       IDE.FINDREPLACE.typeInFindField("java");
 
       //Put cursor at start and click on "Find" button
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(2);
       assertEquals("java", getSelectedText());

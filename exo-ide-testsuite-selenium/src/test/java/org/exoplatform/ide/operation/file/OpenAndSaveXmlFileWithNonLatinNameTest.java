@@ -106,7 +106,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
 
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
 
       saveAsUsingToolbarButton(FILE_NAME);
@@ -115,7 +115,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT_2);
 
       //Save command enabled

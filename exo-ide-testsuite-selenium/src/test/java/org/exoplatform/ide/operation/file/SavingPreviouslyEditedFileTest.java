@@ -128,7 +128,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
      IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.selectIFrameWithEditor(0);
-     IDE.EDITOR.deleteFileContent();
+     IDE.EDITOR.deleteFileContent(0);
       IDE.selectMainFrame();
      IDE.EDITOR.typeTextIntoEditor(0, XML_TEXT);
       saveCurrentFile();

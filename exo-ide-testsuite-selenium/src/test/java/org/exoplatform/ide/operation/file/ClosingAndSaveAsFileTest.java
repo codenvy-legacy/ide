@@ -164,22 +164,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
        * 6. Click on Close file button
        *     -  AskForValue dialog must be opened.
        */
-      IDE.EDITOR.clickCloseEditorButton(0);
-      assertTrue(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
-      
-      /*
-       * 7. Click "Ok" button.
-       *     - File must be closed.
-       *     - File must be present in the tree.
-       */
-      
-     /* 
-      * FIXME
-      * 
-      * IDE.EDITOR.rememberFileToBeClosed(0);
-      IDE.ASK_FOR_VALUE_DIALOG.setValue("new XML file.xml");
-      IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
-      IDE.EDITOR.waitForRememberFileClosed();*/
+      IDE.EDITOR.saveAndCloseFile(0, "new XML file.xml");
       
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/new XML file.xml");
       

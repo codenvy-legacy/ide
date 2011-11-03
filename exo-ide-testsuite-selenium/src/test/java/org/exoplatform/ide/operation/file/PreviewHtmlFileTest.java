@@ -153,15 +153,7 @@ public class PreviewHtmlFileTest extends BaseTest
        * 11. Close all tabs in editor.
        */
       IDE.EDITOR.closeFile(1);
-      IDE.EDITOR.clickCloseEditorButton(0);
-
-    /* 
-     * FIXME
-     * 
-     *  IDE.SAVE_AS.checkIsOpened(true);
-      IDE.EDITOR.rememberFileToBeClosed(0);
-      IDE.SAVE_AS.clickNo();
-      IDE.EDITOR.waitForRememberFileClosed();*/
+      IDE.EDITOR.closeTabIgnoringChanges(0);
 
       IDE.PREVIEW.close();
    }

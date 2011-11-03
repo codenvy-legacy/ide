@@ -118,7 +118,7 @@ public class NavigateVersionsTest extends BaseTest
       /*
        * 2. Clear text in text editor and save file.
        */
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
       saveAsUsingToolbarButton(FILE_1);
 
       /*
@@ -482,7 +482,7 @@ public class NavigateVersionsTest extends BaseTest
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       //Edit file and save
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -511,7 +511,7 @@ public class NavigateVersionsTest extends BaseTest
          + version6Text);
 
       //Edit file and save
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -623,7 +623,7 @@ public class NavigateVersionsTest extends BaseTest
       IDE.VERSIONS.checkVersionPanelState(false);
 
       //Edit file and save
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);

@@ -31,9 +31,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.awt.Robot;
-import java.awt.event.InputEvent;
-
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -145,7 +142,15 @@ public class Editor extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId))) == null;
+            try
+            {
+               input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
          }
       });
    }
@@ -184,7 +189,15 @@ public class Editor extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId))) == null;
+            try
+            {
+               input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
          }
       });
    }
@@ -326,92 +339,27 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Delete pointed number of lines in editor.s
+    * Delete pointed number of lines in editor.
     * 
     * @param count number of lines to delete
+    * @throws Exception 
     */
-   public void deleteLinesInEditor(int count)
+   public void deleteLinesInEditor(int tabIndex, int count) throws Exception
    {
-      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       for (int i = 0; i < count; i++)
       {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_D);
+         typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "d");
       }
-      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
    }
 
    /**
     *  Delete all file content via Ctrl+a, Delete
     */
-   public void deleteFileContent() throws Exception
+   public void deleteFileContent(int tabIndex) throws Exception
    {
-      String command = Keys.CONTROL + "a" + Keys.DELETE;
-      typeTextIntoEditor(0, command);
-
+      typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "a");
+      typeTextIntoEditor(tabIndex, Keys.DELETE.toString());
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   /**
-    * Clicks on editor panel with the help of {@link Robot}.
-    * It makes a system click, so the coordinates, where to click are computered, 
-    * taking into consideration the browser outer and inner height.
-    * 
-    * @param index editor tab's index
-    * @throws Exception
-    */
-   public void clickOnEditor() throws Exception
-   {
-      // Make system mouse click on editor space
-      Robot robot = new Robot();
-      robot.mouseMove(getEditorLeftScreenPosition() + 50, getEditorTopScreenPosition() + 50);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      robot.mousePress(InputEvent.BUTTON1_MASK);
-      robot.mouseRelease(InputEvent.BUTTON1_MASK);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-
-      //Second click is needed in some tests with outline , because editor looses focus:
-      robot.mousePress(InputEvent.BUTTON1_MASK);
-      robot.mouseRelease(InputEvent.BUTTON1_MASK);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      // Put cursor at the beginning of the document
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   /**
-    * Returns the editor's left position on the screen
-    * 
-    * @return int x
-    */
-   protected int getEditorLeftScreenPosition()
-   {
-      // Get the delta between of toolbar browser area
-      int deltaX = Integer.parseInt(selenium().getEval("window.outerWidth-window.innerWidth"));
-      // Get the position on screen of the editor
-      //      int x = selenium().getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
-      int x =
-         selenium().getElementPositionLeft("//div[@panel-id='editor' and @tab-index='0' ]//iframe").intValue() + deltaX;
-      return x;
-   }
-
-   /**
-    * Returns the editor's top position on the screen
-    * 
-    * @return int y
-    */
-   protected int getEditorTopScreenPosition()
-   {
-      // Get the delta between of toolbar browser area
-      int deltaY = Integer.parseInt(selenium().getEval("window.outerHeight-window.innerHeight"));
-      // Get the position on screen of the editor
-      int y =
-         selenium().getElementPositionTop("//div[@panel-id='editor' and @tab-index='0']//iframe").intValue() + deltaY;
-      return y;
    }
 
    /**
@@ -527,7 +475,7 @@ public class Editor extends AbstractTestModule
    public void clickOnEditor(int tabIndex) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      selenium().clickAt("//body[@class='editbox']", "5,5");
+      driver().switchTo().activeElement().click();
       IDE().selectMainFrame();
    }
 
@@ -538,7 +486,7 @@ public class Editor extends AbstractTestModule
    public String getTextFromCodeEditor(int tabIndex) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      String text = selenium().getText("//body[@class='editbox']");
+      String text = driver().switchTo().activeElement().getText();
       IDE().selectMainFrame();
       return text;
    }
@@ -546,7 +494,7 @@ public class Editor extends AbstractTestModule
    public String getTextFromCKEditor(int tabIndex) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      String text = selenium().getText("//body");
+      String text = driver().switchTo().activeElement().getText();
       IDE().selectMainFrame();
       return text;
    }
@@ -630,20 +578,15 @@ public class Editor extends AbstractTestModule
       return selenium().isElementPresent(locator);
    }
 
-   /**
-    * Check is line numbers are shown in editor
-    * 
-    * @param visible is line numbers must be shown
-    */
-   public void checkLineNumbersVisible(boolean visible)
+   public boolean isLineNumbersVisible()
    {
-      if (visible)
+      try
       {
-         assertTrue(selenium().isElementPresent("//div[@class='CodeMirror-line-numbers']"));
+         return editor.findElement(By.cssSelector("div[class='CodeMirror-line-numbers']")) != null;
       }
-      else
+      catch (NoSuchElementException e)
       {
-         assertFalse(selenium().isElementPresent("//div[@class='CodeMirror-line-numbers']"));
+         return false;
       }
    }
 

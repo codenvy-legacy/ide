@@ -203,7 +203,7 @@ public class UsingKeyboardTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
 
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);

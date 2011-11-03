@@ -54,7 +54,7 @@ public class SearchAdvancedTest extends BaseTest
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.deleteLinesInEditor(7);
+      IDE.EDITOR.deleteLinesInEditor(0, 7);
       IDE.EDITOR.typeTextIntoEditor(0, googleGadgetFileContent);
       IDE.NAVIGATION.saveFileAs(googleGadgetFileName);
       Thread.sleep(TestConstants.SLEEP);

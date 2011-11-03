@@ -278,7 +278,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       
       //click on editor
       IDE.EDITOR.clickOnEditor(0);
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
 
       //type some text
       IDE.EDITOR.typeTextIntoEditor(0, "public void TestClass(){}");

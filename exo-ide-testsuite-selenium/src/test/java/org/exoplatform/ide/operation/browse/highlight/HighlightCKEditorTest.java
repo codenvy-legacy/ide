@@ -81,7 +81,7 @@ public class HighlightCKEditorTest extends BaseTest {
 		IDE.PERSPECTIVE.checkViewIsActive("idePreviewHTMLView");
 		IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
 
-		IDE.EDITOR.clickOnEditor();
+		IDE.EDITOR.clickOnEditor(0);
 
 		// TODO should be compled should be completed after fix problem|
 		// highlighting in codeeditor after setting cursor in text

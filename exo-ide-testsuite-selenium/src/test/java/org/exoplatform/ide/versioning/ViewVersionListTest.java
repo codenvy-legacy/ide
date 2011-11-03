@@ -97,7 +97,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
 
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
       IDE.NAVIGATION.saveFileAs(FILE_1);
 //      saveAsUsingToolbarButton(FILE_1);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
@@ -134,7 +134,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkVersionPanelState(true);
 
       //Edit file and save
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       selenium().keyPressNative("" + KeyEvent.VK_END);
@@ -164,7 +164,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
 
       //Edit file and save
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       selenium().keyPressNative("" + KeyEvent.VK_END);
@@ -214,7 +214,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
 
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
       IDE.NAVIGATION.saveFileAs(FILE_2);
 //      saveAsUsingToolbarButton(FILE_2);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_2);

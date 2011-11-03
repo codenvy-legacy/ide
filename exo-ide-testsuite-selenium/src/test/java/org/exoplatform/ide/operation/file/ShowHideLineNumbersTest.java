@@ -23,6 +23,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -98,7 +99,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        *     Line numbers must shows in editor and Menu command "Edit > Hide line numbers" must be enabled.
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML);
-      IDE.EDITOR.checkLineNumbersVisible(true);
+      Assert.assertTrue(IDE.EDITOR.isLineNumbersVisible());
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
 
       /*
@@ -108,7 +109,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        */
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
-      IDE.EDITOR.checkLineNumbersVisible(false);
+      Assert.assertFalse(IDE.EDITOR.isLineNumbersVisible());
 
       /*
        * 5. Run menu command Edit > Show Line Numbers. 
@@ -117,8 +118,8 @@ public class ShowHideLineNumbersTest extends BaseTest
        */
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
-      IDE.EDITOR.checkLineNumbersVisible(true);
-
+      Assert.assertTrue(IDE.EDITOR.isLineNumbersVisible());
+      
       /*
        * 6. Close XML file.
        *     Menu commands Edit > Show / Hide line numbers must be hidden.
@@ -145,7 +146,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        *     Line numbers must be hidden and menu command "Edit > Show Line Numbers" must be enabled.
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML);
-      IDE.EDITOR.checkLineNumbersVisible(false);
+      Assert.assertFalse(IDE.EDITOR.isLineNumbersVisible());
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
 
       /*
@@ -153,7 +154,7 @@ public class ShowHideLineNumbersTest extends BaseTest
        *      Line numbers must shows in editor and menu command "Edit > Hide line numbers" must be enabled.
        */
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
-      IDE.EDITOR.checkLineNumbersVisible(true);
+      Assert.assertTrue(IDE.EDITOR.isLineNumbersVisible());
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
 
       /*

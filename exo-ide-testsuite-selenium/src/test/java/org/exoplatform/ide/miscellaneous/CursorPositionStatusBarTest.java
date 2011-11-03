@@ -74,7 +74,7 @@ public class CursorPositionStatusBarTest extends BaseTest
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //click on editor
-      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor(0);
       // change cursor position in editor
       for (int i = 0; i < 6; i++)
       {

@@ -83,7 +83,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       //this method call error in deleteFileContent() method. 
       //Select not content in code editor but all IDE spase
       //  IDE.EDITOR.clickOnEditor();
-      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.deleteFileContent(0);
 
       String hello =
          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "  <ModulePrefs title=\"Hello World!\" />\n"
