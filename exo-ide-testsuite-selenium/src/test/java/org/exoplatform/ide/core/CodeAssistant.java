@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -124,8 +125,22 @@ public class CodeAssistant extends AbstractTestModule
    public void closeForm()
    {
       input.sendKeys(Keys.ESCAPE);
-      selenium().waitForCondition(
-         "var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID + "\"); value == null", "5000");
+      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.id(Locators.PANEL_ID));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -135,7 +150,7 @@ public class CodeAssistant extends AbstractTestModule
    {
       //RETURN key is used instead of ENTER because 
       //of issue http://code.google.com/p/selenium/issues/detail?id=2180
-      input.sendKeys(Keys.RETURN); 
+      input.sendKeys(Keys.RETURN);
    }
 
    /**

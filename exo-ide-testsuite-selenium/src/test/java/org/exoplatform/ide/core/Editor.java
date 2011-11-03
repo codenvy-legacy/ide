@@ -345,13 +345,8 @@ public class Editor extends AbstractTestModule
     */
    public void deleteFileContent() throws Exception
    {
-      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-
-      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
+      String command = Keys.CONTROL + "a" + Keys.DELETE;
+      typeTextIntoEditor(0, command);
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
