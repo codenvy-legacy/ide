@@ -220,6 +220,6 @@ public class Search extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium().doubleClick(locator);
-      IDE().EDITOR.waitEditorFileOpened();
+      IDE().EDITOR.waitTabPresent(0);
    }
 }

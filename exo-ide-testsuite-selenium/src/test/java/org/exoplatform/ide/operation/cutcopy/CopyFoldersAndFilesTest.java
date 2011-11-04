@@ -26,6 +26,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -136,7 +137,7 @@ public class CopyFoldersAndFilesTest extends BaseTest
 
       checkFilesAndFoldersOnServer();
 
-     IDE.EDITOR.checkIsTabPresentInEditorTabset("test_groovy", true);
+     Assert.assertTrue(IDE.EDITOR.isTabPresentInEditorTabset("test_groovy"));
 
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);

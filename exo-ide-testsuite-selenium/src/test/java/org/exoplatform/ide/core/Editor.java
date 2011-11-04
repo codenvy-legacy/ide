@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -72,11 +71,17 @@ public class Editor extends AbstractTestModule
 
       String DEBUG_EDITOR_PREVIOUS_ACTIVE_FILE_URL = "debug-editor-previous-active-file-url";
 
-      String DESIGN_BUTTON_LOCATOR = "//div[@id='DesignButtonID']";
+      String DESIGN_BUTTON_ID = "DesignButtonID";
 
-      String SOURCE_BUTTON_LOCATOR = "//div[@id='SourceButtonID']/span";
+      String SOURCE_BUTTON_ID = "SourceButtonID";
 
       String CLOSE_BUTTON_LOCATOR = "//div[@button-name='close-tab']";
+
+      String VIEW_ID_ATTRIBUTE = "view-id";
+
+      String TITLE_LOCATOR = "//span[@title='%s']";
+      
+      String LINE_NUMBER_CSS_LOCATOR = "div[class='CodeMirror-line-numbers']";
    }
 
    private WebElement editor;
@@ -136,7 +141,7 @@ public class Editor extends AbstractTestModule
       final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
       clickCloseEditorButton(tabIndex);
 
-      new WebDriverWait(driver(), 2000).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -183,7 +188,7 @@ public class Editor extends AbstractTestModule
          fail("Dialog has been not found!");
       }
 
-      new WebDriverWait(driver(), 2000).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -210,9 +215,15 @@ public class Editor extends AbstractTestModule
     */
    public boolean isFileContentChanged(int tabIndex)
    {
-      //check, that file is unsaved
       final String tabName = getTabTitle(tabIndex);
       return tabName.endsWith("*");
+   }
+
+   public boolean isFileContentChanged(String title)
+   {
+      WebElement tab =
+         editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TITLE_LOCATOR, title)));
+      return tab.getText().endsWith("*");
    }
 
    /**
@@ -229,8 +240,8 @@ public class Editor extends AbstractTestModule
    public void saveAndCloseFile(int tabIndex, String newFileName) throws Exception
    {
       selectTab(tabIndex);
-      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
-
+      final String viewId =
+         editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute(Locators.VIEW_ID_ATTRIBUTE);
       clickCloseEditorButton(tabIndex);
 
       /*
@@ -253,7 +264,7 @@ public class Editor extends AbstractTestModule
          fail();
       }
 
-      new WebDriverWait(driver(), 2000).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -274,54 +285,39 @@ public class Editor extends AbstractTestModule
 
    public boolean isEditorTabSelected(String tabTitle)
    {
-      return editor.findElement(By.xpath(String.format(Locators.SELECTED_EDITOR_TAB_LOCATOR, tabTitle))) != null;
+      try
+      {
+         return editor.findElement(By.xpath(String.format(Locators.SELECTED_EDITOR_TAB_LOCATOR, tabTitle))) != null;
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
    }
 
-   /**
-    * Because of troubles of finding element, which contains text with symbol *,
-    * this method doesn't check directly is editor tab locator with <code>tabTitle</code> present.
-    * <p>
-    * This method checks editor tabs with indexes from 0 to 50 (I think there will not be opened more)
-    * and checks: if tab with such index present, compares its title with <code>tabTitle</code>.
-    * 
-    * @param tabTitle - title of editor tab
-    * @param isOpened - is tab must be opened
-    * @throws Exception
-    */
-   public void checkIsTabPresentInEditorTabset(String tabTitle, boolean isOpened)
+   public boolean isTabPresentInEditorTabset(String tabTitle)
    {
-      /*  if (isOpened)
-        {
-           for (int i = 0; i < 50; i++)
-           {
-              if (selenium().isElementPresent(getEditorTabScLocator(i)))
-              {
-                 if (tabTitle.equals(getTabTitle(i)))
-                    return;
-              }
-              else
-              {
-                 break;
-              }
-           }
-           fail("Can't find " + tabTitle + " in tab titles");
-        }
-        else
-        {
-           for (int i = 0; i < 50; i++)
-           {
-              if (selenium().isElementPresent(getEditorTabScLocator(i)))
-              {
-                 if (tabTitle.equals(getTabTitle(i)))
-                    fail(tabTitle + " is present in tab titles");
-              }
-              else
-              {
-                 return;
-              }
-           }
-        }*/
-      //TODO
+      try
+      {
+         return editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_LOCATOR)) != null;
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+
+   public boolean isTabPresentInEditorTabset(int tabIndex)
+   {
+      try
+      {
+         return editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR
+            + String.format(Locators.TAB_LOCATOR, tabIndex))) != null;
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
    }
 
    /**
@@ -330,12 +326,10 @@ public class Editor extends AbstractTestModule
     * @param fileURL
     * @return
     */
+   @Deprecated
    public boolean isFileOpened(String fileURL)
    {
-      String locator =
-         "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//table[@class='gwt-DecoratedTabBar']//"
-            + "span[@title='" + fileURL + "']";
-      return selenium().isElementPresent(locator);
+      return false;
    }
 
    /**
@@ -506,8 +500,24 @@ public class Editor extends AbstractTestModule
     */
    public void waitTabPresent(int tabIndex) throws Exception
    {
-      waitForElementPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      final String tab = Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex);
+
+      new WebDriverWait(driver(), TestConstants.EDITOR_OPEN_PERIOD).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return input.findElement(By.xpath(tab)) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -517,20 +527,25 @@ public class Editor extends AbstractTestModule
     */
    public void waitTabNotPresent(int tabIndex) throws Exception
    {
-      waitForElementNotPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]"
-         + "/table");
-   }
+      final String tab = Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex);
 
-   public void waitEditorFileOpened() throws Exception
-   {
-      /*
-       * click for element to clear it's text
-       */
-      //webdriver don't alloy click to invisible elements!!! 
-      //      selenium().click("debug-editor-active-file-url");
+      new WebDriverWait(driver(), TestConstants.EDITOR_OPEN_PERIOD).until(new ExpectedCondition<Boolean>()
+      {
 
-      //      Thread.sleep(1);
-      waitForElementTextIsNotEmpty("debug-editor-active-file-url");
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(tab));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -541,6 +556,7 @@ public class Editor extends AbstractTestModule
     */
    public void checkCkEditorOpened(int tabIndex) throws Exception
    {
+      //TODO    
       String locator =
          "//div[@panel-id='editor' and @tab-index='" + tabIndex
             + "']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
@@ -557,32 +573,19 @@ public class Editor extends AbstractTestModule
     */
    public void checkCodeEditorOpened(int tabIndex) throws Exception
    {
+      //TODO
+
       String locator =
          "//div[@panel-id='editor'and @tab-index='" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
       assertTrue(selenium().isElementPresent(locator));
       assertTrue(selenium().isVisible(locator));
    }
 
-   /**
-    * Determines whether specified tab opened in Editor.
-    * 
-    * @param tabIndex index of tab, starts at 0
-    * @return
-    */
-   public boolean isTabOpened(int tabIndex)
-   {
-      //      String locator = "//div[@panel-id='editor' and @is-panel='true']//tabe[@id='editor-panel-switcher']" +
-      //      		"//table[@class='gwt-DecoratedTabBar']/tbody/tr/td/[@tab-bar-index='" + tabIndex +  "']";
-      String locator =
-         "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//table[@class='gwt-DecoratedTabBar']/tbody/tr/td[@tab-bar-index='0']";
-      return selenium().isElementPresent(locator);
-   }
-
    public boolean isLineNumbersVisible()
    {
       try
       {
-         return editor.findElement(By.cssSelector("div[class='CodeMirror-line-numbers']")) != null;
+         return editor.findElement(By.cssSelector(Locators.LINE_NUMBER_CSS_LOCATOR)) != null;
       }
       catch (NoSuchElementException e)
       {
@@ -597,9 +600,7 @@ public class Editor extends AbstractTestModule
     */
    public void clickSourceButton() throws Exception
    {
-      assertTrue("Button 'Source' is absent!", selenium().isElementPresent(Locators.SOURCE_BUTTON_LOCATOR));
-      selenium().keyPress(Locators.SOURCE_BUTTON_LOCATOR, "\\13"); // hack to simulate click as described for GWT ToogleButton in the http://code.google.com/p/selenium/issues/detail?id=542
-      Thread.sleep(TestConstants.SLEEP);
+      editor.findElement(By.id(Locators.SOURCE_BUTTON_ID)).click();
    }
 
    /**
@@ -609,51 +610,15 @@ public class Editor extends AbstractTestModule
     */
    public void clickDesignButton() throws Exception
    {
-      assertTrue("Button 'Design' is absent!", selenium().isElementPresent(Locators.DESIGN_BUTTON_LOCATOR));
-      selenium().keyPress(Locators.DESIGN_BUTTON_LOCATOR, "\\13");
-      Thread.sleep(TestConstants.SLEEP);
+      editor.findElement(By.id(Locators.DESIGN_BUTTON_ID)).click();
    }
 
    public void selectCkEditorIframe(int tabIndex)
    {
+      //TODO
       String divIndex = String.valueOf(tabIndex);
       selenium().selectFrame(
          "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
             + "//table[@class='cke_editor']//iframe");
    }
-
-   /**
-    * Check what state of CK editor active: source or visual.
-    * 
-    * @param tabIndex
-    * @param isSourceActive
-    * @throws Exception
-    */
-   private void checkSourceAreaActiveInCkEditor(int tabIndex, boolean isSourceActive) throws Exception
-   {
-      String divIndex = String.valueOf(tabIndex);
-
-      if (isSourceActive)
-      {
-
-         //  assertTrue(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         //   + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
-
-         assertTrue(selenium().isElementPresent(
-            "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-               + "//table[@class='cke_editor']//textarea"));
-
-         assertFalse(selenium().isElementPresent(
-            "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-               + "//table[@class='cke_editor']//iframe"));
-      }
-      else
-      {
-         assertFalse(selenium().isElementPresent(
-            "//div[@class='tabSetContainer']/div/div[" + divIndex + "]//table[@class='cke_editor']//textarea"));
-
-         assertTrue(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex + "]//iframe"));
-      }
-   }
-
 }

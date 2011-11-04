@@ -26,6 +26,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -77,7 +78,7 @@ public class GadgetDevelopmentTest extends BaseTest
       IDE.TEMPLATES.clickCreateButton();
 
       IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.checkIsTabPresentInEditorTabset(FILE_NAME + " *", true);
+      Assert.assertTrue(IDE.EDITOR.isFileContentChanged(FILE_NAME));
 
       //Click on "Save As" button and save file "Test Gadget File" with default name.
       saveAsUsingToolbarButton(FILE_NAME_FULL);
@@ -88,9 +89,9 @@ public class GadgetDevelopmentTest extends BaseTest
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME_FULL, false);
       IDE.EDITOR.waitTabPresent(0);
-      
+
       final String tabTitle = IDE.EDITOR.getTabTitle(0);
-      assertTrue(tabTitle.equals(FILE_NAME_FULL)|| tabTitle.equals(FILE_NAME_FULL + " *"));
+      assertTrue(tabTitle.equals(FILE_NAME_FULL) || tabTitle.equals(FILE_NAME_FULL + " *"));
       IDE.EDITOR.closeFile(0);
    }
 

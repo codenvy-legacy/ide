@@ -21,6 +21,8 @@ package org.exoplatform.ide.miscellaneous;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import junit.framework.Assert;
+
 import com.google.gwt.editor.client.Editor.Ignore;
 
 import org.exoplatform.ide.MenuCommands;
@@ -219,7 +221,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Nothing or default browser event works out
-      IDE.EDITOR.checkIsTabPresentInEditorTabset("Untitled file.css", false);
+      Assert.assertFalse(IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.css"));
       Thread.sleep(TestConstants.SLEEP);
    }
 

@@ -94,7 +94,7 @@ public class Toolbar extends AbstractTestModule
                menuItemName.equals(MenuCommands.New.RUBY) ||
                menuItemName.equals(MenuCommands.New.PHP)
                ) {
-         IDE().EDITOR.waitEditorFileOpened();
+         IDE().EDITOR.waitTabPresent(0);
       }
       else
       {

@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -114,8 +114,8 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       saveAsUsingToolbarButton(FILE);
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/" + FILE);
 
-      assertTrue(IDE.EDITOR.isTabOpened(0));
-      assertTrue(IDE.EDITOR.isTabOpened(1));
+      assertTrue(IDE.EDITOR.isTabPresentInEditorTabset(0));
+      assertTrue(IDE.EDITOR.isTabPresentInEditorTabset(0));
       
       //file stays in editor panel
       IDE.EDITOR.checkCodeEditorOpened(0);

@@ -41,8 +41,8 @@ public class AutoCompletionHTMLTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitEditorFileOpened();
-
+      IDE.EDITOR.waitTabPresent(0);
+      
       IDE.EDITOR.moveCursorDown(0, 4);
 
       htmlTest();

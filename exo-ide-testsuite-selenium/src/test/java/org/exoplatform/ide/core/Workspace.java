@@ -104,7 +104,7 @@ public class Workspace extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium().doubleClick(locator);
-      IDE().EDITOR.waitEditorFileOpened();
+      IDE().EDITOR.waitTabPresent(0);
    }
 
    public void doubleClickOnFileFromSearchTab(String fileURL) throws Exception
@@ -118,7 +118,7 @@ public class Workspace extends AbstractTestModule
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium().doubleClick(locator);
-      IDE().EDITOR.waitEditorFileOpened();
+      IDE().EDITOR.waitTabPresent(0);
    }
 
    /**

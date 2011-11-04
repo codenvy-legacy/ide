@@ -149,7 +149,7 @@ public class LockFileTest extends LockFileAbstract
       //----- 8 ------------
       //close HTML file, open and check, that file is unlocked
       IDE.EDITOR.closeFile(1);
-      IDE.EDITOR.checkIsTabPresentInEditorTabset(FILE_NAME_2, false);
+      Assert.assertFalse(IDE.EDITOR.isTabPresentInEditorTabset(FILE_NAME_2));
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME_2, false);
 
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);

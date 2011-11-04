@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
+import junit.framework.Assert;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -198,7 +200,7 @@ public class CutFolderTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 2/folder 2/file.groovy", false);
-     IDE.EDITOR.checkIsTabPresentInEditorTabset("file.groovy", true);
+      Assert.assertTrue(IDE.EDITOR.isTabPresentInEditorTabset("file.groovy"));
       assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/");

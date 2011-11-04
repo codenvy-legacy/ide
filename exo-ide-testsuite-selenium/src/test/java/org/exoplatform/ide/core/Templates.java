@@ -318,9 +318,7 @@ public class Templates extends AbstractTestModule
       IDE().TEMPLATES.typeNameToInputField(fileName);
       IDE().TEMPLATES.clickCreateButton();
 
-      IDE().EDITOR.waitEditorFileOpened();
-      
-      //Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE().EDITOR.waitTabNotPresent(0);
    }
 
    /**
