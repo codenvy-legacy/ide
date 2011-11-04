@@ -373,6 +373,7 @@ public class Editor extends AbstractTestModule
    {
       selectIFrameWithEditor(tabIndex);
       driver().switchTo().activeElement().sendKeys(text);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE().selectMainFrame();
    }
 

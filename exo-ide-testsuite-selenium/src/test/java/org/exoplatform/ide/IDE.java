@@ -39,6 +39,7 @@ import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.Project;
+import org.exoplatform.ide.core.ProjectExplorer;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
 import org.exoplatform.ide.core.RenameDialog;
@@ -149,9 +150,11 @@ public class IDE
    public OpenShift OPENSHIFT = new OpenShift();
 
    public Project PROJECT = new Project();
-   
+
    public Input INPUT = new Input();
-   
+
+   public ProjectExplorer PROJECT_EXPLORER;
+
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
       System.out.println("\r\n\r\n\r\n\r\n" + "Initializing IDE ( Selenium )\r\n" + "Workspace URL > " + workspaceURL
@@ -161,9 +164,10 @@ public class IDE
       this.workspaceURL = workspaceURL;
       this.driver = driver;
       instance = this;
-      
+
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
+      PROJECT_EXPLORER = PageFactory.initElements(driver, ProjectExplorer.class);
    }
 
    public Selenium getSelenium()
@@ -175,7 +179,7 @@ public class IDE
    {
       return driver;
    }
-   
+
    /**
     * Select main frame of IDE.
     * 

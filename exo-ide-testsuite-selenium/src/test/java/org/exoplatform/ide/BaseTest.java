@@ -37,7 +37,6 @@ import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.BufferedReader;
@@ -160,11 +159,11 @@ public abstract class BaseTest
       switch (BROWSER_COMMAND)
       {
          case GOOGLE_CHROME :
-            
+
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
             capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
             driver = new ChromeDriver(capabilities);
-            
+
             break;
          case IE_EXPLORE_PROXY :
             driver = new InternetExplorerDriver();
@@ -174,7 +173,7 @@ public abstract class BaseTest
       }
 
       selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
-      
+
       IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/", driver);
 
       try
@@ -865,15 +864,7 @@ public abstract class BaseTest
    {
       selenium().refresh();
       selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      //      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      //Wait while "dev-monit" appears in navigation tree.
-      //
-      //Sometimes, test fails, becouse after refresh not all 
-      //elements are appears in SLEEP tile.
-      //Thats why, wait for WAIT_PERIOD for root element
-      //of navigation tree.
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT_EXPLORER.waitOpened();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }

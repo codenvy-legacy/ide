@@ -68,7 +68,7 @@ public class CodeAssistant extends AbstractTestModule
    public void typeToInput(String text) throws Exception
    {
       input.sendKeys(text);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
    }
 
    /**
@@ -110,8 +110,8 @@ public class CodeAssistant extends AbstractTestModule
       for (int i = 0; i < row; i++)
       {
          input.sendKeys(Keys.DOWN.toString());
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
-      Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
    /**
@@ -148,12 +148,14 @@ public class CodeAssistant extends AbstractTestModule
 
    /**
     *Press Enter key to close form and paste selected item in to the editor 
+    * @throws InterruptedException 
     */
-   public void insertSelectedItem()
+   public void insertSelectedItem() throws InterruptedException
    {
       //RETURN key is used instead of ENTER because 
       //of issue http://code.google.com/p/selenium/issues/detail?id=2180
       input.sendKeys(Keys.RETURN);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /**

@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.autocompletion;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -33,25 +35,20 @@ public class AutoCompletionCSSTest extends BaseTest
    @Test
    public void testPlainCSS() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();      
+      IDE.PROJECT_EXPLORER.waitOpened();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CHROMATTIC);
-      System.out.println("AutoCompletionCSSTest.testPlainCSS()>>>"+IDE.EDITOR.getTabTitle(0));
-      IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.clickCloseEditorButton(1);
-      // cssTest();
-      Thread.sleep(3000);
+      cssTest();
    }
 
-  /* @Test
+   @Test
    public void testGoogleGadget() throws Exception
    {
-      refresh();
-      IDE.WORKSPACE.waitForRootItem();      
+      selenium.refresh();
+      IDE.PROJECT_EXPLORER.waitOpened();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.moveCursorDown(0, 4);
       IDE.EDITOR.moveCursorRight(0, 16);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER +  "<style>\n\n\n</style>");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER + "<style>\n\n\n</style>");
       IDE.EDITOR.moveCursorUp(0, 1);
 
       cssTest();
@@ -61,24 +58,21 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testHTML() throws Exception
    {
       selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT_EXPLORER.waitOpened();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
 
       IDE.EDITOR.moveCursorDown(0, 2);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER);
       IDE.EDITOR.typeTextIntoEditor(0, "<script>\n</script>");
-      
+
       IDE.EDITOR.moveCursorDown(0, 2);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER);
-      IDE.EDITOR.typeTextIntoEditor(0,"<style>\n\n</style>");
+      IDE.EDITOR.typeTextIntoEditor(0, "<style>\n\n</style>");
       IDE.EDITOR.moveCursorUp(0, 1);
-      
+
       cssTest();
    }
 
-  *//**
-    * @throws InterruptedException
-    *//*
    private void cssTest() throws Exception
    {
       IDE.EDITOR.typeTextIntoEditor(0, ".main{" + Keys.ENTER.toString());
@@ -88,5 +82,5 @@ public class AutoCompletionCSSTest extends BaseTest
       IDE.CODEASSISTANT.insertSelectedItem();
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.contains("list-style-type:"));
-   }*/
+   }
 }
