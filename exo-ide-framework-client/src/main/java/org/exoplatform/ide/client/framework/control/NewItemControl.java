@@ -75,6 +75,17 @@ public class NewItemControl extends SimpleControl implements IDEControl
       this.mimeType = mimeType;
    }
 
+   public NewItemControl(String id, String title, String prompt, ImageResource icon, ImageResource disabledIcon, String mimeType)
+   {
+      super(id);
+
+      setTitle(title);
+      setPrompt(prompt);
+      setNormalImage(icon);
+      setDisabledImage(disabledIcon);
+      this.mimeType = mimeType;
+   }
+
    public String getMimeType()
    {
       return mimeType;

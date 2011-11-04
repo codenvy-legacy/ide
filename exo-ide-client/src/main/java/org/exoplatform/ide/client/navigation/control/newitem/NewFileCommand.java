@@ -18,14 +18,21 @@
  */
 package org.exoplatform.ide.client.navigation.control.newitem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.navigator.NavigatorPresenter;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -37,12 +44,12 @@ import com.google.gwt.resources.client.ImageResource;
  */
 @RolesAllowed({"administrators", "developers"})
 public class NewFileCommand extends SimpleControl implements IDEControl, ViewVisibilityChangedHandler,
-   VfsChangedHandler
+   VfsChangedHandler, ItemsSelectedHandler
 {
 
-   protected boolean browserSelected = true;
-
-   protected String entryPoint;
+   private VirtualFileSystemInfo vfsInfo;
+   
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    public NewFileCommand(String id, String title, String prompt, String icon, GwtEvent<?> event)
    {
@@ -70,36 +77,50 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
     */
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 
+      setVisible(true);
       updateEnabling();
    }
 
    protected void updateEnabling()
    {
-      if (entryPoint == null)
-      {
-         setVisible(false);
+      if (vfsInfo == null) {
          setEnabled(false);
          return;
       }
-
-      setVisible(true);
-
-      if (browserSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
+      
+      if (selectedItems.size() == 0) {
          setEnabled(false);
+         return;
       }
+      
+      setEnabled(true);
+      
+//      if (entryPoint == null)
+//      {
+//         setVisible(false);
+//         setEnabled(false);
+//         return;
+//      }
+//
+//      setVisible(true);
+//
+//      if (browserSelected)
+//      {
+//         setEnabled(true);
+//      }
+//      else
+//      {
+//         setEnabled(false);
+//      }
    }
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      entryPoint = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
+      vfsInfo = event.getVfsInfo();
       updateEnabling();
    }
 
@@ -109,11 +130,18 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof NavigatorPresenter.Display)
-      {
-         browserSelected = event.getView().isViewVisible();
-         updateEnabling();
-      }
+//      if (event.getView() instanceof NavigatorPresenter.Display)
+//      {
+//         browserSelected = event.getView().isViewVisible();
+//         updateEnabling();
+//      }
+   }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      updateEnabling();
    }
 
 }

@@ -97,7 +97,7 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      selectedItems = event.getSelectedItems();
+      selectedItems = event.getSelectedItems();      
       updateEnabling();
    }
 
@@ -124,7 +124,6 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }
-
    }
 
 }

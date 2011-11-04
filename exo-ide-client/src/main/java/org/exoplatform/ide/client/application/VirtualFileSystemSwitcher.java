@@ -54,6 +54,8 @@ public class VirtualFileSystemSwitcher implements SwitchVFSHandler, Configuratio
    @Override
    public void onSwitchVFS(SwitchVFSEvent event)
    {
+
+      
       IDE.fireEvent(new VfsChangedEvent(null));
 
       vfsId = event.getVfs();

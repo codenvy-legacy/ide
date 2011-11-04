@@ -211,9 +211,17 @@ public class NewItemControlsFormatter implements ControlsFormatter
          }
          else
          {
-            command =
-               new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
-                  control.getIcon(), new CreateNewFileEvent(control.getMimeType()));
+            if (control.getNormalImage() != null) {
+               command =
+                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
+                     control.getNormalImage(), control.getDisabledImage(), new CreateNewFileEvent(control.getMimeType()));
+               
+            } else {
+               command =
+                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
+                     control.getIcon(), new CreateNewFileEvent(control.getMimeType()));
+               
+            }            
          }
          command.setDelimiterBefore(control.hasDelimiterBefore());
          

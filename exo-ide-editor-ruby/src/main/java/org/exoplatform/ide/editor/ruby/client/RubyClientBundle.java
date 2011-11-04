@@ -68,6 +68,10 @@ public interface RubyClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/ruby/client/images/module-item.png")
    ImageResource module();
    
-   @Source("org/exoplatform/ide/editor/ruby/public/images/ruby.png")
+   @Source("org/exoplatform/ide/editor/ruby/client/images/ruby-file.png")
    ImageResource ruby();
+
+   @Source("org/exoplatform/ide/editor/ruby/client/images/ruby-file-disabled.png")
+   ImageResource rubyDisabled();
+   
 }

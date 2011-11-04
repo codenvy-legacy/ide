@@ -64,7 +64,10 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Java Class", "Java Class", "Create Java Class", Images.JAVA,
+         new NewItemControl("File/New/New Java Class",
+            "Java Class", "Create Java Class",
+            JavaClientBundle.INSTANCE.java(),
+            JavaClientBundle.INSTANCE.javaDisabled(),
             MimeType.APPLICATION_JAVA).setGroup(2));
 
       JavaClientBundle.INSTANCE.css().ensureInjected();

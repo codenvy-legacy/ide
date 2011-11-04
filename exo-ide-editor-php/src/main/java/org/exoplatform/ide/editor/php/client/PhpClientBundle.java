@@ -88,4 +88,11 @@ public interface PhpClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/php/client/images/codeassistant/function-item.png")
    ImageResource function();
+   
+   @Source("org/exoplatform/ide/editor/php/client/images/php.png")
+   ImageResource php();
+   
+   @Source("org/exoplatform/ide/editor/php/client/images/php-disabled.png")
+   ImageResource phpDisabled();
+   
 }

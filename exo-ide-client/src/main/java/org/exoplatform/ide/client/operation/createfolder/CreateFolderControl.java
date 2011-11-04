@@ -25,6 +25,12 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
@@ -39,7 +45,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewVisibilityChangedHandler
+   ViewVisibilityChangedHandler, ViewActivatedHandler, ViewOpenedHandler, ViewClosedHandler
 {
 
    private boolean folderItemSelected = true;
@@ -70,6 +76,9 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    {
       eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewActivatedEvent.TYPE, this);
+      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    private void updateEnabling()
@@ -91,6 +100,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
+//      System.out.println("selected items > " + event.getSelectedItems().size() );
+      
       if (event.getSelectedItems().size() != 1)
       {
          folderItemSelected = false;
@@ -100,7 +111,6 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
 
       folderItemSelected = true;
       updateEnabling();
-
    }
 
    /**
@@ -109,11 +119,32 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
+//      System.out.println("view visibility changed > " + event.getView().getId());
+      
       if (event.getView() instanceof NavigatorPresenter.Display)
       {
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }
-
    }
+
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+//      System.out.println("view activated > " + event.getView().getId());
+      
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+//      System.out.println("view closed > " + event.getView().getId());
+   }
+
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+//      System.out.println("view opened > " + event.getView().getId());
+   }
+
 }

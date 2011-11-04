@@ -112,9 +112,9 @@ import com.google.gwt.user.client.Timer;
  * 
  */
 
-public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, SwitchVFSHandler, SelectItemHandler,
+public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
-   ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
+   ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
    ConfigurationReceivedSuccessfullyHandler, ShowProjectExplorerHandler, ItemsSelectedHandler, ViewActivatedHandler,
    OpenProjectHandler, VfsChangedHandler, ProjectCreatedHandler, CloseProjectHandler
 {
@@ -180,7 +180,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
 
    private Display display;
 
-   private boolean viewOpened = false;
+   //private boolean viewOpened = false;
 
    private String itemToSelect;
 
@@ -201,7 +201,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
 
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+//      IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -610,89 +610,85 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       }
    }
 
-   /**
-    * Switching active workspace by Switch Workspace Event
-    * 
-    * @see SwitchVFSEvent#onSwitchVFS(org.exoplatform.ide.client.workspace.event.SwitchVFSEvent)
-    */
-   public void onSwitchVFS(final SwitchVFSEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
-
-      if (!viewOpened)
-      {
-         IDE.getInstance().openView(display.asView());
-      }
-
-      display.getBrowserTree().setValue(null);
-      selectedItems.clear();
-
-      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
-      IDE.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-
-      try
-      {
-         String workspaceUrl =
-            (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + event.getVfs() : vfsBaseUrl + "/" + event.getVfs();
-         //TODO workspace URL consists of vfsBaseURL (taken from IDE init conf) and VFS id (path parameter)
-         new VirtualFileSystem(workspaceUrl).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
-            new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
-         {
-
-            @Override
-            protected void onSuccess(VirtualFileSystemInfo result)
-            {
-               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
-               IDE.fireEvent(new VfsChangedEvent(result));
-
-               display.asView().setViewVisible();
-
-               IDE.fireEvent(new ViewVisibilityChangedEvent((View)display));
-
-               display.getBrowserTree().setValue(result.getRoot());
-               display.selectItem(result.getRoot().getId());
-               selectedItems = display.getSelectedItems();
-
-               try
-               {
-                  onRefreshBrowser(new RefreshBrowserEvent());
-               }
-               catch (Exception e)
-               {
-                  e.printStackTrace();
-               }
-
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               itemToSelect = null;
-               foldersToRefresh.clear();
-
-               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
-               IDE.fireEvent(new VfsChangedEvent(null));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-      }
-   }
+//   /**
+//    * Switching active workspace by Switch Workspace Event
+//    * 
+//    * @see SwitchVFSEvent#onSwitchVFS(org.exoplatform.ide.client.workspace.event.SwitchVFSEvent)
+//    */
+//   public void onSwitchVFS(final SwitchVFSEvent event)
+//   {
+//      if (display == null)
+//      {
+//         return;
+//      }
+//
+//      if (!viewOpened)
+//      {
+//         IDE.getInstance().openView(display.asView());
+//      }
+//
+//      display.getBrowserTree().setValue(null);
+//      selectedItems.clear();
+//
+//      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+//      IDE.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+//
+//      try
+//      {
+//         String workspaceUrl =
+//            (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + event.getVfs() : vfsBaseUrl + "/" + event.getVfs();
+//         //TODO workspace URL consists of vfsBaseURL (taken from IDE init conf) and VFS id (path parameter)
+//         new VirtualFileSystem(workspaceUrl).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+//            new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
+//         {
+//
+//            @Override
+//            protected void onSuccess(VirtualFileSystemInfo result)
+//            {
+//               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
+//               IDE.fireEvent(new VfsChangedEvent(result));
+//
+//               display.asView().setViewVisible();
+//
+//               IDE.fireEvent(new ViewVisibilityChangedEvent((View)display));
+//
+//               display.getBrowserTree().setValue(result.getRoot());
+//               display.selectItem(result.getRoot().getId());
+//               selectedItems = display.getSelectedItems();
+//
+//               try
+//               {
+//                  onRefreshBrowser(new RefreshBrowserEvent());
+//               }
+//               catch (Exception e)
+//               {
+//                  e.printStackTrace();
+//               }
+//
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               itemToSelect = null;
+//               foldersToRefresh.clear();
+//
+//               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
+//               IDE.fireEvent(new VfsChangedEvent(null));
+//            }
+//         });
+//      }
+//      catch (RequestException e)
+//      {
+//         e.printStackTrace();
+//      }
+//   }
 
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      System.out.println("TinyProjectExplorerPresenter.onApplicationSettingsReceived( >>>>>>>>>>>>>>>>>>> )");
-      
-      //      applicationSettings = event.getApplicationSettings();
-
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
@@ -773,14 +769,14 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       display.addItemsIcons(event.getTreeItemIcons());
    }
 
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         viewOpened = true;
-      }
-   }
+//   @Override
+//   public void onViewOpened(ViewOpenedEvent event)
+//   {
+//      if (event.getView() instanceof Display)
+//      {
+//         viewOpened = true;
+//      }
+//   }
 
    @Override
    public void onViewClosed(ViewClosedEvent event)
@@ -789,7 +785,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       {
          display = null;
          openedProject = null;
-         viewOpened = false;
+//         viewOpened = false;
       }
    }
 
@@ -799,7 +795,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
    @Override
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
-      System.out.println("TinyProjectExplorerPresenter.onConfigurationReceivedSuccessfully( >>>>>>>>>>>>>>>>>>>>>>> )");
       this.vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();      
       showProjectExplorer();
    }
@@ -926,6 +921,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       display.setProjectExplorerTreeVisible(false);
       
       selectedItems.clear();
+      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
       
       IDE.fireEvent(projectClosedEvent);
    }

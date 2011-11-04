@@ -160,12 +160,6 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       String workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
       applicationSettings.setValue("entry-point", workspace, Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-      
-      System.out.println("ApplicationStateSnapshotListener.onVfsChanged() vfsinfo > " + event.getVfsInfo());
-      
-      //Map<String, Link> map = event.getVfsInfo().getRoot().getLinks();
-      //Link root = event.getVfsInfo().getRoot().getLinks().get(Link.REL_SELF);
-      //String s = root.getHref();
    }
 
    /**

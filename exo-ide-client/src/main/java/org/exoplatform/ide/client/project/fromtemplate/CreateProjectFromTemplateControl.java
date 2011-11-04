@@ -21,12 +21,7 @@ package org.exoplatform.ide.client.project.fromtemplate;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommand;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for create project from template command.
@@ -37,10 +32,10 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class CreateProjectFromTemplateControl extends NewFileCommand implements ItemsSelectedHandler
+public class CreateProjectFromTemplateControl extends NewFileCommand
 {
    
-   private boolean folderItemSelected = true;
+   //private boolean folderItemSelected = true;
 
    public static final String ID = "Project/New/From Template...";
    
@@ -50,67 +45,66 @@ public class CreateProjectFromTemplateControl extends NewFileCommand implements 
 
    public CreateProjectFromTemplateControl()
    {
-      super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(),
-         IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateProjectFromTemplateEvent());
+      super(ID, TITLE, PROMPT,
+         IDEImageBundle.INSTANCE.createFromTemplate(),
+         IDEImageBundle.INSTANCE.createFromTemplateDisabled(),
+         new CreateProjectFromTemplateEvent());
       setGroup(0);
    }
    
-   public void initialize(HandlerManager eventBus)
-   {
-      super.initialize(eventBus);
-      
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+//   public void initialize(HandlerManager eventBus)
+//   {
+//      super.initialize(eventBus);
+//      
+//      //eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+//   }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      System.out.println("CreateProjectFromTemplateControl.onItemsSelected()");
-      System.out.println("selected items > " + (event.getSelectedItems() == null ? "none" : event.getSelectedItems().size()));
-      
-      if (event.getSelectedItems().size() != 1)
-      {
-         folderItemSelected = false;
-         updateEnabling();
-         return;
-      }
-
-      if(event.getSelectedItems().get(0) instanceof ProjectModel)
-      {
-         folderItemSelected = false;
-         updateEnabling();
-         return;
-      }
-      folderItemSelected = true;
-      updateEnabling();
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+//    */
+//   public void onItemsSelected(ItemsSelectedEvent event)
+//   {
+//      if (event.getSelectedItems().size() != 1)
+//      {
+//         folderItemSelected = false;
+//         updateEnabling();
+//         return;
+//      }
+//
+//      if(event.getSelectedItems().get(0) instanceof ProjectModel)
+//      {
+//         folderItemSelected = false;
+//         updateEnabling();
+//         return;
+//      }
+//      folderItemSelected = true;
+//      updateEnabling();
+//   }
    
-   protected void updateEnabling()
-   {
-      if (entryPoint == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-      
-      setVisible(true);
-      
-      if (!browserSelected)
-      {
-         setEnabled(false);
-         return;
-      }
-      if (folderItemSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }
+//   protected void updateEnabling()
+//   {
+//      if (entryPoint == null)
+//      {
+//         setVisible(false);
+//         setEnabled(false);
+//         return;
+//      }
+//      
+//      setVisible(true);
+//      
+//      if (!browserSelected)
+//      {
+//         setEnabled(false);
+//         return;
+//      }
+//      if (folderItemSelected)
+//      {
+//         setEnabled(true);
+//      }
+//      else
+//      {
+//         setEnabled(false);
+//      }
+//   }
 
 }

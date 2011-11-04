@@ -96,8 +96,6 @@ import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
@@ -118,12 +116,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
       .editorControllerAskCloseFile();
-
-   /**
-    * Used to remove handlers when they are no longer needed.
-    */
-   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
-      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
    private ArrayList<String> ignoreContentChangedList = new ArrayList<String>();
 
@@ -147,45 +139,33 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    public EditorController()
    {
-      handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE,
-         IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
-      //eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(EditorOpenFileEvent.TYPE, this);
+      IDE.addHandler(EditorReplaceFileEvent.TYPE, this);
+      IDE.addHandler(RefreshHotKeysEvent.TYPE, this);
 
-      handlerRegistrations.put(EditorOpenFileEvent.TYPE, IDE.addHandler(EditorOpenFileEvent.TYPE, this));
+      IDE.addHandler(EditorFindTextEvent.TYPE, this);
+      IDE.addHandler(EditorReplaceTextEvent.TYPE, this);
+      IDE.addHandler(EditorReplaceAndFindTextEvent.TYPE, this);
 
-      handlerRegistrations.put(EditorReplaceFileEvent.TYPE, IDE.addHandler(EditorReplaceFileEvent.TYPE, this));
-
-      handlerRegistrations.put(RefreshHotKeysEvent.TYPE, IDE.addHandler(RefreshHotKeysEvent.TYPE, this));
-
-      handlerRegistrations.put(EditorFindTextEvent.TYPE, IDE.addHandler(EditorFindTextEvent.TYPE, this));
-      handlerRegistrations.put(EditorReplaceTextEvent.TYPE, IDE.addHandler(EditorReplaceTextEvent.TYPE, this));
-      handlerRegistrations.put(EditorReplaceAndFindTextEvent.TYPE,
-         IDE.addHandler(EditorReplaceAndFindTextEvent.TYPE, this));
-
-      handlerRegistrations.put(EditorContentChangedEvent.TYPE,
-         IDE.addHandler(EditorContentChangedEvent.TYPE, this));
-      handlerRegistrations.put(EditorSaveContentEvent.TYPE, IDE.addHandler(EditorSaveContentEvent.TYPE, this));
-      handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE,
-         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this));
-      handlerRegistrations.put(EditorCloseFileEvent.TYPE, IDE.addHandler(EditorCloseFileEvent.TYPE, this));
-      handlerRegistrations.put(EditorUndoTypingEvent.TYPE, IDE.addHandler(EditorUndoTypingEvent.TYPE, this));
-      handlerRegistrations.put(EditorRedoTypingEvent.TYPE, IDE.addHandler(EditorRedoTypingEvent.TYPE, this));
-      handlerRegistrations.put(FileSavedEvent.TYPE, IDE.addHandler(FileSavedEvent.TYPE, this));
-      handlerRegistrations.put(EditorFormatTextEvent.TYPE, IDE.addHandler(EditorFormatTextEvent.TYPE, this));
-      handlerRegistrations.put(ShowLineNumbersEvent.TYPE, IDE.addHandler(ShowLineNumbersEvent.TYPE, this));
-      handlerRegistrations.put(EditorChangeActiveFileEvent.TYPE,
-         IDE.addHandler(EditorChangeActiveFileEvent.TYPE, this));
-      handlerRegistrations.put(EditorDeleteCurrentLineEvent.TYPE,
-         IDE.addHandler(EditorDeleteCurrentLineEvent.TYPE, this));
-      handlerRegistrations.put(EditorGoToLineEvent.TYPE, IDE.addHandler(EditorGoToLineEvent.TYPE, this));
-      handlerRegistrations.put(EditorSetFocusEvent.TYPE, IDE.addHandler(EditorSetFocusEvent.TYPE, this));
-      handlerRegistrations.put(SaveFileAsEvent.TYPE, IDE.addHandler(SaveFileAsEvent.TYPE, this));
-      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE,
-         IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this));
-      handlerRegistrations.put(ClosingViewEvent.TYPE, IDE.addHandler(ClosingViewEvent.TYPE, this));
-      handlerRegistrations.put(EditorFocusReceivedEvent.TYPE, IDE.addHandler(EditorFocusReceivedEvent.TYPE, this));
-      handlerRegistrations.put(VersionRestoredEvent.TYPE, IDE.addHandler(VersionRestoredEvent.TYPE, this));
-
+      IDE.addHandler(EditorContentChangedEvent.TYPE, this);
+      IDE.addHandler(EditorSaveContentEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorCloseFileEvent.TYPE, this);
+      IDE.addHandler(EditorUndoTypingEvent.TYPE, this);
+      IDE.addHandler(EditorRedoTypingEvent.TYPE, this);
+      IDE.addHandler(FileSavedEvent.TYPE, this);
+      IDE.addHandler(EditorFormatTextEvent.TYPE, this);
+      IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
+      IDE.addHandler(EditorChangeActiveFileEvent.TYPE, this);
+      IDE.addHandler(EditorDeleteCurrentLineEvent.TYPE, this);
+      IDE.addHandler(EditorGoToLineEvent.TYPE, this);
+      IDE.addHandler(EditorSetFocusEvent.TYPE, this);
+      IDE.addHandler(SaveFileAsEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ClosingViewEvent.TYPE, this);
+      IDE.addHandler(EditorFocusReceivedEvent.TYPE, this);
+      IDE.addHandler(VersionRestoredEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -202,29 +182,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       {
          applicationSettings.setValue("default-editors", new LinkedHashMap<String, String>(), Store.SERVER);
       }
-   }
-
-   /**
-    * Destroy 
-    */
-   public void destroy()
-   {
-      removeHandlers();
-   }
-
-   /**
-    * Remove handlers, that are no longer needed.
-    */
-   private void removeHandlers()
-   {
-      //TODO: such method is not very convenient.
-      //If gwt mvp framework will be used , it will be good to use
-      //ResettableEventBus class
-      for (HandlerRegistration h : handlerRegistrations.values())
-      {
-         h.removeHandler();
-      }
-      handlerRegistrations.clear();
    }
 
    /* 
