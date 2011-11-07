@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEvent;
@@ -31,8 +29,9 @@ import org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEv
  * @version $Id:  Jun 9, 2011 2:51:28 PM anya $
  *
  */
-public class ShowApplicationInfoControl extends SimpleControl implements IDEControl
+public class ShowApplicationInfoControl extends AbstractOpenShiftControl
 {
+
    public ShowApplicationInfoControl()
    {
       super(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlId());
@@ -43,13 +42,4 @@ public class ShowApplicationInfoControl extends SimpleControl implements IDECont
       setEvent(new ShowApplicationInfoEvent());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

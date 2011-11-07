@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
  * @version $Id:  May 31, 2011 3:32:33 PM anya $
  *
  */
-public class HerokuControl extends SimpleControl implements IDEControl
+public class HerokuControlsGroup extends SimpleControl implements IDEControl
 {
    /**
     * Control ID.
@@ -46,7 +46,7 @@ public class HerokuControl extends SimpleControl implements IDEControl
    */
    public static final String PROMPT = "Heroku";
 
-   public HerokuControl()
+   public HerokuControlsGroup()
    {
       super(ID);
       setTitle(TITLE);

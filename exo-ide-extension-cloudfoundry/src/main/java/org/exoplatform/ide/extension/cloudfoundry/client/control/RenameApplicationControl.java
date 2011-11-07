@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicatio
  * @version $Id: RenameApplicationControl.java Jul 15, 2011 11:40:43 AM vereshchaka $
  *
  */
-public class RenameApplicationControl extends SimpleControl implements IDEControl
+public class RenameApplicationControl extends AbstractCloudFoundryControl
 {
 
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.renameAppControlId();
@@ -48,16 +46,6 @@ public class RenameApplicationControl extends SimpleControl implements IDEContro
       setImages(CloudFoundryClientBundle.INSTANCE.renameApplication(),
          CloudFoundryClientBundle.INSTANCE.renameApplicationDisabled());
       setEvent(new RenameApplicationEvent());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
@@ -31,40 +29,17 @@ import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
  * @version $Id:  May 31, 2011 9:32:28 AM anya $
  *
  */
-public class AddKeyControl extends SimpleControl implements IDEControl
+public class AddKeyControl extends AbstractHerokuControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlId();
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlTitle();
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlPrompt();
 
    public AddKeyControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlId());
+      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlTitle());
+      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlPrompt());
       setEvent(new AddKeyEvent());
       setImages(HerokuClientBundle.INSTANCE.addKeys(), HerokuClientBundle.INSTANCE.addKeysDisabled());
       setDelimiterBefore(true);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

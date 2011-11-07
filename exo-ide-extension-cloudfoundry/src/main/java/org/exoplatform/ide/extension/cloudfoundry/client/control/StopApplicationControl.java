@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEv
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  *
  */
-public class StopApplicationControl extends SimpleControl implements IDEControl
+public class StopApplicationControl extends AbstractCloudFoundryControl
 {
 
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.stopAppControlId();
@@ -50,16 +48,6 @@ public class StopApplicationControl extends SimpleControl implements IDEControl
       setPrompt(PROMPT);
       setImages(CloudFoundryClientBundle.INSTANCE.stopApp(), CloudFoundryClientBundle.INSTANCE.stopAppDisabled());
       setEvent(new StopApplicationEvent());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

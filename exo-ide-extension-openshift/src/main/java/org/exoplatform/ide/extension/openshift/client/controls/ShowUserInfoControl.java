@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent;
@@ -31,8 +29,9 @@ import org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent;
  * @version $Id:  Jun 14, 2011 10:47:04 AM anya $
  *
  */
-public class ShowUserInfoControl extends SimpleControl implements IDEControl
+public class ShowUserInfoControl extends AbstractOpenShiftControl
 {
+
    public ShowUserInfoControl()
    {
       super(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlId());
@@ -44,13 +43,4 @@ public class ShowUserInfoControl extends SimpleControl implements IDEControl
       setDelimiterBefore(true);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

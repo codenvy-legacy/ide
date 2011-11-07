@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationEvent;
@@ -29,40 +27,17 @@ import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationEvent
  * @version $Id:  Jun 2, 2011 11:47:47 AM anya $
  *
  */
-public class RenameApplicationControl extends SimpleControl implements IDEControl
+public class RenameApplicationControl extends AbstractHerokuControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlId();
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlTitle();
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlPrompt();
 
    public RenameApplicationControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlId());
+      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlTitle());
+      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlPrompt());
       setEvent(new RenameApplicationEvent());
       setImages(HerokuClientBundle.INSTANCE.renameApplication(),
          HerokuClientBundle.INSTANCE.renameApplicationDisabled());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

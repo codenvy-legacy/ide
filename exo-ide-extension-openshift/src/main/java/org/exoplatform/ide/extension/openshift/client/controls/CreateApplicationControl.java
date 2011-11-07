@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEvent;
@@ -31,8 +29,9 @@ import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEv
  * @version $Id:  Jun 7, 2011 5:35:09 PM anya $
  *
  */
-public class CreateApplicationControl extends SimpleControl implements IDEControl
+public class CreateApplicationControl extends AbstractOpenShiftControl
 {
+   
    public CreateApplicationControl()
    {
       super(OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationControlId());
@@ -44,13 +43,4 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
       setDelimiterBefore(true);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

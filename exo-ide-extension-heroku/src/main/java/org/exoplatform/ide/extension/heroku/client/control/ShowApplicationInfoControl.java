@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.info.ShowApplicationInfoEvent;
@@ -31,43 +29,16 @@ import org.exoplatform.ide.extension.heroku.client.info.ShowApplicationInfoEvent
  * @version $Id:  Jun 1, 2011 11:18:56 AM anya $
  *
  */
-public class ShowApplicationInfoControl extends SimpleControl implements IDEControl
+public class ShowApplicationInfoControl extends AbstractHerokuControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlId();
 
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlTitle();
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlPrompt();
-
-   /**
-    * @param id
-    */
    public ShowApplicationInfoControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlId());
+      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlTitle());
+      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlPrompt());
       setEvent(new ShowApplicationInfoEvent());
       setImages(HerokuClientBundle.INSTANCE.applicationInfo(), HerokuClientBundle.INSTANCE.applicationInfoDisabled());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

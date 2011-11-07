@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.stack.ChangeApplicationStackEvent;
@@ -31,8 +29,9 @@ import org.exoplatform.ide.extension.heroku.client.stack.ChangeApplicationStackE
  * @version $Id:  Jul 28, 2011 5:58:35 PM anya $
  *
  */
-public class ChangeApplicationStackConrol extends SimpleControl implements IDEControl
+public class ChangeApplicationStackConrol extends AbstractHerokuControl
 {
+   
    public ChangeApplicationStackConrol()
    {
       super(HerokuExtension.LOCALIZATION_CONSTANT.changeStackControlId());
@@ -42,13 +41,4 @@ public class ChangeApplicationStackConrol extends SimpleControl implements IDECo
       setEvent(new ChangeApplicationStackEvent());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

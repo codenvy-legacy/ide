@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateApplicationControl;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateDomainControl;
 import org.exoplatform.ide.extension.openshift.client.controls.DeleteApplicationControl;
-import org.exoplatform.ide.extension.openshift.client.controls.OpenShiftControl;
+import org.exoplatform.ide.extension.openshift.client.controls.OpenShiftControlsGroup;
 import org.exoplatform.ide.extension.openshift.client.controls.PreviewApplicationControl;
 import org.exoplatform.ide.extension.openshift.client.controls.ShowApplicationInfoControl;
 import org.exoplatform.ide.extension.openshift.client.controls.ShowUserInfoControl;
@@ -65,7 +65,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls:
-      IDE.getInstance().addControl(new OpenShiftControl());
+      IDE.getInstance().addControl(new OpenShiftControlsGroup());
       IDE.getInstance().addControl(new CreateDomainControl());
       IDE.getInstance().addControl(new CreateApplicationControl());
       IDE.getInstance().addControl(new DeleteApplicationControl());

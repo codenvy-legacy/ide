@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationEvent;
@@ -31,44 +29,20 @@ import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationEvent
  * @version $Id:  May 26, 2011 5:10:21 PM anya $
  *
  */
-public class DeleteApplicationControl extends SimpleControl implements IDEControl
+public class DeleteApplicationControl extends AbstractHerokuControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId();
 
    /**
-    * Control's title.
-    */
-   public static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle();
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt();
-
-   /**
-    * @param id
+    * 
     */
    public DeleteApplicationControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId());
+      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle());
+      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt());
       setEvent(new DeleteApplicationEvent());
       setImages(HerokuClientBundle.INSTANCE.destroyApplication(),
          HerokuClientBundle.INSTANCE.destroyApplicationDisabled());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ShowApplicationsEvent;
@@ -29,7 +27,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.apps.ShowApplicationsEv
  * @version $Id:  Aug 18, 2011 evgen $
  *
  */
-public class ApplicationsControl extends SimpleControl implements IDEControl
+public class ApplicationsControl extends AbstractCloudFoundryControl
 {
 
    /**
@@ -42,16 +40,6 @@ public class ApplicationsControl extends SimpleControl implements IDEControl
       setPrompt(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlPrompt());
       setEvent(new ShowApplicationsEvent());
       setImages(CloudFoundryClientBundle.INSTANCE.appsList(), CloudFoundryClientBundle.INSTANCE.appsListDisabled());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

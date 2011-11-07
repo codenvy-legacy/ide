@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
@@ -31,8 +29,9 @@ import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
  * @version $Id:  Jun 6, 2011 2:22:44 PM anya $
  *
  */
-public class CreateDomainControl extends SimpleControl implements IDEControl
+public class CreateDomainControl extends AbstractOpenShiftControl
 {
+   
    public CreateDomainControl()
    {
       super(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlId());
@@ -42,13 +41,4 @@ public class CreateDomainControl extends SimpleControl implements IDEControl
       setEvent(new CreateDomainEvent());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

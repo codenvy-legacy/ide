@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
  * @version $Id:  Aug 16, 2011 12:54:05 PM anya $
  *
  */
-public class SwitchAccountControl extends SimpleControl implements IDEControl
+public class SwitchAccountControl extends AbstractCloudFoundryControl
 {
 
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
@@ -52,16 +50,6 @@ public class SwitchAccountControl extends SimpleControl implements IDEControl
          CloudFoundryClientBundle.INSTANCE.switchAccountDisabled());
       setEvent(new LoginEvent(null, null));
       setDelimiterBefore(true);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
    
 }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlEvent;
  * @version $Id: UnmapUrlControl.java Jul 18, 2011 9:49:11 AM vereshchaka $
  *
  */
-public class UnmapUrlControl extends SimpleControl implements IDEControl
+public class UnmapUrlControl extends AbstractCloudFoundryControl
 {
 
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlControlId();
@@ -51,16 +49,6 @@ public class UnmapUrlControl extends SimpleControl implements IDEControl
       setImages(CloudFoundryClientBundle.INSTANCE.mapUrl(), CloudFoundryClientBundle.INSTANCE.mapUrlDisabled());
       setEvent(new UnmapUrlEvent());
       setDelimiterBefore(true);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

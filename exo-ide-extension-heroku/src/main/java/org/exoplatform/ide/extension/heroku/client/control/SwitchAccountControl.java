@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.SwitchAccountEvent;
@@ -31,43 +29,16 @@ import org.exoplatform.ide.extension.heroku.client.login.SwitchAccountEvent;
  * @version $Id: SwitchAccountControl.java Jun 20, 2011 9:45:44 AM vereshchaka $
  *
  */
-public class SwitchAccountControl extends SimpleControl implements IDEControl
+public class SwitchAccountControl extends AbstractHerokuControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
 
-   /**
-    * Control's title.
-    */
-   public static final String SWITCH_TITLE = HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchTitle();
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String SWITCH_PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchPrompt();
-
-   /**
-    * @param id
-    */
    public SwitchAccountControl()
    {
-      super(ID);
-      setTitle(SWITCH_TITLE);
-      setPrompt(SWITCH_PROMPT);
+      super(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlId());
+      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchTitle());
+      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchPrompt());
       setEvent(new SwitchAccountEvent());
       setImages(HerokuClientBundle.INSTANCE.switchAccount(), HerokuClientBundle.INSTANCE.switchAccountDisabled());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

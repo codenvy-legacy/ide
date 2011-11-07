@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandEvent;
  * @version $Id:  Jun 17, 2011 10:43:13 AM anya $
  *
  */
-public class RakeControl extends SimpleControl implements IDEControl
+public class RakeControl extends AbstractHerokuControl
 {
 
    public RakeControl()
@@ -42,16 +40,6 @@ public class RakeControl extends SimpleControl implements IDEControl
       setEvent(new RakeCommandEvent());
       setImages(HerokuClientBundle.INSTANCE.rake(), HerokuClientBundle.INSTANCE.rakeDisabled());
       setDelimiterBefore(true);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

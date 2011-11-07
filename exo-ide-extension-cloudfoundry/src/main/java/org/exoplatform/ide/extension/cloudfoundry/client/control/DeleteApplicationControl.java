@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicatio
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  *
  */
-public class DeleteApplicationControl extends SimpleControl implements IDEControl
+public class DeleteApplicationControl extends AbstractCloudFoundryControl
 {
 
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId();
@@ -51,16 +49,6 @@ public class DeleteApplicationControl extends SimpleControl implements IDEContro
       setImages(CloudFoundryClientBundle.INSTANCE.deleteApplication(),
          CloudFoundryClientBundle.INSTANCE.deleteApplicationDisabled());
       setEvent(new DeleteApplicationEvent());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.logs.ShowLogsEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.heroku.client.logs.ShowLogsEvent;
  * @version $Id:  Sep 19, 2011 12:33:48 PM anya $
  *
  */
-public class ShowLogsControl extends SimpleControl implements IDEControl
+public class ShowLogsControl extends AbstractHerokuControl
 {
 
    public ShowLogsControl()
@@ -43,13 +41,4 @@ public class ShowLogsControl extends SimpleControl implements IDEControl
       setImages(HerokuClientBundle.INSTANCE.logs(), HerokuClientBundle.INSTANCE.logsDisabled());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

@@ -30,9 +30,10 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * @version $Id:  Jun 9, 2011 4:58:20 PM anya $
  *
  */
-public class OpenShiftControl extends SimpleControl implements IDEControl
+public class OpenShiftControlsGroup extends SimpleControl implements IDEControl
 {
-   public OpenShiftControl()
+   
+   public OpenShiftControlsGroup()
    {
       super(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlId());
       setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlTitle());
@@ -50,4 +51,5 @@ public class OpenShiftControl extends SimpleControl implements IDEControl
       setVisible(true);
       setEnabled(true);
    }
+   
 }

@@ -26,7 +26,7 @@ import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
 import org.exoplatform.ide.extension.heroku.client.control.ChangeApplicationStackConrol;
 import org.exoplatform.ide.extension.heroku.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.DeleteApplicationControl;
-import org.exoplatform.ide.extension.heroku.client.control.HerokuControl;
+import org.exoplatform.ide.extension.heroku.client.control.HerokuControlsGroup;
 import org.exoplatform.ide.extension.heroku.client.control.RakeControl;
 import org.exoplatform.ide.extension.heroku.client.control.RenameApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.ShowApplicationInfoControl;
@@ -76,7 +76,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls
-      IDE.getInstance().addControl(new HerokuControl());
+      IDE.getInstance().addControl(new HerokuControlsGroup());
       IDE.getInstance().addControl(new CreateApplicationControl());
       IDE.getInstance().addControl(new DeleteApplicationControl());
       IDE.getInstance().addControl(new RenameApplicationControl());

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyEvent;
  * @version $Id:  Jun 21, 2011 12:15:28 PM anya $
  *
  */
-public class UpdatePublicKeyControl extends SimpleControl implements IDEControl
+public class UpdatePublicKeyControl extends AbstractOpenShiftControl
 {
 
    public UpdatePublicKeyControl()
@@ -44,13 +42,4 @@ public class UpdatePublicKeyControl extends SimpleControl implements IDEControl
       setEvent(new UpdatePublicKeyEvent());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
 }

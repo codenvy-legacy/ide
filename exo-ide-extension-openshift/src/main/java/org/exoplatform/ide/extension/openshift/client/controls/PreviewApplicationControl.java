@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationEvent;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplication
  * @version $
  */
 
-public class PreviewApplicationControl extends SimpleControl implements IDEControl
+public class PreviewApplicationControl extends AbstractOpenShiftControl
 {
 
    public PreviewApplicationControl()
@@ -42,16 +40,6 @@ public class PreviewApplicationControl extends SimpleControl implements IDEContr
       setImages(OpenShiftClientBundle.INSTANCE.previewControl(),
          OpenShiftClientBundle.INSTANCE.previewControlDisabled());
       setEvent(new PreviewApplicationEvent());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 
 }
