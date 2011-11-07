@@ -18,11 +18,21 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.control;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationEvent;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Control for updating application.
@@ -31,21 +41,27 @@ import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationEv
  * @version $Id: UpdateApplicationControl.java Oct 10, 2011 4:59:30 PM vereshchaka $
  *
  */
-public class UpdateApplicationControl extends SimpleControl implements IDEControl
+public class UpdateApplicationControl extends SimpleControl implements IDEControl, VfsChangedHandler,
+   ItemsSelectedHandler
 {
-   
+
    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.updateApplicationControlId();
-   
+
    private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.updateApplicationControlTitle();
-   
+
    private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.updateApplicationControlPrompt();
-   
+
+   private VirtualFileSystemInfo vfsInfo;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
+
    public UpdateApplicationControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(CloudBeesClientBundle.INSTANCE.updateApplication(), CloudBeesClientBundle.INSTANCE.updateApplicationDisabled());
+      setImages(CloudBeesClientBundle.INSTANCE.updateApplication(),
+         CloudBeesClientBundle.INSTANCE.updateApplicationDisabled());
       setEvent(new UpdateApplicationEvent());
    }
 
@@ -55,8 +71,38 @@ public class UpdateApplicationControl extends SimpleControl implements IDEContro
    @Override
    public void initialize()
    {
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      
       setVisible(true);
-      setEnabled(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      refresh();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      refresh();
+   }
+
+   /**
+    * 
+    */
+   private void refresh()
+   {
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
    }
 
 }

@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
  * @version $Id: CloudFoundryControl.java Jul 8, 2011 3:25:33 PM vereshchaka $
  *
  */
-public class CloudFoundryControl extends SimpleControl implements IDEControl
+public class CloudFoundryControlGroup extends SimpleControl implements IDEControl
 {
 
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlId();
@@ -42,7 +42,7 @@ public class CloudFoundryControl extends SimpleControl implements IDEControl
    /**
     * 
     */
-   public CloudFoundryControl()
+   public CloudFoundryControlGroup()
    {
       super(ID);
       setTitle(TITLE);

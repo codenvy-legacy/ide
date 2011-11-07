@@ -18,11 +18,21 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.control;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationEvent;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Control for initializing application on CloudBees.
@@ -30,15 +40,20 @@ import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeAppli
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
-public class InitializeApplicationControl extends SimpleControl implements IDEControl
+public class InitializeApplicationControl extends SimpleControl implements IDEControl, VfsChangedHandler,
+   ItemsSelectedHandler
 {
-   
+
    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlId();
-   
+
    private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlTitle();
-   
+
    private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlPrompt();
-   
+
+   private VirtualFileSystemInfo vfsInfo;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
+
    public InitializeApplicationControl()
    {
       super(ID);
@@ -54,8 +69,38 @@ public class InitializeApplicationControl extends SimpleControl implements IDECo
    @Override
    public void initialize()
    {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+
       setVisible(true);
-      setEnabled(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      refresh();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      refresh();
+   }
+
+   /**
+    * 
+    */
+   private void refresh()
+   {
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
    }
 
 }

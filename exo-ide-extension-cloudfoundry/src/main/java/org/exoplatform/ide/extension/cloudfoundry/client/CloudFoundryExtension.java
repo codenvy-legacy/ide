@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationInfoControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControlGroup;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.RestartApplicationControl;
@@ -82,7 +82,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new CloudFoundryControl());
+      IDE.getInstance().addControl(new CloudFoundryControlGroup());
       IDE.getInstance().addControl(new CreateApplicationControl());
       IDE.getInstance().addControl(new UpdateApplicationControl());
       IDE.getInstance().addControl(new DeleteApplicationControl());

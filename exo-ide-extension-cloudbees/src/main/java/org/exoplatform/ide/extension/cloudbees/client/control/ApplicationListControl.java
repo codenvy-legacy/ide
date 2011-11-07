@@ -18,19 +18,34 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.control;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.list.ShowApplicationListEvent;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Sep 21, 2011 evgen $
  *
  */
-public class ApplicationListControl extends SimpleControl implements IDEControl
+public class ApplicationListControl extends SimpleControl implements IDEControl, VfsChangedHandler,
+   ItemsSelectedHandler
 {
+
+   private VirtualFileSystemInfo vfsInfo;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
     * 
@@ -41,8 +56,6 @@ public class ApplicationListControl extends SimpleControl implements IDEControl
       setTitle(CloudBeesExtension.LOCALIZATION_CONSTANT.controlAppListTitle());
       setPrompt(CloudBeesExtension.LOCALIZATION_CONSTANT.controlAppListPrompt());
       setImages(CloudBeesClientBundle.INSTANCE.appList(), CloudBeesClientBundle.INSTANCE.appListDisabled());
-      setEnabled(true);
-      setVisible(true);
       setEvent(new ShowApplicationListEvent());
    }
 
@@ -52,6 +65,38 @@ public class ApplicationListControl extends SimpleControl implements IDEControl
    @Override
    public void initialize()
    {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+
+      setVisible(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      refresh();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      refresh();
+   }
+
+   /**
+    * 
+    */
+   private void refresh()
+   {
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
    }
 
 }
