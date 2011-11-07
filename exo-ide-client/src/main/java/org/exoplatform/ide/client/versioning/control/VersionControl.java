@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.versioning.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
@@ -27,14 +28,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEv
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.versioning.VersionContentPresenter;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 13, 2010 $
  *
  */
-public class VersionControl extends SimpleControl implements IDEControl, ViewOpenedHandler,
+public abstract class VersionControl extends SimpleControl implements IDEControl, ViewOpenedHandler,
    ViewVisibilityChangedHandler, org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler
 {
 
@@ -44,19 +43,18 @@ public class VersionControl extends SimpleControl implements IDEControl, ViewOpe
    public VersionControl(String id)
    {
       super(id);
-      
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
-   
 
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
@@ -80,7 +78,7 @@ public class VersionControl extends SimpleControl implements IDEControl, ViewOpe
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if(event.getView()  instanceof VersionContentPresenter.Display )
+      if (event.getView() instanceof VersionContentPresenter.Display)
       {
          setVisible(false);
       }
@@ -92,9 +90,10 @@ public class VersionControl extends SimpleControl implements IDEControl, ViewOpe
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if(event.getView()  instanceof VersionContentPresenter.Display )
+      if (event.getView() instanceof VersionContentPresenter.Display)
       {
          setVisible(true);
       }
    }
+
 }

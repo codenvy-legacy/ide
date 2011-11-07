@@ -24,8 +24,6 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowDocumentationControl Jan 21, 2011 11:10:08 AM evgen $
@@ -43,6 +41,9 @@ public class ShowDocumentationControl extends SimpleControl implements IDEContro
 
    public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.hideDocumentationControl();
 
+   /**
+    * 
+    */
    public ShowDocumentationControl()
    {
       super(ID);
@@ -55,9 +56,10 @@ public class ShowDocumentationControl extends SimpleControl implements IDEContro
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
    }
 

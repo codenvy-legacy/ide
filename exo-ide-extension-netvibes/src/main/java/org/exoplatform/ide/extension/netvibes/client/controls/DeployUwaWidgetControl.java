@@ -23,10 +23,9 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.netvibes.client.Images;
 import org.exoplatform.ide.extension.netvibes.client.event.DeployUwaWidgetEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for deploying UWA widgets to Netvibes Ecosystem. 
@@ -66,12 +65,12 @@ public class DeployUwaWidgetControl extends SimpleControl implements IDEControl,
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**

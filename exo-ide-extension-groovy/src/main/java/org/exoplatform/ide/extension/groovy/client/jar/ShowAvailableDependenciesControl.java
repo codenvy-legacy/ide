@@ -23,8 +23,6 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -35,7 +33,7 @@ import com.google.gwt.event.shared.HandlerManager;
 @RolesAllowed({"administrators", "developers"})
 public class ShowAvailableDependenciesControl extends SimpleControl implements IDEControl
 {
-   
+
    public static final String ID = "Help/Show Available Dependencies...";
 
    public static final String TITLE = "Show Available Dependencies...";
@@ -48,18 +46,18 @@ public class ShowAvailableDependenciesControl extends SimpleControl implements I
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(GroovyClientBundle.INSTANCE.jarLibrary(),
-         GroovyClientBundle.INSTANCE.jarLibraryDisabled());
+      setImages(GroovyClientBundle.INSTANCE.jarLibrary(), GroovyClientBundle.INSTANCE.jarLibraryDisabled());
       setEvent(new ShowAvailableDependenciesEvent());
-      setVisible(true);
-      setEnabled(true);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
+      setVisible(true);
+      setEnabled(true);
    }
 
 }

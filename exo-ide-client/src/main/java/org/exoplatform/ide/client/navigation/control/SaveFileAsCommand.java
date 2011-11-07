@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -46,9 +44,12 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsControl();
 
    private boolean singleItemSelected = true;
-   
+
    private FileModel activeFile;
 
+   /**
+    * 
+    */
    public SaveFileAsCommand()
    {
       super(ID);
@@ -59,22 +60,29 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize(eventBus);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
       updateEnabling();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
+    */
    @Override
    protected void updateEnabling()
    {
@@ -88,6 +96,10 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() == 1)

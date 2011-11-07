@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.git.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -79,13 +78,13 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
       setVisible(true);
    }
 

@@ -24,10 +24,9 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.gatein.gadget.client.GateinGadgetClientBundle;
 import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -48,20 +47,26 @@ public class UndeployGadgetCommand extends SimpleControl implements IDEControl, 
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(GateinGadgetClientBundle.INSTANCE.undeployGadget(), GateinGadgetClientBundle.INSTANCE.undeployGadgetDisabled());
+      setImages(GateinGadgetClientBundle.INSTANCE.undeployGadget(),
+         GateinGadgetClientBundle.INSTANCE.undeployGadgetDisabled());
       //      setIcon(Images.UNDEPLOY_GADGET);
       setEvent(new UndeployGadgetEvent());
 
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)

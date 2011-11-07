@@ -29,8 +29,6 @@ import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -42,15 +40,18 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 {
 
    public static final String ID = "Edit/Copy Item(s)";
-   
+
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsTitleControl();
-   
+
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsPromptControl();
 
    private Item selectedItem;
 
    private boolean copyReady = false;
 
+   /**
+    * 
+    */
    public CopyItemsCommand()
    {
       super(ID);
@@ -58,19 +59,22 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
       setEvent(new CopyItemsEvent());
-
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize(eventBus);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 0)
@@ -86,6 +90,9 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
+    */
    @Override
    protected void updateEnabling()
    {
@@ -111,6 +118,10 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    */
+   @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
       if (event.getView() instanceof NavigatorPresenter.Display)

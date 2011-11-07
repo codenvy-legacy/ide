@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
@@ -31,7 +29,7 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
  * @version $Id:  May 31, 2011 3:32:33 PM anya $
  *
  */
-public class HerokuControl extends SimpleControl implements IDEControl 
+public class HerokuControl extends SimpleControl implements IDEControl
 {
    /**
     * Control ID.
@@ -47,7 +45,7 @@ public class HerokuControl extends SimpleControl implements IDEControl
    * Control's prompt, when user hovers the mouse on it.
    */
    public static final String PROMPT = "Heroku";
-   
+
    public HerokuControl()
    {
       super(ID);
@@ -56,12 +54,11 @@ public class HerokuControl extends SimpleControl implements IDEControl
       setImages(HerokuClientBundle.INSTANCE.heroku(), HerokuClientBundle.INSTANCE.herokuDisabled());
    }
 
-
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       setEnabled(true);

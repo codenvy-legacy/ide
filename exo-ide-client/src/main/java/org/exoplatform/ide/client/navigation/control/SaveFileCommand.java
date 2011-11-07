@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -40,9 +41,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -91,21 +89,23 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
-      eventBus.addHandler(FileSavedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+      IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
+      IDE.addHandler(FileSavedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getVfsInfo() != null)
@@ -121,6 +121,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
@@ -161,34 +162,36 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    /**
     * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent)
     */
+   @Override
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
       //TODO
-//      if (!(event.getItem() instanceof FileModel))
-//      {
-//         return;
-//      }
-//
-//      if ((FileModel)event.getItem() != activeFile)
-//      {
-//         return;
-//      }
-//
-//      File file = (File)event.getItem();
-//
-//      if (file.isContentChanged())
-//      {
-//         setEnabled(true);
-//      }
-//      else
-//      {
-//         setEnabled(false);
-//      }
+      //      if (!(event.getItem() instanceof FileModel))
+      //      {
+      //         return;
+      //      }
+      //
+      //      if ((FileModel)event.getItem() != activeFile)
+      //      {
+      //         return;
+      //      }
+      //
+      //      File file = (File)event.getItem();
+      //
+      //      if (file.isContentChanged())
+      //      {
+      //         setEnabled(true);
+      //      }
+      //      else
+      //      {
+      //         setEnabled(false);
+      //      }
    }
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent)
     */
+   @Override
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
       if (event.getFile().isLocked())
@@ -212,6 +215,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
     */
+   @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
@@ -232,14 +236,14 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
          return;
       }
       //TODO
-//      if (event.getFile().isPropertiesChanged())
-//      {
-//         setEnabled(true);
-//      }
-//      else
-//      {
-         setEnabled(false);
-//      }
+      //      if (event.getFile().isPropertiesChanged())
+      //      {
+      //         setEnabled(true);
+      //      }
+      //      else
+      //      {
+      setEnabled(false);
+      //      }
    }
 
 }

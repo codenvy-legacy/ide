@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.preview;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -49,6 +47,9 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
 
    private FileModel currentlyActiveFile;
 
+   /**
+    * 
+    */
    public PreviewHTMLControl()
    {
       super(ID);
@@ -59,20 +60,29 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(FileSavedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(FileSavedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       currentlyActiveFile = event.getFile();
       updateVisibility(currentlyActiveFile, currentlyActiveFile == null ? false : !currentlyActiveFile.isPersisted());
    }
 
+   /**
+    * @param file
+    * @param isNew
+    */
    private void updateVisibility(FileModel file, boolean isNew)
    {
       if (file == null)
@@ -101,6 +111,9 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
+    */
    @Override
    public void onFileSaved(FileSavedEvent event)
    {

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
@@ -35,13 +33,16 @@ import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEven
  */
 public class UpdateMemoryControl extends SimpleControl implements IDEControl
 {
-   
+
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryControlId();
-   
+
    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryTitle();
-   
+
    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryPrompt();
-   
+
+   /**
+    * 
+    */
    public UpdateMemoryControl()
    {
       super(ID);
@@ -52,10 +53,10 @@ public class UpdateMemoryControl extends SimpleControl implements IDEControl
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       setEnabled(true);

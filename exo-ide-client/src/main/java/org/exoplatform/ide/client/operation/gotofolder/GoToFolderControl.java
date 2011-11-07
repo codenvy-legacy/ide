@@ -28,8 +28,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -45,6 +43,9 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.goToFolderControl();
 
+   /**
+    * 
+    */
    public GoToFolderControl()
    {
       super(ID);
@@ -54,16 +55,21 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
       setEvent(new GoToFolderEvent());
       setDelimiterBefore(true);
    }
-   
+
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
    
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null || !event.getFile().isPersisted())
@@ -75,6 +81,10 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
       setEnabled(true);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getVfsInfo() != null)
@@ -86,4 +96,5 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
          setVisible(false);
       }
    }
+   
 }

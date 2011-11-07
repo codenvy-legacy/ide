@@ -21,11 +21,10 @@ package org.exoplatform.ide.extension.java.client.project_explorer;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.extension.java.client.JavaClientBundle;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -37,29 +36,29 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class ShowProjectExplorerControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
-   
+
    public static final String ID = "View/Project Explorer";
-   
-//   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplateTitleControl();
-   
-//   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplatePromptControl();
-   
-   private static final String TITLE = "Project Explorer";   
+
+   private static final String TITLE = "Project Explorer";
+
    private static final String PROMPT = "Project Explorer";
 
-   public ShowProjectExplorerControl() {
+   public ShowProjectExplorerControl()
+   {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);      
-      setImages(JavaClientBundle.INSTANCE.javaProject(),
-         JavaClientBundle.INSTANCE.javaProjectDisabled());
-      setEvent(new ShowProjectExplorerEvent());      
+      setPrompt(PROMPT);
+      setImages(JavaClientBundle.INSTANCE.javaProject(), JavaClientBundle.INSTANCE.javaProjectDisabled());
+      setEvent(new ShowProjectExplorerEvent());
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       setEnabled(true);
       setVisible(true);
    }
@@ -67,7 +66,6 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      System.out.println("ITEMS SELECTED >>> " + event.getSelectedItems().size());
    }
-   
+
 }

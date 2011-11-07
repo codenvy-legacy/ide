@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
@@ -46,10 +44,10 @@ public class BuildControl extends SimpleControl implements IDEControl
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       //TODO enable only if Java project selected

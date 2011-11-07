@@ -28,8 +28,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -37,14 +35,16 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SearchFilesCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   VfsChangedHandler
+public class SearchFilesCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler
 {
 
    public static final String ID = "File/Search...";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.searchFilesControl();
 
+   /**
+    * 
+    */
    public SearchFilesCommand()
    {
       super(ID);
@@ -55,14 +55,19 @@ public class SearchFilesCommand extends SimpleControl implements IDEControl, Ite
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -75,6 +80,10 @@ public class SearchFilesCommand extends SimpleControl implements IDEControl, Ite
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getVfsInfo() != null)
@@ -86,4 +95,5 @@ public class SearchFilesCommand extends SimpleControl implements IDEControl, Ite
          setVisible(false);
       }
    }
+
 }

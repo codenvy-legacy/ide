@@ -40,8 +40,6 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Control for manual lock or unlock file.
  * 
@@ -63,15 +61,18 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    public static final String ID = "Edit/Lock \\ Unlock File";
 
    public static final String TITLE_LOCK = IDE.IDE_LOCALIZATION_CONSTANT.lockFileLockControl();
-   
+
    public static final String TITLE_UNLOCK = IDE.IDE_LOCALIZATION_CONSTANT.lockFileUnlockControl();
 
    private boolean fileLocked = false;
-   
+
    private Map<String, String> lockTokens;
-   
+
    private FileModel activeFile;
 
+   /**
+    * 
+    */
    public LockUnlockFileControl()
    {
       super(ID);
@@ -84,37 +85,37 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * Initialize handlers for LockUnlockFileControl.
-    * 
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ItemLockedEvent.TYPE, this);
-      eventBus.addHandler(ItemUnlockedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ItemLockedEvent.TYPE, this);
+      IDE.addHandler(ItemUnlockedEvent.TYPE, this);
    }
-   
+
    /**
     * Handle this event to update status of button
     * according to status of active file: locked or unlocked.
     * 
     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       FileModel file = event.getFile();
       activeFile = file;
-      
+
       if (file == null || event.getEditor() == null)
       {
          setVisible(false);
          return;
       }
-      
+
       setVisible(true);
-      
+
       if (!file.isPersisted())
       {
          fileLocked = false;
@@ -122,10 +123,10 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
          setEnabled(false);
          return;
       }
-      
+
       if (activeFile.isLocked())
       {
-         if(!lockTokens.containsKey(activeFile.getId()))
+         if (!lockTokens.containsKey(activeFile.getId()))
          {
             fileLocked = false;
             update();
@@ -133,11 +134,11 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
             return;
          }
       }
-      
+
       setEnabled(true);
-      
+
       String lockToken = lockTokens.get(file.getId());
-      
+
       if (lockToken == null)
       {
          fileLocked = false;
@@ -171,6 +172,10 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
@@ -196,7 +201,6 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
       }
    }
 
-   
    /**
     * Checks, if item is instance of file.
     * If item is file, checks, is active file equals to item.
@@ -210,12 +214,12 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
       {
          return false;
       }
-      
+
       if (activeFile.getId().equals(item.getId()))
       {
          return true;
       }
-      
+
       return false;
    }
 

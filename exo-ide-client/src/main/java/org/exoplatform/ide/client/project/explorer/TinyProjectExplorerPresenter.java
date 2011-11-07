@@ -55,28 +55,22 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
-import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
-import org.exoplatform.ide.client.workspace.event.SwitchVFSHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -86,7 +80,6 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Lock;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -201,7 +194,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
-//      IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -451,7 +443,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          return;
       }
-
+      
       final Folder folder = foldersToRefresh.get(0);
       try
       {
@@ -547,8 +539,9 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       List<Item> itemsToRemove = new ArrayList<Item>();
       for (Item item : items)
       {
-         if (item.getName().startsWith("."))
+         if (item.getName().startsWith(".")) {
             itemsToRemove.add(item);
+         }
       }
       items.removeAll(itemsToRemove);
    }
@@ -610,79 +603,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
    }
 
-//   /**
-//    * Switching active workspace by Switch Workspace Event
-//    * 
-//    * @see SwitchVFSEvent#onSwitchVFS(org.exoplatform.ide.client.workspace.event.SwitchVFSEvent)
-//    */
-//   public void onSwitchVFS(final SwitchVFSEvent event)
-//   {
-//      if (display == null)
-//      {
-//         return;
-//      }
-//
-//      if (!viewOpened)
-//      {
-//         IDE.getInstance().openView(display.asView());
-//      }
-//
-//      display.getBrowserTree().setValue(null);
-//      selectedItems.clear();
-//
-//      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
-//      IDE.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-//
-//      try
-//      {
-//         String workspaceUrl =
-//            (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + event.getVfs() : vfsBaseUrl + "/" + event.getVfs();
-//         //TODO workspace URL consists of vfsBaseURL (taken from IDE init conf) and VFS id (path parameter)
-//         new VirtualFileSystem(workspaceUrl).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
-//            new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
-//         {
-//
-//            @Override
-//            protected void onSuccess(VirtualFileSystemInfo result)
-//            {
-//               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
-//               IDE.fireEvent(new VfsChangedEvent(result));
-//
-//               display.asView().setViewVisible();
-//
-//               IDE.fireEvent(new ViewVisibilityChangedEvent((View)display));
-//
-//               display.getBrowserTree().setValue(result.getRoot());
-//               display.selectItem(result.getRoot().getId());
-//               selectedItems = display.getSelectedItems();
-//
-//               try
-//               {
-//                  onRefreshBrowser(new RefreshBrowserEvent());
-//               }
-//               catch (Exception e)
-//               {
-//                  e.printStackTrace();
-//               }
-//
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable exception)
-//            {
-//               itemToSelect = null;
-//               foldersToRefresh.clear();
-//
-//               IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
-//               IDE.fireEvent(new VfsChangedEvent(null));
-//            }
-//         });
-//      }
-//      catch (RequestException e)
-//      {
-//         e.printStackTrace();
-//      }
-//   }
 
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
@@ -769,15 +689,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       display.addItemsIcons(event.getTreeItemIcons());
    }
 
-//   @Override
-//   public void onViewOpened(ViewOpenedEvent event)
-//   {
-//      if (event.getView() instanceof Display)
-//      {
-//         viewOpened = true;
-//      }
-//   }
-
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -785,7 +696,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          display = null;
          openedProject = null;
-//         viewOpened = false;
       }
    }
 
@@ -809,7 +719,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          return;
       }
-
    }
 
    private String lastNavigatorId = null;
@@ -864,10 +773,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       navigatorSelectedItems.clear();
       navigatorSelectedItems.add(openedProject);
       
-      Folder folder = (Folder)navigatorSelectedItems.get(0);
+//      Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();
-      foldersToRefresh.add(folder);
-      refreshNextFolder();      
+      foldersToRefresh.add(openedProject);
+      refreshNextFolder();
    }
 
    @Override
@@ -887,6 +796,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onProjectCreated(final ProjectCreatedEvent event)
    {
+      if (display == null) {
+         return;
+      }
+      
       if (openedProject == null) {
          doOpenProject(event.getProject());
          return;

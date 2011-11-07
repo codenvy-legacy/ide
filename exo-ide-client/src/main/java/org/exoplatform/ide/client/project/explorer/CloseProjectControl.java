@@ -26,8 +26,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -37,18 +35,23 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 @RolesAllowed({"administrators", "developers"})
-public class CloseProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
+public class CloseProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
+   ProjectClosedHandler
 {
-   
+
    public static final String ID = "Project/Close Project";
 
    private static final String TITLE = "Close Project";
 
    private static final String PROMPT = "Close Project";
-   
+
    private ProjectModel openedProject;
-   
-   public CloseProjectControl() {
+
+   /**
+    * 
+    */
+   public CloseProjectControl()
+   {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
@@ -56,16 +59,22 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
       setEvent(new CloseProjectEvent());
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       setEnabled(false);
-      
+
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.project.explorer.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.explorer.ProjectClosedEvent)
+    */
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
@@ -73,6 +82,9 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
       setEnabled(false);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.project.explorer.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.explorer.ProjectOpenedEvent)
+    */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {

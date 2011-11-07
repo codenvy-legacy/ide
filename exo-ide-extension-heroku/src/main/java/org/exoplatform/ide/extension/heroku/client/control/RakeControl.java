@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
@@ -42,16 +40,15 @@ public class RakeControl extends SimpleControl implements IDEControl
       setTitle(HerokuExtension.LOCALIZATION_CONSTANT.rakeControlTitle());
       setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.rakeControlPrompt());
       setEvent(new RakeCommandEvent());
-      setImages(HerokuClientBundle.INSTANCE.rake(),
-         HerokuClientBundle.INSTANCE.rakeDisabled());
+      setImages(HerokuClientBundle.INSTANCE.rake(), HerokuClientBundle.INSTANCE.rakeDisabled());
       setDelimiterBefore(true);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       setEnabled(true);

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
@@ -35,13 +33,16 @@ import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicatio
  */
 public class RestartApplicationControl extends SimpleControl implements IDEControl
 {
-   
+
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlId();
-   
+
    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlTitle();
-   
+
    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlPrompt();
-   
+
+   /**
+    * 
+    */
    public RestartApplicationControl()
    {
       super(ID);
@@ -52,10 +53,10 @@ public class RestartApplicationControl extends SimpleControl implements IDEContr
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       setEnabled(true);

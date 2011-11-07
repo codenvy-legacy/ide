@@ -24,10 +24,9 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.netvibes.client.NetvibesClientBundle;
 import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -53,11 +52,11 @@ public class ShowNetvibesPreviewControl extends SimpleControl implements IDECont
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

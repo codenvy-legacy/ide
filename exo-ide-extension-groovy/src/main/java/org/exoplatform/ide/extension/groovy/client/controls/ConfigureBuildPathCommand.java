@@ -18,16 +18,20 @@
  */
 package org.exoplatform.ide.extension.groovy.client.controls;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for calling the dialog for configuring classpath file.
@@ -36,7 +40,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Jan 6, 2011 $
  *
  */
-public class ConfigureBuildPathCommand extends SimpleControl implements IDEControl, VfsChangedHandler
+public class ConfigureBuildPathCommand extends SimpleControl implements IDEControl, VfsChangedHandler,
+   ItemsSelectedHandler
 {
 
    private static final String ID = "File/Configure Classpath...";
@@ -46,6 +51,8 @@ public class ConfigureBuildPathCommand extends SimpleControl implements IDEContr
    private final String PROMPT = "Configure Groovy Classpath...";
 
    private VirtualFileSystemInfo vfsInfo;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    public ConfigureBuildPathCommand()
    {
@@ -58,32 +65,35 @@ public class ConfigureBuildPathCommand extends SimpleControl implements IDEContr
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      update();
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      setVisible(true);
+
+      updateEnabling();
    }
 
-   private void update()
+   private void updateEnabling()
    {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-
-      setVisible(true);
-      setEnabled(true);
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
    }
 
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      update();
+      updateEnabling();
+   }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      updateEnabling();
    }
 
 }

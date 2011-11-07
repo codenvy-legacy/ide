@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.application.phases.RestoreOpenedFilesPhase;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;

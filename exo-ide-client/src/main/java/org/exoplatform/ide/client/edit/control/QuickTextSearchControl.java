@@ -24,8 +24,6 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -38,25 +36,29 @@ public class QuickTextSearchControl extends TextInputControl implements IDEContr
 {
 
    public static final String ID = "Quick search";
-   
+
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.quickTextSearchControl();
-   
+
+   /**
+    * 
+    */
    public QuickTextSearchControl()
    {
       super(ID);
       setPrompt(TITLE);
       setNormalImage(IDEImageBundle.INSTANCE.findText());
       setDisabledImage(IDEImageBundle.INSTANCE.findTextDisabled());
-      setEnabled(true);
-      setVisible(true);
       setSize(150);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
+      setEnabled(true);
+      setVisible(true);
    }
 
 }

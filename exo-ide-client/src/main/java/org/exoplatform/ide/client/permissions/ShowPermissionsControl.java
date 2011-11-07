@@ -26,8 +26,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * This class represent command in main menu(<var>View/Show Permissions</var>).<br>
  * Fired {@link ShowPermissionsEvent} if clicked. <br>
@@ -44,6 +42,9 @@ public class ShowPermissionsControl extends SimpleControl implements IDEControl,
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.permissionsControl();
 
+   /**
+    * 
+    */
    public ShowPermissionsControl()
    {
       super(ID);
@@ -55,16 +56,18 @@ public class ShowPermissionsControl extends SimpleControl implements IDEControl,
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
     * @see org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent)
     */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -74,4 +77,5 @@ public class ShowPermissionsControl extends SimpleControl implements IDEControl,
       }
       setEnabled(true);
    }
+
 }

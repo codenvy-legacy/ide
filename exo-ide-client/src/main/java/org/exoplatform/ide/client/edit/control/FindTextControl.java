@@ -33,8 +33,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.api.EditorCapability;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS.
  *	
@@ -53,6 +51,9 @@ public class FindTextControl extends SimpleControl implements IDEControl, Editor
 
    private boolean findTextViewOpened = false;
 
+   /**
+    * 
+    */
    public FindTextControl()
    {
       super(ID);
@@ -64,13 +65,14 @@ public class FindTextControl extends SimpleControl implements IDEControl, Editor
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**

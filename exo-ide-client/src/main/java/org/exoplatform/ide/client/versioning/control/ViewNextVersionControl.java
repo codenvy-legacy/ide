@@ -27,8 +27,6 @@ import org.exoplatform.ide.client.versioning.event.ShowNextVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 29, 2010 $
@@ -43,12 +41,11 @@ public class ViewNextVersionControl extends VersionControl implements ShowVersio
    private final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.viewNextVersionTitleControl();
 
    private final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.viewNextVersionPromptControl();
-   
+
    private Version version;
 
    /**
-    * @param id
-    * @param eventBus
+    * 
     */
    public ViewNextVersionControl()
    {
@@ -58,26 +55,28 @@ public class ViewNextVersionControl extends VersionControl implements ShowVersio
       setEvent(new ShowNextVersionEvent());
       setImages(IDEImageBundle.INSTANCE.viewNewerVersion(), IDEImageBundle.INSTANCE.viewNewerVersionDisabled());
    }
-   
+
    /**
-    * @see org.exoplatform.ide.client.versioning.control.VersionControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.versioning.control.VersionControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
-      super.initialize(eventBus);
+      IDE.addHandler(ShowVersionContentEvent.TYPE, this);
+      super.initialize();
    }
 
    /**
     * @see org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler#onShowVersionContent(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
     */
+   @Override
    public void onShowVersionContent(ShowVersionContentEvent event)
    {
       version = event.getVersion();
       boolean isEnabled =
-         (version.getProperty(ItemProperty.SUCCESSOR_SET) != null && version
-            .getProperty(ItemProperty.SUCCESSOR_SET).getChildProperties().size() > 0);
+         (version.getProperty(ItemProperty.SUCCESSOR_SET) != null && version.getProperty(ItemProperty.SUCCESSOR_SET)
+            .getChildProperties().size() > 0);
       setEnabled(isEnabled);
    }
+
 }

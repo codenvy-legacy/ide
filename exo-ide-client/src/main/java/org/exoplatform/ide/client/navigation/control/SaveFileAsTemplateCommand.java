@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -46,6 +44,9 @@ public class SaveFileAsTemplateCommand extends SimpleControl implements IDEContr
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsTemplateControl();
 
+   /**
+    * 
+    */
    public SaveFileAsTemplateCommand()
    {
       super(ID);
@@ -56,14 +57,19 @@ public class SaveFileAsTemplateCommand extends SimpleControl implements IDEContr
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
-   
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
@@ -75,6 +81,10 @@ public class SaveFileAsTemplateCommand extends SimpleControl implements IDEContr
       setEnabled(true);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getVfsInfo() != null)

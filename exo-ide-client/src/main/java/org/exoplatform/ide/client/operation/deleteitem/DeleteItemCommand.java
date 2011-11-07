@@ -28,8 +28,6 @@ import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -49,6 +47,9 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
 
    private Item selectedItem;
 
+   /**
+    * 
+    */
    public DeleteItemCommand()
    {
       super(ID);
@@ -59,19 +60,22 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(ItemDeletedEvent.TYPE, this);
-      super.initialize(eventBus);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ItemDeletedEvent.TYPE, this);
+      super.initialize();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-
       if (!isItemsInSameFolder(event.getSelectedItems()))
       {
          setEnabled(false);
@@ -89,13 +93,19 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent)
+    */
+   @Override
    public void onItemDeleted(ItemDeletedEvent event)
    {
       selectedItem = null;
       updateEnabling();
    }
 
-
+   /**
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
+    */
    @Override
    protected void updateEnabling()
    {
@@ -112,7 +122,6 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
       }
 
       setEnabled(true);
-
    }
 
 }

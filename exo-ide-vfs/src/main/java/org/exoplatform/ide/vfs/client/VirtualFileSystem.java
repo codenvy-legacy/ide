@@ -146,14 +146,6 @@ public class VirtualFileSystem
     */
    public void getChildren(Folder folder, AsyncRequestCallback<List<Item>> callback) throws RequestException
    {
-      //      ItemList<Item> items = new ItemList<Item>();
-      //      folder.setChildren(items);
-
-      //callback.setResult(items);
-      //ChildrenUnmarshaller unmarshaller = new ChildrenUnmarshaller(callback.getResult());
-
-      //callback.setEventBus(eventBus);
-      //callback.setPayload(unmarshaller);
       String param = "propertyFilter=" + PropertyFilter.ALL;
       AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param).send(
          callback);

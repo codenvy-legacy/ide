@@ -24,11 +24,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticClientBundle;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for deploying(creating) new JCR node type.
@@ -54,7 +53,8 @@ public class DeployNodeTypeControl extends SimpleControl implements IDEControl, 
       super(ID);
       setTitle(ChromatticExtension.LOCALIZATION_CONSTANT.deployNodeTypeControlTitle());
       setPrompt(ChromatticExtension.LOCALIZATION_CONSTANT.deployNodeTypeControlTitle());
-      setImages(ChromatticClientBundle.INSTANCE.deployNodeTypeControl(), ChromatticClientBundle.INSTANCE.deployNodeTypeControlDisabled());
+      setImages(ChromatticClientBundle.INSTANCE.deployNodeTypeControl(),
+         ChromatticClientBundle.INSTANCE.deployNodeTypeControlDisabled());
       setEvent(new DeployNodeTypeEvent());
    }
 
@@ -79,11 +79,11 @@ public class DeployNodeTypeControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 }

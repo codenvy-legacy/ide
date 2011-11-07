@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.edit.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -45,6 +43,9 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.formatControl();
 
+   /**
+    * 
+    */
    public FormatSourceControl()
    {
       super(ID);
@@ -53,15 +54,20 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
       setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
       setEvent(new EditorFormatTextEvent());
    }
-   
+
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       //TODO versions

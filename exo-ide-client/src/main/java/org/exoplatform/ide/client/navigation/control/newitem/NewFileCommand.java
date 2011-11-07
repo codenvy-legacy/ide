@@ -35,7 +35,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.resources.client.ImageResource;
 
 /* 
@@ -48,9 +47,16 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
 {
 
    private VirtualFileSystemInfo vfsInfo;
-   
+
    private List<Item> selectedItems = new ArrayList<Item>();
 
+   /**
+    * @param id
+    * @param title
+    * @param prompt
+    * @param icon
+    * @param event
+    */
    public NewFileCommand(String id, String title, String prompt, String icon, GwtEvent<?> event)
    {
       super(id);
@@ -61,6 +67,14 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
       setEnabled(true);
    }
 
+   /**
+    * @param id
+    * @param title
+    * @param prompt
+    * @param normalIcon
+    * @param disabledIcon
+    * @param event
+    */
    public NewFileCommand(String id, String title, String prompt, ImageResource normalIcon, ImageResource disabledIcon,
       GwtEvent<?> event)
    {
@@ -73,9 +87,10 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -85,39 +100,30 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
       updateEnabling();
    }
 
+   /**
+    * 
+    */
    protected void updateEnabling()
    {
-      if (vfsInfo == null) {
+      if (vfsInfo == null)
+      {
          setEnabled(false);
          return;
       }
-      
-      if (selectedItems.size() == 0) {
+
+      if (selectedItems.size() == 0)
+      {
          setEnabled(false);
          return;
       }
-      
+
       setEnabled(true);
-      
-//      if (entryPoint == null)
-//      {
-//         setVisible(false);
-//         setEnabled(false);
-//         return;
-//      }
-//
-//      setVisible(true);
-//
-//      if (browserSelected)
-//      {
-//         setEnabled(true);
-//      }
-//      else
-//      {
-//         setEnabled(false);
-//      }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
@@ -130,13 +136,16 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-//      if (event.getView() instanceof NavigatorPresenter.Display)
-//      {
-//         browserSelected = event.getView().isViewVisible();
-//         updateEnabling();
-//      }
+      //      if (event.getView() instanceof NavigatorPresenter.Display)
+      //      {
+      //         browserSelected = event.getView().isViewVisible();
+      //         updateEnabling();
+      //      }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {

@@ -24,8 +24,6 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -47,10 +45,10 @@ public class PreviewApplicationControl extends SimpleControl implements IDEContr
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       setEnabled(true);

@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -42,9 +43,6 @@ import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -63,6 +61,9 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
 
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
+   /**
+    * 
+    */
    public SaveAllFilesCommand()
    {
       super(ID);
@@ -73,17 +74,18 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
-      eventBus.addHandler(FileContentSavedEvent.TYPE, this);
-      eventBus.addHandler(FileSavedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
+      IDE.addHandler(FileContentSavedEvent.TYPE, this);
+      IDE.addHandler(FileSavedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    private void checkItemEnabling()

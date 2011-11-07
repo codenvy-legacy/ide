@@ -32,8 +32,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHa
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -51,6 +49,9 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
 
    private Item selectedItem;
 
+   /**
+    * 
+    */
    public GetItemURLControl()
    {
       super(ID);
@@ -61,15 +62,20 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -81,6 +87,9 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
       updateEnabling();
    }
 
+   /**
+    * 
+    */
    private void updateEnabling()
    {
       if (selectedItem == null)
@@ -93,6 +102,10 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getVfsInfo() != null)
@@ -103,7 +116,6 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
       {
          setVisible(false);
       }
-
    }
 
    /**
@@ -117,4 +129,5 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
          updateEnabling();
       }
    }
+
 }

@@ -31,8 +31,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.api.EditorCapability;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -53,6 +51,9 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
 
    private boolean outlineViewOpened = false;
 
+   /**
+    * 
+    */
    public ShowOutlineControl()
    {
       super(ID);
@@ -65,18 +66,20 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
    }
 
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null || event.getEditor() == null)
@@ -91,13 +94,14 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       {
          update();
       }
-
    }
 
+   /**
+    * 
+    */
    private void update()
    {
       setSelected(outlineViewOpened);
-
       if (outlineViewOpened)
       {
          setPrompt(PROMPT_HIDE);
@@ -110,6 +114,9 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
+    */
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
@@ -120,6 +127,9 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {

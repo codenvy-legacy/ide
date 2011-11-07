@@ -27,8 +27,6 @@ import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResult
 import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedHandler;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -43,6 +41,9 @@ public class SelectWorkspaceControl extends SimpleControl implements IDEControl,
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.selectWorkspaceControl();
 
+   /**
+    * 
+    */
    public SelectWorkspaceControl()
    {
       super(ID);
@@ -58,11 +59,12 @@ public class SelectWorkspaceControl extends SimpleControl implements IDEControl,
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(IsDiscoverableResultReceivedEvent.TYPE, this);
+      IDE.addHandler(IsDiscoverableResultReceivedEvent.TYPE, this);
    }
 
    /**

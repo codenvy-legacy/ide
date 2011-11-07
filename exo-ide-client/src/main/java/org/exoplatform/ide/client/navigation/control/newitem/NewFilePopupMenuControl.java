@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.control.newitem;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -39,6 +37,9 @@ public class NewFilePopupMenuControl extends PopupMenuControl implements IDECont
 
    public static final String ID = "File/New *";
 
+   /**
+    * 
+    */
    public NewFilePopupMenuControl()
    {
       super(ID);
@@ -49,13 +50,18 @@ public class NewFilePopupMenuControl extends PopupMenuControl implements IDECont
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
-   
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getVfsInfo() != null)
@@ -67,4 +73,5 @@ public class NewFilePopupMenuControl extends PopupMenuControl implements IDECont
          setVisible(false);
       }
    }
+
 }

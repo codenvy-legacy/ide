@@ -29,8 +29,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -50,6 +48,9 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerControlPrompt();
 
+   /**
+    * 
+    */
    public ShowProjectExplorerControl()
    {
       super(ID);
@@ -59,8 +60,11 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
       setEvent(new ShowProjectExplorerEvent());
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -69,6 +73,9 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
       setVisible(true);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -79,6 +86,9 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
+    */
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {

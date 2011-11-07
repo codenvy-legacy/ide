@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
-
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.component.TextButton.TextAlignment;
 import org.exoplatform.ide.client.edit.event.GoToLineEvent;
@@ -34,6 +31,8 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
+import com.google.gwt.user.client.Timer;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -45,12 +44,13 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
 {
    public static final String ID = "__editor_cursor_position";
 
+   /**
+    * 
+    */
    public EditorCursorPositionControl()
    {
       super(ID);
 
-      setVisible(true);
-      setEnabled(true);
       setSize(70);
       setFireEventOnSingleClick(true);
       setText("&nbsp;");
@@ -61,12 +61,19 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
+      setVisible(true);
+      setEnabled(true);
    }
 
+   /**
+    * @param row
+    * @param column
+    */
    private void setCursorPosition(int row, int column)
    {
       setText("<nobr>" + row + " : " + column + "</nobr>");
@@ -75,6 +82,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
    /**
     * @see org.exoplatform.gwtframework.editor.event.EditorActivityHandler#onEditorActivity(org.exoplatform.gwtframework.editor.event.EditorActivityEvent)
     */
+   @Override
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
       if (event.getRow() > 0 && event.getColumn() > 0)
@@ -104,6 +112,9 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
 
    };
 
+   /**
+    * 
+    */
    private void updateCursorPosition()
    {
       try
@@ -136,8 +147,9 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
    }
 
    /**
-    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       file = event.getFile();

@@ -30,8 +30,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -51,6 +49,9 @@ public class ShowPropertiesControl extends SimpleControl implements IDEControl, 
 
    public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.showPropertiesHidePromptControl();
 
+   /**
+    * 
+    */
    public ShowPropertiesControl()
    {
       super(ID);
@@ -61,15 +62,20 @@ public class ShowPropertiesControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() == null)
@@ -91,6 +97,9 @@ public class ShowPropertiesControl extends SimpleControl implements IDEControl, 
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -102,6 +111,9 @@ public class ShowPropertiesControl extends SimpleControl implements IDEControl, 
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
+    */
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {

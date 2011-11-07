@@ -25,8 +25,6 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -41,22 +39,26 @@ public class CustomizeHotKeysControl extends SimpleControl implements IDEControl
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.customizeHotkeysControl();
 
+   /**
+    * 
+    */
    public CustomizeHotKeysControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setEnabled(true);
-      setVisible(true);
       setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
       setEvent(new CustomizeHotKeysEvent());
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
+      setEnabled(true);
+      setVisible(true);
    }
 
 }

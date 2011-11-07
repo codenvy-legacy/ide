@@ -71,10 +71,8 @@ public class IDEServiceApplication extends Application
       
       objects.add(new RemoteFileServiceExceptionMapper());
       
-      classes.add(RemoteFileService.class);
-      
-      objects.add(RequestContextResolver.class);
-      
+      classes.add(RemoteFileService.class);      
+      classes.add(RequestContextResolver.class);
       classes.add(RestConversationState.class);
       classes.add(UploadService.class);
    }

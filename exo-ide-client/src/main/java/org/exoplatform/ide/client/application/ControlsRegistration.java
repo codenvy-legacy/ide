@@ -55,6 +55,9 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
 
    private List<ControlsFormatter> controlsFormatters = new ArrayList<ControlsFormatter>();
 
+   /**
+    * 
+    */
    public ControlsRegistration()
    {
       toolbarDefaultControls.add("");
@@ -63,21 +66,33 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       IDE.addHandler(AddControlsFormatterEvent.TYPE, this);
    }
 
+   /**
+    * @return
+    */
    public List<Control> getRegisteredControls()
    {
       return registeredControls;
    }
 
+   /**
+    * @return
+    */
    public List<String> getToolbarDefaultControls()
    {
       return toolbarDefaultControls;
    }
 
+   /**
+    * @return
+    */
    public List<String> getStatusBarControls()
    {
       return statusBarControls;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.RegisterControlHandler#onRegisterControl(org.exoplatform.ide.client.framework.control.RegisterControlEvent)
+    */
    public void onRegisterControl(RegisterControlEvent event)
    {
       if (!(event.getControl() instanceof IDEControl))
@@ -99,6 +114,11 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       }
    }
 
+   /**
+    * @param control
+    * @param docking
+    * @param rightDocking
+    */
    public void addControl(Control<?> control, Docking docking, boolean rightDocking)
    {
       if (!(control instanceof IDEControl))
@@ -123,6 +143,11 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       }
    }
 
+   /**
+    * @param control
+    * @param controls
+    * @param rightDocking
+    */
    protected void addControl(Control control, List<String> controls, boolean rightDocking)
    {
       if (rightDocking)
@@ -151,6 +176,9 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       }
    }
 
+   /**
+    * @param userRoles
+    */
    public void initControls(List<String> userRoles)
    {
       ClassAnnotationMap annotationMap = GWT.create(ClassAnnotationMap.class);
@@ -165,11 +193,17 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       {
          if (control instanceof IDEControl)
          {
-            ((IDEControl)control).initialize(IDE.eventBus());
+            ((IDEControl)control).initialize();
          }
       }
    }
 
+   /**
+    * @param controls
+    * @param userRoles
+    * @param annotationMap
+    * @return
+    */
    private List<Control> getAllowedControlsForUser(List<Control> controls, List<String> userRoles,
       ClassAnnotationMap annotationMap)
    {
@@ -186,6 +220,11 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       return allowedControls;
    }
 
+   /**
+    * @param userRoles
+    * @param rolesAllowed
+    * @return
+    */
    private boolean checkControlAllowedForUser(List<String> userRoles, List<String> rolesAllowed)
    {
       for (String role : rolesAllowed)
@@ -198,6 +237,9 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       return false;
    }
 
+   /**
+    * @param allowedControls
+    */
    private void removeNotAllowedControls(List<Control> allowedControls)
    {
       List<String> allowedIds = new ArrayList<String>();
@@ -220,11 +262,17 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       controlsFormatters.add(event.getControlsFormatter());
    }
 
+   /**
+    * @param formatter
+    */
    public void addControlsFormatter(ControlsFormatter formatter)
    {
       controlsFormatters.add(formatter);
    }
 
+   /**
+    * 
+    */
    public void formatControls()
    {
       for (ControlsFormatter formatter : controlsFormatters)

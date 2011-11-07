@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.operation.openbypath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -25,8 +28,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS.
@@ -34,15 +39,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class OpenFileByPathCommand extends SimpleControl implements IDEControl, VfsChangedHandler
+public class OpenFileByPathCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler
 {
 
    private final static String ID = "File/Open File By Path...";
 
    private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openFileByPathControl();
 
-   private boolean browserPanelSelected = true;
+   private List<Item> selectedItems = new ArrayList<Item>();
 
+   private VirtualFileSystemInfo vfsInfo;
+
+   /**
+    * 
+    */
    public OpenFileByPathCommand()
    {
       super(ID);
@@ -52,34 +62,42 @@ public class OpenFileByPathCommand extends SimpleControl implements IDEControl, 
       setEvent(new OpenFileByPathEvent());
    }
 
-   public void initialize(HandlerManager eventBus)
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
-   }   
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
-
+      vfsInfo = event.getVfsInfo();
       updateEnabling();
    }
-   
+
+   /**
+    * 
+    */
    private void updateEnabling()
    {
-      if (browserPanelSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }   
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      updateEnabling();
+   }
+
 }

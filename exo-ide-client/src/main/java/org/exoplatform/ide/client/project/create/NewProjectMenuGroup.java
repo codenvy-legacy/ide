@@ -27,8 +27,6 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -38,13 +36,16 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 @RolesAllowed({"administrators", "developers"})
-public class NewProjectMenuGroup  extends SimpleControl implements IDEControl, VfsChangedHandler
+public class NewProjectMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
    public static final String ID = "Project/New";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
 
+   /**
+    * 
+    */
    public NewProjectMenuGroup()
    {
       super(ID);
@@ -53,15 +54,20 @@ public class NewProjectMenuGroup  extends SimpleControl implements IDEControl, V
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
       setEnabled(true);
    }
-   
+
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getVfsInfo() != null)
@@ -72,6 +78,6 @@ public class NewProjectMenuGroup  extends SimpleControl implements IDEControl, V
       {
          setVisible(false);
       }
-   }   
+   }
 
 }

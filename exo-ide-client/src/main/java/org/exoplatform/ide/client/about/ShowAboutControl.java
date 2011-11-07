@@ -24,8 +24,6 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -40,6 +38,9 @@ public class ShowAboutControl extends SimpleControl implements IDEControl
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.aboutControl();
 
+   /**
+    * 
+    */
    public ShowAboutControl()
    {
       super(ID);
@@ -52,9 +53,10 @@ public class ShowAboutControl extends SimpleControl implements IDEControl
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
    }
 

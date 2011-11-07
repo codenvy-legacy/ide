@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.groovy.client.controls;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.event.SetAutoloadEvent;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
@@ -67,14 +66,15 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ItemPropertiesSavedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ItemPropertiesSavedEvent.TYPE, this);
    }
-   
+
    /**
     * Handling event Editor active file changed
     * 
@@ -114,7 +114,7 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
    private void checkEnablingFor(FileModel file)
    {
       enableAutoload();
-      
+
       String autoloadPropertyValue = GroovyPropertyUtil.getAutoloadPropertyValue(file);
       boolean isSetAutoload = false;
       if (autoloadPropertyValue != null)

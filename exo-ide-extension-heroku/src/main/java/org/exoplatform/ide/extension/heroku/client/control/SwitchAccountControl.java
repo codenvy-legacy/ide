@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
@@ -49,8 +47,7 @@ public class SwitchAccountControl extends SimpleControl implements IDEControl
    * Control's prompt, when user hovers the mouse on it.
    */
    public static final String SWITCH_PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchPrompt();
-   
-   
+
    /**
     * @param id
     */
@@ -64,10 +61,10 @@ public class SwitchAccountControl extends SimpleControl implements IDEControl
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       setEnabled(true);

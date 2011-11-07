@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.groovy.client.controls;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxEvent;
 
@@ -50,14 +49,14 @@ public class DeployGroovySandboxCommand extends SimpleControl implements IDECont
       //setImages(GroovyPluginImageBundle.INSTANCE.deployGroovy(), GroovyPluginImageBundle.INSTANCE.deployGroovyDisabled());
       setEvent(new DeployGroovyScriptSandboxEvent());
    }
-   
+
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

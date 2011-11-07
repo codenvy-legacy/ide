@@ -49,9 +49,9 @@ public class NewItemControl extends SimpleControl implements IDEControl
    }
    
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
    }
 

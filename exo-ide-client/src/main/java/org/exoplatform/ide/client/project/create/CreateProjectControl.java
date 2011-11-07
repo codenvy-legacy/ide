@@ -30,8 +30,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -51,6 +49,9 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
 
    private VirtualFileSystemInfo vfsInfo;
 
+   /**
+    * 
+    */
    public CreateProjectControl()
    {
       super(ID);
@@ -61,13 +62,19 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
       setGroup(0);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       update();
    }
 
+   /**
+    * 
+    */
    private void update()
    {
       if (vfsInfo == null)
@@ -81,6 +88,9 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
       setEnabled(true);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {

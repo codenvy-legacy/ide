@@ -27,8 +27,6 @@ import org.exoplatform.ide.client.versioning.event.ShowPreviousVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 29, 2010 $
@@ -46,8 +44,7 @@ public class ViewPreviousVersionControl extends VersionControl implements ShowVe
    private Version version;
 
    /**
-    * @param id
-    * @param eventBus
+    * 
     */
    public ViewPreviousVersionControl()
    {
@@ -59,18 +56,19 @@ public class ViewPreviousVersionControl extends VersionControl implements ShowVe
    }
 
    /**
-    * @see org.exoplatform.ide.client.versioning.control.VersionControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.versioning.control.VersionControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
-      super.initialize(eventBus);
+      IDE.addHandler(ShowVersionContentEvent.TYPE, this);
+      super.initialize();
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler#onShowVersionContent(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
     */
+   @Override
    public void onShowVersionContent(ShowVersionContentEvent event)
    {
       version = event.getVersion();
@@ -79,4 +77,5 @@ public class ViewPreviousVersionControl extends VersionControl implements ShowVe
             .getProperty(ItemProperty.PREDECESSOR_SET).getChildProperties().size() > 0);
       setEnabled(isEnabled);
    }
+
 }

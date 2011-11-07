@@ -27,8 +27,6 @@ import org.exoplatform.ide.client.versioning.event.RestoreToVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 29, 2010 $
@@ -45,8 +43,7 @@ public class RestoreToVersionControl extends VersionControl implements ShowVersi
    private Version version;
 
    /**
-    * @param id
-    * @param eventBus
+    * 
     */
    public RestoreToVersionControl()
    {
@@ -58,18 +55,19 @@ public class RestoreToVersionControl extends VersionControl implements ShowVersi
    }
    
    /**
-    * @see org.exoplatform.ide.client.versioning.control.VersionControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.versioning.control.VersionControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ShowVersionContentEvent.TYPE, this);
-      super.initialize(eventBus);
+      IDE.addHandler(ShowVersionContentEvent.TYPE, this);
+      super.initialize();
    }
 
    /**
     * @see org.exoplatform.ide.client.versioning.event.ShowVersionContentHandler#onShowVersionContent(org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent)
     */
+   @Override
    public void onShowVersionContent(ShowVersionContentEvent event)
    {
       version = event.getVersion();

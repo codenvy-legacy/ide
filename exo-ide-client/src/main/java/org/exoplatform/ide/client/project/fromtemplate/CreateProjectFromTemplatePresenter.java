@@ -27,8 +27,9 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -53,6 +54,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -75,7 +77,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 
 public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemplateHandler, ItemsSelectedHandler,
-   ViewClosedHandler, TemplatesMigratedHandler
+   ViewClosedHandler, TemplatesMigratedHandler, VfsChangedHandler
 {
 
    /**
@@ -146,7 +148,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    }
 
-   private FolderModel baseFolder;
+   //private FolderModel baseFolder;
 
    protected Display display;
 
@@ -159,6 +161,8 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    private int itemsCreated = 0;
 
    private ProjectModel projectFolder;
+   
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * The list of templates to display.
@@ -184,6 +188,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       IDE.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -282,55 +287,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
        * Refresh template list grid
        */
       refreshTemplateList();
-   }
-
-   /**
-    * @param templates - list of templates (folder and file), from which folders and files will be created
-    * @param parent - parent folder
-    */
-   private void build(List<Template> templates, ProjectModel parent)
-   {
-      if (templates == null || templates.size() == 0)
-      {
-         return;
-      }
-
-//      for (Template template : templates)
-//      {
-//         if (template instanceof FolderTemplate)
-//         {
-//            FolderTemplate projectTemplate = (FolderTemplate)template;
-//
-//            FolderModel folder = new FolderModel(projectTemplate.getName(), parent);
-//            folderList.add(folder);
-//            build(projectTemplate.getChildren(), folder);
-//         }
-//         else if (template instanceof FileTemplate)
-//         {
-//            FileTemplate fileTemplate = (FileTemplate)template;
-//            FileModel file = createFileFromTemplate(fileTemplate, parent);
-//            if (file != null)
-//            {
-//               fileList.add(file);
-//            }
-//         }
-//      }
-   }
-
-   private FileModel createFileFromTemplate(FileTemplate fileTemplate, FolderModel parent)
-   {
-      for (FileTemplate fTemplate : fileTemplates)
-      {
-         if (fTemplate.getName().equals(fileTemplate.getName()))
-         {
-            String contentType = fTemplate.getMimeType();
-
-            FileModel newFile = new FileModel(fileTemplate.getFileName(), contentType, fTemplate.getContent(), parent);
-            return newFile;
-         }
-      }
-
-      return null;
    }
 
    private void createFolder(final FolderModel folder)
@@ -446,19 +402,16 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       String projectName = display.getNameField().getValue();
 
       ProjectTemplate selectedTemplate = selectedTemplates.get(0);
-
-      //      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
-      //      selectedTemplate.getChildren().add(classPathTemplate);
-
       if (selectedTemplate.isDefault())
       {
          final IDELoader loader = new IDELoader();
          try
          {
+            String parentId = vfsInfo.getRoot().getId();
+            
             loader.show();
-            TemplateService.getInstance().createProjectFromTemplate(VirtualFileSystem.getInstance().getInfo().getId(), baseFolder.getId(), projectName, selectedTemplate, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
+            TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName, selectedTemplate, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
             {
-               
                @Override
                protected void onSuccess(ProjectModel result)
                {
@@ -499,13 +452,20 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    private void finishProjectCreation()
    {
       IDE.getInstance().closeView(display.asView().getId());
-      IDE.fireEvent(new RefreshBrowserEvent(baseFolder, projectFolder));
       IDE.fireEvent(new ProjectCreatedEvent(projectFolder));
    }
 
    @Override
    public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
    {
+      if (vfsInfo == null) {
+         return;
+      }
+      
+      if (display != null) {
+         return;
+      }
+      
       if (isTemplatesMigrated)
       {
          createProjectFromTemplate();
@@ -525,31 +485,9 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    private void createProjectFromTemplate()
    {
-      if (display == null)
-      {
-         if (selectedItems.size() > 0)
-         {
-            Item item = selectedItems.get(0);
-
-            if(item instanceof ProjectModel)
-            {
-               //TODO log error
-               return;
-            }
-            if (item instanceof FileModel)
-            {
-               baseFolder = ((FileModel)item).getParent();
-            }
-            else 
-            {
-               baseFolder = (FolderModel)item;
-            }
-         }
-
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
    }
 
    private void onFolderCreated(FolderModel folder)
@@ -610,15 +548,12 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
                TemplateService.getInstance().getFileTemplateList(
                   new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<FileTemplateList>(IDE.eventBus())
                   {
-
                      @Override
                      protected void onSuccess(FileTemplateList result)
                      {
                         fileTemplates = result.getFileTemplates();
-
                      }
                   });
-
             }
          });
    }
@@ -711,6 +646,12 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    public void onTemplatesMigrated(TemplatesMigratedEvent event)
    {
       isTemplatesMigrated = true;
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
    }
 
 }

@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.client.progress;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.progress.event.ShowProgressEvent;
 
@@ -31,6 +30,7 @@ import org.exoplatform.ide.client.progress.event.ShowProgressEvent;
  * @version $Id:  Sep 20, 2011 evgen $
  *
  */
+@RolesAllowed({"administrators", "developers"})
 public class ShowProgressControl extends SimpleControl implements IDEControl
 {
 
@@ -44,16 +44,16 @@ public class ShowProgressControl extends SimpleControl implements IDEControl
       setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.progressControlPrompt());
       setImages(IDEImageBundle.INSTANCE.progresImage(), IDEImageBundle.INSTANCE.progresImage());
       setEvent(new ShowProgressEvent());
-      setVisible(true);
-      setEnabled(true);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
+      setVisible(true);
+      setEnabled(true);
    }
 
 }

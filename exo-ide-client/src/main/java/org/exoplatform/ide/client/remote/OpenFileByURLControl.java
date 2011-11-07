@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.remote;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -25,9 +28,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for opening file by URL.
@@ -39,10 +43,12 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 @RolesAllowed({"administrators", "developers"})
-public class OpenFileByURLControl extends SimpleControl implements IDEControl, VfsChangedHandler
+public class OpenFileByURLControl extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler
 {
 
    private VirtualFileSystemInfo vfsInfo;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
     * Creates a new instance of this control.
@@ -57,33 +63,44 @@ public class OpenFileByURLControl extends SimpleControl implements IDEControl, V
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      update();
-   }
-
-   private void update()
-   {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       setVisible(true);
-      setEnabled(true);
+
+      updateEnabling();
    }
 
+   /**
+    * 
+    */
+   private void updateEnabling()
+   {
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      update();
+      updateEnabling();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      updateEnabling();
    }
 
 }

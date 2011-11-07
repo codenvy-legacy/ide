@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -38,15 +36,18 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
 {
 
    private static final String ID = "Edit/Cut Item(s)";
-   
+
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.cutItemsTitleControl();
-   
+
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.cutItemsPromptControl();
 
    private boolean cutReady = false;
 
    private Item selectedItem;
 
+   /**
+    * 
+    */
    public CutItemsCommand()
    {
       super(ID);
@@ -58,15 +59,18 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize(eventBus);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
+    */
    @Override
    protected void updateEnabling()
    {
@@ -92,6 +96,10 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 0)

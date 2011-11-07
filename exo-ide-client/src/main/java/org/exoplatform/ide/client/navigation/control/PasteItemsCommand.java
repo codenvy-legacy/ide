@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -48,6 +46,9 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
 
    private boolean pastePrepared = false;
 
+   /**
+    * 
+    */
    public PasteItemsCommand()
    {
       super(ID);
@@ -58,43 +59,56 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
-      eventBus.addHandler(ItemsToPasteSelectedEvent.TYPE, this);
-      eventBus.addHandler(PasteItemsCompleteEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize(eventBus);
+      IDE.addHandler(ItemsToPasteSelectedEvent.TYPE, this);
+      IDE.addHandler(PasteItemsCompleteEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      super.initialize();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedHandler#onItemsToPasteSelected(org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedEvent)
+    */
+   @Override
    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)
    {
       pastePrepared = true;
       setEnabled(true);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.navigation.event.PasteItemsCompleteHandler#onPasteItemsComlete(org.exoplatform.ide.client.navigation.event.PasteItemsCompleteEvent)
+    */
+   @Override
    public void onPasteItemsComlete(PasteItemsCompleteEvent event)
    {
       setEnabled(false);
       pastePrepared = false;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() == 1)
       {
-
          updateEnabling();
       }
       else
       {
          setEnabled(false);
       }
-
    }
 
+   /**
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
+    */
    @Override
    protected void updateEnabling()
    {
@@ -108,7 +122,6 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
          {
             setEnabled(false);
          }
-
       }
       else
       {

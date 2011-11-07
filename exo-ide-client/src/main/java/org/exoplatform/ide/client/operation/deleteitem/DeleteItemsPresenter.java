@@ -142,12 +142,14 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    public void onDeleteItem(DeleteItemEvent event)
    {
-      if (display == null)
+      if (display != null)
       {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView((View)d);
-         bindDisplay(d);
+         return;
       }
+      
+      Display d = GWT.create(Display.class);
+      IDE.getInstance().openView((View)d);
+      bindDisplay(d);      
    }
 
    public void bindDisplay(Display d)
@@ -372,8 +374,11 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          folder = ((ItemContext)lastDeletedItem).getParent();
       }
-      IDE.fireEvent(new RefreshBrowserEvent(folder));
-      IDE.fireEvent(new SelectItemEvent(folder.getId()));
+      
+      if (folder != null) {
+         IDE.fireEvent(new RefreshBrowserEvent(folder));
+         IDE.fireEvent(new SelectItemEvent(folder.getId()));         
+      }      
    }
 
    @Override

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.operation.openlocalfile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -27,11 +30,8 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.navigator.NavigatorPresenter;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS.
@@ -39,16 +39,20 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class OpenLocalFileCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewVisibilityChangedHandler, VfsChangedHandler
+public class OpenLocalFileCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler
 {
 
    private final static String ID = "File/Open Local File...";
 
    private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openLocalFileControl();
 
-   private boolean browserPanelSelected = true;
+   private VirtualFileSystemInfo vfsInfo;
 
+   private List<Item> selectedItems = new ArrayList<Item>();
+
+   /**
+    * 
+    */
    public OpenLocalFileCommand()
    {
       super(ID);
@@ -59,56 +63,43 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, I
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      setVisible(true);
+      setEnabled(false);
    }
 
+   /**
+    * 
+    */
    private void updateEnabling()
    {
-      if (browserPanelSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
    }
 
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-   }
-
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
-
+      vfsInfo = event.getVfsInfo();
       updateEnabling();
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
     */
    @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getView() instanceof NavigatorPresenter.Display)
-      {
-         browserPanelSelected = event.getView().isViewVisible();
-         updateEnabling();
-      }
+      selectedItems = event.getSelectedItems();
+      updateEnabling();
    }
 
 }

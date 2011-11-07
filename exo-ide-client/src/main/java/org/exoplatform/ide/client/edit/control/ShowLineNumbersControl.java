@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.edit.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -71,13 +69,14 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    /**
@@ -118,6 +117,7 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeEditor = event.getEditor();
@@ -128,6 +128,7 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent)
     */
+   @Override
    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
    {
       if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null)

@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -46,6 +45,9 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
 
    private String rootId;
 
+   /**
+    * 
+    */
    public NavigatorStatusControl()
    {
       super(ID);
@@ -56,14 +58,19 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
    
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (rootId == null)
@@ -110,6 +117,11 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       //setVisible(true);
    }
 
+   /**
+    * @param originalStatusMessage
+    * @param icon
+    * @return
+    */
    private String tuneMessage(String originalStatusMessage, String icon)
    {
       String table =
@@ -124,6 +136,10 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       return table;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       rootId = (event.getVfsInfo() != null &&  event.getVfsInfo().getRoot() != null) ? event.getVfsInfo().getRoot().getId() : null;

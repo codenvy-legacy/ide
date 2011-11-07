@@ -63,8 +63,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
    private FileModel activeFile;
 
    /**
-    * @param id
-    * @param eventBus
+    * 
     */
    public ViewVersionHistoryControl()
    {
@@ -78,19 +77,21 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(FileSavedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(FileSavedEvent.TYPE, this);
    }
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
+   @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
@@ -104,6 +105,9 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
       setEnabled(checkIsVersioned(activeFile));
    }
 
+   /**
+    * 
+    */
    private void update()
    {
       setSelected(versionPanelOpened);
@@ -120,6 +124,10 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
+    */
+   @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
       if (event.getView() instanceof VersionContentPresenter.Display)
@@ -133,6 +141,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.event.ViewClosedHandler#onPanelClosed(org.exoplatform.ide.client.framework.ui.api.event.event.ViewClosedEvent)
     */
+   @Override
    public void onViewClosed(ViewClosedEvent event)
    {
       if (event.getView() instanceof VersionContentPresenter.Display)
@@ -146,6 +155,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
    /**
     * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
     */
+   @Override
    public void onFileSaved(FileSavedEvent event)
    {
       if (activeFile != null && event.getFile().equals(activeFile))

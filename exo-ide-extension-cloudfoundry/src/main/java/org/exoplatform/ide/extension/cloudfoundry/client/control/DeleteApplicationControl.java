@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
@@ -35,13 +33,16 @@ import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicatio
  */
 public class DeleteApplicationControl extends SimpleControl implements IDEControl
 {
-   
+
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId();
-   
+
    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle();
-   
+
    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt();
-   
+
+   /**
+    * 
+    */
    public DeleteApplicationControl()
    {
       super(ID);
@@ -53,10 +54,10 @@ public class DeleteApplicationControl extends SimpleControl implements IDEContro
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
       setVisible(true);
       setEnabled(true);

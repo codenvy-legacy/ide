@@ -32,8 +32,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEv
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -55,6 +53,9 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
 
    private boolean oneItemSelected = true;
 
+   /**
+    * 
+    */
    public RefreshBrowserControl()
    {
       super(ID);
@@ -65,18 +66,21 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
-   public void initialize(HandlerManager eventBus)
+   @Override
+   public void initialize()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
+   /**
+    * 
+    */
    private void updateEnabling()
    {
-
       if (browserPanelSelected && oneItemSelected)
       {
          setEnabled(true);
@@ -85,9 +89,12 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       {
          setEnabled(false);
       }
-
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       if (event.getSelectedItems().size() != 1)
@@ -102,6 +109,10 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getVfsInfo() != null)
@@ -126,5 +137,5 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
          updateEnabling();
       }
    }
-   
+
 }

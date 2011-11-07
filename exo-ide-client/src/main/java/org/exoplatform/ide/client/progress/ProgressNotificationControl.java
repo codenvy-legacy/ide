@@ -18,48 +18,52 @@
  */
 package org.exoplatform.ide.client.progress;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.HTML;
-
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.job.Job;
 import org.exoplatform.ide.client.progress.event.ShowProgressEvent;
+
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.HTML;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Sep 16, 2011 evgen $
  *
  */
+@RolesAllowed({"administrators", "developers"})
 public class ProgressNotificationControl extends StatusTextControl implements IDEControl
 {
 
    public static final String ID = "__request-notification-control";
 
    /**
-    * @param id
+    * 
     */
    public ProgressNotificationControl()
    {
       super(ID);
-      setEnabled(true);
-      setVisible(false);
       setText("&nbsp;");
       setSize(300);
       setEvent(new ShowProgressEvent());
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   public void initialize(HandlerManager eventBus)
+   public void initialize()
    {
+      setEnabled(true);
+      setVisible(false);
    }
 
+   /**
+    * @param job
+    */
    public void updateState(Job job)
    {
       setVisible(true);
