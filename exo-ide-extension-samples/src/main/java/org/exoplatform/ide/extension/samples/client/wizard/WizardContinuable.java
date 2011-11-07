@@ -23,6 +23,9 @@ import org.exoplatform.ide.extension.samples.client.ProjectProperties;
 /**
  * Interface for wizard step.
  * <p/>
+ * You can use this interface,
+ * if you want to create multi-step wizard.
+ * <p/>
  * Used to navigate between wizard steps:
  * what to do on current step.
  * 

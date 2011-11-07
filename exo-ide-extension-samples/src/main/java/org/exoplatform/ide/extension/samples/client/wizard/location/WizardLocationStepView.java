@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.location.SelectLocationView;
+import org.exoplatform.ide.extension.samples.client.samples.location.SelectLocationView;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -128,7 +128,7 @@ public class WizardLocationStepView extends ViewImpl implements WizardLocationSt
    }
 
    /**
-    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getNextButton()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getFinishButton()
     */
    @Override
    public HasClickHandlers getNextButton()

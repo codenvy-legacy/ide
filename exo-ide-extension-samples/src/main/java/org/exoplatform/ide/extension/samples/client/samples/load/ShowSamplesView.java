@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.load;
+package org.exoplatform.ide.extension.samples.client.samples.load;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -77,7 +77,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getNextButton()
+    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getFinishButton()
     */
    @Override
    public HasClickHandlers getNextButton()

@@ -1,0 +1,109 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+   xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:n="urn:import:org.exoplatform.ide.client.framework.ui">
+
+   <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .label {
+      margin-right: 5px;
+      cursor: default;
+      font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      font-size: 11px;
+      font-style: normal;
+      font-weight: normal;
+      float: left;
+      }
+
+      .buttons {
+      display: block;
+      margin-left: 10px;
+      margin-right: 10px;
+      }
+
+      .floatRight {
+      float: right;
+      }
+
+      .floatLeft {
+      float:
+      left;
+      }
+
+      .space {
+      margin: 10px;
+      }
+      
+      .table
+      {
+      width:100%;
+      height:100%;
+      border-collapse: collapse;
+      }
+      
+
+      .bottomBox {
+      display: block;
+      margin:
+      0 8px;
+      }
+
+      .left-float {
+      float: left;
+      }
+
+      .right {
+      position: absolute;
+      right: 0;
+      }
+
+      .middle {
+      position: absolute;
+      right: 100px;
+      }
+      
+      .selectItemBox {
+      position: absolute;
+      right: 1px;
+      left: 100px;
+      }
+
+   </ui:style>
+
+   <g:LayoutPanel>
+      <g:layer>
+         <g:FlowPanel stylePrimaryName="{resource.css.topBox}">
+            <g:Label text="{locale.samplesSelectTypeTitle}" styleName="{resource.css.labelTitle}"></g:Label>
+            <g:Label text="{locale.samplesSelectTypeText}" styleName="{resource.css.labelDescription}"></g:Label>
+         </g:FlowPanel>
+      </g:layer>
+      
+      <g:layer top="80px" height="50px">
+         <g:FlowPanel width="auto" styleName="{resource.css.innerBox}">
+            <g:Label text="{locale.samplesProjectTypeLable}" width="90px" styleName="{resource.css.leftFloat}"></g:Label>
+            <g:FlowPanel width="10px" styleName="{resource.css.leftFloat}"></g:FlowPanel>
+            <g:SimplePanel styleName="{style.selectItemBox}">
+               <f:SelectItem ui:field="projectTypeField" width="100%" height="22px"></f:SelectItem>
+            </g:SimplePanel>
+         </g:FlowPanel>
+      </g:layer>
+      
+      <g:layer height="33px" bottom="0">
+         <g:FlowPanel width="auto" styleName="{resource.css.innerBox}">
+            <f:ImageButton ui:field="cancelButton" styleName="{resource.css.leftFloat}" width="90px" text="{locale.cancelButton}"
+               imageName="cancel" buttonId="ideSelectTypeCancelButtonId"></f:ImageButton>
+
+            <g:FlowPanel width="10px" height="22px" styleName="{resource.css.leftFloat}"></g:FlowPanel>
+
+            <f:ImageButton ui:field="backButton" width="90px" styleName="{resource.css.middle}" text="{locale.backButton}"
+               imageResource="{resource.back}" disabledImageResource="{resource.backDisabled}" buttonId="ideSelectTypeBackButtonId"></f:ImageButton>
+
+            <f:ImageButton ui:field="finishButton" width="90px" styleName="{resource.css.right}" text="{locale.finishButton}"
+               imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}" buttonId="ideSelectTypeFinishButtonId"></f:ImageButton>
+
+         </g:FlowPanel>
+      </g:layer>
+   </g:LayoutPanel>
+</ui:UiBinder> 

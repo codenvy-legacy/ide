@@ -116,8 +116,14 @@ public interface SamplesLocalizationConstant extends Messages
    /*
     * ShowSamplesView
     */
-   @Key("showSamples.title")
+   @Key("showSamples.dialog.title")
    String showSamplesTitle();
+   
+   @Key("showSamples.title")
+   String showSamplesSelectProjectTitle();
+   
+   @Key("showSamples.text")
+   String showSamplesSelectProjectText();
    
    /*
     * ShowSamplesPresenter
@@ -325,5 +331,20 @@ public interface SamplesLocalizationConstant extends Messages
    
    @Key("login.fail")
    String loginFail(String paas);
+   
+   /*
+    * SelectTypeView.
+    */
+   @Key("selectType.dialog.title")
+   String selectTypeTitle();
+   
+   @Key("selectType.title")
+   String samplesSelectTypeTitle();
+   
+   @Key("selectType.text")
+   String samplesSelectTypeText();
+   
+   @Key("selectType.lable")
+   String samplesProjectTypeLable();
 
 }

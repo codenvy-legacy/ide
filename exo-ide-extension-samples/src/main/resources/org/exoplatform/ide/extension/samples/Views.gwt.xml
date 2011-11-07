@@ -20,12 +20,16 @@
 -->
 <module>
    <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.extension.samples.client.load.ShowSamplesView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.load.ShowSamplesPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.samples.client.samples.load.ShowSamplesView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.samples.load.ShowSamplesPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.samples.client.location.SelectLocationView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.location.SelectLocationPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.samples.client.samples.selecttype.SelectTypeView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.samples.selecttype.SelectTypePresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.samples.client.samples.location.SelectLocationView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.samples.location.SelectLocationPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.startpage.StartPageView">

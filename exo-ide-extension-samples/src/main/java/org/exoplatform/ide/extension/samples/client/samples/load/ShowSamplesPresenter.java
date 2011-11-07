@@ -16,9 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.load;
+package org.exoplatform.ide.extension.samples.client.samples.load;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -34,16 +39,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
-import org.exoplatform.ide.extension.samples.client.location.SelectLocationEvent;
+import org.exoplatform.ide.extension.samples.client.samples.SamplesContinuable;
+import org.exoplatform.ide.extension.samples.client.samples.SamplesReturnable;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import java.util.List;
 
 /**
  * Presenter to show the list of samples, that stored on github.
@@ -52,44 +53,47 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
  * @version $Id: GithubSamplesPresenter.java Aug 30, 2011 12:12:39 PM vereshchaka $
  *
  */
-public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandler, ItemsSelectedHandler
+public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandler, ItemsSelectedHandler,
+   SamplesContinuable, SamplesReturnable
 {
-   
+
    public interface Display extends IsView
    {
       HasClickHandlers getNextButton();
-      
+
       HasClickHandlers getCancelButton();
-      
+
       ListGridItem<Repository> getSamplesListGrid();
-      
+
       List<Repository> getSelectedItems();
-      
+
       void enableNextButton(boolean enable);
    }
-   
+
    private static SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
-   
+
    private Display display;
-   
+
    List<Repository> sampleRepos;
-   
+
    List<Repository> selectedRepos;
-   
+
    List<Item> selectedItems;
-   
+
+   private SamplesContinuable samplesContinuable;
+
    public ShowSamplesPresenter()
    {
       IDE.addHandler(ShowSamplesEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
-   
+
    private void bindDisplay()
    {
       display.getNextButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
@@ -98,21 +102,22 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                Dialogs.getInstance().showError(lb.showSamplesErrorSelectRepository());
                return;
             }
-            IDE.fireEvent(new SelectLocationEvent(selectedRepos.get(0)));
+            Repository repo = selectedRepos.get(0);
+            samplesContinuable.onContinue(repo);
             closeView();
          }
       });
-      
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
             closeView();
          }
       });
-      
+
       display.getSamplesListGrid().addSelectionHandler(new SelectionHandler<Repository>()
       {
          @Override
@@ -129,7 +134,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
             }
          }
       });
-      
+
       display.getSamplesListGrid().setValue(sampleRepos);
       display.enableNextButton(false);
    }
@@ -145,7 +150,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
          display = null;
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.ShowSamplesHandler.samples.GithubSamplesShowHandler#onShowSamples(org.exoplatform.ide.client.ShowSamplesEvent.samples.ShowGithubSamplesEvent)
     */
@@ -162,7 +167,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
          }
       });
    }
-   
+
    private void openView()
    {
       if (display == null)
@@ -178,10 +183,10 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
          IDE.fireEvent(new ExceptionThrownEvent("Show Samples View must be null"));
       }
    }
-   
+
    private void closeView()
    {
-      IDE.getInstance().closeView(display.asView().getId());      
+      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
@@ -193,4 +198,27 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       this.selectedItems = event.getSelectedItems();
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.samples.SamplesReturnable#onReturn()
+    */
+   @Override
+   public void onReturn()
+   {
+      openView();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.samples.SamplesContinuable#onContinue()
+    */
+   @Override
+   public void onContinue(Repository repository)
+   {
+      openView();
+   }
+   
+   public void setSamplesContinuable(SamplesContinuable samplesContinuable)
+   {
+      this.samplesContinuable = samplesContinuable;
+   }
+   
 }
