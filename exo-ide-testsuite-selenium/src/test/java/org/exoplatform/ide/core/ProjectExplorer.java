@@ -42,10 +42,21 @@ public class ProjectExplorer extends AbstractTestModule
       String VIEW_LOCATOR = "//div[@view-id='ideTinyProjectExplorerView']";
 
       String TREE_PREFIX = "navigation-";
+
+      String TREE_GRID_ID = "ideProjectExplorerItemTreeGrid";
+
+      String ROOT_ITEM_LOCATOR = "xpath=(//div[@id='" + TREE_GRID_ID
+         + "']//div[@class='ide-Tree-label'])[position()=1]";
    }
 
    @FindBy(how = How.XPATH, using = Locators.VIEW_LOCATOR)
    private WebElement view;
+
+   @FindBy(id = Locators.TREE_GRID_ID)
+   private WebElement treeGrid;
+
+   @FindBy(how = How.XPATH, using = Locators.ROOT_ITEM_LOCATOR)
+   private WebElement rootItem;
 
    public void waitOpened() throws InterruptedException
    {
@@ -108,11 +119,12 @@ public class ProjectExplorer extends AbstractTestModule
       WebElement item = driver().findElement(By.id(getItemId(path)));
       item.click();
    }
-   
+
    public void openItem(String path) throws Exception
    {
       WebElement item = driver().findElement(By.id(getItemId(path)));
       item.click();
+
       Actions actions = new Actions(driver());
       actions.doubleClick(item).build().perform();
    }
@@ -127,5 +139,19 @@ public class ProjectExplorer extends AbstractTestModule
       {
          return false;
       }
+   }
+
+   /**
+    * Returns current folder's name (root node in Project Explorer).
+    * 
+    * @return {@link String} name of the current project
+    */
+   public String getCurrentProject()
+   {
+      if (treeGrid == null || !treeGrid.isDisplayed() || rootItem != null || !rootItem.isDisplayed())
+      {
+         return null;
+      }
+      return rootItem.getText();
    }
 }
