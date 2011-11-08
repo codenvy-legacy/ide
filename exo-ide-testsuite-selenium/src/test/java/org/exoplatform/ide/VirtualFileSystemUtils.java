@@ -49,46 +49,79 @@ public class VirtualFileSystemUtils
    public static int put(String filePath, String mimeType, String contentNodeType, String storageUrl)
       throws IOException
    {
-      URL url = new URL(storageUrl);
-      HttpURLConnection connection = Utils.getConnection(url);
-      String data = Utils.readFileAsString(filePath);
-      connection.setRequestMethod(HTTPMethod.PUT);
-      connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
-      connection.setRequestProperty(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length()));
-      connection.setRequestProperty(HTTPHeader.CONTENT_NODETYPE, contentNodeType);
-      connection.setDoOutput(true);
-      OutputStream output = connection.getOutputStream();
-      output.write(data.getBytes());
-      output.close();
-      return connection.getResponseCode();
+      HttpURLConnection connection = null;
+      try
+      {
+         URL url = new URL(storageUrl);
+         connection = Utils.getConnection(url);
+         String data = Utils.readFileAsString(filePath);
+         connection.setRequestMethod(HTTPMethod.PUT);
+         connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
+         connection.setRequestProperty(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length()));
+         connection.setRequestProperty(HTTPHeader.CONTENT_NODETYPE, contentNodeType);
+         connection.setDoOutput(true);
+         OutputStream output = connection.getOutputStream();
+         output.write(data.getBytes());
+         output.close();
+         return connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
    }
 
    public static int put(byte[] data, String mimeType, String contentNodeType, String storageUrl) throws IOException
    {
-      URL url = new URL(storageUrl);
-      HttpURLConnection connection = Utils.getConnection(url);
-      connection.setRequestMethod(HTTPMethod.PUT);
-      connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
-      connection.setRequestProperty(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length));
-      connection.setRequestProperty(HTTPHeader.CONTENT_NODETYPE, contentNodeType);
-      connection.setDoOutput(true);
-      OutputStream output = connection.getOutputStream();
-      output.write(data);
-      output.close();
-      return connection.getResponseCode();
+      HttpURLConnection connection = null;
+      try
+      {
+         URL url = new URL(storageUrl);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod(HTTPMethod.PUT);
+         connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
+         connection.setRequestProperty(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length));
+         connection.setRequestProperty(HTTPHeader.CONTENT_NODETYPE, contentNodeType);
+         connection.setDoOutput(true);
+         OutputStream output = connection.getOutputStream();
+         output.write(data);
+         output.close();
+         return connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
    }
 
    public static int put(byte[] data, String storageUrl) throws IOException
    {
-      URL url = new URL(storageUrl);
-      HttpURLConnection connection = Utils.getConnection(url);
-      connection.setRequestMethod(HTTPMethod.PUT);
-      connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/xml");
-      connection.setDoOutput(true);
-      OutputStream output = connection.getOutputStream();
-      output.write(data);
-      output.close();
-      return connection.getResponseCode();
+      HttpURLConnection connection = null;
+      try
+      {
+         URL url = new URL(storageUrl);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod(HTTPMethod.PUT);
+         connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/xml");
+         connection.setDoOutput(true);
+         OutputStream output = connection.getOutputStream();
+         output.write(data);
+         output.close();
+         return connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
    }
 
    /**
@@ -156,13 +189,13 @@ public class VirtualFileSystemUtils
       HttpURLConnection connection = null;
       int status = -1;
       String data = "";
+      BufferedReader reader = null;
       try
       {
          connection = Utils.getConnection(url);
          connection.setRequestMethod(HTTPMethod.GET);
          status = connection.getResponseCode();
          InputStream in = connection.getInputStream();
-         BufferedReader reader = null;
          reader = new BufferedReader(new InputStreamReader(in));
          StringBuilder sb = new StringBuilder();
 
@@ -173,6 +206,11 @@ public class VirtualFileSystemUtils
             sb.append('\n');
          }
          data = sb.toString();
+         in.close();
+         if (reader != null)
+         {
+            reader.close();
+         }
       }
       catch (Exception e)
       {

@@ -120,7 +120,7 @@ public class UploadingZippedFolderTest extends BaseTest
       assertTrue(text.length() > 0);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      IDE.PROPERTIES.waitForPropertiesViewOpened();
+      IDE.PROPERTIES.waitOpened();
       assertEquals("nt:resource", IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.TEXT_XML, IDE.PROPERTIES.getContentType());
 

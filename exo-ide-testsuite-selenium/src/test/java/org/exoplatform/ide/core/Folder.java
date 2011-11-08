@@ -18,7 +18,12 @@
  */
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.MenuCommands;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -27,29 +32,75 @@ import org.exoplatform.ide.TestConstants;
  */
 public class Folder extends AbstractTestModule
 {
-   
-   private static final String FOLDER_CREATE_FORM_ID = "ideCreateFolderForm";
-   
-   private static final String INPUT_FIELD_NAME = "ideCreateFolderFormNameField";
-   
-   private static final String CREATE_BUTTON_ID = "ideCreateFolderFormCreateButton";
-   
-   public void waitForDialog() throws Exception
+
+   public interface Locators
    {
-      waitForElementPresent("//div[@view-id='" + FOLDER_CREATE_FORM_ID + "']");
+      String VIEW_LOCATOR = "//div[@view-id='ideCreateFolderForm']";
+
+      String INPUT_FIELD_NAME = "ideCreateFolderFormNameField";
+
+      String CREATE_BUTTON_ID = "ideCreateFolderFormCreateButton";
+
+      String CANCEL_BUTTON_ID = "ideCreateFolderFormCancelButton";
+   }
+
+   @FindBy(id = Locators.VIEW_LOCATOR)
+   WebElement view;
+
+   @FindBy(name = Locators.INPUT_FIELD_NAME)
+   WebElement nameField;
+
+   @FindBy(id = Locators.CREATE_BUTTON_ID)
+   WebElement createButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   WebElement cancelButton;
+
+   public void waitOpened() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return view != null && view.isDisplayed();
+         }
+      });
    }
    
+   public void waitClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return view == null;
+         }
+      });
+   }
+
    public void typeFolderName(String name) throws InterruptedException
    {
-      selenium().type(INPUT_FIELD_NAME, name);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE().INPUT.typeToElement(nameField, name, true);
    }
-   
+
    public void clickCreateButton() throws Exception
    {
-      selenium().click(CREATE_BUTTON_ID);
-
-      waitForElementNotPresent(FOLDER_CREATE_FORM_ID);
+      createButton.click();
    }
-
+   
+   public void clickCancelButton() throws Exception
+   {
+      cancelButton.click();
+   }
+   
+   public void createFolder(String name) throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.New.NEW, MenuCommands.New.FOLDER);
+      waitOpened();
+      typeFolderName(name);
+      clickCreateButton();
+      waitClosed();
+   }
 }

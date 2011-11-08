@@ -21,6 +21,7 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -62,7 +63,7 @@ public class Editor extends AbstractTestModule
 
       String EDITOR_VIEW_LOCATOR = "//div[@panel-id='editor' and @view-id='%s']";
 
-      String ACTIVE_EDITOR_TAB_LOCATOR = "//div[@panel-id='editor' and is-active='true']";
+      String ACTIVE_EDITOR_TAB_LOCATOR = "//div[@panel-id='editor' and @is-active='true']";
 
       String SELECTED_EDITOR_TAB_LOCATOR =
          "//div[contains(@class, 'gwt-TabLayoutPanelTab-selected') and contains(text(), '%s')]";
@@ -80,8 +81,10 @@ public class Editor extends AbstractTestModule
       String VIEW_ID_ATTRIBUTE = "view-id";
 
       String TITLE_LOCATOR = "//span[@title='%s']";
-      
+
       String LINE_NUMBER_CSS_LOCATOR = "div[class='CodeMirror-line-numbers']";
+
+      String ACTIVE_FILE_ID = "debug-editor-active-file-url";
    }
 
    private WebElement editor;
@@ -97,7 +100,7 @@ public class Editor extends AbstractTestModule
    {
       WebElement tab =
          editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, index)));
-      return tab.getText();
+      return tab.getText().trim();
    }
 
    /**
@@ -114,6 +117,16 @@ public class Editor extends AbstractTestModule
          editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR, tabIndex)));
       tab.click();
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+   }
+
+   public void saveAs(int tabIndex, String name) throws Exception
+   {
+      selectTab(tabIndex);
+      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
+      IDE().ASK_FOR_VALUE_DIALOG.waitForPresent();
+      IDE().ASK_FOR_VALUE_DIALOG.setValue(name);
+      IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
+      IDE().ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
    }
 
    /**
@@ -351,8 +364,7 @@ public class Editor extends AbstractTestModule
     */
    public void deleteFileContent(int tabIndex) throws Exception
    {
-      typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "a");
-      typeTextIntoEditor(tabIndex, Keys.DELETE.toString());
+      typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -512,6 +524,31 @@ public class Editor extends AbstractTestModule
             try
             {
                return input.findElement(By.xpath(tab)) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait while tab appears in editor 
+    * @param tabIndex - index of tab, starts at 0
+    * @throws Exception
+    */
+   public void waitActiveFile(String path) throws Exception
+   {
+      final String location = (path.startsWith("/")) ? path : "/" + path;
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return location.equals(selenium().getText(Locators.ACTIVE_FILE_ID));
             }
             catch (NoSuchElementException e)
             {

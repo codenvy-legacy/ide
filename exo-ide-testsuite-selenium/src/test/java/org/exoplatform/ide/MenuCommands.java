@@ -280,6 +280,21 @@ public interface MenuCommands
 
       String STATUS = "Status";
    }
+   
+   public interface Project
+   {
+      String PROJECT = "Project";
+
+      String NEW = "New";
+
+      String OPEN_PROJECT = "Open Project...";
+
+      String CLOSE_PROJECT = "Close Project";
+
+      String EMPTY_PROJECT = "Empty Project...";
+      
+      String FROM_TEMPLATE = "From Template...";
+   }
 
    public interface PaaS
    {

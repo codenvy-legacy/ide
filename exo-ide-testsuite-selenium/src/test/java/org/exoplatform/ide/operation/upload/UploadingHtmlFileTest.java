@@ -77,7 +77,7 @@ public class UploadingHtmlFileTest extends BaseTest
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      IDE.PROPERTIES.waitForPropertiesViewOpened();
+      IDE.PROPERTIES.waitOpened();
       assertEquals("nt:resource", IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.TEXT_HTML, IDE.PROPERTIES.getContentType());
    }

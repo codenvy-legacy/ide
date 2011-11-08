@@ -19,14 +19,13 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -39,29 +38,18 @@ import org.junit.Test;
 public class ClosingAndSaveAsFileTest extends BaseTest
 {
 
-   private static String FOLDER = ClosingAndSaveAsFileTest.class.getSimpleName();
+   private static String PROJECT = ClosingAndSaveAsFileTest.class.getSimpleName();
 
    private static final String FILE = "testfile";
 
-   @Before
-   public void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER + "/");
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
+   private static final String FILE2 = "new XML file.xml";
 
    @After
    public void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER + "/");
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT + "/");
       }
       catch (Exception e)
       {
@@ -71,104 +59,61 @@ public class ClosingAndSaveAsFileTest extends BaseTest
 
    //http://jira.exoplatform.com/browse/IDE-412
    @Test
-   public void testClosingAnsSaveAsFile() throws Exception
+   public void testClosingAndSaveAsFile() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
-      
-      String textFileURL = WS_URL_IDE + FOLDER + "/Untitled file.txt";
-      String xmlFileURL = WS_URL_IDE + FOLDER + "/Untitled file.xml";
-      
-      /*
-       * 1. Create TEXT and XML files.
-       *     - TEXT and XML files must be opened.
-       */
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      
-      assertTrue(IDE.EDITOR.isFileOpened(textFileURL));
-      assertTrue(IDE.EDITOR.isFileOpened(xmlFileURL));
+      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.CREATE_PROJECT.createProject(PROJECT);
+      IDE.PROJECT_EXPLORER.waitForItem("/" + PROJECT);
 
-      /*
-       * 2. Click on Close XML file button ( index 1 )
-       *     -  AskForValue dialog must be opened.
-       */
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.waitTabPresent(2);
+
       IDE.EDITOR.clickCloseEditorButton(1);
       assertTrue(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
-      
-      /*
-       * 3. Click "Cancel" button of dialog.
-       *     - AskForValue dialog must be closed.
-       *     - File must be still opened.
-       */
+
       IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
       IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
-      assertTrue(IDE.EDITOR.isFileOpened(xmlFileURL));      
 
-      /*
-       * 4. Select TEXT file and Save it
-       *     - File must be present in Workspace tree.
-       *     - Text FILE and XML files must be still opened in editor.
-       */
-      IDE.EDITOR.selectTab(0);
-      saveAsUsingToolbarButton(FILE);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/" + FILE);
-
-      assertTrue(IDE.EDITOR.isTabPresentInEditorTabset(0));
-      assertTrue(IDE.EDITOR.isTabPresentInEditorTabset(0));
-      
-      //file stays in editor panel
-      IDE.EDITOR.checkCodeEditorOpened(0);
       IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.checkCodeEditorOpened(1);
-      assertEquals(FILE, IDE.EDITOR.getTabTitle(0));
-      
-      // close editor
-      IDE.EDITOR.closeTabIgnoringChanges(1);
-      IDE.EDITOR.closeFile(0);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
+      IDE.ASK_FOR_VALUE_DIALOG.waitForPresent();
+      IDE.ASK_FOR_VALUE_DIALOG.setValue(FILE);
+      IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
+      IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+
+      IDE.WORKSPACE.waitForItem("/" + PROJECT + "/" + FILE);
+
+      assertTrue(IDE.EDITOR.isTabPresentInEditorTabset(1));
+      assertEquals(FILE, IDE.EDITOR.getTabTitle(1));
+
+      IDE.EDITOR.closeFile(1);
    }
 
    @Test
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
-      /*
-       * 1. Refresh page
-       */
-      refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
+      selenium.refresh();
+      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.CREATE_PROJECT.createProject(PROJECT);
 
-      /*
-       * 2. Select folder and ctreate XML file.
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
+      IDE.PROJECT_EXPLORER.waitForItem(PROJECT);
+
+      IDE.WORKSPACE.selectItem(PROJECT);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      
-      String createdFileURL = WS_URL_IDE + FOLDER + "/Untitled file.xml";
-      assertTrue(IDE.EDITOR.isFileOpened(createdFileURL));
-      
-      /*
-       * 3. Click on Close file button
-       *     - AskForValue dialog must be opened.
-       */
-      IDE.EDITOR.clickCloseEditorButton(0);
-      assertTrue(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
+      IDE.EDITOR.waitTabPresent(1);
 
-      /*
-       * 5. Click on "Close" button.
-       *     - AskForValue dialog must be closed.
-       */
+      IDE.EDITOR.clickCloseEditorButton(1);
+      IDE.ASK_FOR_VALUE_DIALOG.waitForPresent();
+
       IDE.ASK_FOR_VALUE_DIALOG.closeDialog();
-      assertFalse(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
-      
-      /*
-       * 6. Click on Close file button
-       *     -  AskForValue dialog must be opened.
-       */
-      IDE.EDITOR.saveAndCloseFile(0, "new XML file.xml");
-      
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/new XML file.xml");
-      
-      assertFalse(IDE.EDITOR.isFileOpened(createdFileURL));
+      IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+
+      IDE.EDITOR.saveAndCloseFile(1, FILE2);
+
+      IDE.WORKSPACE.waitForItem(PROJECT + "/" + FILE2);
+      Assert.assertFalse(IDE.EDITOR.isTabPresentInEditorTabset(FILE2));
    }
 
 }

@@ -19,6 +19,12 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.ToolbarCommands;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -27,29 +33,74 @@ import org.exoplatform.ide.ToolbarCommands;
  */
 public class Properties extends AbstractTestModule
 {
+   interface Locators
+   {
+      String PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='%1s']";
 
-   private final String PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='%1s']";
-   
-   public static final String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
-   
+      String PROPERTIES_FORM_LOCATOR = "//div[@view-id='ideFilePropertiesView']";
+
+      String NAME_PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Name']";
+
+      String PATH_PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Path']";
+
+      String MIME_TYPE_PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Mime Type']";
+
+      String CREATED_PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Created']";
+
+      String LAST_MODIFIED_PROPERTY_LOCATOR =
+         "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Last modified']";
+
+      String CONTENT_LENGHT_PROPERTY_LOCATOR =
+         "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Content lenght']";
+
+      String CLOSE_VIEW_BUTTON_LOCATOR = "//div[@button-name='close-tab' and @tab-title='Properties']";
+   }
+
+   @FindBy(how = How.XPATH, using = Locators.PROPERTIES_FORM_LOCATOR)
+   private WebElement propertiesView;
+
+   /*Properties*/
+   @FindBy(how = How.XPATH, using = Locators.NAME_PROPERTY_LOCATOR)
+   private WebElement nameProperty;
+
+   @FindBy(how = How.XPATH, using = Locators.PATH_PROPERTY_LOCATOR)
+   private WebElement pathProperty;
+
+   @FindBy(how = How.XPATH, using = Locators.MIME_TYPE_PROPERTY_LOCATOR)
+   private WebElement mimeTypeProperty;
+
+   @FindBy(how = How.XPATH, using = Locators.CREATED_PROPERTY_LOCATOR)
+   private WebElement createdProperty;
+
+   @FindBy(how = How.XPATH, using = Locators.LAST_MODIFIED_PROPERTY_LOCATOR)
+   private WebElement lastModifiedProperty;
+
+   @FindBy(how = How.XPATH, using = Locators.CONTENT_LENGHT_PROPERTY_LOCATOR)
+   private WebElement contentLenghtProperty;
+
+   @FindBy(how = How.XPATH, using = Locators.CLOSE_VIEW_BUTTON_LOCATOR)
+   private WebElement closeViewButton;
+
    /**
     * Get Autoload property value
     * @return String value
     */
+   @Deprecated
    public String getAutoloadProperty()
    {
-      String locator = String.format(PROPERTY_LOCATOR, "Autoload");
-      return selenium().getText(locator);
+      //TODO No such property
+      return null;
    }
 
    /**
     * Get Content Node Type property value 
     * @return String value
     */
+   @Deprecated
    public String getContentNodeType()
    {
-      String locator = String.format(PROPERTY_LOCATOR, "Content Node Type");
-      return selenium().getText(locator);
+      //TODO No such property
+      return null;
    }
 
    /**
@@ -58,18 +109,16 @@ public class Properties extends AbstractTestModule
     */
    public String getContentLength()
    {
-      String locator = String.format(PROPERTY_LOCATOR, "Content Length");
-      return selenium().getText(locator);
+      return contentLenghtProperty.getText();
    }
-   
+
    /**
     * Get Content Type property value
     * @return String value
     */
    public String getContentType()
    {
-      String locator = String.format(PROPERTY_LOCATOR, "Content Type");
-      return selenium().getText(locator);
+      return mimeTypeProperty.getText();
    }
 
    /**
@@ -78,42 +127,74 @@ public class Properties extends AbstractTestModule
     */
    public String getDisplayName()
    {
-      String locator = String.format(PROPERTY_LOCATOR, "Display Name");
-      return selenium().getText(locator);
+      return nameProperty.getText();
    }
 
    /**
     * Get File Node Type property value
     * @return String value
     */
+   @Deprecated
    public String getFileNodeType()
    {
-      String locator = String.format(PROPERTY_LOCATOR, "File Node Type");
-      return selenium().getText(locator);
+      //TODO No such property
+      return null;
    }
 
    /**
-    * Close Properties View
+    * Close Properties View.
     */
    public void closeProperties() throws Exception
    {
-      selenium().click("//div[@button-name='close-tab' and @tab-title='Properties']");
-      waitForElementNotPresent(PROPERTIES_FORM_LOCATOR);
+      closeViewButton.click();
+      waitClosed();
    }
 
+   /**
+    * Open properties view.
+    * 
+    * @throws Exception
+    */
    public void openProperties() throws Exception
    {
       IDE().TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
-      waitForElementPresent(PROPERTIES_FORM_LOCATOR);
+      waitOpened();
    }
-   
+
    /**
     * Wait for properties view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForPropertiesViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(PROPERTIES_FORM_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return (propertiesView != null && propertiesView.isDisplayed() && contentLenghtProperty != null && contentLenghtProperty
+               .isDisplayed());
+         }
+      });
+   }
+
+   /**
+    * Wait for properties view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return (propertiesView == null);
+         }
+      });
    }
 }

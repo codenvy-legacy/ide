@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Utils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
+import org.exoplatform.ide.MenuCommands;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -32,21 +28,47 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Nov 4, 2011 10:38:30 AM anya $
+ * @version $Id:  Nov 4, 2011 12:34:31 PM anya $
  *
  */
-public class ProjectExplorer extends AbstractTestModule
+public class CreateProject extends AbstractTestModule
 {
    interface Locators
    {
-      String VIEW_LOCATOR = "//div[@view-id='ideTinyProjectExplorerView']";
+      String VIEW_ID = "org.exoplatform.ide.client.project.create.CreateProjectForm";
 
-      String TREE_PREFIX = "navigation-";
+      String VIEW_LOCATOR = "//div[@view-id='org.exoplatform.ide.client.project.create.CreateProjectForm']";
+
+      String PROJECT_NAME_ID = "CreateProjectFormProjectName";
+
+      String PROJECT_TYPE_ID = "CreateProjectFormProjectType";
+
+      String CREATE_BUTTON_ID = "CreateProjectFormCreateButton";
+
+      String CANCEL_BUTTON_ID = "CreateProjectFormCancelButton";
+
    }
 
    @FindBy(how = How.XPATH, using = Locators.VIEW_LOCATOR)
    private WebElement view;
 
+   @FindBy(name = Locators.PROJECT_NAME_ID)
+   private WebElement projectNameField;
+
+   @FindBy(name = Locators.PROJECT_TYPE_ID)
+   private WebElement projectTypeField;
+
+   @FindBy(id = Locators.CREATE_BUTTON_ID)
+   private WebElement createButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   /**
+    * Wait view is opened.
+    * 
+    * @throws InterruptedException
+    */
    public void waitOpened() throws InterruptedException
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
@@ -69,19 +91,11 @@ public class ProjectExplorer extends AbstractTestModule
    }
 
    /**
-    * Generate item id 
-    * @param path item's name 
-    * @return id of item
+    * Wait view is closed.
+    * 
+    * @throws InterruptedException
     */
-   public String getItemId(String path) throws Exception
-   {
-      path = (path.startsWith(BaseTest.WS_URL)) ? path.replace(BaseTest.WS_URL, "") : path;
-      String itemId = (path.startsWith("/")) ? path : "/" + path;
-      itemId = Utils.md5(itemId);
-      return Locators.TREE_PREFIX + itemId;
-   }
-
-   public void waitForItem(final String path) throws Exception
+   public void waitClosed() throws InterruptedException
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
@@ -91,41 +105,55 @@ public class ProjectExplorer extends AbstractTestModule
          {
             try
             {
-               WebElement item = driver().findElement(By.id(getItemId(path)));
-               return item != null && item.isDisplayed();
+               return view != null;
             }
             catch (Exception e)
             {
                e.printStackTrace();
-               return false;
+               return true;
             }
          }
       });
    }
 
-   public void selectItem(String path) throws Exception
+   /**
+    * Click create button.
+    */
+   public void clickCreateButton()
    {
-      WebElement item = driver().findElement(By.id(getItemId(path)));
-      item.click();
-   }
-   
-   public void openItem(String path) throws Exception
-   {
-      WebElement item = driver().findElement(By.id(getItemId(path)));
-      item.click();
-      Actions actions = new Actions(driver());
-      actions.doubleClick(item).build().perform();
+      createButton.click();
    }
 
-   public boolean isItemPresent(String path) throws Exception
+   /**
+    * Click cancel button.
+    */
+   public void clickCancelButton()
    {
-      try
-      {
-         return driver().findElement(By.id(getItemId(path))) != null;
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+      cancelButton.click();
+   }
+
+   /**
+    * Set project's name (type to input).
+    * 
+    * @param name project's name
+    */
+   public void setProjectName(String name)
+   {
+      IDE().INPUT.typeToElement(projectNameField, name, true);
+   }
+
+   /**
+    * Create default project with pointed name.
+    * 
+    * @param name project's name
+    * @throws Exception
+    */
+   public void createProject(String name) throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.NEW, MenuCommands.Project.EMPTY_PROJECT);
+      waitOpened();
+      setProjectName(name);
+      clickCreateButton();
+      waitClosed();
    }
 }

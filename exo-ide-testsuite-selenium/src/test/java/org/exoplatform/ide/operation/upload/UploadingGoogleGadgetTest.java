@@ -83,7 +83,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      IDE.PROPERTIES.waitForPropertiesViewOpened();
+      IDE.PROPERTIES.waitOpened();
       assertEquals("exo:googleGadget", IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.GOOGLE_GADGET, IDE.PROPERTIES.getContentType());
     }

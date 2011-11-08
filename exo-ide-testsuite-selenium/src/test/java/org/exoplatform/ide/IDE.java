@@ -24,6 +24,7 @@ import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.AskForValueDialog;
 import org.exoplatform.ide.core.ClasspathProject;
 import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.core.CreateProject;
 import org.exoplatform.ide.core.CreateProjectTemplate;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorDialog;
@@ -131,7 +132,7 @@ public class IDE
 
    public Output OUTPUT = new Output();
 
-   public Properties PROPERTIES = new Properties();
+   public Properties PROPERTIES;
 
    public ClasspathProject CLASSPATH_PROJECT = new ClasspathProject();
 
@@ -155,6 +156,8 @@ public class IDE
 
    public ProjectExplorer PROJECT_EXPLORER;
 
+   public CreateProject CREATE_PROJECT;
+
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
       System.out.println("\r\n\r\n\r\n\r\n" + "Initializing IDE ( Selenium )\r\n" + "Workspace URL > " + workspaceURL
@@ -168,6 +171,8 @@ public class IDE
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
       PROJECT_EXPLORER = PageFactory.initElements(driver, ProjectExplorer.class);
+      PROPERTIES = PageFactory.initElements(driver, Properties.class);
+      CREATE_PROJECT = PageFactory.initElements(driver, CreateProject.class);
    }
 
    public Selenium getSelenium()

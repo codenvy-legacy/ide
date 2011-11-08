@@ -60,19 +60,6 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
-
    @AfterClass
    public static void tearDown()
    {
@@ -92,26 +79,28 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
     * encoding characters in file name
     * @throws Exception
     */
-   @Ignore
    @Test
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-
+      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.CREATE_PROJECT.createProject(FOLDER_NAME);
+      IDE.PROJECT_EXPLORER.waitForItem(FOLDER_NAME);
+      IDE.PROJECT_EXPLORER.selectItem(FOLDER_NAME);
+      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(0));
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.waitActiveFile(FOLDER_NAME + "/Untitled file.xml");
+      assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(1));
 
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
 
-      IDE.EDITOR.deleteFileContent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
+      IDE.EDITOR.deleteFileContent(1);
+      IDE.EDITOR.typeTextIntoEditor(1, XML_CONTENT);
 
-      saveAsUsingToolbarButton(FILE_NAME);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT_EXPLORER.waitForItem(FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.closeFile(1);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.EDITOR.waitTabPresent(0);

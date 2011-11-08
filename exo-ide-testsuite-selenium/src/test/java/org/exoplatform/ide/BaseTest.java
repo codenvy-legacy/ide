@@ -386,6 +386,7 @@ public abstract class BaseTest
     * @param tabIndex - index of tab, where new file will be opened (starts with 0)
     * @throws Exception
     */
+   @Deprecated
    protected void createSaveAndCloseFile(String menuCommand, String fileName, int tabIndex) throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuCommand);

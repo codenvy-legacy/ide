@@ -23,11 +23,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.SaveFileUtils;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -42,8 +40,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 {
    //IDE-10: Creating and "Saving As" new files.
 
-   private static final String FOLDER_NAME = CreatingAndSavingAsNewFileTest.class.getSimpleName() + " - "
-      + System.currentTimeMillis();
+   private static final String FOLDER_NAME = CreatingAndSavingAsNewFileTest.class.getSimpleName();
 
    private static final String REST_SERVICE_FILE_NAME = "TestGroovyRest.groovy";
 
@@ -67,19 +64,6 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
    private static final String NETVIBES_FILE_NAME = "TestNetvibes.html";
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
-
    @AfterClass
    public static void tearDown()
    {
@@ -96,8 +80,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    @Test
    public void testCreatingAndSavingAsNewFiles() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.CREATE_PROJECT.createProject(FOLDER_NAME);
+      IDE.PROJECT_EXPLORER.waitForItem(FOLDER_NAME);
+      IDE.PROJECT_EXPLORER.selectItem(FOLDER_NAME);
 
       createFileAndSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
@@ -122,15 +108,11 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
       assertTrue(selenium().isTextPresent("Untitled file 1." + fileExtention));
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE_AS);
-      SaveFileUtils.checkSaveAsDialogAndSave(fileName, true);
-
+      IDE.EDITOR.saveAs(1, fileName);
       IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.closeTabIgnoringChanges(1);      
 
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);      
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + fileName);
+      Assert.assertTrue(IDE.PROJECT_EXPLORER.isItemPresent(FOLDER_NAME + "/" + fileName));
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + fileName).getStatusCode());
    }
 

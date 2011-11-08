@@ -236,6 +236,7 @@ public class Utils
    private static boolean isLogged()
    {
       HttpURLConnection http = null;
+      BufferedReader reader = null;
       try
       {
          http = (HttpURLConnection)new URL(BaseTest.APPLICATION_URL).openConnection();
@@ -243,7 +244,7 @@ public class Utils
          http.getResponseCode();
 
          InputStream in = http.getInputStream();
-         BufferedReader reader = null;
+
          reader = new BufferedReader(new InputStreamReader(in));
          StringBuilder sb = new StringBuilder();
 
@@ -252,6 +253,10 @@ public class Utils
          {
             sb.append(line);
             sb.append('\n');
+         }
+         if (reader != null)
+         {
+            reader.close();
          }
          in.close();
          return !sb.toString().contains("loginForm");
@@ -266,7 +271,10 @@ public class Utils
       }
       finally
       {
-         http.disconnect();
+         if (http != null)
+         {
+            http.disconnect();
+         }
       }
       return false;
    }
