@@ -18,11 +18,19 @@
  */
 package org.exoplatform.ide.operation.autocompletion;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -31,12 +39,36 @@ import static org.junit.Assert.assertTrue;
  */
 public class AutoCompletionCSSTest extends BaseTest
 {
+   
+   
+   private static Map<String, Link> project;
+
+   @BeforeClass
+   public static void createProject()
+   {
+      try
+      {
+         project = VirtualFileSystemUtils.createDefaultProject(AutoCompletionCSSTest.class.getSimpleName());
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   @AfterClass
+   public static void deleteProject() throws IOException
+   {
+      VirtualFileSystemUtils.deleteFolder(project.get(Link.REL_DELETE));
+   }
 
    @Test
    public void testPlainCSS() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(AutoCompletionCSSTest.class.getSimpleName());
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
+      IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.css");
       cssTest();
    }
 
@@ -45,10 +77,12 @@ public class AutoCompletionCSSTest extends BaseTest
    {
       selenium.refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(AutoCompletionCSSTest.class.getSimpleName());
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.xml");
       IDE.EDITOR.moveCursorDown(0, 4);
       IDE.EDITOR.moveCursorRight(0, 16);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER + "<style>\n\n\n</style>");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN + "<style>\n\n\n</style>");
       IDE.EDITOR.moveCursorUp(0, 1);
 
       cssTest();
@@ -59,8 +93,9 @@ public class AutoCompletionCSSTest extends BaseTest
    {
       selenium().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(AutoCompletionCSSTest.class.getSimpleName());
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-
+      IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.html");
       IDE.EDITOR.moveCursorDown(0, 2);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER);
       IDE.EDITOR.typeTextIntoEditor(0, "<script>\n</script>");
