@@ -142,7 +142,7 @@ public class IDE
 
    public OpenShift OPENSHIFT = new OpenShift();
 
-   public Project PROJECT = new Project();
+   public Project PROJECT;
 
    public Input INPUT = new Input();
 
@@ -159,6 +159,7 @@ public class IDE
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
+      PROJECT = PageFactory.initElements(driver, Project.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
       FOLDER = PageFactory.initElements(driver, Folder.class);
    }

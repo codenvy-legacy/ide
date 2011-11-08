@@ -22,6 +22,7 @@ package org.exoplatform.ide.core;
 import org.exoplatform.ide.core.project.ClasspathProject;
 import org.exoplatform.ide.core.project.CreateProject;
 import org.exoplatform.ide.core.project.CreateProjectTemplate;
+import org.exoplatform.ide.core.project.OpenProject;
 import org.exoplatform.ide.core.project.ProjectExplorer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.PageFactory;
@@ -55,6 +56,8 @@ public class Project extends AbstractTestModule
 
    public CreateProject CREATE;
    
+   public OpenProject OPEN;
+   
    public ClasspathProject CLASSPATH = new ClasspathProject();
    
    public CreateProjectTemplate TEMPLATE = new CreateProjectTemplate();
@@ -66,6 +69,7 @@ public class Project extends AbstractTestModule
    {
       EXPLORER = PageFactory.initElements(driver(), ProjectExplorer.class);
       CREATE = PageFactory.initElements(driver(), CreateProject.class);
+      OPEN = PageFactory.initElements(driver(), OpenProject.class);
    }
 
    public void waitForDialogOpened() throws Exception
