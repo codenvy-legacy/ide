@@ -33,47 +33,58 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 import java.util.Set;
 
-
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class CreateProjectForm extends ViewImpl implements org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display
+public class CreateProjectForm extends ViewImpl implements
+   org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display
 {
-   
+
    private static final int WIDTH = 370;
 
    private static final int HEIGHT = 210;
-   
+
    private static final String ID = CreateProjectForm.class.getName();
-   
+
+   private static final String PROJECT_NAME_ID = "CreateProjectFormProjectName";
+
+   private static final String PROJECT_TYPE_ID = "CreateProjectFormProjectType";
+
+   private static final String CREATE_BUTTON_ID = "CreateProjectFormCreateButton";
+
+   private static final String CANCEL_BUTTON_ID = "CreateProjectFormCancelButton";
+
    @UiField
    TextField projectName;
-   
+
    @UiField
    SelectItem projectType;
-   
+
    @UiField
    ImageButton createButton;
-   
+
    @UiField
-   ImageButton cancelButton; 
-   
-   
+   ImageButton cancelButton;
+
    private static CreateProjectFormUiBinder uiBinder = GWT.create(CreateProjectFormUiBinder.class);
 
    interface CreateProjectFormUiBinder extends UiBinder<Widget, CreateProjectForm>
    {
    }
-   
+
    public CreateProjectForm()
    {
       super(ID, ViewType.MODAL, "Create Project", null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+
+      projectName.setName(PROJECT_NAME_ID);
+      projectType.setName(PROJECT_TYPE_ID);
+      createButton.setButtonId(CREATE_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
-   
+
    @Override
    public HasClickHandlers getCreateButton()
    {
