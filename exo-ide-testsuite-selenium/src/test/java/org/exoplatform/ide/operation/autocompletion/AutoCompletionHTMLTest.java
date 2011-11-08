@@ -20,9 +20,10 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -31,18 +32,27 @@ import org.openqa.selenium.Keys;
  * @version $Id: $
  *
  */
-public class AutoCompletionHTMLTest extends BaseTest
+public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
 {
+
+   private String projectName = AutoCompletionHTMLTest.class.getSimpleName();
+
+   @BeforeClass
+   public static void createProject()
+   {
+      createProject(AutoCompletionHTMLTest.class.getSimpleName());
+   }
+
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      selenium().refresh();
-      selenium().waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
 
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(projectName);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      
+      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.html");
+
       IDE.EDITOR.moveCursorDown(0, 4);
 
       htmlTest();
@@ -55,12 +65,11 @@ public class AutoCompletionHTMLTest extends BaseTest
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
-      selenium().refresh();
-      selenium().waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
-      IDE.WORKSPACE.waitForRootItem();
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(projectName);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-
+      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.xml");
       IDE.EDITOR.moveCursorDown(0, 4);
 
       GoogleGadgetTest();
@@ -69,12 +78,12 @@ public class AutoCompletionHTMLTest extends BaseTest
    @Test
    public void testGroovyTemplate() throws Exception
    {
-      selenium().refresh();
-      selenium().waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(projectName);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gtmpl");
       IDE.EDITOR.deleteFileContent(0);
 
       IDE.EDITOR.typeTextIntoEditor(0, "<div class=\"ItemDetail\" style=\"display:block\">\n");

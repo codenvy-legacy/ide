@@ -20,46 +20,23 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class AutoCompletionCSSTest extends BaseTest
+public class AutoCompletionCSSTest extends CodeAssistantBaseTest
 {
-   
-   
-   private static Map<String, Link> project;
 
    @BeforeClass
    public static void createProject()
    {
-      try
-      {
-         project = VirtualFileSystemUtils.createDefaultProject(AutoCompletionCSSTest.class.getSimpleName());
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-   }
-   
-   @AfterClass
-   public static void deleteProject() throws IOException
-   {
-      VirtualFileSystemUtils.deleteFolder(project.get(Link.REL_DELETE));
+      createProject(AutoCompletionCSSTest.class.getSimpleName());
    }
 
    @Test
