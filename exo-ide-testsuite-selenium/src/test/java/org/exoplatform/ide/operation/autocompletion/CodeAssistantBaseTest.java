@@ -22,6 +22,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
+import org.junit.Before;
 
 import java.io.IOException;
 import java.util.Map;
@@ -35,9 +36,12 @@ public abstract class CodeAssistantBaseTest extends BaseTest
 {
 
    private static Map<String, Link> project;
+   
+   protected static String projectName;
 
    public static void createProject(String name)
    {
+      projectName = name;
       try
       {
          project = VirtualFileSystemUtils.createDefaultProject(name);
@@ -53,6 +57,14 @@ public abstract class CodeAssistantBaseTest extends BaseTest
    {
       if (project != null)
          VirtualFileSystemUtils.deleteFolder(project.get(Link.REL_DELETE));
+   }
+   
+   @Before
+   public void openProject() throws Exception
+   {
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(projectName);
    }
 
 }

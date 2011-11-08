@@ -35,8 +35,6 @@ import org.openqa.selenium.Keys;
 public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
 {
 
-   private String projectName = AutoCompletionHTMLTest.class.getSimpleName();
-
    @BeforeClass
    public static void createProject()
    {
@@ -46,10 +44,6 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(projectName);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.html");
 
@@ -65,9 +59,6 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(projectName);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.xml");
       IDE.EDITOR.moveCursorDown(0, 4);
@@ -78,10 +69,6 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
    @Test
    public void testGroovyTemplate() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(projectName);
-
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gtmpl");
       IDE.EDITOR.deleteFileContent(0);

@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.operation.autocompletion;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -27,15 +27,20 @@ import org.junit.Test;
  * @version $Id: $
  *
  */
-public class AutoCompletionJavaScriptDuplicationTest extends BaseTest
+public class AutoCompletionJavaScriptDuplicationTest extends CodeAssistantBaseTest
 {
+
+   @BeforeClass
+   public static void createPoject()
+   {
+      createProject(AutoCompletionJavaScriptDuplicationTest.class.getSimpleName());
+   }
 
    @Test
    public void testDuplication() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-
+      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.js");
       IDE.EDITOR.typeTextIntoEditor(0, "var a;\n \n function a() {\n}");
 
       IDE.EDITOR.moveCursorUp(0, 2);

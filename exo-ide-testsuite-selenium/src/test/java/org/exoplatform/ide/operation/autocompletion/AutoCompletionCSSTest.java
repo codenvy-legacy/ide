@@ -42,8 +42,6 @@ public class AutoCompletionCSSTest extends CodeAssistantBaseTest
    @Test
    public void testPlainCSS() throws Exception
    {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(AutoCompletionCSSTest.class.getSimpleName());
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.css");
       cssTest();
@@ -52,9 +50,6 @@ public class AutoCompletionCSSTest extends CodeAssistantBaseTest
    @Test
    public void testGoogleGadget() throws Exception
    {
-      selenium.refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(AutoCompletionCSSTest.class.getSimpleName());
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.xml");
       IDE.EDITOR.moveCursorDown(0, 4);
@@ -68,9 +63,6 @@ public class AutoCompletionCSSTest extends CodeAssistantBaseTest
    @Test
    public void testHTML() throws Exception
    {
-      selenium().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(AutoCompletionCSSTest.class.getSimpleName());
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.html");
       IDE.EDITOR.moveCursorDown(0, 2);
