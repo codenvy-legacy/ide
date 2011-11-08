@@ -98,7 +98,7 @@ public class CreateProjectTemplate extends AbstractTestModule
    public void clickAddFolderButton() throws Exception
    {
       selenium().click(ADD_FOLDER_BUTTON_ID);
-      IDE().FOLDER.waitForDialog();
+      IDE().FOLDER.waitOpened();
    }
    
    /**
