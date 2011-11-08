@@ -19,12 +19,12 @@
 package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -37,6 +37,16 @@ public class CreateFolderTest extends BaseTest
 
    private static String FOLDER_NAME_DEFAULT = "New Folder";
 
+   private static String PROJECT = CreateFolderTest.class.getSimpleName();
+
+   @Test
+   public void testCreateFolderNotInProject() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitOpened();
+      Assert.assertFalse(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FOLDER));
+      Assert.assertNull(IDE.PROJECT.EXPLORER.getCurrentProject());
+   }
+
    /**
     * Test to create folder using main menu (TestCase IDE-3).
     * 
@@ -45,19 +55,21 @@ public class CreateFolderTest extends BaseTest
    @Test
    public void testCreateFolder() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      selenium.refresh();
 
-      //run command for create folder
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.CREATE.createProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
+      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FOLDER));
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
+      IDE.FOLDER.waitOpened();
+      IDE.FOLDER.clickCreateButton();
+      IDE.FOLDER.waitClosed();
 
-      //create folder
-      selenium().click("ideCreateFolderFormCreateButton");
-      Thread.sleep(2000);
-      //check disapear menu after create of folder
-      assertFalse(selenium().isElementPresent("//div[@view-id='ideCreateFolderForm']"));
-      //check folder in tread menu
-      IDE.NAVIGATION.assertItemVisible("/" + FOLDER_NAME_DEFAULT);
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_DEFAULT.replace(" ", "%20"))
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_DEFAULT);
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_NAME_DEFAULT.replace(" ", "%20"))
          .getStatusCode());
    }
 
@@ -69,7 +81,7 @@ public class CreateFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_DEFAULT.replace(" ", "%20"));
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT + "/");
       }
       catch (Exception e)
       {

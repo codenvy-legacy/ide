@@ -24,6 +24,10 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 /**
  * 
@@ -36,16 +40,32 @@ import org.exoplatform.ide.TestConstants;
 public class Toolbar extends AbstractTestModule
 {
 
+   interface Locators
+   {
+      String BUTTON_LOCATOR = "//div[@id='exoIDEToolbar']//div[@title='%s']";
+
+      String POPUP_PANEL_LOCTOR = "//table[@class='exo-popupMenuTable']";
+
+      String BUTTON_FROM_NEW_POPUP_LOCATOR = POPUP_PANEL_LOCTOR + "//tr[contains(., '%s')]";
+
+      String LOCKLAYER_CLASS = "exo-lockLayer";
+   }
+
+   @FindBy(className = Locators.LOCKLAYER_CLASS)
+   WebElement lockLayer;
+
    /**
     * Performs click on toolbar button and makes pause after it.
     * @param buttonTitle toolbar button title
     */
    public void runCommand(String buttonTitle) throws Exception
    {
-      String locator = "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
+      String locator =
+         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
       selenium().click(locator);
 
-      if ("New".equals(buttonTitle)) {
+      if ("New".equals(buttonTitle))
+      {
          waitForElementPresent("//div[@id='menu-lock-layer-id']//table[@class='exo-popupMenuTable']");
       }
    }
@@ -78,22 +98,17 @@ public class Toolbar extends AbstractTestModule
       {
          waitForElementPresent("//div[@view-id='ideCreateFileFromTemplateForm']");
       }
-      else if (menuItemName.equals(MenuCommands.New.GOOGLE_GADGET_FILE) ||
-               menuItemName.equals(MenuCommands.New.REST_SERVICE_FILE) ||
-               menuItemName.equals(MenuCommands.New.GROOVY_SCRIPT_FILE) ||
-               menuItemName.equals(MenuCommands.New.CHROMATTIC) ||
-               menuItemName.equals(MenuCommands.New.HTML_FILE) ||
-               menuItemName.equals(MenuCommands.New.JAVASCRIPT_FILE) ||
-               menuItemName.equals(MenuCommands.New.CSS_FILE) ||
-               menuItemName.equals(MenuCommands.New.GROOVY_TEMPLATE_FILE) ||
-               menuItemName.equals(MenuCommands.New.XML_FILE) ||
-               menuItemName.equals(MenuCommands.New.TEXT_FILE) ||
-               menuItemName.equals(MenuCommands.New.NETVIBES_WIDGET) ||
-               menuItemName.equals(MenuCommands.New.JAVA_CLASS) ||
-               menuItemName.equals(MenuCommands.New.JSP) ||
-               menuItemName.equals(MenuCommands.New.RUBY) ||
-               menuItemName.equals(MenuCommands.New.PHP)
-               ) {
+      else if (menuItemName.equals(MenuCommands.New.GOOGLE_GADGET_FILE)
+         || menuItemName.equals(MenuCommands.New.REST_SERVICE_FILE)
+         || menuItemName.equals(MenuCommands.New.GROOVY_SCRIPT_FILE)
+         || menuItemName.equals(MenuCommands.New.CHROMATTIC) || menuItemName.equals(MenuCommands.New.HTML_FILE)
+         || menuItemName.equals(MenuCommands.New.JAVASCRIPT_FILE) || menuItemName.equals(MenuCommands.New.CSS_FILE)
+         || menuItemName.equals(MenuCommands.New.GROOVY_TEMPLATE_FILE)
+         || menuItemName.equals(MenuCommands.New.XML_FILE) || menuItemName.equals(MenuCommands.New.TEXT_FILE)
+         || menuItemName.equals(MenuCommands.New.NETVIBES_WIDGET) || menuItemName.equals(MenuCommands.New.JAVA_CLASS)
+         || menuItemName.equals(MenuCommands.New.JSP) || menuItemName.equals(MenuCommands.New.RUBY)
+         || menuItemName.equals(MenuCommands.New.PHP))
+      {
          IDE().EDITOR.waitTabPresent(0);
       }
       else
@@ -107,7 +122,10 @@ public class Toolbar extends AbstractTestModule
     * 
     * @param name button name
     * @param enabled boolean value
+    * 
+    * Use {@link Toolbar.#isButtonEnabled(String)}
     */
+   @Deprecated
    public void assertButtonEnabled(String name, boolean enabled)
    {
       if (enabled)
@@ -126,6 +144,46 @@ public class Toolbar extends AbstractTestModule
       }
    }
 
+   /**
+    * @param name button's title
+    * @return enabled state of the button
+    */
+   public boolean isButtonEnabled(String name)
+   {
+      try
+      {
+         WebElement button = driver().findElement(By.xpath(String.format(Locators.BUTTON_LOCATOR, name)));
+         return Boolean.parseBoolean(button.getAttribute("enabled"));
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+
+   public boolean isButtonFromNewPopupMenuEnabled(String name) throws Exception
+   {
+      runCommand(MenuCommands.New.NEW);
+
+      try
+      {
+         WebElement button =
+            driver().findElement(By.xpath(String.format(Locators.BUTTON_FROM_NEW_POPUP_LOCATOR, name)));
+         return Boolean.parseBoolean(button.getAttribute("item-enabled"));
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+      finally
+      {
+         if (lockLayer != null)
+         {
+            lockLayer.click();
+         }
+      }
+   }
+
    public void waitForButtonEnabled(String name, boolean enabled) throws Exception
    {
       String locator = null;
@@ -141,18 +199,21 @@ public class Toolbar extends AbstractTestModule
             "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"false\" and @title=\"" + name
                + "\"]";
       }
-      
+
       long startTime = System.currentTimeMillis();
-      while (true) {
-         if (selenium().isElementPresent(locator)) {
+      while (true)
+      {
+         if (selenium().isElementPresent(locator))
+         {
             break;
          }
-         
+
          long time = System.currentTimeMillis() - startTime;
-         if (time > TestConstants.TIMEOUT) {
+         if (time > TestConstants.TIMEOUT)
+         {
             fail("timeout for element " + locator);
          }
-         
+
          Thread.sleep(1000);
       }
    }

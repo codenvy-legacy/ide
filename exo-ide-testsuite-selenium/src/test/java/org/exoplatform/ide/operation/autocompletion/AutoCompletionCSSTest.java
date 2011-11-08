@@ -35,7 +35,7 @@ public class AutoCompletionCSSTest extends BaseTest
    @Test
    public void testPlainCSS() throws Exception
    {
-      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       cssTest();
    }
@@ -44,7 +44,7 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testGoogleGadget() throws Exception
    {
       selenium.refresh();
-      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.moveCursorDown(0, 4);
       IDE.EDITOR.moveCursorRight(0, 16);
@@ -58,7 +58,7 @@ public class AutoCompletionCSSTest extends BaseTest
    public void testHTML() throws Exception
    {
       selenium().refresh();
-      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
 
       IDE.EDITOR.moveCursorDown(0, 2);

@@ -80,7 +80,7 @@ public class IDE
 
    public Menu MENU = new Menu();
 
-   public Toolbar TOOLBAR = new Toolbar();
+   public Toolbar TOOLBAR;
 
    public Editor EDITOR;
 
@@ -132,7 +132,7 @@ public class IDE
 
    public Versions VERSIONS = new Versions();
 
-   public Folder FOLDER = new Folder();
+   public Folder FOLDER;
 
    public RenameDialog RENAME_DIALOG = new RenameDialog();
 
@@ -159,6 +159,8 @@ public class IDE
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
+      TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
+      FOLDER = PageFactory.initElements(driver, Folder.class);
    }
 
    public Selenium getSelenium()

@@ -19,9 +19,11 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.MenuCommands;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -44,7 +46,7 @@ public class Folder extends AbstractTestModule
       String CANCEL_BUTTON_ID = "ideCreateFolderFormCancelButton";
    }
 
-   @FindBy(id = Locators.VIEW_LOCATOR)
+   @FindBy(how = How.XPATH, using = Locators.VIEW_LOCATOR)
    WebElement view;
 
    @FindBy(name = Locators.INPUT_FIELD_NAME)
@@ -56,6 +58,11 @@ public class Folder extends AbstractTestModule
    @FindBy(id = Locators.CANCEL_BUTTON_ID)
    WebElement cancelButton;
 
+   /**
+    * Wait Create folder view opened.
+    * 
+    * @throws Exception
+    */
    public void waitOpened() throws Exception
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
@@ -67,7 +74,12 @@ public class Folder extends AbstractTestModule
          }
       });
    }
-   
+
+   /**
+    * Wait create folder view closed.
+    * 
+    * @throws Exception
+    */
    public void waitClosed() throws Exception
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
@@ -75,31 +87,65 @@ public class Folder extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return view == null;
+            try
+            {
+               return view == null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
          }
       });
    }
 
+   /**
+    * Type folder's name.
+    * 
+    * @param name folder's name
+    * @throws InterruptedException
+    */
    public void typeFolderName(String name) throws InterruptedException
    {
       IDE().INPUT.typeToElement(nameField, name, true);
    }
 
+   /**
+    * Click create folder button.
+    * 
+    * @throws Exception
+    */
    public void clickCreateButton() throws Exception
    {
       createButton.click();
    }
-   
+
+   /**
+    * Click cancel button.
+    * 
+    * @throws Exception
+    */
    public void clickCancelButton() throws Exception
    {
       cancelButton.click();
    }
-   
+
+   /**
+    * Performs operations to create new folder.
+    * 
+    * @param name folder's name. May be <code>null</code> if default name is used
+    * @throws Exception
+    */
    public void createFolder(String name) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.New.NEW, MenuCommands.New.FOLDER);
       waitOpened();
-      typeFolderName(name);
+
+      if (name != null)
+      {
+         typeFolderName(name);
+      }
+
       clickCreateButton();
       waitClosed();
    }
