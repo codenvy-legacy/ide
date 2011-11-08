@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.finish;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -54,16 +56,11 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Presenter for Step1 (Source) of Wizard for creation Java Project.
@@ -226,66 +223,45 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
    
    private void finishProjectCreation()
    {
+      FolderModel parent = (FolderModel)vfs.getRoot();
+      ProjectModel model = new ProjectModel();
+      model.setName(projectProperties.getName());
+      model.setProjectType(projectProperties.getType());
+      model.setParent(parent);
       try
       {
-         final FolderModel parent = projectProperties.getParenFolder();
-         ProjectModel newProject = new ProjectModel(projectProperties.getName(), parent, projectProperties.getType(), 
-            Collections.EMPTY_LIST);
          VirtualFileSystem.getInstance().createProject(parent, new AsyncRequestCallback<ProjectModel>(
-                  new ProjectUnmarshaller(newProject))
+            new ProjectUnmarshaller(model))
          {
-            
             @Override
             protected void onSuccess(ProjectModel result)
             {
+               project = result;
                if (!ProjectProperties.Paas.NONE.equals(projectProperties.getPaas()))
                {
-                  project = result;
                   buildApplication(project);
                }
-               //TODO check this works:
-               IDE.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
-               //eventBus.fireEvent(new RefreshBrowserEvent(parent));
+               
                IDE.fireEvent(new ProjectCreationFinishedEvent(false));
+               
+               IDE.fireEvent(new ProjectCreatedEvent(project));
+               IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
                closeView();
             }
-            
+
             @Override
             protected void onFailure(Throwable exception)
             {
-               exception.printStackTrace();
-               IDE.fireEvent(new ExceptionThrownEvent(exception, lb.wizardFinishErrorCantCreateProject()));
+               IDE.fireEvent(new ExceptionThrownEvent(exception,
+                  "Exception during creating project"));
             }
          });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         IDE.fireEvent(new ExceptionThrownEvent(e,
-            "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
       }
       
-   }
-   
-   /**
-    * Work up to the root folder to create a list of folder to refresh.
-    * Need to refresh all folders, that were created during "Select Location"
-    * step, but not displayed in main navigation tree.
-    * 
-    * @param folder - the parent folder of your project
-    * @return
-    */
-   private ArrayList<Folder> getFoldersToRefresh(Folder folder)
-   {
-      ArrayList<Folder> folders = new ArrayList<Folder>();
-      folders.add(0, folder);
-      Folder parent = ((ItemContext)folder).getParent();
-      while (parent != null)
-      {
-         folders.add(0, parent);
-         parent = ((ItemContext)parent).getParent();
-      }
-      return folders;
    }
    
    private LoggedInHandler deployToCloudBeesLoggedInHandler = new LoggedInHandler()

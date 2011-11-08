@@ -33,7 +33,6 @@ import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter
 import org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter;
-import org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter;
 
 /**
@@ -68,7 +67,6 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       
       new StartPagePresenter();
-//      new SelectLocationPresenter();
       new ConvertToProjectPresenter();
       
       ShowSamplesPresenter showSamplesStep = new ShowSamplesPresenter();
@@ -77,15 +75,12 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       selectTypeSamplesStep.setSamplesReturnable(showSamplesStep);
       
       WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter();
-      WizardLocationStepPresenter wizardLocationStep = new WizardLocationStepPresenter();
       WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter();
       WizardDeploymentStepPresenter wizardDeploymentStep = new WizardDeploymentStepPresenter();
       WizardFinishStepPresenter wizardFinishStep = new WizardFinishStepPresenter();
       
-      wizardSourceStep.setWizardContinuable(wizardLocationStep);
-      wizardLocationStep.setWizardReturn(wizardSourceStep);
-      wizardLocationStep.setWizardContinue(wizardDefinitionStep);
-      wizardDefinitionStep.setWizardReturnable(wizardLocationStep);
+      wizardSourceStep.setWizardContinuable(wizardDefinitionStep);
+      wizardDefinitionStep.setWizardReturnable(wizardSourceStep);
       wizardDefinitionStep.setWizardContinuable(wizardDeploymentStep);
       wizardDeploymentStep.setWizardReturnable(wizardDefinitionStep);
       wizardDeploymentStep.setWizardContinuable(wizardFinishStep);
