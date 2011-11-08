@@ -42,7 +42,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Utils.java Apr 8, 2011 2:51:02 PM vereshchaka $
- * 
+ * @deprecated not use JCR directly any more
  */
 public class Utils
 {
