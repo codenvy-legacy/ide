@@ -82,10 +82,10 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
    @Test
    public void testOpenAndSaveXmlFileWithNonLatinName() throws Exception
    {
-      IDE.PROJECT_EXPLORER.waitOpened();
-      IDE.CREATE_PROJECT.createProject(FOLDER_NAME);
-      IDE.PROJECT_EXPLORER.waitForItem(FOLDER_NAME);
-      IDE.PROJECT_EXPLORER.selectItem(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.CREATE.createProject(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(FOLDER_NAME);
       
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
@@ -99,7 +99,7 @@ public class OpenAndSaveXmlFileWithNonLatinNameTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(1, XML_CONTENT);
 
       IDE.EDITOR.saveAs(1, FILE_NAME);
-      IDE.PROJECT_EXPLORER.waitForItem(FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.closeFile(1);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);

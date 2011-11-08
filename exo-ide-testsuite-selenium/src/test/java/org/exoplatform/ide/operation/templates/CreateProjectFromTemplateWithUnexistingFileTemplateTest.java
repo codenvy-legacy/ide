@@ -129,9 +129,9 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       IDE.TEMPLATES.typeNameToInputField(PROJECT_NAME);
       IDE.TEMPLATES.clickCreateButton();
 
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
-      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
-      IDE.CLASSPATH_PROJECT.clickCancelButton();
+      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
+      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
+      IDE.PROJECT.CLASSPATH.clickCancelButton();
 
       //----- 3 ----------------
       //check new project created

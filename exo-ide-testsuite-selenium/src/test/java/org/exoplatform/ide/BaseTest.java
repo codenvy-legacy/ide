@@ -865,7 +865,7 @@ public abstract class BaseTest
    {
       selenium().refresh();
       selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }

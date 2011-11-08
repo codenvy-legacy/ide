@@ -61,9 +61,9 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    @Test
    public void testClosingAndSaveAsFile() throws Exception
    {
-      IDE.PROJECT_EXPLORER.waitOpened();
-      IDE.CREATE_PROJECT.createProject(PROJECT);
-      IDE.PROJECT_EXPLORER.waitForItem("/" + PROJECT);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.CREATE.createProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem("/" + PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(1);
@@ -95,10 +95,10 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
       selenium.refresh();
-      IDE.PROJECT_EXPLORER.waitOpened();
-      IDE.CREATE_PROJECT.createProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.CREATE.createProject(PROJECT);
 
-      IDE.PROJECT_EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.WORKSPACE.selectItem(PROJECT);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);

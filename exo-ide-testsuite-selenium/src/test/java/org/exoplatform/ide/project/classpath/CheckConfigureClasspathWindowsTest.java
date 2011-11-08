@@ -149,129 +149,129 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
 
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
+      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
 
       /*
        * "Configure classpath" dialog appeared
        */
-      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
-      IDE.CLASSPATH_PROJECT.checkAddButtonEnabledState(true);
-      IDE.CLASSPATH_PROJECT.checkRemoveButtonEnabledState(false);
-      IDE.CLASSPATH_PROJECT.checkSaveButtonEnabledState(true);
-      IDE.CLASSPATH_PROJECT.checkCancelButtonEnabledState(true);
+      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
+      IDE.PROJECT.CLASSPATH.checkAddButtonEnabledState(true);
+      IDE.PROJECT.CLASSPATH.checkRemoveButtonEnabledState(false);
+      IDE.PROJECT.CLASSPATH.checkSaveButtonEnabledState(true);
+      IDE.PROJECT.CLASSPATH.checkCancelButtonEnabledState(true);
 
       /*
        * Classpath list grid must be empty
        */
-      IDE.CLASSPATH_PROJECT.checkItemsCountInClasspathGrid(0);
+      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(0);
 
       /*
        * 4. Click "Add..." button and check "Choose source path" dialog
        */
-      IDE.CLASSPATH_PROJECT.clickAddButton();
-      IDE.CLASSPATH_PROJECT.waitForChooseSourceViewOpened();
-      IDE.CLASSPATH_PROJECT.checkChooseSourceWindow();
+      IDE.PROJECT.CLASSPATH.clickAddButton();
+      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewOpened();
+      IDE.PROJECT.CLASSPATH.checkChooseSourceWindow();
       /*
        * Check, that all workspaces are present in list grid
        */
       String[] workspaces = {WS_NAME, WS_NAME_2};
-      IDE.CLASSPATH_PROJECT.checkElementsInChooseSourceTreeGrid(workspaces);
-      IDE.CLASSPATH_PROJECT.checkChooseSourceOkButtonEnabledState(false);
-      IDE.CLASSPATH_PROJECT.checkChooseSourceCancelButtonEnabledState(true);
+      IDE.PROJECT.CLASSPATH.checkElementsInChooseSourceTreeGrid(workspaces);
+      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(false);
+      IDE.PROJECT.CLASSPATH.checkChooseSourceCancelButtonEnabledState(true);
 
       /*
        * 5. Select default workspace. "Ok" button is disabled.
        */
-      IDE.CLASSPATH_PROJECT.selectItemInChooseSourceTree(WS_NAME);
-      IDE.CLASSPATH_PROJECT.checkChooseSourceOkButtonEnabledState(false);
+      IDE.PROJECT.CLASSPATH.selectItemInChooseSourceTree(WS_NAME);
+      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(false);
 
       /*
        * 6. Open default workspace. Select folder. "Ok" button is enabled.
        */
-      IDE.CLASSPATH_PROJECT.openFolderInChooseSourceTree(WS_NAME);
+      IDE.PROJECT.CLASSPATH.openFolderInChooseSourceTree(WS_NAME);
 
-      IDE.CLASSPATH_PROJECT.selectItemInChooseSourceTree(FOLDER_NAME);
-      IDE.CLASSPATH_PROJECT.checkChooseSourceOkButtonEnabledState(true);
+      IDE.PROJECT.CLASSPATH.selectItemInChooseSourceTree(FOLDER_NAME);
+      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(true);
 
-      IDE.CLASSPATH_PROJECT.clickChooseSourceOkButton();
+      IDE.PROJECT.CLASSPATH.clickChooseSourceOkButton();
 
       /*
        * "Choose source" window dissapeared.
        * New item in Configure Classpath list grid appeared.
        */
-      IDE.CLASSPATH_PROJECT.waitForChooseSourceViewClosed();
-      IDE.CLASSPATH_PROJECT.checkItemsCountInClasspathGrid(1);
+      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewClosed();
+      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(1);
 
       final String folderPathForClasspath = WS_NAME + "#" + "/" + FOLDER_NAME + "/";
 
-      assertEquals(folderPathForClasspath, IDE.CLASSPATH_PROJECT.getPathByIndex(1));
+      assertEquals(folderPathForClasspath, IDE.PROJECT.CLASSPATH.getPathByIndex(1));
 
       /*
        * 7. Select folder path and check, that remove button is enabled
        */
-      IDE.CLASSPATH_PROJECT.selectRowInListGrid(1);
-      IDE.CLASSPATH_PROJECT.waitRemoveButtonEnabled(true);
-      IDE.CLASSPATH_PROJECT.checkSaveButtonEnabledState(true);
+      IDE.PROJECT.CLASSPATH.selectRowInListGrid(1);
+      IDE.PROJECT.CLASSPATH.waitRemoveButtonEnabled(true);
+      IDE.PROJECT.CLASSPATH.checkSaveButtonEnabledState(true);
 
       /*
        * 8. Click remove button and check, that element was removed
        */
-      IDE.CLASSPATH_PROJECT.clickRemoveButton();
+      IDE.PROJECT.CLASSPATH.clickRemoveButton();
 
-      IDE.CLASSPATH_PROJECT.checkItemsCountInClasspathGrid(0);
+      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(0);
 
       /*
        * 9. Add element to list grid. Than click cancel button 
        * to check, that all changes will be canceled.
        */
-      IDE.CLASSPATH_PROJECT.clickAddButton();
-      IDE.CLASSPATH_PROJECT.waitForChooseSourceViewOpened();
-      IDE.CLASSPATH_PROJECT.checkChooseSourceWindow();
+      IDE.PROJECT.CLASSPATH.clickAddButton();
+      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewOpened();
+      IDE.PROJECT.CLASSPATH.checkChooseSourceWindow();
 
-      IDE.CLASSPATH_PROJECT.openFolderInChooseSourceTree(WS_NAME);
+      IDE.PROJECT.CLASSPATH.openFolderInChooseSourceTree(WS_NAME);
 
-      IDE.CLASSPATH_PROJECT.selectItemInChooseSourceTree(FOLDER_NAME);
-      IDE.CLASSPATH_PROJECT.checkChooseSourceOkButtonEnabledState(true);
+      IDE.PROJECT.CLASSPATH.selectItemInChooseSourceTree(FOLDER_NAME);
+      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(true);
 
-      IDE.CLASSPATH_PROJECT.clickChooseSourceOkButton();
-      IDE.CLASSPATH_PROJECT.checkItemsCountInClasspathGrid(1);
+      IDE.PROJECT.CLASSPATH.clickChooseSourceOkButton();
+      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(1);
 
-      IDE.CLASSPATH_PROJECT.clickCancelButton();
+      IDE.PROJECT.CLASSPATH.clickCancelButton();
 
       /*
        * 10. Open form and check, that it is empty
        */
       IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
+      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
 
       /*
        * "Configure classpath" dialog appeared
        */
-      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
+      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
 
       /*
        * Classpath list grid must be empty
        */
-      IDE.CLASSPATH_PROJECT.checkItemsCountInClasspathGrid(0);
+      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(0);
 
       /*
        * 11. Add element to list grid. And click save button
        */
-      IDE.CLASSPATH_PROJECT.clickAddButton();
-      IDE.CLASSPATH_PROJECT.waitForChooseSourceViewOpened();
-      IDE.CLASSPATH_PROJECT.checkChooseSourceWindow();
+      IDE.PROJECT.CLASSPATH.clickAddButton();
+      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewOpened();
+      IDE.PROJECT.CLASSPATH.checkChooseSourceWindow();
 
-      IDE.CLASSPATH_PROJECT.openFolderInChooseSourceTree(WS_NAME);
+      IDE.PROJECT.CLASSPATH.openFolderInChooseSourceTree(WS_NAME);
 
-      IDE.CLASSPATH_PROJECT.selectItemInChooseSourceTree(FOLDER_NAME);
-      IDE.CLASSPATH_PROJECT.checkChooseSourceOkButtonEnabledState(true);
+      IDE.PROJECT.CLASSPATH.selectItemInChooseSourceTree(FOLDER_NAME);
+      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(true);
 
-      IDE.CLASSPATH_PROJECT.clickChooseSourceOkButton();
-      IDE.CLASSPATH_PROJECT.waitForChooseSourceViewClosed();
-      IDE.CLASSPATH_PROJECT.checkItemsCountInClasspathGrid(1);
+      IDE.PROJECT.CLASSPATH.clickChooseSourceOkButton();
+      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewClosed();
+      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(1);
 
-      IDE.CLASSPATH_PROJECT.clickSaveButton();
+      IDE.PROJECT.CLASSPATH.clickSaveButton();
 
       Thread.sleep(1000);
       /*
@@ -299,19 +299,19 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       //1. Create new project: New -> Project from template
       IDE.TEMPLATES.createProjectFromTemplate(Templates.DEFAULT_PROJECT_TEMPLATE_NAME, CREATED_PROJECT_NAME);
       
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
+      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
       //Check, Configure Classpath window appeared.
-      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
+      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
 
       //Check, there is project folder in Classpath listgrid
 
-      IDE.CLASSPATH_PROJECT.checkItemsCountInClasspathGrid(1);
-      final String firstResource = IDE.CLASSPATH_PROJECT.getPathByIndex(1);
+      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(1);
+      final String firstResource = IDE.PROJECT.CLASSPATH.getPathByIndex(1);
       assertEquals(WS_NAME + "#" + "/" + CREATED_PROJECT_NAME + "/", firstResource);
 
       // 2. Close form.
-      IDE.CLASSPATH_PROJECT.clickCancelButton();
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialogClose();
+      IDE.PROJECT.CLASSPATH.clickCancelButton();
+      IDE.PROJECT.CLASSPATH.waitForClasspathDialogClose();
 
       // Check new project created.
 

@@ -157,9 +157,9 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * Configure classpath window dialog appeared. Close it
        */
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
-      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
-      IDE.CLASSPATH_PROJECT.clickCancelButton();
+      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
+      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
+      IDE.PROJECT.CLASSPATH.clickCancelButton();
 
       /*
        * 3. Check new project created
@@ -211,9 +211,9 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 2. Configure classpath window dialog appeared. Close it
        */
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
-      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
-      IDE.CLASSPATH_PROJECT.clickCancelButton();
+      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
+      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
+      IDE.PROJECT.CLASSPATH.clickCancelButton();
 
       /*
        * 3. Check sample project created
@@ -274,9 +274,9 @@ public class CreateProjectFromTemplateTest extends BaseTest
       /*
        * 2. Configure classpath window dialog appeared. Close it
        */
-      IDE.CLASSPATH_PROJECT.waitForClasspathDialogOpen();
-      IDE.CLASSPATH_PROJECT.checkConfigureClasspathDialog();
-      IDE.CLASSPATH_PROJECT.clickCancelButton();
+      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
+      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
+      IDE.PROJECT.CLASSPATH.clickCancelButton();
 
       /*
        * 3. Check new project created

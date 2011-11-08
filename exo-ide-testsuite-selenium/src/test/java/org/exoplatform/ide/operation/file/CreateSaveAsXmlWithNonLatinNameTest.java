@@ -97,11 +97,11 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    @Test
    public void testCreateAndSaveAsXmlWithNonLatinName() throws Exception
    {
-      IDE.PROJECT_EXPLORER.waitOpened();
+      IDE.PROJECT.EXPLORER.waitOpened();
 
-      IDE.CREATE_PROJECT.createProject(PROJECT);
-      IDE.PROJECT_EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT_EXPLORER.selectItem(PROJECT);
+      IDE.PROJECT.CREATE.createProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
@@ -128,9 +128,9 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       //check file on server
       checkFileExists(URL + PROJECT + "/" + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
 
-      Assert.assertTrue(IDE.PROJECT_EXPLORER.isItemPresent(PROJECT + "/" + XML_FILE));
+      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + XML_FILE));
 
-      IDE.PROJECT_EXPLORER.openItem(PROJECT + "/" + XML_FILE);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE);
 
       //change file content
@@ -139,7 +139,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       //save as file
       IDE.EDITOR.saveAs(1, NEW_XML_FILE);
-      IDE.PROJECT_EXPLORER.waitForItem(PROJECT + "/" + NEW_XML_FILE);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NEW_XML_FILE);
 
       assertEquals(NEW_XML_FILE, IDE.EDITOR.getTabTitle(1));
       IDE.PROPERTIES.openProperties();
@@ -151,8 +151,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       checkFileExists(URL + PROJECT + "/" + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
       checkFileExists(URL + PROJECT + "/" + URLEncoder.encode(NEW_XML_FILE, "UTF-8"), XML_CONTENT_2);
 
-      Assert.assertTrue(IDE.PROJECT_EXPLORER.isItemPresent(PROJECT + "/" + XML_FILE));
-      Assert.assertTrue(IDE.PROJECT_EXPLORER.isItemPresent(PROJECT + "/" + NEW_XML_FILE));
+      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + XML_FILE));
+      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + NEW_XML_FILE));
    }
 
    /**

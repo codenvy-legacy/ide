@@ -21,8 +21,7 @@ package org.exoplatform.ide.operation.templates;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.core.CreateProjectTemplate;
-import org.junit.After;
+import org.exoplatform.ide.core.project.CreateProjectTemplate;
 import org.junit.Test;
 
 /**
@@ -51,8 +50,8 @@ public class CreateProjectTemplateTest extends BaseTest
       //----- 1 ----------------
       //open Create Project Template Form
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
-      IDE.PROJECT_TEMPLATE.waitForDialog();
-      IDE.PROJECT_TEMPLATE.checkCreateProjectTemplateDialog();
+      IDE.PROJECT.TEMPLATE.waitForDialog();
+      IDE.PROJECT.TEMPLATE.checkCreateProjectTemplateDialog();
       //      checkTreeNodeSelected(ROOT_NODE_NAME);
 
       //----- 2 ----------------
@@ -60,13 +59,13 @@ public class CreateProjectTemplateTest extends BaseTest
       addFolder(myFolder);
       //check folder added
       //      checkTreeNodeSelected(myFolder);
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FILE_BUTTON_ID, true);
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FOLDER_BUTTON_ID, true);
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, true);
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FILE_BUTTON_ID, true);
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FOLDER_BUTTON_ID, true);
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, true);
 
       //----- 3 ----------------
       //select root of tree
-      IDE.PROJECT_TEMPLATE.selectRootNode();
+      IDE.PROJECT.TEMPLATE.selectRootNode();
 
       //try to add folder with the same name
       addFolder(myFolder);
@@ -84,13 +83,13 @@ public class CreateProjectTemplateTest extends BaseTest
       //check new file selected
       //      checkTreeNodeSelected(gadgetFileName + "(from Google Gadget)");
       //check buttons
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FILE_BUTTON_ID, false);
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FOLDER_BUTTON_ID, false);
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, true);
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FILE_BUTTON_ID, false);
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.ADD_FOLDER_BUTTON_ID, false);
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, true);
 
       //----- 5 ----------------
       //select root node
-      IDE.PROJECT_TEMPLATE.selectRootNode();
+      IDE.PROJECT.TEMPLATE.selectRootNode();
 
       //----- 6 ----------------
       //try to add file with existing name
@@ -104,18 +103,18 @@ public class CreateProjectTemplateTest extends BaseTest
       //=================== Change project name ====================
       //----- 7 ----------------
       //type new project name to name field
-      IDE.PROJECT_TEMPLATE.typeNameToInputField(newProjectName);
+      IDE.PROJECT.TEMPLATE.typeNameToInputField(newProjectName);
 
       //----- 8 ----------------
       //type description to description field
       final String description = "Sample project for test";
-      IDE.PROJECT_TEMPLATE.typeDescriptionToInputField(description);
+      IDE.PROJECT.TEMPLATE.typeDescriptionToInputField(description);
 
       //=================== Create project template ====================
       //----- 9 ----------------
       //click Create button
-      IDE.PROJECT_TEMPLATE.clickCreateButton();
-      IDE.PROJECT_TEMPLATE.waitForDialogNotPresent();
+      IDE.PROJECT.TEMPLATE.clickCreateButton();
+      IDE.PROJECT.TEMPLATE.waitForDialogNotPresent();
 
       //check info dialog appears
       IDE.INFORMATION_DIALOG.waitForInfoDialog("Template created successfully!");
@@ -125,21 +124,21 @@ public class CreateProjectTemplateTest extends BaseTest
       //check cancel button
       //call create project template form
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
-      IDE.PROJECT_TEMPLATE.waitForDialog();
+      IDE.PROJECT.TEMPLATE.waitForDialog();
 
       //click cancel button
-      IDE.PROJECT_TEMPLATE.clickCancelButton();
+      IDE.PROJECT.TEMPLATE.clickCancelButton();
 
       //=================== Create project template with existing name ====================
       //----- 11 ----------------
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
-      IDE.PROJECT_TEMPLATE.waitForDialog();
+      IDE.PROJECT.TEMPLATE.waitForDialog();
 
       //type new project name to name field
-      IDE.PROJECT_TEMPLATE.typeNameToInputField(newProjectName);
+      IDE.PROJECT.TEMPLATE.typeNameToInputField(newProjectName);
 
       //click create button
-      IDE.PROJECT_TEMPLATE.clickCreateButton();
+      IDE.PROJECT.TEMPLATE.clickCreateButton();
 
       //check warn dialog appears
       IDE.WARNING_DIALOG.waitForWarningDialogOpened();
@@ -147,12 +146,12 @@ public class CreateProjectTemplateTest extends BaseTest
       IDE.WARNING_DIALOG.clickOk();
 
       //check template form
-      IDE.PROJECT_TEMPLATE.checkDialogOpened();
+      IDE.PROJECT.TEMPLATE.checkDialogOpened();
 
       //----- 12 ----------------
       //close
       //click cancel button
-      IDE.PROJECT_TEMPLATE.clickCancelButton();
+      IDE.PROJECT.TEMPLATE.clickCancelButton();
    }
 
    @Test
@@ -164,31 +163,31 @@ public class CreateProjectTemplateTest extends BaseTest
 
       //----- 1 ----------------
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);
-      IDE.PROJECT_TEMPLATE.waitForDialog();
-      IDE.PROJECT_TEMPLATE.checkCreateProjectTemplateDialog();
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, false);
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, false);
+      IDE.PROJECT.TEMPLATE.waitForDialog();
+      IDE.PROJECT.TEMPLATE.checkCreateProjectTemplateDialog();
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.DELETE_BUTTON_ID, false);
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, false);
 
       //----- 2 ----------------
       //type text to name field
-      IDE.PROJECT_TEMPLATE.typeNameToInputField("a");
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, true);
+      IDE.PROJECT.TEMPLATE.typeNameToInputField("a");
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, true);
 
       //----- 3 ----------------
       //remove text
-      IDE.PROJECT_TEMPLATE.typeNameToInputField("");
-      IDE.PROJECT_TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, false);
+      IDE.PROJECT.TEMPLATE.typeNameToInputField("");
+      IDE.PROJECT.TEMPLATE.checkButtonState(CreateProjectTemplate.CREATE_BUTTON_ID, false);
 
       //----- 3 ----------------
       //close
       //click cancel button
-      IDE.PROJECT_TEMPLATE.clickCancelButton();
+      IDE.PROJECT.TEMPLATE.clickCancelButton();
    }
 
    private void addFile(String templateName, String fileName) throws Exception
    {
       //click add file button
-      IDE.PROJECT_TEMPLATE.clickAddFileButton();
+      IDE.PROJECT.TEMPLATE.clickAddFileButton();
       //add file form appeared
       IDE.TEMPLATES.checkAddCreateFileFromTemplateWindowComponents();
       //select file template
@@ -202,7 +201,7 @@ public class CreateProjectTemplateTest extends BaseTest
 
    private void addFolder(String folderName) throws Exception
    {
-      IDE.PROJECT_TEMPLATE.clickAddFolderButton();
+      IDE.PROJECT.TEMPLATE.clickAddFolderButton();
       //set folder's name
       IDE.FOLDER.typeFolderName(folderName);
       //click ok button

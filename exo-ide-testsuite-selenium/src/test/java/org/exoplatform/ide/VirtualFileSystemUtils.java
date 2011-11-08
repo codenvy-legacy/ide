@@ -277,17 +277,60 @@ public class VirtualFileSystemUtils
       return client.executeMethod(filePost);
    }
 
-   public static int inportZipProject(String projectName, String zipPath) throws IOException
+   /**
+    * Delete folder by Link
+    * @param link
+    * @return http status code
+    * @throws IOException
+    */
+   public static int deleteFolder(Link link) throws IOException
+   {
+      if (link == null)
+         throw new IllegalArgumentException("Parameter 'link' can't be null!");
+
+      int status = -1;
+      HttpURLConnection connection = null;
+      try
+      {
+         URL url = new URL(link.getHref());
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod(HTTPMethod.POST);
+         status = connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+      return status;
+   }
+
+   public static Map<String, Link> createDefaultProject(String name) throws IOException
+   {
+      return importZipProject(name, "src/test/resources/org/exoplatform/ide/project/default-selenium-test.zip");
+   }
+
+   /**
+    * Import project zip to IDE
+    * @param projectName name of the project
+    * @param zipPath local path to project zip
+    * @return map of the Link, related to created project
+    * @throws IOException
+    */
+   public static Map<String, Link> importZipProject(String projectName, String zipPath) throws IOException
    {
 
       HttpURLConnection connection = null;
       try
       {
 
-         String href = createFolder(projectName);
-         if(href == null)
+         Map<String, Link> folderLiks = createFolder(projectName);
+         Link href = folderLiks.get(Link.REL_IMPORT);
+         if (href == null)
             throw new RuntimeException("Folder not created or 'import' relation not found.");
-         URL url = new URL(href);
+         URL url = new URL(href.getHref());
          connection = Utils.getConnection(url);
          connection.setRequestMethod("POST");
          connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/zip");
@@ -298,7 +341,8 @@ public class VirtualFileSystemUtils
          IOUtils.copy(inputStream, outputStream);
          inputStream.close();
          outputStream.close();
-         return connection.getResponseCode();
+         connection.getResponseCode();
+         return folderLiks;
       }
       finally
       {
@@ -309,7 +353,14 @@ public class VirtualFileSystemUtils
       }
    }
 
-   private static String createFolder(String name) throws IOException
+   /**
+    * Create folder in root.
+    * @param name
+    * @return
+    * @throws IOException
+    */
+   @SuppressWarnings("unchecked")
+   private static Map<String, Link> createFolder(String name) throws IOException
    {
       if (rootLinks == null)
       {
@@ -327,12 +378,9 @@ public class VirtualFileSystemUtils
          parser.parse(connection.getInputStream());
          connection.getInputStream().close();
          Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
-         
-         @SuppressWarnings("unchecked")
-         Map<String, Link> map =
-            ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(), parser.getJsonObject()
-               .getElement("links"));
-         return map.get(Link.REL_IMPORT).getHref();
+
+         return (Map<String, Link>)ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(),
+            parser.getJsonObject().getElement("links"));
       }
       catch (JsonException e)
       {

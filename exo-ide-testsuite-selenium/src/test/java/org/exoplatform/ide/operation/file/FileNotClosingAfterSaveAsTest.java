@@ -49,17 +49,17 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
    @Test
    public void testFileNotClosingAfterSaveAs() throws Exception
    {
-      IDE.PROJECT_EXPLORER.waitOpened();
-      IDE.CREATE_PROJECT.createProject(FOLDER_NAME);
-      IDE.PROJECT_EXPLORER.selectItem(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.CREATE.createProject(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(FOLDER_NAME);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       IDE.EDITOR.waitTabPresent(1);
       IDE.EDITOR.saveAs(1, FILE_NAME_1);
-      IDE.PROJECT_EXPLORER.waitForItem(FOLDER_NAME + "/" + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.waitForItem(FOLDER_NAME + "/" + FILE_NAME_1);
       IDE.EDITOR.closeFile(1);
       
-      IDE.PROJECT_EXPLORER.openItem(FOLDER_NAME + "/" + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.openItem(FOLDER_NAME + "/" + FILE_NAME_1);
       IDE.EDITOR.waitActiveFile(FOLDER_NAME + "/" + FILE_NAME_1);
       IDE.EDITOR.typeTextIntoEditor(1, "test test test");
       IDE.EDITOR.closeTabIgnoringChanges(1);

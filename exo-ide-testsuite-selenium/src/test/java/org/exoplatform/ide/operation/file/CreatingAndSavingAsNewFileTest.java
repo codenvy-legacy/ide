@@ -80,10 +80,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    @Test
    public void testCreatingAndSavingAsNewFiles() throws Exception
    {
-      IDE.PROJECT_EXPLORER.waitOpened();
-      IDE.CREATE_PROJECT.createProject(FOLDER_NAME);
-      IDE.PROJECT_EXPLORER.waitForItem(FOLDER_NAME);
-      IDE.PROJECT_EXPLORER.selectItem(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.CREATE.createProject(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(FOLDER_NAME);
 
       createFileAndSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
@@ -112,7 +112,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       IDE.EDITOR.closeFile(1);
       IDE.EDITOR.closeTabIgnoringChanges(1);      
 
-      Assert.assertTrue(IDE.PROJECT_EXPLORER.isItemPresent(FOLDER_NAME + "/" + fileName));
+      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(FOLDER_NAME + "/" + fileName));
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + fileName).getStatusCode());
    }
 
