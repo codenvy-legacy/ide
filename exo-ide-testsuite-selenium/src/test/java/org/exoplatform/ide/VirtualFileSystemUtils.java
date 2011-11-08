@@ -296,6 +296,8 @@ public class VirtualFileSystemUtils
          File f = new File(zipPath);
          FileInputStream inputStream = new FileInputStream(f);
          IOUtils.copy(inputStream, outputStream);
+         inputStream.close();
+         outputStream.close();
          return connection.getResponseCode();
       }
       finally
@@ -323,6 +325,7 @@ public class VirtualFileSystemUtils
          connection.setRequestMethod("POST");
          JsonParser parser = new JsonParser();
          parser.parse(connection.getInputStream());
+         connection.getInputStream().close();
          Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
          
          @SuppressWarnings("unchecked")
@@ -368,6 +371,7 @@ public class VirtualFileSystemUtils
          connection.setRequestMethod("GET");
          JsonParser parser = new JsonParser();
          parser.parse(connection.getInputStream());
+         connection.getInputStream().close();
          vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfo.class, parser.getJsonObject());
          JsonValue element = parser.getJsonObject().getElement("root").getElement("links");
 
