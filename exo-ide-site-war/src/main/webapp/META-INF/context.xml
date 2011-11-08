@@ -19,7 +19,7 @@
 
 -->
 <Context path="/site" docBase="site" reloadable="true" crossContext="false">
-
+  <Valve className="org.apache.catalina.authenticator.FormAuthenticator" characterEncoding="UTF-8" />
   <Logger className='org.apache.catalina.logger.SystemOutLogger'
             prefix='localhost_site_log.' suffix='.txt' timestamp='true'/>
     <Manager className='org.apache.catalina.session.PersistentManager' saveOnRestart='false'/>

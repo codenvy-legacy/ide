@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <html>
 <head>
 <title>eXo IDE Login Page</title>
