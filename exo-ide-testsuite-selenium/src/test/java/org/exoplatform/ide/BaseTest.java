@@ -34,6 +34,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -941,16 +942,20 @@ public abstract class BaseTest
          }
       }
 
-      byte[] sc = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
-      File parent = new File("target/screenshots");
-      parent.mkdirs();
       try
       {
+         byte[] sc = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
+         File parent = new File("target/screenshots");
+         parent.mkdirs();
          File file = new File(parent, this.getClass().getName() + "." + testMethodName + ".png");
          file.createNewFile();
          FileOutputStream outputStream = new FileOutputStream(file);
          outputStream.write(sc);
          outputStream.close();
+      }
+      catch (WebDriverException e)
+      {
+         e.printStackTrace();
       }
       catch (FileNotFoundException e)
       {

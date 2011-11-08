@@ -20,11 +20,8 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import static org.junit.Assert.assertTrue;
 
-import java.awt.event.KeyEvent;
-
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -33,40 +30,33 @@ import org.openqa.selenium.Keys;
  * @version $Id: $
  *
  */
-public class AutoCompletionXMLTest extends BaseTest
+public class AutoCompletionXMLTest extends CodeAssistantBaseTest
 {
+
+   @BeforeClass
+   public static void createProject()
+   {
+      createProject(AutoCompletionXMLTest.class.getSimpleName());
+   }
 
    @Test
    public void openForm() throws Throwable
    {
-      Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-      String text =IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.xml");
+
+      String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.HOME.toString());
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      //      selenium().keyDown("//body[@class='editbox']", "\\35");
-     IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-     IDE.EDITOR.typeTextIntoEditor(0, "<root>");
-     IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-     IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-     IDE.EDITOR.typeTextIntoEditor(0, "</root>");
-      selenium().keyPressNative("" + KeyEvent.VK_UP);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "<root>\n\n</root>");
+      IDE.EDITOR.moveCursorUp(0, 1);
 
-     IDE.EDITOR.typeTextIntoEditor(0, "<rot>");
-     IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-     IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-     IDE.EDITOR.typeTextIntoEditor(0, "</rot>");
-      selenium().keyPressNative("" + KeyEvent.VK_UP);
+      IDE.EDITOR.typeTextIntoEditor(0, "<rot>\n\n</rot>");
+      IDE.EDITOR.moveCursorUp(0, 1);
 
-     IDE.EDITOR.typeTextIntoEditor(0, "<rt>");
-     IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-     IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-     IDE.EDITOR.typeTextIntoEditor(0, "</rt>");
-
-      selenium().keyPressNative("" + KeyEvent.VK_UP);
+      IDE.EDITOR.typeTextIntoEditor(0, "<rt>\n\n</rt>");
+      IDE.EDITOR.moveCursorUp(0, 1);
 
       IDE.CODEASSISTANT.openForm();
 
@@ -74,11 +64,8 @@ public class AutoCompletionXMLTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("rot");
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      String textAfter =IDE.EDITOR.getTextFromCodeEditor(0);
+      String textAfter = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(textAfter.contains("<root></root>"));
-
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-     IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
 }
