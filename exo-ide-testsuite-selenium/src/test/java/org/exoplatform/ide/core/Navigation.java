@@ -230,7 +230,10 @@ public class Navigation extends AbstractTestModule
     * Delete selected item in navigation tree.
     * 
     * @throws Exception
+    * 
+    * use {@link Delete.#deleteSelectedItems()}
     */
+   @Deprecated
    public void deleteSelectedItems() throws Exception
    {
       IDE().TOOLBAR.runCommand(ToolbarCommands.File.DELETE);

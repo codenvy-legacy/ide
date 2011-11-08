@@ -27,38 +27,38 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: Folder.java May 13, 2011 4:52:00 PM vereshchaka $
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Nov 8, 2011 4:05:33 PM anya $
  *
  */
-public class Folder extends AbstractTestModule
+public class Delete extends AbstractTestModule
 {
-
    public interface Locators
    {
-      String VIEW_LOCATOR = "//div[@view-id='ideCreateFolderForm']";
+      String VIEW_LOCATOR = "//div[@view-id='ideDeleteItemsView']";
 
-      String INPUT_FIELD_NAME = "ideCreateFolderFormNameField";
+      String OK_BUTTON_ID = "ideDeleteItemFormOkButton";
 
-      String CREATE_BUTTON_ID = "ideCreateFolderFormCreateButton";
+      String NO_BUTTON_ID = "ideDeleteItemFormCancelButton";
 
-      String CANCEL_BUTTON_ID = "ideCreateFolderFormCancelButton";
+      String LABEL_LOCATOR = VIEW_LOCATOR + "//div[@class='gwt-Label']";
+
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
-   WebElement view;
+   private WebElement view;
 
-   @FindBy(name = Locators.INPUT_FIELD_NAME)
-   WebElement nameField;
+   @FindBy(xpath = Locators.LABEL_LOCATOR)
+   private WebElement label;
 
-   @FindBy(id = Locators.CREATE_BUTTON_ID)
-   WebElement createButton;
+   @FindBy(id = Locators.OK_BUTTON_ID)
+   private WebElement okButton;
 
-   @FindBy(id = Locators.CANCEL_BUTTON_ID)
-   WebElement cancelButton;
+   @FindBy(id = Locators.NO_BUTTON_ID)
+   private WebElement noButton;
 
    /**
-    * Wait Create folder view opened.
+    * Wait delete items view opened.
     * 
     * @throws Exception
     */
@@ -75,7 +75,7 @@ public class Folder extends AbstractTestModule
    }
 
    /**
-    * Wait create folder view closed.
+    * Wait delete items view closed.
     * 
     * @throws Exception
     */
@@ -99,53 +99,41 @@ public class Folder extends AbstractTestModule
    }
 
    /**
-    * Type folder's name.
-    * 
-    * @param name folder's name
-    * @throws InterruptedException
+    * Click ok button.
     */
-   public void typeFolderName(String name) throws InterruptedException
+   public void clickOkButton()
    {
-      IDE().INPUT.typeToElement(nameField, name, true);
+      okButton.click();
    }
 
    /**
-    * Click create folder button.
-    * 
-    * @throws Exception
+    * Click no button.
     */
-   public void clickCreateButton() throws Exception
+   public void clickNoButton()
    {
-      createButton.click();
+      noButton.click();
    }
 
    /**
-    * Click cancel button.
+    * Returns deletion question text.
     * 
-    * @throws Exception
+    * @return {@link String} text displayed on deletion dialog
     */
-   public void clickCancelButton() throws Exception
+   public String getDeletionText()
    {
-      cancelButton.click();
+      return (label != null) ? label.getText() : null;
    }
 
    /**
-    * Performs operations to create new folder.
+    * Performs deletion of selected items.
     * 
-    * @param name folder's name. May be <code>null</code> if default name is used
     * @throws Exception
     */
-   public void createFolder(String name) throws Exception
+   public void deleteSelectedItems() throws Exception
    {
-      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.New.NEW, MenuCommands.New.FOLDER);
+      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.DELETE);
       waitOpened();
-
-      if (name != null)
-      {
-         typeFolderName(name);
-      }
-
-      clickCreateButton();
+      clickOkButton();
       waitClosed();
    }
 }

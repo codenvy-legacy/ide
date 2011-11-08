@@ -23,6 +23,7 @@ import com.thoughtworks.selenium.Selenium;
 import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.AskForValueDialog;
 import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.core.Delete;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorDialog;
 import org.exoplatform.ide.core.FindReplace;
@@ -146,6 +147,8 @@ public class IDE
 
    public Input INPUT = new Input();
 
+   public Delete DELETE;
+
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
       System.out.println("\r\n\r\n\r\n\r\n" + "Initializing IDE ( Selenium )\r\n" + "Workspace URL > " + workspaceURL
@@ -157,6 +160,7 @@ public class IDE
       instance = this;
 
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
+      DELETE = PageFactory.initElements(driver, Delete.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);

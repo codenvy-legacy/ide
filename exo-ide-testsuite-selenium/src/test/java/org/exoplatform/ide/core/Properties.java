@@ -22,7 +22,6 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -56,29 +55,29 @@ public class Properties extends AbstractTestModule
       String CLOSE_VIEW_BUTTON_LOCATOR = "//div[@button-name='close-tab' and @tab-title='Properties']";
    }
 
-   @FindBy(how = How.XPATH, using = Locators.PROPERTIES_FORM_LOCATOR)
+   @FindBy(xpath = Locators.PROPERTIES_FORM_LOCATOR)
    private WebElement propertiesView;
 
    /*Properties*/
-   @FindBy(how = How.XPATH, using = Locators.NAME_PROPERTY_LOCATOR)
+   @FindBy(xpath = Locators.NAME_PROPERTY_LOCATOR)
    private WebElement nameProperty;
 
-   @FindBy(how = How.XPATH, using = Locators.PATH_PROPERTY_LOCATOR)
+   @FindBy(xpath = Locators.PATH_PROPERTY_LOCATOR)
    private WebElement pathProperty;
 
-   @FindBy(how = How.XPATH, using = Locators.MIME_TYPE_PROPERTY_LOCATOR)
+   @FindBy(xpath = Locators.MIME_TYPE_PROPERTY_LOCATOR)
    private WebElement mimeTypeProperty;
 
-   @FindBy(how = How.XPATH, using = Locators.CREATED_PROPERTY_LOCATOR)
+   @FindBy(xpath = Locators.CREATED_PROPERTY_LOCATOR)
    private WebElement createdProperty;
 
-   @FindBy(how = How.XPATH, using = Locators.LAST_MODIFIED_PROPERTY_LOCATOR)
+   @FindBy(xpath = Locators.LAST_MODIFIED_PROPERTY_LOCATOR)
    private WebElement lastModifiedProperty;
 
-   @FindBy(how = How.XPATH, using = Locators.CONTENT_LENGHT_PROPERTY_LOCATOR)
+   @FindBy(xpath = Locators.CONTENT_LENGHT_PROPERTY_LOCATOR)
    private WebElement contentLenghtProperty;
 
-   @FindBy(how = How.XPATH, using = Locators.CLOSE_VIEW_BUTTON_LOCATOR)
+   @FindBy(xpath = Locators.CLOSE_VIEW_BUTTON_LOCATOR)
    private WebElement closeViewButton;
 
    /**

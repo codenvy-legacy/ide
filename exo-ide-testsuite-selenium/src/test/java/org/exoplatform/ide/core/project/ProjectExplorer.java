@@ -73,7 +73,6 @@ public class ProjectExplorer extends AbstractTestModule
             }
             catch (Exception e)
             {
-               e.printStackTrace();
                return false;
             }
          }

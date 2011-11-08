@@ -35,21 +35,22 @@ import org.junit.Test;
 */
 public class RenameFolderTest extends BaseTest
 {
-   private final static String FOLDER_NAME = RenameFolderTest.class.getSimpleName();
+   private final static String PROJECT = RenameFolderTest.class.getSimpleName();
+
+   private final static String FOLDER_NAME = "FirstName";
 
    private final static String NEW_FOLDER_NAME = "FolderRenamed";
 
-   private final String ORIG_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
-      + WS_NAME + "/" + FOLDER_NAME;
+   private final String ORIG_URL = WS_URL + PROJECT + "/" + FOLDER_NAME;
 
-   private final String RENAME_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
-      + WS_NAME + "/" + NEW_FOLDER_NAME;
+   private final String RENAME_URL = WS_URL + PROJECT + "/" + NEW_FOLDER_NAME;
 
    @Before
    public void setUp()
    {
       try
       {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
          VirtualFileSystemUtils.mkcol(ORIG_URL);
       }
       catch (Exception e)
@@ -66,12 +67,14 @@ public class RenameFolderTest extends BaseTest
    @Test
    public void testRenameFolder() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(ORIG_URL + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME); 
       
-      //select folder and run rename command
-      IDE.WORKSPACE.selectItem(ORIG_URL + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
-      chekAppearRenameForm();
+
+      
       //set cursor on rename field
       selenium().click("ideRenameItemFormRenameField");
       //check default name folder in rename field
@@ -111,5 +114,5 @@ public class RenameFolderTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
 }

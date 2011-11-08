@@ -28,8 +28,8 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({CreateFolderTest.class,CreateFolderWithNonLatinSymbolsTest.class,DeleteFolderTest.class,
-   DeleteSeveralFoldersSimultaneously.class,RenameFolderTest.class,RootFolderTest.class})
+@SuiteClasses({CreateFolderTest.class, CreateFolderWithNonLatinSymbolsTest.class, DeleteFolderTest.class,
+   DeleteSeveralFoldersSimultaneously.class, RenameFolderTest.class})
 public class FolderTestSuite
 {
 

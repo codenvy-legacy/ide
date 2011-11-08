@@ -44,6 +44,8 @@ import java.net.URLEncoder;
 public class DeleteSeveralFoldersSimultaneously extends BaseTest
 {
 
+   private final static String PROJECT = DeleteSeveralFoldersSimultaneously.class.getSimpleName();
+   
    private final static String FOLDER_NAME_1 = "test 1";
 
    private final static String FOLDER_NAME_2 = "test 2";
@@ -57,12 +59,13 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_1);
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_1 + "/" + FOLDER_NAME_2);
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_3);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/"+  FOLDER_NAME_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/"+ FOLDER_NAME_1 + "/" + FOLDER_NAME_2);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/"+ FOLDER_NAME_3);
          VirtualFileSystemUtils.put(
             "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
-            MimeType.GROOVY_SERVICE, WS_URL + "/" + FOLDER_NAME_3 + "/" + FILE_NAME);
+            MimeType.GROOVY_SERVICE, WS_URL + PROJECT + "/" + FOLDER_NAME_3 + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -70,13 +73,18 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       }
    }
 
-   @Ignore
    @Test
+   @Ignore
    public void testDeleteSeveralFoldersSimultaneously() throws Exception
    {
-      IDE.WORKSPACE.waitForItem("/" + FOLDER_NAME_1);
-      IDE.WORKSPACE.doubleClickOnFolder("/" + FOLDER_NAME_1);
-
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME_1);
+      
+      
       IDE.WORKSPACE.selectItem("/" + FOLDER_NAME_1);
       selenium().controlKeyDown();
       IDE.WORKSPACE.selectItem("/" + FOLDER_NAME_2);
@@ -131,8 +139,7 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_1);
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_3);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {

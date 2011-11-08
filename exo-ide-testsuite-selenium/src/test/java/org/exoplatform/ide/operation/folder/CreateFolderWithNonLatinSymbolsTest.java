@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.Ignore;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,8 +36,15 @@ import java.net.URLEncoder;
 */
 public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
 {
+   private static String PROJECT = CreateFolderWithNonLatinSymbolsTest.class.getSimpleName();
+
    private static String FOLDER_NAME = "Папка з кирилічними символами";
 
+   @BeforeClass
+   public static void beforeTest() throws IOException
+   {
+      VirtualFileSystemUtils.createDefaultProject(PROJECT);
+   }
 
    /**
     * Test added to Ignore, because at the moment not solved a problem with encoding Cyrillic characters to URL.
@@ -45,23 +52,19 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
     * encoding characters in file name
     * @throws Exception
     */
-   @Ignore
    @Test
    public void testCreateFolderWithNonLatinSymbols() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      // Create folder with Cyrillic name
-      IDE.NAVIGATION.createFolder(FOLDER_NAME);
-      IDE.WORKSPACE.waitForItem("/" + FOLDER_NAME);
-      //Check in repository
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
-      IDE.NAVIGATION.assertItemVisible("/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.NAVIGATION.deleteSelectedItems();
-      
-      IDE.WORKSPACE.waitForItemNotPresent("/" + FOLDER_NAME);
-      
-      IDE.NAVIGATION.assertItemNotVisible("/" + URLEncoder.encode(FOLDER_NAME, "UTF-8"));
+      IDE.FOLDER.createFolder(FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + URLEncoder.encode(FOLDER_NAME, "UTF-8"))
+         .getStatusCode());
    }
 
    @AfterClass
@@ -69,7 +72,7 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8"));
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
