@@ -25,18 +25,31 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.apache.commons.io.IOUtils;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
 import org.exoplatform.ide.core.Response;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -45,6 +58,10 @@ import java.net.URL;
 */
 public class VirtualFileSystemUtils
 {
+
+   private static VirtualFileSystemInfo vfsInfo;
+
+   private static Map<String, Link> rootLinks;
 
    public static int put(String filePath, String mimeType, String contentNodeType, String storageUrl)
       throws IOException
@@ -130,7 +147,6 @@ public class VirtualFileSystemUtils
     * @param storageUrl
     * @return HTTPStatus code
     * @throws IOException
-    * @throws ModuleException
     */
    public static int put(byte[] data, String mimeType, String storageUrl) throws IOException
    {
@@ -143,7 +159,6 @@ public class VirtualFileSystemUtils
     * @param storageUrl
     * @return HTTPStatus code
     * @throws IOException
-    * @throws ModuleException
     */
    public static int put(String filePath, String mimeType, String storageUrl) throws IOException
    {
@@ -181,7 +196,6 @@ public class VirtualFileSystemUtils
     * @param storageUrl
     * @return HTTPStatus code
     * @throws IOException
-    * @throws ModuleException
     */
    public static Response get(String storageUrl) throws IOException
    {
@@ -230,7 +244,6 @@ public class VirtualFileSystemUtils
     * @param storageUrl
     * @return HTTPStatus code
     * @throws IOException
-    * @throws ModuleException
     */
    public static int mkcol(String storageUrl) throws IOException
    {
@@ -262,5 +275,125 @@ public class VirtualFileSystemUtils
       filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
       HttpClient client = Utils.getHttpClient();
       return client.executeMethod(filePost);
+   }
+
+   public static int inportZipProject(String projectName, String zipPath) throws IOException
+   {
+
+      HttpURLConnection connection = null;
+      try
+      {
+
+         String href = createFolder(projectName);
+         if(href == null)
+            throw new RuntimeException("Folder not created or 'import' relation not found.");
+         URL url = new URL(href);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod("POST");
+         connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/zip");
+         connection.setDoOutput(true);
+         OutputStream outputStream = connection.getOutputStream();
+         File f = new File(zipPath);
+         FileInputStream inputStream = new FileInputStream(f);
+         IOUtils.copy(inputStream, outputStream);
+         return connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+   }
+
+   private static String createFolder(String name) throws IOException
+   {
+      if (rootLinks == null)
+      {
+         initVFS();
+      }
+      HttpURLConnection connection = null;
+      try
+      {
+         String href = rootLinks.get(Link.REL_CREATE_FOLDER).getHref();
+         href = URLDecoder.decode(href, "UTF-8").replace("[name]", name);
+         URL url = new URL(href);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod("POST");
+         JsonParser parser = new JsonParser();
+         parser.parse(connection.getInputStream());
+         Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
+         
+         @SuppressWarnings("unchecked")
+         Map<String, Link> map =
+            ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(), parser.getJsonObject()
+               .getElement("links"));
+         return map.get(Link.REL_IMPORT).getHref();
+      }
+      catch (JsonException e)
+      {
+         e.printStackTrace();
+      }
+      catch (SecurityException e)
+      {
+         e.printStackTrace();
+      }
+      catch (NoSuchFieldException e)
+      {
+         e.printStackTrace();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+      return null;
+   }
+
+   /**
+    * 
+    */
+   @SuppressWarnings("unchecked")
+   private static void initVFS() throws IOException
+   {
+      String uRl = BaseTest.BASE_URL + BaseTest.REST_CONTEXT + "/ide/vfs/dev-monit";
+      HttpURLConnection connection = null;
+      try
+      {
+         URL url = new URL(uRl);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod("GET");
+         JsonParser parser = new JsonParser();
+         parser.parse(connection.getInputStream());
+         vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfo.class, parser.getJsonObject());
+         JsonValue element = parser.getJsonObject().getElement("root").getElement("links");
+
+         Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
+         rootLinks = ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(), element);
+         System.out.println("VFS initialized - " + vfsInfo.getId());
+      }
+      catch (JsonException e)
+      {
+         e.printStackTrace();
+      }
+      catch (SecurityException e)
+      {
+         e.printStackTrace();
+      }
+      catch (NoSuchFieldException e)
+      {
+         e.printStackTrace();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+
    }
 }

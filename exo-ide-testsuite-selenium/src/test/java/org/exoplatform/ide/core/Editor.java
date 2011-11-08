@@ -356,6 +356,7 @@ public class Editor extends AbstractTestModule
       for (int i = 0; i < count; i++)
       {
          typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "d");
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
 
@@ -401,6 +402,7 @@ public class Editor extends AbstractTestModule
       for (int i = 0; i < rows; i++)
       {
          typeTextIntoEditor(tabIndex, Keys.DOWN.toString());
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
 
@@ -446,6 +448,7 @@ public class Editor extends AbstractTestModule
       for (int i = 0; i < symbols; i++)
       {
          typeTextIntoEditor(tabIndex, Keys.RIGHT.toString());
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
 

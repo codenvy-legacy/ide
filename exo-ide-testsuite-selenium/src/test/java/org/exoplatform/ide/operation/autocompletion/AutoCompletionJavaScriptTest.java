@@ -23,9 +23,13 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -42,43 +46,38 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
 
       javaScriptTestVar();
-      javaScriptTestFunction();
-      javaScriptTestFunctions();
+//      javaScriptTestFunction();
+//      javaScriptTestFunctions();
 
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+//      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
+      driver.navigate().refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.EDITOR.moveCursorDown(0, 4);
+      IDE.EDITOR.moveCursorRight(0, 10);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "<script>\n\n</script>\n");
+      IDE.EDITOR.moveCursorUp(0, 2);
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      IDE.EDITOR.typeTextIntoEditor(0, "<script>");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      IDE.EDITOR.typeTextIntoEditor(0, "</script>");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN.toString());
 
       javaScriptTestVar();
-      javaScriptTestFunction();
-      javaScriptTestFunctions();
+//      javaScriptTestFunction();
+//      javaScriptTestFunctions();
+      
 
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+//      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @Test
+   @Ignore
    public void testHTML() throws InterruptedException, Exception
    {
       IDE.WORKSPACE.waitForRootItem();      
@@ -134,6 +133,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
    }
 
    @Test
+   @Ignore
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
       IDE.WORKSPACE.waitForRootItem();      
@@ -212,7 +212,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, "    };");
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      IDE.EDITOR.moveCursorUp(0, 1);
 
       IDE.CODEASSISTANT.openForm();
 
@@ -230,59 +230,64 @@ public class AutoCompletionJavaScriptTest extends BaseTest
     */
    private void javaScriptTestFunction() throws Exception
    {
-      IDE.EDITOR.typeTextIntoEditor(0, "function a () {");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-
-      IDE.EDITOR.typeTextIntoEditor(0, "return 1;");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "};");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "var b = function() {");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "return 2;");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "};");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-
-      IDE.CODEASSISTANT.openForm();
-
-      IDE.CODEASSISTANT.checkElementPresent("a()");
-      IDE.CODEASSISTANT.checkElementPresent("b()");
-
-      selenium().keyDown(CodeAssistant.Locators.INPUT, "\\40");
-      IDE.CODEASSISTANT.insertSelectedItem();
-
-      String textAfter = IDE.EDITOR.getTextFromCodeEditor(0);
-      assertTrue(textAfter.split("b").length >= 2);
-
+     
       // remove created text
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+//      IDE.EDITOR.deleteFileContent(0);
    }
 
    /**
     * @throws Exception 
     */
    private void javaScriptTestVar() throws Exception
-   {
-      IDE.EDITOR.typeTextIntoEditor(0, "var a = 1;");
+   {      
+//      IDE.EDITOR.moveCursorUp(0, 1);
+//      IDE.EDITOR.deleteLinesInEditor(0, 2);
+      
+      IDE.EDITOR.typeTextIntoEditor(0, "function a () {\nreturn 1;\n}\n");
+      IDE.EDITOR.typeTextIntoEditor(0, "var b = function() {\nreturn 2;\n}\n");
+      IDE.CODEASSISTANT.openForm();
+
+      IDE.CODEASSISTANT.checkElementPresent("a()");
+      IDE.CODEASSISTANT.checkElementPresent("b()");
+
+      IDE.CODEASSISTANT.moveCursorDown(1);
+      IDE.CODEASSISTANT.insertSelectedItem();
+
+      String textAfter = IDE.EDITOR.getTextFromCodeEditor(0);
+      assertTrue(textAfter.split("b").length >= 2);
+
+//      IDE.EDITOR.deleteLinesInEditor(0, 6);
+      
+      IDE.EDITOR.typeTextIntoEditor(0, "function topFunc(x) {");
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "a");
+      IDE.EDITOR.typeTextIntoEditor(0, "  // Local variables get a different colour than global ones.");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "  var localVarOfTopFunc = 44;");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, " function privateFunc1OfTopFunc() {");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "  var localVarOfPrivateFuncOfTopFunc = 1;");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "   };");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "   var privateFunc2OfTopFunc = function() {");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "   };");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "    };");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.moveCursorUp(0, 1);
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("a");
-      IDE.CODEASSISTANT.closeForm();
+      IDE.CODEASSISTANT.checkElementPresent("topFunc()");
+      IDE.CODEASSISTANT.checkElementNotPresent("localVarOfTopFunc");
+      IDE.CODEASSISTANT.checkElementNotPresent("privateFunc1OfTopFunc()");
+      IDE.CODEASSISTANT.checkElementNotPresent("localVarOfPrivateFuncOfTopFunc");
+      IDE.CODEASSISTANT.checkElementNotPresent("privateFunc2OfTopFunc()");
 
-      // remove created text
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
-      
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
-      
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      IDE.CODEASSISTANT.closeForm();
    }
 
 }
