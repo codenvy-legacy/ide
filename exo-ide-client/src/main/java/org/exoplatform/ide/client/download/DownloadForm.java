@@ -18,23 +18,27 @@
  */
 package org.exoplatform.ide.client.download;
 
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.navigation.event.DownloadFileEvent;
-import org.exoplatform.ide.client.navigation.event.DownloadFileHandler;
-import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderEvent;
-import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderHandler;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.Item;
+import com.google.gwt.core.client.GWT;
 
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
+
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
+import org.exoplatform.ide.client.navigation.event.DownloadFileEvent;
+import org.exoplatform.ide.client.navigation.event.DownloadFileHandler;
+import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderEvent;
+import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Link;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,21 +47,16 @@ import com.google.gwt.user.client.ui.RootPanel;
  * @version $
  */
 
-public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHandler, ItemsSelectedHandler,
-   ConfigurationReceivedSuccessfullyHandler
+public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHandler, ItemsSelectedHandler
 {
-
-   private final String CONTEXT_DOWNLOAD = "/ide/downloadcontent";
+   private static final IdeUploadLocalizationConstant lb = GWT.create(IdeUploadLocalizationConstant.class);
 
    private AbsolutePanel panel;
 
    private Item selectedItem;
 
-   private IDEConfiguration applicationConfiguration;
-
    public DownloadForm()
    {
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       IDE.addHandler(DownloadFileEvent.TYPE, this);
       IDE.addHandler(DownloadZippedFolderEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -69,24 +68,8 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
       RootPanel.get().add(panel, -10000, -10000);
    }
 
-   private void downloadResource()
+   private void downloadResource(String url)
    {
-      //Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      String fileName = selectedItem.getName();
-
-      //      if (fileName.endsWith("/"))
-      //      {
-      //         fileName = fileName.substring(0, fileName.length() - 1);
-      //      }
-      //      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-
-      if (!(selectedItem instanceof FileModel))
-      {
-         fileName += ".zip";
-      }
-
-      String path = selectedItem.getId();
-      String url = applicationConfiguration.getContext() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
       String iframe =
          "<iframe src=\"" + url
             + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";
@@ -95,12 +78,26 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
 
    public void onDownloadFile(DownloadFileEvent event)
    {
-      downloadResource();
+      if (selectedItem instanceof FileModel)
+      {
+         downloadResource(selectedItem.getLinkByRelation(Link.REL_CONTENT).getHref());
+      }
+      else
+      {
+         Dialogs.getInstance().showError(lb.downloadFileError());
+      }
    }
 
    public void onDownloadZippedFolder(DownloadZippedFolderEvent event)
    {
-      downloadResource();
+      if (selectedItem instanceof FolderModel || selectedItem instanceof ProjectModel)
+      {
+         downloadResource(selectedItem.getLinkByRelation(Link.REL_EXPORT).getHref());
+      }
+      else
+      {
+         Dialogs.getInstance().showError(lb.downloadFolderError());
+      }
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -113,11 +110,6 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
       {
          selectedItem = event.getSelectedItems().get(0);
       }
-   }
-
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      applicationConfiguration = event.getConfiguration();
    }
 
 }

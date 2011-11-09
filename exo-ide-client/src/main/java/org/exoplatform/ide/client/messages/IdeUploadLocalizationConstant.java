@@ -88,5 +88,14 @@ public interface IdeUploadLocalizationConstant extends Constants
    
    @Key("upload.file.exist.text")
    String uploadFileExistText();
+   
+   /*
+    * DownloadForm
+    */
+   @Key("download.file.error")
+   String downloadFileError();
+   
+   @Key("download.zip.folder.error")
+   String downloadFolderError();
 
 }
