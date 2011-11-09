@@ -61,7 +61,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id: $
 */
 
-public class ProjectCreationTest extends TestCase
+public abstract class ProjectCreationTest extends TestCase
 {
 
    private MockVirtualFileSystem vfs = new MockVirtualFileSystem("dev-monit");
