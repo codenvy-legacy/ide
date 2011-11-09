@@ -103,14 +103,14 @@ public class NetvibesCodeAssistant extends HtmlCodeAssistant implements Comparat
          this.editor = editor;
          this.posX = cursorOffsetX;
          this.posY = cursorOffsetY;
+         cursorPositionY = editor.getCursorRow();
+         lineContent = editor.getLineContent(cursorPositionY);
+         cursorPositionX = editor.getCursorCol();
+         this.tokenFromParser = tokenFromParser;
+         this.currentToken = currentToken;
          if (defaultTokens == null && nVApiTokens == null)
          {
             NetvibesBundle bundle = GWT.create(NetvibesBundle.class);
-            cursorPositionY = editor.getCursorRow();
-            lineContent = editor.getLineContent(cursorPositionY);
-            cursorPositionX = editor.getCursorCol();
-            this.tokenFromParser = tokenFromParser;
-            this.currentToken = currentToken;
             bundle.netvibesTokens().getText(this);
             return;
          }
