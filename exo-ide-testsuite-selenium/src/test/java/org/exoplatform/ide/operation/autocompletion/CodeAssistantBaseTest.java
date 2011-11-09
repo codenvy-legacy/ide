@@ -35,7 +35,7 @@ import java.util.Map;
 public abstract class CodeAssistantBaseTest extends BaseTest
 {
 
-   private static Map<String, Link> project;
+   protected static Map<String, Link> project;
    
    protected static String projectName;
 
@@ -65,6 +65,7 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(projectName);
+      IDE.PROJECT.EXPLORER.waitForItem(projectName);
    }
 
 }

@@ -47,6 +47,8 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Map;
@@ -310,6 +312,36 @@ public class VirtualFileSystemUtils
    public static Map<String, Link> createDefaultProject(String name) throws IOException
    {
       return importZipProject(name, "src/test/resources/org/exoplatform/ide/project/default-selenium-test.zip");
+   }
+
+   public static int createFile(Link link, String name, String mimeType, String content) throws IOException
+   {
+      if (link == null)
+         throw new IllegalArgumentException("Parameter 'link' can't be null!");
+      int status = -1;
+      HttpURLConnection connection = null;
+      try
+      {
+         String href = URLDecoder.decode(link.getHref(), "UTF-8");
+         href = href.replace("[name]", name);
+         URL url = new URL(href);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod(HTTPMethod.POST);
+         connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
+         connection.setDoOutput(true);
+         OutputStream out = connection.getOutputStream();
+         out.write(content.getBytes());
+         out.close();
+         status = connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+      return status;
    }
 
    /**
