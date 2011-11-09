@@ -19,6 +19,7 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.MenuCommands;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -88,7 +89,8 @@ public class Folder extends AbstractTestModule
          {
             try
             {
-               return view == null || !view.isDisplayed();
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
             }
             catch (NoSuchElementException e)
             {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.operation.folder;
+package org.exoplatform.ide.core;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.openqa.selenium.WebElement;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: $
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Nov 9, 2011 12:09:26 PM anya $
  *
  */
-@RunWith(Suite.class)
-@SuiteClasses({CreateFolderTest.class, CreateFolderWithNonLatinSymbolsTest.class, DeleteFolderTest.class,
-   /*DeleteSeveralFoldersSimultaneously.class,*/ RenameFolderTest.class})
-public class FolderTestSuite
+public class Button extends AbstractTestModule
 {
+   private final String ENABLED_ATTRIBUTE = "button-enabled";
 
+   /**
+    * Get the enabled state of the button.
+    * 
+    * @param button
+    * @return enabled state of the button
+    */
+   public boolean isButtonEnabled(WebElement button)
+   {
+      return Boolean.parseBoolean(button.getAttribute(ENABLED_ATTRIBUTE));
+   }
 }

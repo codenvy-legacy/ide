@@ -261,7 +261,9 @@ public abstract class AbstractTestModule
     * @param buttonId - the id of button
     * @return is button enabled or disabled
     * @throws InterruptedException 
+    * use {@link Button.#isButtonEnabled(org.openqa.selenium.WebElement)}
     */
+   @Deprecated
    public boolean getButtonState(String buttonId) throws Exception
    {
       if (selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='true']"))

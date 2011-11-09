@@ -19,12 +19,11 @@
 package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -69,36 +68,17 @@ public class RenameFolderTest extends BaseTest
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME); 
-      
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
 
-      
-      //set cursor on rename field
-      selenium().click("ideRenameItemFormRenameField");
-      //check default name folder in rename field
-      assertEquals(FOLDER_NAME, selenium().getValue("ideRenameItemFormRenameField"));
-      //type new name and press "enter"
-      selenium().type("ideRenameItemFormRenameField", NEW_FOLDER_NAME);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      IDE.RENAME_DIALOG.waitForRenameDialogNotPresent();
-      // check appear folder with new name
-      waitForElementPresent(IDE.NAVIGATION.getItemId(RENAME_URL + "/"));
-      IDE.NAVIGATION.assertItemNotVisible(ORIG_URL + "/");
-      IDE.NAVIGATION.assertItemVisible(RENAME_URL + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME);
+
+      IDE.RENAME.rename(NEW_FOLDER_NAME);
+
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NEW_FOLDER_NAME);
+      Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER_NAME));
+
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());
-   }
-
-   /**
-    * chek appear elements rename form
-    */
-   public void chekAppearRenameForm()
-   {
-      assertTrue(selenium().isElementPresent("//div[@view-id='ideRenameItemForm']"));
-      assertTrue(selenium().isElementPresent("ideRenameItemFormRenameField"));
-      assertTrue(selenium().isElementPresent("ideRenameItemFormRenameField"));
    }
 
    @After
@@ -106,8 +86,7 @@ public class RenameFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(ORIG_URL);
-         VirtualFileSystemUtils.delete(RENAME_URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {

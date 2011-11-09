@@ -19,6 +19,8 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.ToolbarCommands;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -36,7 +38,7 @@ public class Properties extends AbstractTestModule
    {
       String PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='%1s']";
 
-      String PROPERTIES_FORM_LOCATOR = "//div[@view-id='ideFilePropertiesView']";
+      String VIEW_LOCATOR = "//div[@view-id='ideFilePropertiesView']";
 
       String NAME_PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Name']";
 
@@ -55,7 +57,7 @@ public class Properties extends AbstractTestModule
       String CLOSE_VIEW_BUTTON_LOCATOR = "//div[@button-name='close-tab' and @tab-title='Properties']";
    }
 
-   @FindBy(xpath = Locators.PROPERTIES_FORM_LOCATOR)
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement propertiesView;
 
    /*Properties*/
@@ -192,7 +194,15 @@ public class Properties extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return (propertiesView == null);
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
          }
       });
    }

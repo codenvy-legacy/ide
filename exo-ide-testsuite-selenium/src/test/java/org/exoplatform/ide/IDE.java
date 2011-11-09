@@ -22,6 +22,7 @@ import com.thoughtworks.selenium.Selenium;
 
 import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.AskForValueDialog;
+import org.exoplatform.ide.core.Button;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Delete;
 import org.exoplatform.ide.core.Editor;
@@ -40,7 +41,7 @@ import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.Project;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
-import org.exoplatform.ide.core.RenameDialog;
+import org.exoplatform.ide.core.Rename;
 import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.exoplatform.ide.core.Search;
@@ -135,7 +136,7 @@ public class IDE
 
    public Folder FOLDER;
 
-   public RenameDialog RENAME_DIALOG = new RenameDialog();
+   public Rename RENAME;
 
    public org.exoplatform.ide.git.core.GIT GIT = new org.exoplatform.ide.git.core.GIT(selenium);
 
@@ -146,6 +147,8 @@ public class IDE
    public Project PROJECT;
 
    public Input INPUT = new Input();
+   
+   public Button BUTTON = new Button();
 
    public Delete DELETE;
 
@@ -164,6 +167,7 @@ public class IDE
       EDITOR = PageFactory.initElements(driver, Editor.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);
+      RENAME = PageFactory.initElements(driver, Rename.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
       FOLDER = PageFactory.initElements(driver, Folder.class);
    }

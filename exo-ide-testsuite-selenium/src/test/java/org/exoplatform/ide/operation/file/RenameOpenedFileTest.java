@@ -19,9 +19,11 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -36,7 +38,7 @@ import org.junit.Test;
 public class RenameOpenedFileTest extends BaseTest
 {
 
-   private final static String FOLDER = RenameOpenedFileTest.class.getSimpleName();
+   private final static String PROJECT = RenameOpenedFileTest.class.getSimpleName();
 
    private final static String FILE1 = "fileforrename.txt";
 
@@ -49,8 +51,8 @@ public class RenameOpenedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER);
-         VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, WS_URL + FOLDER + "/" + FILE1);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.put(PATH, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FILE1);
       }
       catch (Exception e)
       {
@@ -63,7 +65,7 @@ public class RenameOpenedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -75,46 +77,34 @@ public class RenameOpenedFileTest extends BaseTest
    @Test
    public void testRenameOpenedFile() throws Exception
    {
-      //TODO fix problem see issue 805
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
 
-      /*
-       * 1. Open Folder
-       */
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE1);
 
-      /*
-       * 2. Open File1
-       */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER + "/" + FILE1);
+      
 
-      /*
-       * 3. Rename opened file  
-       */
-      IDE.RENAME_DIALOG.callFromMenu();
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.RENAME.waitOpened();
 
-      assertEquals("Can't change mime-type to opened file", IDE.RENAME_DIALOG.getWarningMessage());
+    //Try to rename opened file - warning message must be shown and Mime Type field disabled.
+      assertEquals("Can't change mime-type to opened file", IDE.RENAME.getWarningMessage());
+      assertFalse(IDE.RENAME.isMimeTypeFieldEnabled());
+      assertFalse(IDE.RENAME.isRenameButtonEnabled());
 
-      IDE.RENAME_DIALOG.setFileName(FILE2);
+      IDE.RENAME.setNewName(FILE2);
+      IDE.RENAME.clickRenameButton();
+      IDE.RENAME.waitClosed();
 
-      IDE.RENAME_DIALOG.clickRenameButton();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE2);
+      IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FILE1);
 
-      /*
-       * 4. Assert file was renamed successfully.
-       */
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER + "/" + FILE2);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER + "/" + FILE1);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FILE1).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FILE2.replaceAll(" ", "%20")).getStatusCode());
 
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + FILE1).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + FILE2).getStatusCode());
-
-      assertEquals(FILE2, IDE.EDITOR.getTabTitle(0));
-
-      /*
-       * 5. Close editor
-       */
-
-      IDE.EDITOR.closeFile(0);
+      assertEquals(FILE2, IDE.EDITOR.getTabTitle(1));
+      IDE.EDITOR.closeFile(1);
    }
 
 }

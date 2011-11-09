@@ -20,6 +20,7 @@ package org.exoplatform.ide.core.project;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -106,7 +107,8 @@ public class CreateProject extends AbstractTestModule
          {
             try
             {
-               return view != null;
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
             }
             catch (Exception e)
             {
