@@ -59,6 +59,9 @@ public class CodeAssistant extends AbstractTestModule
    @FindBy(id = Locators.INPUT)
    private WebElement input;
 
+   @FindBy(id = Locators.JAVADOC_DIV)
+   private WebElement doc;
+
    /**
     * Type text to input field of autocompletion form.
     * 
@@ -174,6 +177,24 @@ public class CodeAssistant extends AbstractTestModule
             return d.findElement(By.id(Locators.PANEL_ID)) != null;
          }
       });
+   }
+
+   public void waitForDocPanelOpened()
+   {
+      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver d)
+         {
+            return doc != null && doc.isDisplayed();
+         }
+      });
+
+   }
+   
+   public String getDocPanelText()
+   {
+      return doc.getText();
    }
 
    public void checkDocFormPresent()

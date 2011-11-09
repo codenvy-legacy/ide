@@ -50,7 +50,6 @@ public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
 
       VirtualFileSystemUtils.createFile(project.get(Link.REL_CREATE_FILE), NETVIBES_NAME, MimeType.UWA_WIDGET,
          NETVIBES_CONTENT);
-
    }
 
    @Before
