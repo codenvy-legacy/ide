@@ -480,4 +480,18 @@ public class VirtualFileSystemUtils
       }
 
    }
+
+   
+   /**
+    * Create file with local file content
+    * @param link
+    * @param name
+    * @param mimeType
+    * @param filePath
+    * @throws IOException
+    */
+   public static void createFileFromLocal(Link link, String name, String mimeType, String filePath) throws IOException
+   {
+      createFile(link, name, mimeType, Utils.readFileAsString(filePath));
+   }
 }

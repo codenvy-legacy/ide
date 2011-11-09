@@ -383,7 +383,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
             int width = 300;
             descriptionPanel.getElement().setId(DOC_ID);
             descriptionPanel.setWidth(width + "px");
-            descriptionPanel.setHeight("" + (panel.getOffsetHeight() - 2));
+            descriptionPanel.setHeight((panel.getOffsetHeight() - 2) + "px");
 
             descriptionPanel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().description());
             int clientWidth = Window.getClientWidth();

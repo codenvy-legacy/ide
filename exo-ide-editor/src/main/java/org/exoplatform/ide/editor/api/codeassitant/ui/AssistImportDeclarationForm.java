@@ -61,6 +61,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 public class AssistImportDeclarationForm extends Composite implements ResizeHandler
 {
 
+   private static final String ID = "ideAssistImportDeclarationForm";
+   
    private AbsolutePanel lockLayer;
 
    private AbsolutePanel absolutePanel;
@@ -89,6 +91,7 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
       AssistImportDeclarationHandler handler)
    {
       absolutePanel = new AbsolutePanel();
+      
       this.handler = handler;
       this.factory = factory;
       initWidget(absolutePanel);
@@ -108,6 +111,7 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
       lockLayer.add(blockMouseEventsPanel, 0, 0);
 
       flowPanel = new AssistantImportDeclarationPanel();
+      flowPanel.getElement().setId(ID);
 
       scrollPanel = new CodeAssitantScrollPanel();
 

@@ -21,81 +21,55 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ChrommaticImportAssistant Jan 24, 2011 5:42:31 PM evgen $
  *
  */
-public class ChrommaticImportAssistantTest extends BaseTest
+public class ChrommaticImportAssistantTest extends CodeAssistantBaseTest
 {
-
-   private final static String TEST_FOLDER = ImportStatementInsertionTest.class.getSimpleName();
-
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
    private final static String FILE_NAME = "importChrommatic.groovy";
 
    @BeforeClass
-   public static void setUp()
+   public static void setUp() throws IOException
    {
+      createProject(ChrommaticImportAssistantTest.class.getSimpleName());
       String serviceFilePath =
          "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/importAssistantChrommatic.groovy";
-      try
-      {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(serviceFilePath, MimeType.GROOVY_SERVICE, URL + TEST_FOLDER + "/" + FILE_NAME);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
+         MimeType.CHROMATTIC_DATA_OBJECT, serviceFilePath);
+   }
+
+   @Before
+   public void openFile() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
    }
 
    @Test
    public void testChrommaticImportAssistant() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
-      
-      // 
+      //sleep to give editor parse file content
       Thread.sleep(TestConstants.SLEEP);
-      
-      selenium().click("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '2')]");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.CODEASSISTANT.clickOnLineNumer(2);
 
-      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "1,1");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.CODEASSISTANT.waitForImportAssistForOpened();
+
+      IDE.CODEASSISTANT.selectImportProposal("Base64");
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
-      
-      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
-   private String getErrorCorrectionListItemLocator(String packageName)
-   {
-      return "//div[@class='gwt-Label' and contains(text(),'" + packageName + "')]";
-   }
-
-   @AfterClass
-   public static void tearDown() throws Exception
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
-   
 }

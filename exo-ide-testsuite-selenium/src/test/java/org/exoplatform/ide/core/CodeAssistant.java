@@ -27,6 +27,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -44,16 +46,18 @@ public class CodeAssistant extends AbstractTestModule
       /**
        * XPath autocompletion panel locator.
        */
-      public static final String PANEL_ID = "exo-ide-autocomplete-panel";
+      String PANEL_ID = "exo-ide-autocomplete-panel";
 
-      public static final String PANEL = "//table[@id='exo-ide-autocomplete-panel']";
+      String PANEL = "//table[@id='exo-ide-autocomplete-panel']";
 
       /**
        * Xpath autocompletion input locator.
        */
-      public static final String INPUT = "exo-ide-autocomplete-edit";
+      String INPUT = "exo-ide-autocomplete-edit";
 
-      public static final String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
+      String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
+
+      String IMPORT_PANEL_ID = "ideAssistImportDeclarationForm";
    }
 
    @FindBy(id = Locators.INPUT)
@@ -61,6 +65,9 @@ public class CodeAssistant extends AbstractTestModule
 
    @FindBy(id = Locators.JAVADOC_DIV)
    private WebElement doc;
+
+   @FindBy(id = Locators.IMPORT_PANEL_ID)
+   private WebElement importPanel;
 
    /**
     * Type text to input field of autocompletion form.
@@ -150,7 +157,7 @@ public class CodeAssistant extends AbstractTestModule
    }
 
    /**
-    *Press Enter key to close form and paste selected item in to the editor 
+    * Press Enter key to close form and paste selected item in to the editor 
     * @throws InterruptedException 
     */
    public void insertSelectedItem() throws InterruptedException
@@ -191,7 +198,7 @@ public class CodeAssistant extends AbstractTestModule
       });
 
    }
-   
+
    public String getDocPanelText()
    {
       return doc.getText();
@@ -200,5 +207,38 @@ public class CodeAssistant extends AbstractTestModule
    public void checkDocFormPresent()
    {
       assertTrue(selenium().isElementPresent(Locators.JAVADOC_DIV));
+   }
+
+   public void clickOnLineNumer(int num)
+   {
+      driver().findElement(By.xpath("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '" + num + "')]"))
+         .click();
+   }
+
+   public void waitForImportAssistForOpened()
+   {
+      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver d)
+         {
+            return importPanel != null && importPanel.isDisplayed();
+         }
+      });
+   }
+
+   /**
+    * @param name
+    * @throws InterruptedException 
+    */
+   public void selectImportProposal(String name) throws InterruptedException
+   {
+      WebElement im = driver().findElement(By.xpath("//div[@class='gwt-Label' and contains(text(),'" + name + "')]"));
+      Actions a = new Actions(driver());
+      im.click();
+      Action sel = a.doubleClick(im).build();
+      sel.perform();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 }
