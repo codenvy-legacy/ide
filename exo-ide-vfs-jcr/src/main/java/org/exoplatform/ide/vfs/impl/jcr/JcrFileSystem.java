@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.apache.commons.fileupload.FileItem;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
@@ -39,6 +40,7 @@ import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -87,10 +89,12 @@ import javax.jcr.query.QueryResult;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -1049,6 +1053,121 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Object " + data.getName() + " is not file. ");
          }
          ((FileData)data).setContent(newcontent, mediaType, lockToken);
+      }
+      finally
+      {
+         session.logout();
+      }
+   }
+
+   // FIXME Add in VirtualFileSystem
+   @POST
+   @Path("uploadfile/{parentId}")
+   @Consumes({MediaType.MULTIPART_FORM_DATA})
+   @Produces({MediaType.TEXT_HTML})
+   public Object uploadFile(@PathParam("parentId") String parentId, //
+      java.util.Iterator<FileItem> formData //
+   ) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException, IOException
+   {
+      Session session = session();
+      try
+      {
+         ItemData parentData = getItemData(session, parentId);
+         if (ItemType.FOLDER != parentData.getType())
+         {
+            throw new InvalidArgumentException("Unable upload file. Item specified as parent is not a folder. ");
+         }
+
+         FileItem contentItem = null;
+         MediaType mediaType = null;
+         String name = null;
+         boolean overwrite = false;
+
+         while (formData.hasNext())
+         {
+            FileItem item = formData.next();
+            if (!item.isFormField())
+            {
+               if (contentItem == null)
+               {
+                  contentItem = item;
+               }
+               else
+               {
+                  throw new InvalidArgumentException("More then one upload file is found but only one should be. ");
+               }
+            }
+            else if ("mimeType".equals(item.getFieldName()))
+            {
+               String m = item.getString().trim();
+               if (m.length() > 0)
+               {
+                  mediaType = MediaType.valueOf(m);
+               }
+            }
+            else if ("name".equals(item.getFieldName()))
+            {
+               name = item.getString().trim();
+            }
+            else if ("overwrite".equals(item.getFieldName()))
+            {
+               overwrite = Boolean.parseBoolean(item.getString().trim());
+            }
+         }
+
+         if (contentItem == null)
+         {
+            throw new InvalidArgumentException("Cannot find file for upload. ");
+         }
+
+         if (name == null || name.isEmpty())
+         {
+            name = contentItem.getName();
+         }
+         checkName(name);
+
+         if (mediaType == null)
+         {
+            String contentType = contentItem.getContentType();
+            mediaType = contentType != null //
+               ? MediaType.valueOf(contentType) //
+               : MediaType.APPLICATION_OCTET_STREAM_TYPE;
+         }
+
+         InputStream content = contentItem.getInputStream();
+         FolderData folder = (FolderData)parentData;
+         if (!folder.hasChild(name))
+         {
+            folder.createFile(name, //
+               mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
+               mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
+               mediaType, //
+               mediaType2NodeTypeResolver.getFileMixins(mediaType), //
+               null, //
+               content);
+         }
+         else if (overwrite)
+         {
+            final String filePath = parentData.getPath() + "/" + name;
+            ItemData file = getItemDataByPath(session, filePath);
+            if (ItemType.FILE != file.getType())
+            {
+               throw new InvalidArgumentException(
+                  "Unable upload file. Item with the same name exists but it is not a file. ");
+            }
+            ((FileData)file).setContent(content, mediaType, null);
+         }
+         else
+         {
+            throw new WebApplicationException(Response //
+               .status(Response.Status.BAD_REQUEST) //
+               .entity("<pre>Unable upload file. File with the same name exists. </pre>") //
+               .type(MediaType.TEXT_HTML) //
+               .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_EXISTS)) //
+               .build());
+         }
+         return "";
       }
       finally
       {
