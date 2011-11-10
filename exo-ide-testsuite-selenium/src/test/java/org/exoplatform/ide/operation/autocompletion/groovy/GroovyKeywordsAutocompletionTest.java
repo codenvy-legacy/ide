@@ -20,10 +20,11 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
@@ -33,26 +34,24 @@ import org.junit.Test;
  *
  */
 //IDE-492
-public class GroovyKeywordsAutocompletionTest extends BaseTest
+public class GroovyKeywordsAutocompletionTest extends CodeAssistantBaseTest
 {
+
+   @BeforeClass
+   public static void createProject()
+   {
+      createProject(GroovyKeywordsAutocompletionTest.class.getSimpleName());
+   }
 
    @Test
    public void testGroovyKeywordsAutocompletion() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
 
-      for (int i = 0; i < 9; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
+      IDE.EDITOR.moveCursorDown(0, 9);
 
-      selenium().keyDown("//body[@class='editbox']", "\\35");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-     IDE.EDITOR.typeTextIntoEditor(0, "n");
-
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nn");
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.checkElementPresent("name:String");
@@ -60,14 +59,9 @@ public class GroovyKeywordsAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("new");
       IDE.CODEASSISTANT.checkElementPresent("null");
 
-      for (int i = 0; i < 3; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
+      IDE.CODEASSISTANT.moveCursorDown(3);
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.CODEASSISTANT.insertSelectedItem();
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("null"));
 
    }

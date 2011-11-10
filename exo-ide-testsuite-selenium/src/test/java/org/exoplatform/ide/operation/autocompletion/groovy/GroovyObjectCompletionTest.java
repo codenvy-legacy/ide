@@ -22,11 +22,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
@@ -35,10 +38,8 @@ import org.junit.Test;
  * @version $Id: Dec 8, 2010 12:40:45 PM evgen $
  *
  */
-public class GroovyObjectCompletionTest extends BaseTest
+public class GroovyObjectCompletionTest extends CodeAssistantBaseTest
 {
-
-   private static final String FOLDER_NAME = GroovyObjectCompletionTest.class.getSimpleName();
 
    private static final String FILE_NAME = "groovyObjectCompetitionTest.grs";
 
@@ -47,10 +48,10 @@ public class GroovyObjectCompletionTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/groovy/groovyObjectCompetitionTest.grs",
-            MimeType.GROOVY_SERVICE, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         createProject(GroovyObjectCompletionTest.class.getSimpleName());
+         VirtualFileSystemUtils
+            .createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME, MimeType.GROOVY_SERVICE,
+               "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/groovy/groovyObjectCompetitionTest.grs");
       }
       catch (Exception e)
       {
@@ -58,25 +59,21 @@ public class GroovyObjectCompletionTest extends BaseTest
          fail("Can't create test folder");
       }
    }
-   
+
+   @Before
+   public void openFile() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
+   }
+
    @Test
    public void testGroovyObjectCompletion() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      
       Thread.sleep(TestConstants.SLEEP);
-
-      for (int i = 0; i < 10; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
-
-      selenium().keyDown("//body[@class='editbox']", "\\35");
-      IDE.EDITOR.typeTextIntoEditor(0, ".");
+      IDE.EDITOR.moveCursorDown(0, 10);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + ".");
 
       IDE.CODEASSISTANT.openForm();
 
@@ -88,16 +85,12 @@ public class GroovyObjectCompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("contentEquals(StringBuffer):boolean");
       IDE.CODEASSISTANT.checkElementPresent("contentEquals(CharSequence):boolean");
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.CODEASSISTANT.moveCursorDown(2);
 
       IDE.CODEASSISTANT.insertSelectedItem();
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
 
-      IDE.EDITOR.closeFile(0);
    }
 
 }

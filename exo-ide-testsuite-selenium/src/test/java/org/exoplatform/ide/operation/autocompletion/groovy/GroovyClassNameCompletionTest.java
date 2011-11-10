@@ -20,10 +20,11 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,24 +33,23 @@ import org.junit.Test;
  * @version $Id: Dec 10, 2010 2:34:17 PM evgen $
  *
  */
-public class GroovyClassNameCompletionTest extends BaseTest
+public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
 {
+   
+   @BeforeClass
+   public static void createProject()
+   {
+      createProject(GroovyClassNameCompletionTest.class.getSimpleName());
+   }
 
    @Test
    public void testGroovyClassNameCompletion() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
 
-      for (int i = 0; i < 9; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
-      selenium().keyDown("//body[@class='editbox']", "\\35");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-     IDE.EDITOR.typeTextIntoEditor(0, "Colle");
+      IDE.EDITOR.moveCursorDown(0, 9);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nCollection");
 
       //open autocomplete form
       IDE.CODEASSISTANT.openForm();
@@ -57,8 +57,7 @@ public class GroovyClassNameCompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("Collections");
       IDE.CODEASSISTANT.checkElementPresent("Collection");
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.CODEASSISTANT.moveCursorDown(1);
 
       IDE.CODEASSISTANT.insertSelectedItem();
 

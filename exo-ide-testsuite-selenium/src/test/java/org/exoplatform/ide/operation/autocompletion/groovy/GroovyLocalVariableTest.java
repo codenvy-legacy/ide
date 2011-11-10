@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.operation.autocompletion.groovy;
 
-import junit.framework.Assert;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,26 +34,20 @@ import org.junit.Test;
  *
  */
 // http://jira.exoplatform.org/browse/IDE-478
-public class GroovyLocalVariableTest extends BaseTest
+public class GroovyLocalVariableTest extends CodeAssistantBaseTest
 {
 
    private static String FILE_NAME = "GroovyLocalVariable.groovy";
-
-   private final static String TEST_FOLDER = GroovyLocalVariableTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/groovyLocalVar.groovy",
-            MimeType.GROOVY_SERVICE, TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + TEST_FOLDER + "/"
-               + FILE_NAME);
+         createProject(GroovyLocalVariableTest.class.getSimpleName());
+         VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
+            MimeType.GROOVY_SERVICE,
+            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/groovyLocalVar.groovy");
       }
       catch (Exception e)
       {
@@ -63,14 +55,18 @@ public class GroovyLocalVariableTest extends BaseTest
       }
    }
 
+   @Before
+   public void openFile() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
+   }
+
    @Test
    public void testLocalVariable() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
-      moveCursorDown(15);
+      IDE.EDITOR.moveCursorDown(0, 15);
 
       IDE.CODEASSISTANT.openForm();
 
@@ -82,7 +78,7 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("s:String");
       IDE.CODEASSISTANT.closeForm();
 
-      moveCursorDown(5);
+      IDE.EDITOR.moveCursorDown(0, 5);
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("e:Exception");
       IDE.CODEASSISTANT.checkElementPresent("name:String");
@@ -99,7 +95,7 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("ii");
       IDE.CODEASSISTANT.closeForm();
 
-      moveCursorDown(3);
+      IDE.EDITOR.moveCursorDown(0, 3);
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("col:Object");
       IDE.CODEASSISTANT.checkElementPresent("e:Exception");
@@ -115,7 +111,7 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
       IDE.CODEASSISTANT.closeForm();
 
-      moveCursorDown(6);
+      IDE.EDITOR.moveCursorDown(0, 6);
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("s:String");
       IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
@@ -131,7 +127,7 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("ii:Integer");
       IDE.CODEASSISTANT.closeForm();
 
-      moveCursorDown(8);
+      IDE.EDITOR.moveCursorDown(0, 8);
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
@@ -145,8 +141,8 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
       IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
       IDE.CODEASSISTANT.closeForm();
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      IDE.EDITOR.moveCursorDown(0, 1);
+      IDE.EDITOR.typeTextIntoEditor(0, "\n");
 
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementNotPresent("getInt(Double):Integer");
@@ -154,48 +150,13 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("hello():Object");
       IDE.CODEASSISTANT.checkElementNotPresent("printClosureOuter():Object");
       IDE.CODEASSISTANT.checkElementNotPresent("s:String");
-      IDE.CODEASSISTANT.checkElementNotPresent("col:Object");      
+      IDE.CODEASSISTANT.checkElementNotPresent("col:Object");
       IDE.CODEASSISTANT.checkElementNotPresent("name:String");
       IDE.CODEASSISTANT.checkElementNotPresent("e:Exception");
       IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
       IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
       IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
       IDE.CODEASSISTANT.closeForm();
-      
-     //TODO this block should be remove after fix problem in issue IDE-804. File does not should be modified  
-     if (IDE.EDITOR.isFileContentChanged(0)){
-      
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-     }
-     else
-       IDE.EDITOR.closeFile(0);
-
-   }
-
-   /**
-    * @throws InterruptedException
-    */
-   private void moveCursorDown(int row) throws InterruptedException
-   {
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      for (int i = 0; i < row; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
    }
 
 }

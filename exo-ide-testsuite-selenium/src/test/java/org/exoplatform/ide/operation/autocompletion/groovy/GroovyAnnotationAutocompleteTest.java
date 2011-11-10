@@ -20,10 +20,11 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,25 +33,23 @@ import org.junit.Test;
  * @version $Id: Dec 16, 2010 10:46:04 AM evgen $
  *
  */
-public class GroovyAnnotationAutocompleteTest extends BaseTest
+public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
 {
+
+   @BeforeClass
+   public static void createProject()
+   {
+      createProject(GroovyAnnotationAutocompleteTest.class.getSimpleName());
+   }
 
    @Test
    public void testGroovyAnnotation() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
+      IDE.EDITOR.moveCursorDown(0, 8);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\n@");
 
-      for (int i = 0; i < 8; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      }
-      selenium().keyDown("//body[@class='editbox']", "\\35");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-     IDE.EDITOR.typeTextIntoEditor(0, "@");
-      
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementNotPresent("hello(String):String");
       IDE.CODEASSISTANT.checkElementPresent("Deprecated");
@@ -61,15 +60,9 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("SuppressWarnings");
       IDE.CODEASSISTANT.checkElementPresent("Target");
       
-      for (int i = 0; i < 3; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
-      
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.CODEASSISTANT.typeToInput("Over");
+      IDE.CODEASSISTANT.insertSelectedItem();
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@Override"));
    }
-   
+
 }

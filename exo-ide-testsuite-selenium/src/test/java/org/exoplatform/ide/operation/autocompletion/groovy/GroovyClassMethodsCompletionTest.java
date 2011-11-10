@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.operation.autocompletion.groovy;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -37,47 +34,37 @@ import org.openqa.selenium.Keys;
  * @version $Id: Dec 8, 2010 2:36:49 PM evgen $
  *
  */
-public class GroovyClassMethodsCompletionTest extends BaseTest
+public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
 {
+
+   @BeforeClass
+   public static void createProject()
+   {
+      createProject(GroovyClassMethodsCompletionTest.class.getSimpleName());
+   }
 
    @Test
    public void testGroovyClassMethodCompletion() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-
       /*
        * 1. Open REST Service file.
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-
+      IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
       /*
        * 2. Go inside hello() method.
        */
-      for (int i = 0; i < 9; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
-      selenium().keyDown(Locators.EDITOR_LOCATOR, "" + java.awt.event.KeyEvent.VK_END);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-
-      /*
-       * 3. Type text "Collections."
-       */
-      IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
+      IDE.EDITOR.moveCursorDown(0, 9);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nCollections.");
 
       /*
        * 4. Call autocomplete form.
        */
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SPACE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium().isElementPresent(CodeAssistant.Locators.PANEL_ID));
+      IDE.CODEASSISTANT.openForm();
 
       /*
        * 5. Type to the input field text "so".
        */
-      selenium().focus(CodeAssistant.Locators.INPUT);
       IDE.CODEASSISTANT.typeToInput("so");
 
       /*
@@ -91,26 +78,17 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       /*
        * 6. Select sort(List, Comparator):void element
        */
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.CODEASSISTANT.moveCursorDown(1);
 
       /*
        * 7. Press Enter to instert element info editor
        */
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.CODEASSISTANT.insertSelectedItem();
 
       /*
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
-      assertFalse(selenium().isElementPresent(CodeAssistant.Locators.PANEL_ID));
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
-
-      /*
-       * 8. Close file
-       */
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
 }
