@@ -398,8 +398,8 @@ public class JcrFileSystem implements VirtualFileSystem
          }
          FileData fileData = (FileData)data;
          ContentStream stream =
-            new ContentStream(fileData.getContent(), fileData.getMediaType().toString(), fileData.getContenLength(),
-               new java.util.Date(fileData.getLastModificationDate()));
+            new ContentStream(fileData.getName(), fileData.getContent(), fileData.getMediaType().toString(),
+               fileData.getContenLength(), new java.util.Date(fileData.getLastModificationDate()));
          return stream;
       }
       finally
@@ -429,14 +429,14 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             FileData version = ((FileData)data).getVersion(versionId);
             stream =
-               new ContentStream(version.getContent(), version.getMediaType().toString(), version.getContenLength(),
-                  new java.util.Date(version.getLastModificationDate()));
+               new ContentStream(version.getName(), version.getContent(), version.getMediaType().toString(),
+                  version.getContenLength(), new java.util.Date(version.getLastModificationDate()));
          }
          else
          {
             stream =
-               new ContentStream(fileData.getContent(), fileData.getMediaType().toString(), fileData.getContenLength(),
-                  new java.util.Date(fileData.getLastModificationDate()));
+               new ContentStream(fileData.getName(), fileData.getContent(), fileData.getMediaType().toString(),
+                  fileData.getContenLength(), new java.util.Date(fileData.getLastModificationDate()));
          }
          return stream;
       }
@@ -454,8 +454,12 @@ public class JcrFileSystem implements VirtualFileSystem
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       ContentStream content = getContent(id);
-      return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
-         .header("Content-Length", Long.toString(content.getLength())).build();
+      return Response //
+         .ok(content.getStream(), content.getMimeType()) //
+         .lastModified(content.getLastModificationDate()) //
+         .header("Content-Length", Long.toString(content.getLength())) //
+         .header("Content-Disposition", "attachment; filename=\"" + content.getFileName() + "\"") //
+         .build();
    }
 
    /**
@@ -466,8 +470,11 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       ContentStream content = getContent(path, versionId);
-      return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
-         .header("Content-Length", Long.toString(content.getLength())).build();
+      return Response //
+         .ok(content.getStream(), content.getMimeType()) //
+         .lastModified(content.getLastModificationDate()) //
+         .header("Content-Length", Long.toString(content.getLength())) //
+         .build();
    }
 
    /**
@@ -494,7 +501,8 @@ public class JcrFileSystem implements VirtualFileSystem
             session.logout();
          }
          vfsInfo =
-            new VirtualFileSystemInfo(this.vfsID, true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
+            new VirtualFileSystemInfo(this.vfsID, true, true,
+               org.exoplatform.services.security.IdentityConstants.ANONIM,
                org.exoplatform.services.security.IdentityConstants.ANY, permissions, ACLCapability.MANAGE,
                QueryCapability.BOTHCOMBINED, createUrlTemplates(), root);
       }
@@ -623,7 +631,7 @@ public class JcrFileSystem implements VirtualFileSystem
          }
          FileData versionData = ((FileData)data).getVersion(versionId);
          ContentStream stream =
-            new ContentStream(versionData.getContent(), versionData.getMediaType().toString(),
+            new ContentStream(versionData.getName(), versionData.getContent(), versionData.getMediaType().toString(),
                versionData.getContenLength(), new java.util.Date(versionData.getLastModificationDate()));
          return stream;
       }
@@ -1023,10 +1031,6 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateContent(java.lang.String, javax.ws.rs.core.MediaType,
-    *      java.io.InputStream, java.lang.String)
-    */
    @Path("content/{id}")
    public void updateContent(
       @PathParam("id") String id, //

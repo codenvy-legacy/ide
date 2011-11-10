@@ -27,27 +27,34 @@ import java.util.Date;
  */
 public final class ContentStream
 {
+   private final String fileName;
    private final InputStream stream;
    private final String mimeType;
    private final long length;
    private final Date lastModificationDate;
 
-   public ContentStream(InputStream stream, String mimeType, long length, Date lastModificationDate)
+   public ContentStream(String fileName, InputStream stream, String mimeType, long length, Date lastModificationDate)
    {
+      this.fileName = fileName;
       this.stream = stream;
       this.mimeType = mimeType;
       this.length = length;
       this.lastModificationDate = lastModificationDate;
    }
 
-   public ContentStream(InputStream stream, String mimeType, Date lastModificationDate)
+   public ContentStream(String fileName, InputStream stream, String mimeType, Date lastModificationDate)
    {
-      this(stream, mimeType, -1, lastModificationDate);
+      this(fileName, stream, mimeType, -1, lastModificationDate);
    }
 
-   public ContentStream(InputStream stream, String mimeType)
+   public ContentStream(String fileName, InputStream stream, String mimeType)
    {
-      this(stream, mimeType, -1, new Date());
+      this(fileName, stream, mimeType, -1, new Date());
+   }
+
+   public String getFileName()
+   {
+      return fileName;
    }
 
    public InputStream getStream()

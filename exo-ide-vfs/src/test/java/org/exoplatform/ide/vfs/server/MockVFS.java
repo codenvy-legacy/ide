@@ -196,7 +196,7 @@ public class MockVFS implements VirtualFileSystem
       PermissionDeniedException, VirtualFileSystemException
    {
       ByteArrayInputStream b = new ByteArrayInputStream("Hello, world!".getBytes());
-      return new ContentStream(b, "text/plain", b.available(), new Date());
+      return new ContentStream("", b, "text/plain", b.available(), new Date());
    }
 
    @Override

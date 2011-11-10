@@ -28,10 +28,12 @@ import java.io.ByteArrayInputStream;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -41,6 +43,7 @@ public class GetContentTest extends JcrFileSystemTest
 {
    private Node getContentTestNode;
    private String fileID;
+   private String fileName;
    private String folderID;
    private String content = "__GetContentTest__";
    private String filePath;
@@ -63,6 +66,7 @@ public class GetContentTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(content.getBytes()));
       fileID = ((ExtendedNode)fileNode).getIdentifier();
+      fileName = fileNode.getName();
       filePath = fileNode.getPath();
 
       Node folderNode = getContentTestNode.addNode("GetContentTest_FOLDER", "nt:folder");
@@ -84,6 +88,7 @@ public class GetContentTest extends JcrFileSystemTest
       assertEquals(content, new String(writer.getBody()));
       assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")),
          response.getContentType());
+      checkContentDispositionHeader(response);
    }
 
    public void testGetContentFolder() throws Exception
@@ -129,6 +134,7 @@ public class GetContentTest extends JcrFileSystemTest
       assertEquals(content, new String(writer.getBody()));
       assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")),
          response.getContentType());
+      //checkContentDispositionHeader(response);
    }
 
    public void testGetContentByPathWithVersionID() throws Exception
@@ -156,6 +162,22 @@ public class GetContentTest extends JcrFileSystemTest
       assertEquals(content, new String(writer.getBody()));
       assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")),
          response.getContentType());
+      //checkContentDispositionHeader(response);
+   }
+   
+   private void checkContentDispositionHeader(ContainerResponse response)
+   {
+      MultivaluedMap<String, Object> headers = response.getHttpHeaders();
+      String contentDispositionHeader = null;
+      if (headers != null)
+      {
+         List<Object> l = headers.get("Content-Disposition");
+         if (l != null && l.size() > 0)
+         {
+            contentDispositionHeader = (String)l.get(0);
+         }
+      }
+      assertEquals("attachment; filename=\"" + fileName + "\"", contentDispositionHeader);
    }
 
 }
