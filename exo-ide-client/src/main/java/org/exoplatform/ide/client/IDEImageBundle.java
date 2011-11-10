@@ -74,6 +74,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("bundled-images/welcome/back_Disabled.png")
    ImageResource backDisabled();
    
+   @Source("bundled-images/welcome/welcome.png")
+   ImageResource welcome();
+   
+   @Source("bundled-images/welcome/welcome-disabled.png")
+   ImageResource welcomeDisabled();
+   
    /*
     * Actions
     */

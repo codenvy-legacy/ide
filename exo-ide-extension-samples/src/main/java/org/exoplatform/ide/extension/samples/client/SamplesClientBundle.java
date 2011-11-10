@@ -43,6 +43,13 @@ public interface SamplesClientBundle extends ClientBundle
    /*
     * Buttons
     */
+
+   @Source("org/exoplatform/ide/extension/samples/images/buttons/welcome.png")
+   ImageResource welcome();
+
+   @Source("org/exoplatform/ide/extension/samples/images/buttons/welcome-disabled.png")
+   ImageResource welcomeDisabled();
+   
    @Source("org/exoplatform/ide/extension/samples/images/buttons/ok.png")
    ImageResource ok();
 

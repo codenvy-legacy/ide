@@ -50,7 +50,7 @@ public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingVie
 
    private List<ClosingViewHandler> closingViewHandlers = new ArrayList<ClosingViewHandler>();
 
-   private boolean hasModalWindows = false;
+   private boolean hasModalWindows = true;
 
    private Map<String, Widget> lockPanels = new HashMap<String, Widget>();
 
@@ -116,8 +116,8 @@ public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingVie
       if (hasModalWindows)
       {
          AbsolutePanel lockPanel = new AbsolutePanel();
-         lockPanel.getElement().getStyle().setBackgroundColor("#9999FF");
-         lockPanel.getElement().getStyle().setOpacity(0.1);
+         lockPanel.getElement().getStyle().setBackgroundColor("#FFFFFF");
+         lockPanel.getElement().getStyle().setOpacity(0.5);
          add(lockPanel);
          lockPanels.put(view.getId(), lockPanel);
          //         resizeLockPanels();

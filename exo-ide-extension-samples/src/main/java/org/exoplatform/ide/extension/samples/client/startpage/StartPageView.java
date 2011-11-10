@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
@@ -74,7 +75,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    
    public StartPageView()
    {
-      super(ID, "editor", TITLE);
+      super(ID, "editor", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()));
       add(uiBinder.createAndBindUi(this));
    }
 

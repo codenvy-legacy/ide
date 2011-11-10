@@ -119,7 +119,7 @@ public class StandartPerspective extends FlowPanel implements Perspective
       add(layoutPanel);
       layoutPanel.setWidth("100%");
       layoutPanel.setHeight("100%");
-      popupWindowsPanel = new WindowsPanel();
+      popupWindowsPanel = new WindowsPanel(true);
       popupWindowsPanel.addClosingViewHandler(closingViewHandler);
       modalWindowsPanel = new WindowsPanel(true);
       modalWindowsPanel.addClosingViewHandler(closingViewHandler);
