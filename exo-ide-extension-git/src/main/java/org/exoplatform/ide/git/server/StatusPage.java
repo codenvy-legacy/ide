@@ -35,13 +35,6 @@ public class StatusPage extends Status implements InfoPage
 {
    private final StatusRequest request;
 
-   /**
-    * @param branchName
-    * @param changedNotUpdated
-    * @param changedNotCommited
-    * @param untracked
-    * @param request
-    */
    public StatusPage(String branchName, List<GitFile> changedNotUpdated, List<GitFile> changedNotCommited,
       List<GitFile> untracked, StatusRequest request)
    {
