@@ -40,6 +40,13 @@ public class LogPage extends Log implements InfoPage
 {
    // The same as C git does.
    private static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy ZZZZZ";
+   private static final DateFormat dateFormat;
+   static
+   {
+      dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+      TimeZone timeZone = TimeZone.getDefault();
+      dateFormat.setTimeZone(timeZone);
+   }
 
    public LogPage(List<Revision> commits)
    {
@@ -54,28 +61,25 @@ public class LogPage extends Log implements InfoPage
    {
       // Default behavior only at the moment. 
       PrintWriter writer = new PrintWriter(out);
-      DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-      TimeZone timeZone = TimeZone.getDefault();
-      dateFormat.setTimeZone(timeZone);
 
       for (Revision commit : commits)
       {
-         writer.format("commit %1s\n", commit.getId());
+         writer.format("commit %s\n", commit.getId());
 
          GitUser commiter = commit.getCommitter();
          if (commiter != null)
-            writer.format("Author: %1s <%2s>\n", commiter.getName(), commiter.getEmail());
+            writer.format("Author: %1$s <%2$s>\n", commiter.getName(), commiter.getEmail());
 
          long commitTime = commit.getCommitTime();
          if (commitTime > 0)
-            writer.format("Date:   %1s\n", dateFormat.format(new Date(commitTime)));
+            writer.format("Date:   %s\n", ((DateFormat)dateFormat.clone()).format(new Date(commitTime)));
 
          writer.println();
 
          // Message with indent.
          String[] lines = commit.getMessage().split("\n");
          for (String line : lines)
-            writer.format("    %1s\n", line);
+            writer.format("    %s\n", line);
 
          writer.println();
       }

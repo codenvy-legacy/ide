@@ -72,19 +72,19 @@ public class StatusPage extends Status implements InfoPage
       if (changedNotUpdated != null && !changedNotUpdated.isEmpty())
       {
          for (GitFile f : changedNotUpdated)
-            writer.format(" %1s %2s\n", f.getStatus().getShortStatus(), f.getPath());
+            writer.format(" %1$s %2$s\n", f.getStatus().getShortStatus(), f.getPath());
       }
 
       if (changedNotCommited != null && !changedNotCommited.isEmpty())
       {
          for (GitFile f : changedNotCommited)
-            writer.format("%1s  %2s\n", f.getStatus().getShortStatus(), f.getPath());
+            writer.format("%1$s  %2$s\n", f.getStatus().getShortStatus(), f.getPath());
       }
 
       if (untracked != null && !untracked.isEmpty())
       {
          for (GitFile f : untracked)
-            writer.format("%1s %2s\n", f.getStatus().getShortStatus(), f.getPath());
+            writer.format("%1$s %2$s\n", f.getStatus().getShortStatus(), f.getPath());
       }
 
       writer.flush();
@@ -94,7 +94,7 @@ public class StatusPage extends Status implements InfoPage
    {
       PrintWriter writer = new PrintWriter(out);
 
-      writer.format("# On branch %1s\n", branchName);
+      writer.format("# On branch %s\n", branchName);
       
       if ((changedNotUpdated == null || changedNotUpdated.isEmpty()) //
          && (changedNotCommited == null || changedNotCommited.isEmpty()) //
@@ -109,7 +109,7 @@ public class StatusPage extends Status implements InfoPage
             writer.println("# Changes to be committed:");
             writer.println('#');
             for (GitFile f : changedNotCommited)
-               writer.format("#       %1s:    %2s\n", f.getStatus().getLongStatus(), f.getPath());
+               writer.format("#       %1$s:    %2$s\n", f.getStatus().getLongStatus(), f.getPath());
          }
          writer.println('#');
 
@@ -118,7 +118,7 @@ public class StatusPage extends Status implements InfoPage
             writer.println("# Changed but not updated:");
             writer.println('#');
             for (GitFile f : changedNotUpdated)
-               writer.format("#       %1s:    %2s\n", f.getStatus().getLongStatus(), f.getPath());
+               writer.format("#       %1$s:    %2$s\n", f.getStatus().getLongStatus(), f.getPath());
             writer.println('#');
          }
 
@@ -127,7 +127,7 @@ public class StatusPage extends Status implements InfoPage
             writer.println("# Untracked files:");
             writer.println('#');
             for (GitFile f : untracked)
-               writer.format("#       %1s\n", f.getPath());
+               writer.format("#       %s\n", f.getPath());
          }
       }
       writer.flush();
