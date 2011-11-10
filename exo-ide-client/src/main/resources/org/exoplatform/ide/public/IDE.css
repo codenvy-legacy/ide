@@ -32,11 +32,15 @@ Add shadow to dialog boxes and menus
 .gwt-DialogBox
 {
 	-moz-box-shadow: 10px 10px 10px 0 #C8C8C8 !important;
+	-webkit-box-shadow: 10px 10px 10px 0 #C8C8C8 !important;
+	box-shadow: 10px 10px 10px 0 #C8C8C8 !important;
 }
 
 .exo-popupMenuMain
 {
 	-moz-box-shadow: 7px 7px 10px 0 #C8C8C8 !important;
+	-webkit-box-shadow: 7px 7px 10px 0 #C8C8C8 !important;
+	box-shadow: 7px 7px 10px 0 #C8C8C8 !important;
 }
 
 .DevTool_contentEditorBorder {
