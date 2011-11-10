@@ -56,11 +56,11 @@ public class Utils
       //absolute path
       if (path.startsWith("/"))
       {
-         return path.substring(1);
+         return path;
       }
       if (!path.startsWith(".."))
       {
-         String folderPath = currentFolder.getPath().substring(1);
+         String folderPath = currentFolder.getPath();
          
          if (folderPath.endsWith("/") && path.startsWith("/"))
             return folderPath + path.substring(1);
@@ -97,7 +97,7 @@ public class Utils
                currentPath += "/" + s;
             }
          }
-         return currentPath;
+         return "/" + currentPath;
       }
    }
 
