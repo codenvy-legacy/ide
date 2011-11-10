@@ -38,6 +38,8 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -107,8 +109,6 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
 
       display.getFolderNameField().setValue(NEW_FOLDER_NAME);
 
-      display.setFocusInNameField();
-
       display.getFolderNameFiledKeyPressed().addKeyPressHandler(new KeyPressHandler()
       {
          public void onKeyPress(KeyPressEvent event)
@@ -149,7 +149,6 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
                {
                   IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
-
                }
             });
       }
@@ -175,8 +174,16 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
 
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
-      display.setFocusInNameField();
       bindDisplay();
+      
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            display.setFocusInNameField();
+         }
+      });
    }
 
    /**

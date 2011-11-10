@@ -35,14 +35,14 @@ public class SwitchVFSEvent extends GwtEvent<SwitchVFSHandler>
    /**
     * Virtual file system id.
     */
-   private String vfs;
+   private String vfsID;
 
    /**
-    * @param vfs virtual file system id
+    * @param vfsID virtual file system id
     */
-   public SwitchVFSEvent(String vfs)
+   public SwitchVFSEvent(String vfsID)
    {
-      this.vfs = vfs;
+      this.vfsID = vfsID;
    }
 
    @Override
@@ -58,10 +58,11 @@ public class SwitchVFSEvent extends GwtEvent<SwitchVFSHandler>
    }
 
    /**
-    * @return the vfs
+    * @return the ID of virtual file system
     */
-   public String getVfs()
+   public String getVfsID()
    {
-      return vfs;
+      return vfsID;
    }
+   
 }

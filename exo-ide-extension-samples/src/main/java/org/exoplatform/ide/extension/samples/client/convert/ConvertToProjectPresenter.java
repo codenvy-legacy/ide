@@ -41,8 +41,8 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.event.ConvertToProjectEvent;
-import org.exoplatform.ide.client.framework.project.event.ConvertToProjectHandler;
+import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
+import org.exoplatform.ide.client.framework.project.ConvertToProjectHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -299,7 +299,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.event.ConvertToProjectHandler#onConvertToProject(org.exoplatform.ide.client.framework.project.event.ConvertToProjectEvent)
+    * @see org.exoplatform.ide.client.framework.project.ConvertToProjectHandler#onConvertToProject(org.exoplatform.ide.client.framework.project.ConvertToProjectEvent)
     */
    @Override
    public void onConvertToProject(ConvertToProjectEvent event)

@@ -38,12 +38,12 @@ public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
 
    private List<Item> selectedItems;
 
-   private String panelId;
+   private String viewId;
 
    public ItemsSelectedEvent(List<Item> selectedItems, String panelId)
    {
       this.selectedItems = selectedItems;
-      this.panelId = panelId;
+      this.viewId = panelId;
    }
 
    @Override
@@ -63,9 +63,9 @@ public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
       return selectedItems;
    }
 
-   public String getPanelId()
+   public String getViewId()
    {
-      return panelId;
+      return viewId;
    }
 
 }

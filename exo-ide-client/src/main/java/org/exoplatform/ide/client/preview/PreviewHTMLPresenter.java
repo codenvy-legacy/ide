@@ -79,7 +79,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new PreviewHTMLControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new PreviewHTMLControl(), Docking.TOOLBAR_RIGHT);
    }
 
    /**

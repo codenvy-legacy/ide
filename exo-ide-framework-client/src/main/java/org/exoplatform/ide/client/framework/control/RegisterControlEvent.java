@@ -38,8 +38,6 @@ public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
 
    private Docking docking = Docking.NONE;
 
-   private boolean rightDocking = false;
-
    public RegisterControlEvent(Control control)
    {
       this.control = control;
@@ -51,13 +49,6 @@ public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
       this.docking = docking;
    }
 
-   public RegisterControlEvent(Control control, Docking docking, boolean rightDocking)
-   {
-      this.control = control;
-      this.docking = docking;
-      this.rightDocking = rightDocking;
-   }
-
    public Control getControl()
    {
       return control;
@@ -66,11 +57,6 @@ public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
    public Docking getDocking()
    {
       return docking;
-   }
-
-   public boolean isRightDocking()
-   {
-      return rightDocking;
    }
 
    @Override

@@ -95,14 +95,11 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       ImageResourceCell iconCell = new ImageResourceCell();
       Column<T, ImageResource> iconColumn = new Column<T, ImageResource>(iconCell)
       {
-
          @Override
          public ImageResource getValue(T item)
          {
             return getItemIcon(item);
-            
          }
-
       };
       
       getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
@@ -138,6 +135,8 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
          }
 
       };
+      
+      nameColumn.setCellStyleNames("default-cursor");
       getCellTable().addColumn(nameColumn, NAME);
       getCellTable().setColumnWidth(nameColumn, 40, Unit.PCT);
       
@@ -172,6 +171,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
 
       };
       
+      entryNameColumn.setCellStyleNames("default-cursor");
       getCellTable().addColumn(entryNameColumn, DESCRIPTION);
       getCellTable().setColumnWidth(entryNameColumn, 60, Unit.PCT);
    }

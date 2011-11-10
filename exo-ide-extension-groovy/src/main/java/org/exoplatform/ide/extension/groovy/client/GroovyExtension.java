@@ -91,11 +91,11 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    private IDEConfiguration configuration;
 
    //TODO: currently not use lock
-  // private Map<String, String> lockTokens;
+   // private Map<String, String> lockTokens;
 
    //need for http://jira.exoplatform.org/browse/IDE-347
    //undeploy service on cancel 
-//   private boolean undeployOnCancel = false;
+   //   private boolean undeployOnCancel = false;
 
    private boolean previewOpened = false;
 
@@ -111,31 +111,28 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    {
       handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(InitializeServicesEvent.TYPE, this));
 
-      IDE.getInstance().addControl(new SetAutoloadCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new SetAutoloadCommand(), Docking.TOOLBAR_RIGHT);
       IDE.getInstance().addControl(new ConfigureBuildPathCommand());
-      IDE.getInstance().addControl(new ValidateGroovyCommand(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new DeployGroovyCommand(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new UndeployGroovyCommand(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new RunGroovyServiceCommand(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new DeployGroovySandboxCommand(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new UndeployGroovySandboxCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new ValidateGroovyCommand(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new DeployGroovyCommand(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new UndeployGroovyCommand(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new RunGroovyServiceCommand(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new DeployGroovySandboxCommand(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new UndeployGroovySandboxCommand(), Docking.TOOLBAR_RIGHT);
 
       new LaunchRestServicePresenter();
 
-      IDE.getInstance().addControl(new PreviewGroovyTemplateControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new PreviewGroovyTemplateControl(), Docking.TOOLBAR_RIGHT);
 
-      handlerRegistrations.put(InitializeServicesEvent.TYPE,
-         IDE.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(SetAutoloadEvent.TYPE, this));
 
       //handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewWadlOutputEvent.TYPE, this));
 
-      handlerRegistrations.put(InitializeServicesEvent.TYPE,
-         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE,
          IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
-      handlerRegistrations
-         .put(InitializeServicesEvent.TYPE, IDE.addHandler(PreviewGroovyTemplateEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(PreviewGroovyTemplateEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(ViewClosedEvent.TYPE, this));
 
       new RunGroovyServiceCommandHandler();
@@ -229,13 +226,13 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-    /* TODO currently not use lock
-     if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
-      {
-         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
+      /* TODO currently not use lock
+       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
+        {
+           event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+        }
 
-      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");*/
+        lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");*/
    }
 
    /**

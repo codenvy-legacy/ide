@@ -72,8 +72,8 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
 
       control = new ProgressNotificationControl();
       control.setDelimiterBefore(true);
-      IDE.getInstance().addControl(control, Docking.STATUSBAR, true);
-      IDE.getInstance().addControl(new ShowProgressControl(), Docking.NONE, false);
+      IDE.getInstance().addControl(control, Docking.STATUSBAR_RIGHT);
+      IDE.getInstance().addControl(new ShowProgressControl());
    }
 
    private void bind()

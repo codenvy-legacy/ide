@@ -94,7 +94,7 @@ public class NavigationModule implements
    {
       NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
 
-      IDE.getInstance().addControl(newFilePopupMenuControl, Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(newFilePopupMenuControl, Docking.TOOLBAR);
       IDE.getInstance().addControl(new NewFileCommandMenuGroup());
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
       IDE.getInstance().addControl(new CreateFileFromTemplateControl());
@@ -109,11 +109,11 @@ public class NavigationModule implements
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
 
-      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);
 
       new UploadFilePresenter();
       new UploadZipPresenter();
@@ -123,8 +123,8 @@ public class NavigationModule implements
 
       IDE.getInstance().addControl(new DownloadFileCommand());
       IDE.getInstance().addControl(new DownloadZippedFolderCommand());
-      IDE.getInstance().addControl(new SaveFileCommand(), Docking.TOOLBAR, false);
-      IDE.getInstance().addControl(new SaveFileAsCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new SaveFileCommand(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new SaveFileAsCommand(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new SaveAllFilesCommand());
       IDE.getInstance().addControl(new SaveFileAsTemplateCommand());
       
@@ -141,13 +141,13 @@ public class NavigationModule implements
       new SearchResultsPresenter();
       
       
-      IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR);
 
       new GoToFolderCommandHandler();
 
       new GetItemURLPresenter();
 
-      IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR, false);
+      IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR);
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);

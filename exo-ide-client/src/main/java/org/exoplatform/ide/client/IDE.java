@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
+import org.exoplatform.ide.client.log.PopupEventLogger;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeLocalizationMessages;
@@ -114,6 +115,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
        * Registering Icons
        */
       IDEIconSet.init();
+      
+      //new PopupEventLogger();
       
       //new PopupWindowLogger();
 
@@ -191,12 +194,12 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget, boolean)
+    * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget)
     */
    @Override
-   public void addControl(Control<?> control, Docking docking, boolean rightDocking)
+   public void addControl(Control<?> control, Docking docking)
    {
-      controlsRegistration.addControl(control, docking, rightDocking);
+      controlsRegistration.addControl(control, docking);
    }
 
    /**
@@ -205,7 +208,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    @Override
    public void addControl(Control<?> control)
    {
-      controlsRegistration.addControl(control, Docking.NONE, false);
+      controlsRegistration.addControl(control, Docking.NONE);
    }   
    
    /**

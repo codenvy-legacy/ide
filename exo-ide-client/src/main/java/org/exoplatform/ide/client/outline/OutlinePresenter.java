@@ -146,7 +146,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       IDE.addHandler(EditorCursorActivityEvent.TYPE, this);      
       IDE.addHandler(EditorTokenListPreparedEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR);
    }
 
    @Override

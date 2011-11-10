@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,23 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.event;
+
+package org.exoplatform.ide.client.project;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link ProjectCreatedEvent} event.
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Jan 6, 2011 $
- *
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface ProjectCreatedHandler extends EventHandler
+
+public interface CloseProjectHandler extends EventHandler
 {
-   /**
-    * Perform actions, when user wants to configure build pah of the project. 
-    * 
-    * @param event
-    */
-   void onProjectCreated(ProjectCreatedEvent event);
+   
+   void onCloseProject(CloseProjectEvent event);
+
 }

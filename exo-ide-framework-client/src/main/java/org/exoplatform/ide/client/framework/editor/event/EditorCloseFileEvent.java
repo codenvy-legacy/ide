@@ -36,22 +36,22 @@ public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
 
    private FileModel file;
    
-   private boolean forceClosing = false;
+   private boolean ignoreChanges = false;
 
    public EditorCloseFileEvent(FileModel file)
    {
       this.file = file;
    }
 
-   public EditorCloseFileEvent(FileModel file, boolean forceClosing)
+   public EditorCloseFileEvent(FileModel file, boolean ignoreChanges)
    {
       this.file = file;
-      this.forceClosing = forceClosing;
+      this.ignoreChanges = ignoreChanges;
    }   
 
-   public boolean isForceClosing()
+   public boolean isIgnoreChanges()
    {
-      return forceClosing;
+      return ignoreChanges;
    }
 
    /**

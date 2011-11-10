@@ -38,8 +38,6 @@ import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetEv
 import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -59,8 +57,8 @@ EditorActiveFileChangedHandler
    @Override
    public void initialize()
    {
-      IDE.getInstance().addControl(new DeployGadgetCommand(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new UndeployGadgetCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployGadgetCommand(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new UndeployGadgetCommand(), Docking.TOOLBAR_RIGHT);
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
    }
 

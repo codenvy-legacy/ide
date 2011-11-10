@@ -95,31 +95,14 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
     */
    public void onRegisterControl(RegisterControlEvent event)
    {
-      if (!(event.getControl() instanceof IDEControl))
-      {
-         Dialogs.getInstance().showError(
-            IDE.ERRORS_CONSTANT.controlsRegistration() + " " + event.getControl().getClass());
-         return;
-      }
-
-      registeredControls.add(event.getControl());
-
-      if (event.getDocking() == Docking.TOOLBAR)
-      {
-         addControl(event.getControl(), toolbarDefaultControls, event.isRightDocking());
-      }
-      else if (event.getDocking() == Docking.STATUSBAR)
-      {
-         addControl(event.getControl(), statusBarControls, event.isRightDocking());
-      }
+      addControl(event.getControl(), event.getDocking());
    }
 
    /**
     * @param control
     * @param docking
-    * @param rightDocking
     */
-   public void addControl(Control<?> control, Docking docking, boolean rightDocking)
+   public void addControl(Control<?> control, Docking docking)
    {
       if (!(control instanceof IDEControl))
       {
@@ -132,13 +115,19 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       switch (docking)
       {
          case TOOLBAR :
-            addControl(control, toolbarDefaultControls, rightDocking);
+            addControl(control, toolbarDefaultControls, false);
+            break;
+
+         case TOOLBAR_RIGHT :
+            addControl(control, toolbarDefaultControls, true);
             break;
 
          case STATUSBAR :
-            addControl(control, statusBarControls, rightDocking);
+            addControl(control, statusBarControls, false);
             break;
-         default :
+            
+         case STATUSBAR_RIGHT :
+            addControl(control, statusBarControls, true);
             break;
       }
    }
@@ -148,7 +137,7 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
     * @param controls
     * @param rightDocking
     */
-   protected void addControl(Control control, List<String> controls, boolean rightDocking)
+   private void addControl(Control control, List<String> controls, boolean rightDocking)
    {
       if (rightDocking)
       {

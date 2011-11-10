@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.edit;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
@@ -89,11 +88,25 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
-
-   public void bindDisplay(Display d)
+   
+   /**
+    * @see org.exoplatform.ide.client.edit.event.GoToLineHandler#onGoToLine(org.exoplatform.ide.client.edit.event.GoToLineEvent)
+    */
+   @Override
+   public void onGoToLine(GoToLineEvent event)
    {
-      display = d;
+      if (display != null) {
+         return;
+      }
+      
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
+      display.setFocusInLineNumberField();
+   }   
 
+   public void bindDisplay()
+   {
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent arg0)
@@ -170,25 +183,6 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       this.activeFile = event.getFile();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.edit.event.GoToLineHandler#onGoToLine(org.exoplatform.ide.client.edit.event.GoToLineEvent)
-    */
-   @Override
-   public void onGoToLine(GoToLineEvent event)
-   {
-      if (display == null)
-      {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
-         display.setFocusInLineNumberField();
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent("Display Go To Line must be null"));
-      }
    }
 
    /**

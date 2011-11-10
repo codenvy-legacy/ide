@@ -62,7 +62,7 @@ import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
-import org.exoplatform.ide.client.project.explorer.OpenProjectEvent;
+import org.exoplatform.ide.client.project.OpenProjectEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
@@ -311,7 +311,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    protected void onItemSelected()
    {
       updateSelectionTimer.cancel();
-      updateSelectionTimer.schedule(10);
+      updateSelectionTimer.schedule(1);
    }
 
    private Timer updateSelectionTimer = new Timer()
@@ -776,10 +776,14 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    public void onViewClosed(final ViewClosedEvent event)
    {
       if (event.getView() instanceof Display)
-      {
+      {         
          display = null;
          viewOpened = false;
          
+         if (!event.getView().isActive()) {
+            return;
+         }
+
          Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute()
@@ -813,6 +817,10 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       else if ("ideTinyProjectExplorerView".equals(event.getView().getId()) && !event.getView().getId().equals(lastNavigatorId))
       {
          lastNavigatorId = "ideTinyProjectExplorerView";
+      }
+      
+      if (event.getView() instanceof Display) {
+         onItemSelected();
       }
    }
 

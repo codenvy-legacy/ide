@@ -159,7 +159,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
     * 
     */
    public LaunchRestServicePresenter() {
-      IDE.getInstance().addControl(new LaunchRestServiceCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new LaunchRestServiceCommand(), Docking.TOOLBAR_RIGHT);
       
       IDE.addHandler(PreviewWadlOutputEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);

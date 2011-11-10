@@ -17,7 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.framework.control;
+package org.exoplatform.ide.client.framework.event;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * 
@@ -27,8 +29,9 @@ package org.exoplatform.ide.client.framework.control;
  * @version $
  */
 
-public enum Docking {
-
-   TOOLBAR, TOOLBAR_RIGHT, STATUSBAR, STATUSBAR_RIGHT, NONE
+public interface AllFilesClosedHandler extends EventHandler
+{
+   
+   void onAllFilesClosed(AllFilesClosedEvent event);
 
 }

@@ -56,8 +56,8 @@ public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
                {
                   if (item.getNodeName() == null)
                   {
-                     return "<span title=\"" + item.getType() + "\"><font color=\"#FF0000\">"
-                        + item.getType() + "</font></span>";
+                     return "<span title=\"" + item.getType() + "\"><font color=\"#FF0000\"><nobr>"
+                        + item.getType() + "</nobr></font></span>";
                   }
                   else
                   {
@@ -70,7 +70,8 @@ public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
 
       };
       
+      entryTypeColumn.setCellStyleNames("default-cursor");
       getCellTable().addColumn(entryTypeColumn, "Type");
-      getCellTable().setColumnWidth(entryTypeColumn, 20, Unit.PCT);
+      getCellTable().setColumnWidth(entryTypeColumn, 50, Unit.PX);
    }
 }

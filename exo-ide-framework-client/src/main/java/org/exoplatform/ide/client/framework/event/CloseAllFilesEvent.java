@@ -16,23 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.project.event;
 
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.event;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Handler for {@link ConvertToProjectEvent} event.
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Oct 27, 2011 3:53:18 PM anya $
- *
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface ConvertToProjectHandler extends EventHandler
+
+public class CloseAllFilesEvent extends GwtEvent<CloseAllFilesHandler>
 {
-   /**
-    * Perform actions, when user tries to convert folder to project.
-    * 
-    * @param event
-    */
-   void onConvertToProject(ConvertToProjectEvent event);
+
+   public static final GwtEvent.Type<CloseAllFilesHandler> TYPE = new GwtEvent.Type<CloseAllFilesHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<CloseAllFilesHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(CloseAllFilesHandler handler)
+   {
+      handler.onCloseAllFiles(this);
+   }
+
 }

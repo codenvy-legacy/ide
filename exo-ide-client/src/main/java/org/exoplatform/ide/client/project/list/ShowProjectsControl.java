@@ -38,12 +38,9 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 public class ShowProjectsControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
-   public static final String ID = "Project/Open Project...";
+   public static final String ID = "Project/Open...";
 
-   //   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplateTitleControl();
-   //   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplatePromptControl();
-
-   private static final String TITLE = "Open Project...";
+   private static final String TITLE = "Open...";
 
    private static final String PROMPT = "Open Project...";
 
@@ -59,6 +56,7 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
       setEvent(new ShowProjectsEvent());
+      setDelimiterBefore(true);
    }
 
    /**

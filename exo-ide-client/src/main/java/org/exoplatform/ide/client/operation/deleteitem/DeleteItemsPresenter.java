@@ -105,7 +105,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    public DeleteItemsPresenter()
    {
-      IDE.getInstance().addControl(new DeleteItemCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new DeleteItemCommand(), Docking.TOOLBAR);
       
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);

@@ -50,8 +50,8 @@ public class ChromatticExtension extends Extension implements InitializeServices
    @Override
    public void initialize()
    {
-      IDE.getInstance().addControl(new GenerateNodeTypeControl(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new DeployNodeTypeControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new GenerateNodeTypeControl(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new DeployNodeTypeControl(), Docking.TOOLBAR_RIGHT);
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       

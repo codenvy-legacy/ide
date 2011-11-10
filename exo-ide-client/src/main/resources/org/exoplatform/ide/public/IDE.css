@@ -8,6 +8,23 @@ body {
 	background-color: #ebebeb;
 }
 
+.gwt-TextBox
+{
+    border-color: #ABADB3 #DBDFE5 #DBDFE5;
+    border-style: solid;
+    border-width: 1px;	
+}
+
+.default-cursor
+{
+	cursor: default;
+}
+
+.gwt-TextBox:FOCUS
+{
+	border-color: #5678AC #AFC6E2 #C0D7EC;
+}
+
 .DevTool_contentEditorBorder {
 	border: 1px solid #A7ABB4;
 }

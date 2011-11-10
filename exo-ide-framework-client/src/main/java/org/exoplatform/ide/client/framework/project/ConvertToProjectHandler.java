@@ -16,19 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.exoplatform.ide.client.framework.project;
 
-package org.exoplatform.ide.client.framework.control;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link ConvertToProjectEvent} event.
  * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Oct 27, 2011 3:53:18 PM anya $
+ *
  */
-
-public enum Docking {
-
-   TOOLBAR, TOOLBAR_RIGHT, STATUSBAR, STATUSBAR_RIGHT, NONE
-
+public interface ConvertToProjectHandler extends EventHandler
+{
+   /**
+    * Perform actions, when user tries to convert folder to project.
+    * 
+    * @param event
+    */
+   void onConvertToProject(ConvertToProjectEvent event);
 }

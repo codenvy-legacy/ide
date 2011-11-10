@@ -38,10 +38,8 @@ import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesHandle
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidgetServiceImpl;
 import org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Link;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -74,8 +72,8 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    @Override
    public void initialize()
    {
-      IDE.getInstance().addControl(new DeployUwaWidgetControl(), Docking.TOOLBAR, true);
-      IDE.getInstance().addControl(new ShowNetvibesPreviewControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployUwaWidgetControl(), Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new ShowNetvibesPreviewControl(), Docking.TOOLBAR_RIGHT);
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(PreviewNetvibesEvent.TYPE, this);

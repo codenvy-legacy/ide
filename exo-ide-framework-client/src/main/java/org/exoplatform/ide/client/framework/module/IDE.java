@@ -93,10 +93,9 @@ public abstract class IDE
    /**
     * Add control to main menu/tool bar or status bar
     * @param control
-    * @param docking where control dock(toolbar/statusbar) 
-    * @param rightDocking control pleased right on toolbar
+    * @param docking where control dock(toolbar/statusbar)
     */
-   public abstract void addControl(Control<?> control, Docking docking, boolean rightDocking);
+   public abstract void addControl(Control<?> control, Docking docking);
 
    /**
     * Add control to main menu

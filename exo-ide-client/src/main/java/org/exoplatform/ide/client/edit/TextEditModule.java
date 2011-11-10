@@ -51,25 +51,32 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
 
    public TextEditModule()
    {
-      IDE.getInstance().addControl(new UndoTypingControl(), Docking.TOOLBAR, false);
-      IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR, false);
-      IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new UndoTypingControl(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR);
 
-      IDE.getInstance().addControl(new FindTextControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new FindTextControl(), Docking.TOOLBAR);
+      new FindTextPresenter();
+      
       IDE.getInstance().addControl(new ShowLineNumbersControl());
+      
       IDE.getInstance().addControl(new DeleteCurrentLineControl());
+
       IDE.getInstance().addControl(new GoToLineControl());
+      new GoToLinePresenter();
 
-      IDE.getInstance().addControl(new EditorCursorPositionControl(), Docking.STATUSBAR, true);
-      IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new EditorCursorPositionControl(), Docking.STATUSBAR_RIGHT);
+      
+      IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR);
 
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-
-      IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
       
       new LockUnlockFileHandler();
-      new FindTextPresenter();
-      new GoToLinePresenter();
+      
+      
+      IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      
+      new CloseAllFilesEventHandler();
    }
 
    /**

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,11 +37,8 @@ import org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display;
 import org.exoplatform.ide.client.project.create.CreateProjectPresenter.ErrorMessage;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -346,7 +341,7 @@ public abstract class ProjectCreationTest extends TestCase
    {
 
       @Override
-      public void addControl(Control<?> control, Docking docking, boolean rightDocking)
+      public void addControl(Control<?> control, Docking docking)
       {
       }
 

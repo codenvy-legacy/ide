@@ -98,9 +98,9 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
 
    public CutCopyPasteItemsCommandHandler()
    {
-      IDE.getInstance().addControl(new CutItemsCommand(), Docking.TOOLBAR, false);
-      IDE.getInstance().addControl(new CopyItemsCommand(), Docking.TOOLBAR, false);
-      IDE.getInstance().addControl(new PasteItemsCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new CutItemsCommand(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new CopyItemsCommand(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new PasteItemsCommand(), Docking.TOOLBAR);
 
       IDE.addHandler(PasteItemsEvent.TYPE, this);
       IDE.addHandler(ItemDeletedEvent.TYPE, this);

@@ -51,9 +51,9 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
 
    public static final int DEFAULT_HEIGHT = 300;
 
-   public static final int DEFAULT_WIDTH = 550;
+   public static final int DEFAULT_WIDTH = 600;
    
-   private final String BUTTON_W = "75px";
+   private final String BUTTON_W = "90px";
    
    private final String BUTTON_H = "22px";
 

@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.project.explorer;
+package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -29,9 +29,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface ProjectOpenedHandler extends EventHandler
+public interface CloseAllFilesHandler extends EventHandler
 {
    
-   void onProjectOpened(ProjectOpenedEvent event);
+   void onCloseAllFiles(CloseAllFilesEvent event);
 
 }

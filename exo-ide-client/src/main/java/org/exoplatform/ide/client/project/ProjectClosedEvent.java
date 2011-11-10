@@ -17,7 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.project.explorer;
+package org.exoplatform.ide.client.project;
+
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -29,21 +31,33 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class CloseProjectEvent extends GwtEvent<CloseProjectHandler>
+public class ProjectClosedEvent extends GwtEvent<ProjectClosedHandler>
 {
-   
-   public static final GwtEvent.Type<CloseProjectHandler> TYPE = new GwtEvent.Type<CloseProjectHandler>();
+
+   public static final GwtEvent.Type<ProjectClosedHandler> TYPE = new GwtEvent.Type<ProjectClosedHandler>();
+
+   private ProjectModel project;
+
+   public ProjectClosedEvent(ProjectModel project)
+   {
+      this.project = project;
+   }
+
+   public ProjectModel getProject()
+   {
+      return project;
+   }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CloseProjectHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ProjectClosedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(CloseProjectHandler handler)
+   protected void dispatch(ProjectClosedHandler handler)
    {
-      handler.onCloseProject(this);
+      handler.onProjectClosed(this);
    }
 
 }

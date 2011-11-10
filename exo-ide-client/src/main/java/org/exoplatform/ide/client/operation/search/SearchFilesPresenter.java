@@ -86,7 +86,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
    public SearchFilesPresenter()
    {
-      IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR, false);      
+      IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR);      
       
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);

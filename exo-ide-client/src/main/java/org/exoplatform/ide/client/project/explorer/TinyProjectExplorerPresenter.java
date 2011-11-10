@@ -37,8 +37,6 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.event.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -51,6 +49,8 @@ import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconE
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
@@ -65,6 +65,12 @@ import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
+import org.exoplatform.ide.client.project.CloseProjectEvent;
+import org.exoplatform.ide.client.project.CloseProjectHandler;
+import org.exoplatform.ide.client.project.OpenProjectEvent;
+import org.exoplatform.ide.client.project.OpenProjectHandler;
+import org.exoplatform.ide.client.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.project.ProjectOpenedEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
@@ -111,6 +117,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    ConfigurationReceivedSuccessfullyHandler, ShowProjectExplorerHandler, ItemsSelectedHandler, ViewActivatedHandler,
    OpenProjectHandler, VfsChangedHandler, ProjectCreatedHandler, CloseProjectHandler
 {
+   
    public interface Display extends IsView
    {
       
@@ -167,6 +174,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
 
    }
+   
+   private static final String DEFAULT_TITLE = "&nbsp;Project Explorer&nbsp;";
 
    private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
       .workspaceReceiveChildrenError();
@@ -325,7 +334,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    protected void onItemSelected()
    {
       updateSelectionTimer.cancel();
-      updateSelectionTimer.schedule(10);
+      updateSelectionTimer.schedule(1);
    }
 
    private Timer updateSelectionTimer = new Timer()
@@ -726,15 +735,20 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if ("ideWorkspaceView".equals(event.getView().getId()) 
-         &&!event.getView().getId().equals(lastNavigatorId))
+      if ("ideWorkspaceView".equals(event.getView().getId())  &&!event.getView().getId().equals(lastNavigatorId))
       {
          lastNavigatorId = "ideWorkspaceView";
       }
-      else if ("ideTinyProjectExplorerView".equals(event.getView().getId())
-         && !event.getView().getId().equals(lastNavigatorId))
+      else if ("ideTinyProjectExplorerView".equals(event.getView().getId()) && !event.getView().getId().equals(lastNavigatorId))
       {
          lastNavigatorId = "ideTinyProjectExplorerView";
+      }
+      
+      if (event.getView() instanceof Display) {
+         
+         System.out.println("file items selected event............");
+         
+         onItemSelected();
       }
    }
 
@@ -787,10 +801,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
       
       display.setProjectExplorerTreeVisible(false);
-      
-      if (event.getVfsInfo() == null) {
-         return;
-      }
+      display.asView().setTitle(DEFAULT_TITLE);
    }
 
    @Override
@@ -830,7 +841,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       openedProject = null;
       
       display.getBrowserTree().setValue(null);
-      display.asView().setTitle("&nbsp;Project Explorer&nbsp;");
+      display.asView().setTitle(DEFAULT_TITLE);
       display.setProjectExplorerTreeVisible(false);
       
       selectedItems.clear();

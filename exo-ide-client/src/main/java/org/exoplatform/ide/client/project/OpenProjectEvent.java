@@ -16,41 +16,52 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.project.event;
+
+package org.exoplatform.ide.client.project;
+
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to convert folder to project.
- * Implement {@link ConvertToProjectHandler} to handle event.
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Oct 27, 2011 3:53:03 PM anya $
- *
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
-{
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ConvertToProjectHandler> TYPE = new GwtEvent.Type<ConvertToProjectHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
+public class OpenProjectEvent extends GwtEvent<OpenProjectHandler>
+{
+
+   public static final GwtEvent.Type<OpenProjectHandler> TYPE = new GwtEvent.Type<OpenProjectHandler>();
+
+   private ProjectModel project;
+
+   public OpenProjectEvent()
+   {
+   }
+
+   public OpenProjectEvent(ProjectModel project)
+   {
+      this.project = project;
+   }
+
+   public ProjectModel getProject()
+   {
+      return project;
+   }
+
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ConvertToProjectHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<OpenProjectHandler> getAssociatedType()
    {
       return TYPE;
    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
    @Override
-   protected void dispatch(ConvertToProjectHandler handler)
+   protected void dispatch(OpenProjectHandler handler)
    {
-      handler.onConvertToProject(this);
+      handler.onOpenProject(this);
    }
 
 }

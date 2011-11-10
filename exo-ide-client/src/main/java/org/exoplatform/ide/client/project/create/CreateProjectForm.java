@@ -42,7 +42,7 @@ public class CreateProjectForm extends ViewImpl implements
    org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display
 {
 
-   private static final int WIDTH = 370;
+   private static final int WIDTH = 420;
 
    private static final int HEIGHT = 210;
 

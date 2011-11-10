@@ -67,7 +67,7 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(FileSavedEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new ShowPropertiesControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new ShowPropertiesControl(), Docking.TOOLBAR_RIGHT);
    }
 
    @Override

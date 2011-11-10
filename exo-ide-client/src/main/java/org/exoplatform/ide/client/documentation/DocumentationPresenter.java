@@ -80,7 +80,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       IDE.addHandler(RegisterDocumentationEvent.TYPE, this);
 
       control = new ShowDocumentationControl();
-      IDE.getInstance().addControl(control, Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(control, Docking.TOOLBAR);
    }
 
    /**

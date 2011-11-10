@@ -285,7 +285,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    public void onEditorCloseFile(EditorCloseFileEvent event)
    {
-      if (event.isForceClosing())
+      if (event.isIgnoreChanges())
       {
          closeFileAfterSaving = false;
          closeFile(event.getFile());
@@ -358,7 +358,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    public void onEditorRedoTyping(EditorRedoTypingEvent event)
    {
       getEditorFromView(activeFile.getId()).redo();
-
    }
 
    private void updateTabTitle(FileModel file)
@@ -384,7 +383,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
-
       updateLineNumbers(event.isShowLineNumber());
    }
 

@@ -34,6 +34,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
+import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
+import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -62,14 +65,14 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class SelectWorkspacePresenter implements EditorFileOpenedHandler, EditorFileClosedHandler,
-   ApplicationSettingsReceivedHandler, SelectWorkspaceHandler, ViewClosedHandler
+public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHandler, SelectWorkspaceHandler, ViewClosedHandler, AllFilesClosedHandler
 {
 
    public interface Display extends IsView
@@ -106,11 +109,6 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
 
    }
 
-   private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
-      .workspaceCloseAllFilesDialogTitle();
-
-   private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
-      .workspaceCloseAllFilesDialogText();
 
    /**
     * Instance of Display
@@ -135,7 +133,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    /**
     * Map of opened files, is needs for verifying for opened files in current working workspace and asking user for save them.
     */
-   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+   //private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    /*
     * Remove this map and use SaveFileEvent instead calling of VirtualFileSystem.getInstance().saveContent(...) method.
@@ -152,11 +150,10 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    {
       IDE.getInstance().addControl(new SelectWorkspaceControl());
 
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(SelectWorkspaceEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
    }
 
    /**
@@ -176,28 +173,6 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       lockTokens = applicationSettings.getValueAsMap("lock-tokens");
 
       workingWorkspace = applicationSettings.getValueAsString("entry-point");
-   }
-
-   /**
-    * Handler of EditorFileOpened Event.
-    * Is need to close opened files while switching workspace.
-    * 
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
-    */
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
-
-   /**
-    * Handler of EditorFileClosed Event.
-    * Is need to close opened files while switching workspace.
-    * 
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
-    */
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
    }
 
    /**
@@ -353,101 +328,17 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
     */
    private void changeEntryPoint()
    {
-      if (openedFiles.size() != 0)
-      {
-         Dialogs.getInstance().ask(ASK_DIALOG_TITLE, ASK_DIALOG_TEXT, new BooleanValueReceivedHandler()
-         {
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value == null)
-               {
-                  return;
-               }
-               if (value)
-               {
-                  closeNextFile();
-               }
-               else
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-               }
-            }
-
-         });
-         return;
-      }
-      else
-      {
-         storeCurrentWorkspaceToConfiguration();
-      }
+      IDE.fireEvent(new CloseAllFilesEvent());
    }
-
-   /**
-    * Closing opened files.
-    */
-   private void closeNextFile()
+   
+   @Override
+   public void onAllFilesClosed(AllFilesClosedEvent event)
    {
-      if (openedFiles.size() == 0)
-      {
-         storeCurrentWorkspaceToConfiguration();
+      if (display == null) {
          return;
       }
-
-      String href = openedFiles.keySet().iterator().next();
-      final FileModel file = openedFiles.get(href);
-
-      if (file.isContentChanged())
-      {
-         final String fileName = Utils.unescape(file.getName());
-         final String message =
-            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.selectWorkspaceAskSaveFileBeforeClosing(fileName);
-         final String title =
-            org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.selectWorkspaceAskSaveFileBeforeClosingDialogTitle();
-         Dialogs.getInstance().ask(title, message, new BooleanValueReceivedHandler()
-         {
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value == null)
-               {
-                  return;
-               }
-
-               if (value)
-               {
-                  if (!file.isPersisted())
-                  {
-                     IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
-                  }
-                  else
-                  {
-                     //TODO
-                     //                     VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()),
-                     //                        new FileContentSaveCallback()
-                     //                        {
-                     //                           @Override
-                     //                           protected void onSuccess(FileData result)
-                     //                           {
-                     //                              eventBus.fireEvent(new EditorCloseFileEvent(result.getFile(), true));
-                     //                              closeNextFile();
-                     //                           }
-                     //                        });
-                  }
-               }
-               else
-               {
-                  IDE.fireEvent(new EditorCloseFileEvent(file, true));
-                  closeNextFile();
-               }
-            }
-
-         });
-         return;
-      }
-      else
-      {
-         IDE.fireEvent(new EditorCloseFileEvent(file, true));
-         closeNextFile();
-      }
+      
+      storeCurrentWorkspaceToConfiguration();
    }
 
    /**
@@ -462,7 +353,6 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       {
          workingWorkspace = selectedWorkspace.getId();
          IDE.getInstance().closeView(display.asView().getId());
-         
          IDE.fireEvent(new SwitchVFSEvent(selectedWorkspace.getId()));
       }
    }

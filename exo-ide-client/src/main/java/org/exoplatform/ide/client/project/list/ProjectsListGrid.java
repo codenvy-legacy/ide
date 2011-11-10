@@ -71,6 +71,9 @@ public class ProjectsListGrid extends ListGrid<ProjectModel>
             return object.getProjectType();
          }
       };
+      
+      nameColumn.setCellStyleNames("default-cursor");
+      typeColumn.setCellStyleNames("default-cursor");
 
       getCellTable().addColumn(iconColumn, "");
       getCellTable().setColumnWidth(iconColumn, "20px");

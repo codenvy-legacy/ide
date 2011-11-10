@@ -24,6 +24,11 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.project.CloseProjectEvent;
+import org.exoplatform.ide.client.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.project.ProjectOpenedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -39,9 +44,9 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
    ProjectClosedHandler
 {
 
-   public static final String ID = "Project/Close Project";
+   public static final String ID = "Project/Close";
 
-   private static final String TITLE = "Close Project";
+   private static final String TITLE = "Close";
 
    private static final String PROMPT = "Close Project";
 
@@ -73,7 +78,7 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.explorer.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.explorer.ProjectClosedEvent)
+    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
     */
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
@@ -83,7 +88,7 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.explorer.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.explorer.ProjectOpenedEvent)
+    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)

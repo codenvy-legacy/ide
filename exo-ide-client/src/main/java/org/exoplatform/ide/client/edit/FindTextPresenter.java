@@ -95,14 +95,12 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
    private final String STRING_NOT_FOUND = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.findTextStringNotFound();
 
-   private HashMap<String, FindTextState> filesFindState;
+   private HashMap<String, FindTextState> filesFindState = new HashMap<String, FindTextState>();
 
    private FileModel activeFile;
 
    public FindTextPresenter()
    {
-      filesFindState = new HashMap<String, FindTextState>();
-
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
