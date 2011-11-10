@@ -114,7 +114,8 @@ public class Editor extends AbstractTestModule
    public void selectTab(int tabIndex) throws Exception
    {
       WebElement tab =
-         editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR, tabIndex)));
+         editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR + "//span",
+            tabIndex)));
       tab.click();
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
@@ -151,6 +152,7 @@ public class Editor extends AbstractTestModule
    public void closeFile(int tabIndex) throws Exception
    {
       selectTab(tabIndex);
+
       final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
       clickCloseEditorButton(tabIndex);
 
@@ -237,6 +239,34 @@ public class Editor extends AbstractTestModule
       WebElement tab =
          editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TITLE_LOCATOR, title)));
       return tab.getText().endsWith("*");
+   }
+
+   /**
+    * Wait mark of file content modification appear (symbol "*" near title).
+    * 
+    * @param title file's title
+    */
+   public void waitFileContentModificationMark(final String title)
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               WebElement tab =
+                  editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR
+                     + String.format(Locators.TITLE_LOCATOR, title)));
+               return tab.getText().trim().endsWith("*");
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**

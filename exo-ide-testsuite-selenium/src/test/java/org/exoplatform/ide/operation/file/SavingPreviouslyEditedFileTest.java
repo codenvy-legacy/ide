@@ -19,10 +19,11 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
@@ -41,17 +42,16 @@ import org.junit.Test;
 public class SavingPreviouslyEditedFileTest extends BaseTest
 {
 
-   private static final String FOLDER_NAME = SavingPreviouslyEditedFileTest.class.getSimpleName();
+   private static final String PROJECT = SavingPreviouslyEditedFileTest.class.getSimpleName();
 
    private static final String FILE_NAME = "TestXmlFile";
 
    private static final String DEFAULT_XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>";
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   private final static String XML_TEXT1 = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n"
+      + "<settings>param</settings>\n<bean>\n<name>MineBean</name>\n" + "</bean>";
 
-   private final static String XML_TEXT = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n"
-      + "<settings>param</settings>\n" + "<bean>\n" + "<name>MineBean</name>\n" + "</bean>\n" + "</test>";
+   private final static String XML_TEXT2 = "\n</test>";
 
    private static final String FORMATTED_XML_TEXT = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n"
       + "  <settings>param</settings>\n" + "  <bean>\n" + "    <name>MineBean</name>\n" + "  </bean>\n" + "</test>";
@@ -61,7 +61,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME + "/");
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (Exception e)
       {
@@ -74,7 +74,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME + "/");
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -85,83 +85,64 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    @Test
    public void testSavePreviouslyEditedFile() throws Exception
    {
-      //----- 1 ------------
-      //Create and select "Test" in "Workspace" panel.
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //----- 2 ------------
-      //Click "New -> XML File" button.
+      //Create new XML file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
+      assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(1));
+      assertEquals(DEFAULT_XML_CONTENT, IDE.EDITOR.getTextFromCodeEditor(0));
 
-      //You will see default XML content  in the new file tab of "Content" panel.
-      //is file openededitor()
-      assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(0));
-      assertEquals(DEFAULT_XML_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
+      //Save new XML file:
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      //----- 3-4 ------------
-      //Click "Save As" button.
-      //Enter "RepoFile.xml" as name of the file and click "Ok" button.
-      saveAsUsingToolbarButton(FILE_NAME);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      //is file saved
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
-      
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
+      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FILE_NAME));
 
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FILE_NAME));
 
-      assertEquals(FILE_NAME,IDE.EDITOR.getTabTitle(0));
-     IDE.EDITOR.closeFile(0);
+      assertEquals(FILE_NAME, IDE.EDITOR.getTabTitle(1));
+      IDE.EDITOR.closeFile(1);
 
-      //----- 5 ------------
-      //Go to server window and check that the files created on the server
-      assertEquals(200, VirtualFileSystemUtils.get(URL + FOLDER_NAME).getStatusCode());
-      Response response = VirtualFileSystemUtils.get(URL + FOLDER_NAME + "/" + FILE_NAME);
+      //Check that the files created on the server
+      Response response = VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FILE_NAME);
       assertEquals(200, response.getStatusCode());
       assertEquals(DEFAULT_XML_CONTENT + "\n", response.getData());
 
-      //----- 6 ------------
-      //Go back to gadget window, do some changes in "Content" panel, click "Save" button.
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
-     IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.selectIFrameWithEditor(0);
-     IDE.EDITOR.deleteFileContent(0);
-      IDE.selectMainFrame();
-     IDE.EDITOR.typeTextIntoEditor(0, XML_TEXT);
-      saveCurrentFile();
+      //Edit file and save it:
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.deleteFileContent(1);
+      IDE.EDITOR.typeTextIntoEditor(1, XML_TEXT1);
+      IDE.EDITOR.typeTextIntoEditor(1, XML_TEXT2);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      waitForLoaderDissapeared();
+      IDE.EDITOR.closeFile(1);
 
-     IDE.EDITOR.closeFile(0);
+      selenium.refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      //TODO remove opening project, when saving current project is done:
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      //----- 7 ------------
-      //Refresh page, go to "Test" in "Workspace" panel.
-      //You'll see "RepoFile.xml" in file list
-      refresh();
+      //Open file:
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      assertEquals(FORMATTED_XML_TEXT, IDE.EDITOR.getTextFromCodeEditor(0));
 
-      //Test folder is closed, no file in navigation tree
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      //open Test folder
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
-      //see xml file in navigation tree
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
 
-      //----- 8 ------------
-      //Open "RepoFile.xml" file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(0);
-      //You must see the content of your file in "Content" panel.
-      assertEquals(FORMATTED_XML_TEXT,IDE.EDITOR.getTextFromCodeEditor(0));
+      //Edit file and save
+      IDE.EDITOR.typeTextIntoEditor(0, "<root>admin</root>");
 
-      //----- 9 ------------
-      //Make some changes in file content and then click on "File->Save" top menu command.
-      final String typeText = "<root>" + "admin" + "</root>";
-     IDE.EDITOR.typeTextIntoEditor(0, typeText);
-      //The "Save" button and "File->Save" command must become enabled.
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, true);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
    }
 
    /**
@@ -173,58 +154,66 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    @Test
    public void testEditAndSaveJustCreatedFile() throws Exception
    {
-      refresh();
+      selenium.refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-
+      //Open new file and save it:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      saveAsUsingToolbarButton(FILE_NAME);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      
-     IDE.EDITOR.typeTextIntoEditor(0, "X");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      //File is not modified:
+      assertFalse(IDE.EDITOR.isFileContentChanged(FILE_NAME));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
 
-      assertEquals(FILE_NAME + " *",IDE.EDITOR.getTabTitle(0));
+      //Modify file:
+      IDE.EDITOR.typeTextIntoEditor(0, "X");
+      IDE.EDITOR.waitFileContentModificationMark(FILE_NAME);
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
    }
 
    /**
-    * Bug http://jira.exoplatform.org/browse/IDE-342.
-    * 
-    * Create, save and close file. Than open file and type one letter.
-    * @throws Exception
-    */
+     * Bug http://jira.exoplatform.org/browse/IDE-342.
+     * 
+     * Create, save and close file. Than open file and type one letter.
+     * @throws Exception
+     */
    @Test
    public void testOpenEditAndSaveJustCreatedFile() throws Exception
    {
-      refresh();
+      selenium.refresh();
 
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
+      //Open new file and save it:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      saveAsUsingToolbarButton(FILE_NAME);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      
-     IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
-     IDE.EDITOR.typeTextIntoEditor(0, "X");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.EDITOR.closeFile(1);
 
-      assertEquals(FILE_NAME + " *",IDE.EDITOR.getTabTitle(0));
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, true);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      //File is not modified:
+      assertFalse(IDE.EDITOR.isFileContentChanged(FILE_NAME));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+
+      //Modify file:
+      IDE.EDITOR.typeTextIntoEditor(1, "X");
+      IDE.EDITOR.waitFileContentModificationMark(FILE_NAME);
+
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
    }
-
 }

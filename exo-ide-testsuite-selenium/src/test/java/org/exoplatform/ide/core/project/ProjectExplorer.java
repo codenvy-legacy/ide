@@ -48,6 +48,8 @@ public class ProjectExplorer extends AbstractTestModule
 
       String ROOT_ITEM_LOCATOR = "xpath=(//div[@id='" + TREE_GRID_ID
          + "']//div[@class='ide-Tree-label'])[position()=1]";
+
+      String OPEN_CLOSE_BUTTON_LOCATOR = "//div[@id='%s']/table/tbody/tr/td[1]/img";
    }
 
    @FindBy(how = How.XPATH, using = Locators.VIEW_LOCATOR)
@@ -59,6 +61,9 @@ public class ProjectExplorer extends AbstractTestModule
    @FindBy(how = How.XPATH, using = Locators.ROOT_ITEM_LOCATOR)
    private WebElement rootItem;
 
+   /**
+    * @throws InterruptedException
+    */
    public void waitOpened() throws InterruptedException
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
@@ -107,19 +112,30 @@ public class ProjectExplorer extends AbstractTestModule
             }
             catch (Exception e)
             {
-               e.printStackTrace();
                return false;
             }
          }
       });
    }
 
+   /**
+    * Select item in project explorer view.
+    * 
+    * @param path item's path
+    * @throws Exception
+    */
    public void selectItem(String path) throws Exception
    {
       WebElement item = driver().findElement(By.id(getItemId(path)));
       item.click();
    }
 
+   /**
+    * Open item (make double click) in Project explorer tree. 
+    * 
+    * @param path item's path
+    * @throws Exception
+    */
    public void openItem(String path) throws Exception
    {
       WebElement item = driver().findElement(By.id(getItemId(path)));
@@ -129,6 +145,13 @@ public class ProjectExplorer extends AbstractTestModule
       actions.doubleClick(item).build().perform();
    }
 
+   /**
+    * Is item present in project explorer tree.
+    * 
+    * @param path item's path
+    * @return <code>true</code> if item is present.
+    * @throws Exception
+    */
    public boolean isItemPresent(String path) throws Exception
    {
       try
@@ -139,6 +162,39 @@ public class ProjectExplorer extends AbstractTestModule
       {
          return false;
       }
+   }
+
+   /**
+    * Returns item visibility state in project explorer tree.
+    * 
+    * @param path item's path
+    * @return item's visibility state
+    * @throws Exception
+    */
+   public boolean isItemVisible(String path) throws Exception
+   {
+      try
+      {
+         WebElement item = driver().findElement(By.id(getItemId(path)));
+         return (item != null && item.isDisplayed());
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+
+   /**
+    * Click open/close(+/-) button of the pointed item.
+    * 
+    * @param path item's path
+    * @throws Exception
+    */
+   public void clickOpenCloseButton(String path) throws Exception
+   {
+      WebElement button =
+         driver().findElement(By.xpath(String.format(Locators.OPEN_CLOSE_BUTTON_LOCATOR, getItemId(path))));
+      button.click();
    }
 
    /**
