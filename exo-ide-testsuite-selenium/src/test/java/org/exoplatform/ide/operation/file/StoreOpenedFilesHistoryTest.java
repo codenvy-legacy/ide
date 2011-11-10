@@ -37,6 +37,7 @@ import org.junit.Test;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 4, 2011 $
  *
+ *FIXME: when store current project and opened files will be ready.
  */
 public class StoreOpenedFilesHistoryTest extends BaseTest
 {

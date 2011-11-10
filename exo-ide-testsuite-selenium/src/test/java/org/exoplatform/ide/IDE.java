@@ -80,7 +80,7 @@ public class IDE
       return instance;
    }
 
-   public Menu MENU = new Menu();
+   public Menu MENU;
 
    public Toolbar TOOLBAR;
 
@@ -165,6 +165,7 @@ public class IDE
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       DELETE = PageFactory.initElements(driver, Delete.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
+      MENU = PageFactory.initElements(driver, Menu.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);
       RENAME = PageFactory.initElements(driver, Rename.class);

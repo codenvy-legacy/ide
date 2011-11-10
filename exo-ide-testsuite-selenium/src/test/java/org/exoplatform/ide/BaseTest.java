@@ -122,6 +122,8 @@ public abstract class BaseTest
    protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.valueOf(IDE_SETTINGS
       .getString("selenium.browser.commad"));
 
+   protected static final String LINE_NUMBERS_COOKIE = "eXo-IDE-" + USER_NAME + "-line-numbers_bool";
+
    public static Selenium selenium()
    {
       return selenium;
