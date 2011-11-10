@@ -125,27 +125,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       if (applicationSettings.getValueAsString("entry-point") != null)
       {
          String entryPoint = applicationSettings.getValueAsString("entry-point");
-         
-//         System.out.println("entry point > " + entryPoint);
-//         
-//         int handlers = IDE.eventBus().getHandlerCount(SwitchVFSEvent.TYPE);
-//         System.out.println("SwitchVFSEvent handlers > " + handlers);
-//         for (int i = 0; i < handlers; i++) {
-//            System.out.println("handler > " + IDE.eventBus().getHandler(SwitchVFSEvent.TYPE, i));
-//         }
-//         
-//         int h2 = IDE.eventBus().getHandlerCount(VfsChangedEvent.TYPE);
-//         System.out.println("VfsChangedEvent handlers > " + h2);
-//         for (int i = 0; i < h2; i++) {
-//            System.out.println("handler > " + IDE.eventBus().getHandler(VfsChangedEvent.TYPE, i));
-//         }
-//
-//         int h3 = IDE.eventBus().getHandlerCount(SelectWorkspaceEvent.TYPE);
-//         System.out.println("SelectWorkspaceEvent handlers > " + h3);
-//         for (int i = 0; i < h3; i++) {
-//            System.out.println("handler > " + IDE.eventBus().getHandler(SelectWorkspaceEvent.TYPE, i));
-//         }
-         
          IDE.fireEvent(new SwitchVFSEvent(entryPoint));
       }
       else
@@ -156,8 +135,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      Window.alert("Remove this handler!!!!!!!!!1");
-      new Exception().printStackTrace();
+      //TODO maybe remove handling of VfsChangedEvent
       
       IDE.removeHandler(VfsChangedEvent.TYPE, this);
       if (event.getVfsInfo() == null || event.getVfsInfo().getId() == null)

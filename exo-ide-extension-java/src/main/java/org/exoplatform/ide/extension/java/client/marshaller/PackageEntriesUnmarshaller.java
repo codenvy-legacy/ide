@@ -51,8 +51,6 @@ public class PackageEntriesUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      System.out.println("TEXT > \r\n" + response.getText());
-      
       entries.clear();
 
       try

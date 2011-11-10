@@ -117,7 +117,6 @@ public class ProjectExplorerPresenter implements ShowProjectExplorerHandler, Ite
       @Override
       public void onSelectionChange(SelectionChangeEvent event)
       {
-         System.out.println("selection changed");
       }
    };
    
@@ -133,11 +132,7 @@ public class ProjectExplorerPresenter implements ShowProjectExplorerHandler, Ite
          @Override
          public void onSelectionChange(SelectionChangeEvent event)
          {
-            System.out.println("selection changed!!!!!!!!!!!!1");
             Set<AstItem> selectedItems = selectionModel.getSelectedSet();
-            
-            System.out.println(" SELECTED ITEMS COUNT > " + selectedItems.size());
-            
          }
       });
       
@@ -146,15 +141,7 @@ public class ProjectExplorerPresenter implements ShowProjectExplorerHandler, Ite
          @Override
          public void onDoubleClick(DoubleClickEvent event)
          {
-            System.out.println("CELL TREE ITEM DOUBLE CLICKED >>>");
-            
             Set<AstItem> selectedItems = selectionModel.getSelectedSet();
-            System.out.println("SELECTED ITEMS > " + selectedItems.size());
-
-            for (AstItem item : selectedItems) {
-               System.out.println("selected item > " + item);
-            }
-            
          }
       });
    }

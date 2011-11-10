@@ -101,7 +101,6 @@ public class CodeMirrorParserImpl extends Parser
       
       if (buildCommand.isBusy())
       {
-//         System.out.println("CodeMirrorImpl.getTokenList(); editor " + editorId + " token list prepared directly");
          eventBus.fireEvent(new EditorTokenListPreparedEvent(editorId, rootToken.getSubTokenList()));
       }
       
@@ -307,11 +306,7 @@ public class CodeMirrorParserImpl extends Parser
             }
 
             currentToken = parseLine(currentNode, lineNumber, currentToken, false);
-            
             lineNumber++;
-            
-//            System.out.println("GetTokenListInBackgroundCommand.execute(); editor " + this.editorId + "; parsing line number " + lineNumber);
-            
             return true;
          }
 
@@ -346,7 +341,6 @@ public class CodeMirrorParserImpl extends Parser
          preparedTokenList = rootToken.getSubTokenList();
          isReady = true;
          interrupt();
-//         System.out.println("CodeMirrorImpl.finish(); editor " + this.editorId + " token list prepared in background; shouldRebuild=" + shouldRebuild);
          eventBus.fireEvent(new EditorTokenListPreparedEvent(this.editorId, preparedTokenList));
       }
       

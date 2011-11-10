@@ -114,11 +114,9 @@ public final class HttpChunkReader
       }
       finally
       {
-         /*System.out.println("status:       "
-            + ((http != null) ? ("" + http.getResponseCode()) : "HTTP CONNECTION FAILED. "));
-         System.out.println("nextChunk:    " + nextChunk);*/
-         if (http != null)
+         if (http != null) {
             http.disconnect();
+         }
       }
    }
 }

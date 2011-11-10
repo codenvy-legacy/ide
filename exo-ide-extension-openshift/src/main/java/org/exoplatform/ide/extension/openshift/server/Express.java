@@ -240,9 +240,6 @@ public class Express
             ExpressException expressException = fault(http);
             int exitCode = expressException.getExitCode();
 
-            /*System.out.println("HTTP status : " + status
-                           + "\nExit code   : " + exitCode);*/
-
             // 99:  User does not exist. 
             // Happens if user did not create domain yet. 
             if (!(status == 404 && exitCode == 99))

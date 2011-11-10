@@ -70,31 +70,25 @@ public class JsonResponseUnmarshaller implements Unmarshallable
    {
       for (String key : jsonObject.keySet())
       {
-         System.out.println(">>>>>key: " + key);
          JSONValue jsonValue = jsonObject.get(key);
          if (jsonValue.isArray() != null)
          {
-            System.out.println("..array");
             parseListValue(key, jsonValue.isArray());
          }
          else if (jsonValue.isString() != null)
          {
-            System.out.println("..string");
             objectsMap.put(key, jsonValue.isString().stringValue());
          }
          else if (jsonValue.isBoolean() != null)
          {
-            System.out.println("..boolean");
             objectsMap.put(key, jsonValue.isBoolean().booleanValue());
          }
          else if (jsonValue.isNumber() != null)
          {
-            System.out.println("..number");
             objectsMap.put(key, (int)jsonValue.isNumber().doubleValue());
          }
          else if (jsonValue.isObject() != null)
          {
-            System.out.println("..object");
             parseMapValue(key, jsonValue.isObject(), objectsMap);
          }
       }

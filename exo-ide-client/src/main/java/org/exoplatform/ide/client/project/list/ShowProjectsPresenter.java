@@ -44,6 +44,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -78,12 +79,24 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
 
    }
 
+   /**
+    * Instance of opened {@link Display}.
+    */
    private Display display;
 
+   /**
+    * Current user name.
+    */
    private String userName;
    
+   /**
+    * ID of current opened project.
+    */
    private String currentOpenedProjectID;
 
+   /**
+    * Creates new instance of this presenter.
+    */
    public ShowProjectsPresenter()
    {
       IDE.getInstance().addControl(new ShowProjectsControl());
@@ -95,6 +108,11 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       IDE.addHandler(AllFilesClosedEvent.TYPE, this);
    }
 
+   /**
+    * Handles {@link ShowProjectsEvent} and opens {@link ShowProjectsView}.
+    * 
+    * @see org.exoplatform.ide.client.project.list.ShowProjectsHandler#onShowProjects(org.exoplatform.ide.client.project.list.ShowProjectsEvent)
+    */
    @Override
    public void onShowProjects(ShowProjectsEvent event)
    {
@@ -106,6 +124,9 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       getProjectList();
    }
 
+   /**
+    * Creates and binds display.
+    */
    private void createAndBindDisplay()
    {
       display = GWT.create(Display.class);
@@ -143,39 +164,43 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
          @Override
          public void onClick(ClickEvent event)
          {
-            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
-            {
-               @Override
-               public void execute()
-               {
-                  if (display == null)
-                  {
-                     return;
-                  }
-                  
-                  if (display.getSelectedItems().size() != 1) {
-                     display.setOpenButtonEnabled(false);
-                     return;
-                  }
-                  
-                  ProjectModel selectedProject = display.getSelectedItems().get(0);
-                  if (selectedProject.getId().equals(currentOpenedProjectID)) {
-                     display.setOpenButtonEnabled(false);
-                  } else {
-                     display.setOpenButtonEnabled(true);
-                  }
-                  
-//                  display.setOpenButtonEnabled(display.getSelectedItems().size() > 0);
-//                  System.out.println("selected items > " + display.getSelectedItems().size());
-               }
-            });
-
+            Scheduler.get().scheduleDeferred(openButtonEnablingChecker);
          }
       });
 
       display.setOpenButtonEnabled(false);
    }
+   
+   /**
+    * Enables or disables Open button.
+    */
+   private ScheduledCommand openButtonEnablingChecker = new ScheduledCommand()
+   {
+      @Override
+      public void execute()
+      {
+         if (display == null)
+         {
+            return;
+         }
+         
+         if (display.getSelectedItems().size() != 1) {
+            display.setOpenButtonEnabled(false);
+            return;
+         }
+         
+         ProjectModel selectedProject = display.getSelectedItems().get(0);
+         if (selectedProject.getId().equals(currentOpenedProjectID)) {
+            display.setOpenButtonEnabled(false);
+         } else {
+            display.setOpenButtonEnabled(true);
+         }
+      }
+   };
 
+   /**
+    * Refreshes the list of available projects and opens new {@link ShowProjectsView}.
+    */
    private void getProjectList()
    {
       HashMap<String, String> query = new HashMap<String, String>();
@@ -223,6 +248,10 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       }
    }
 
+   /**
+    * Opens selected project.
+    * First, close all opened files.  
+    */
    private void openProject()
    {
       if (display.getSelectedItems().size() == 0)
@@ -233,6 +262,11 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       IDE.fireEvent(new CloseAllFilesEvent());
    }
    
+   /**
+    * Opens the project after all files are closed.
+    * 
+    * @see org.exoplatform.ide.client.framework.event.AllFilesClosedHandler#onAllFilesClosed(org.exoplatform.ide.client.framework.event.AllFilesClosedEvent)
+    */
    @Override
    public void onAllFilesClosed(AllFilesClosedEvent event)
    {
@@ -244,6 +278,11 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       IDE.fireEvent(new OpenProjectEvent(project));
    }
 
+   /**
+    * Handle {@link ViewClosedEvent} and reset instance of {@link Display}.
+    * 
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -253,12 +292,22 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       }
    }
 
+   /**
+    * Receives the current user name.
+    * 
+    * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent)
+    */
    @Override
    public void onUserInfoReceived(UserInfoReceivedEvent event)
    {
       userName = event.getUserInfo().getName();
    }
 
+   /**
+    * Receives the name of the currently opened project.
+    * 
+    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
+    */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
@@ -269,6 +318,5 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
          IDE.getInstance().closeView(display.asView().getId());
       }
    }
-
 
 }

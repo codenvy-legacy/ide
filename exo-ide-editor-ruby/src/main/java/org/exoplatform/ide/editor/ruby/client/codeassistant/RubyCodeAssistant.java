@@ -565,10 +565,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
       i++;
       for (Token t : tokens)
       {
-         System.out.println(spacer + t.getName() + " " + t.getType());
          TokenProperty p = t.getProperty(TokenProperties.LAST_LINE_NUMBER);
-         if (p != null && p.isNumericProperty() != null)
-            System.out.println(spacer + p.isNumericProperty().numericValue());
          if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
             && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
          {

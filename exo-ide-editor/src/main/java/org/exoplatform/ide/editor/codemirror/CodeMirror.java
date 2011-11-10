@@ -614,7 +614,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       if (needUpdateTokenList && showLineNumbers)
       {         
-//         System.out.println("CodeMirror.validateCode(); editor " + editorId + " (type" + genericMimeType + ")");         
          needValidateCode = true;
          configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
       }
@@ -1259,8 +1258,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
    {
-      // System.out.println("CodeMirror handler; editor " + this.editorId + " (type" + this.genericMimeType + "), recieved from " + event.getEditorId() + "; needValidateCode=" + needValidateCode);
-      
       if (! this.editorId.equals(event.getEditorId()))
       {
          return;

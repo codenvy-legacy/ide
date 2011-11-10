@@ -745,9 +745,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
       
       if (event.getView() instanceof Display) {
-         
-         System.out.println("file items selected event............");
-         
          onItemSelected();
       }
    }

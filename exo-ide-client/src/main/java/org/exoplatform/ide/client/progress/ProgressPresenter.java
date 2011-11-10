@@ -108,7 +108,6 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
       control.setEnabled(true);
 
       jobs.put(job.getId(), job);
-      System.out.println(job.getId() + " @ " +job.getStatus());
       if (job.getStatus() != JobStatus.FINISHED)
       {
          control.updateState(job);

@@ -267,26 +267,16 @@ public class JavaService
    private void scanFolder(VirtualFileSystem vfs, Folder folder, boolean canBePackage, List<String> folders)
       throws VirtualFileSystemException
    {
-      System.out.println("scanning folder [" + folder.getPath() + "]");
-      
       ItemList<Item> children = vfs.getChildren(folder.getId(), -1, 0, PropertyFilter.ALL_FILTER);
-      //System.out.println("childer count > " + children.getItems().size());
-      
       if (canBePackage && showInPackageList(children)) {
          folders.add(folder.getPath());
       }
       
       for (Item item : children.getItems())
       {
-         //System.out.println("ITEM > " + item.getPath());
          if (item instanceof Folder)
          {
             Folder f = (Folder)item;
-//
-//            if (showInPackageList(children)) {
-//               folders.add(f.getPath());
-//            }
-//            
             scanFolder(vfs, f, true, folders);
          }
       }

@@ -47,7 +47,6 @@ public class SafeHandlerManager extends HandlerManager
    @Override
    public void fireEvent(GwtEvent<?> event)
    {
-      //System.out.println(">>> event >>> " + event.getClass().getName());
       try
       {
          super.fireEvent(event);

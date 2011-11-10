@@ -158,20 +158,13 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       
    }
 
-   private List<Item> selectedItems = new ArrayList<Item>();
-   
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
     */
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      selectedItems = event.getSelectedItems();
-      
-      System.out.println("on items selected > " + event.getSelectedItems().size() + "  on panel > " + event.getViewId());
-
       if (!openedViews.contains(event.getViewId())) {
-         System.out.println("skipping selecting of items/////////////////////////////////////////////////////////////");
          return;
       }
       
@@ -182,7 +175,6 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       }
       
       Item item = event.getSelectedItems().get(0);
-
       if (currentActiveView instanceof TinyProjectExplorerPresenter.Display)
       {
          setText(new StatusMessage(currentOpenedProject, item).getHtml());
@@ -253,17 +245,11 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    public void onViewActivated(ViewActivatedEvent event)
    {
       currentActiveView = event.getView();
-      
-      System.out.println("NavigatorStatusControl.onViewActivated()" + "view > " + ( event.getView() == null ? "none" : event.getView().getId() ));
-
-      System.out.println("this.selectedItems size > " + selectedItems.size());
    }
 
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      System.out.println("NavigatorStatusControl.onViewOpened() view ID > " + event.getView().getId());
-      
       if (!openedViews.contains(event.getView().getId())) {
          openedViews.add(event.getView().getId());
       }
@@ -272,8 +258,6 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      System.out.println("NavigatorStatusControl.onViewClosed() view ID > " + event.getView().getId());
-      
       if (openedViews.contains( event.getView().getId() )) {
          openedViews.remove( event.getView().getId() );
       }

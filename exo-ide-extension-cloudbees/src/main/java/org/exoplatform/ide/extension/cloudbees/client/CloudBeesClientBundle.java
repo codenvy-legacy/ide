@@ -84,7 +84,7 @@ public interface CloudBeesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/cloudbees/images/apps-list.png")
    ImageResource appList();
    
-   @Source("org/exoplatform/ide/extension/cloudbees/images/apps-list.png")
+   @Source("org/exoplatform/ide/extension/cloudbees/images/apps-list_Disabled.png")
    ImageResource appListDisabled();
 
 }

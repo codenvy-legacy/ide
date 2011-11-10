@@ -549,25 +549,10 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
       i += 3;
       for (Token t : tokens)
       {
-         if (t.getName() == null)
-            continue;
-         System.out.println(spacer + t.getName() + " " + t.getType());
-         for (String key : t.getPropertiesNames())
-         {
-            TokenProperty p = t.getProperty(key);
-            if (p.isStringProperty() != null)
-            {
-               System.out.println(spacer + key + " " + p.isStringProperty().stringValue());
-            }
-            if (p.isNumericProperty() != null)
-            {
-               System.out.println(spacer + key + " " + p.isNumericProperty().numericValue());
-            }
-            if (p.isObjectProperty() != null)
-            {
-               System.out.println(spacer + key + " " + p.isObjectProperty().objectValue());
-            }
+         if (t.getName() == null) {
+            continue;         
          }
+         
          if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
             && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
          {

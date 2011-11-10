@@ -72,7 +72,6 @@ public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants
       long commitTime =
          (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
             ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
-      System.out.println("RevisionUnmarshaller.unmarshal()" + commitTime);
       revision.setCommitTime(commitTime);
       if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null)
       {

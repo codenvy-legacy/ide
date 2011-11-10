@@ -850,8 +850,6 @@ public class JcrFileSystem implements VirtualFileSystem
          }
       }
 
-      //System.out.println(">>>>> SQL: " + sql.toString());
-
       Session session = session();
       try
       {
