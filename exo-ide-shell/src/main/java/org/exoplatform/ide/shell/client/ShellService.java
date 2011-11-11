@@ -384,7 +384,7 @@ public class ShellService
             }
             else if (values != null && values.size() > 0)
             {
-               query += param.getName() + "=" + values.get(0) + "&";
+               query += (values.get(0) != null) ? param.getName() + "=" + values.get(0) + "&" : "";
             }
          }
          else
@@ -395,7 +395,7 @@ public class ShellService
                throw new MandatoryParameterNotFoundException(
                   CloudShell.messages.requiredOptionNotFound(optionsToString(param.getOptions())));
             }
-            query += param.getName() + "=" + value + "&";
+            query += (value != null) ? param.getName() + "=" + value + "&" : "";
          }
 
       }
