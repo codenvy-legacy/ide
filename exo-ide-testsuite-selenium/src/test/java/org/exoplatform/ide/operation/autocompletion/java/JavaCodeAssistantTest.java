@@ -21,9 +21,10 @@ package org.exoplatform.ide.operation.autocompletion.java;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,10 +33,8 @@ import org.junit.Test;
  * @version $Id: JavaCodeAssistant Apr 15, 2011 10:32:15 AM evgen $
  *
  */
-public class JavaCodeAssistantTest extends BaseTest
+public class JavaCodeAssistantTest extends CodeAssistantBaseTest
 {
-   private static final String FOLDER_NAME = JavaCodeAssistantTest.class.getSimpleName();
-
    private static final String FILE_NAME = "JavaTestClass.java";
 
    @BeforeClass
@@ -43,10 +42,10 @@ public class JavaCodeAssistantTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/codeassistantj.txt",
-            MimeType.APPLICATION_JAVA, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         createProject(JavaCodeAssistantTest.class.getSimpleName());
+         VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
+            MimeType.APPLICATION_JAVA,
+            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/codeassistantj.txt");
       }
       catch (Exception e)
       {
@@ -55,13 +54,17 @@ public class JavaCodeAssistantTest extends BaseTest
       }
    }
 
+   @Before
+   public void openFile() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
+   }
+
    @Test
    public void testJavaCodeAssistant() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       goToLine(32);
       IDE.EDITOR.typeTextIntoEditor(0, "a");
       IDE.CODEASSISTANT.openForm();
@@ -72,22 +75,6 @@ public class JavaCodeAssistantTest extends BaseTest
 
       IDE.CODEASSISTANT.closeForm();
 
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
    }
 
 }
