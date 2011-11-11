@@ -10,7 +10,7 @@
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
-   
+
    <component>
       <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
       <init-params>
@@ -28,12 +28,12 @@
          </value-param>
       </init-params>
    </component>
-   
-   
-    <component>
+
+
+   <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
       <init-params>
@@ -80,19 +80,19 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
    </component>
-   
-  <component>
-     <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
-  </component>
-    
-    
-  <component>
-     <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
-  </component>
+
+   <component>
+      <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
+   </component>
+
+
+   <component>
+      <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
+   </component>
 
    <component>
       <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
@@ -223,11 +223,11 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.samples.server.Github</type>
       <init-params>
@@ -241,36 +241,47 @@
    <component>
       <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
    </component>
-
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
    </component>
-
    <component>
       <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
       <init-params>
          <values-param>
             <name>workspaces</name>
-            <value>dev-monit</value>
             <value>production</value>
          </values-param>
+         <object-param>
+            <name>dev-monit</name>
+            <object type="org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemConfiguration">
+               <field name="path">
+                  <string>/${userId}</string>
+               </field>
+               <field name="workspace">
+                  <string>dev-monit</string>
+               </field>
+               <field name="id">
+                  <string>dev-monit</string>
+               </field>
+            </object>
+         </object-param>
       </init-params>
    </component>
-   
+
    <component>
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
       <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
    </component>
-   
-    <component>
+
+   <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
       <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.davmount.WebDavFolderBinder</type>
       <description>Bind WebDavFolder</description>
