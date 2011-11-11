@@ -287,9 +287,9 @@ public interface MenuCommands
 
       String NEW = "New";
 
-      String OPEN_PROJECT = "Open Project...";
+      String OPEN_PROJECT = "Open...";
 
-      String CLOSE_PROJECT = "Close Project";
+      String CLOSE_PROJECT = "Close";
 
       String EMPTY_PROJECT = "Empty Project...";
       

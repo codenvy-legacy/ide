@@ -25,8 +25,9 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.project.classpath.UseOfClasspathEntriesTest;
-import org.junit.AfterClass;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,50 +36,28 @@ import org.junit.Test;
  * @version $Id: GroovyClassNameProjectTest Jan 20, 2011 2:13:30 PM evgen $
  *
  */
-public class GroovyProjectAutocompletionTest extends BaseTest
+public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
 {
 
-   private static final String FOLDER_NAME = UseOfClasspathEntriesTest.class.getSimpleName() + "-test";
+   private static final String FOLDER_NAME = "src";
 
-   private static final String PROJECT_NAME = UseOfClasspathEntriesTest.class.getSimpleName() + "-project";
-
-   private static final String EMPLOYEE_FILE_NAME = "Employee.groovy";
-
-   private static final String POJO_FILE_NAME = "Pojo.groovy";
-
-   private static final String REST_SERVICE_FILE_NAME = "Sample.grs";
+   private static final String REST_SERVICE_FILE_NAME = "rest-service.grs";
 
    private static final String CLASSPATH_FILE_CONTENT = "{\"entries\":[{\"kind\":\"dir\", \"path\":\""
-      + BaseTest.WS_NAME + "#/" + FOLDER_NAME + "/\"}]}";;
+      + BaseTest.WS_NAME + "#/" + GroovyProjectAutocompletionTest.class.getSimpleName() + "/" + FOLDER_NAME + "/\"}]}";;
 
    private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
 
    @BeforeClass
    public static void setUp()
    {
-      final String filePath = "src/test/resources/org/exoplatform/ide/project/classpath/";
       try
       {
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME);
-         //create structure of folder for package org/exoplatform/sample, 
-         //where will be placed Employee.groovy file
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org");
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org/exoplatform");
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org/exoplatform/sample");
-         //put Employee.groovy file
-         VirtualFileSystemUtils.put(filePath + "employee.groovy", MimeType.APPLICATION_GROOVY, WORKSPACE_URL
-            + FOLDER_NAME + "/org/exoplatform/sample/" + EMPLOYEE_FILE_NAME);
-         //put Pojo.groovy
-         VirtualFileSystemUtils.put(filePath + POJO_FILE_NAME, MimeType.APPLICATION_GROOVY, WORKSPACE_URL + FOLDER_NAME
-            + "/org/exoplatform/sample/" + POJO_FILE_NAME);
+         createProject(GroovyProjectAutocompletionTest.class.getSimpleName(),
+            "src/test/resources/org/exoplatform/ide/project/classpath.zip");
 
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + PROJECT_NAME);
-         //put rest service file
-         VirtualFileSystemUtils.put(filePath + "rest-service.grs", MimeType.GROOVY_SERVICE, WORKSPACE_URL
-            + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME);
-         //put classpath file
-         VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, WORKSPACE_URL
-            + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
+         VirtualFileSystemUtils.createFile(project.get(Link.REL_CREATE_FILE), CLASSPATH_FILE_NAME,
+            MimeType.APPLICATION_JSP, CLASSPATH_FILE_CONTENT);
       }
       catch (Exception e)
       {
@@ -87,24 +66,20 @@ public class GroovyProjectAutocompletionTest extends BaseTest
       }
    }
 
+   @Before
+   public void openFile() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + REST_SERVICE_FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + REST_SERVICE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + REST_SERVICE_FILE_NAME);
+   }
+
    @Test
    public void testGroovyClassNameProject() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      Thread.sleep(TestConstants.SLEEP);
 
-      /*
-       * 1. Check, that project folder and folder with resources are present.
-       * Open REST Service. 
-       */
-      IDE.NAVIGATION.assertItemVisible(WS_URL + PROJECT_NAME + "/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
-
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + PROJECT_NAME + "/");
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + PROJECT_NAME + "/"
-         + REST_SERVICE_FILE_NAME, false);
-
-      IDE.CODEASSISTANT.moveCursorDown(12);
+      IDE.EDITOR.moveCursorDown(0, 12);
 
       IDE.EDITOR.typeTextIntoEditor(0, "Po");
 
@@ -112,15 +87,11 @@ public class GroovyProjectAutocompletionTest extends BaseTest
 
       IDE.CODEASSISTANT.checkElementPresent("Pojo");
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.CODEASSISTANT.insertSelectedItem();
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
 
-      IDE.EDITOR.typeTextIntoEditor(0, " p");
-
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.EDITOR.typeTextIntoEditor(0, " p\n");
 
       IDE.EDITOR.typeTextIntoEditor(0, "p.");
 
@@ -132,25 +103,10 @@ public class GroovyProjectAutocompletionTest extends BaseTest
 
       IDE.CODEASSISTANT.typeToInput("pr");
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.CODEASSISTANT.insertSelectedItem();
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("p.printText(String)"));
 
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
    }
 
 }

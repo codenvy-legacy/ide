@@ -21,11 +21,11 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -34,33 +34,22 @@ import org.junit.Test;
  * @version $Id: Dec 6, 2010 $
  *
  */
-public class ImportStatementInsertionTest extends BaseTest
+public class ImportStatementInsertionTest extends CodeAssistantBaseTest
 {
 
    private final static String SERVICE_FILE_NAME = "import-statement-insertion.groovy";
-
-   private final static String TEMPLATE_FILE_NAME = "import-statement-insertion.gtmpl";
-
-   private final static String TEST_FOLDER = ImportStatementInsertionTest.class.getSimpleName();
-
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
    @BeforeClass
    public static void setUp()
    {
       String serviceFilePath =
          "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/" + SERVICE_FILE_NAME;
-      String templateFilePath =
-         "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/" + TEMPLATE_FILE_NAME;
 
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(serviceFilePath, MimeType.GROOVY_SERVICE, URL + TEST_FOLDER + "/"
-            + SERVICE_FILE_NAME);
-         VirtualFileSystemUtils.put(templateFilePath, MimeType.GROOVY_TEMPLATE, URL + TEST_FOLDER + "/"
-            + TEMPLATE_FILE_NAME);
+         createProject(ImportStatementInsertionTest.class.getSimpleName());
+         VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), SERVICE_FILE_NAME,
+            MimeType.GROOVY_SERVICE, serviceFilePath);
       }
       catch (Exception e)
       {
@@ -68,29 +57,29 @@ public class ImportStatementInsertionTest extends BaseTest
       }
    }
 
+   @Before
+   public void openFile() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + SERVICE_FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + SERVICE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + SERVICE_FILE_NAME);
+   }
+   
    //   GWTX-64: "Don't insert "import <FQN>;" statement if this is class from default package or there is existed import in the header."
-
    @Test
    public void testServiceFile() throws Exception
    {
-      // Open groovy file with test content
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP * 2);
 
       // goto line 14, type "B" symbol and then click on Ctrl+Space. Then select "Base64" class item from non-default package and press "Enter" key.
-      goToLine(14);
+      IDE.EDITOR.moveCursorDown(0,14);
       IDE.EDITOR.typeTextIntoEditor(0, "B");
       IDE.CODEASSISTANT.openForm();
-      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "1,1");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.CODEASSISTANT.typeToInput("ase64");
+      IDE.CODEASSISTANT.insertSelectedItem();
 
       // test import statement
-      IDE.EDITOR.clickOnEditor(0);
+//      IDE.EDITOR.clickOnEditor(0);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
             + "import javax.ws.rs.PathParam\n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
@@ -100,98 +89,27 @@ public class ImportStatementInsertionTest extends BaseTest
       IDE.EDITOR.deleteLinesInEditor(0, 1);
       IDE.EDITOR.typeTextIntoEditor(0, "B");
       IDE.CODEASSISTANT.openForm();
-      selenium().clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.CODEASSISTANT.typeToInput("itSet");
+      IDE.CODEASSISTANT.insertSelectedItem();
 
       // test import statement
-      IDE.EDITOR.clickOnEditor(0);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
             + "import javax.ws.rs.PathParam\n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
 
-      // Empty line 14 and then click on Ctrl+Space. Then select "HelloWorld" class item with current class name and press "Enter" key.
-      goToLine(14);
+      // Empty line 16 and then click on Ctrl+Space. Then select "HelloWorld" class item with current class name and press "Enter" key.
+      goToLine(16);
       IDE.EDITOR.deleteLinesInEditor(0, 1);
       IDE.EDITOR.typeTextIntoEditor(0, " ");
       IDE.CODEASSISTANT.openForm();
-      selenium().clickAt(getErrorCorrectionListItemLocator("HelloWorld"), "");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.CODEASSISTANT.typeToInput("HelloWorld");
+      IDE.CODEASSISTANT.insertSelectedItem();
 
       // test import statement
-      IDE.EDITOR.clickOnEditor(0);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
             + "import javax.ws.rs.PathParam\n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
 
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+
    }
-
-   // Could be turned on after the will be realized an autocomplete within the ECM Template file.
-   // @Test
-   public void testTemplateFile() throws Exception
-   {
-      // Open ECM template file with test content
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP * 2);
-
-      // goto line 15, type "B" symbol and then click on Ctrl+Space. Then select "Base64" class item from non-default package and press "Enter" key.
-      goToLine(15);
-      IDE.EDITOR.typeTextIntoEditor(1, "B");
-      IDE.CODEASSISTANT.openForm();
-      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP);
-
-      // test import statement
-      IDE.EDITOR.clickOnEditor(0);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(1)
-         .startsWith(
-            "<html>" + "   <head>" + "     <%" + "       import javax.ws.rs.Path" + "       import javax.ws.rs.GET"
-               + "       import javax.ws.rs.PathParam" + "       import java.util.prefs.Base64" + "     %>"
-               + "   </head>"));
-
-      // Empty line 15, type "B" symbol and then click on Ctrl+Space. Then select "BitSet" class item from default package and press "Enter" key.
-      goToLine(15);
-      IDE.EDITOR.deleteLinesInEditor(0, 1);
-      IDE.EDITOR.typeTextIntoEditor(1, "B");
-      IDE.CODEASSISTANT.openForm();
-      selenium().clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP);
-
-      // test import statement
-      IDE.EDITOR.clickOnEditor(0);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(1)
-         .startsWith(
-            "<html>" + "   <head>" + "     <%" + "       import javax.ws.rs.Path" + "       import javax.ws.rs.GET"
-               + "       import javax.ws.rs.PathParam" + "       import java.util.prefs.Base64" + "     %>"
-               + "   </head>"));
-
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-   }
-
-   @AfterClass
-   public static void tearDown() throws Exception
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
-
-   private String getErrorCorrectionListItemLocator(String packageName)
-   {
-      return "//div[@class='gwt-Label' and contains(text(),'" + packageName + "')]";
-   }
-
 }

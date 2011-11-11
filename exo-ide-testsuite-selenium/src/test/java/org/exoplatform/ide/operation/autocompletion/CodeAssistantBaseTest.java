@@ -21,7 +21,7 @@ package org.exoplatform.ide.operation.autocompletion;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 
 import java.io.IOException;
@@ -36,29 +36,38 @@ public abstract class CodeAssistantBaseTest extends BaseTest
 {
 
    protected static Map<String, Link> project;
-   
+
    protected static String projectName;
 
-   public static void createProject(String name)
+   public static void createProject(String name, String zipPath)
    {
       projectName = name;
       try
       {
-         project = VirtualFileSystemUtils.createDefaultProject(name);
+         if (zipPath == null)
+            project = VirtualFileSystemUtils.createDefaultProject(name);
+         else
+            project = VirtualFileSystemUtils.importZipProject(name, zipPath);
       }
       catch (IOException e)
       {
-         e.printStackTrace();
+         Assert.fail(e.getMessage());
       }
+
    }
 
-   @AfterClass
+   public static void createProject(String name)
+   {
+      createProject(name, null);
+   }
+
+//   @AfterClass
    public static void deleteProject() throws IOException
    {
       if (project != null)
          VirtualFileSystemUtils.deleteFolder(project.get(Link.REL_DELETE));
    }
-   
+
    @Before
    public void openProject() throws Exception
    {
