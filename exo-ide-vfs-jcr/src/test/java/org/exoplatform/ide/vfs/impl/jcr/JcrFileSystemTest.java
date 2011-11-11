@@ -275,6 +275,20 @@ public abstract class JcrFileSystemTest extends TestCase
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("content").path(file.getId()).build().toString(),
             link.getHref());
 
+         link = links.get(Link.REL_DOWNLOAD_FILE);
+         assertNotNull("'" + Link.REL_DOWNLOAD_FILE + "' link not found. ", link);
+         assertEquals(file.getMimeType(), link.getType());
+         assertEquals(Link.REL_DOWNLOAD_FILE, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("downloadfile").path(file.getId()).build().toString(),
+            link.getHref());
+
+         link = links.get(Link.REL_UPLOAD_FILE);
+         assertNotNull("'" + Link.REL_UPLOAD_FILE + "' link not found. ", link);
+         assertEquals(MediaType.TEXT_HTML, link.getType());
+         assertEquals(Link.REL_UPLOAD_FILE, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("uploadfile").path(file.getId()).build().toString(),
+            link.getHref());
+
          link = links.get(Link.REL_CONTENT_BY_PATH);
          assertNotNull("'" + Link.REL_CONTENT_BY_PATH + "' link not found. ", link);
          assertEquals(file.getMimeType(), link.getType());
@@ -380,6 +394,20 @@ public abstract class JcrFileSystemTest extends TestCase
          assertEquals("application/zip", link.getType());
          assertEquals(Link.REL_IMPORT, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("import").path(item.getId()).build().toString(),
+            link.getHref());
+
+         link = links.get(Link.REL_DOWNLOAD_ZIP);
+         assertNotNull("'" + Link.REL_DOWNLOAD_ZIP + "' link not found. ", link);
+         assertEquals("application/zip", link.getType());
+         assertEquals(Link.REL_DOWNLOAD_ZIP, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("downloadzip").path(item.getId()).build().toString(),
+            link.getHref());
+
+         link = links.get(Link.REL_UPLOAD_ZIP);
+         assertNotNull("'" + Link.REL_UPLOAD_ZIP + "' link not found. ", link);
+         assertEquals(MediaType.TEXT_HTML, link.getType());
+         assertEquals(Link.REL_UPLOAD_ZIP, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("uploadzip").path(item.getId()).build().toString(),
             link.getHref());
       }
    }

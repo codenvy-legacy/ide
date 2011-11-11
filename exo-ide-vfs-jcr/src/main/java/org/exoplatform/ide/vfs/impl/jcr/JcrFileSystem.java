@@ -1712,6 +1712,12 @@ public class JcrFileSystem implements VirtualFileSystem
       links.put(Link.REL_CONTENT, //
          new Link(createURI("content", id), Link.REL_CONTENT, file.getMediaType().toString()));
 
+      links.put(Link.REL_DOWNLOAD_FILE, //
+         new Link(createURI("downloadfile", id), Link.REL_DOWNLOAD_FILE, file.getMediaType().toString()));
+
+      links.put(Link.REL_UPLOAD_FILE, //
+         new Link(createURI("uploadfile", id), Link.REL_UPLOAD_FILE, MediaType.TEXT_HTML));
+
       links.put(Link.REL_CONTENT_BY_PATH, //
          new Link(createURI("contentbypath", null, "path", file.getPath()), Link.REL_CONTENT_BY_PATH, file
             .getMediaType().toString()));
@@ -1772,6 +1778,12 @@ public class JcrFileSystem implements VirtualFileSystem
 
       links.put(Link.REL_IMPORT, //
          new Link(createURI("import", id), Link.REL_IMPORT, "application/zip"));
+
+      links.put(Link.REL_DOWNLOAD_ZIP, //
+         new Link(createURI("downloadzip", id), Link.REL_DOWNLOAD_ZIP, "application/zip"));
+
+      links.put(Link.REL_UPLOAD_ZIP, //
+         new Link(createURI("uploadzip", id), Link.REL_UPLOAD_ZIP, MediaType.TEXT_HTML));
 
       return links;
    }
