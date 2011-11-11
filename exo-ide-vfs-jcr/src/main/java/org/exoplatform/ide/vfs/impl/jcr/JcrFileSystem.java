@@ -1715,9 +1715,6 @@ public class JcrFileSystem implements VirtualFileSystem
       links.put(Link.REL_DOWNLOAD_FILE, //
          new Link(createURI("downloadfile", id), Link.REL_DOWNLOAD_FILE, file.getMediaType().toString()));
 
-      links.put(Link.REL_UPLOAD_FILE, //
-         new Link(createURI("uploadfile", id), Link.REL_UPLOAD_FILE, MediaType.TEXT_HTML));
-
       links.put(Link.REL_CONTENT_BY_PATH, //
          new Link(createURI("contentbypath", null, "path", file.getPath()), Link.REL_CONTENT_BY_PATH, file
             .getMediaType().toString()));
@@ -1772,6 +1769,9 @@ public class JcrFileSystem implements VirtualFileSystem
 
       links.put(Link.REL_CREATE_FILE, //
          new Link(createURI("file", id, "name", "[name]"), Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
+
+      links.put(Link.REL_UPLOAD_FILE, //
+         new Link(createURI("uploadfile", id), Link.REL_UPLOAD_FILE, MediaType.TEXT_HTML));
 
       links.put(Link.REL_EXPORT, //
          new Link(createURI("export", id), Link.REL_EXPORT, "application/zip"));

@@ -282,13 +282,6 @@ public abstract class JcrFileSystemTest extends TestCase
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("downloadfile").path(file.getId()).build().toString(),
             link.getHref());
 
-         link = links.get(Link.REL_UPLOAD_FILE);
-         assertNotNull("'" + Link.REL_UPLOAD_FILE + "' link not found. ", link);
-         assertEquals(MediaType.TEXT_HTML, link.getType());
-         assertEquals(Link.REL_UPLOAD_FILE, link.getRel());
-         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("uploadfile").path(file.getId()).build().toString(),
-            link.getHref());
-
          link = links.get(Link.REL_CONTENT_BY_PATH);
          assertNotNull("'" + Link.REL_CONTENT_BY_PATH + "' link not found. ", link);
          assertEquals(file.getMimeType(), link.getType());
@@ -366,6 +359,13 @@ public abstract class JcrFileSystemTest extends TestCase
          assertEquals(Link.REL_CREATE_FILE, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("file").path(item.getId()).queryParam("name", "[name]")
             .build().toString(), link.getHref());
+
+         link = links.get(Link.REL_UPLOAD_FILE);
+         assertNotNull("'" + Link.REL_UPLOAD_FILE + "' link not found. ", link);
+         assertEquals(MediaType.TEXT_HTML, link.getType());
+         assertEquals(Link.REL_UPLOAD_FILE, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("uploadfile").path(item.getId()).build().toString(),
+            link.getHref());
 
          link = links.get(Link.REL_CREATE_PROJECT);
          if (item instanceof Project)
