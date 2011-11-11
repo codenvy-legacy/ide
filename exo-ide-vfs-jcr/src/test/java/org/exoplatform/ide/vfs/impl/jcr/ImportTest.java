@@ -19,11 +19,14 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.test.mock.MockHttpServletRequest;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ExtendedSession;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.net.URL;
 import java.util.Arrays;
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -40,6 +44,7 @@ import javax.jcr.Node;
 public class ImportTest extends JcrFileSystemTest
 {
    private String importFolderId;
+   private byte[] zip;
 
    @Override
    protected void setUp() throws Exception
@@ -49,16 +54,16 @@ public class ImportTest extends JcrFileSystemTest
       Node importFolder = testRoot.addNode(name, "nt:folder");
       session.save();
       importFolderId = ((ExtendedNode)importFolder).getIdentifier();
+      URL testZipResource = Thread.currentThread().getContextClassLoader().getResource("spring-project.zip");
+      java.io.File f = new java.io.File(testZipResource.toURI());
+      FileInputStream in = new FileInputStream(f);
+      zip = new byte[(int)f.length()];
+      in.read(zip);
+      in.close();
    }
 
    public void testImport() throws Exception
    {
-      URL testZipResource = Thread.currentThread().getContextClassLoader().getResource("spring-project.zip");
-      java.io.File f = new java.io.File(testZipResource.toURI());
-      FileInputStream in = new FileInputStream(f);
-      byte[] b = new byte[(int)f.length()];
-      in.read(b);
-      in.close();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("import/") //
@@ -66,7 +71,7 @@ public class ImportTest extends JcrFileSystemTest
          .toString();
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       headers.put("Content-Type", Arrays.asList("application/zip"));
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, b, null, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, zip, null, null);
       assertEquals(204, response.getStatus());
 
       // Check imported structure.
@@ -74,7 +79,43 @@ public class ImportTest extends JcrFileSystemTest
       assertTrue("'.project' node missed", node.hasNode(".project"));
       Project project = (Project)getItem(importFolderId);
       assertEquals("spring", project.getProjectType());
-      java.io.File unzip = ZipUtils.unzip(new ByteArrayInputStream(b));
+      java.io.File unzip = ZipUtils.unzip(new ByteArrayInputStream(zip));
+      new ZipUtils.TreeWalker(unzip, (FolderData)ItemData.fromNode(node, null)).walk();
+   }
+
+   public void testUploadZip() throws Exception
+   {
+      // Do the same as 'import' but send content in HTML form. 
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("uploadzip/") //
+         .append(importFolderId) //
+         .toString();
+      Map<String, List<String>> headers = new HashMap<String, List<String>>();
+      headers.put("Content-Type", Arrays.asList("multipart/form-data; boundary=abcdef"));
+
+      // Build multipart request.
+      ByteArrayOutputStream buf = new ByteArrayOutputStream();
+      buf.write("--abcdef\r\nContent-Disposition: form-data; name=\"file\"; filename=\"zippedfolder\"\r\nContent-Type: application/zip\r\n\r\n"
+         .getBytes());
+      buf.write(zip);
+      buf.write("\r\n--abcdef--".getBytes());
+      byte[] body = buf.toByteArray();
+      
+      // Need set EnvironmentContext.  HttpServletRequest used to obtain HTML form data.
+      EnvironmentContext env = new EnvironmentContext();
+      env.put(HttpServletRequest.class, new MockHttpServletRequest("", new ByteArrayInputStream(body), body.length,
+         "POST", headers));
+
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, body, null, env);
+      assertEquals(200, response.getStatus());
+
+      // Check imported structure.
+      Node node = ((ExtendedSession)session).getNodeByIdentifier(importFolderId);
+      assertTrue("'.project' node missed", node.hasNode(".project"));
+      Project project = (Project)getItem(importFolderId);
+      assertEquals("spring", project.getProjectType());
+      java.io.File unzip = ZipUtils.unzip(new ByteArrayInputStream(zip));
       new ZipUtils.TreeWalker(unzip, (FolderData)ItemData.fromNode(node, null)).walk();
    }
 }

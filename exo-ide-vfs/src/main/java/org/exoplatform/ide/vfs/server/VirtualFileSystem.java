@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.server;
 
+import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -253,6 +254,8 @@ public interface VirtualFileSystem
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
+   @GET
+   @Path("content")
    ContentStream getContent(String id) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
 
@@ -267,38 +270,9 @@ public interface VirtualFileSystem
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
-   ContentStream getContent(String path, String versionId) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException;
-
-   /**
-    * Get binary content of File.
-    * 
-    * @param id id of File
-    * @return content response
-    * @throws ItemNotFoundException if <code>id</code> does not exist
-    * @throws InvalidArgumentException if <code>id</code> is not File
-    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
-    * @throws VirtualFileSystemException if any other errors occur
-    */
-   @GET
-   @Path("content")
-   Response getContentResponse(String id) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException;
-
-   /**
-    * Get binary content of File.
-    * 
-    * @param path path of File
-    * @param versionId version id for File item. If<code>null</code> content of latest version returned.
-    * @return content response
-    * @throws ItemNotFoundException if <code>path</code> does not exist
-    * @throws InvalidArgumentException if <code>path</code> is not File
-    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
-    * @throws VirtualFileSystemException if any other errors occur
-    */
    @GET
    @Path("contentbypath")
-   Response getContentResponse(String path, String versionId) throws ItemNotFoundException, InvalidArgumentException,
+   ContentStream getContent(String path, String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
 
    /**
@@ -361,9 +335,6 @@ public interface VirtualFileSystem
    Item getItemByPath(String path, String versionId, PropertyFilter propertyFilter) throws ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException;
 
-   ContentStream getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException;
-
    /**
     * Get binary content of version of File item.
     * 
@@ -381,7 +352,7 @@ public interface VirtualFileSystem
     */
    @GET
    @Path("version")
-   Response getVersionResponse(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
+   ContentStream getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
 
    /**
@@ -680,7 +651,7 @@ public interface VirtualFileSystem
    @GET
    @Path("export")
    @Produces("application/zip")
-   InputStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+   ContentStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, IOException, VirtualFileSystemException;
 
    /**
@@ -700,5 +671,88 @@ public interface VirtualFileSystem
    @Path("import")
    @Consumes("application/zip")
    public void importZip(String parentId, InputStream in, Boolean overwrite) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException;
+
+   /**
+    * Download binary content of File. Response must contains 'Content-Disposition' header to force web browser save
+    * file.
+    * 
+    * @param id id of File
+    * @return Response with file content for download.
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws InvalidArgumentException if <code>id</code> is not File
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   @GET
+   @Path("downloadfile")
+   Response downloadFile(String id) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
+      VirtualFileSystemException;
+
+   /**
+    * Upload content of file. Content of file is part of 'multipart/form-data request', e.g. content sent from HTML
+    * form.
+    * 
+    * @param parentId id of parent for new File
+    * @param formData content of file and optional additional form fields. Set of additional field is implementation
+    *           specific.
+    * @return Response that represents response in HTML format.
+    * @throws ItemNotFoundException if <code>parentId</code> does not exist
+    * @throws InvalidArgumentException if any of following conditions are met:
+    *            <ul>
+    *            <li><code>parentId</code> if not a folder</li>
+    *            <li>If form does not contain all required fields. Set of fields is implementation specific.</li>
+    *            </ul>
+    * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name. It is
+    *            possible to prevent such type of exception by sending some form parameters that allow to overwrite file
+    *            content.
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws IOException if any i/o errors occur
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   @POST
+   @Path("uploadfile")
+   @Consumes({MediaType.MULTIPART_FORM_DATA})
+   @Produces({MediaType.TEXT_HTML})
+   Response uploadFile(String parentId, java.util.Iterator<FileItem> formData) throws ItemNotFoundException,
+      InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException,
+      IOException;
+
+   /**
+    * Download content of <code>folderId</code> as ZIP archive. Response must contains 'Content-Disposition' header to
+    * force web browser save file.
+    * 
+    * @param folderId folder for ZIP
+    * @return Response with ZIPed content of folder
+    * @throws ItemNotFoundException if <code>folderId</code> does not exist
+    * @throws InvalidArgumentException if <code>folderId</code> item is not a Folder
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws IOException if any i/o errors occur
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   @GET
+   @Path("downloadzip")
+   @Consumes("application/zip")
+   Response downloadZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, IOException, VirtualFileSystemException;
+
+   /**
+    * Import ZIP content. ZIP content is part of 'multipart/form-data request', e.g. content sent from HTML form.
+    * 
+    * @param parentId id of folder to unzip
+    * @param formData contains ZIPed folder and add optional additional form fields. Set of additional field is
+    *           implementation specific.
+    * @return Response that represents response in HTML format.
+    * @throws ItemNotFoundException if <code>parentId</code> does not exist
+    * @throws InvalidArgumentException if <code>parentId</code> item is not a Folder
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws IOException if any i/o errors occur
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   @POST
+   @Path("uploadzip")
+   @Consumes(MediaType.MULTIPART_FORM_DATA)
+   @Produces({MediaType.TEXT_HTML})
+   public Response uploadZip(String parentId, java.util.Iterator<FileItem> formData) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException;
 }

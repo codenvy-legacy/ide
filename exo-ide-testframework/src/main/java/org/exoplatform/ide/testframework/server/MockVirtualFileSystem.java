@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide.testframework.server;
 
+import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
@@ -40,6 +42,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -122,27 +125,6 @@ public class MockVirtualFileSystem implements VirtualFileSystem
       return null;
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContentResponse(java.lang.String)
-    */
-   @Override
-   public Response getContentResponse(String id) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException
-   {
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContentResponse(java.lang.String, java.lang.String)
-    */
-   @Override
-   public Response getContentResponse(String path, String versionId) throws ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
    @Override
    public VirtualFileSystemInfo getInfo() throws VirtualFileSystemException
    {
@@ -170,16 +152,6 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    @Override
    public ContentStream getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
-   {
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersionResponse(java.lang.String, java.lang.String)
-    */
-   @Override
-   public Response getVersionResponse(String id, String versionId) throws ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
@@ -253,7 +225,7 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public InputStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+   public ContentStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, IOException, VirtualFileSystemException
    {
       return null;
@@ -263,5 +235,46 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    public void importZip(String parentId, InputStream in, Boolean overwrite) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
    {
+   }
+
+   @Override
+   public Response uploadFile(String parentId, Iterator<FileItem> formData) throws ItemNotFoundException,
+      InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException,
+      IOException
+   {
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#downloadFile(java.lang.String)
+    */
+   @Override
+   public Response downloadFile(String id) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#downloadZip(java.lang.String)
+    */
+   @Override
+   public Response downloadZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, IOException, VirtualFileSystemException
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#uploadZip(java.lang.String, java.util.Iterator)
+    */
+   @Override
+   public Response uploadZip(String parentId, Iterator<FileItem> formData) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

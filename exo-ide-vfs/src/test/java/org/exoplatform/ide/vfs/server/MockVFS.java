@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.server;
 
+import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -192,6 +194,7 @@ public class MockVFS implements VirtualFileSystem
    }
 
    @Override
+   @Path("content/{id:.*}")
    public ContentStream getContent(@PathParam("id") String id) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
    {
@@ -206,22 +209,22 @@ public class MockVFS implements VirtualFileSystem
       return null;
    }
 
-   @Override
-   @Path("content/{id:.*}")
-   public Response getContentResponse(@PathParam("id") String id) throws ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
-   {
-      ContentStream content = getContent(id);
-      return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
-         .build();
-   }
-
-   @Override
-   public Response getContentResponse(String path, String versionId) throws ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
-   {
-      return null;
-   }
+   //   @Override
+   //   @Path("content/{id:.*}")
+   //   public Response getContentResponse(@PathParam("id") String id) throws ItemNotFoundException,
+   //      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   //   {
+   //      ContentStream content = getContent(id);
+   //      return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
+   //         .build();
+   //   }
+   //
+   //   @Override
+   //   public Response getContentResponse(String path, String versionId) throws ItemNotFoundException,
+   //      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   //   {
+   //      return null;
+   //   }
 
    @Override
    public VirtualFileSystemInfo getInfo()
@@ -324,15 +327,6 @@ public class MockVFS implements VirtualFileSystem
 
    @Override
    public ContentStream getVersion(@PathParam("id") String id, //
-      @PathParam("versionId") String versionId) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException
-   {
-      return null;
-   }
-
-   @Override
-   @Path("version/{id:.*}/{versionId}")
-   public Response getVersionResponse(@PathParam("id") String id, //
       @PathParam("versionId") String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
    {
@@ -443,7 +437,7 @@ public class MockVFS implements VirtualFileSystem
    }
 
    @Override
-   public InputStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+   public ContentStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, IOException, VirtualFileSystemException
    {
       return null;
@@ -453,5 +447,43 @@ public class MockVFS implements VirtualFileSystem
    public void importZip(String parentId, InputStream in, Boolean overwrite) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
    {
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#downloadFile(java.lang.String)
+    */
+   @Override
+   public Response downloadFile(String id) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   @Override
+   public Response uploadFile(String parentId, Iterator<FileItem> formData) throws ItemNotFoundException,
+      InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException,
+      IOException
+   {
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#downloadZip(java.lang.String)
+    */
+   @Override
+   public Response downloadZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, IOException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#uploadZip(java.lang.String, java.util.Iterator)
+    */
+   @Override
+   public Response uploadZip(String parentId, Iterator<FileItem> formData) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
+   {
+      return null;
    }
 }

@@ -92,7 +92,7 @@ class FilesHelper
    static void copy(VirtualFileSystem vfs, String source, java.io.File target) throws VirtualFileSystemException,
       IOException
    {
-      InputStream zip = vfs.exportZip(source);
+      InputStream zip = vfs.exportZip(source).getStream();
       unzip(zip, target);
    }
 

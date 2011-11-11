@@ -28,12 +28,11 @@ import java.io.ByteArrayInputStream;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -86,9 +85,25 @@ public class GetContentTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
       assertEquals(content, new String(writer.getBody()));
-      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")),
-         response.getContentType());
-      checkContentDispositionHeader(response);
+      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")).toString(), writer
+         .getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
+   }
+
+   public void testDownloadFile() throws Exception
+   {
+      // Expect the same as 'get content' plus header "Content-Disposition". 
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("downloadfile/") //
+         .append(fileID).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      //log.info(new String(writer.getBody()));
+      assertEquals(content, new String(writer.getBody()));
+      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")).toString(), writer
+         .getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
+      assertEquals("attachment; filename=\"" + fileName + "\"", writer.getHeaders().getFirst("Content-Disposition"));
    }
 
    public void testGetContentFolder() throws Exception
@@ -132,9 +147,8 @@ public class GetContentTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
       assertEquals(content, new String(writer.getBody()));
-      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")),
-         response.getContentType());
-      //checkContentDispositionHeader(response);
+      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")).toString(), writer
+         .getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
    }
 
    public void testGetContentByPathWithVersionID() throws Exception
@@ -160,24 +174,7 @@ public class GetContentTest extends JcrFileSystemTest
       //log.info(new String(writer.getBody()));
       // Still have original content, version '1'. Latest version has ID '0'. 
       assertEquals(content, new String(writer.getBody()));
-      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")),
-         response.getContentType());
-      //checkContentDispositionHeader(response);
+      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")).toString(), writer
+         .getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
    }
-   
-   private void checkContentDispositionHeader(ContainerResponse response)
-   {
-      MultivaluedMap<String, Object> headers = response.getHttpHeaders();
-      String contentDispositionHeader = null;
-      if (headers != null)
-      {
-         List<Object> l = headers.get("Content-Disposition");
-         if (l != null && l.size() > 0)
-         {
-            contentDispositionHeader = (String)l.get(0);
-         }
-      }
-      assertEquals("attachment; filename=\"" + fileName + "\"", contentDispositionHeader);
-   }
-
 }

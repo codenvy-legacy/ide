@@ -123,8 +123,34 @@ public class ExportTest extends JcrFileSystemTest
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
+      assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
       ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(writer.getBody()));
+      checkZipItems(zip);
+   }
+
+   public void testDownloadZip() throws Exception
+   {
+      // Expect the same as 'export in zip' plus header "Content-Disposition". 
+      String exportFolderId = ((ExtendedNode)exportFolder).getIdentifier();
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("downloadzip/") //
+         .append(exportFolderId) //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
+      assertEquals("attachment; filename=\"" + exportFolder.getName() + ".zip" + "\"",
+         writer.getHeaders().getFirst("Content-Disposition"));
+
+      ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(writer.getBody()));
+      checkZipItems(zip);
+   }
+
+   private void checkZipItems(ZipInputStream zip) throws Exception
+   {
       ZipEntry zipEntry;
       while ((zipEntry = zip.getNextEntry()) != null)
       {
