@@ -93,7 +93,7 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
       boolean enable = false;
       for (FileModel file : openedFiles.values())
       {
-         if (!file.isPersisted() && file.isContentChanged())
+         if (file.isPersisted() && file.isContentChanged())
          {
             enable = true;
             break;
