@@ -21,6 +21,13 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,8 +41,59 @@ public class Preview extends AbstractTestModule
    public interface Locators
    {
       public static final String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='Preview']";
-      
+
       public static final String GADGET_PREVIEW = "//div[@view-id='gadgetpreview']";
+
+      public static final String HTML_PREVIEW = "//div[@view-id='idePreviewHTMLView']";
+   }
+   
+   
+   @FindBy(xpath = Locators.HTML_PREVIEW)
+   private WebElement htmlPreview;
+
+   
+   /**
+    * Wait for HTML preview view opened.
+    * 
+    * @throws Exception
+    */
+   public void waitHtmlPreviewOpened() throws Exception
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return (htmlPreview != null && htmlPreview.isDisplayed());
+         }
+      });
+   }
+
+   /**
+    * Wait for HTML preview view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitHtmlPreviewClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.HTML_PREVIEW));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    public void checkPreviewHTMLIsOpened(boolean isOpened)
@@ -48,17 +106,17 @@ public class Preview extends AbstractTestModule
    {
       assertEquals(isOpened, selenium().isElementPresent(Locators.GADGET_PREVIEW));
    }
-   
+
    public void selectIFrame(String iFrameURL)
    {
       selenium().selectFrame("//iframe[@src='" + iFrameURL + "']");
    }
-   
+
    public boolean isGroovyTemplateVisible()
    {
       return selenium().isElementPresent(Locators.GROOVY_TEMPLATE_PREVIEW);
    }
-   
+
    /**
     * Selenium selects preview iframe.
     */

@@ -113,7 +113,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
@@ -167,7 +167,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
@@ -223,7 +223,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 3 -----------------
       //check Run Groovy Service button and menu
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 
@@ -263,7 +263,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 2 -----------------
       //check Run Groovy Service button and menu
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
 

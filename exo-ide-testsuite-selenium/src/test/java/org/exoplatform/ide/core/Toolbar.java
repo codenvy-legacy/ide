@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -42,13 +41,18 @@ public class Toolbar extends AbstractTestModule
 
    interface Locators
    {
-      String BUTTON_LOCATOR = "//div[@id='exoIDEToolbar']//div[@title='%s']";
+      String TOOLBAR_ID = "exoIDEToolbar";
+
+      String BUTTON_LOCATOR = "//div[@id='" + TOOLBAR_ID + "']//div[@title='%s']";
 
       String POPUP_PANEL_LOCTOR = "//table[@class='exo-popupMenuTable']";
 
       String BUTTON_FROM_NEW_POPUP_LOCATOR = POPUP_PANEL_LOCTOR + "//tr[contains(., '%s')]";
 
       String LOCKLAYER_CLASS = "exo-lockLayer";
+
+      String RIGHT_SIDE_BUTTON_LOCATOR = "//div[@id='" + TOOLBAR_ID
+         + "']//div[@class='exoToolbarElementRight']//div[@class='exoIconButtonPanel' and @title='%s']";
    }
 
    @FindBy(className = Locators.LOCKLAYER_CLASS)
@@ -245,22 +249,16 @@ public class Toolbar extends AbstractTestModule
     * Check is button present on toolbar
     * 
     * @param name button name (title in DOM)
-    * @param isPresent is present
     */
-   public void checkButtonExistAtRight(String name, boolean exist)
+   public boolean isButtonPresentAtRight(String name)
    {
-      String locator =
-         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@class=\"exoToolbarElementRight\"]//div[@class=\"exoIconButtonPanel\" and @title=\""
-            + name + "\"]";
-
-      if (exist)
+      try
       {
-         assertTrue(selenium().isElementPresent(locator));
+         return driver().findElement(By.xpath(String.format(Locators.RIGHT_SIDE_BUTTON_LOCATOR, name))) != null;
       }
-      else
+      catch (NoSuchElementException e)
       {
-         if (selenium().isElementPresent(locator))
-            assertFalse(selenium().isVisible(locator));
+         return false;
       }
    }
 

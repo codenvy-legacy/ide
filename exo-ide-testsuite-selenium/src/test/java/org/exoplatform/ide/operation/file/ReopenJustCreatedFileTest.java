@@ -19,11 +19,10 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -40,10 +39,7 @@ import org.junit.Test;
  */
 public class ReopenJustCreatedFileTest extends BaseTest
 {
-   private static final String FOLDER_NAME = ReopenJustCreatedFileTest.class.getSimpleName();
-
-   private static final String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
-      + WS_NAME + "/" + FOLDER_NAME + "/";
+   private static final String PROJECT = ReopenJustCreatedFileTest.class.getSimpleName();
 
    private static final String NETVIBES_FILE_NAME = "file-" + ReopenJustCreatedFileTest.class.getSimpleName();
 
@@ -52,7 +48,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(STORAGE_URL);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (Exception e)
       {
@@ -65,7 +61,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(STORAGE_URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -76,31 +72,23 @@ public class ReopenJustCreatedFileTest extends BaseTest
    @Test
    public void testReopenJustCreatedFile() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
+      assertTrue(IDE.EDITOR.isFileContentChanged("Untitled file.html"));
 
-      String fileName = IDE.EDITOR.getTabTitle(0);
+      IDE.EDITOR.saveAs(1, NETVIBES_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NETVIBES_FILE_NAME);
+      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.waitTabNotPresent(1);
 
-      assertEquals("Untitled file.html *", fileName);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NETVIBES_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + NETVIBES_FILE_NAME);
 
-      saveAsUsingToolbarButton(NETVIBES_FILE_NAME);
-
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.EDITOR.closeFile(0);
-
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + NETVIBES_FILE_NAME);
-
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + NETVIBES_FILE_NAME);
-
-      fileName = IDE.EDITOR.getTabTitle(0);
-
-      assertEquals(NETVIBES_FILE_NAME, fileName);
+      assertEquals(NETVIBES_FILE_NAME, IDE.EDITOR.getTabTitle(1));
    }
 
 }

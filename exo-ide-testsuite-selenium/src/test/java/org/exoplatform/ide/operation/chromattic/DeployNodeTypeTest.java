@@ -40,20 +40,21 @@ public class DeployNodeTypeTest extends BaseTest
 {
    //---- Locators ------------
    public static final String IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR = "//div[@view-id='ideGeneratedTypePreviewView']";
-   
+
    public static final String DEPLOY_NODE_TYPE_DIALOG_ID = "//div[@view-id='ideDeployNodeTypeView']";
-   
+
    public static final String DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME = "ideDeployNodeTypeViewFormatField";
-   
-   public static final String DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME = "ideDeployNodeTypeViewAlreadyExistBehaviorField";
-   
+
+   public static final String DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME =
+      "ideDeployNodeTypeViewAlreadyExistBehaviorField";
+
    public static final String DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID = "ideDeployNodeTypeViewDeployButton";
-   
+
    public static final String DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID = "ideDeployNodeTypeViewCancelButton";
-   
+
    //---- Variables ------------
    private final static String FOLDER_NAME = DeployNodeTypeTest.class.getSimpleName();
-   
+
    private static final String FILE_NAME = DeployNodeTypeTest.class.getSimpleName() + ".groovy";
 
    /**
@@ -104,7 +105,7 @@ public class DeployNodeTypeTest extends BaseTest
 
       //Check controls are present and enabled:
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.DEPLOY_NODE_TYPE));
       IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, true);
@@ -144,7 +145,7 @@ public class DeployNodeTypeTest extends BaseTest
 
       IDE.EDITOR.closeFile(0);
    }
-   
+
    /**
     * Test deploy node type with ignore if exist behavior.
     * 
@@ -180,7 +181,7 @@ public class DeployNodeTypeTest extends BaseTest
 
       IDE.EDITOR.closeFile(0);
    }
-   
+
    /**
     * Test deploy node type with fail if exist behavior.
     * 

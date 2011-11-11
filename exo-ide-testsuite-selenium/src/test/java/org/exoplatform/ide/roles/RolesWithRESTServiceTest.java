@@ -19,6 +19,7 @@
 package org.exoplatform.ide.roles;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -191,7 +192,7 @@ public class RolesWithRESTServiceTest extends BaseTest
     */
    private void checkValidateService(boolean allowed) throws Exception
    {
-	   IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
+	   assertEquals(allowed, IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE));
 	   IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
 	   if (allowed)
 	   {
@@ -246,7 +247,7 @@ public class RolesWithRESTServiceTest extends BaseTest
     */
    private void checkLaunchService(boolean allowed) throws Exception
    {
-      IDE.TOOLBAR.checkButtonExistAtRight(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
+      assertEquals(allowed, IDE.TOOLBAR.isButtonPresentAtRight(MenuCommands.Run.LAUNCH_REST_SERVICE));
       IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
       if (allowed)
       {

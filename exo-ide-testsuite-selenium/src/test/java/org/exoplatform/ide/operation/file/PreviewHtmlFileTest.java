@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -38,7 +38,7 @@ import org.junit.Test;
  */
 public class PreviewHtmlFileTest extends BaseTest
 {
-   private final static String FOLDER_NAME = PreviewHtmlFileTest.class.getSimpleName();
+   private final static String PROJECT = PreviewHtmlFileTest.class.getSimpleName();
 
    private final static String FILE_NAME = "PreviewHtmlFile.html";
 
@@ -48,8 +48,8 @@ public class PreviewHtmlFileTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/PreviewHtmlFile.html";
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FILE_NAME);
       }
       catch (Exception e)
       {
@@ -62,7 +62,7 @@ public class PreviewHtmlFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -77,46 +77,50 @@ public class PreviewHtmlFileTest extends BaseTest
    @Test
    public void previewHtmlFile() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       /*
        * 1. create HTML file
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
 
       /*
        * 2. "Preview" button must be disabled
        */
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.SHOW_PREVIEW, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW));
 
       /*
        * 3. open "PreviewHtmlFileTest/PreviewHtmlFile.html" file
        */
-      IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_NAME + "/");
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
       /*
        * 4. "Preview" button must be enabled
        */
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, true);
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.SHOW_PREVIEW, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW));
 
       /*
        * 5. Click on "Preview" button
        */
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.SHOW_PREVIEW);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.PREVIEW.waitHtmlPreviewOpened();
+      
+      
+    //TODO  rework following all steps when ready preview:
+      
+      IDE.PREVIEW.selectIFrame(PROJECT + "/" + FILE_NAME);
 
-      /*
-       * 6/ "Preview" must be opened.
-       */
-      IDE.PREVIEW.checkPreviewHTMLIsOpened(true);
-      IDE.PREVIEW.selectIFrame(WS_URL_IDE + FOLDER_NAME + "/" + FILE_NAME);
       assertTrue(selenium().isElementPresent("//p/b/i[text()='Changed Content.']"));
-      assertTrue(selenium().isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
+      assertTrue(selenium()
+         .isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
       IDE.selectMainFrame();
 
       /*
@@ -129,24 +133,25 @@ public class PreviewHtmlFileTest extends BaseTest
        */
       IDE.EDITOR.closeFile(1);
 
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.Run.SHOW_PREVIEW, true);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW));
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
 
       /*
        * 9. Reopen "PreviewHtmlFile.html" and click "Preview".
        */
-      IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_NAME + "/");
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.NAVIGATION.selectAndRefreshFolder(PROJECT + "/");
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + PROJECT + "/" + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 
       /*
        * 10. Check "Preview" again.
        */
       IDE.PREVIEW.checkPreviewHTMLIsOpened(true);
-      IDE.PREVIEW.selectIFrame(WS_URL_IDE + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PREVIEW.selectIFrame(WS_URL_IDE + PROJECT + "/" + FILE_NAME);
       assertTrue(selenium().isElementPresent("//p/b/i[text()='Changed Content.']"));
-      assertTrue(selenium().isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
+      assertTrue(selenium()
+         .isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
       IDE.selectMainFrame();
 
       /*

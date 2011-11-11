@@ -42,7 +42,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Editor extends AbstractTestModule
 {
-
+   public static final String MODIFIED_MARK = "*";
+   
    public interface Locators
    {
       /**
@@ -231,14 +232,14 @@ public class Editor extends AbstractTestModule
    public boolean isFileContentChanged(int tabIndex)
    {
       final String tabName = getTabTitle(tabIndex);
-      return tabName.endsWith("*");
+      return tabName.endsWith(MODIFIED_MARK);
    }
 
    public boolean isFileContentChanged(String title)
    {
       WebElement tab =
          editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TITLE_LOCATOR, title)));
-      return tab.getText().endsWith("*");
+      return tab.getText().trim().endsWith(MODIFIED_MARK);
    }
 
    /**
@@ -259,7 +260,7 @@ public class Editor extends AbstractTestModule
                WebElement tab =
                   editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR
                      + String.format(Locators.TITLE_LOCATOR, title)));
-               return tab.getText().trim().endsWith("*");
+               return tab.getText().trim().endsWith(MODIFIED_MARK);
             }
             catch (NoSuchElementException e)
             {
@@ -600,7 +601,7 @@ public class Editor extends AbstractTestModule
    {
       final String tab = Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex);
 
-      new WebDriverWait(driver(), TestConstants.EDITOR_OPEN_PERIOD).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

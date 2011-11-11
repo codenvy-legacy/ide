@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.versioning;
 
-import java.awt.event.KeyEvent;
+import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -28,6 +28,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.awt.event.KeyEvent;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -327,8 +329,8 @@ public class ViewVersionHistoryTest extends BaseTest
       //Open new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY, false);
-
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY));
+      
       //Select tab with saved file
       IDE.EDITOR.selectTab(0);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
@@ -337,7 +339,7 @@ public class ViewVersionHistoryTest extends BaseTest
       //Select tab with unsaved file
       IDE.EDITOR.selectTab(1);
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY, false);
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.View.VIEW_VERSION_HISTORY));
       saveAsUsingToolbarButton(FILE_2);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
@@ -387,13 +389,13 @@ public class ViewVersionHistoryTest extends BaseTest
 
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
       // View version button
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_VERSION, false);
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.View.VIEW_VERSION));
       //Restore button
-      IDE.TOOLBAR.checkButtonExistAtRight(MenuCommands.File.RESTORE_VERSION, false);
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtRight(MenuCommands.File.RESTORE_VERSION));
       //Newer version button
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_NEWER_VERSION, false);
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.View.VIEW_NEWER_VERSION));
       //Older version button
-      IDE.TOOLBAR.checkButtonExistAtRight(ToolbarCommands.View.VIEW_OLDER_VERSION, false);
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.View.VIEW_OLDER_VERSION));
 
       saveAsByTopMenu(FILE_3);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
