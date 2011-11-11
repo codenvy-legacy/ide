@@ -665,6 +665,10 @@
       </plugins>
    </build>
    <modules>
+
+      <module>exo-ide-vfs</module>
+      <module>exo-ide-vfs-jcr</module>
+
       <module>exo-ide-server</module>
 
       <module>exo-ide-testframework</module>
@@ -673,8 +677,7 @@
 
       <module>exo-ide-vfs-webdav-client</module>
 
-      <module>exo-ide-vfs</module>
-      <module>exo-ide-vfs-jcr</module>
+      
 
       <module>exo-ide-codeassistant-framework</module>
 
@@ -703,7 +706,7 @@
       <module>exo-ide-extension-netvibes</module>
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>
-      <module>exo-ide-extension-ssh</module
+      <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>
       <module>exo-ide-extension-openshift</module>
       <module>exo-ide-extension-cloudbees</module>      
