@@ -703,7 +703,7 @@
       <module>exo-ide-extension-netvibes</module>
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>
-      <!--module>exo-ide-extension-ssh</module-->
+      <module>exo-ide-extension-ssh</module
       <module>exo-ide-extension-heroku</module>
       <module>exo-ide-extension-openshift</module>
       <module>exo-ide-extension-cloudbees</module>      
