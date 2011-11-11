@@ -27,10 +27,6 @@ import org.exoplatform.services.log.Log;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Hello world!
- * 
- */
 public class WebDavFolderBinder
 {
    /**

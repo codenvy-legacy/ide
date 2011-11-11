@@ -24,7 +24,9 @@ import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
 import org.exoplatform.services.security.j2ee.TomcatLoginModule;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.security.auth.callback.Callback;
@@ -35,16 +37,19 @@ import javax.security.auth.login.LoginException;
 
 public class FakeLoginModule extends TomcatLoginModule
 {
-   private String _username;
+   /**
+    * The list of users.
+    */
+   private List<String> users = new ArrayList<String>();
    private String _password;
 
    @Override
    public void afterInitialize()
    {
       super.afterInitialize();
-      _username = (String)options.get("username");
-      if (_username == null || _username.isEmpty())
-         _username = "exo";
+      users.add((String)options.get("username"));
+      users.add("exo");
+      users.add("root");
       _password = (String)options.get("password");
       if (_password == null || _password.isEmpty())
          _password = "exo";
@@ -64,15 +69,10 @@ public class FakeLoginModule extends TomcatLoginModule
          String username = ((NameCallback)callbacks[0]).getName();
          String password = new String(((PasswordCallback)callbacks[1]).getPassword());
          ((PasswordCallback)callbacks[1]).clearPassword();
-         if (_username.equals(username)/* && _password.equals(password)*/)
+         if (users.contains(username))
          {
             Set<MembershipEntry> entries = new HashSet<MembershipEntry>(1);
             entries.add(new MembershipEntry(username));
-            //            RolesExtractor rolesExtractor =
-            //               (RolesExtractor)getContainer().getComponentInstanceOfType(RolesExtractor.class);
-            //            Set<String> roles = rolesExtractor != null //
-            //               ? rolesExtractor.extractRoles(username, entries) //
-            //               : Collections.<String> emptySet();
             Set<String> roles = new HashSet<String>(1);
             roles.add("users");
             identity = new Identity(username, entries, roles);
@@ -82,7 +82,7 @@ public class FakeLoginModule extends TomcatLoginModule
          }
          else
          {
-            throw new LoginException("Login failed for " + username + " " + password + ". ");
+            throw new LoginException("Login failed for " + username + ". ");
          }
       }
       catch (UnsupportedCallbackException e)
