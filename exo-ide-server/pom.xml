@@ -228,7 +228,7 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs-jcr</artifactId>
+         <artifactId>exo-ide-vfs</artifactId>
       </dependency>
       <dependency>
          <groupId>com.google.guava</groupId>
