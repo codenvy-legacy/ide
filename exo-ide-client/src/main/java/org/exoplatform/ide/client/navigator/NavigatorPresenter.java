@@ -107,7 +107,7 @@ import com.google.gwt.user.client.Timer;
 */
 public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
-   ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
+   ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
    ConfigurationReceivedSuccessfullyHandler, ViewActivatedHandler, ShowNavigatorHandler, VfsChangedHandler
 {
    
@@ -171,8 +171,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
 
    private Display display;
 
-   private boolean viewOpened = false;
-
    private String itemToSelect;
 
    private List<Folder> foldersToRefresh = new ArrayList<Folder>();
@@ -186,14 +184,12 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    public NavigatorPresenter()
    {
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
 
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(ItemUnlockedEvent.TYPE, this);
       IDE.addHandler(ItemLockedEvent.TYPE, this);
-      //IDE.addHandler(SwitchVFSEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
@@ -203,9 +199,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       
       IDE.getInstance().addControl(new ShowNavigatorControl());
-
-//      display = GWT.create(Display.class);
-//      bindDisplay();
    }
    
    @Override
@@ -680,22 +673,12 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    }
 
    @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         viewOpened = true;
-      }
-   }
-
-   @Override
    public void onViewClosed(final ViewClosedEvent event)
    {
       if (event.getView() instanceof Display)
       {         
          display = null;
-         viewOpened = false;
-         
+
          if (!event.getView().isActive()) {
             return;
          }
