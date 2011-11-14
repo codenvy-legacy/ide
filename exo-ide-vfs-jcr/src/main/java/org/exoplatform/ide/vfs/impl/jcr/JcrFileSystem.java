@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.input.CountingInputStream;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
@@ -39,6 +40,7 @@ import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.File;
@@ -1256,7 +1258,7 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException, IOException
    {
       Session session = session();
-      ZipInputStream zip = new ZipInputStream(in);
+      ZipInputStream zip = null;
       try
       {
          ItemData data = getItemData(session, parentId);
@@ -1264,6 +1266,67 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Unable import from zip. Item specified as parent is not a folder. ");
          }
+         // Counts numbers of compressed data.  
+         final CountingInputStream compressedCounter = new CountingInputStream(in);
+         zip = new ZipInputStream(compressedCounter);
+         // The threshold after that checking of ZIP ratio started. 
+         final long threshold = 1000000;
+         // Max compression ratio. If the number of bytes uncompressed data is exceed the number
+         // of bytes of compressed stream more than this ratio (and number of uncompressed data
+         // is more than threshold) then VirtualFileSystemRuntimeException is thrown.
+         final int zipRatio = 100;
+         // Counts number of uncompressed data.
+         CountingInputStream uncompressedCounter = new CountingInputStream(zip)
+         {
+            @Override
+            public int read() throws IOException
+            {
+               int i = super.read();
+               checkComperssionRatio();
+               return i;
+            }
+
+            @Override
+            public int read(byte[] b, int off, int len) throws IOException
+            {
+               int i = super.read(b, off, len);
+               checkComperssionRatio();
+               return i;
+            }
+
+            @Override
+            public int read(byte[] b) throws IOException
+            {
+               int i = super.read(b);
+               checkComperssionRatio();
+               return i;
+            }
+
+            @Override
+            public long skip(long length) throws IOException
+            {
+               long i = super.skip(length);
+               checkComperssionRatio();
+               return i;
+            }
+
+            private void checkComperssionRatio()
+            {
+               long ubytes = getByteCount(); // number of uncompressed bytes
+               if (ubytes > threshold)
+               {
+                  long cbytes = compressedCounter.getByteCount(); // number of compressed bytes
+                  if (ubytes > (zipRatio * cbytes))
+                  {
+                     throw new VirtualFileSystemRuntimeException("Zip bomb detected. ");
+                  }
+               }
+            }
+         };
+         // Wrap zip stream to prevent close it. We can pass stream to other method
+         // and it can read content of current ZipEntry but not able to close original
+         // stream of ZIPed data.
+         InputStream noCloseZip = new NotClosableInputStream(uncompressedCounter);
          FolderData parentFolder = (FolderData)data;
          ZipEntry zipEntry;
          while ((zipEntry = zip.getNextEntry()) != null)
@@ -1308,7 +1371,7 @@ public class JcrFileSystem implements VirtualFileSystem
                try
                {
                   JsonParser jp = new JsonParser();
-                  jp.parse(new NotClosableInputStream(zip));
+                  jp.parse(noCloseZip);
                   ConvertibleProperty[] array =
                      (ConvertibleProperty[])ObjectBuilder.createArray(ConvertibleProperty[].class, jp.getJsonObject());
                   properties = Arrays.asList(array);
@@ -1325,7 +1388,7 @@ public class JcrFileSystem implements VirtualFileSystem
                ItemData child = current.getChild(name);
                if (child != null && overwrite && ItemType.FILE == child.getType())
                {
-                  ((FileData)child).setContent(new NotClosableInputStream(zip), child.getMediaType(), null);
+                  ((FileData)child).setContent(noCloseZip, child.getMediaType(), null);
                }
                else
                {
@@ -1335,7 +1398,7 @@ public class JcrFileSystem implements VirtualFileSystem
                      mediaType, //
                      mediaType2NodeTypeResolver.getFileMixins(mediaType), //
                      null, //
-                     new NotClosableInputStream(zip));
+                     noCloseZip);
                }
             }
             zip.closeEntry();
@@ -1344,8 +1407,10 @@ public class JcrFileSystem implements VirtualFileSystem
       finally
       {
          session.logout();
-         zip.closeEntry();
-         zip.close();
+         if (zip != null)
+         {
+            zip.close();
+         }
       }
    }
 

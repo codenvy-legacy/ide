@@ -19,7 +19,7 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValuesParam;
+import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.RequestContext;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
@@ -58,7 +58,6 @@ public final class JcrFileSystemInitializer implements Startable
       this(repositoryService, itemType2NodeTypeResolver, getConfigurations(initParams), vfsRegistry);
    }
 
-   @SuppressWarnings("rawtypes")
    private static List<JcrFileSystemConfiguration> getConfigurations(InitParams initParams)
    {
       List<JcrFileSystemConfiguration> configurations = new ArrayList<JcrFileSystemConfiguration>();
@@ -90,17 +89,10 @@ public final class JcrFileSystemInitializer implements Startable
          //    <value>production</value>
          // </values-param>
 
-         ValuesParam workspacesParams = initParams.getValuesParam("workspaces");
-         if (workspacesParams != null)
+         List<String> workspaces = ExoConfigurationHelper.readValuesParam(initParams, "workspaces");
+         for (String w : workspaces)
          {
-            List l = workspacesParams.getValues();
-            if (l != null && l.size() > 0)
-            {
-               for (Object o : l)
-               {
-                  configurations.add(new JcrFileSystemConfiguration((String)o));
-               }
-            }
+            configurations.add(new JcrFileSystemConfiguration(w));
          }
       }
       return configurations;

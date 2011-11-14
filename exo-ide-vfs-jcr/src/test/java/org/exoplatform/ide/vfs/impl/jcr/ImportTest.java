@@ -33,6 +33,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.jcr.Node;
 import javax.servlet.http.HttpServletRequest;
@@ -101,7 +103,7 @@ public class ImportTest extends JcrFileSystemTest
       buf.write(zip);
       buf.write("\r\n--abcdef--".getBytes());
       byte[] body = buf.toByteArray();
-      
+
       // Need set EnvironmentContext.  HttpServletRequest used to obtain HTML form data.
       EnvironmentContext env = new EnvironmentContext();
       env.put(HttpServletRequest.class, new MockHttpServletRequest("", new ByteArrayInputStream(body), body.length,
@@ -117,5 +119,34 @@ public class ImportTest extends JcrFileSystemTest
       assertEquals("spring", project.getProjectType());
       java.io.File unzip = ZipUtils.unzip(new ByteArrayInputStream(zip));
       new ZipUtils.TreeWalker(unzip, (FolderData)ItemData.fromNode(node, null)).walk();
+   }
+
+   public void testZipBomb() throws Exception
+   {
+      final int uncompressedSize = 1000001;
+      // Uncompressed size bigger then 1000000 (~1M).
+      ByteArrayOutputStream bout = new ByteArrayOutputStream();
+      ZipOutputStream zip = new ZipOutputStream(bout);
+      zip.putNextEntry(new ZipEntry("null"));
+      for (int i = 0; i < uncompressedSize; i++)
+      {
+         zip.write(0);
+      }
+      zip.closeEntry();
+      zip.close();
+      byte b[] = bout.toByteArray();
+      // Be sure source data for test is correct. Zero data should be compressed with very high ratio.
+      assertTrue((uncompressedSize / b.length) > 100);
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("import/") //
+         .append(importFolderId) //
+         .toString();
+      Map<String, List<String>> headers = new HashMap<String, List<String>>();
+      headers.put("Content-Type", Arrays.asList("application/zip"));
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, b, null, null);
+      // Exception must be thrown.
+      assertEquals(500, response.getStatus());
+      log.info(response.getEntity());
    }
 }

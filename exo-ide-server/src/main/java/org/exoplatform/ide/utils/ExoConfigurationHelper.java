@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide;
+package org.exoplatform.ide.utils;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
@@ -31,7 +31,7 @@ import java.util.List;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ExoConfigurationUtils
+public class ExoConfigurationHelper
 {
    /**
     * Get 'value-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not
@@ -107,7 +107,7 @@ public class ExoConfigurationUtils
       return Collections.emptyList();
    }
 
-   private ExoConfigurationUtils()
+   private ExoConfigurationHelper()
    {
    }
 }
