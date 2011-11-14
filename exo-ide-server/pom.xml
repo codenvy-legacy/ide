@@ -235,6 +235,12 @@
          <artifactId>guava</artifactId>
          <version>r09</version>
       </dependency>
+      
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+         		<artifactId>exo-ide-vfs-jcr</artifactId>
+            </dependency>      
+      
    </dependencies>
    <build>
       <resources>

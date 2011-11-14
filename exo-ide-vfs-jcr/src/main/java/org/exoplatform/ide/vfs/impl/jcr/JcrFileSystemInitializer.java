@@ -19,7 +19,7 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.utils.ExoConfigurationHelper;
+import org.exoplatform.container.xml.ValuesParam;
 import org.exoplatform.ide.vfs.server.RequestContext;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
@@ -34,6 +34,7 @@ import org.picocontainer.Startable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.jcr.RepositoryException;
@@ -58,6 +59,45 @@ public final class JcrFileSystemInitializer implements Startable
       this(repositoryService, itemType2NodeTypeResolver, getConfigurations(initParams), vfsRegistry);
    }
 
+   /**
+    * Get 'values-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not
+    * contains requested 'values-param' this method return empty List never <code>null</code>. The returned List is
+    * unmodifiable.
+    * <p>
+    * If part of configuration looks like:
+    * 
+    * <pre>
+    * ...
+    * &lt;init-params&gt;
+    *    &lt;values-param&gt;
+    *       &lt;name&gt;my-parameters&lt;/name&gt;
+    *       &lt;value&gt;foo&lt;/value&gt;
+    *       &lt;value&gt;bar&lt;/value&gt;
+    *    &lt;/values-param&gt;
+    * &lt;/init-params&gt;
+    * ...
+    * </pre>
+    * 
+    * It becomes to List: <code>["foo", "bar"]</code>
+    * 
+    * @param initParams the InitParams
+    * @param name name of 'values-param'
+    * @return unmodifiable List of requested 'values-param' or empty List if requested parameter not found
+    */
+   @SuppressWarnings("unchecked")
+   private static List<String> readValuesParam(InitParams initParams, String name)
+   {
+      if (initParams != null)
+      {
+         ValuesParam vp = initParams.getValuesParam(name);
+         if (vp != null)
+         {
+            return Collections.unmodifiableList(vp.getValues());
+         }
+      }
+      return Collections.emptyList();
+   }   
+   
    private static List<JcrFileSystemConfiguration> getConfigurations(InitParams initParams)
    {
       List<JcrFileSystemConfiguration> configurations = new ArrayList<JcrFileSystemConfiguration>();
@@ -89,7 +129,7 @@ public final class JcrFileSystemInitializer implements Startable
          //    <value>production</value>
          // </values-param>
 
-         List<String> workspaces = ExoConfigurationHelper.readValuesParam(initParams, "workspaces");
+         List<String> workspaces = readValuesParam(initParams, "workspaces");
          for (String w : workspaces)
          {
             configurations.add(new JcrFileSystemConfiguration(w));
