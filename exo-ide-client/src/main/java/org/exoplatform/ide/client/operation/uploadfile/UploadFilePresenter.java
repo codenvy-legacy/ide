@@ -25,8 +25,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -34,15 +32,9 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -54,13 +46,12 @@ import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.client.operation.overwrite.ui.OverwriteDialog;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,7 +64,7 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler, ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler
+public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler, ItemsSelectedHandler
 {
 
    public interface Display extends IsView
@@ -87,15 +78,6 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
       void setMimeTypeFieldEnabled(boolean enabled);
 
-      void setHiddenFields(String parentId, String name, String mimeType, String vfsId);
-      
-      /**
-       * Set the id of existing file, which will be overrided by
-       * uploaded file.
-       * @param fileId
-       */
-      void setFileIdHiddenField(String fileId);
-      
       /**
        * Operation (action) to do with file:
        * <code>update</code> or <code>create</code>
@@ -115,18 +97,22 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
       HasFileSelectedHandler getFileUploadInput();
 
+      //new interface
+
+      void setMimeTypeHiddedField(String mimeType);
+
+      void setNameHiddedField(String name);
+
+      void setOverwriteHiddedField(Boolean override);
+
    }
-   
+
    IdeUploadLocalizationConstant lb = IDE.UPLOAD_CONSTANT;
 
    private Display display;
-   
-   private IDEConfiguration configuration;
 
    private List<Item> selectedItems = new ArrayList<Item>();
-   
-   private String parentPath;
-   
+
    private String fileName;
 
    public UploadFilePresenter()
@@ -134,21 +120,14 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       IDE.getInstance().addControl(new UploadFileCommand());
       IDE.addHandler(UploadFileEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
-   
-   @Override
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      configuration = event.getConfiguration();
-   }
-   
+
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-   }   
+   }
 
    @Override
    public void onViewClosed(ViewClosedEvent event)
@@ -176,7 +155,6 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    {
       display.getUploadForm().setMethod(FormPanel.METHOD_POST);
       display.getUploadForm().setEncoding(FormPanel.ENCODING_MULTIPART);
-      display.getUploadForm().setAction(configuration.getUploadServiceContext() + "/");
 
       display.setOpenButtonEnabled(false);
       display.setMimeTypeFieldEnabled(false);
@@ -215,23 +193,23 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
          {
             submitComplete(event.getResults());
          }
-      });      
+      });
    }
-   
+
    private FileSelectedHandler fileSelectedHandler = new FileSelectedHandler()
    {
       @Override
       public void onFileSelected(FileSelectedEvent event)
       {
-         String file = event.getFileName();
-         file = file.replace('\\', '/');
+         fileName = event.getFileName();
+         fileName = fileName.replace('\\', '/');
 
-         if (file.indexOf('/') >= 0)
+         if (fileName.indexOf('/') >= 0)
          {
-            file = file.substring(file.lastIndexOf("/") + 1);
+            fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
          }
 
-         display.getFileNameField().setValue(file);
+         display.getFileNameField().setValue(fileName);
          display.setMimeTypeFieldEnabled(true);
 
          List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
@@ -245,8 +223,8 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
          if (proposalMimeTypes != null && proposalMimeTypes.size() > 0)
          {
-            String mimeTYpe = proposalMimeTypes.get(0);
-            display.setSelectedMimeType(mimeTYpe);
+            String mimeType = proposalMimeTypes.get(0);
+            display.setSelectedMimeType(mimeType);
             display.setOpenButtonEnabled(true);
          }
          else
@@ -255,7 +233,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
          }
       }
    };
-   
+
    ValueChangeHandler<String> mimeTypeChangedHandler = new ValueChangeHandler<String>()
    {
       @Override
@@ -271,37 +249,31 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
          }
       }
    };
-   
+
    private void doUploadFile()
    {
       String mimeType = display.getMimeTypeField().getValue();
 
       if (mimeType == null || "".equals(mimeType))
       {
-         return;
-      }
-
-      fileName = display.getFileNameField().getValue();
-      if (fileName.contains("/"))
-      {
-         fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+         mimeType = null;
       }
 
       Item item = selectedItems.get(0);
-      parentPath = item.getPath();
-      String parentId = item.getId();
+      String uploadUrl = "";
       if (item instanceof FileModel)
       {
-         parentPath = ((FileModel)item).getParent().getPath();
-         parentId = ((FileModel)item).getParent().getId();
+         uploadUrl = ((FileModel)item).getParent().getLinkByRelation(Link.REL_UPLOAD_FILE).getHref();
       }
-      String name = URL.encodePathSegment(fileName);
-
-      display.setHiddenFields(parentId, name, mimeType, "dev-monit");//TODO: need remove hardcode
-      display.setActionHiddedField("create");
+      else
+      {
+         uploadUrl = item.getLinkByRelation(Link.REL_UPLOAD_FILE).getHref();
+      }
+      display.getUploadForm().setAction(uploadUrl);
+      display.setMimeTypeHiddedField(mimeType);
       display.getUploadForm().submit();
-   }   
-   
+   }
+
    protected void submit(SubmitEvent event)
    {
       IDELoader.getInstance().show();
@@ -310,97 +282,88 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    private void submitComplete(String uploadServiceResponse)
    {
       IDELoader.getInstance().hide();
-      
+
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {
          //if response is null or empty - than complete upload
          completeUpload(uploadServiceResponse);
+         return;
       }
-      else if (uploadServiceResponse.startsWith("{itemalreadyexists}"))
-      {
-         //note: server return the message, which starts from "{itemalreadyexists}" string
-         //if file already exists
-         
-         //otherwise, check what king of error we got:
-         //if file already exists, than show dialog, where
-         //user can say: override file or not.
-         
-         Dialogs.getInstance().ask(lb.uploadFileExistTitle(), lb.uploadFileExistText(),
-            new BooleanValueReceivedHandler()
-            {
-               @Override
-               public void booleanValueReceived(Boolean value)
-               {
-                  if (value)
-                  {
-                     try
-                     {
-                        String filePath = parentPath.endsWith("/") ? parentPath + fileName : parentPath + "/" + fileName;
-                        VirtualFileSystem.getInstance().getItemByPath(filePath,
-                           new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-                           {
-                              @Override
-                              protected void onSuccess(ItemWrapper result)
-                              {
-                                 if (result.getItem() instanceof File)
-                                 {
-                                    File file = (File)result.getItem();
-                                    display.setActionHiddedField("update");
-                                    display.setFileIdHiddenField(file.getId());
-                                    display.getUploadForm().submit();
-                                 }
-                                 else
-                                 {
-                                    IDE.fireEvent(new ExceptionThrownEvent("Can't find file: " + fileName));
-                                 }
-                              }
 
-                              @Override
-                              protected void onFailure(Throwable exception)
-                              {
-                                 closeView();
-                                 IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                 exception.printStackTrace();
-                              }
-                           });
-                     }
-                     catch (RequestException e)
-                     {
-                        display.setActionHiddedField("update");
-                        IDE.fireEvent(new ExceptionThrownEvent(e));
-                        e.printStackTrace();
-                     }
-                  }
-                  else
-                  {
-                     IDE.getInstance().closeView(display.asView().getId());
-                     return;
-                  }
-               }
-            });
+      ErrorData errData = parseError(uploadServiceResponse);
+      if (ExitCodes.ITEM_EXISTS == errData.code)
+      {
+         OverwriteDialog dialog = new OverwriteDialog(fileName, errData.text)
+         {
+            
+            @Override
+            public void onOverwrite()
+            {
+               display.setOverwriteHiddedField(true);
+               display.getUploadForm().submit();
+            }
+            
+            @Override
+            public void onRename(String value)
+            {
+               display.setNameHiddedField(value);
+               display.getUploadForm().submit();
+            }
+            
+            @Override
+            public void onCancel()
+            {
+               closeView();
+            }
+         };
+         IDE.getInstance().openView(dialog);
       }
       else
       {
          //in this case show the error, received from server.
-         Dialogs.getInstance().showError(uploadServiceResponse);
+         Dialogs.getInstance().showError(errData.text);
       }
    }
-   
+
    protected void completeUpload(String response)
    {
-      IDE.getInstance().closeView(display.asView().getId());
-      
-      if (selectedItems.get(0) instanceof FileModel) {
+      closeView();
+
+      if (selectedItems.get(0) instanceof FileModel)
+      {
          IDE.fireEvent(new RefreshBrowserEvent(((FileModel)selectedItems.get(0)).getParent()));
-      } else if (selectedItems.get(0) instanceof FolderModel) {
+      }
+      else if (selectedItems.get(0) instanceof FolderModel)
+      {
          IDE.fireEvent(new RefreshBrowserEvent((FolderModel)selectedItems.get(0)));
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
    }
 
+   /**
+    * 
+    */
+   private class ErrorData
+   {
+      public ErrorData(int code, String text)
+      {
+         this.code = code;
+         this.text = text;
+      }
+
+      int code;
+
+      String text;
+   }
+
+   private ErrorData parseError(String errorMsg)
+   {
+      String[] res = errorMsg.split("^<pre>Code: | Text: |</pre>$");
+      return new ErrorData(Integer.valueOf(res[1]).intValue(), res[2]);
+   }
 
 }

@@ -33,9 +33,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -49,6 +46,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.List;
 
@@ -60,7 +58,7 @@ import java.util.List;
  */
 
 public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, ItemsSelectedHandler,
-   FileSelectedHandler, ConfigurationReceivedSuccessfullyHandler
+   FileSelectedHandler
 {
 
    public interface Display extends IsView
@@ -86,8 +84,6 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
    protected List<Item> selectedItems;
 
-   private IDEConfiguration configuration;
-
    public UploadZipPresenter()
    {
       IDE.getInstance().addControl(new UploadZipControl());
@@ -95,7 +91,6 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       IDE.addHandler(UploadZipEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
    @Override
@@ -115,7 +110,6 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
    {
       display.getUploadForm().setMethod(FormPanel.METHOD_POST);
       display.getUploadForm().setEncoding(FormPanel.ENCODING_MULTIPART);
-      display.getUploadForm().setAction(configuration.getUploadServiceContext() + "/folder/");
 
       display.getUploadButton().addClickHandler(new ClickHandler()
       {
@@ -170,6 +164,16 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       href += URL.encodePathSegment(fileName);
 
       display.setHiddenFields(href, "", "", "");
+      String uploadUrl = "";
+      if (item instanceof FileModel)
+      {
+         uploadUrl = ((FileModel)item).getParent().getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref();
+      }
+      else
+      {
+         uploadUrl = item.getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref();
+      }
+      display.getUploadForm().setAction(uploadUrl);
       display.getUploadForm().submit();
    }
 
@@ -278,12 +282,6 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
       display.getFileNameField().setValue(file);
       display.setUploadButtonEnabled(true);
-   }
-
-   @Override
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      configuration = event.getConfiguration();
    }
 
 }

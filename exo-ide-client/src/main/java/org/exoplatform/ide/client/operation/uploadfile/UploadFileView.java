@@ -19,16 +19,6 @@
 
 package org.exoplatform.ide.client.operation.uploadfile;
 
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
-import org.exoplatform.ide.client.framework.ui.upload.FormFields;
-import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -39,6 +29,16 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
+import org.exoplatform.ide.client.framework.ui.upload.FormFields;
+import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 
 /**
  * 
@@ -51,6 +51,12 @@ import com.google.gwt.user.client.ui.Widget;
 public class UploadFileView extends ViewImpl implements
    org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display
 {
+   
+   private static final String MIME_TYPE_HIDDED_FIELD = "mimeType";
+   
+   private static final String NAME_HIDDED_FIELD = "name";
+   
+   private static final String OVERWRITE_HIDDED_FIELD = "overwrite";
 
    public static final int WIDTH = 460;
 
@@ -115,22 +121,6 @@ public class UploadFileView extends ViewImpl implements
    }
 
    @Override
-   public void setHiddenFields(String parentId, String name, String mimeType, String vfsId)
-   {
-      Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
-      postFieldsPanel.add(mimeTypeField);
-
-      Hidden parentIdField = new Hidden(FormFields.PARENT_ID, parentId);
-      postFieldsPanel.add(parentIdField);
-
-      Hidden nameField = new Hidden(FormFields.NAME, name);
-      postFieldsPanel.add(nameField);
-
-      Hidden vfsIdField = new Hidden(FormFields.VFS_ID, vfsId);
-      postFieldsPanel.add(vfsIdField);
-   }
-
-   @Override
    public HasClickHandlers getOpenButton()
    {
       return openButton;
@@ -167,16 +157,6 @@ public class UploadFileView extends ViewImpl implements
    }
 
    /**
-    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setFileIdHiddenField(java.lang.String)
-    */
-   @Override
-   public void setFileIdHiddenField(String fileId)
-   {
-      Hidden fileIdField = new Hidden(FormFields.FILE_ID, fileId);
-      postFieldsPanel.add(fileIdField);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setActionHiddedField(java.lang.String)
     */
    @Override
@@ -184,6 +164,36 @@ public class UploadFileView extends ViewImpl implements
    {
       Hidden actionIdField = new Hidden(FormFields.ACTION_UPDATE, action);
       postFieldsPanel.add(actionIdField);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setMimeTypeHiddedField(java.lang.String)
+    */
+   @Override
+   public void setMimeTypeHiddedField(String mimeType)
+   {
+      Hidden field = new Hidden(MIME_TYPE_HIDDED_FIELD, mimeType);
+      postFieldsPanel.add(field);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setNameHiddedField(java.lang.String)
+    */
+   @Override
+   public void setNameHiddedField(String name)
+   {
+      Hidden field = new Hidden(NAME_HIDDED_FIELD, name);
+      postFieldsPanel.add(field);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setOverwriteHiddedField(java.lang.Boolean)
+    */
+   @Override
+   public void setOverwriteHiddedField(Boolean overwrite)
+   {
+      Hidden field = new Hidden(OVERWRITE_HIDDED_FIELD, String.valueOf(overwrite));
+      postFieldsPanel.add(field);
    }
 
 }
