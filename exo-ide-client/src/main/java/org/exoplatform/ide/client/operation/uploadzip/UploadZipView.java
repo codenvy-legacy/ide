@@ -18,15 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.uploadzip;
 
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
-import org.exoplatform.ide.client.framework.ui.upload.FormFields;
-import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -37,6 +28,15 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
+import org.exoplatform.ide.client.framework.ui.upload.FormFields;
+import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -50,6 +50,8 @@ public class UploadZipView extends ViewImpl implements
 {
 
    private static final String ID = "ideUploadForm";
+   
+   private static final String OVERWRITE_HIDDED_FIELD = "overwrite";
 
    /**
     * Initial width of this view.
@@ -86,11 +88,14 @@ public class UploadZipView extends ViewImpl implements
 
    @UiField
    ImageButton cancelButton;
+   
+   private Hidden overwriteHiddenField;
 
    public UploadZipView()
    {
       super(ID, "modal", UPLOAD_FOLDER_TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT,false);
       add(uiBinder.createAndBindUi(this));
+      overwriteHiddenField = new Hidden(OVERWRITE_HIDDED_FIELD);
    }
 
    @Override
@@ -134,6 +139,17 @@ public class UploadZipView extends ViewImpl implements
    public HasFileSelectedHandler getFileUploadInput()
    {
       return fileUploadInput;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display#setOverwriteHiddedField(java.lang.Boolean)
+    */
+   @Override
+   public void setOverwriteHiddedField(Boolean overwrite)
+   {
+      overwriteHiddenField.setValue(String.valueOf(overwrite));
+      if (postFieldsPanel.getWidgetIndex(overwriteHiddenField) == -1)
+         postFieldsPanel.add(overwriteHiddenField);
    }
 
 }

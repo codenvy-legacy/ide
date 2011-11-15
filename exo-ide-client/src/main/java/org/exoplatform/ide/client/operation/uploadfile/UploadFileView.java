@@ -37,7 +37,6 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
-import org.exoplatform.ide.client.framework.ui.upload.FormFields;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 
 /**
@@ -89,11 +88,21 @@ public class UploadFileView extends ViewImpl implements
 
    @UiField
    ComboBoxField mimeTypesField;
+   
+   private Hidden nameHiddenField;
+   
+   private Hidden mimeTypeHiddenField;
+   
+   private Hidden overwriteHiddenField;
 
    public UploadFileView()
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
+      
+      nameHiddenField = new Hidden(NAME_HIDDED_FIELD);
+      mimeTypeHiddenField = new Hidden(MIME_TYPE_HIDDED_FIELD);
+      overwriteHiddenField = new Hidden(OVERWRITE_HIDDED_FIELD);
    }
 
    @Override
@@ -157,23 +166,15 @@ public class UploadFileView extends ViewImpl implements
    }
 
    /**
-    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setActionHiddedField(java.lang.String)
-    */
-   @Override
-   public void setActionHiddedField(String action)
-   {
-      Hidden actionIdField = new Hidden(FormFields.ACTION_UPDATE, action);
-      postFieldsPanel.add(actionIdField);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setMimeTypeHiddedField(java.lang.String)
     */
    @Override
    public void setMimeTypeHiddedField(String mimeType)
    {
-      Hidden field = new Hidden(MIME_TYPE_HIDDED_FIELD, mimeType);
-      postFieldsPanel.add(field);
+      mimeTypeHiddenField.setValue(mimeType);
+      if (postFieldsPanel.getWidgetIndex(mimeTypeHiddenField) == -1)
+         postFieldsPanel.add(mimeTypeHiddenField);
+      
    }
 
    /**
@@ -182,8 +183,9 @@ public class UploadFileView extends ViewImpl implements
    @Override
    public void setNameHiddedField(String name)
    {
-      Hidden field = new Hidden(NAME_HIDDED_FIELD, name);
-      postFieldsPanel.add(field);
+      nameHiddenField.setValue(name);
+      if (postFieldsPanel.getWidgetIndex(nameHiddenField) == -1)
+         postFieldsPanel.add(nameHiddenField);
    }
 
    /**
@@ -192,8 +194,9 @@ public class UploadFileView extends ViewImpl implements
    @Override
    public void setOverwriteHiddedField(Boolean overwrite)
    {
-      Hidden field = new Hidden(OVERWRITE_HIDDED_FIELD, String.valueOf(overwrite));
-      postFieldsPanel.add(field);
+      overwriteHiddenField.setValue(String.valueOf(overwrite));
+      if (postFieldsPanel.getWidgetIndex(overwriteHiddenField) == -1)
+         postFieldsPanel.add(overwriteHiddenField);
    }
 
 }

@@ -97,5 +97,11 @@ public interface IdeUploadLocalizationConstant extends Constants
    
    @Key("download.zip.folder.error")
    String downloadFolderError();
+   
+   @Key("upload.overwrite.title")
+   String uploadOverwriteTitle();
+   
+   @Key("upload.overwrite.ask")
+   String uploadOverwriteAsk();
 
 }

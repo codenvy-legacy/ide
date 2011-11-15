@@ -22,7 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -30,6 +29,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
@@ -42,8 +42,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
+import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
+import org.exoplatform.ide.client.operation.uploadfile.UploadHelper;
+import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -51,7 +54,7 @@ import org.exoplatform.ide.vfs.shared.Link;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
+ * Presenter for uploading zipped folder form.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -78,7 +81,11 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
       void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType);
 
+      void setOverwriteHiddedField(Boolean overwrite);
+
    }
+
+   IdeUploadLocalizationConstant lb = IDE.UPLOAD_CONSTANT;
 
    private Display display;
 
@@ -98,6 +105,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
    {
       if (display != null)
       {
+         Dialogs.getInstance().showError("Upload zipped folder display must be null");
          return;
       }
 
@@ -115,7 +123,8 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       {
          public void onClick(ClickEvent event)
          {
-            upload();
+            display.getUploadForm().setAction(getUploadUrl(selectedItems.get(0)));
+            display.getUploadForm().submit();
          }
       });
 
@@ -123,7 +132,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       {
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(display.asView().getId());
+            closeView();
          }
       });
 
@@ -131,7 +140,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       {
          public void onSubmit(SubmitEvent event)
          {
-            submit(event);
+            IDELoader.getInstance().show();
          }
       });
 
@@ -147,111 +156,71 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       display.setUploadButtonEnabled(false);
    }
 
-   private void upload()
+   private String getUploadUrl(Item item)
    {
-      String fileName = display.getFileNameField().getValue();
-      if (fileName.contains("/"))
-      {
-         fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-      }
-
-      Item item = selectedItems.get(0);
-      String href = item.getPath();
-      if (item instanceof File)
-      {
-         href = href.substring(0, href.lastIndexOf("/") + 1);
-      }
-      href += URL.encodePathSegment(fileName);
-
-      display.setHiddenFields(href, "", "", "");
-      String uploadUrl = "";
       if (item instanceof FileModel)
       {
-         uploadUrl = ((FileModel)item).getParent().getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref();
+         return ((FileModel)item).getParent().getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref();
       }
       else
       {
-         uploadUrl = item.getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref();
+         return item.getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref();
       }
-      display.getUploadForm().setAction(uploadUrl);
-      display.getUploadForm().submit();
-   }
-
-   protected void submit(SubmitEvent event)
-   {
-      IDELoader.getInstance().show();
    }
 
    private void submitComplete(String uploadServiceResponse)
    {
       IDELoader.getInstance().hide();
 
-      String responseOk = checkResponseOk(uploadServiceResponse);
-      if (responseOk != null)
+      if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {
-         Dialogs.getInstance().showError(responseOk);
+         //if response is null or empty - than complete upload
+         completeUpload();
          return;
       }
-      completeUpload(uploadServiceResponse);
-   }
 
-   /**
-    * Check response is Ok.
-    * If response is Ok, return null,
-    * else return error message
-    * 
-    * @param uploadServiceResponse
-    * @return
-    */
-   private String checkResponseOk(String uploadServiceResponse)
-   {
-      boolean matches =
-         uploadServiceResponse.matches("^<ERROR>(.*)</ERROR>$")
-            || uploadServiceResponse.matches("^<error>(.*)</error>$");
-
-      if (!gotError(uploadServiceResponse, matches))
+      ErrorData errData = UploadHelper.parseError(uploadServiceResponse);
+      if (ExitCodes.ITEM_EXISTS == errData.code)
       {
-         return null;
-      }
+         Dialogs.getInstance().ask(lb.uploadOverwriteTitle(), errData.text + "<br>" + lb.uploadOverwriteAsk(),
+            new BooleanValueReceivedHandler()
+            {
 
-      if (matches)
-      {
-         String errorMsg = uploadServiceResponse.substring("<error>".length());
-         errorMsg = errorMsg.substring(0, errorMsg.length() - "</error>".length());
-
-         return errorMsg;
+               @Override
+               public void booleanValueReceived(Boolean value)
+               {
+                  if (value == null || !value)
+                  {
+                     closeView();
+                     return;
+                  }
+                  if (value)
+                  {
+                     display.setOverwriteHiddedField(true);
+                     display.getUploadForm().submit();
+                  }
+               }
+            });
       }
       else
       {
-         return errorMessage();
+         Dialogs.getInstance().showError(errData.text);
       }
    }
 
-   protected String errorMessage()
+   private void completeUpload()
    {
-      return IDE.ERRORS_CONSTANT.uploadFolderUploadingFailure();
-   }
-
-   protected boolean gotError(String uploadServiceResponse, boolean matches)
-   {
-      return uploadServiceResponse == null || uploadServiceResponse.length() > 0 || matches;
-   }
-
-   protected void completeUpload(String response)
-   {
-      IDE.getInstance().closeView(display.asView().getId());
+      closeView();
 
       Item item = selectedItems.get(0);
-      Folder folder = null;
       if (item instanceof FileModel)
       {
-         folder = ((FileModel)item).getParent();
+         IDE.fireEvent(new RefreshBrowserEvent(((FileModel)item).getParent()));
       }
       else if (item instanceof Folder)
       {
-         folder = (Folder)item;
+         IDE.fireEvent(new RefreshBrowserEvent((Folder)item));
       }
-      IDE.fireEvent(new RefreshBrowserEvent(folder));
    }
 
    @Override
@@ -282,6 +251,11 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
       display.getFileNameField().setValue(file);
       display.setUploadButtonEnabled(true);
+   }
+
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
    }
 
 }

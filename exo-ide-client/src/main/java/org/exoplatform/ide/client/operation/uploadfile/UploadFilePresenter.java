@@ -47,9 +47,10 @@ import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.operation.overwrite.ui.OverwriteDialog;
+import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Link;
 
@@ -59,7 +60,7 @@ import java.util.List;
 
 /**
  * 
- * Created by The eXo Platform SAS .
+ * Presenter for uploading file form.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -78,13 +79,6 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
       void setMimeTypeFieldEnabled(boolean enabled);
 
-      /**
-       * Operation (action) to do with file:
-       * <code>update</code> or <code>create</code>
-       * @param action
-       */
-      void setActionHiddedField(String action);
-
       HasClickHandlers getOpenButton();
 
       void setOpenButtonEnabled(boolean enabled);
@@ -97,13 +91,11 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
       HasFileSelectedHandler getFileUploadInput();
 
-      //new interface
-
       void setMimeTypeHiddedField(String mimeType);
 
       void setNameHiddedField(String name);
 
-      void setOverwriteHiddedField(Boolean override);
+      void setOverwriteHiddedField(Boolean overwrite);
 
    }
 
@@ -282,15 +274,15 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    private void submitComplete(String uploadServiceResponse)
    {
       IDELoader.getInstance().hide();
-
+      
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {
          //if response is null or empty - than complete upload
-         completeUpload(uploadServiceResponse);
+         completeUpload();
          return;
       }
 
-      ErrorData errData = parseError(uploadServiceResponse);
+      ErrorData errData = UploadHelper.parseError(uploadServiceResponse);
       if (ExitCodes.ITEM_EXISTS == errData.code)
       {
          OverwriteDialog dialog = new OverwriteDialog(fileName, errData.text)
@@ -325,45 +317,24 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       }
    }
 
-   protected void completeUpload(String response)
+   private void completeUpload()
    {
       closeView();
-
-      if (selectedItems.get(0) instanceof FileModel)
+      
+      Item item = selectedItems.get(0);
+      if (item instanceof FileModel)
       {
-         IDE.fireEvent(new RefreshBrowserEvent(((FileModel)selectedItems.get(0)).getParent()));
+         IDE.fireEvent(new RefreshBrowserEvent(((FileModel)item).getParent()));
       }
-      else if (selectedItems.get(0) instanceof FolderModel)
+      else if (item instanceof Folder)
       {
-         IDE.fireEvent(new RefreshBrowserEvent((FolderModel)selectedItems.get(0)));
+         IDE.fireEvent(new RefreshBrowserEvent((Folder)item));
       }
    }
 
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * 
-    */
-   private class ErrorData
-   {
-      public ErrorData(int code, String text)
-      {
-         this.code = code;
-         this.text = text;
-      }
-
-      int code;
-
-      String text;
-   }
-
-   private ErrorData parseError(String errorMsg)
-   {
-      String[] res = errorMsg.split("^<pre>Code: | Text: |</pre>$");
-      return new ErrorData(Integer.valueOf(res[1]).intValue(), res[2]);
    }
 
 }
