@@ -1673,6 +1673,7 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          FileItem contentItem = null;
+         boolean overwrite = false;
          while (formData.hasNext())
          {
             FileItem item = formData.next();
@@ -1687,12 +1688,16 @@ public class JcrFileSystem implements VirtualFileSystem
                   throw new InvalidArgumentException("More then one upload file is found but only one should be. ");
                }
             }
+            else if ("overwrite".equals(item.getFieldName()))
+            {
+               overwrite = Boolean.parseBoolean(item.getString().trim());
+            }
          }
          if (contentItem == null)
          {
             throw new InvalidArgumentException("Cannot find file for upload. ");
          }
-         importZip(parentId, contentItem.getInputStream(), false);
+         importZip(parentId, contentItem.getInputStream(), overwrite);
          return Response.ok("", MediaType.TEXT_HTML).build();
       }
       catch (VirtualFileSystemException e)
