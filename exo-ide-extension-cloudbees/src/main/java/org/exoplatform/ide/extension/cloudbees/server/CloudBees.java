@@ -425,18 +425,6 @@ public class CloudBees
       }
       catch (ItemNotFoundException e)
       {
-         // TODO : remove in future versions. Need it to back compatibility with existed data.
-         keyPath = "/PaaS/cloudbees-config/" + user + "/cloudbees-credentials";
-         try
-         {
-            content = vfs.getContent(keyPath, null);
-            CloudBeesCredentials credentials = readCredentials(content);
-            writeCredentials(credentials); // write in new place.
-            return credentials;
-         }
-         catch (ItemNotFoundException e1)
-         {
-         }
       }
       return null;
    }
