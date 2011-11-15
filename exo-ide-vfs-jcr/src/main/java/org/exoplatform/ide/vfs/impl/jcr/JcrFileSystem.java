@@ -895,7 +895,7 @@ public class JcrFileSystem implements VirtualFileSystem
          }
 
          List<Item> l = new ArrayList<Item>();
-         String rootPath = getJcrPath(session, "/");
+         String rootPath = getJcrPath(session.getUserID(), "/");
          for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
          {
             ItemData data = ItemData.fromNode(nodes.nextNode(), rootPath);
@@ -967,7 +967,7 @@ public class JcrFileSystem implements VirtualFileSystem
             propertyFilterBuilder.append(n);
          }
          PropertyFilter propertyFilter = PropertyFilter.valueOf(propertyFilterBuilder.toString());
-         String rootPath = getJcrPath(session, "/");
+         String rootPath = getJcrPath(session.getUserID(), "/");
          for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
          {
             l.add(fromItemData(ItemData.fromNode(nodes.nextNode(), rootPath), propertyFilter));
@@ -1707,14 +1707,41 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
+   //   /**
+   //    * Get JCR path from Virtual File System path.
+   //    * 
+   //    * @param session JCR session
+   //    * @param vfsPath Virtual File System path
+   //    * @return JCR path
+   //    */
+   //   protected final String getJcrPath(Session session, String vfsPath)
+   //   {
+   //      if (rootNodePath == null || rootNodePath.isEmpty() || "/".equals(rootNodePath))
+   //      {
+   //         // Not need to do anything if rootNodePath is not set.
+   //         return vfsPath;
+   //      }
+   //      String root = rootNodePath;
+   //      if (root.contains("${userId}"))
+   //      {
+   //         String userID = session.getUserID();
+   //         root = root.replace("${userId}", userID);
+   //      }
+   //      if ("/".equals(vfsPath))
+   //      {
+   //         return root;
+   //      }
+   //      return (root + vfsPath);
+   //   }
+
    /**
     * Get JCR path from Virtual File System path.
     * 
-    * @param session JCR session
+    * @param userID the current user identifier
     * @param vfsPath Virtual File System path
     * @return JCR path
     */
-   protected final String getJcrPath(Session session, String vfsPath)
+   protected final String getJcrPath(String userID, String vfsPath)
    {
       if (rootNodePath == null || rootNodePath.isEmpty() || "/".equals(rootNodePath))
       {
@@ -1724,7 +1751,6 @@ public class JcrFileSystem implements VirtualFileSystem
       String root = rootNodePath;
       if (root.contains("${userId}"))
       {
-         String userID = session.getUserID();
          root = root.replace("${userId}", userID);
       }
       if ("/".equals(vfsPath))
@@ -1921,7 +1947,8 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       try
       {
-         return ItemData.fromNode(((ExtendedSession)session).getNodeByIdentifier(id), getJcrPath(session, "/"));
+         return ItemData.fromNode(((ExtendedSession)session).getNodeByIdentifier(id),
+            getJcrPath(session.getUserID(), "/"));
       }
       catch (javax.jcr.ItemNotFoundException e)
       {
@@ -1946,13 +1973,13 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       try
       {
-         String jcrPath = getJcrPath(session, path);
+         String jcrPath = getJcrPath(session.getUserID(), path);
          javax.jcr.Item jcrItem = session.getItem(jcrPath);
          if (!jcrItem.isNode())
          {
             throw new ItemNotFoundException("Object " + path + " does not exists. ");
          }
-         return ItemData.fromNode((Node)jcrItem, getJcrPath(session, "/"));
+         return ItemData.fromNode((Node)jcrItem, getJcrPath(session.getUserID(), "/"));
       }
       catch (PathNotFoundException e)
       {

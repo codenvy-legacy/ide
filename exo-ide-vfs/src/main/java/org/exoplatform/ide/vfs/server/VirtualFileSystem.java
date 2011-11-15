@@ -650,7 +650,7 @@ public interface VirtualFileSystem
     */
    @GET
    @Path("export")
-   @Produces("application/zip")
+   @Produces({"application/zip"})
    ContentStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, IOException, VirtualFileSystemException;
 
@@ -669,7 +669,7 @@ public interface VirtualFileSystem
     */
    @POST
    @Path("import")
-   @Consumes("application/zip")
+   @Consumes({"application/zip"})
    public void importZip(String parentId, InputStream in, Boolean overwrite) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException;
 
@@ -732,7 +732,7 @@ public interface VirtualFileSystem
     */
    @GET
    @Path("downloadzip")
-   @Consumes("application/zip")
+   @Consumes({"application/zip"})
    Response downloadZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, IOException, VirtualFileSystemException;
 
@@ -751,7 +751,7 @@ public interface VirtualFileSystem
     */
    @POST
    @Path("uploadzip")
-   @Consumes(MediaType.MULTIPART_FORM_DATA)
+   @Consumes({MediaType.MULTIPART_FORM_DATA})
    @Produces({MediaType.TEXT_HTML})
    public Response uploadZip(String parentId, java.util.Iterator<FileItem> formData) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException;
