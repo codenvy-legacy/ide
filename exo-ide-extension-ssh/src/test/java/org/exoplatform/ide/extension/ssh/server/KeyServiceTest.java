@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.ssh.server;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import org.everrest.core.RequestHandler;
 import org.everrest.core.impl.ContainerResponse;
@@ -30,14 +29,6 @@ import org.everrest.core.tools.ResourceLauncher;
 import org.everrest.test.mock.MockHttpServletRequest;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.CredentialsImpl;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
-import org.exoplatform.services.jcr.impl.core.SessionImpl;
 import org.exoplatform.services.security.Authenticator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Credential;
@@ -45,13 +36,11 @@ import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,58 +53,23 @@ import javax.ws.rs.core.SecurityContext;
  * @version $Id: $
  * 
  */
-public class KeyServiceTest 
+public class KeyServiceTest
 {
-
-   private static String WORKSPACE = "dev-monit";
-
-   private SessionImpl session;
-
-   private RepositoryImpl repository;
-
-   private CredentialsImpl credentials;
-
-   private RepositoryService repositoryService;
-
-   private MultivaluedMap<String, String> headers;
-   
-   protected static StandaloneContainer container;
-
-   public static ResourceLauncher launcher;
-
-   @BeforeClass
-   public static void setUp() throws Exception
-   {
-      String containerConf = KeyServiceTest.class.getResource("/conf/standalone/test-configuration.xml").toString();
-
-      StandaloneContainer.addConfigurationURL(containerConf);
-
-      container = StandaloneContainer.getInstance();
-
-      if (System.getProperty("java.security.auth.login.config") == null)
-         System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
-            .getResource("login.conf").toString());
-
-      RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
-      launcher = new ResourceLauncher(handler);
-   }
+   private ResourceLauncher launcher;
 
    @Before
-   public void prepare() throws Exception
+   public void setUp() throws Exception
    {
-      credentials = new CredentialsImpl("root", "exo".toCharArray());
-
-      repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-      repository = (RepositoryImpl)repositoryService.getDefaultRepository();
-      session = (SessionImpl)repository.login(credentials, WORKSPACE);
-
-      SessionProviderService sessionProviderService =
-         (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
-      assertNotNull(sessionProviderService);
-
-      sessionProviderService
-         .setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("admin"))));
-
+      String containerConf = getClass().getResource("/conf/standalone/test-configuration.xml").toString();
+      StandaloneContainer.setConfigurationURL(containerConf);
+      StandaloneContainer container = StandaloneContainer.getInstance();
+      if (System.getProperty("java.security.auth.login.config") == null)
+      {
+         System.setProperty("java.security.auth.login.config", //
+            Thread.currentThread().getContextClassLoader().getResource("login.conf").toString());
+      }
+      RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
+      launcher = new ResourceLauncher(handler);
       Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
       String validUser =
          authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
@@ -126,58 +80,39 @@ public class KeyServiceTest
       id.setRoles(roles);
       ConversationState s = new ConversationState(id);
       ConversationState.setCurrent(s);
-
-      headers = new MultivaluedMapImpl();
-      headers.putSingle("content-type", "multipart/form-data; boundary=-----abcdef");
    }
 
    @Test
    public void testAddPrivateKey() throws Exception
    {
+      InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream("test.txt");
+      byte[] res = new byte[file.available()];
+      file.read(res);
+      file.close();
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      out.write("-------abcdef\r\nContent-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n\r\n"
+         .getBytes());
+      out.write("\r\n-------abcdef--".getBytes());
+      byte[] data = out.toByteArray();
+
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      headers.putSingle("content-type", "multipart/form-data; boundary=-----abcdef");
+
       EnvironmentContext ctx = new EnvironmentContext();
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
       DummySecurityContext securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
       ctx.put(SecurityContext.class, securityContext);
-
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      PrintWriter w = new PrintWriter(out);
-
-      InputStream resourceAsStream = ClassLoader.getSystemClassLoader().getResourceAsStream("test.txt");
-      byte[] res = new byte[resourceAsStream.available()];
-      resourceAsStream.read(res);
-      resourceAsStream.close();
-      String source =
-         getRequestSource("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n", new String(res));
-
-      w.write(source);
-      w.flush();
-
-      byte[] data = out.toByteArray();
-
       HttpServletRequest httpRequest =
          new MockHttpServletRequest("http://localhost/ide/ssh-keys/add?host=exoplatform.com", new ByteArrayInputStream(
             data), data.length, "POST", headers);
-
       ctx.put(HttpServletRequest.class, httpRequest);
 
       ContainerResponse response =
-         launcher.service("POST", "/ide/ssh-keys/add?host=exoplatform.com", "http://localhost", headers, data, null,
-            ctx);
+         launcher.service("POST", "http://localhost/ide/ssh-keys/add?host=exoplatform.com", "http://localhost",
+            headers, data, null, ctx);
 
-      assertEquals(HTTPStatus.OK, response.getStatus());
-      assertEquals("Success", response.getEntity());
-
-      session.refresh(false);
+      assertEquals(200, response.getStatus());
+      assertEquals("", response.getEntity());
    }
-
-   private String getRequestSource(String fileContentDisposition, String content)
-   {
-      String source =
-         "-------abcdef\r\n" + fileContentDisposition + "Content-Type: text/plain\r\n\r\n" + content + "\r\n"
-            + "-------abcdef--\r\n";
-
-      return source;
-   }
-
 }

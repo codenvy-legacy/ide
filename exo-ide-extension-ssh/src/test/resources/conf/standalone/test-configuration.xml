@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the 
-   Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY 
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received 
-   a copy of the GNU Lesser General Public License along with this software; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, 
-   or see the FSF site: http://www.fsf.org. -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd" xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
+   <component>
+      <type>org.exoplatform.ide.extension.ssh.server.KeyApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</type>
+   </component>
 
    <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
@@ -23,73 +45,124 @@
             <name>properties</name>
             <description>Log4J properties</description>
             <property name="log4j.rootLogger" value="INFO, stdout, file" />
-
             <property name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender" />
             <property name="log4j.appender.stdout.threshold" value="INFO" />
-
+            <!--  <property name="log4j.appender.stdout.threshold" value="DEBUG" /> -->
             <property name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout" />
             <property name="log4j.appender.stdout.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
-
             <property name="log4j.appender.file" value="org.apache.log4j.FileAppender" />
             <property name="log4j.appender.file.File" value="target/jcr.log" />
-
             <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
             <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
-
-            <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
-            <property name="log4j.category.jcr.ext.RestRepositoryService" value="DEBUG" />
-
+            <!-- <property name="log4j.category.org.everrest.core.impl.method.DefaultMethodInvoker" value="DEBUG" /> -->
          </properties-param>
       </init-params>
    </component>
-   
-    <component>
-      <type>org.everrest.exoplatform.EverrestInitializer</type>
-   </component>
+
    <component>
-      <type>org.everrest.core.impl.ResourceBinderImpl</type>
-   </component>
-   <component>
-      <type>org.everrest.exoplatform.ProvidersRegistry</type>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
    </component>
 
    <component>
-      <type>org.everrest.exoplatform.StartableApplication</type>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
    </component>
 
    <component>
-      <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
+      <init-params>
+         <values-param>
+            <name>workspaces</name>
+            <value>ws</value>
+         </values-param>
+      </init-params>
    </component>
 
    <component>
-      <type>org.everrest.exoplatform.ExoDependencySupplier</type>
+      <type>org.exoplatform.services.security.IdentityRegistry</type>
    </component>
 
    <component>
-      <key>org.everrest.core.RequestHandler</key>
-      <type>org.everrest.exoplatform.ExoRequestHandler</type>
+      <type>org.exoplatform.services.security.ConversationRegistry</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService</type>
+   </component>
+
+   <component>
+      <key>org.exoplatform.services.security.Authenticator</key>
+      <type>org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl</type>
+   </component>
+
+   <component>
+      <key>org.exoplatform.services.document.DocumentReaderService</key>
+      <type>org.exoplatform.services.document.impl.tika.TikaDocumentReaderServiceImpl</type>
+   </component>
+
+   <component>
+      <key>org.exoplatform.services.naming.InitialContextInitializer</key>
+      <type>org.exoplatform.services.naming.InitialContextInitializer</type>
+      <init-params>
+         <properties-param>
+            <name>default-properties</name>
+            <description>Default initial context properties</description>
+            <property name="java.naming.factory.initial" value="org.exoplatform.services.naming.SimpleContextFactory" />
+         </properties-param>
+      </init-params>
+   </component>
+
+   <component>
+      <key>org.exoplatform.services.jdbc.DataSourceProvider</key>
+      <type>org.exoplatform.services.jdbc.impl.DataSourceProviderImpl</type>
+      <init-params>
+          <!--  Indicates that the data source needs to check if a tx is active
+            to decide if the provided connection needs to be managed or not.
+            If it is set to false, the data source will provide only
+            managed connections if the data source itself is managed.  -->
+         <!--value-param>
+            <name>check-tx-active</name>
+            <value>true</value>
+         </value-param-->
+         <!-- Indicates that all the data sources are managed 
+              If set to true the parameter never-managed and 
+              managed-data-sources will be ignored -->
+         <!--value-param>
+            <name>always-managed</name>
+            <value>true</value>
+         </value-param-->
+         <!-- Indicates the list of all the data sources that are 
+              managed, each value tag can contain a list of
+              data source names separated by a comma, in the
+              example below we will register ds-foo1, ds-foo2 
+              and ds-foo3 as managed data source. If always-managed
+              and/or never-managed is set true this parameter is ignored -->
+         <!--values-param>
+            <name>managed-data-sources</name>
+            <value>ds-foo1, ds-foo2</value>
+            <value>ds-foo3</value>
+         </values-param-->
+      </init-params>
+   </component>
+
+   <component>
+      <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
+      <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl</type>
       <init-params>
          <value-param>
-            <name>org.everrest.http.method.override</name>
-            <value>true</value>
+            <name>conf-path</name>
+            <description>JCR configuration file</description>
+            <value>jar:/conf/standalone/test-jcr-configuration.xml</value>
          </value-param>
       </init-params>
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService
-		</type>
+      <key>org.exoplatform.services.idgenerator.IDGeneratorService</key>
+      <type>org.exoplatform.services.idgenerator.impl.IDGeneratorServiceImpl</type>
    </component>
 
    <component>
-      <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService
-		</type>
-   </component>
-
-   <component>
-      <key>org.exoplatform.services.security.Authenticator</key>
-      <type>org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl
-		</type>
+      <type>org.exoplatform.services.jcr.impl.RepositoryCreationSynchronizer</type>
    </component>
 
    <component>
@@ -104,30 +177,49 @@
                <properties-param>
                   <name>namespaces</name>
                   <property name="dc" value="http://purl.org/dc/elements/1.1/" />
+                  <property name="vfs" value="http://exoplatform.org/vfs" />
                </properties-param>
+            </init-params>
+         </component-plugin>
+         <component-plugin>
+            <name>add.nodeType</name>
+            <set-method>addPlugin</set-method>
+            <type>org.exoplatform.services.jcr.impl.AddNodeTypePlugin</type>
+            <init-params>
+               <values-param>
+                  <name>autoCreatedInNewRepository</name>
+                  <description>Node types configuration file</description>
+                  <value>classpath:/conf/vfs-node-types.xml</value>
+               </values-param>
             </init-params>
          </component-plugin>
       </component-plugins>
    </component>
 
    <component>
-      <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration
-		</key>
-      <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl
-		</type>
-      <init-params>
-         <value-param>
-            <name>conf-path</name>
-            <description>JCR configuration file</description>
-            <value>jar:/conf/standalone/test-jcr-ext-config.xml</value>
-         </value-param>
-      </init-params>
+      <type>org.everrest.exoplatform.EverrestInitializer</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.StartableApplication</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ProvidersRegistry</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ExoDependencySupplier</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ExoRequestHandler</type>
+   </component>
+   <component>
+      <type>org.everrest.core.impl.ResourceBinderImpl</type>
    </component>
 
-
    <external-component-plugins>
-      <target-component>org.exoplatform.services.naming.InitialContextInitializer
-		</target-component>
+      <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
       <component-plugin>
          <name>bind.datasource</name>
          <set-method>addPlugin</set-method>
@@ -149,13 +241,11 @@
                <name>ref-addresses</name>
                <description>ref-addresses</description>
                <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-               <property name="url" value="jdbc:hsqldb:file:target/temp/data/portal" />
+               <property name="url" value="jdbc:hsqldb:file:target/temp/data" />
                <property name="username" value="sa" />
                <property name="password" value="" />
             </properties-param>
          </init-params>
       </component-plugin>
    </external-component-plugins>
-
 </configuration>
-

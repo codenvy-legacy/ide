@@ -95,7 +95,7 @@ public class ExpressService
    @POST
    @Path("domain/create")
    public void createDomain(@QueryParam("namespace") String namespace, @QueryParam("alter") boolean alter)
-      throws ExpressException, IOException
+      throws ExpressException, IOException, VirtualFileSystemException
    {
       express.createDomain(namespace, alter);
    }

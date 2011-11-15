@@ -32,6 +32,7 @@ import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -259,7 +260,8 @@ public class Express
       removeCredentials();
    }
 
-   public void createDomain(String namespace, boolean alter) throws ExpressException, IOException
+   public void createDomain(String namespace, boolean alter) throws ExpressException, IOException,
+      VirtualFileSystemException
    {
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
@@ -268,7 +270,7 @@ public class Express
    }
 
    private void createDomain(RHCloudCredentials rhCloudCredentials, String namespace, boolean alter)
-      throws ExpressException, IOException
+      throws ExpressException, IOException, VirtualFileSystemException
    {
       final String host = "rhcloud.com";
 
@@ -687,7 +689,7 @@ public class Express
             {
             }
          }
-         
+
          return null;
       }
       catch (RepositoryException re)

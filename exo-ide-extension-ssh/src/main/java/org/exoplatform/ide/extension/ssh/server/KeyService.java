@@ -22,6 +22,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 import org.exoplatform.ide.extension.ssh.shared.PublicKey;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +42,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -67,16 +67,25 @@ public class KeyService
    @POST
    @Path("gen")
    @RolesAllowed({"users"})
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Consumes({MediaType.APPLICATION_JSON})
    public Response genKeyPair(GenKeyRequest request)
    {
       try
       {
          keyProvider.genKeyPair(request.getHost(), request.getComment(), request.getPassphrase());
       }
-      catch (IOException ioe)
+      catch (IOException e)
       {
-         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+         throw new WebApplicationException(Response.serverError() //
+            .entity(e.getMessage()) //
+            .type(MediaType.TEXT_PLAIN) //
+            .build());
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new WebApplicationException(Response.serverError() //
+            .entity(e.getMessage()) //
+            .type(MediaType.TEXT_PLAIN) //
             .build());
       }
       return Response.ok().build();
@@ -87,35 +96,44 @@ public class KeyService
     */
    @POST
    @Path("add")
-   @Consumes("multipart/*")
+   @Consumes({MediaType.MULTIPART_FORM_DATA})
    @RolesAllowed({"users"})
    public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host,
       Iterator<FileItem> iterator)
    {
-      //      if (!security.isSecure())
-      //         throw new WebApplicationException(Response.status(400)
-      //            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
-      try
+      /*      XXX : Temporary turn-off don't work on demo site      
+            if (!security.isSecure())
+            {
+               throw new WebApplicationException(Response.status(400)
+                  .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+            }
+      */
+      byte[] key = null;
+      while (iterator.hasNext() && key == null)
       {
-         byte[] key = null;
-         if (iterator.hasNext())
+         FileItem fileItem = iterator.next();
+         if (!fileItem.isFormField())
          {
-            FileItem fileItem = iterator.next();
-            if (!fileItem.isFormField())
-               key = fileItem.get();
+            key = fileItem.get();
          }
-         if (key == null)
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Can't find input file. ")
-               .build());
-
-         keyProvider.addPrivateKey(host, key);
       }
-      catch (IOException ioe)
+      // Return error response in <pre> HTML tag. 
+      if (key == null)
       {
-         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+         throw new WebApplicationException(Response.ok("<pre>Can't find input file.</pre>", MediaType.TEXT_HTML)
             .build());
       }
-      return Response.ok().entity("Success").build();
+
+      try
+      {
+         keyProvider.addPrivateKey(host, key);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new WebApplicationException(Response.ok("<pre>" + e.getMessage() + "</pre>", MediaType.TEXT_HTML)
+            .build());
+      }
+      return Response.ok("", MediaType.TEXT_HTML).build();
    }
 
    /**
@@ -126,28 +144,44 @@ public class KeyService
     */
    @GET
    @RolesAllowed({"users"})
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces({MediaType.APPLICATION_JSON})
    public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host)
    {
 
-      // XXX : Temporary turn-off don't work on demo site      
-      //      if (!security.isSecure())
-      //         throw new WebApplicationException(Response.status(400)
-      //            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+      /*      XXX : Temporary turn-off don't work on demo site      
+            if (!security.isSecure())
+            {
+               throw new WebApplicationException(Response.status(400)
+                  .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+            }
+      */
+      SshKey publicKey = null;
       try
       {
-         SshKey publicKey = keyProvider.getPublicKey(host);
-         if (publicKey != null)
-            return Response.ok().entity(new PublicKey(host, new String(publicKey.getBytes())))
-               .type(MediaType.APPLICATION_JSON).build();
-         throw new WebApplicationException(Response.status(404).entity("Public key for host " + host + " not found. ")
-            .type(MediaType.TEXT_PLAIN).build());
+         publicKey = keyProvider.getPublicKey(host);
       }
-      catch (IOException ioe)
+      catch (IOException e)
       {
-         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+         throw new WebApplicationException(Response.serverError() //
+            .entity(e.getMessage()) //
+            .type(MediaType.TEXT_PLAIN) //
             .build());
       }
+      catch (VirtualFileSystemException e)
+      {
+         throw new WebApplicationException(Response.serverError() //
+            .entity(e.getMessage()) //
+            .type(MediaType.TEXT_PLAIN) //
+            .build());
+      }
+      if (publicKey == null)
+      {
+         throw new WebApplicationException(Response.status(404) //
+            .entity("Public key for host " + host + " not found. ") //
+            .type(MediaType.TEXT_PLAIN) //
+            .build());
+      }
+      return Response.ok(new PublicKey(host, new String(publicKey.getBytes())), MediaType.APPLICATION_JSON).build();
    }
 
    /**
@@ -158,39 +192,65 @@ public class KeyService
    @RolesAllowed({"users"})
    public String removeKeys(@QueryParam("host") String host, @QueryParam("callback") String calback)
    {
-      keyProvider.removeKeys(host);
+      try
+      {
+         keyProvider.removeKeys(host);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new WebApplicationException(Response.serverError() //
+            .entity(e.getMessage()) //
+            .type(MediaType.TEXT_PLAIN) //
+            .build());
+      }
       return calback + "();";
    }
 
    @GET
    @Path("all")
    @RolesAllowed({"users"})
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces({MediaType.APPLICATION_JSON})
    public Response getKeys(@Context UriInfo uriInfo)
    {
-      Set<String> all = keyProvider.getAll();
-      if (all.size() == 0)
-         return Response.ok().entity(Collections.emptyList()).type(MediaType.APPLICATION_JSON).build();
-      List<KeyItem> result = new ArrayList<KeyItem>(all.size());
-      for (String host : all)
+      try
       {
-         boolean publicKeyExists = false;
-         try
+         Set<String> all = keyProvider.getAll();
+         if (all.size() > 0)
          {
-            publicKeyExists = keyProvider.getPublicKey(host) != null;
+            List<KeyItem> result = new ArrayList<KeyItem>(all.size());
+            for (String host : all)
+            {
+               boolean publicKeyExists = false;
+               publicKeyExists = keyProvider.getPublicKey(host) != null;
+               String getPublicKeyUrl = null;
+               if (publicKeyExists)
+               {
+                  getPublicKeyUrl =
+                     uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString();
+               }
+               String removeKeysUrl =
+                  uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build()
+                     .toString();
+
+               result.add(new KeyItem(host, getPublicKeyUrl, removeKeysUrl));
+            }
+            return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
          }
-         catch (IOException ioe)
-         {
-            throw new WebApplicationException(Response.serverError().entity(ioe.getMessage())
-               .type(MediaType.TEXT_PLAIN).build());
-         }
-         String getPublicKeyUrl = null;
-         if (publicKeyExists)
-            getPublicKeyUrl = uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString();
-         String removeKeysUrl =
-            uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build().toString();
-         result.add(new KeyItem(host, getPublicKeyUrl, removeKeysUrl));
+         return Response.ok(Collections.emptyList(), MediaType.APPLICATION_JSON).build();
       }
-      return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
+      catch (IOException e)
+      {
+         throw new WebApplicationException(Response.serverError() //
+            .entity(e.getMessage()) //
+            .type(MediaType.TEXT_PLAIN) //
+            .build());
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new WebApplicationException(Response.serverError() //
+            .entity(e.getMessage()) //
+            .type(MediaType.TEXT_PLAIN) //
+            .build());
+      }
    }
 }

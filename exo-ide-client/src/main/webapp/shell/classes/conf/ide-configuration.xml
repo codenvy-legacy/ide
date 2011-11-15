@@ -159,7 +159,7 @@
 
    <component>
       <key>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</key>
-      <type>org.exoplatform.ide.extension.ssh.server.JcrSshKeyProvider</type>
+      <type>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</type>
       <init-params>
          <value-param>
             <name>workspace</name>

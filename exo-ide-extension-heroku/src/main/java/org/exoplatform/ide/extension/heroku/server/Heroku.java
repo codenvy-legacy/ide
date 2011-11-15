@@ -153,7 +153,8 @@ public class Heroku
       addSshKey(herokuCredentials);
    }
 
-   private void addSshKey(HerokuCredentials herokuCredentials) throws HerokuException, IOException
+   private void addSshKey(HerokuCredentials herokuCredentials) throws HerokuException, IOException,
+      VirtualFileSystemException
    {
       final String host = "heroku.com";
       SshKey publicKey = keyProvider.getPublicKey(host);

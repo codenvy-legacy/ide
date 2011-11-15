@@ -49,29 +49,29 @@
                   </properties>
                </query-handler>
             </workspace>
-            <workspace name="ws2">
-               <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
-                  <properties>
-                     <property name="source-name" value="jdbcjcr" />
-                     <property name="dialect" value="hsqldb" />
-                     <property name="multi-db" value="true" />
-                     <property name="update-storage" value="true" />
-                     <property name="max-buffer-size" value="200k" />
-                     <property name="swap-directory" value="target/temp/swap/ws2" />
-                  </properties>
-               </container>
-               <cache enabled="true">
-                  <properties>
-                     <property name="max-size" value="5k" />
-                     <property name="live-time" value="1h" />
-                  </properties>
-               </cache>
-               <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
-                  <properties>
-                     <property name="index-dir" value="target/temp/index/ws2" />
-                  </properties>
-               </query-handler>
-            </workspace>
+<!--             <workspace name="ws2"> -->
+<!--                <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer"> -->
+<!--                   <properties> -->
+<!--                      <property name="source-name" value="jdbcjcr" /> -->
+<!--                      <property name="dialect" value="hsqldb" /> -->
+<!--                      <property name="multi-db" value="true" /> -->
+<!--                      <property name="update-storage" value="true" /> -->
+<!--                      <property name="max-buffer-size" value="200k" /> -->
+<!--                      <property name="swap-directory" value="target/temp/swap/ws2" /> -->
+<!--                   </properties> -->
+<!--                </container> -->
+<!--                <cache enabled="true"> -->
+<!--                   <properties> -->
+<!--                      <property name="max-size" value="5k" /> -->
+<!--                      <property name="live-time" value="1h" /> -->
+<!--                   </properties> -->
+<!--                </cache> -->
+<!--                <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex"> -->
+<!--                   <properties> -->
+<!--                      <property name="index-dir" value="target/temp/index/ws2" /> -->
+<!--                   </properties> -->
+<!--                </query-handler> -->
+<!--             </workspace> -->
             </workspaces>
       </repository>
    </repositories>

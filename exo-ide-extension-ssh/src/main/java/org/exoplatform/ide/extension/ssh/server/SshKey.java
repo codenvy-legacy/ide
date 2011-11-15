@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.ssh.server;
 
-import java.io.IOException;
-
 /**
  * SSH key.
  * 
@@ -55,9 +53,8 @@ public class SshKey
     * Get SSH key as byte array.
     * 
     * @return SSH key as byte array
-    * @throws if any i/o errors occurs
     */
-   public byte[] getBytes() throws IOException
+   public byte[] getBytes()
    {
       return bytes;
    }

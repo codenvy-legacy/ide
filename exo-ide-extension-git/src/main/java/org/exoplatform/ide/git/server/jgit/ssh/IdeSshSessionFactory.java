@@ -28,6 +28,7 @@ import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.util.FS;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.picocontainer.Startable;
 
 import java.io.IOException;
@@ -83,9 +84,13 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
          jsch.addIdentity(key.getIdentifier(), key.getBytes(), null, null);
          return jsch;
       }
-      catch (IOException ioe)
+      catch (IOException e)
       {
-         throw new JSchException(ioe.getMessage(), ioe);
+         throw new JSchException(e.getMessage(), e);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new JSchException(e.getMessage(), e);
       }
    }
 

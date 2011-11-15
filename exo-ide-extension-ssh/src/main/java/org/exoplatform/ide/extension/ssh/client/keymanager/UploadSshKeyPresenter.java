@@ -40,11 +40,12 @@ import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.keymanager.ui.UploadSshKeyView;
 
 /**
- * This class is presenter for {@link UploadSshKeyView}.
- * Main appointment of this class is upload private SSH key to the server.
+ * This class is presenter for {@link UploadSshKeyView}. Main appointment of this class is upload private SSH key to the
+ * server.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHandler
 {
@@ -53,6 +54,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
 
       /**
        * Get host filed
+       * 
        * @return instance of {@link HasValue} interface
        */
       HasValue<String> getHostField();
@@ -69,18 +71,21 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
 
       /**
        * Get file name filed
+       * 
        * @return instance of {@link HasValue} interface
        */
       HasValue<String> getFileNameField();
 
       /**
        * Form that do upload
+       * 
        * @return {@link FormPanel} instance
        */
       FormPanel getFormPanel();
 
       /**
        * Set error message
+       * 
        * @param message the message
        */
       void setMessage(String message);
@@ -99,7 +104,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
    private Display display;
 
    /**
-    * Registration of {@link ViewClosedEvent} handler 
+    * Registration of {@link ViewClosedEvent} handler
     */
    private HandlerRegistration viewClosedHandler;
 
@@ -108,7 +113,6 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
     */
    private String restContext;
 
-   
    /**
     * @param restContext part of URL to IDE REST Context
     */
@@ -152,11 +156,18 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
          @Override
          public void onSubmitComplete(SubmitCompleteEvent event)
          {
-            if(event.getResults().contains("Success"))
+            String result = event.getResults();
+            if (result.isEmpty())
+            {
                IDE.getInstance().closeView(display.asView().getId());
+            }
             else
             {
-               IDE.fireEvent(new ExceptionThrownEvent(event.getResults()));
+               if (result.startsWith("<pre>") && result.endsWith("</pre>"))
+               {
+                  result.substring(5, (result.length() - 6));
+               }
+               IDE.fireEvent(new ExceptionThrownEvent(result));
             }
          }
       });
@@ -165,8 +176,8 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
    }
 
    /**
-    * Validate <b>host</b> parameter and do submit action.
-    * If <b>host</b> parameter is null or empty string, show error message.
+    * Validate <b>host</b> parameter and do submit action. If <b>host</b> parameter is null or empty string, show error
+    * message.
     */
    private void upload()
    {

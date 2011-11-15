@@ -29,16 +29,14 @@ import javax.ws.rs.core.Application;
  */
 public class KeyApplication extends Application
 {
-   private Set<Class<?>> classes;
-   
-   private Set<Object> singletons;
+   private final Set<Class<?>> classes;
+   private final Set<Object> singletons;
 
    public KeyApplication()
    {
       classes = new HashSet<Class<?>>(1);
       classes.add(KeyService.class);
-      
-      singletons = new HashSet<Object>();
+      singletons = new HashSet<Object>(1);
       singletons.add(new JsonpEntityProvider());
    }
 
