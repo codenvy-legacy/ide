@@ -19,6 +19,8 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -71,15 +73,12 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
     */
    private static final String XML_CONTENT_2 = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<settings>test</settings>";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + PROJECT + "/");
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -108,8 +107,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
 
       assertEquals("Untitled file.xml *", IDE.EDITOR.getTabTitle(1));
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE_AS));
 
       IDE.EDITOR.deleteFileContent(0);
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
@@ -126,7 +125,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.EDITOR.closeFile(1);
 
       //check file on server
-      checkFileExists(URL + PROJECT + "/" + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
+      checkFileExists(WS_URL + PROJECT + "/" + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
 
       Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + XML_FILE));
 
@@ -148,8 +147,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.EDITOR.closeFile(1);
 
       //check two files exist
-      checkFileExists(URL + PROJECT + "/" + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
-      checkFileExists(URL + PROJECT + "/" + URLEncoder.encode(NEW_XML_FILE, "UTF-8"), XML_CONTENT_2);
+      checkFileExists(WS_URL + PROJECT + "/" + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
+      checkFileExists(WS_URL + PROJECT + "/" + URLEncoder.encode(NEW_XML_FILE, "UTF-8"), XML_CONTENT_2);
 
       Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + XML_FILE));
       Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + NEW_XML_FILE));

@@ -31,14 +31,14 @@ import org.openqa.selenium.WebElement;
 
 public class AskForValueDialog extends AbstractTestModule
 {
-   
+
    public interface Locator
    {
-      
+
       String VIEW_ID = "ideAskForValueView";
-      
+
       String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
-      
+
       String OK_BUTTON_LOCATOR = "ideAskForValueViewYesButton";
 
       String NO_BUTTON_LOCATOR = "ideAskForValueViewNoButton";
@@ -49,7 +49,6 @@ public class AskForValueDialog extends AbstractTestModule
 
    }
 
-
    /**
     * Determines whether the Dialog is open.
     * 
@@ -59,13 +58,14 @@ public class AskForValueDialog extends AbstractTestModule
    {
       return selenium().isElementPresent(Locator.VIEW_LOCATOR);
    }
-   
+
    /**
     * Waits until AskForValue dialog will be present.
     * 
     * @throws Exception
     */
-   public void waitForPresent() throws Exception {
+   public void waitForPresent() throws Exception
+   {
       waitForElementPresent(Locator.VIEW_LOCATOR);
    }
 
@@ -78,13 +78,14 @@ public class AskForValueDialog extends AbstractTestModule
    {
       waitForElementNotPresent(Locator.VIEW_LOCATOR);
    }
-   
+
    /**
     * Closes AskForValue dialog.
     * 
     * @throws Exception
     */
-   public void closeDialog() throws Exception {
+   public void closeDialog() throws Exception
+   {
       String locator = "//div[@id='ideAskForValueView-window']//img[@title='Close']";
       selenium().click(locator);
       waitForElementNotPresent(Locator.VIEW_LOCATOR);
@@ -142,8 +143,7 @@ public class AskForValueDialog extends AbstractTestModule
    public void setValue(String value) throws Exception
    {
       WebElement inputElement = driver().findElement(By.name(Locator.TEXT_FIELD_LOCATOR));
-      inputElement.clear();
-      inputElement.sendKeys(value);
+      IDE().INPUT.typeToElement(inputElement, value, true);
    }
 
 }

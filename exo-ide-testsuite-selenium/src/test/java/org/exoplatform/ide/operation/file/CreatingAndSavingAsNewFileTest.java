@@ -19,7 +19,6 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -102,15 +101,15 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       throws InterruptedException, Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
-
-      assertTrue(selenium().isTextPresent("Untitled file." + fileExtention));
+      IDE.EDITOR.waitActiveFile(FOLDER_NAME + "/" + "Untitled file." + fileExtention);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
-
-      assertTrue(selenium().isTextPresent("Untitled file 1." + fileExtention));
+      IDE.EDITOR.waitActiveFile(FOLDER_NAME + "/" + "Untitled file 1." + fileExtention);
 
       IDE.EDITOR.saveAs(1, fileName);
-      IDE.EDITOR.closeFile(1);
-      IDE.EDITOR.closeTabIgnoringChanges(1);      
+      IDE.PROJECT.EXPLORER.waitForItem(FOLDER_NAME + "/" + fileName);
+      IDE.EDITOR.closeFile(fileName);
+      IDE.EDITOR.waitTabNotPresent(fileName);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
 
       Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(FOLDER_NAME + "/" + fileName));
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + fileName).getStatusCode());

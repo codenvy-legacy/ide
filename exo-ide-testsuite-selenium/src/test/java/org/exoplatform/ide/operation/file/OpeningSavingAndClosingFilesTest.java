@@ -19,28 +19,27 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
- * 
- *
  */
 public class OpeningSavingAndClosingFilesTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = OpeningSavingAndClosingFilesTest.class.getSimpleName();
+   private static String PROJECT = OpeningSavingAndClosingFilesTest.class.getSimpleName();
 
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
@@ -58,22 +57,23 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
-   private final static String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
-      + WS_NAME + "/" + FOLDER_NAME + "/";
-
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(STORAGE_URL);
-         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, STORAGE_URL + HTML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + CSS_FILE_NAME, MimeType.TEXT_CSS, STORAGE_URL + CSS_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, STORAGE_URL + JS_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, STORAGE_URL + GADGET_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, STORAGE_URL + GROOVY_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.TEXT_XML, STORAGE_URL + XML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + TXT_FILE_NAME, MimeType.TEXT_PLAIN, STORAGE_URL + TXT_FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, HTML_FILE_NAME, MimeType.TEXT_HTML, PATH + HTML_FILE_NAME);
+         VirtualFileSystemUtils.createFileFromLocal(link, CSS_FILE_NAME, MimeType.TEXT_CSS, PATH + CSS_FILE_NAME);
+         VirtualFileSystemUtils.createFileFromLocal(link, JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, PATH
+            + JS_FILE_NAME);
+         VirtualFileSystemUtils.createFileFromLocal(link, GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, PATH
+            + GADGET_FILE_NAME);
+         VirtualFileSystemUtils.createFileFromLocal(link, GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, PATH
+            + GROOVY_FILE_NAME);
+         VirtualFileSystemUtils.createFileFromLocal(link, XML_FILE_NAME, MimeType.TEXT_XML, PATH + XML_FILE_NAME);
+         VirtualFileSystemUtils.createFileFromLocal(link, TXT_FILE_NAME, MimeType.TEXT_PLAIN, PATH + TXT_FILE_NAME);
       }
       catch (IOException e)
       {
@@ -86,13 +86,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(STORAGE_URL + HTML_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + CSS_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + JS_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + GADGET_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + GROOVY_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + XML_FILE_NAME);
-         VirtualFileSystemUtils.delete(STORAGE_URL + TXT_FILE_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -103,280 +97,224 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    @Test
    public void testOpeningSavingAndClosingTabsWithFile() throws Exception
    {
-      // Refresh Workspace:
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + CSS_FILE_NAME);
 
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-
-      //      IDE.WORKSPACE.selectItem(WS_URL);
-      //      
-      //      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      //      
-      //      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      //      
-      //      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-      // ----------5--------------
       reopenFiles();
-      // clickTabAndCheckSaveButton();
-
-      //------------6-------------      
       changeFiles();
       saveAndCloseFile();
-
-      //--------------8------------
       reopenFiles();
       clickTabAndCheckSaveButton();
-
-      chekSaveInFiles();
+      checkSaveInFiles();
    }
 
-   public void chekSaveInFiles() throws Exception
+   /**
+    * Check changes were saved in file.
+    * 
+    * @throws Exception
+    */
+   public void checkSaveInFiles() throws Exception
    {
       // check changed string in CSS file
-      IDE.EDITOR.selectTab(0);
       String CSS =
          "Change file\n/*Some example CSS*/\n\n@import url (\"something.css\")\nbody {\n  margin 0;\n  padding 3em 6em;\n  font-family: tahoma, arial, sans-serif;\n  color #000;\n}\n  #navigation a {\n    font-weigt: bold;\n  text-decoration: none !important;\n}\n}";
-
-      assertEquals(CSS, IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.selectTab(CSS_FILE_NAME);
+      assertEquals(CSS, IDE.EDITOR.getTextFromCodeEditor(7));
 
       // check changed string in Google Gadget file
-      IDE.EDITOR.selectTab(1);
       String GG =
-         "Change file\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<Module>\n  <ModulePrefs title=\"Hello World!\" />\n  <Content type=\"html\">\n    <![CDATA[ \n    <script type='text/javascript'>\n      function foo(bar, baz) {\n        alert('quux');\n        return bar + baz + 1;\n      }\n    </script>\n    <style type='text/css'>\n      div.border {\n        border: 1px solid black;\n        padding: 3px;\n      }\n      #foo code {\n        font-family: courier, monospace;\n        font-size: 80%;\n        color: #448888;\n      }\n    </style>\n    <p>Hello</p>\n    ]]></Content></Module>";
-      assertEquals(GG, IDE.EDITOR.getTextFromCodeEditor(1));
-      //      assertEquals(GG, selenium().getText("//body[@class='editbox']"));
-      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      //      Thread.sleep(TestConstants.SLEEP);
+         "Change file\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<Module>\n  <ModulePrefs title=\"Hello World!\" />\n  <Content type=\"html\">\n    <![CDATA[\n    <script type='text/javascript'>\n      function foo(bar, baz) {\n        alert('quux');\n        return bar + baz + 1;\n      }\n    </script>\n    <style type='text/css'>\n      div.border {\n        border: 1px solid black;\n        padding: 3px;\n      }\n      #foo code {\n        font-family: courier, monospace;\n        font-size: 80%;\n        color: #448888;\n      }\n    </style>\n    <p>Hello</p>\n    ]]></Content></Module>";
+      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
+      assertEquals(GG, IDE.EDITOR.getTextFromCodeEditor(8));
 
-      //      // check changed string in Groovy file
-      IDE.EDITOR.selectTab(2);
+      // check changed string in Groovy file
       String Groovy =
          "//simple groovy script\n\nimport javax.ws.rs.Path\nimport javax.ws.rs.GET\nimport javax.ws.rs.PathParam\n\n@Path (\"/\")\npublic class HelloWorld{\n@Get\n@Path (\"helloworld/{name}\")\npublic String hello(PathParam(\"name\")String name){\n  return \"Hello\"+name\n  }\n  }";
-      assertEquals(Groovy, IDE.EDITOR.getTextFromCodeEditor(2));
-
-      //      assertEquals(Groovy, selenium().getText("//body[@class='editbox']"));
-      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      //      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.selectTab(GROOVY_FILE_NAME);
+      assertEquals(Groovy, IDE.EDITOR.getTextFromCodeEditor(9));
 
       // check changed string in HTML file
-      IDE.EDITOR.selectTab(3);
-
       String HTML =
          "Change file\n<html>\n<head>\n  <title>HTML Example</title>\n  <script type='text/javascript'>\n    function foo(bar, baz) {\n      alert('quux');\n      return bar + baz + 1;\n    }\n  </script>\n  <style type='text/css'>\n    div.border {\n      border: 1px solid black;\n      padding: 3px;\n    }\n    #foo code {\n      font-family: courier, monospace;\n      font-size: 80%;\n      color: #448888;\n    }\n  </style>\n</head>\n<body>\n  <p>Hello</p>\n</body>\n</html>";
-      assertEquals(HTML, IDE.EDITOR.getTextFromCodeEditor(3));
-      //      assertEquals(HTML, selenium().getText("//body[@class='editbox']"));
-      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      //      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.selectTab(HTML_FILE_NAME);
+      assertEquals(HTML, IDE.EDITOR.getTextFromCodeEditor(10));
 
       // check changed string in JS file
-      IDE.EDITOR.selectTab(4);
-
       String JS =
-         "Change file\n  //Here you see some JavaScript code. Mess around with it to get\n//acquinted with CodeMirror's features.\n\n// Press enter inside the objects and your new line will \n// intended.\n\nvar keyBindings ={\n  enter:\"newline-and-indent\",\n  tab:\"reindent-selection\",\n  ctrl_z \"undo\",\n  ctrl_y:\"redo\"\n  };\n  var regex =/foo|bar/i;\n  function example (x){\n  var y=44.4;\n  return x+y;\n  }";
-      assertEquals(JS, IDE.EDITOR.getTextFromCodeEditor(4));
-      //      assertEquals(JS, selenium().getText("//body[@class='editbox']"));
-      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      //      Thread.sleep(TestConstants.SLEEP);
+         "var a=5;\n//Here you see some JavaScript code. Mess around with it to get\n//acquinted with CodeMirror's features.\n\n// Press enter inside the objects and your new line will\n// intended.\n\nvar keyBindings ={\n  enter:\"newline-and-indent\",\n  tab:\"reindent-selection\",\n  ctrl_z \"undo\",\n  ctrl_y:\"redo\"\n  };\n  var regex =/foo|bar/i;\n  function example (x){\n  var y=44.4;\n  return x+y;\n  }";
+      IDE.EDITOR.selectTab(JS_FILE_NAME);
+      assertEquals(JS, IDE.EDITOR.getTextFromCodeEditor(11));
 
       // check changed string in TXT file
-      IDE.EDITOR.selectTab(5);
       String TXT = "text content";
-      assertEquals(TXT, IDE.EDITOR.getTextFromCodeEditor(5));
-      //      assertEquals(TXT, selenium().getText("//body[@class='editbox']"));
-      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      //      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.selectTab(TXT_FILE_NAME);
+      assertEquals(TXT, IDE.EDITOR.getTextFromCodeEditor(12));
    }
 
+   /**
+    * Reopened files.
+    * 
+    * @throws InterruptedException
+    * @throws Exception
+    */
    public void reopenFiles() throws InterruptedException, Exception
    {
-      // Open CSS:
       openCss();
-
-      // Open GoogleGadged:
       openGooglegadget();
-
-      //Open Groovy:
       openGroovy();
-
-      //Open HTML:
       openHtml();
-
-      //Open JavaScript:
       openJavaScript();
-
-      //Open Txt:
       openTXT();
-
-      //Open XML:
       openXML();
    }
 
+   /**
+    * Save file and close it.
+    * 
+    * @throws InterruptedException
+    * @throws Exception
+    */
    public void saveAndCloseFile() throws InterruptedException, Exception
    {
       // Save and closeCssFile
-      IDE.EDITOR.selectTab(0);
-      saveCurrentFile();
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.selectTab(CSS_FILE_NAME);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(CSS_FILE_NAME);
+      IDE.EDITOR.closeFile(CSS_FILE_NAME);
 
       // Save and closeGoogleGadgetFile
-      IDE.EDITOR.selectTab(0);
-      saveCurrentFile();
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(GADGET_FILE_NAME);
+      IDE.EDITOR.closeFile(GADGET_FILE_NAME);
 
       // Save and close HTMLFile
-      IDE.EDITOR.selectTab(1);
-      saveCurrentFile();
-      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.selectTab(HTML_FILE_NAME);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(HTML_FILE_NAME);
+      IDE.EDITOR.closeFile(HTML_FILE_NAME);
 
       // Save and closeJsFile
-      IDE.EDITOR.selectTab(1);
-      saveCurrentFile();
-      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.selectTab(JS_FILE_NAME);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(JS_FILE_NAME);
+      IDE.EDITOR.closeFile(JS_FILE_NAME);
 
       //
       //      // Save and closeXMLFile
-      IDE.EDITOR.selectTab(2);
-      saveCurrentFile();
-      IDE.EDITOR.closeFile(2);
+      IDE.EDITOR.selectTab(XML_FILE_NAME);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(XML_FILE_NAME);
+      IDE.EDITOR.closeFile(XML_FILE_NAME);
 
       //      // close GroovyFile
-      IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.closeFile(0);
-      //      Thread.sleep(500);
-      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      //**********TODO**********
-      //      checkSaveDialog();
-      //
-      //      // close TXTFile
-      IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.closeFile(0);
-      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      //*****TODO************
-      //      checkSaveDialog();
-      //      assertFalse(selenium().isElementPresent("//body[@class='editbox']"));
-
+      IDE.EDITOR.closeFile(GROOVY_FILE_NAME);
+      IDE.EDITOR.closeFile(TXT_FILE_NAME);
    }
 
+   /**
+    * Change files' content.
+    * 
+    * @throws Exception
+    */
    public void changeFiles() throws Exception
    {
       // changeCssFile
-      IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.typeTextIntoEditor(0, "Change file");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      assertEquals(IDE.EDITOR.getTabTitle(0), CSS_FILE_NAME + " *");
+      assertFalse(IDE.EDITOR.isFileContentChanged(CSS_FILE_NAME));
+      IDE.EDITOR.selectTab(CSS_FILE_NAME);
+      IDE.EDITOR.typeTextIntoEditor(0, "Change file\n");
+      IDE.EDITOR.waitFileContentModificationMark(CSS_FILE_NAME);
 
       // changeGoogleGadgetFile
-      IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.typeTextIntoEditor(1, "Change file");
-      IDE.EDITOR.typeTextIntoEditor(1, Keys.ENTER.toString());
-      assertEquals(IDE.EDITOR.getTabTitle(1), GADGET_FILE_NAME + " *");
+      assertFalse(IDE.EDITOR.isFileContentChanged(GADGET_FILE_NAME));
+      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
+      IDE.EDITOR.typeTextIntoEditor(1, "Change file\n");
+      IDE.EDITOR.waitFileContentModificationMark(GADGET_FILE_NAME);
 
       // changeHTMLFile
-      IDE.EDITOR.selectTab(3);
-      IDE.EDITOR.typeTextIntoEditor(3, "Change file");
-      IDE.EDITOR.typeTextIntoEditor(3, Keys.ENTER.toString());
-      assertEquals(IDE.EDITOR.getTabTitle(3), HTML_FILE_NAME + " *");
+      assertFalse(IDE.EDITOR.isFileContentChanged(HTML_FILE_NAME));
+      IDE.EDITOR.selectTab(HTML_FILE_NAME);
+      IDE.EDITOR.typeTextIntoEditor(3, "Change file\n");
+      IDE.EDITOR.waitFileContentModificationMark(HTML_FILE_NAME);
 
       // changeJavaScriptFile
-      IDE.EDITOR.selectTab(4);
-      IDE.EDITOR.typeTextIntoEditor(4, "Change file");
-      IDE.EDITOR.typeTextIntoEditor(4, Keys.ENTER.toString());
-      assertEquals(IDE.EDITOR.getTabTitle(4), JS_FILE_NAME + " *");
+      assertFalse(IDE.EDITOR.isFileContentChanged(JS_FILE_NAME));
+      IDE.EDITOR.selectTab(JS_FILE_NAME);
+      IDE.EDITOR.typeTextIntoEditor(4, "var a=5;\n");
+      IDE.EDITOR.waitFileContentModificationMark(JS_FILE_NAME);
 
       // changeXMLFile
-      IDE.EDITOR.selectTab(6);
-      IDE.EDITOR.typeTextIntoEditor(6, "Change file");
-      IDE.EDITOR.typeTextIntoEditor(6, Keys.ENTER.toString());
-      assertEquals(IDE.EDITOR.getTabTitle(6), XML_FILE_NAME + " *");
-
+      assertFalse(IDE.EDITOR.isFileContentChanged(XML_FILE_NAME));
+      IDE.EDITOR.selectTab(XML_FILE_NAME);
+      IDE.EDITOR.typeTextIntoEditor(6, "Change file\n");
+      IDE.EDITOR.waitFileContentModificationMark(XML_FILE_NAME);
    }
 
    protected void clickTabAndCheckSaveButton() throws Exception
    {
-      IDE.EDITOR.selectTab(0);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.EDITOR.selectTab(CSS_FILE_NAME);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
 
-      IDE.EDITOR.selectTab(1);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.EDITOR.selectTab(HTML_FILE_NAME);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
 
-      IDE.EDITOR.selectTab(2);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
 
-      IDE.EDITOR.selectTab(3);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.EDITOR.selectTab(GROOVY_FILE_NAME);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
 
-      IDE.EDITOR.selectTab(4);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.EDITOR.selectTab(JS_FILE_NAME);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
 
-      IDE.EDITOR.selectTab(5);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.EDITOR.selectTab(TXT_FILE_NAME);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
 
-      IDE.EDITOR.selectTab(6);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+      IDE.EDITOR.selectTab(XML_FILE_NAME);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
    }
 
    public void openXML() throws InterruptedException, Exception
    {
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + XML_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(6);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
    }
 
    public void openTXT() throws InterruptedException, Exception
    {
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + TXT_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(5);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
    }
 
    public void openJavaScript() throws InterruptedException, Exception
    {
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + JS_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(4);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
    }
 
    public void openHtml() throws InterruptedException, Exception
    {
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + HTML_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(3);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
    }
 
    public void openGroovy() throws InterruptedException, Exception
    {
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + GROOVY_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(2);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
    }
 
    public void openGooglegadget() throws InterruptedException, Exception
    {
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + GADGET_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
    }
 
    public void openCss() throws InterruptedException, Exception
    {
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + CSS_FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(0);
-      //Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + CSS_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
    }
-
-   //****************TODO fix  Task IDE-445
-   public void checkSaveDialog() throws InterruptedException
-   {
-      if (selenium().isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member/"))
-      {
-         selenium().click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
-         Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      }
-      else
-      {
-         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      }
-   }
-
 }

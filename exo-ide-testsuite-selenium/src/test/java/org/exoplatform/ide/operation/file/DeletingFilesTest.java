@@ -19,14 +19,16 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * IDE-11: Deleting files. 
@@ -40,7 +42,7 @@ import org.junit.Test;
 public class DeletingFilesTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = DeletingFilesTest.class.getSimpleName();
+   private static String PROJECT = DeletingFilesTest.class.getSimpleName();
 
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
@@ -54,41 +56,22 @@ public class DeletingFilesTest extends BaseTest
 
    private static String TEXT_FILE_NAME = "newTxtFile.txt";
 
-   private static String CUR_TIME = String.valueOf(System.currentTimeMillis());
-
-   private final static String STORAGE_URL = WS_URL + FOLDER_NAME + "/";
-
-   private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
-
-   private static String HTML_FILE_URL = STORAGE_URL + CUR_TIME + HTML_FILE_NAME;
-
-   private static String GROOVY_FILE_URL = STORAGE_URL + CUR_TIME + GROOVY_FILE_NAME;
-
-   private static String GOOGLE_GADGET_FILE_URL = STORAGE_URL + CUR_TIME + GOOGLE_GADGET_FILE_NAME;
-
-   private static String JAVA_SCRIPT_FILE_URL = STORAGE_URL + CUR_TIME + JAVA_SCRIPT_FILE_NAME;
-
-   private static String XML_FILE_URL = STORAGE_URL + CUR_TIME + XML_FILE_NAME;
-
-   private static String TEXT_FILE_URL = STORAGE_URL + CUR_TIME + TEXT_FILE_NAME;
-
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, HTML_FILE_URL);
-         VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, GROOVY_FILE_URL);
-         VirtualFileSystemUtils.put(PATH + GOOGLE_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, GOOGLE_GADGET_FILE_URL);
-         VirtualFileSystemUtils
-            .put(PATH + JAVA_SCRIPT_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, JAVA_SCRIPT_FILE_URL);
-         VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.APPLICATION_XML, XML_FILE_URL);
-         VirtualFileSystemUtils.put(PATH + TEXT_FILE_NAME, MimeType.TEXT_PLAIN, TEXT_FILE_URL);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFile(link, HTML_FILE_NAME, MimeType.TEXT_HTML, "");
+         VirtualFileSystemUtils.createFile(link, GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, "");
+         VirtualFileSystemUtils.createFile(link, GOOGLE_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, "");
+         VirtualFileSystemUtils.createFile(link, JAVA_SCRIPT_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, "");
+         VirtualFileSystemUtils.createFile(link, XML_FILE_NAME, MimeType.APPLICATION_XML, "");
+         VirtualFileSystemUtils.createFile(link, TEXT_FILE_NAME, MimeType.TEXT_PLAIN, "");
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -97,11 +80,10 @@ public class DeletingFilesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(STORAGE_URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -109,38 +91,44 @@ public class DeletingFilesTest extends BaseTest
    @Test
    public void testDeletingFile() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_FILE_NAME);
 
-      IDE.WORKSPACE.doubleClickOnFile(GROOVY_FILE_URL);
-      IDE.NAVIGATION.deleteSelectedItems();
-      assertEquals(404, VirtualFileSystemUtils.get(GROOVY_FILE_URL).getStatusCode());
-      assertFalse(selenium().isTextPresent(GROOVY_FILE_NAME));
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + GROOVY_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + GROOVY_FILE_NAME).getStatusCode());
 
-      IDE.WORKSPACE.doubleClickOnFile(GOOGLE_GADGET_FILE_URL);
-      IDE.NAVIGATION.deleteSelectedItems();
-      assertEquals(404, VirtualFileSystemUtils.get(GOOGLE_GADGET_FILE_URL).getStatusCode());
-      assertFalse(selenium().isTextPresent(CUR_TIME + GOOGLE_GADGET_FILE_NAME));
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GOOGLE_GADGET_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GOOGLE_GADGET_FILE_NAME);
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + GOOGLE_GADGET_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + GOOGLE_GADGET_FILE_NAME).getStatusCode());
 
-      IDE.WORKSPACE.doubleClickOnFile(JAVA_SCRIPT_FILE_URL);
-      IDE.NAVIGATION.deleteSelectedItems();
-      assertEquals(404, VirtualFileSystemUtils.get(JAVA_SCRIPT_FILE_URL).getStatusCode());
-      assertFalse(selenium().isTextPresent(CUR_TIME + JAVA_SCRIPT_FILE_NAME));
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JAVA_SCRIPT_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JAVA_SCRIPT_FILE_NAME);
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + JAVA_SCRIPT_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + JAVA_SCRIPT_FILE_NAME).getStatusCode());
 
-      IDE.WORKSPACE.doubleClickOnFile(XML_FILE_URL);
-      IDE.NAVIGATION.deleteSelectedItems();
-      assertEquals(404, VirtualFileSystemUtils.get(XML_FILE_URL).getStatusCode());
-      assertFalse(selenium().isTextPresent(CUR_TIME + XML_FILE_NAME));
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + XML_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + XML_FILE_NAME).getStatusCode());
 
-      IDE.WORKSPACE.doubleClickOnFile(TEXT_FILE_URL);
-      IDE.NAVIGATION.deleteSelectedItems();
-      assertEquals(404, VirtualFileSystemUtils.get(TEXT_FILE_URL).getStatusCode());
-      assertFalse(selenium().isTextPresent(CUR_TIME + TEXT_FILE_NAME));
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEXT_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEXT_FILE_NAME);
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + TEXT_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + TEXT_FILE_NAME).getStatusCode());
 
-      IDE.WORKSPACE.doubleClickOnFile(HTML_FILE_URL);
-      IDE.NAVIGATION.deleteSelectedItems();
-      assertEquals(404, VirtualFileSystemUtils.get(HTML_FILE_URL).getStatusCode());
-      assertFalse(selenium().isTextPresent(CUR_TIME + HTML_FILE_NAME));
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + HTML_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + HTML_FILE_NAME).getStatusCode());
    }
-
 }

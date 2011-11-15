@@ -139,8 +139,9 @@ public class CreateProject extends AbstractTestModule
     * Set project's name (type to input).
     * 
     * @param name project's name
+    * @throws InterruptedException 
     */
-   public void setProjectName(String name)
+   public void setProjectName(String name) throws InterruptedException
    {
       IDE().INPUT.typeToElement(projectNameField, name, true);
    }

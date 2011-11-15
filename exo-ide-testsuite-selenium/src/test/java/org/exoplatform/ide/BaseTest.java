@@ -115,7 +115,7 @@ public abstract class BaseTest
    /**
     * Default workspace URL.
     */
-   public static final String WS_URL = ENTRY_POINT_URL + WS_NAME + "/";
+   public static final String WS_URL = ENTRY_POINT_URL + WS_NAME + "/" + USER_NAME + "/";
 
    protected static final String REGISTER_IN_PORTAL = BASE_URL + "portal/private";
 
@@ -308,7 +308,8 @@ public abstract class BaseTest
 
       SaveFileUtils.checkSaveAsDialogAndSave(name, true);
    }
-
+   
+   @Deprecated
    protected void saveCurrentFile() throws Exception
    {
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);

@@ -118,6 +118,27 @@ public class ProjectExplorer extends AbstractTestModule
       });
    }
 
+   public void waitForItemNotPresent(final String path) throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               driver().findElement(By.id(getItemId(path)));
+               return false;
+            }
+            catch (Exception e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
    /**
     * Select item in project explorer view.
     * 

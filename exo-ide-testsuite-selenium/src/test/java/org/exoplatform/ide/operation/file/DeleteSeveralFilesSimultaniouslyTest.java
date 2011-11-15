@@ -19,21 +19,24 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Map;
+
 public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = DeleteSeveralFilesSimultaniouslyTest.class.getSimpleName() + " - " + System.currentTimeMillis();
+   private static String PROJECT = DeleteSeveralFilesSimultaniouslyTest.class.getSimpleName();
 
    private static String HTML_FILE_NAME = "newHtmlFile.html";
 
@@ -49,23 +52,15 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-      String url = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
       try
       {
-         VirtualFileSystemUtils.mkcol(url);
-         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, 
-            WS_URL + FOLDER_NAME + "/in test.html");
-         VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE,
-            WS_URL + FOLDER_NAME + "/in test.groovy");
-         VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.APPLICATION_XML, 
-            WS_URL + FOLDER_NAME + "/in test.xml");
-         
-         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML,
-            WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);         
-         VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE,
-            WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.APPLICATION_XML,
-            WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, HTML_FILE_NAME, MimeType.TEXT_HTML, PATH + HTML_FILE_NAME);
+         VirtualFileSystemUtils.createFileFromLocal(link, GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, PATH
+            + GROOVY_FILE_NAME);
+         VirtualFileSystemUtils
+            .createFileFromLocal(link, XML_FILE_NAME, MimeType.APPLICATION_XML, PATH + XML_FILE_NAME);
       }
       catch (Exception e)
       {
@@ -81,7 +76,7 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -95,34 +90,29 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
    @Test
    public void testDeleteSeveralFilesSimultaniously() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_FILE_NAME);
 
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
-      IDE.NAVIGATION.deleteSelectedItems();      
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME).getStatusCode());
-      
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + GROOVY_FILE_NAME);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + GROOVY_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + GROOVY_FILE_NAME).getStatusCode());
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
-      IDE.NAVIGATION.deleteSelectedItems();
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME).getStatusCode());
-      
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
-      IDE.NAVIGATION.deleteSelectedItems();
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME).getStatusCode());
-      
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
-      IDE.NAVIGATION.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + XML_FILE_NAME);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + XML_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + XML_FILE_NAME).getStatusCode());
+
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + HTML_FILE_NAME);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + HTML_FILE_NAME);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + HTML_FILE_NAME).getStatusCode());
    }
-
 }

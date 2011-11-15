@@ -43,7 +43,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Editor extends AbstractTestModule
 {
    public static final String MODIFIED_MARK = "*";
-   
+
    public interface Locators
    {
       /**
@@ -66,8 +66,8 @@ public class Editor extends AbstractTestModule
 
       String ACTIVE_EDITOR_TAB_LOCATOR = "//div[@panel-id='editor' and @is-active='true']";
 
-      String SELECTED_EDITOR_TAB_LOCATOR =
-         "//div[contains(@class, 'gwt-TabLayoutPanelTab-selected') and contains(text(), '%s')]";
+      String SELECTED_EDITOR_TAB_LOCATOR = EDITOR_TABSET_LOCATOR
+         + "//div[contains(@class, 'gwt-TabLayoutPanelTab-selected') and contains(., '%s')]";
 
       String DEBUG_EDITOR_ACTIVE_FILE_URL = "debug-editor-active-file-url";
 
@@ -77,15 +77,18 @@ public class Editor extends AbstractTestModule
 
       String SOURCE_BUTTON_ID = "SourceButtonID";
 
+      String TAB_TITLE = "//table[@class='tabTitleTable' and contains(., '%s')]";
+
       String CLOSE_BUTTON_LOCATOR = "//div[@button-name='close-tab']";
 
       String VIEW_ID_ATTRIBUTE = "view-id";
 
-      String TITLE_LOCATOR = "//span[@title='%s']";
+      String TITLE_SPAN_LOCATOR = "//span[@title='%s']";
 
       String LINE_NUMBER_CSS_LOCATOR = "div[class='CodeMirror-line-numbers']";
 
       String ACTIVE_FILE_ID = "debug-editor-active-file-url";
+
    }
 
    private WebElement editor;
@@ -118,12 +121,24 @@ public class Editor extends AbstractTestModule
          editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR + "//span",
             tabIndex)));
       tab.click();
+      //TODO replace with wait for condition
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+   }
+
+   public void selectTab(String fileName) throws Exception
+   {
+      WebElement tab =
+         editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR,
+            fileName)));
+      tab.click();
+      //TODO replace with wait for condition
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
    public void saveAs(int tabIndex, String name) throws Exception
    {
       selectTab(tabIndex);
+
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
       IDE().ASK_FOR_VALUE_DIALOG.waitForPresent();
       IDE().ASK_FOR_VALUE_DIALOG.setValue(name);
@@ -145,6 +160,14 @@ public class Editor extends AbstractTestModule
       closeButton.click();
    }
 
+   public void clickCloseEditorButton(String tabTitle) throws Exception
+   {
+      WebElement closeButton =
+         editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_TITLE, tabTitle)
+            + Locators.CLOSE_BUTTON_LOCATOR));
+      closeButton.click();
+   }
+
    /**
     * Closes file 
     * 
@@ -153,25 +176,31 @@ public class Editor extends AbstractTestModule
    public void closeFile(int tabIndex) throws Exception
    {
       selectTab(tabIndex);
-
-      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
+      String activeFile =
+         (selenium().getText(Locators.ACTIVE_FILE_ID) == null) ? "" : selenium().getText(Locators.ACTIVE_FILE_ID);
       clickCloseEditorButton(tabIndex);
+      waitActiveFileChanged(activeFile);
+   }
 
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+   public void closeFile(String fileName) throws Exception
+   {
+      selectTab(fileName);
+      String activeFile =
+         (selenium().getText(Locators.ACTIVE_FILE_ID) == null) ? "" : selenium().getText(Locators.ACTIVE_FILE_ID);
+      clickCloseEditorButton(fileName);
+      waitActiveFileChanged(activeFile);
+      waitTabNotPresent(fileName);
+   }
+
+   private void waitActiveFileChanged(final String activeFile)
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
          public Boolean apply(WebDriver input)
          {
-            try
-            {
-               input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
-               return false;
-            }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
+            return !activeFile.equals(selenium().getText(Locators.ACTIVE_FILE_ID));
          }
       });
    }
@@ -238,7 +267,8 @@ public class Editor extends AbstractTestModule
    public boolean isFileContentChanged(String title)
    {
       WebElement tab =
-         editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TITLE_LOCATOR, title)));
+         editor
+            .findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
       return tab.getText().trim().endsWith(MODIFIED_MARK);
    }
 
@@ -259,12 +289,35 @@ public class Editor extends AbstractTestModule
             {
                WebElement tab =
                   editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR
-                     + String.format(Locators.TITLE_LOCATOR, title)));
+                     + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
                return tab.getText().trim().endsWith(MODIFIED_MARK);
             }
             catch (NoSuchElementException e)
             {
                return false;
+            }
+         }
+      });
+   }
+
+   public void waitNoContentModificationMark(final String title)
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               WebElement tab =
+                  editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR
+                     + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
+               return !tab.getText().trim().endsWith(MODIFIED_MARK);
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
             }
          }
       });
@@ -343,7 +396,7 @@ public class Editor extends AbstractTestModule
    {
       try
       {
-         return editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_LOCATOR)) != null;
+         return editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR)) != null;
       }
       catch (NoSuchElementException e)
       {
@@ -600,6 +653,29 @@ public class Editor extends AbstractTestModule
    public void waitTabNotPresent(int tabIndex) throws Exception
    {
       final String tab = Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex);
+
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(tab));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   public void waitTabNotPresent(String fileName) throws Exception
+   {
+      final String tab = String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR, fileName);
 
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
       {

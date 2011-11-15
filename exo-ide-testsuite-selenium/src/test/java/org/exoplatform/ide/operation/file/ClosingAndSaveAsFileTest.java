@@ -49,7 +49,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT + "/");
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {

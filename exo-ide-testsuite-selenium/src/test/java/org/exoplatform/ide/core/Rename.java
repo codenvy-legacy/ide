@@ -50,6 +50,7 @@ public class Rename extends AbstractTestModule
       String MIME_TYPE_ID = "ideRenameItemFormMimeTypeField";
 
       String WARNING_MESSAGE_CLASS_NAME = "exo-rename-warning-msg";
+
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -82,7 +83,15 @@ public class Rename extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return view != null && view.isDisplayed();
+            try
+            {
+               WebElement view = input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return (view != null && view.isDisplayed());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
          }
       });
    }
@@ -126,8 +135,9 @@ public class Rename extends AbstractTestModule
     * Sets new item's name.
     * 
     * @param newName name to rename to
+    * @throws InterruptedException 
     */
-   public void setNewName(String newName)
+   public void setNewName(String newName) throws InterruptedException
    {
       IDE().INPUT.typeToElement(newNameField, newName, true);
    }
@@ -146,10 +156,11 @@ public class Rename extends AbstractTestModule
     * Sets the new file's mime type.
     * 
     * @param mimeType mime type to change to
+    * @throws InterruptedException 
     */
-   public void setMimeType(String mimeType)
+   public void setMimeType(String mimeType) throws InterruptedException
    {
-      IDE().INPUT.typeToElement(mimeTypeField, mimeType, true);
+      IDE().INPUT.setComboboxValue(mimeTypeField, mimeType);
    }
 
    /**

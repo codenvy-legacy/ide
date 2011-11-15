@@ -140,11 +140,11 @@ public class SaveAllFilesTest extends BaseTest
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + SAVED_XML);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + SAVED_XML);
-      IDE.EDITOR.typeTextIntoEditor(3, "<root>admin</root>");
+      IDE.EDITOR.typeTextIntoEditor(4, "<root>admin</root>");
       
       IDE.WORKSPACE.doubleClickOnFile(PROJECT + "/" + FOLDER_2 + "/" + SAVED_GROOVY);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_2 + "/" + SAVED_GROOVY);
-      IDE.EDITOR.typeTextIntoEditor(4, "changed content of file");
+      IDE.EDITOR.typeTextIntoEditor(5, "changed content of file");
 
       /*
        * 8. Save All command must be enabled.

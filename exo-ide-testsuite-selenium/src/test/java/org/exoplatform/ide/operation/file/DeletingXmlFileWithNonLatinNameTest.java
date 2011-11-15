@@ -22,14 +22,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * IDE-49: Deleting XML file with non-latin name.
@@ -43,24 +43,24 @@ import java.net.URLEncoder;
 //IDE-49: Deleting XML file with non-latin name
 public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
 {
-   private static final String FILE_NAME = System.currentTimeMillis() + "ТестовыйФайл.xml";
+   private static final String PROJECT = DeletingXmlFileWithNonLatinNameTest.class.getSimpleName();
 
-   private static final String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private static final String FILE_NAME = "ТестовыйФайл.xml";
 
-   private static String XML_CONTENT =
-      "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n" + "<settings>param</settings>\n" + "<bean>\n"
-         + "<name>MineBean</name>\n" + "</bean>\n" + "</test>";
+   private static String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n"
+      + "<settings>param</settings>\n" + "<bean>\n" + "<name>MineBean</name>\n" + "</bean>\n" + "</test>";
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.put(XML_CONTENT.getBytes(), MimeType.TEXT_XML, STORAGE_URL + URLEncoder.encode(FILE_NAME,"UTF-8"));
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFile(link, URLEncoder.encode(FILE_NAME, "UTF-8"), MimeType.TEXT_XML, XML_CONTENT);
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -69,34 +69,26 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(STORAGE_URL + URLEncoder.encode(FILE_NAME,"UTF-8"));
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
-   
-   /**
-    * Test added to Ignore, because at the moment not solved a problem with encoding Cyrillic characters to URL.
-    * For example: create new file with cyrillic name, save him, and get URL in IDE. In URL IDE we  shall see 
-    * encoding characters in file name
-    * @throws Exception
-    */
-   @Ignore
    @Test
    public void testDeletingXmlFileWithNonLatinName() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      
-      IDE.WORKSPACE.waitForItem(WS_URL + FILE_NAME);
-      IDE.WORKSPACE.selectItem(WS_URL + FILE_NAME);
-      IDE.NAVIGATION.deleteSelectedItems();
-      IDE.WORKSPACE.waitForItemNotPresent(WS_URL + FILE_NAME);
-      
-      assertEquals(404, VirtualFileSystemUtils.get(STORAGE_URL + URLEncoder.encode(FILE_NAME,"UTF-8")).getStatusCode());
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
+
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FILE_NAME);
+
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + URLEncoder.encode(FILE_NAME, "UTF-8"))
+         .getStatusCode());
    }
-   
+
 }

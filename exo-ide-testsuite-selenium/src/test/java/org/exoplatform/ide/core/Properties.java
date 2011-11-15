@@ -175,8 +175,8 @@ public class Properties extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return (propertiesView != null && propertiesView.isDisplayed() && contentLenghtProperty != null && contentLenghtProperty
-               .isDisplayed());
+            return (propertiesView != null && propertiesView.isDisplayed() && contentLenghtProperty != null
+               && contentLenghtProperty.isDisplayed() && nameProperty != null && nameProperty.isDisplayed());
          }
       });
    }

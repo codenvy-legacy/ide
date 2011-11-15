@@ -141,7 +141,6 @@ public class RenameClosedFileTest extends BaseTest
 
       IDE.PROPERTIES.openProperties();
       assertEquals(MimeType.TEXT_XML, IDE.PROPERTIES.getContentType());
-
       IDE.PROPERTIES.closeProperties();
       IDE.EDITOR.closeFile(1);
    }
