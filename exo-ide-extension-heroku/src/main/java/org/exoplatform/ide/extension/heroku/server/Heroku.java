@@ -514,8 +514,6 @@ public class Heroku
       if (name == null || name.isEmpty())
       {
          name = detectAppName(workDir);
-         if (name == null || name.isEmpty())
-            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -570,8 +568,6 @@ public class Heroku
       if (name == null || name.isEmpty())
       {
          name = detectAppName(workDir);
-         if (name == null || name.isEmpty())
-            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -688,8 +684,6 @@ public class Heroku
       if (name == null || name.isEmpty())
       {
          name = detectAppName(workDir);
-         if (name == null || name.isEmpty())
-            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -783,8 +777,6 @@ public class Heroku
       if (name == null || name.isEmpty())
       {
          name = detectAppName(workDir);
-         if (name == null || name.isEmpty())
-            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -867,8 +859,6 @@ public class Heroku
       if (name == null || name.isEmpty())
       {
          name = detectAppName(workDir);
-         if (name == null || name.isEmpty())
-            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -1027,8 +1017,6 @@ public class Heroku
       if (name == null || name.isEmpty())
       {
          name = detectAppName(workDir);
-         if (name == null || name.isEmpty())
-            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -1137,8 +1125,6 @@ public class Heroku
       if (name == null || name.isEmpty())
       {
          name = detectAppName(workDir);
-         if (name == null || name.isEmpty())
-            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -1239,24 +1225,15 @@ public class Heroku
     */
    private static String detectAppName(File workDir)
    {
+      String app = null;
       if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
       {
          GitConnection git = null;
+         List<Remote> remotes;
          try
          {
             git = GitConnectionFactory.getInstance().getConnection(workDir, null);
-            RemoteListRequest request = new RemoteListRequest(null, true);
-            List<Remote> remoteList = git.remoteList(request);
-            String detectedApp = null;
-            for (Remote r : remoteList)
-            {
-               if (r.getUrl().startsWith("git@heroku.com:"))
-               {
-                  if ((detectedApp = extractAppName(r)) != null)
-                     break;
-               }
-            }
-            return detectedApp;
+            remotes = git.remoteList(new RemoteListRequest(null, true));
          }
          catch (GitException ge)
          {
@@ -1267,8 +1244,20 @@ public class Heroku
             if (git != null)
                git.close();
          }
+         for (Iterator<Remote> iter = remotes.iterator(); iter.hasNext() && app == null;)
+         {
+            Remote r = iter.next();
+            if (r.getUrl().startsWith("git@heroku.com:"))
+            {
+               app = extractAppName(r);
+            }
+         }
       }
-      return null;
+      if (app == null || app.isEmpty())
+      {
+         throw new RuntimeException("Not a Heroku application. Please select root folder of Heroku project. ");
+      }
+      return app;
    }
 
    private static String extractAppName(Remote gitRemote)
