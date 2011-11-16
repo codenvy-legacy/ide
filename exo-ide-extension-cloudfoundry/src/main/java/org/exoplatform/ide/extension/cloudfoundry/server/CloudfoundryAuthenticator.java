@@ -29,7 +29,9 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
 
@@ -237,15 +239,19 @@ public class CloudfoundryAuthenticator
       writeFile(vfs, getConfigParent(vfs), "vmc_token", w.toString());
    }
    
-   private Item getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
+   private Folder getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
    {
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String cloudFoundryPath = config + user + "/cloud_foundry";
       VirtualFileSystemInfo info = vfs.getInfo();
-      Item cloudFoundry = null;
+      Folder cloudFoundry = null;
       try
       {
-         cloudFoundry = vfs.getItemByPath(cloudFoundryPath, null, PropertyFilter.NONE_FILTER);
+         Item item = vfs.getItemByPath(cloudFoundryPath, null, PropertyFilter.NONE_FILTER);
+         if (ItemType.FOLDER != item.getItemType())
+         {
+            throw new RuntimeException("Item " + cloudFoundryPath + " is not a Folder. ");
+         }
       }
       catch (ItemNotFoundException e)
       {
