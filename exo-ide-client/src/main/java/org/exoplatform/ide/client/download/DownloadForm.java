@@ -80,7 +80,7 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
    {
       if (selectedItem instanceof FileModel)
       {
-         downloadResource(selectedItem.getLinkByRelation(Link.REL_CONTENT).getHref());
+         downloadResource(selectedItem.getLinkByRelation(Link.REL_DOWNLOAD_FILE).getHref());
       }
       else
       {
@@ -92,7 +92,7 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
    {
       if (selectedItem instanceof FolderModel || selectedItem instanceof ProjectModel)
       {
-         downloadResource(selectedItem.getLinkByRelation(Link.REL_EXPORT).getHref());
+         downloadResource(selectedItem.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref());
       }
       else
       {

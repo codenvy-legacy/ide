@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.uploadzip;
 
+import com.google.gwt.user.client.ui.CheckBox;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -61,7 +63,7 @@ public class UploadZipView extends ViewImpl implements
    /**
     * Initial height of this view.
     */
-   private static final int HEIGHT = 145;
+   private static final int HEIGHT = 165;
 
    private static final String UPLOAD_FOLDER_TITLE = IDE.UPLOAD_CONSTANT.uploadFolderTitle();
 
@@ -88,6 +90,9 @@ public class UploadZipView extends ViewImpl implements
 
    @UiField
    ImageButton cancelButton;
+   
+   @UiField
+   CheckBox overwriteField;
    
    private Hidden overwriteHiddenField;
 
@@ -150,6 +155,15 @@ public class UploadZipView extends ViewImpl implements
       overwriteHiddenField.setValue(String.valueOf(overwrite));
       if (postFieldsPanel.getWidgetIndex(overwriteHiddenField) == -1)
          postFieldsPanel.add(overwriteHiddenField);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display#getOverwriteAllField()
+    */
+   @Override
+   public HasValue<Boolean> getOverwriteAllField()
+   {
+      return overwriteField;
    }
 
 }

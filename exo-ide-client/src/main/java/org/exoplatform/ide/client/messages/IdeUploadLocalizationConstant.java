@@ -103,5 +103,11 @@ public interface IdeUploadLocalizationConstant extends Constants
    
    @Key("upload.overwrite.ask")
    String uploadOverwriteAsk();
+   
+   /*
+    * UploadZipView
+    */
+   @Key("upload.overwriteAll.label")
+   String uploadOverwriteAllLabel();
 
 }

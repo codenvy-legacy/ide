@@ -17,9 +17,12 @@
       }
 
       .spacing {
-      margin-top: 20px;
       margin-left: 15px;
       margin-right: 15px;
+      }
+      
+      .spacingTop {
+      margin-top: 20px;
       }
 
       .center {
@@ -40,8 +43,8 @@
 
    <g:LayoutPanel>
       <g:layer top="0" bottom="40px">
-         <g:DockLayoutPanel unit="PX" height="60px" addStyleNames="{style.spacing}">
-            <g:north size="30">
+         <g:DockLayoutPanel unit="PX" height="50px" addStyleNames="{style.spacing} {style.spacingTop}">
+            <g:north size="20">
                <f:Label value="{uploadLocale.folderToUpload}"></f:Label>
             </g:north>
             <g:center>
@@ -61,6 +64,12 @@
                </g:AbsolutePanel>
             </g:east>
          </g:DockLayoutPanel>
+      </g:layer>
+      
+      <g:layer top="70px" bottom="40px">
+         <g:FlowPanel width="100%" addStyleNames="{style.spacing}">
+            <g:CheckBox ui:field="overwriteField" text="{uploadLocale.uploadOverwriteAllLabel}"></g:CheckBox>
+         </g:FlowPanel>
       </g:layer>
 
       <g:layer height="40px" bottom="0">

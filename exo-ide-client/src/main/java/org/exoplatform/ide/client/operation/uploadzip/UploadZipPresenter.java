@@ -78,6 +78,8 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       HasFileSelectedHandler getFileUploadInput();
 
       HasValue<String> getFileNameField();
+      
+      HasValue<Boolean> getOverwriteAllField();
 
       void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType);
 
@@ -124,6 +126,8 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
          public void onClick(ClickEvent event)
          {
             display.getUploadForm().setAction(getUploadUrl(selectedItems.get(0)));
+            //server handle only hidden overwrite field, but not form check box item "Overwrite"
+            display.setOverwriteHiddedField(display.getOverwriteAllField().getValue());
             display.getUploadForm().submit();
          }
       });
