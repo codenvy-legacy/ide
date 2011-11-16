@@ -69,7 +69,7 @@
       <dependency>
          <groupId>org.exoplatform</groupId>
          <artifactId>user-service</artifactId>
-         <version>1.0-Alpha02-SNAPSHOT</version>
+         <version>1.0-Alpha02</version>
          <exclusions>
             <exclusion>
                <groupId>commons-collections</groupId>
