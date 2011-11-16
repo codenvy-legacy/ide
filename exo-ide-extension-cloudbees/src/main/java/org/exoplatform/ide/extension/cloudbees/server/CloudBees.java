@@ -37,7 +37,9 @@ import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
 
@@ -457,11 +459,11 @@ public class CloudBees
    private void writeCredentials(CloudBeesCredentials credentials) throws VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
-      Item cloudBees = getConfigParent(vfs);
+      Folder cloudBees = getConfigParent(vfs);
       try
       {
          Item credentialsFile =
-            vfs.getItemByPath(cloudBees.getPath() + "/cloudbees-credentials", null, PropertyFilter.NONE_FILTER);
+            vfs.getItemByPath(cloudBees.createPath("cloudbees-credentials"), null, PropertyFilter.NONE_FILTER);
          InputStream newcontent =
             new ByteArrayInputStream((credentials.getApiKey() + "\n" + credentials.getSecret()).getBytes());
          vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newcontent, null);
@@ -488,19 +490,24 @@ public class CloudBees
       vfs.delete(credentialsFile.getId(), null);
    }
 
-   private Item getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
+   private Folder getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
    {
       String user = ConversationState.getCurrent().getIdentity().getUserId();
-      String cloudFoundryPath = config + user + "/cloud_bees";
+      String cloudBeesPath = config + user + "/cloud_bees";
       VirtualFileSystemInfo info = vfs.getInfo();
-      Item cloudBees = null;
+      Folder cloudBees = null;
       try
       {
-         cloudBees = vfs.getItemByPath(cloudFoundryPath, null, PropertyFilter.NONE_FILTER);
+         Item item = vfs.getItemByPath(cloudBeesPath, null, PropertyFilter.NONE_FILTER);
+         if (ItemType.FOLDER != item.getItemType())
+         {
+            throw new RuntimeException("Item " + cloudBeesPath + " is not a Folder. ");
+         }
+         cloudBees = (Folder)item;
       }
       catch (ItemNotFoundException e)
       {
-         cloudBees = vfs.createFolder(info.getRoot().getId(), cloudFoundryPath.substring(1));
+         cloudBees = vfs.createFolder(info.getRoot().getId(), cloudBeesPath.substring(1));
       }
       return cloudBees;
    }
