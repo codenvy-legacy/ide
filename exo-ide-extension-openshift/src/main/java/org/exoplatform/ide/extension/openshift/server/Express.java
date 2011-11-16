@@ -623,11 +623,11 @@ public class Express
    private void writeCredentials(RHCloudCredentials credentials) throws VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
-      Item expressConfig = getConfigParent(vfs);
+      Folder expressConfig = getConfigParent(vfs);
       try
       {
          Item credentialsFile =
-            vfs.getItemByPath(expressConfig.getPath() + "/rhcloud-credentials", null, PropertyFilter.NONE_FILTER);
+            vfs.getItemByPath(expressConfig.createPath("rhcloud-credentials"), null, PropertyFilter.NONE_FILTER);
          InputStream newcontent =
             new ByteArrayInputStream((credentials.getRhlogin() + "\n" + credentials.getPassword()).getBytes());
          vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newcontent, null);
@@ -645,7 +645,7 @@ public class Express
       }
    }
 
-   private Item getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
+   private Folder getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
    {
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String expressPath = config + user + "/express";
