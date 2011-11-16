@@ -79,13 +79,13 @@
          <version>1.0.5</version>
       </dependency>
 
-      <dependency>
+      <!--<dependency>
          <groupId>org.seleniumhq.selenium.grid</groupId>
          <artifactId>selenium-grid-remote-control</artifactId>
          <version>1.0.5</version>
       </dependency>
 
-      <dependency>
+      --><dependency>
          <groupId>org.seleniumhq.selenium.grid</groupId>
          <artifactId>selenium-grid-tools</artifactId>
          <version>1.0.5</version>
