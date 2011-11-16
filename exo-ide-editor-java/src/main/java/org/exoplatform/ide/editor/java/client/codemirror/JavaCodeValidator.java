@@ -34,7 +34,6 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.CodeValidator;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
-import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 
 
@@ -187,6 +186,10 @@ public class JavaCodeValidator extends CodeValidator
       {
          javaType = getTypeWithoutParameter(javaType);
          
+         String foundFqn;
+         
+         String fqn;
+         
          // filter FQN type for full java types like "javax.ws.rs.GET", and "data.ProductItem", but parse type like "ResourceBundle.Control"
          if (javaType.contains(".")
                 && (javaType.split("[.]").length > 2
@@ -197,44 +200,35 @@ public class JavaCodeValidator extends CodeValidator
             currentToken.setFqn(javaType);
          }
          
-         else 
-         {  
-            String foundFqn;
-            
-            // verifying if this type is from import statements
-            if ((foundFqn = findImport(javaType, importStatementBlock)) != null)
-            {
-               currentToken.setFqn(foundFqn);
-            }
-            
-            // verifying if this type is from import statements 
-            if (classesFromProject != null 
-                   && (foundFqn = findClassesFromProject(javaType, classesFromProject)) != null)
-            {
-               currentToken.setFqn(foundFqn);
-            }
-            
-            else
-            {
-               // verifying if this short java type like "int" and stay "fqn = null" for such token
-               if (shortJavaType.contains(javaType))
-               {
-                  currentToken.setFqn(null);
-               }
-               else
-               {
-                  // verifying if this type is from one of the default packages like "String" from "java.lang.String"
-                  String fqn = getFqnFromDefaultPackages(javaType);
-                  if (fqn != null)
-                  {
-                     currentToken.setFqn(fqn);
-                  }
-                  else
-                  {
-                     javaTypeErrorList.add(new CodeLine(CodeType.TYPE_ERROR, javaType, currentToken.getLineNumber()));
-                  }
-               }
-            }
+         // verifying if this type is from import statements
+         else if ((foundFqn = findImport(javaType, importStatementBlock)) != null)
+         {
+            currentToken.setFqn(foundFqn);
+         }
+         
+         // verifying if this type is from import statements 
+         else if (classesFromProject != null 
+                && (foundFqn = findClassesFromProject(javaType, classesFromProject)) != null)
+         {
+            currentToken.setFqn(foundFqn);
+         }
+
+         // verifying if this short java type like "int" and stay "fqn = null" for such token
+         else if (shortJavaType.contains(javaType))
+         {
+            currentToken.setFqn(null);
+         }
+
+         // verifying if this type is from one of the default packages like "String" from "java.lang.String"
+         else if ((fqn = getFqnFromDefaultPackages(javaType)) != null)
+         {
+            currentToken.setFqn(fqn);
+         }
+         
+         // add token into error list
+         else
+         {
+            javaTypeErrorList.add(new CodeLine(CodeType.TYPE_ERROR, javaType, currentToken.getLineNumber()));
          }
       }
 
