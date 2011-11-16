@@ -16,37 +16,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.samples.load;
+package org.exoplatform.ide.extension.samples.client.github.location;
+
+import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event to show list of repositories with sample projects on GitHub.
+ * Event, that calls <code>Select location</code> dialog window with navigation tree.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesShowEvent.java Aug 30, 2011 12:07:32 PM vereshchaka $
+ * @version $Id: SelectLocationEvent.java Aug 31, 2011 12:03:17 PM vereshchaka $
+ *
  */
-public class ShowSamplesEvent extends GwtEvent<ShowSamplesHandler>
+public class SelectLocationEvent extends GwtEvent<SelectLocationHandler>
 {
-   public static final GwtEvent.Type<ShowSamplesHandler> TYPE = new GwtEvent.Type<ShowSamplesHandler>();
+   public static final GwtEvent.Type<SelectLocationHandler> TYPE = new GwtEvent.Type<SelectLocationHandler>();
    
-   public ShowSamplesEvent()
+   Repository repo;
+   
+   public SelectLocationEvent(Repository repository)
    {
+      repo = repository;
    }
 
    @Override
-   protected void dispatch(ShowSamplesHandler handler)
+   protected void dispatch(SelectLocationHandler handler)
    {
-      handler.onShowSamples(this);
+      handler.onSelectLocation(this);
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowSamplesHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<SelectLocationHandler> getAssociatedType()
    {
       return TYPE;
+   }
+   
+   /**
+    * @return the repo
+    */
+   public Repository getRepository()
+   {
+      return repo;
    }
 
 }

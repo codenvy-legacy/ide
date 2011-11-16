@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.samples.selecttype;
+package org.exoplatform.ide.extension.samples.client.github.selecttype;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -39,8 +39,8 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.extension.samples.client.samples.SamplesContinuable;
-import org.exoplatform.ide.extension.samples.client.samples.SamplesReturnable;
+import org.exoplatform.ide.extension.samples.client.github.SamplesContinuable;
+import org.exoplatform.ide.extension.samples.client.github.SamplesReturnable;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -160,7 +160,7 @@ public class SelectTypePresenter implements ViewClosedHandler, SamplesContinuabl
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.SamplesContinuable#onContinue()
+    * @see org.exoplatform.ide.extension.samples.client.github.SamplesContinuable#onContinue()
     */
    @Override
    public void onContinue(Repository repository)
@@ -170,7 +170,7 @@ public class SelectTypePresenter implements ViewClosedHandler, SamplesContinuabl
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.SamplesReturnable#onReturn()
+    * @see org.exoplatform.ide.extension.samples.client.github.SamplesReturnable#onReturn()
     */
    @Override
    public void onReturn()
@@ -199,6 +199,7 @@ public class SelectTypePresenter implements ViewClosedHandler, SamplesContinuabl
             protected void onSuccess(ProjectModel result)
             {
                cloneRepository(repository, result);
+               closeView();
             }
 
             @Override
@@ -232,7 +233,6 @@ public class SelectTypePresenter implements ViewClosedHandler, SamplesContinuabl
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   IDE.fireEvent(new ProjectCreatedEvent(project));
                   IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));

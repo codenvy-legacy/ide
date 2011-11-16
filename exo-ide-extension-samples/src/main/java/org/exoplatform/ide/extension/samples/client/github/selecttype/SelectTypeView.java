@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.samples.selecttype;
+package org.exoplatform.ide.extension.samples.client.github.selecttype;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -79,7 +79,7 @@ private static final String ID = "SelectTypeView";
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.selecttype.SelectTypePresenter.Display#getProjectType()
+    * @see org.exoplatform.ide.extension.samples.client.github.selecttype.SelectTypePresenter.Display#getProjectType()
     */
    @Override
    public HasValue<String> getProjectType()
@@ -88,7 +88,7 @@ private static final String ID = "SelectTypeView";
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.selecttype.SelectTypePresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.samples.client.github.selecttype.SelectTypePresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -97,7 +97,7 @@ private static final String ID = "SelectTypeView";
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.selecttype.SelectTypePresenter.Display#getFinishButton()
+    * @see org.exoplatform.ide.extension.samples.client.github.selecttype.SelectTypePresenter.Display#getFinishButton()
     */
    @Override
    public HasClickHandlers getFinishButton()
@@ -106,7 +106,7 @@ private static final String ID = "SelectTypeView";
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.selecttype.SelectTypePresenter.Display#getBackButton()
+    * @see org.exoplatform.ide.extension.samples.client.github.selecttype.SelectTypePresenter.Display#getBackButton()
     */
    @Override
    public HasClickHandlers getBackButton()
@@ -115,7 +115,7 @@ private static final String ID = "SelectTypeView";
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.selecttype.SelectTypePresenter.Display#setProjectTypes(java.util.Set)
+    * @see org.exoplatform.ide.extension.samples.client.github.selecttype.SelectTypePresenter.Display#setProjectTypes(java.util.Set)
     */
    @Override
    public void setProjectTypes(Set<String> set)

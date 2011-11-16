@@ -16,24 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.samples;
+package org.exoplatform.ide.extension.samples.client.github.load;
 
-import org.exoplatform.ide.extension.samples.shared.Repository;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Interface for samples dialog window step.
- * <p/>
- * You can use this interface,
- * if you want to create multi-step wizard.
- * <p/>
- * Used to navigate between wizard steps:
- * what to do on current step.
+ * Event to show list of repositories with sample projects on GitHub.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SamplesContinuable.java Nov 3, 2011 6:16:26 PM vereshchaka $
- *
+ * @version $Id: GithubSamplesShowEvent.java Aug 30, 2011 12:07:32 PM vereshchaka $
  */
-public interface SamplesContinuable
+public class ShowSamplesEvent extends GwtEvent<ShowSamplesHandler>
 {
-   void onContinue(Repository repository);
+   public static final GwtEvent.Type<ShowSamplesHandler> TYPE = new GwtEvent.Type<ShowSamplesHandler>();
+   
+   public ShowSamplesEvent()
+   {
+   }
+
+   @Override
+   protected void dispatch(ShowSamplesHandler handler)
+   {
+      handler.onShowSamples(this);
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowSamplesHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
 }

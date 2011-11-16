@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   xmlns:e="urn:import:org.exoplatform.ide.extension.samples.client.samples.location" xmlns:n="urn:import:org.exoplatform.ide.client.framework.ui">
+   xmlns:e="urn:import:org.exoplatform.ide.extension.samples.client.github.location" xmlns:n="urn:import:org.exoplatform.ide.client.framework.ui">
 
    <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>

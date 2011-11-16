@@ -49,9 +49,6 @@
 
             <g:FlowPanel width="10px" height="22px" styleName="{resource.css.leftFloat}"></g:FlowPanel>
 
-            <f:ImageButton ui:field="backButton" width="90px" styleName="{resource.css.middle}" text="{locale.backButton}"
-               imageResource="{resource.back}" disabledImageResource="{resource.backDisabled}" buttonId="ideWizardDefinitionBackButtonId"></f:ImageButton>
-
             <f:ImageButton ui:field="nextButton" width="90px" styleName="{resource.css.right}" text="{locale.nextButton}" imageResource="{resource.next}"
                disabledImageResource="{resource.nextDisabled}" buttonId="ideWizardDefinitionNextButtonId"></f:ImageButton>
 

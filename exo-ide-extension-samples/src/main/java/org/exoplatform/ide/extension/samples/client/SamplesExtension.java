@@ -25,15 +25,14 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
+import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
+import org.exoplatform.ide.extension.samples.client.github.selecttype.SelectTypePresenter;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter;
-import org.exoplatform.ide.extension.samples.client.samples.load.ShowSamplesPresenter;
-import org.exoplatform.ide.extension.samples.client.samples.selecttype.SelectTypePresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter;
-import org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter;
 
 /**
  * Samples extension for IDE.
@@ -69,18 +68,20 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new StartPagePresenter();
       new ConvertToProjectPresenter();
       
+      //wizard Import from GitHub
       ShowSamplesPresenter showSamplesStep = new ShowSamplesPresenter();
       SelectTypePresenter selectTypeSamplesStep = new SelectTypePresenter();
       showSamplesStep.setSamplesContinuable(selectTypeSamplesStep);
       selectTypeSamplesStep.setSamplesReturnable(showSamplesStep);
       
-      WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter();
+      //wizard Create new Java Project
+//      WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter();
       WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter();
       WizardDeploymentStepPresenter wizardDeploymentStep = new WizardDeploymentStepPresenter();
       WizardFinishStepPresenter wizardFinishStep = new WizardFinishStepPresenter();
       
-      wizardSourceStep.setWizardContinuable(wizardDefinitionStep);
-      wizardDefinitionStep.setWizardReturnable(wizardSourceStep);
+//      wizardSourceStep.setWizardContinuable(wizardDefinitionStep);
+//      wizardDefinitionStep.setWizardReturnable(wizardSourceStep);
       wizardDefinitionStep.setWizardContinuable(wizardDeploymentStep);
       wizardDeploymentStep.setWizardReturnable(wizardDefinitionStep);
       wizardDeploymentStep.setWizardContinuable(wizardFinishStep);

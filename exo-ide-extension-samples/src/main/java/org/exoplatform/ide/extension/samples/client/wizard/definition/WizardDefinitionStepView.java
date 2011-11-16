@@ -69,9 +69,6 @@ public class WizardDefinitionStepView extends ViewImpl implements WizardDefiniti
    @UiField
    ImageButton nextButton;
    
-   @UiField
-   ImageButton backButton;
-   
    public WizardDefinitionStepView()
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
@@ -130,15 +127,6 @@ public class WizardDefinitionStepView extends ViewImpl implements WizardDefiniti
    public void setTypes(String[] types)
    {
       typeSelectField.setValueMap(types);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter.Display#getBackButton()
-    */
-   @Override
-   public HasClickHandlers getBackButton()
-   {
-      return backButton;
    }
 
    /**

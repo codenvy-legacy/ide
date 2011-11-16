@@ -29,6 +29,8 @@ import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinish
 import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
+import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -45,7 +47,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: SourceWizardPresenter.java Sep 7, 2011 3:00:58 PM vereshchaka $
  */
 public class WizardDefinitionStepPresenter implements ViewClosedHandler, ProjectCreationFinishedHandler,
-   WizardContinuable, WizardReturnable
+   WizardReturnable, ShowWizardHandler
 {
    public interface Display extends IsView
    {
@@ -56,8 +58,6 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
       HasClickHandlers getNextButton();
       
       HasClickHandlers getCancelButton();
-      
-      HasClickHandlers getBackButton();
       
       void enableNextButton(boolean enabled);
       
@@ -74,8 +74,6 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
    
    private WizardContinuable wizardContinuable;
    
-   private WizardReturnable wizardReturnable;
-   
    static
    {
       TYPES = new String[2];
@@ -87,6 +85,7 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ProjectCreationFinishedEvent.TYPE, this);
+      IDE.addHandler(ShowWizardEvent.TYPE, this);
    }
    
    /**
@@ -95,14 +94,6 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
    public void setWizardContinuable(WizardContinuable wizardContinuable)
    {
       this.wizardContinuable = wizardContinuable;
-   }
-   
-   /**
-    * @param wizardReturnable the wizardReturnable to set
-    */
-   public void setWizardReturnable(WizardReturnable wizardReturnable)
-   {
-      this.wizardReturnable = wizardReturnable;
    }
    
    private void bindDisplay()
@@ -125,16 +116,6 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
             projectProperties.setName(display.getNameField().getValue());
             projectProperties.setType(display.getSelectTypeField().getValue());
             wizardContinuable.onContinue(projectProperties);
-            closeView();
-         }
-      });
-      
-      display.getBackButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            wizardReturnable.onReturn();
             closeView();
          }
       });
@@ -236,12 +217,12 @@ public class WizardDefinitionStepPresenter implements ViewClosedHandler, Project
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable#onContinue(ProjectProperties)
+    * @see org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardHandler#onShowWizard(org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent)
     */
    @Override
-   public void onContinue(ProjectProperties projectProperties)
+   public void onShowWizard(ShowWizardEvent event)
    {
-      this.projectProperties = projectProperties;
+      projectProperties = new ProjectProperties();
       openView();
    }
 

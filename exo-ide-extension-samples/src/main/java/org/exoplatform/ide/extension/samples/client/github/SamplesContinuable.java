@@ -16,18 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.samples.location;
+package org.exoplatform.ide.extension.samples.client.github;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.extension.samples.shared.Repository;
 
 /**
- * Handler for {@link SelectLocationEvent}.
+ * Interface for samples dialog window step.
+ * <p/>
+ * You can use this interface,
+ * if you want to create multi-step wizard.
+ * <p/>
+ * Used to navigate between wizard steps:
+ * what to do on current step.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SelectLocationHandler.java Aug 31, 2011 12:03:07 PM vereshchaka $
+ * @version $Id: SamplesContinuable.java Nov 3, 2011 6:16:26 PM vereshchaka $
  *
  */
-public interface SelectLocationHandler extends EventHandler
+public interface SamplesContinuable
 {
-   void onSelectLocation(SelectLocationEvent event);
+   void onContinue(Repository repository);
 }

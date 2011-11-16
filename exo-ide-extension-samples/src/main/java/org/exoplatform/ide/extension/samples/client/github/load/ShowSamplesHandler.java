@@ -16,25 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.samples;
+package org.exoplatform.ide.extension.samples.client.github.load;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Interface for samples dialog window step.
- * <p/>
- * You can use this interface,
- * if you want to create multi-step wizard.
- * <p/>
- * If presenter implements this step, 
- * than you can return to this step.
- * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SamplesReturnable.java Nov 3, 2011 6:16:37 PM vereshchaka $
+ * @version $Id: GithubSamplesShowHandler.java Aug 30, 2011 12:07:21 PM vereshchaka $
  *
  */
-public interface SamplesReturnable
+public interface ShowSamplesHandler extends EventHandler
 {
-   /**
-    * What to do, when you return to this step from next.
-    */
-   void onReturn();
+   void onShowSamples(ShowSamplesEvent event);
 }

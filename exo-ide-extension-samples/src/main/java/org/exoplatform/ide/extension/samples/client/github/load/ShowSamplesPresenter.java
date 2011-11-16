@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.samples.load;
+package org.exoplatform.ide.extension.samples.client.github.load;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -39,8 +39,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
-import org.exoplatform.ide.extension.samples.client.samples.SamplesContinuable;
-import org.exoplatform.ide.extension.samples.client.samples.SamplesReturnable;
+import org.exoplatform.ide.extension.samples.client.github.SamplesContinuable;
+import org.exoplatform.ide.extension.samples.client.github.SamplesReturnable;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -199,7 +199,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.SamplesReturnable#onReturn()
+    * @see org.exoplatform.ide.extension.samples.client.github.SamplesReturnable#onReturn()
     */
    @Override
    public void onReturn()
@@ -208,7 +208,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.samples.SamplesContinuable#onContinue()
+    * @see org.exoplatform.ide.extension.samples.client.github.SamplesContinuable#onContinue()
     */
    @Override
    public void onContinue(Repository repository)
