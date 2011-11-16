@@ -11,26 +11,23 @@
    <version>1.2.0-M4-SNAPSHOT</version>
    <name>eXo IDE :: Extension : OPENSHIFT</name>
    <dependencies>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-git</artifactId>
          <exclusions>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
+
       <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.core</artifactId>
-         <exclusions>
-            <exclusion>
-               <artifactId>xstream</artifactId>
-               <groupId>xstream</groupId>
-            </exclusion>
-         </exclusions>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
       </dependency>
+
       <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
@@ -60,6 +57,7 @@
          <artifactId>exo-ide-framework-client</artifactId>
          <scope>provided</scope>
       </dependency>
+
    </dependencies>
 
    <build>

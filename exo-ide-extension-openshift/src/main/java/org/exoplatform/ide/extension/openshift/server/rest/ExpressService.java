@@ -51,43 +51,28 @@ public class ExpressService
 {
    @Inject
    private Express express;
-
    @Inject
    private LocalPathResolver localPathResolver;
-
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
-
    @QueryParam("vfsid")
    private String vfsId;
-
    @QueryParam("projectid")
    private String projectId;
-
    @QueryParam("name")
    private String appName;
-
-   public ExpressService()
-   {
-   }
-
-   protected ExpressService(Express express)
-   {
-      // Use this constructor when deploy ExpressService as singleton resource.
-      this.express = express;
-   }
 
    @POST
    @Path("login")
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws ExpressException, IOException
+   public void login(Map<String, String> credentials) throws ExpressException, IOException, VirtualFileSystemException
    {
       express.login(credentials.get("rhlogin"), credentials.get("password"));
    }
 
    @POST
    @Path("logout")
-   public void logout()
+   public void logout() throws IOException, VirtualFileSystemException
    {
       express.logout();
    }
@@ -107,8 +92,6 @@ public class ExpressService
       ParsingResponseException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return express.createApplication(appName, type,
          (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
@@ -128,8 +111,6 @@ public class ExpressService
       VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return express.applicationInfo(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
    }
@@ -140,8 +121,6 @@ public class ExpressService
       VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       express.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
    }
@@ -150,7 +129,7 @@ public class ExpressService
    @Path("user/info")
    @Produces(MediaType.APPLICATION_JSON)
    public RHUserInfo userInfo(@QueryParam("appsinfo") boolean appsInfo) throws ExpressException, IOException,
-      ParsingResponseException
+      ParsingResponseException, VirtualFileSystemException
    {
       return express.userInfo(appsInfo);
    }
