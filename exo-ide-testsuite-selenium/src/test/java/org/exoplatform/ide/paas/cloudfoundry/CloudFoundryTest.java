@@ -81,6 +81,7 @@ public abstract class CloudFoundryTest extends BaseTest
       {
          File f = new File("src/test/resources/org/exoplatform/ide/paas/cloudfoundry/java-spring-project.zip");
 
+         //FIXME there is no upload service. Use import zip feature of VFS
          String postURL = BASE_URL + REST_CONTEXT + "/ide/upload/folder/";
          System.out.println("> POST [" + postURL + "]");
 

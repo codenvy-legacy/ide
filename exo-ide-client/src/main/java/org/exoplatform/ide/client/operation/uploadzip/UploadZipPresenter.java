@@ -179,7 +179,8 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {
          //if response is null or empty - than complete upload
-         completeUpload();
+         closeView();
+         refreshFolder();
          return;
       }
 
@@ -196,6 +197,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
                   if (value == null || !value)
                   {
                      closeView();
+                     refreshFolder();
                      return;
                   }
                   if (value)
@@ -212,10 +214,8 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       }
    }
 
-   private void completeUpload()
+   private void refreshFolder()
    {
-      closeView();
-
       Item item = selectedItems.get(0);
       if (item instanceof FileModel)
       {

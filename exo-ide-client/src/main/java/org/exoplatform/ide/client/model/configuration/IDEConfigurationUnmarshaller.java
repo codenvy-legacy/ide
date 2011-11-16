@@ -49,8 +49,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    public static final String LOOPBACK_SERVICE_CONTEXT = "/ide/loopbackcontent";
 
-   public static final String UPLOAD_SERVICE_CONTEXT = "/ide/upload";
-
    private static final String APP_CONFIG = "configuration";
 
    private static final String USER_SETTINGS = "userSettings";
@@ -166,7 +164,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
       {
          configuration.setContext(jsonConfiguration.get(CONTEXT).isString().stringValue());
          configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
       }
       else
       {

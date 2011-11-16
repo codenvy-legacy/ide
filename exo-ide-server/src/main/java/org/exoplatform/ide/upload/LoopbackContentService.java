@@ -62,6 +62,7 @@ public class LoopbackContentService
    @Produces(MediaType.TEXT_HTML)
    public String post(Iterator<FileItem> items) throws UploadServiceException
    {
+      System.out.println("LoopbackContentService.post()");
       InputStream stream = null;
       while (items.hasNext())
       {

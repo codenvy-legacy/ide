@@ -272,6 +272,7 @@ public class VirtualFileSystemUtils
    public static int upoadZipFolder(String zipPath, String storageUrl) throws HttpException, IOException
    {
       File f = new File(zipPath);
+      //FIXME there is no upload service. Use import zip feature of VFS
       PostMethod filePost = new PostMethod(BaseTest.BASE_URL + BaseTest.REST_CONTEXT + "/ide/upload/folder");
       Part[] parts = {new StringPart("location", storageUrl), new FilePart("file", f)};
       filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));

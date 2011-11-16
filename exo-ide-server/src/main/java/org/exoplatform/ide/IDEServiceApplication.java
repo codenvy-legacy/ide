@@ -21,12 +21,10 @@ package org.exoplatform.ide;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
-import org.exoplatform.ide.download.DownloadContentService;
 import org.exoplatform.ide.remote.RemoteFileService;
 import org.exoplatform.ide.remote.RemoteFileServiceExceptionMapper;
 import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
-import org.exoplatform.ide.upload.UploadService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
 import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -67,14 +65,12 @@ public class IDEServiceApplication extends Application
       objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry));
 
       classes.add(LoopbackContentService.class);
-      classes.add(DownloadContentService.class);
       
       objects.add(new RemoteFileServiceExceptionMapper());
       
       classes.add(RemoteFileService.class);      
       classes.add(RequestContextResolver.class);
       classes.add(RestConversationState.class);
-      classes.add(UploadService.class);
    }
 
    /**

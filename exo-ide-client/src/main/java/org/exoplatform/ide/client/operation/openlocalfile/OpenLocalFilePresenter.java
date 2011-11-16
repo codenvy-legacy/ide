@@ -132,7 +132,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
    {
       display.getUploadForm().setMethod(FormPanel.METHOD_POST);
       display.getUploadForm().setEncoding(FormPanel.ENCODING_MULTIPART);
-      display.getUploadForm().setAction(configuration.getUploadServiceContext() + "/");
+      display.getUploadForm().setAction(configuration.getLoopbackServiceContext() + "/");
 
       display.setOpenButtonEnabled(false);
       display.setMimeTypeFieldEnabled(false);

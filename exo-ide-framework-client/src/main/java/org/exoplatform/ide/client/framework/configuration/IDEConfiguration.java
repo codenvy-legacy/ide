@@ -38,8 +38,6 @@ public class IDEConfiguration
 
    private String loopbackServiceContext;
 
-   private String uploadServiceContext;
-
    private String publicContext;
 
    private String gadgetURL = GWT.getModuleBaseURL();
@@ -102,16 +100,6 @@ public class IDEConfiguration
    public void setLoopbackServiceContext(String loopbackServiceContext)
    {
       this.loopbackServiceContext = loopbackServiceContext;
-   }
-
-   public String getUploadServiceContext()
-   {
-      return uploadServiceContext;
-   }
-
-   public void setUploadServiceContext(String uploadServiceContext)
-   {
-      this.uploadServiceContext = uploadServiceContext;
    }
 
    public String getPublicContext()
