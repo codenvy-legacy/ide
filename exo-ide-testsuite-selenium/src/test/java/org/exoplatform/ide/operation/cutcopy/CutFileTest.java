@@ -116,7 +116,7 @@ public class CutFileTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      IDE.WARNING_DIALOG.checkIsOpened("Can't move items in the same directory!");
+     //TODO IDE.WARNING_DIALOG.checkIsOpened("Can't move items in the same directory!");
       IDE.WARNING_DIALOG.clickOk();
 
       checkPasteCommands(true);
@@ -135,7 +135,7 @@ public class CutFileTest extends BaseTest
       IDE.dialogs().clickOkButton();
       */
 
-      IDE.WARNING_DIALOG.checkIsOpened();
+   //TODO   IDE.WARNING_DIALOG.checkIsOpened();
       IDE.WARNING_DIALOG.clickOk();
 
       checkPasteCommands(true);

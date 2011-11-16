@@ -23,10 +23,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.GoToLine;
-import org.exoplatform.ide.core.Statusbar;
-import org.exoplatform.ide.core.WarningDialog;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
@@ -35,86 +37,109 @@ import org.junit.Test;
  */
 public class GoToLineTest extends BaseTest
 {
+   private static String PROJECT = GoToLineTest.class.getSimpleName();
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
    //IDE-152
    @Test
    public void goToLine() throws Exception
    {
-      //Open new Groovy file in editor.
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.WORKSPACE.waitForRootItem();
+      //Open new Groovy file in editor.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
 
       //Open new HTML file in editor.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
 
       //Select Groovy file.
-      IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.waitTabPresent(0);
-
+      IDE.EDITOR.selectTab(1);
 
       //Go to menu and click "View->Go To Line".
-      waitForElementPresent("//td[@class='exo-menuBarItem'and text()='Edit']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-      IDE.GOTOLINE.waitForGoToLineForm();
-      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR));
-      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(GoToLine.CANCEL_BUTTON_ID));
-      IDE.GOTOLINE.checkLineNumberLabel("Enter line number (1..13):");
+      IDE.GOTOLINE.waitOpened();
+      assertTrue(IDE.GOTOLINE.isGoToLineViewPresent());
+      assertEquals(String.format(GoToLine.RANGE_LABEL, 1, 13), IDE.GOTOLINE.getLineNumberRangeLabel());
 
       // Type empty value an check form (form should remain unchanged)
-      IDE.GOTOLINE.typeIntoGoToLineFormField("");
-      IDE.GOTOLINE.pressGoButton();
-      IDE.GOTOLINE.waitForGoToLineForm();
-      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR));
+      IDE.GOTOLINE.typeIntoLineNumberField("");
+      IDE.GOTOLINE.clickGoButton();
+      assertTrue(IDE.GOTOLINE.isGoToLineViewPresent());
 
       // Print "abc" in input field.
-      IDE.GOTOLINE.typeIntoGoToLineFormField("abc");
-      IDE.GOTOLINE.pressGoButton();
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
-      assertTrue(selenium().isElementPresent(WarningDialog.WARNING_DIALOG_ID));
-      assertTrue(selenium().isTextPresent("Can't parse line number."));
+      IDE.GOTOLINE.typeIntoLineNumberField("abc");
+      IDE.GOTOLINE.clickGoButton();
+      IDE.WARNING_DIALOG.waitOpened();
+      assertEquals("Can't parse line number.", IDE.WARNING_DIALOG.getWarningMessage());
       IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitForWarningDialogClosed();
+      IDE.WARNING_DIALOG.waitClosed();
 
       // Type "100" (above range maximum) and click "Go" button.
-      IDE.GOTOLINE.typeIntoGoToLineFormField("100");
-      IDE.GOTOLINE.pressGoButton();
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
-      assertTrue(selenium().isElementPresent(WarningDialog.WARNING_DIALOG_ID));
-      assertTrue(selenium().isTextPresent("Line number out of range"));
+      IDE.GOTOLINE.typeIntoLineNumberField("100");
+      IDE.GOTOLINE.clickGoButton();
+      IDE.WARNING_DIALOG.waitOpened();
+      assertEquals("Line number out of range", IDE.WARNING_DIALOG.getWarningMessage());
       IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitForWarningDialogClosed();
+      IDE.WARNING_DIALOG.waitClosed();
 
       // Type "2" and click "Go" button.
-      IDE.GOTOLINE.typeIntoGoToLineFormField("2");
-      IDE.GOTOLINE.pressGoButton();
-      waitForElementPresent(Statusbar.STATUSBAR_LOCATOR);
+      IDE.GOTOLINE.typeIntoLineNumberField("2");
+      IDE.GOTOLINE.clickGoButton();
+      IDE.GOTOLINE.waitClosed();
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
 
       // Select HTML file's tab.
-      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.selectTab(2);
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
-      IDE.selectMainFrame();
 
       // Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-      waitForElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR);
-      IDE.GOTOLINE.typeIntoGoToLineFormField("1");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      waitForElementNotPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR);
+      IDE.GOTOLINE.waitOpened();
+      IDE.GOTOLINE.typeIntoLineNumberField("1" + Keys.ENTER.toString());
+      IDE.GOTOLINE.waitClosed();
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
       // Go to status bar - right down corner , where row and column numbers are displayed, hover on them with the mouse and click on it.
-      IDE.STATUSBAR.clickOnStatusBar();
-      IDE.GOTOLINE.waitForGoToLineForm();
-      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR));
-      IDE.GOTOLINE.checkLineNumberLabel("Enter line number (1..8):");
-      
-      // Print "2" and click "Go".
-      IDE.GOTOLINE.typeIntoGoToLineFormField("2");
-      IDE.GOTOLINE.pressGoButtonWithCorrectValue();
-   }
+      IDE.STATUSBAR.clickOnCursorPositionControl();
+      IDE.GOTOLINE.waitOpened();
+      assertEquals(String.format(GoToLine.RANGE_LABEL, 1, 8), IDE.GOTOLINE.getLineNumberRangeLabel());
 
+      // Print "2" and click "Go".
+      IDE.GOTOLINE.typeIntoLineNumberField("2");
+      IDE.GOTOLINE.clickGoButton();
+      IDE.GOTOLINE.waitClosed();
+
+      IDE.STATUSBAR.waitCursorPositionControl();
+      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
+   }
 }

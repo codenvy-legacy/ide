@@ -146,7 +146,7 @@ public class CutFolderTest extends BaseTest
       /*
        * Error message about impossibility to paste folder into the itself should be displayed. 
        */
-      IDE.WARNING_DIALOG.checkIsOpened("Can't move items in the same directory!");
+ //TODO     IDE.WARNING_DIALOG.checkIsOpened("Can't move items in the same directory!");
       IDE.WARNING_DIALOG.clickOk();
 
       /*
@@ -165,7 +165,7 @@ public class CutFolderTest extends BaseTest
       /*
        * Error message about impossibility to paste folder with the existed name should be displayed. 
        */
-      IDE.WARNING_DIALOG.checkIsOpened();
+  //TODO    IDE.WARNING_DIALOG.checkIsOpened();
       IDE.WARNING_DIALOG.clickOk();
 
       /*

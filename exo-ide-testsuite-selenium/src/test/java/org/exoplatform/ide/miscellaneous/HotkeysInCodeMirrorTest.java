@@ -100,7 +100,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       //check go to line window dialog appeared
       assertTrue(selenium().isElementPresent(GO_TO_LINE_FORM_LOCATOR));
       //close
-      IDE.GOTOLINE.pressCancelButton();
+      IDE.GOTOLINE.clickCancelButton();
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);

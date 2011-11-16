@@ -26,7 +26,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.WarningDialog;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -137,9 +136,7 @@ public class DeployNodeTypeTest extends BaseTest
       waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       //Check error message that CND format is not supported:
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
-      assertTrue(selenium().isElementPresent(WarningDialog.WARNING_DIALOG_ID));
-      assertTrue(selenium().isElementPresent(WarningDialog.OK_BUTTON_ID));
+      IDE.WARNING_DIALOG.waitOpened();
       assertTrue(selenium().isTextPresent("Unsupported content type:text/x-jcr-cnd"));
       IDE.WARNING_DIALOG.clickOk();
 
@@ -211,7 +208,7 @@ public class DeployNodeTypeTest extends BaseTest
       selenium().click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
       waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
+      IDE.WARNING_DIALOG.waitOpened();
       IDE.WARNING_DIALOG.clickOk();
 
       //check, that there is no view with generated code

@@ -19,15 +19,19 @@
 package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -41,10 +45,9 @@ import org.junit.Test;
 
 public class HighlightCurrentLineTest extends BaseTest
 {
+   private static final String PROJECT = HighlightCurrentLineTest.class.getSimpleName();
 
    private static final String FILE_NAME = "HtmlTemplate.html";
-
-   private static final String LINE_HIGHLIGHTER_LOCATOR = "//div[@class='CodeMirror-line-highlighter']";
 
    private static final int LINE_HEIGHT = 16;
 
@@ -64,7 +67,9 @@ public class HighlightCurrentLineTest extends BaseTest
          "src/test/resources/org/exoplatform/ide/operation/edit/highlightCurrentLineTest/HtmlTemplate.html";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.TEXT_HTML, filePath);
       }
       catch (Exception e)
       {
@@ -75,10 +80,12 @@ public class HighlightCurrentLineTest extends BaseTest
    @Test
    public void highlightCurrentLine() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FILE_NAME);
-      //open HTML-file with required text
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
       // get line Position Left
       int contentPanelPositionLeft = selenium().getElementPositionLeft(IDE.EDITOR.getContentPanelLocator(0)).intValue();
@@ -96,92 +103,73 @@ public class HighlightCurrentLineTest extends BaseTest
          linePositionTop = linePositionTop.intValue() - scrollTop;
       }
 
-      selenium().isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
-
-      assertEquals(selenium().getElementPositionLeft(IDE.EDITOR.getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
-         linePositionLeft);
-      assertEquals(selenium().getElementPositionTop(IDE.EDITOR.getContentPanelLocator(0) + LINE_HIGHLIGHTER_LOCATOR),
-         linePositionTop);
-
+      assertTrue(IDE.EDITOR.isHighlighterPresent());
+      
+      assertEquals(linePositionLeft, IDE.EDITOR.getHighlighter(0).getLocation().getX());
+      assertEquals(linePositionTop, IDE.EDITOR.getHighlighter(0).getLocation().getY());
+      
       // Press down arrow key on keyboard.
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      IDE.EDITOR.waitTabPresent(0);
-      //Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.EDITOR.moveCursorDown(0, 1);
       lineHighlighterTest(2, 0);
 
       // Press down arrow key on keyboard.
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.moveCursorDown(0, 1);
       lineHighlighterTest(3, 0);
 
-      // Move cursor "up" thirdly.
-      for (int i = 0; i < 3; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      }
-
+      IDE.EDITOR.moveCursorUp(0, 3);
       lineHighlighterTest(1, 0);
 
       // goto last line
-      goToLine(7);
+      IDE.GOTOLINE.goToLine(7);
       lineHighlighterTest(7, 0);
 
       // Press "Enter" key.
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
       lineHighlighterTest(8, 0);
 
       // remove last line
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-      //      Thread.sleep(TestConstants.SLEEP_SHORT);
-
       lineHighlighterTest(8, 0);
 
       // Press down arrow key on keyboard.
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.moveCursorDown(0, 1);
       lineHighlighterTest(8, 0);
 
       // Click in menu "File>New->REST Service".
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
       lineHighlighterTest(1, 1);
 
       // Highlight line number 2 and verify bug [GWTX-47] In the Firefox cursor goes to the line 3 after pressing Enter key at the start of the first line of groovy script in the Code Editor.]
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.ENTER.toString());
       IDE.EDITOR.waitTabPresent(1);
       lineHighlighterTest(2, 1);
-      assertEquals("2 : 1", getCursorPositionUsingStatusBar()); // verify cursor position in the status bar
+      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition()); // verify cursor position in the status bar
 
       // Return to blank first line to verify bug with highlighting [IDE-135] in the Internet Explorer.
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.moveCursorUp(1, 1);
       lineHighlighterTest(1, 1);
-      assertEquals("1 : 1", getCursorPositionUsingStatusBar()); // verify cursor position in the status bar      
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition()); // verify cursor position in the status bar      
 
       // goto line 2
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      IDE.EDITOR.moveCursorDown(1, 1);
       IDE.EDITOR.waitTabPresent(1);
 
       // switch tab to previous file.
-      IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
       lineHighlighterTest(8, 0);
 
       // Return to new HTML file
-      IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
       lineHighlighterTest(2, 1);
 
       // switch tab to previous file.
-      IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.waitTabPresent(0);
-
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
       // goto end of first line 
-      IDE.EDITOR.clickOnEditor(0);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.PAGE_UP.toString() + Keys.END);
       lineHighlighterTest(1, 0);
 
       // test line highlighting with vertical scroll bar.
@@ -190,20 +178,17 @@ public class HighlightCurrentLineTest extends BaseTest
          // Press "Enter" key 37 times to appear scroll bar.
          for (int i = 0; i < 50; i++)
          {
-            selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-            Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+            IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
          }
 
          lineHighlighterTest(51, 0);
 
          // Remember the current line with cursor and move scroll bar up and down.
-         goToLine(4);
+         IDE.GOTOLINE.goToLine(4);
          lineHighlighterTest(4, 0);
 
          // goto last line 58 
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_DOWN);
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_PAGE_UP);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
+         IDE.EDITOR.typeTextIntoEditor(0, Keys.PAGE_DOWN.toString() + Keys.PAGE_UP);
          lineHighlighterTest(4, 0);
       }
    }
@@ -223,15 +208,10 @@ public class HighlightCurrentLineTest extends BaseTest
       {
          linePositionTop = linePositionTop.intValue() - scrollTop;
       }
+      assertTrue(IDE.EDITOR.isHighlighterPresent());
 
-      selenium().isElementPresent(LINE_HIGHLIGHTER_LOCATOR);
-
-      assertEquals(
-         selenium().getElementPositionLeft(IDE.EDITOR.getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
-         linePositionLeft);
-      assertEquals(
-         selenium().getElementPositionTop(IDE.EDITOR.getContentPanelLocator(tabIndex) + LINE_HIGHLIGHTER_LOCATOR),
-         linePositionTop);
+      assertEquals(linePositionLeft, IDE.EDITOR.getHighlighter(tabIndex).getLocation().getX());
+      assertEquals(linePositionTop, IDE.EDITOR.getHighlighter(tabIndex).getLocation().getY());
    }
 
    /**
@@ -246,8 +226,8 @@ public class HighlightCurrentLineTest extends BaseTest
       {
          // trying to read the property from Firefox         
          scrollTop =
-            Integer.parseInt(selenium().getEval("var win = selenium.browserbot.getCurrentWindow(); win."
-               + scrollTopLocator + ";"));
+            Integer.parseInt(selenium().getEval(
+               "var win = selenium.browserbot.getCurrentWindow(); win." + scrollTopLocator + ";"));
       }
       catch (NumberFormatException e)
       {
@@ -260,9 +240,7 @@ public class HighlightCurrentLineTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-      IDE.EDITOR.closeTabIgnoringChanges(1);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-      VirtualFileSystemUtils.delete(WS_URL + FILE_NAME);
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }
 
 }

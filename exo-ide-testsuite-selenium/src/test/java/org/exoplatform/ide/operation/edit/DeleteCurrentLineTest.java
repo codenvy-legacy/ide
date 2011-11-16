@@ -24,10 +24,12 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
@@ -36,11 +38,11 @@ import org.openqa.selenium.Keys;
  */
 public class DeleteCurrentLineTest extends BaseTest
 {
-   private static final String TEST_FOLDER = DeleteCurrentLineTest.class.getSimpleName();
+   private static final String PROJECT = DeleteCurrentLineTest.class.getSimpleName();
 
    private static final String FILE_NAME_1 = "file-" + DeleteCurrentLineTest.class.getSimpleName();
 
-   private static final String FILE_NAME_2 = "file-" + DeleteCurrentLineTest.class.getSimpleName() + "111";
+   private static final String FILE_NAME_2 = "file-" + DeleteCurrentLineTest.class.getSimpleName() + "2";
 
    private static final String WAIT_APPEAR_STATUSBAR =
       "//div[@id='exoIDEStatusbar']//div[@control-id='__editor_cursor_position']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr";
@@ -76,9 +78,10 @@ public class DeleteCurrentLineTest extends BaseTest
 
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(filePath1, MimeType.TEXT_HTML, WS_URL + TEST_FOLDER + "/" + FILE_NAME_1);
-         VirtualFileSystemUtils.put(filePath2, MimeType.TEXT_PLAIN, WS_URL + TEST_FOLDER + "/" + FILE_NAME_2);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME_1, MimeType.TEXT_HTML, filePath1);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME_2, MimeType.TEXT_PLAIN, filePath2);
       }
       catch (Exception e)
       {
@@ -91,7 +94,7 @@ public class DeleteCurrentLineTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -103,20 +106,22 @@ public class DeleteCurrentLineTest extends BaseTest
    @Test
    public void deleteLine() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_1);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_1, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_1);
 
       currentTextInEditor = Lines.DEFAULT_TEXT;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 1 -----------
       // Click on "Edit->Delete Current Line" top menu command.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
       currentTextInEditor = Lines.LINE_2 + Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
@@ -124,8 +129,8 @@ public class DeleteCurrentLineTest extends BaseTest
 
       //----- 2 -----------
       //Press "Ctrl+D" keys.
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
+      IDE.EDITOR.deleteLinesInEditor(0, 1);
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
@@ -133,39 +138,38 @@ public class DeleteCurrentLineTest extends BaseTest
 
       //----- 3 -----------
       //Move cursor down on 2 lines
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.EDITOR.moveCursorDown(0, 2);
 
       //----- 4 -----------
       //Press "Ctrl+D"
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
+      IDE.EDITOR.deleteLinesInEditor(0, 1);
+      IDE.STATUSBAR.waitCursorPositionControl();
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_6 + Lines.LINE_7;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
       assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 5 -----------
       //Click on "Edit->Delete Current Line" top menu command
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_7;
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
       assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 6 -----------
       //Click on "Edit->Delete Current Line" top menu command
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4.trim();
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
       assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 7 -----------
       //Open empty text file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_2, false);
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR + "[text()='1 : 1']");
-
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_2);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_2);
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       IDE.EDITOR.typeTextIntoEditor(1, Lines.TEXT_LINE_1);
 
@@ -176,19 +180,17 @@ public class DeleteCurrentLineTest extends BaseTest
 
       //----- 9 -----------
       //Press "Ctrl+D" keys
-      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "d");
-      
-      IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.deleteLinesInEditor(1, 1);
 
       IDE.EDITOR.selectTab(1);
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
+
+      IDE.EDITOR.selectTab(2);
+      IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
 
-      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "d");
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
+      IDE.EDITOR.deleteLinesInEditor(1, 1);
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
    }
-
 }

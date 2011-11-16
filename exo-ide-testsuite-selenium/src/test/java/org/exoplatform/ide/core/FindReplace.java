@@ -20,9 +20,16 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,38 +40,109 @@ import org.exoplatform.ide.TestConstants;
 
 public class FindReplace extends AbstractTestModule
 {
-   private final static String FIND_REPLACE_VIEW_ID = "ideFindReplaceTextView";
-
-   private final static String FIND_REPLACE_VIEW_LOCATOR = "//div[@view-id='" + FIND_REPLACE_VIEW_ID + "']";
-
-   private final static String FIND_BUTTON_ID = "ideFindReplaceTextFormFindButton";
-
-   private final static String REPLACE_BUTTON_ID = "ideFindReplaceTextFormReplaceButton";
-
-   private final static String REPLACE_FIND_BUTTON_ID = "ideFindReplaceTextFormReplaceFindButton";
-
-   private final static String REPLACE_ALL_BUTTON_ID = "ideFindReplaceTextFormReplaceAllButton";
-
-   private final static String CANCEL_BUTTON_ID = "ideFindReplaceTextFormCancelButton";
-
-   private final static String FIND_FIELD_ID = "ideFindReplaceTextFormFindField";
-
-   private final static String REPLACE_FIELD_ID = "ideFindReplaceTextFormReplaceField";
-
-   private final static String CASE_SENSITIVE_FIELD_ID = "ideFindReplaceTextFormCaseSensitiveField";
-
-   private final static String FIND_RESULT_LABEL_ID = "ideFindReplaceTextFormFindResult";
-
-   private final static String NOT_FOUND_RESULT = "String not found.";
-
-   public void waitForFindReplaceViewOpened() throws Exception
+   interface Locators
    {
-      waitForElementPresent(FIND_REPLACE_VIEW_LOCATOR);
+      String VIEW_LOCATOR = "//div[@view-id='ideFindReplaceTextView']";
+
+      String FIND_BUTTON_ID = "ideFindReplaceTextFormFindButton";
+
+      String REPLACE_BUTTON_ID = "ideFindReplaceTextFormReplaceButton";
+
+      String REPLACE_FIND_BUTTON_ID = "ideFindReplaceTextFormReplaceFindButton";
+
+      String REPLACE_ALL_BUTTON_ID = "ideFindReplaceTextFormReplaceAllButton";
+
+      String CANCEL_BUTTON_ID = "ideFindReplaceTextFormCancelButton";
+
+      String FIND_FIELD_ID = "ideFindReplaceTextFormFindField";
+
+      String REPLACE_FIELD_ID = "ideFindReplaceTextFormReplaceField";
+
+      String CASE_SENSITIVE_FIELD_ID = "ideFindReplaceTextFormCaseSensitiveField";
+
+      String FIND_RESULT_LABEL_ID = "ideFindReplaceTextFormFindResult";
    }
 
-   public void waitForFindReplaceViewClosed() throws Exception
+   public static final String NOT_FOUND_RESULT = "String not found.";
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.FIND_BUTTON_ID)
+   private WebElement findButton;
+
+   @FindBy(id = Locators.REPLACE_BUTTON_ID)
+   private WebElement replaceButton;
+
+   @FindBy(id = Locators.REPLACE_FIND_BUTTON_ID)
+   private WebElement replaceFindButton;
+
+   @FindBy(id = Locators.REPLACE_ALL_BUTTON_ID)
+   private WebElement replaceAllButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locators.FIND_FIELD_ID)
+   private WebElement findField;
+
+   @FindBy(name = Locators.REPLACE_FIELD_ID)
+   private WebElement replaceField;
+
+   @FindBy(name = Locators.CASE_SENSITIVE_FIELD_ID)
+   private WebElement caseSensitiveField;
+
+   @FindBy(id = Locators.FIND_RESULT_LABEL_ID)
+   private WebElement resultLabel;
+
+   /**
+    * Wait Find/Replace text view opened.
+    * 
+    * @throws Exception
+    */
+   public void waitOpened() throws Exception
    {
-      waitForElementNotPresent(FIND_REPLACE_VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement view = input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return (view != null && view.isDisplayed());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait Find/Replace text view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -72,29 +150,28 @@ public class FindReplace extends AbstractTestModule
     */
    public void checkFindReplaceFormAppeared()
    {
-      assertTrue(selenium().isElementPresent(FIND_REPLACE_VIEW_LOCATOR));
-      assertTrue(selenium().isElementPresent(FIND_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(REPLACE_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(REPLACE_FIND_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(REPLACE_ALL_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(FIND_FIELD_ID));
-      assertTrue(selenium().isElementPresent(REPLACE_FIELD_ID));
-      assertTrue(selenium().isElementPresent(CASE_SENSITIVE_FIELD_ID));
-      // Check buttons state
+      assertTrue(view.isDisplayed());
+      assertTrue(findButton.isDisplayed());
+      assertTrue(replaceButton.isDisplayed());
+      assertTrue(replaceFindButton.isDisplayed());
+      assertTrue(replaceAllButton.isDisplayed());
+      assertTrue(cancelButton.isDisplayed());
+      assertTrue(findField.isDisplayed());
+      assertTrue(replaceField.isDisplayed());
+      assertTrue(caseSensitiveField.isDisplayed());
 
+      // Check buttons state
       assertFalse(isReplaceButtonEnabled());
       assertFalse(isReplaceFindButtonEnabled());
       assertFalse(isFindButtonEnabled());
       assertFalse(isReplaceAllButtonEnabled());
       assertTrue(isCancelButtonEnabled());
    }
-   
+
    public void checkFindReplaceFormNotAppeared()
    {
-      assertFalse(selenium().isElementPresent(FIND_REPLACE_VIEW_LOCATOR));
+      assertNull(view);
    }
-   
 
    /**
     * Get enabled state of cancel button.
@@ -103,8 +180,7 @@ public class FindReplace extends AbstractTestModule
     */
    public boolean isCancelButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + CANCEL_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(cancelButton);
    }
 
    /**
@@ -114,8 +190,7 @@ public class FindReplace extends AbstractTestModule
     */
    public boolean isFindButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + FIND_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(findButton);
    }
 
    /**
@@ -125,8 +200,7 @@ public class FindReplace extends AbstractTestModule
     */
    public boolean isReplaceButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + REPLACE_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(replaceButton);
    }
 
    /**
@@ -136,8 +210,7 @@ public class FindReplace extends AbstractTestModule
     */
    public boolean isReplaceFindButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + REPLACE_FIND_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(replaceFindButton);
    }
 
    /**
@@ -147,39 +220,17 @@ public class FindReplace extends AbstractTestModule
     */
    public boolean isReplaceAllButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + REPLACE_ALL_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(replaceAllButton);
    }
 
    public void typeInFindField(String text) throws InterruptedException
    {
-      if (text == "")
-      {
-         selenium().click(FIND_FIELD_ID);
-         selenium().controlKeyDown();
-         selenium().keyPress(FIND_FIELD_ID, "A");
-         selenium().controlKeyUp();
-         selenium().keyDown(FIND_FIELD_ID, "\b");
-         selenium().keyUp(FIND_FIELD_ID, "\b");
-         return;
-      }
-      selenium().type(FIND_FIELD_ID, "");
-      selenium().typeKeys(FIND_FIELD_ID, text);
+      IDE().INPUT.typeToElement(findField, text, true);
    }
 
    public void typeInReplaceField(String text) throws InterruptedException
    {
-      if (text == "")
-      {
-         selenium().click(REPLACE_FIELD_ID);
-         selenium().controlKeyDown();
-         selenium().keyPress(REPLACE_FIELD_ID, "A");
-         selenium().controlKeyUp();
-         selenium().keyPress(REPLACE_FIELD_ID, "\b");
-         return;
-      }
-      selenium().type(REPLACE_FIELD_ID, "");
-      selenium().typeKeys(REPLACE_FIELD_ID, text);
+      IDE().INPUT.typeToElement(replaceField, text, true);
    }
 
    public void checkFindFieldNotEmptyState()
@@ -190,7 +241,7 @@ public class FindReplace extends AbstractTestModule
       assertFalse(isReplaceFindButtonEnabled());
       assertTrue(isCancelButtonEnabled());
    }
-   
+
    public void checkFindFieldEmptyState()
    {
       assertTrue(isFindButtonEnabled());
@@ -202,32 +253,27 @@ public class FindReplace extends AbstractTestModule
 
    public void clickFindButton() throws InterruptedException
    {
-      selenium().click(FIND_BUTTON_ID);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      findButton.click();
    }
 
    public void clickReplaceButton() throws InterruptedException
    {
-      selenium().click(REPLACE_BUTTON_ID);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      replaceButton.click();
    }
 
    public void clickReplaceFindButton() throws InterruptedException
    {
-      selenium().click(REPLACE_FIND_BUTTON_ID);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      replaceFindButton.click();
    }
 
    public void clickReplaceAllButton() throws InterruptedException
    {
-      selenium().click(REPLACE_ALL_BUTTON_ID);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      replaceAllButton.click();
    }
 
    public void clickCancelButton() throws InterruptedException
    {
-      selenium().click(CANCEL_BUTTON_ID);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      cancelButton.click();
    }
 
    /**
@@ -258,12 +304,11 @@ public class FindReplace extends AbstractTestModule
 
    public String getFindResultText()
    {
-      return selenium().getText(FIND_RESULT_LABEL_ID);
+      return resultLabel.getText();
    }
 
    public void clickCaseSensitiveField()
    {
-      selenium().click(CASE_SENSITIVE_FIELD_ID);
+      caseSensitiveField.click();
    }
-
 }

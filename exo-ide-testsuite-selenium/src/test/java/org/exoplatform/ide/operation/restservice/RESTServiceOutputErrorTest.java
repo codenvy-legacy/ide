@@ -84,7 +84,7 @@ public class RESTServiceOutputErrorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, true);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE);
 
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
+      IDE.WARNING_DIALOG.waitOpened();
 
       IDE.WARNING_DIALOG.clickOk();
 
@@ -118,8 +118,7 @@ public class RESTServiceOutputErrorTest extends BaseTest
 
       IDE.REST_SERVICE.clickSendButton();
 
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
-      IDE.WARNING_DIALOG.checkIsOpened();
+      IDE.WARNING_DIALOG.waitOpened();
 
       IDE.WARNING_DIALOG.clickOk();
 

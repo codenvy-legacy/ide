@@ -844,6 +844,7 @@ public abstract class BaseTest
     * @param lineNumber
     * @throws InterruptedException
     */
+   @Deprecated
    public void goToLine(int lineNumber) throws Exception
    {
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);

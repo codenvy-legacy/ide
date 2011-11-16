@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.core;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -27,9 +33,14 @@ package org.exoplatform.ide.core;
 
 public class Statusbar extends AbstractTestModule
 {
+   interface Locators
+   {
+      String CURSOR_POSITION_LOCATOR =
+         "//div[@control-id='__editor_cursor_position']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']";
+   }
 
-   public static String STATUSBAR_LOCATOR =
-      "//div[@id='exoIDEStatusbar']//div[@control-id='__editor_cursor_position']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']";
+   @FindBy(xpath = Locators.CURSOR_POSITION_LOCATOR)
+   private WebElement cursorPosition;
 
    /**
     * Get cursor position.
@@ -37,7 +48,29 @@ public class Statusbar extends AbstractTestModule
     */
    public String getCursorPosition()
    {
-      return selenium().getText(STATUSBAR_LOCATOR);
+      return cursorPosition.getText();
+   }
+
+   /**
+    * Click on cursor position control of status bar.
+    * @throws Exception 
+    */
+   public void clickOnCursorPositionControl()
+   {
+      cursorPosition.click();
+   }
+
+   public void waitCursorPositionControl()
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver arg0)
+         {
+            return (cursorPosition != null && cursorPosition.isDisplayed());
+         }
+      });
    }
 
    /**
@@ -45,20 +78,11 @@ public class Statusbar extends AbstractTestModule
     * 
     * @return {@link String} text
     */
+   @Deprecated
    public String getStatusbarText()
    {
       return selenium()
          .getText(
             "//div[@id='exoIDEStatusbar']//div[@class='exoToolbarElementLeft']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']");
    }
-
-   /**
-    * Click on statusbar.
-    * @throws Exception 
-    */
-   public void clickOnStatusBar()
-   {
-      selenium().click(STATUSBAR_LOCATOR);
-   }
-
 }

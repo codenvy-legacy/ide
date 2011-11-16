@@ -2,7 +2,7 @@
 <Module>
   <ModulePrefs title="Hello World!" />
   <Content type="html">
-    <![CDATA[ 
+    <![CDATA[
     <script type='text/javascript'>
       function foo(bar, baz) {
         alert('quux');

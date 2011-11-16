@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.MenuCommands;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by The eXo Platform SAS .
@@ -32,92 +36,150 @@ import org.exoplatform.ide.TestConstants;
 
 public class GoToLine extends AbstractTestModule
 {
-   public static final String GO_TO_LINE_FORM_LOCATOR = "//div[@view-id='ideGoToLineForm']";
-   
-   public static final String GO_TO_LINE_BUTTON_ID = "ideGoToLineFormGoButton";
-   
-   public static final String CANCEL_BUTTON_ID = "ideGoToLineFormCancelButton";
+
+   interface Locators
+   {
+      String VIEW_LOCATOR = "//div[@view-id='ideGoToLineForm']";
+
+      String LINE_NUBER_FIELD_ID = "ideGoToLineFormLineNumberField";
+
+      String LINE_RANGE_LABEL_ID = "ideGoToLineFormLineRangeLabel";
+
+      String GO_TO_LINE_BUTTON_ID = "ideGoToLineFormGoButton";
+
+      String CANCEL_BUTTON_ID = "ideGoToLineFormCancelButton";
+   }
+
+   public static final String RANGE_LABEL = "Enter line number (%d..%d):";
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(name = Locators.LINE_NUBER_FIELD_ID)
+   private WebElement lineNumberField;
+
+   @FindBy(id = Locators.LINE_RANGE_LABEL_ID)
+   private WebElement lineRangeLabel;
+
+   @FindBy(id = Locators.GO_TO_LINE_BUTTON_ID)
+   private WebElement goButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
 
    /**
-    * check Go To LineForm present
+    * Wait Go to line view opened.
+    * 
+    * @throws Exception
     */
-   public void checkAppearGoToLineForm()
+   public void waitOpened() throws Exception
    {
-      assertTrue(selenium().isElementPresent(GO_TO_LINE_FORM_LOCATOR));
-      assertTrue(selenium().isElementPresent(GO_TO_LINE_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
-   }
-   
-   public void waitForGoToLineForm() throws Exception
-   {
-      waitForElementPresent(GO_TO_LINE_FORM_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement view = input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return (view != null && view.isDisplayed());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
-    * check "GoToLineForm" label on form with string range.
-    * @param label
+    * Wait Go to line view closed.
+    * 
+    * @throws Exception
     */
-   public void checkLineNumberLabel(String label)
+   public void waitClosed() throws Exception
    {
-      assertTrue(selenium().isElementPresent(
-         "//form[@id='ideGoToLineFormDynamicForm']/div/nobr/span[text()=" + "'" + label + "'" + "]"));
-   }
-
-   public void typeIntoGoToLineFormField(String typeText)
-   {
-      selenium().type("ideGoToLineFormLineNumberField", typeText);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
-    * clicks on go button of form. Checks closing form
-    * @throws InterruptedException 
+    * Check Go To LineForm present
     */
-   public void pressGoButtonWithCorrectValue() throws InterruptedException
+   public boolean isGoToLineViewPresent()
    {
-      selenium().click("ideGoToLineFormGoButton");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium().isElementPresent(GO_TO_LINE_FORM_LOCATOR));
-      assertFalse(selenium().isElementPresent("exoWarningDialogOkButton"));
-      assertFalse(selenium().isElementPresent("//div[@id='" + GO_TO_LINE_FORM_LOCATOR + "']//div/img[@title='Close']"));
-      assertFalse(selenium().isElementPresent("ideGoToLineFormGoButton"));
-      assertFalse(selenium().isElementPresent("ideGoToLineFormCancelButton"));
+      return (view != null && view.isDisplayed()) && (goButton != null && goButton.isDisplayed())
+         && (cancelButton != null && cancelButton.isDisplayed())
+         && (lineNumberField != null && lineNumberField.isDisplayed());
    }
 
    /**
-    * clicks on cancel button of form. Checks closing form
-    * @throws InterruptedException 
+    * Get the value of the line number range.
+    * 
+    * @return {@link String}
     */
-   public void pressCancelButtonWithCorrectValue() throws InterruptedException
+   public String getLineNumberRangeLabel()
    {
-      selenium().click("ideGoToLineFormCancelButton");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium().isElementPresent(GO_TO_LINE_FORM_LOCATOR));
-      assertFalse(selenium().isElementPresent("exoWarningDialogOkButton"));
-      assertFalse(selenium().isElementPresent("//div[@id='" + GO_TO_LINE_FORM_LOCATOR + "']//div/img[@title='Close']"));
-      assertFalse(selenium().isElementPresent("ideGoToLineFormGoButton"));
-      assertFalse(selenium().isElementPresent("ideGoToLineFormCancelButton"));
+      return lineRangeLabel.getText();
    }
 
    /**
-    * press on button not check disappear form
+    * Type value of the line number field.
+    * 
+    * @param value line number value
     * @throws InterruptedException
     */
-   public void pressCancelButton() throws InterruptedException
+   public void typeIntoLineNumberField(String value) throws InterruptedException
    {
-      selenium().click("ideGoToLineFormCancelButton");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
+      IDE().INPUT.typeToElement(lineNumberField, value, true);
    }
 
    /**
-    * press on button not check disappear form
+    * Click cancel button.
+    * 
     * @throws InterruptedException
     */
-   public void pressGoButton() throws InterruptedException
+   public void clickCancelButton() throws InterruptedException
    {
-      selenium().click("ideGoToLineFormGoButton");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
+      cancelButton.click();
    }
 
+   /**
+    * Click go to line button.
+    * 
+    * @throws InterruptedException
+    */
+   public void clickGoButton() throws InterruptedException
+   {
+      goButton.click();
+   }
+
+   /**
+    * Move to pointed line number.
+    * 
+    * @param line line number to move to
+    * @throws Exception 
+    */
+   public void goToLine(int line) throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+      waitOpened();
+      typeIntoLineNumberField(String.valueOf(line));
+      clickGoButton();
+      waitClosed();
+   }
 }

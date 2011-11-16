@@ -26,9 +26,13 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
@@ -42,7 +46,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
 
    private final static String TEMPLATE_FILE_NAME = "java-type-validation-and-fixing.gtmpl";
 
-   private final static String TEST_FOLDER = JavaTypeValidationAndFixingTest.class.getSimpleName();
+   private final static String PROJECT = JavaTypeValidationAndFixingTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -52,11 +56,11 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
 
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(serviceFilePath, MimeType.GROOVY_SERVICE, WS_URL + TEST_FOLDER + "/"
-            + SERVICE_FILE_NAME);
-         VirtualFileSystemUtils.put(templateFilePath, MimeType.GROOVY_TEMPLATE, WS_URL + TEST_FOLDER + "/"
-            + TEMPLATE_FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, SERVICE_FILE_NAME, MimeType.GROOVY_SERVICE, serviceFilePath);
+         VirtualFileSystemUtils.createFileFromLocal(link, TEMPLATE_FILE_NAME, MimeType.GROOVY_TEMPLATE,
+            templateFilePath);
       }
       catch (Exception e)
       {
@@ -67,23 +71,22 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    @Test
    public void testServiceFile() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SERVICE_FILE_NAME);
 
-      // Open groovy file with test content
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME);
-      
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + SERVICE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + SERVICE_FILE_NAME);
+
       // test error marks
       firstTestErrorMarks();
-      
+
       // test error marks appearance after the hiding line numbers (IDE-764)
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
+      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS));
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);      
-      
+      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS));
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
+
       // test error marks
       firstTestErrorMarks();
 
@@ -95,40 +98,36 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
                "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "),
             "");
       selenium().click(getErrorCorrectionListItemLocator("Base64"));
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
 
       // test import statement
-      IDE.EDITOR.clickOnEditor(0);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.PAGE_UP.toString() + Keys.HOME);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import Path\n" + "import javax.ws.rs.GET\n" + "import some.pack.String\n"
             + "import javax.inject.Inject \n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
 
       // test code error marks
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(17,
-         "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
+      assertTrue(selenium().isElementPresent(
+         getCodeErrorMarkLocator(17,
+            "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(18)));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(37)));
 
       // edit text
       IDE.EDITOR.deleteFileContent(0);
-      IDE.EDITOR.waitTabPresent(0);
-
-      // test removing error marks if file is empty
-      // assertFalse(selenium().getEval("this.browserbot.findElement(\"//div[@class=\'CodeMirror-line-numbers\']/div[text() = \'9\']\").hasAttribute(\"title\")") == "true");           
 
       // add test text
       IDE.EDITOR.typeTextIntoEditor(0, "Integer1 d \n" + "@POST \n"
          + "public Base64 hello(@PathParam(\"name\") Base64 name) {}");
-      IDE.EDITOR.waitTabPresent(0);
 
       // test error marks
       assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(1, "'Integer1' cannot be resolved to a type; ")));
       assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(2, "'POST' cannot be resolved to a type; ")));
       assertTrue(selenium()
-         .isElementPresent(getCodeErrorMarkLocator(
-            3,
-            "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'Base64' cannot be resolved to a type; ")));
+         .isElementPresent(
+            getCodeErrorMarkLocator(
+               3,
+               "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'Base64' cannot be resolved to a type; ")));
 
       // fix error
       selenium().clickAt(getCodeErrorMarkLocator(3), "");
@@ -138,7 +137,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP * 2);
 
       // test import statement and code error marks
-      IDE.EDITOR.clickOnEditor(0);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.PAGE_UP.toString() + Keys.HOME);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "import java.util.prefs.Base64\n" + "Integer1 d \n" + "@POST \n"
             + "public Base64 hello(@PathParam(\"name\") Base64 name) {}"));
@@ -157,9 +156,8 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
 
       //timeout for parsing text
       Thread.sleep(3000);
-      assertTrue(selenium()
-         .isElementPresent(getCodeErrorMarkLocator(
-            10,
+      assertTrue(selenium().isElementPresent(
+         getCodeErrorMarkLocator(10,
             "'ManyToOne' cannot be resolved to a type; 'Mandatory' cannot be resolved to a type; ")));
       assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(11, "'Property' cannot be resolved to a type; ")));
       assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(14, "'POST' cannot be resolved to a type; ")));
@@ -167,9 +165,10 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(15)));
 
       assertTrue(selenium()
-         .isElementPresent(getCodeErrorMarkLocator(
-            16,
-            "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
+         .isElementPresent(
+            getCodeErrorMarkLocator(
+               16,
+               "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
       assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(17, "'Base64' cannot be resolved to a type; ")));
 
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(18)));
@@ -178,14 +177,10 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(33)));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(35)));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(37)));
-      assertTrue(selenium()
-         .isElementPresent(getCodeErrorMarkLocator(
-            39,
-            "'ChromatticSession' cannot be resolved to a type; ")));
-      assertTrue(selenium()
-         .isElementPresent(getCodeErrorMarkLocator(
-            41,
-            "'ChromatticSession' cannot be resolved to a type; ")));
+      assertTrue(selenium().isElementPresent(
+         getCodeErrorMarkLocator(39, "'ChromatticSession' cannot be resolved to a type; ")));
+      assertTrue(selenium().isElementPresent(
+         getCodeErrorMarkLocator(41, "'ChromatticSession' cannot be resolved to a type; ")));
    }
 
    private void secondVerificationOfErrorMarks()
@@ -201,10 +196,13 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    public void testTemplateFile() throws Exception
    {
       // Open template file with test content
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEMPLATE_FILE_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEMPLATE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEMPLATE_FILE_NAME);
 
       // test error marks
       Thread.sleep(3000);
@@ -217,9 +215,10 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(10, "'Path' cannot be resolved to a type; ")));
 
       assertTrue(selenium()
-         .isElementPresent(getCodeErrorMarkLocator(
-            11,
-            "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
+         .isElementPresent(
+            getCodeErrorMarkLocator(
+               11,
+               "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
       assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(12, "'Base64' cannot be resolved to a type; ")));
 
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(13)));
@@ -238,16 +237,17 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.EDITOR.waitTabPresent(1);
       selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "");
       IDE.EDITOR.waitTabPresent(1);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
-      IDE.EDITOR.clickOnEditor(0);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.PAGE_UP.toString() + Keys.HOME);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(1).startsWith("<%\n" + "  import java.util.prefs.Base64\n" + "%>\n"));
 
       // test code error marks
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(14,
-         "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
+      assertTrue(selenium().isElementPresent(
+         getCodeErrorMarkLocator(14,
+            "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(15)));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(23)));
    }
@@ -255,13 +255,9 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      //IDE.EDITOR.closeFileTabIgnoreChanges(1);
-      org.exoplatform.ide.IDE.getInstance().EDITOR.closeTabIgnoringChanges(1);
-      org.exoplatform.ide.IDE.getInstance().EDITOR.closeTabIgnoringChanges(0);
-
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {

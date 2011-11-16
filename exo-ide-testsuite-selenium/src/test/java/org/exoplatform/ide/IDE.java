@@ -98,7 +98,7 @@ public class IDE
 
    public SaveAs SAVE_AS = new SaveAs();
 
-   public WarningDialog WARNING_DIALOG = new WarningDialog();
+   public WarningDialog WARNING_DIALOG;
 
    public ErrorDialog ERROR_DIALOG = new ErrorDialog();
 
@@ -108,17 +108,17 @@ public class IDE
 
    public InformationDialog INFORMATION_DIALOG = new InformationDialog();
 
-   public Statusbar STATUSBAR = new Statusbar();
+   public Statusbar STATUSBAR;
 
    public SelectWorkspace SELECT_WORKSPACE = new SelectWorkspace();
 
    public Workspace WORKSPACE = new Workspace();
 
-   public GoToLine GOTOLINE = new GoToLine();
+   public GoToLine GOTOLINE;
 
    public Upload UPLOAD = new Upload();
 
-   public FindReplace FINDREPLACE = new FindReplace();
+   public FindReplace FINDREPLACE;
 
    public Templates TEMPLATES = new Templates();
 
@@ -147,7 +147,7 @@ public class IDE
    public Project PROJECT;
 
    public Input INPUT = new Input();
-   
+
    public Button BUTTON = new Button();
 
    public Delete DELETE;
@@ -165,12 +165,16 @@ public class IDE
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       DELETE = PageFactory.initElements(driver, Delete.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
+      FOLDER = PageFactory.initElements(driver, Folder.class);
+      FINDREPLACE = PageFactory.initElements(driver, FindReplace.class);
+      GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
       MENU = PageFactory.initElements(driver, Menu.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);
       RENAME = PageFactory.initElements(driver, Rename.class);
+      STATUSBAR = PageFactory.initElements(driver, Statusbar.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
-      FOLDER = PageFactory.initElements(driver, Folder.class);
+      WARNING_DIALOG = PageFactory.initElements(driver, WarningDialog.class);
    }
 
    public Selenium getSelenium()

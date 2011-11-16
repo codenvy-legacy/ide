@@ -71,8 +71,8 @@ public class CreateProjectTemplateTest extends BaseTest
       addFolder(myFolder);
 
       //error dialog appears
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
-      IDE.WARNING_DIALOG.checkIsOpened("Folder with such name already exists");
+      IDE.WARNING_DIALOG.waitOpened();
+     //TODO IDE.WARNING_DIALOG.checkIsOpened("Folder with such name already exists");
       //close
       IDE.WARNING_DIALOG.clickOk();
 
@@ -96,7 +96,7 @@ public class CreateProjectTemplateTest extends BaseTest
       addFile("Google Gadget", gadgetFileName);
 
       //error dialog appears
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
+      IDE.WARNING_DIALOG.waitOpened();
       //close
       IDE.WARNING_DIALOG.clickOk();
 
@@ -141,7 +141,7 @@ public class CreateProjectTemplateTest extends BaseTest
       IDE.PROJECT.TEMPLATE.clickCreateButton();
 
       //check warn dialog appears
-      IDE.WARNING_DIALOG.waitForWarningDialogOpened();
+      IDE.WARNING_DIALOG.waitOpened();
       //click ok button and close
       IDE.WARNING_DIALOG.clickOk();
 

@@ -28,6 +28,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -89,9 +90,15 @@ public class Editor extends AbstractTestModule
 
       String ACTIVE_FILE_ID = "debug-editor-active-file-url";
 
+      String LINE_HIGHLIGHTER_CLASS = "CodeMirror-line-highlighter";
+
+      String HIGHLIGHTER_SELECTOR = "div[view-id=editor-%s] div." + LINE_HIGHLIGHTER_CLASS;
    }
 
    private WebElement editor;
+
+   @FindBy(className = Locators.LINE_HIGHLIGHTER_CLASS)
+   private WebElement highlighter;
 
    /**
     * Returns the title of the tab with the pointed index.
@@ -485,7 +492,7 @@ public class Editor extends AbstractTestModule
    {
       for (int i = 0; i < rows; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.DOWN.toString());
+         typeTextIntoEditor(tabIndex, Keys.ARROW_DOWN.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -501,7 +508,7 @@ public class Editor extends AbstractTestModule
    {
       for (int i = 0; i < rows; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.UP.toString());
+         typeTextIntoEditor(tabIndex, Keys.ARROW_UP.toString());
       }
    }
 
@@ -516,7 +523,7 @@ public class Editor extends AbstractTestModule
    {
       for (int i = 0; i < symbols; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.LEFT.toString());
+         typeTextIntoEditor(tabIndex, Keys.ARROW_LEFT.toString());
       }
    }
 
@@ -531,7 +538,7 @@ public class Editor extends AbstractTestModule
    {
       for (int i = 0; i < symbols; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.RIGHT.toString());
+         typeTextIntoEditor(tabIndex, Keys.ARROW_RIGHT.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -768,5 +775,36 @@ public class Editor extends AbstractTestModule
       selenium().selectFrame(
          "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
             + "//table[@class='cke_editor']//iframe");
+   }
+
+   public String getSelectedText(int tabIndex) throws Exception
+   {
+      selectIFrameWithEditor(tabIndex);
+      //TODO find how to get selected text
+      String text = selenium().getEval("if (window.getSelection) { window.getSelection().toString();}");
+
+      IDE().selectMainFrame();
+      return text;
+   }
+
+   public boolean isHighlighterPresent()
+   {
+      return highlighter != null && highlighter.isDisplayed();
+   }
+
+   /**
+    * @param tabIndex editor tab with highlighter
+    * @return {@link WebElement} highlighter
+    */
+   public WebElement getHighlighter(int tabIndex)
+   {
+      try
+      {
+         return editor.findElement(By.cssSelector(String.format(Locators.HIGHLIGHTER_SELECTOR, tabIndex)));
+      }
+      catch (NoSuchElementException e)
+      {
+         return null;
+      }
    }
 }

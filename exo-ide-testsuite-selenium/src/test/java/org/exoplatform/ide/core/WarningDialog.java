@@ -18,10 +18,17 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * This class provides methods for working with Warning dialog.
@@ -34,74 +41,79 @@ import org.exoplatform.ide.TestConstants;
 
 public class WarningDialog extends AbstractTestModule
 {
-
-   public static final String WARNING_DIALOG_ID = "exoWarningDialog";
-   
-   public static final String OK_BUTTON_ID = "OkButton";
-   
-   /**
-    * <b>Use instead assert methods in your test.</b>
-    * <p/>
-    * Check whether the Warning dialog is opened.
-    */
-   @Deprecated
-   public void checkIsOpened()
+   interface Locators
    {
-      assertTrue(selenium().isElementPresent(WARNING_DIALOG_ID));
-      assertTrue(selenium().isElementPresent(OK_BUTTON_ID));
+      String WARNING_DIALOG_ID = "exoWarningDialog";
+
+      String OK_BUTTON_ID = "OkButton";
+
+      String MESSAGE_SELECTOR = "div#" + WARNING_DIALOG_ID + " div.gwt-Label";
    }
 
+   @FindBy(id = Locators.OK_BUTTON_ID)
+   private WebElement okButton;
+
+   @FindBy(how = How.CSS, using = Locators.MESSAGE_SELECTOR)
+   private WebElement warningMessage;
+
    /**
-    * <b>Use instead assert methods in your test.</b>
-    * <p/>
-    * Check whether the Warning dialog is opened and contains specified message.
+    * Wait Warning dialog opened.
     * 
-    * @param message message
-    */
-   @Deprecated
-   public void checkIsOpened(String message)
-   {
-      checkIsOpened();
-      assertTrue(selenium().isTextPresent(message));
-   }
-   
-   /**
-    * Wait for Warning dialog opened
     * @throws Exception
     */
-   public void waitForWarningDialogOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(WARNING_DIALOG_ID);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement view = input.findElement(By.id(Locators.WARNING_DIALOG_ID));
+               return (view != null && view.isDisplayed());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
-   
+
    /**
-    * Wait for Warning dialog closed
+    * Wait Warning dialog closed.
+    * 
     * @throws Exception
     */
-   public void waitForWarningDialogClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(WARNING_DIALOG_ID);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.id(Locators.WARNING_DIALOG_ID));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
-    * Gets 
+    * Click ok button.
     * 
-    * @return
+    * @throws Exception
     */
-   public boolean isDialogOpened()
-   {
-      return selenium().isElementPresent(WARNING_DIALOG_ID);
-   }
-   
-   public boolean isDialogOpened(String message) {
-      fail();
-      return false;
-   }
-
    public void clickOk() throws Exception
    {
-      selenium().click("//div[@id='" + WARNING_DIALOG_ID + "']//div[@id='" + OK_BUTTON_ID + "']");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      okButton.click();
    }
 
    public void clickYes() throws Exception
@@ -122,4 +134,15 @@ public class WarningDialog extends AbstractTestModule
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
+   /**
+    * Get warning message.
+    * 
+    * @return {@link String} warning message
+    */
+   public String getWarningMessage()
+   {
+      String text = warningMessage.getText().trim();
+      text = (text.endsWith("\n")) ? text.substring(0, text.length() - 2) : text;
+      return text;
+   }
 }
