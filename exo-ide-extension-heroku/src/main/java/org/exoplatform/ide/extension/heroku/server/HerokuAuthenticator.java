@@ -27,7 +27,9 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
@@ -209,11 +211,11 @@ public class HerokuAuthenticator
    public void writeCredentials(HerokuCredentials credentials) throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
-      Item heroku = getConfigParent(vfs);
+      Folder heroku = getConfigParent(vfs);
       try
       {
          Item credentialsFile =
-            vfs.getItemByPath(heroku.getPath() + "/heroku-credentials", null, PropertyFilter.NONE_FILTER);
+            vfs.getItemByPath(heroku.createPath("heroku-credentials"), null, PropertyFilter.NONE_FILTER);
          InputStream newcontent =
             new ByteArrayInputStream((credentials.getEmail() + "\n" + credentials.getApiKey()).getBytes());
          vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newcontent, null);
@@ -240,19 +242,24 @@ public class HerokuAuthenticator
       vfs.delete(credentialsFile.getId(), null);
    }
 
-   private Item getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
+   private Folder getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
    {
       String user = ConversationState.getCurrent().getIdentity().getUserId();
-      String cloudFoundryPath = config + user + "/heroku";
+      String herokuPath = config + user + "/heroku";
       VirtualFileSystemInfo info = vfs.getInfo();
-      Item heroku = null;
+      Folder heroku = null;
       try
       {
-         heroku = vfs.getItemByPath(cloudFoundryPath, null, PropertyFilter.NONE_FILTER);
+         Item item = vfs.getItemByPath(herokuPath, null, PropertyFilter.NONE_FILTER);
+         if (ItemType.FOLDER != item.getItemType())
+         {
+            throw new RuntimeException("Item " + herokuPath + " is not a Folder. ");
+         }
+         heroku = (Folder)item;
       }
       catch (ItemNotFoundException e)
       {
-         heroku = vfs.createFolder(info.getRoot().getId(), cloudFoundryPath.substring(1));
+         heroku = vfs.createFolder(info.getRoot().getId(), herokuPath.substring(1));
       }
       return heroku;
    }
