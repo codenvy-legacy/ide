@@ -54,7 +54,7 @@ public class SamplesListGrid extends ListGrid<Repository>
 
                public String asString()
                {
-                  return repo.getName();
+                  return "<b>" + repo.getName() + "</b><br><span style=\"color: #747474\">" + repo.getDescription() + "</span>";
                }
             };
             return html;
