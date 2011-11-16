@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
@@ -32,10 +35,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -139,9 +138,9 @@ public class HerokuAuthenticator
          JsonValue jsonValue;
          try
          {
-            JsonDefaultHandler handler = new JsonDefaultHandler();
-            new JsonParserImpl().parse(input, handler);
-            jsonValue = handler.getJsonObject();
+            JsonParser parser = new JsonParser();
+            parser.parse(input);
+            jsonValue = parser.getJsonObject();
          }
          finally
          {
