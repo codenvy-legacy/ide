@@ -252,6 +252,7 @@ public class CloudfoundryAuthenticator
          {
             throw new RuntimeException("Item " + cloudFoundryPath + " is not a Folder. ");
          }
+         cloudFoundry = (Folder)item;
       }
       catch (ItemNotFoundException e)
       {
@@ -260,7 +261,7 @@ public class CloudfoundryAuthenticator
       return cloudFoundry;
    }
 
-   private void writeFile(VirtualFileSystem vfs, Item parent, String file, String data) throws VirtualFileSystemException, IOException
+   private void writeFile(VirtualFileSystem vfs, Folder parent, String file, String data) throws VirtualFileSystemException, IOException
    {
       try
       {
