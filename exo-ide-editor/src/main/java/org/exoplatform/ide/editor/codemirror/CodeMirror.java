@@ -425,6 +425,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
                       return true;                
                     }
                   }
+                  
+                  // fix bug with pasting text into emptied document in the IE (IDE-1142)
+                  if (editor.getCode() == "")
+                  {
+                     editor.setCode("");
+                  }
 
       return false;
       });
