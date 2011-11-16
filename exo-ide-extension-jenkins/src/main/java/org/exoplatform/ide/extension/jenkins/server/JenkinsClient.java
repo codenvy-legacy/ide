@@ -33,6 +33,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -62,12 +63,10 @@ import javax.xml.xpath.XPathFactory;
  */
 public abstract class JenkinsClient
 {
-   protected class HttpStream extends InputStream
+   protected static class HttpStream extends InputStream
    {
       private final HttpURLConnection http;
-
       private InputStream in;
-
       private boolean closed;
 
       public HttpStream(HttpURLConnection http)
@@ -167,10 +166,11 @@ public abstract class JenkinsClient
          authenticate(http);
          http.setRequestProperty("Content-type", "application/xml");
          http.setDoOutput(true);
+         OutputStream out = http.getOutputStream();
          BufferedWriter wr = null;
          try
          {
-            wr = new BufferedWriter(new OutputStreamWriter(http.getOutputStream()));
+            wr = new BufferedWriter(new OutputStreamWriter(out));
             wr.write(data);
             wr.flush();
          }
@@ -178,11 +178,14 @@ public abstract class JenkinsClient
          {
             if (wr != null)
                wr.close();
+            out.close();
          }
 
          int responseCode = http.getResponseCode();
          if (responseCode != 200)
+         {
             throw fault(http);
+         }
       }
       finally
       {
@@ -194,9 +197,13 @@ public abstract class JenkinsClient
    protected String configXml(String git, String user, String email)
    {
       if (jobTemplate == null)
+      {
          loadJobTemplate(); // Load XML template of Jenkins job configuration.
+      }
       if (transfomRules == null)
-         loadTransformRules(); // Load XSLT transformation rules. 
+      {
+         loadTransformRules(); // Load XSLT transformation rules.
+      }
       try
       {
          Transformer tr = transfomRules.newTransformer();
@@ -223,24 +230,32 @@ public abstract class JenkinsClient
    private void loadJobTemplate()
    {
       if (jobTemplate != null)
+      {
          return;
+      }
 
       synchronized (this)
       {
          if (jobTemplate != null)
+         {
             return;
+         }
 
          final String fileName = "jenkins-config.xml";
          InputStream template = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
          if (template == null)
+         {
             throw new RuntimeException("Not found jenkins job configuration template. Required file : " + fileName);
+         }
          try
          {
             ByteArrayOutputStream bout = new ByteArrayOutputStream(template.available());
             byte[] b = new byte[1024];
             int r;
             while ((r = template.read(b)) != -1)
+            {
                bout.write(b, 0, r);
+            }
             jobTemplate = bout.toString();
          }
          catch (IOException e)
@@ -263,19 +278,25 @@ public abstract class JenkinsClient
    private void loadTransformRules()
    {
       if (transfomRules != null)
+      {
          return;
+      }
 
       synchronized (this)
       {
          if (transfomRules != null)
+         {
             return;
+         }
 
+         final String fileName = "jenkins-config.xslt";
+         InputStream xsltSource = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+         if (xsltSource == null)
+         {
+            throw new RuntimeException("File " + fileName + " not found.");
+         }
          try
          {
-            final String fileName = "jenkins-config.xslt";
-            InputStream xsltSource = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
-            if (xsltSource == null)
-               throw new RuntimeException("File " + fileName + " not found.");
             transfomRules = TransformerFactory.newInstance().newTemplates(new StreamSource(xsltSource));
          }
          catch (TransformerConfigurationException e)
@@ -285,6 +306,16 @@ public abstract class JenkinsClient
          catch (TransformerFactoryConfigurationError e)
          {
             throw new RuntimeException(e.getMessage(), e);
+         }
+         finally
+         {
+            try
+            {
+               xsltSource.close();
+            }
+            catch (IOException ignored)
+            {
+            }
          }
       }
    }
@@ -300,9 +331,13 @@ public abstract class JenkinsClient
          authenticate(http);
          int responseCode = http.getResponseCode();
          if (responseCode == 404)
+         {
             throw new JenkinsException(404, "Job '" + jobName + "' not found.\n", "text/plain");
+         }
          if (responseCode != 200)
+         {
             throw fault(http);
+         }
          InputStream input = http.getInputStream();
          int contentLength = http.getContentLength();
          String body = null;
@@ -339,16 +374,22 @@ public abstract class JenkinsClient
             {
                JobStatus lastJobStatus = jobStatus(lastJob, null, null);
                if (JobStatus.Status.END == lastJobStatus.getStatus())
+               {
                   userState.removeAttribute("org.exoplatform.ide.jenkins.job");
+               }
                else
+               {
                   throw new JenkinsException(400, "Build job '" + lastJob
                      + "' in progress. Not allowed have more then one build at the same time. ", "text/plain");
+               }
             }
             catch (JenkinsException e)
             {
-               // Do nothing if job does not exist.
                if (e.getResponseStatus() != 404)
+               {
+                  // Do nothing if job does not exist.
                   throw e;
+               }
             }
          }
       }
@@ -367,7 +408,9 @@ public abstract class JenkinsClient
          int responseCode = http.getResponseCode();
          // Returns 302 if build running. But may return 200 if run build failed, e. g. if user is not authenticated.
          if (responseCode != 302)
+         {
             throw fault(http);
+         }
       }
       finally
       {
@@ -375,7 +418,9 @@ public abstract class JenkinsClient
             http.disconnect();
       }
       if (userState != null)
+      {
          userState.setAttribute("org.exoplatform.ide.jenkins.job", jobName);
+      }
    }
 
    public JobStatus jobStatus(String jobName, VirtualFileSystem vfs, String projectId) throws IOException,
@@ -387,7 +432,9 @@ public abstract class JenkinsClient
       }
 
       if (inQueue(jobName))
+      {
          return new JobStatus(jobName, JobStatus.Status.QUEUE, null, null);
+      }
 
       HttpURLConnection http = null;
       try
@@ -441,8 +488,11 @@ public abstract class JenkinsClient
                XPath xpath = XPathFactory.newInstance().newXPath();
                String building = xpath.evaluate("/" + root + "/building", doc);
 
-               if (Boolean.parseBoolean(building)) // Building in progress.
+               if (Boolean.parseBoolean(building))
+               {
+                  // Building in progress.
                   return new JobStatus(jobName, JobStatus.Status.BUILD, null, null);
+               }
 
                String result = xpath.evaluate("/" + root + "/result", doc);
                String buildUrl = xpath.evaluate("/" + root + "/url", doc);
@@ -504,8 +554,9 @@ public abstract class JenkinsClient
          authenticate(http);
          int responseCode = http.getResponseCode();
          if (responseCode != 200)
+         {
             throw fault(http);
-
+         }
          InputStream input = http.getInputStream();
          int contentLength = http.getContentLength();
          String body = null;
@@ -538,7 +589,9 @@ public abstract class JenkinsClient
       }
 
       if (jobStatus(jobName, vfs, projectId).getStatus() != JobStatus.Status.END)
+      {
          return null; // Do not show output if job in queue for build or building now.
+      }
 
       HttpURLConnection http = null;
       try
@@ -549,9 +602,13 @@ public abstract class JenkinsClient
          authenticate(http);
          int responseCode = http.getResponseCode();
          if (responseCode == 404)
-            return null; // Job exists (checked before) but there is no last-build yet. 
+         {
+            return null; // Job exists (checked before) but there is no last-build yet.
+         }
          if (responseCode != 200)
+         {
             throw fault(http);
+         }
          return new HttpStream(http);
       }
       catch (IOException e)
@@ -584,7 +641,9 @@ public abstract class JenkinsClient
          authenticate(http);
          int responseCode = http.getResponseCode();
          if (responseCode != 302)
+         {
             throw fault(http);
+         }
       }
       finally
       {
@@ -606,13 +665,14 @@ public abstract class JenkinsClient
          int length = http.getContentLength();
          errorStream = http.getErrorStream();
          if (errorStream == null)
+         {
             return new JenkinsException(responseCode, null, null);
-
+         }
          String body = readBody(errorStream, length);
-
          if (body != null)
+         {
             return new JenkinsException(responseCode, body, http.getContentType());
-
+         }
          return new JenkinsException(responseCode, null, null);
       }
       finally
@@ -638,7 +698,9 @@ public abstract class JenkinsClient
          byte[] buf = new byte[1024];
          int point = -1;
          while ((point = input.read(buf)) != -1)
+         {
             bout.write(buf, 0, point);
+         }
          body = bout.toString();
       }
       return body;
@@ -660,7 +722,9 @@ public abstract class JenkinsClient
       Item item = vfs.getItem(projectId, PropertyFilter.valueOf("jenkins-job"));
       String job = (String)item.getPropertyValue("jenkins-job");
       if (job == null || job.isEmpty())
+      {
          throw new RuntimeException("Job name required. ");
+      }
       return job;
    }
 }
