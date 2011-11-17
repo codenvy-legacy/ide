@@ -24,12 +24,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
-
 /**
- * Created by The eXo Platform SAS.
+ * Exception mapper for GitException.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class GitExceptionMapper implements ExceptionMapper<GitException>
 {
    /**
@@ -38,8 +38,9 @@ public class GitExceptionMapper implements ExceptionMapper<GitException>
    @Override
    public Response toResponse(GitException e)
    {
-      // TODO Get correct HTTP status from BeesClientException ??? 
-      return Response.status(500).header("JAXRS-Body-Provided", "Error-Message").entity("<pre>" + e.getMessage() + "</pre>")
-         .type(MediaType.TEXT_PLAIN).build();
+      // Insert error message in <pre> tags even content-type is text/plain.
+      // Message will be included in HTML page by client.
+      return Response.status(500).header("JAXRS-Body-Provided", "Error-Message")
+         .entity("<pre>" + e.getMessage() + "</pre>").type(MediaType.TEXT_PLAIN).build();
    }
 }

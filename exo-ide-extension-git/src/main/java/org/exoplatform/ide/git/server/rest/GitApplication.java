@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import org.exoplatform.ide.vfs.server.RequestContextResolver;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +35,6 @@ public class GitApplication extends Application
    public GitApplication()
    {
       classes.add(GitService.class);
-      classes.add(RequestContextResolver.class);
       classes.add(GitRepoService.class);
       singletons.add(new GitExceptionMapper());
    }

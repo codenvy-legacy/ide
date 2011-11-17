@@ -51,7 +51,7 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
    }
 
    /**
-    * Initial this SshSessionFactory. By default turn of using "know-hosts" file.
+    * Initial this SshSessionFactory. By default turn off using "know-hosts" file.
     */
    protected void init()
    {
@@ -79,7 +79,9 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
          String host = hc.getHostName();
          SshKey key = keyProvider.getPrivateKey(host);
          if (key == null)
+         {
             throw new JSchException("SSH connection failed. Key file not found. ");
+         }
          JSch jsch = new JSch();
          jsch.addIdentity(key.getIdentifier(), key.getBytes(), null, null);
          return jsch;

@@ -18,224 +18,70 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import org.exoplatform.ide.git.client.GitWorkDirNotFoundException;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
-import javax.jcr.AccessDeniedException;
-import javax.jcr.ItemNotFoundException;
-import javax.jcr.LoginException;
-import javax.jcr.NoSuchWorkspaceException;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 /**
- * This REST service is used for searching ".git" folder stored in JCR 
- * by pointing the href of the item, from which to start search and go upper in the hierarchy tree.
- * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 25, 2011 5:46:12 PM anya $
- *
+ * @version $Id: Mar 25, 2011 5:46:12 PM anya $
  */
-
+// XXX : Still need this service ??? 
 @Path("ide/git-repo")
 public class GitRepoService
 {
    @QueryParam("vfsid")
    private String vfsId;
-
-   @QueryParam("path")
-   private String path;
-
-   /**
-    * WebDav context.
-    */
-   public static final String WEBDAV_CONTEXT = "/jcr/";
-
-   /**
-    * Name of the Git's work folder.
-    */
-   public static final String GIT = ".git";
-
-   /**
-    * Repository service.
-    */
-   private RepositoryService repositoryService;
-
-   /**
-    * @param repositoryService repository service
-    */
-   public GitRepoService(RepositoryService repositoryService)
-   {
-      this.repositoryService = repositoryService;
-   }
+   @QueryParam("projectid")
+   private String proj;
+   @Inject
+   private VirtualFileSystemRegistry vfsRegistry;
 
    @GET
    @Path("workdir")
    @Produces(MediaType.TEXT_PLAIN)
-   public String getWorkDir()
+   @Deprecated
+   public String getWorkDir() throws VirtualFileSystemException
    {
-      try
-      {
-         Node node = getNodeByPath(path);
-         //Find node, where ".git" is stored:
-         Node gitNode = findGitNode(node);
-         if (gitNode != null)
-         {
-            //Form the available href of the ".git" directory:
-            String gitWorkDir = (gitNode.getPath().startsWith("/")) ? gitNode.getPath() : "/" + gitNode.getPath();
-            return gitWorkDir;
-         }
-         else
-         {
-            throw new GitWorkDirNotFoundException("Git working directory not found.");
-         }
-      }
-      catch (RepositoryException e)
-      {
-         throw new WebApplicationException(e, 500);
-      }
-      catch (GitWorkDirNotFoundException e)
-      {
-         throw new WebApplicationException(e, 404);
-      }
-      catch (Exception e)
-      {
-         throw new WebApplicationException(e, 404);
-      }
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      return vfs.getItem(proj, PropertyFilter.NONE_FILTER).getPath();
    }
 
    @DELETE
    @Path("workdir")
    @Produces(MediaType.TEXT_PLAIN)
-   public void deleteWorkDir()
+   public void deleteWorkDir() throws VirtualFileSystemException
    {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      Item item = vfs.getItem(proj, PropertyFilter.NONE_FILTER);
+      if (ItemType.FOLDER != item.getItemType())
+      {
+         throw new RuntimeException("Item " + item.getPath() + " is not a GIT working directory. ");
+      }
+      Item git = null;
       try
       {
-         Node node = getNodeByPath(path);
-
-         //Find node, where ".git" is stored:
-         Node gitNode = findGitNode(node);
-         if (gitNode != null)
-         {
-            gitNode.remove();
-            node.getSession().save();
-         }
-         else
-         {
-            throw new GitWorkDirNotFoundException("Git working directory not found.");
-         }
-      }
-      catch (RepositoryException e)
-      {
-         throw new WebApplicationException(e, 500);
-      }
-      catch (GitWorkDirNotFoundException e)
-      {
-         throw new WebApplicationException(e, 404);
-      }
-      catch (Exception e)
-      {
-         throw new WebApplicationException(e, 404);
-      }
-   }
-
-   /**
-    * Find ".git" folder node location by name step by step going upper in node hierarchy.
-    * 
-    * @param node node, in what child nodes to find ".git" directory
-    * @return {@link Node} found jcr node
-    * @throws RepositoryException
-    */
-   public static Node findGitNode(Node node) throws RepositoryException
-   {
-      if (node == null)
-         return null;
-      //Get all child node that end with ".git"
-      NodeIterator nodeIterator = node.getNodes("*" + GIT);
-      while (nodeIterator.hasNext())
-      {
-         Node childNode = nodeIterator.nextNode();
-         //The first found ".git" folder will be returned:
-         if (GIT.equals(childNode.getName()))
-            return childNode;
-      }
-      try
-      {
-         //Go upper to look for ".git" folder:   
-         Node parentNode = node.getParent();
-         return findGitNode(parentNode);
+         git = vfs.getItemByPath(((Folder)item).createPath(".git"), null, PropertyFilter.NONE_FILTER);
       }
       catch (ItemNotFoundException e)
       {
-         return null;
       }
-      catch (AccessDeniedException e)
+      if (git != null)
       {
-         return null;
+         vfs.delete(git.getId(), null);
       }
    }
-
-   private Node getNodeByPath(String path) throws PathNotFoundException, RepositoryException
-   {
-      if (path.startsWith("/"))
-         path = path.replaceFirst("/", "");
-      Session session = getSession();
-      Node node = session.getRootNode().getNode(path);
-      return node;
-   }
-
-   /**
-    * Parse JCR path to retrieve repository name, 
-    * workspace name and absolute path in repository.
-    * 
-    * @param baseUri base URI
-    * @param location file's location
-    * @return array of {@link String}, where elements contain repository name, workspace name and 
-    * the path to JCR node that contains file
-    */
-   @Deprecated
-   public static String[] parseJcrLocation(String baseUri, String location)
-   {
-      baseUri += WEBDAV_CONTEXT;
-      if (!location.startsWith(baseUri))
-      {
-         return null;
-      }
-      String[] elements = new String[3];
-      location = location.substring(baseUri.length());
-      elements[0] = location.substring(0, location.indexOf('/'));
-      location = location.substring(location.indexOf('/') + 1);
-      elements[1] = location.substring(0, location.indexOf('/'));
-      elements[2] = location.substring(location.indexOf('/') + 1);
-      return elements;
-   }
-
-   /**
-    * Get user's valid session to access the repository.
-    * 
-    * @param repoName repository name
-    * @param workspace workspace name
-    * @return {@link Session} user's session to access repository 
-    * @throws RepositoryException 
-    * @throws NoSuchWorkspaceException 
-    * @throws LoginException 
-    * @throws Exception
-    */
-   public Session getSession() throws LoginException, NoSuchWorkspaceException, RepositoryException
-   {
-      ManageableRepository repository = repositoryService.getCurrentRepository();
-      return repository.login(vfsId);
-   }
-
 }

@@ -1302,6 +1302,8 @@ public class JGitConnection implements GitConnection
       try
       {
          Ref headRef = repository.getRef(Constants.HEAD);
+         if (headRef == null)
+            throw new GitException("HEAD reference not found. Seems working directory is not git repository. ");
          String currentBranch = Repository.shortenRefName(headRef.getLeaf().getName());
 
          List<GitFile> changedNotUpdated = new ArrayList<GitFile>();
