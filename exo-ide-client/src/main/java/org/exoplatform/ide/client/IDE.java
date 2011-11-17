@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
@@ -42,7 +43,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
-import org.exoplatform.ide.client.log.PopupEventLogger;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeLocalizationMessages;
@@ -64,8 +64,7 @@ import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .

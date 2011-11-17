@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -73,7 +74,7 @@ public class NavigatorView extends ViewImpl implements
 
    public NavigatorView()
    {
-      super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
+      super(ID, ViewType.NAVIGATION, TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       treeGrid.setExpandProjects(false);
    }
