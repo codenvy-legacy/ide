@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.editor.EditorFactory;
+import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -117,7 +118,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       IDEIconSet.init();
       
       //new PopupEventLogger();
-      
       //new PopupWindowLogger();
 
       /*
@@ -269,6 +269,15 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public List<Control> getControls()
    {
       return controlsRegistration.getRegisteredControls();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#addControlsFormatter(org.exoplatform.ide.client.framework.control.ControlsFormatter)
+    */
+   @Override
+   public void addControlsFormatter(ControlsFormatter controlsFormatter)
+   {
+      controlsRegistration.addControlsFormatter(controlsFormatter);
    }
 
 }

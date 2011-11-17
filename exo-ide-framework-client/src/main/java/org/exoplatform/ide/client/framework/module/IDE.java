@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
@@ -104,6 +105,13 @@ public abstract class IDE
     */
    public abstract void addControl(Control<?> control);
 
+   /**
+    * Add formatter for IDE controls.
+    * 
+    * @param controlsFormatter formatter to be added
+    */
+   public abstract void addControlsFormatter(ControlsFormatter controlsFormatter);
+   
    /**
     * Get list of controls.
     * 

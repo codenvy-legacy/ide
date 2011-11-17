@@ -18,23 +18,19 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
-import org.exoplatform.ide.client.framework.control.AddControlsFormatterEvent;
-import org.exoplatform.ide.client.framework.control.AddControlsFormatterHandler;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.control.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.control.RegisterControlHandler;
 
-import com.google.gwt.core.client.GWT;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -44,7 +40,7 @@ import com.google.gwt.core.client.GWT;
  * @version $
  */
 
-public class ControlsRegistration implements RegisterControlHandler, AddControlsFormatterHandler
+public class ControlsRegistration
 {
 
    private List<Control> registeredControls = new ArrayList<Control>();
@@ -62,8 +58,6 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
    {
       toolbarDefaultControls.add("");
       statusBarControls.add("");
-      IDE.addHandler(RegisterControlEvent.TYPE, this);
-      IDE.addHandler(AddControlsFormatterEvent.TYPE, this);
    }
 
    /**
@@ -88,14 +82,6 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
    public List<String> getStatusBarControls()
    {
       return statusBarControls;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.RegisterControlHandler#onRegisterControl(org.exoplatform.ide.client.framework.control.RegisterControlEvent)
-    */
-   public void onRegisterControl(RegisterControlEvent event)
-   {
-      addControl(event.getControl(), event.getDocking());
    }
 
    /**
@@ -241,14 +227,6 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
 
       toolbarDefaultControls.retainAll(allowedIds);
       statusBarControls.retainAll(allowedIds);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.event.AddControlsFormatterHandler#onAddControlsFormatter(org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent)
-    */
-   public void onAddControlsFormatter(AddControlsFormatterEvent event)
-   {
-      controlsFormatters.add(event.getControlsFormatter());
    }
 
    /**

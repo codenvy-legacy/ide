@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.project;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDE;
@@ -46,6 +43,9 @@ import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -59,7 +59,9 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    
    private TemplatesMigratedCallback callback;
    
-   public ProjectSupportingModule() {      
+   public ProjectSupportingModule() {   
+//      IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
+      
       new CreateProjectPresenter();
 
       new CreateProjectFromTemplatePresenter();

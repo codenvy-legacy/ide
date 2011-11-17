@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -386,6 +387,13 @@ public abstract class ProjectCreationTest extends TestCase
       public List<Control> getControls()
       {
          return null;
+      }
+
+      @Override
+      public void addControlsFormatter(ControlsFormatter controlsFormatter)
+      {
+         // TODO Auto-generated method stub
+         
       }
 
    }

@@ -40,6 +40,7 @@ public class MainMenuControlsFormatter implements ControlsFormatter
       controlIdsOrder = new ArrayList<String>();
 
       controlIdsOrder.add("File");
+      controlIdsOrder.add("Project");
       controlIdsOrder.add("Edit");
       controlIdsOrder.add("View");
       controlIdsOrder.add("Run");
