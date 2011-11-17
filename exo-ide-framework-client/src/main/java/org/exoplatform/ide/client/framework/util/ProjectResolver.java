@@ -50,6 +50,7 @@ public class ProjectResolver
          types.put("Chromattic", IconImageBundle.INSTANCE.groovyProject());
          types.put("REST Groovy", IconImageBundle.INSTANCE.groovyProject());
          types.put("Static Web", IconImageBundle.INSTANCE.defaultProject());
+         types.put("Servlet/JSP", IconImageBundle.INSTANCE.javaProject());
       }
    }
 
