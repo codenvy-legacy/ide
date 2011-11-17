@@ -19,6 +19,8 @@
 
 -->
 <module rename-to="IDE">
+  <set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
+
    <inherits name='com.google.gwt.user.User' />
    
 	<inherits name="org.exoplatform.ide.IDECore" />

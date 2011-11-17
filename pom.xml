@@ -399,7 +399,7 @@
          <dependency>
             <groupId>com.google.gwt.google-apis</groupId>
             <artifactId>gwt-gadgets</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.1</version>
          </dependency>
          <dependency>
             <groupId>org.hsqldb</groupId>
@@ -726,8 +726,8 @@
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
-      <!-- Not build on GWT 2.2.0 -->
-      <!-- module>exo-ide-packaging-gadget-war</module -->
+      
+      <module>exo-ide-packaging-gadget-war</module>
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-packaging-standalone-tomcat</module>
       

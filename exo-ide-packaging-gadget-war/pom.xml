@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-SNAPSHOT</version>
+      <version>1.2.0-M4-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-packaging-gadget-war</artifactId>
@@ -35,6 +35,55 @@
          <version>${gwt.version}</version>
       </dependency>
 
+        <!-- EDITOR EXTENSIONS -->
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-gadget</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-groovy</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-gtmpl</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-chromattic</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-netvibes</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-jsp</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-ruby</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-php</artifactId>
+      </dependency>
+
+
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
          <artifactId>gwt-log</artifactId>
@@ -43,13 +92,11 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs-webdav-client</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
+
+        
+       <!--EXTENSIONS --> 
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -60,15 +107,92 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-groovy</artifactId>
       </dependency>
-      
+
+     <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-java</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-netvibes</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-cloudbees</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-cloudfoundry</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-heroku</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-openshift</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-ruby</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-logreader</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-testframework</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.inject</groupId>
+         <artifactId>javax.inject</artifactId>
+         <version>1</version>
+         <scope>runtime</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-utils</artifactId>
+         <version>2.0.5</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.hsqldb</groupId>
+         <artifactId>hsqldb</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-samples</artifactId>
       </dependency>
       
       <dependency>
@@ -177,7 +301,7 @@
                      <goal>run</goal>
                   </goals>
                </execution>
-                 <execution>
+                 <!-- execution>
                   <id>move-compile-resources</id>
                   <phase>prepare-package</phase>
                   <configuration>
@@ -192,7 +316,7 @@
                   <goals>
                      <goal>run</goal>
                   </goals>
-               </execution>
+               </execution-->
             </executions>
          </plugin>
       </plugins>
@@ -217,7 +341,6 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
-                  <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <module>org.exoplatform.ide.Gadget</module>
                      <runTarget>org.exoplatform.ide.Gadget/Gadget.html</runTarget>
@@ -225,6 +348,7 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <tomcat>${basedir}/target/tomcat</tomcat>
                      <skipTests>false</skipTests>
+                     <extraJvmArgs>-Xmx1024m</extraJvmArgs>
                   </configuration>
                   <executions>                                                                                                                                                                                       
                      <execution>                                                                                                                                                                                     
