@@ -36,6 +36,9 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
+import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
+import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -115,7 +118,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
    ConfigurationReceivedSuccessfullyHandler, ShowProjectExplorerHandler, ItemsSelectedHandler, ViewActivatedHandler,
-   OpenProjectHandler, VfsChangedHandler, ProjectCreatedHandler, CloseProjectHandler
+   OpenProjectHandler, VfsChangedHandler, ProjectCreatedHandler, CloseProjectHandler, AllFilesClosedHandler
 {
    
    public interface Display extends IsView
@@ -218,6 +221,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectCreatedEvent.TYPE, this);
       IDE.addHandler(CloseProjectEvent.TYPE, this);
+      
+      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
    }
    
    @Override
@@ -770,6 +775,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    }
 
    private void doOpenProject(ProjectModel project) {
+      needCloseProject = false;
+      
       display.setProjectExplorerTreeVisible(true);
       
       openedProject = new ProjectModel(project);
@@ -823,16 +830,29 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
             }
          }
       });
-      
    }
-
+   
    @Override
    public void onCloseProject(CloseProjectEvent event)
    {
       if (openedProject == null || display == null) {
          return;
       }
+      
+      needCloseProject = true;      
+      IDE.fireEvent(new CloseAllFilesEvent());
+   }
+   
+   private boolean needCloseProject = false;
 
+   @Override
+   public void onAllFilesClosed(AllFilesClosedEvent event)
+   {
+      if (openedProject == null || display == null || !needCloseProject) {
+         return;
+      }      
+      needCloseProject = false;
+      
       ProjectClosedEvent projectClosedEvent = new ProjectClosedEvent(openedProject);
       
       openedProject = null;

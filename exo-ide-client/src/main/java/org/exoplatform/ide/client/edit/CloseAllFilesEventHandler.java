@@ -19,6 +19,8 @@
 
 package org.exoplatform.ide.client.edit;
 
+import com.google.gwt.user.client.Window;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,7 +102,7 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
          }
       });
    }
-   
+
    /**
     * Closing opened files.
     */

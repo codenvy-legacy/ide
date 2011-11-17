@@ -59,7 +59,6 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
       setPrompt(PROMPT);
       setEvent(new CreateProjectEvent());
       setImages(IDEImageBundle.INSTANCE.newProject(), IDEImageBundle.INSTANCE.newProjectDisabled());
-      setGroup(0);
    }
 
    /**
