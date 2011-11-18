@@ -19,11 +19,12 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -40,6 +41,8 @@ import java.util.UUID;
  */
 public class CutFileTest extends BaseTest
 {
+   private static final String PROJECT = CutFileTest.class.getSimpleName();
+
    private static final String FILE_NAME_1 = "CutFileTest.txt";
 
    private static final String FOLDER_NAME_1 = CutFileTest.class.getSimpleName() + "-1";
@@ -48,17 +51,23 @@ public class CutFileTest extends BaseTest
 
    private static final String RANDOM_CONTENT = UUID.randomUUID().toString();
 
+   private static final String CUT_OPENED_FILE = "Can't cut opened file %s";
+
+   private static final String CUT_FOLDER_WITH_OPENED_FILE = "Can't cut folder %s, it contains open file %s";
+   
+   public static final String WRONG_DESTINATION = "Destination folder already contains item with the same name.";
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_1);
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_2);
-         VirtualFileSystemUtils.put(RANDOM_CONTENT.getBytes(), MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME_1 + "/"
-            + FILE_NAME_1);
-         VirtualFileSystemUtils.put(RANDOM_CONTENT.getBytes(), MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME_2 + "/"
-            + FILE_NAME_1);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME_2);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT.getBytes(), MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/"
+            + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT.getBytes(), MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/"
+            + FOLDER_NAME_2 + "/" + FILE_NAME_1);
       }
       catch (Exception e)
       {
@@ -71,9 +80,7 @@ public class CutFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_1);
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_2);
-         VirtualFileSystemUtils.delete(WS_URL + FILE_NAME_1);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -85,112 +92,95 @@ public class CutFileTest extends BaseTest
    @Test
    public void testCutFile() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME_1);
 
-      //      waitForRootElement();
-      //      IDE.WORKSPACE.selectRootItem();
-      //      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      //      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
-      //      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
+      //Check Paste disabled:
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      //Check Copy enabled:
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
 
-      //Open files "test 1/gadget.xml".
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1, false);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      //Check Paste disabled:
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      //Check Copy enabled:
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
 
-      checkPasteCommands(false);
-      checkCutCopyCommands(true);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-
-      checkPasteCommands(false);
-      checkCutCopyCommands(true);
-
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-
-      //Call the "Edit->Cut Items" topmenu command.
+      //Cut opened file causes warning message:
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
-      checkPasteCommands(true);
-
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
-
-     //TODO IDE.WARNING_DIALOG.checkIsOpened("Can't move items in the same directory!");
+      IDE.WARNING_DIALOG.waitOpened();
+      assertEquals(String.format(CUT_OPENED_FILE, FILE_NAME_1), IDE.WARNING_DIALOG.getWarningMessage());
       IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
+      //Check Paste disabled:
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      checkPasteCommands(true);
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME_1 + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
-
-      //Select "test 2" folder item in the Workspace Panel and then select "Edit->Paste Items" topmenu command.
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
-
-      /*
-      assertTrue(selenium().isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
-      assertTrue(selenium().isTextPresent("412 Precondition Failed"));
-      assertTrue(selenium().isTextPresent("Precondition Failed"));
-      assertTrue(selenium().isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
-      IDE.dialogs().clickOkButton();
-      */
-
-   //TODO   IDE.WARNING_DIALOG.checkIsOpened();
+      //Cut folder, which contains opened file:
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
+      IDE.WARNING_DIALOG.waitOpened();
+      assertEquals(String.format(CUT_FOLDER_WITH_OPENED_FILE, FOLDER_NAME_1, FILE_NAME_1),
+         IDE.WARNING_DIALOG.getWarningMessage());
       IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
+      //Check Paste disabled:
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      checkPasteCommands(true);
+      //Close file :
+      IDE.EDITOR.closeFile(FILE_NAME_1);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME_1);
 
-      //Select root item and then click on "Paste" toolbar button.
-      IDE.WORKSPACE.selectRootItem();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
 
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_2);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1
+      IDE.WARNING_DIALOG.waitOpened();
+      assertEquals(WRONG_DESTINATION,
+         IDE.WARNING_DIALOG.getWarningMessage());
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
-      ).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FILE_NAME_1).getStatusCode());
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1)
+         .getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FILE_NAME_1).getStatusCode());
 
-      assertEquals(RANDOM_CONTENT, IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME_1);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      checkPasteCommands(false);
-
-      //Change content of opened file "gadget.xml" in Content Panel, click on "Ctrl+S" hot key, 
-      //close file tab and open file "gadget.xml".
-      IDE.EDITOR.typeTextIntoEditor(0, "IT`s CHANGE!!!");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      final String oldText = IDE.EDITOR.getTextFromCodeEditor(0);
-
-      IDE.NAVIGATION.saveFile();
-
-      IDE.EDITOR.closeFile(0);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_NAME_1, false);
-      assertEquals(oldText, IDE.EDITOR.getTextFromCodeEditor(0));
-      IDE.EDITOR.closeFile(0);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_1);
+      assertEquals(RANDOM_CONTENT, IDE.EDITOR.getTextFromCodeEditor(1));
+      IDE.EDITOR.closeFile(FILE_NAME_1);
    }
-
-   /**
-    * @throws Exception
-    */
-   private void checkPasteCommands(boolean enabled) throws Exception
-   {
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, enabled);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, enabled);
-   }
-
-   /**
-    * @throws Exception
-    */
-   private void checkCutCopyCommands(boolean enabled) throws Exception
-   {
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, enabled);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, enabled);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, enabled);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, enabled);
-   }
-
 }

@@ -47,7 +47,7 @@ public class Menu extends AbstractTestModule
 
       String TOP_MENU_ITEM_LOCATOR = "//td[@class='exo-menuBarItem' and text()='%s']";
 
-      String MENU_ITEM_LOCATOR = "//td[@class='exo-popupMenuTitleField' and contains(., '%s')]";
+      String MENU_ITEM_LOCATOR = "//td[contains(@class,'exo-popupMenuTitleField') and contains(., '%s')]";
 
       String POPUP_SELECTOR = "table.exo-popupMenuTable";
 

@@ -19,6 +19,8 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -26,10 +28,10 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -41,6 +43,7 @@ import java.util.UUID;
  */
 public class CopyFoldersAndFilesTest extends BaseTest
 {
+   private static final String PROJECT = CopyFoldersAndFilesTest.class.getSimpleName();
 
    private static final String FOLDER_1 = CopyFoldersAndFilesTest.class.getSimpleName() + "-1";
 
@@ -60,24 +63,28 @@ public class CopyFoldersAndFilesTest extends BaseTest
 
    /**
     * BeforeClass create such structure:
-    * FOLDER_1
-    *    FILE_GADGET - file with sample content
-    *    FILE_GROOVY - file with sample content
-    *    FOLDER_1_1
-    *    FOLDER_1_2
-    * FOLDER_2
+    * PROJECT
+    *   FOLDER_1
+    *     FILE_GADGET - file with sample content
+    *     FILE_GROOVY - file with sample content
+    *     FOLDER_1_1
+    *     FOLDER_1_2
+    *   FOLDER_2
     */
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_2);
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1 + "/" + FOLDER_1_2 + "/");
-         VirtualFileSystemUtils.put(RANDOM_CONTENT_1.getBytes(), MimeType.GOOGLE_GADGET, WS_URL + FOLDER_1 + "/" + FILE_GADGET);
-         VirtualFileSystemUtils.put(RANDOM_CONTENT_2.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_2);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT_1.getBytes(), MimeType.GOOGLE_GADGET, WS_URL + PROJECT + "/"
+            + FOLDER_1 + "/" + FILE_GADGET);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT_2.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + PROJECT + "/"
+            + FOLDER_1 + "/" + FILE_GROOVY);
       }
       catch (Exception e)
       {
@@ -86,17 +93,9 @@ public class CopyFoldersAndFilesTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws IOException
    {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_1);
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_2);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }
 
    /**
@@ -107,58 +106,68 @@ public class CopyFoldersAndFilesTest extends BaseTest
    @Test
    public void testCopyFoldersAndFiles() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_1 + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GROOVY, false);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GADGET, false);
+      //Open files:
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GADGET);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_GADGET);
+      
+      IDE.WORKSPACE.selectItem(PROJECT  + "/"+ FOLDER_1);
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
-
-      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
 
       // Call the "Edit->Copy Items" topmenu command.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
-      IDE.NAVIGATION.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GADGET);
-      IDE.NAVIGATION.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GADGET);
+      IDE.DELETE.deleteSelectedItems();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FOLDER_1 + "/" + FILE_GADGET);
 
-      //IDE.NAVIGATION.selectRootOfWorkspace();
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
-
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_2);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       checkFilesAndFoldersOnServer();
 
-     Assert.assertTrue(IDE.EDITOR.isTabPresentInEditorTabset("test_groovy"));
+      assertTrue(IDE.EDITOR.isTabPresentInEditorTabset(FILE_GROOVY));
+      assertFalse(IDE.EDITOR.isTabPresentInEditorTabset(FILE_GADGET));
 
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
+      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
-
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
    }
 
    private void checkFilesAndFoldersOnServer() throws Exception
    {
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FOLDER_1).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FOLDER_1 + "/" + FOLDER_1_2).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GROOVY).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FOLDER_1_2)
+         .getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GROOVY)
+         .getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GADGET)
+         .getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FOLDER_1_1)
+         .getStatusCode());
 
-      Response response = VirtualFileSystemUtils.get(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
+      Response response = VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
       assertEquals(200, response.getStatusCode());
       assertEquals(RANDOM_CONTENT_2, response.getData());
 
-      response =
-         VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GROOVY);
+      response = VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GROOVY);
       assertEquals(200, response.getStatusCode());
       assertEquals(RANDOM_CONTENT_2, response.getData());
    }

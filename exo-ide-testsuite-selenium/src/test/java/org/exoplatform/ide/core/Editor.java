@@ -403,7 +403,8 @@ public class Editor extends AbstractTestModule
    {
       try
       {
-         return editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR)) != null;
+         return editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR,
+            tabTitle))) != null;
       }
       catch (NoSuchElementException e)
       {

@@ -37,18 +37,15 @@ import org.exoplatform.ide.core.Response;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Map;
@@ -204,28 +201,21 @@ public class VirtualFileSystemUtils
       URL url = new URL(storageUrl);
       HttpURLConnection connection = null;
       int status = -1;
-      String data = "";
-      BufferedReader reader = null;
       try
       {
          connection = Utils.getConnection(url);
          connection.setRequestMethod(HTTPMethod.GET);
          status = connection.getResponseCode();
          InputStream in = connection.getInputStream();
-         reader = new BufferedReader(new InputStreamReader(in));
-         StringBuilder sb = new StringBuilder();
-
-         String line = null;
-         while ((line = reader.readLine()) != null)
+         int lenght = connection.getContentLength();
+         try
          {
-            sb.append(line);
-            sb.append('\n');
+            byte[] data = readBody(in, lenght);
+            return new Response(status, new String(data));
          }
-         data = sb.toString();
-         in.close();
-         if (reader != null)
+         finally
          {
-            reader.close();
+            in.close();
          }
       }
       catch (Exception e)
@@ -239,7 +229,7 @@ public class VirtualFileSystemUtils
             connection.disconnect();
          }
       }
-      return new Response(status, data);
+      return new Response(status, null);
    }
 
    /**
@@ -482,7 +472,6 @@ public class VirtualFileSystemUtils
 
    }
 
-   
    /**
     * Create file with local file content
     * @param link
@@ -494,5 +483,26 @@ public class VirtualFileSystemUtils
    public static void createFileFromLocal(Link link, String name, String mimeType, String filePath) throws IOException
    {
       createFile(link, name, mimeType, Utils.readFileAsString(filePath));
+   }
+
+   private static byte[] readBody(InputStream input, int contentLength) throws IOException
+   {
+      if (contentLength > 0)
+      {
+         byte[] b = new byte[contentLength];
+         for (int point = -1, off = 0; (point = input.read(b, off, contentLength - off)) > 0; off += point) //
+         ;
+         return b;
+      }
+      else if (contentLength < 0)
+      {
+         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+         byte[] buf = new byte[1024];
+         int point = -1;
+         while ((point = input.read(buf)) != -1)
+            bout.write(buf, 0, point);
+         return bout.toByteArray();
+      }
+      return new byte[0];
    }
 }

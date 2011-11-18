@@ -148,7 +148,7 @@ public class ProjectExplorer extends AbstractTestModule
    public void selectItem(String path) throws Exception
    {
       WebElement item = driver().findElement(By.id(getItemId(path)));
-      item.click();
+      new Actions(driver()).moveToElement(item, 1, 1).click().perform();
    }
 
    /**
@@ -161,9 +161,7 @@ public class ProjectExplorer extends AbstractTestModule
    {
       WebElement item = driver().findElement(By.id(getItemId(path)));
       item.click();
-
-      Actions actions = new Actions(driver());
-      actions.doubleClick(item).build().perform();
+      new Actions(driver()).doubleClick(item).build().perform();
    }
 
    /**

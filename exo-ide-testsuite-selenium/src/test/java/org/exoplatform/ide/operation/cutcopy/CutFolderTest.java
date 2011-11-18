@@ -19,8 +19,8 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
-
-import junit.framework.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -40,10 +40,15 @@ import org.junit.Test;
  */
 public class CutFolderTest extends BaseTest
 {
+   private static final String PROJECT = CutFolderTest.class.getSimpleName();
 
    private static final String FILE_CONTENT = "file content";
 
-   private static final String CHANGED_FILE_CONTENT = "changed ";
+   private static final String FOLDER1 = "folder1";
+
+   private static final String FOLDER2 = "folder2";
+
+   private static final String FILE = "file.groovy";
 
    /**
     * Create next folders' structure in the workspace root:
@@ -57,11 +62,12 @@ public class CutFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + "folder 1");
-         VirtualFileSystemUtils.mkcol(WS_URL + "folder 1/folder 2");
-         VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL
-            + "folder 1/folder 2/file.groovy");
-         VirtualFileSystemUtils.mkcol(WS_URL + "folder 2");
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER1);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
+         VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + PROJECT + "/"
+            + FOLDER1 + "/" + FOLDER2 + "/" + FILE);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER2);
       }
       catch (Exception e)
       {
@@ -74,8 +80,7 @@ public class CutFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + "folder 1");
-         VirtualFileSystemUtils.delete(WS_URL + "folder 2");
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -86,137 +91,80 @@ public class CutFolderTest extends BaseTest
    @Test
    public void testCutFolderOperation() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.waitForItem(WS_URL + "folder 1/");
-      IDE.WORKSPACE.waitForItem(WS_URL + "folder 2/");
-      /*
-       * 1. Check, that "/folder 1", "/folder 2", "/folder 1/folder 2", "/folder 1/folder 2/file.groovy" are presents
-       */
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + "folder 1/");
-      IDE.WORKSPACE.waitForItem(WS_URL + "folder 1/folder 2/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1);
 
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + "folder 1/folder 2/");      
-      IDE.WORKSPACE.waitForItem(WS_URL + "folder 1/folder 2/file.groovy");
+      //Open folder 1
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
 
-      /*
-       * 2.Open file "test 1/test 2/test.groovy".
-       */
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 1/folder 2/file.groovy", false);
+      //Open folder 2
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2 + "/" + FILE);
 
-      /*
-       * Paste commands are disabled, Cut/Copy are enabled
-       */
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
+      //Paste commands are disabled, Cut/Copy are enabled
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
 
-      /*
-       * 3. Select folder "folder 1/folder 1.1". Click on "Cut" toolbar button.
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/folder 2/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.CUT_TOOLBAR);
 
-      /*
-       * Paste commands are enabled.
-       */
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
+      //Paste commands are enabled.
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      /*
-       * 4. Select file "folder 1/folder 1.1/test.groovy" in the Workspace Panel.
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/folder 2/file.groovy");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2 + "/" + FILE);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      /*
-       * Paste commands are enabled.
-       */
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      //Paste in the same folder:
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.PASTE);
 
-      /*
-       * 5. Select folder "folder 1/folder 1.1/" and click on "Paste" toolbar button.
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + "folder 1/folder 2/");
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
-
-      /*
-       * Error message about impossibility to paste folder into the itself should be displayed. 
-       */
- //TODO     IDE.WARNING_DIALOG.checkIsOpened("Can't move items in the same directory!");
+      IDE.WARNING_DIALOG.waitOpened();
+      assertEquals(CutFileTest.WRONG_DESTINATION, IDE.WARNING_DIALOG.getWarningMessage());
       IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
-      /*
-       * After closing error message dialog the toolbar button "Paste" and topmenu command "Edit->Paste Items" 
-       * should be still enabled.
-       */
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      /*
-       * 6. Select root item and then click on "Paste" toolbar button.
-       */
-      IDE.WORKSPACE.selectRootItem();
+      //Paste in folder, which contains with the same name:
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
-
-      /*
-       * Error message about impossibility to paste folder with the existed name should be displayed. 
-       */
-  //TODO    IDE.WARNING_DIALOG.checkIsOpened();
+      IDE.WARNING_DIALOG.waitOpened();
+      assertEquals(CutFileTest.WRONG_DESTINATION, IDE.WARNING_DIALOG.getWarningMessage());
       IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
-      /*
-       * After closing error message dialog the toolbar button "Paste" and topmenu command "Edit->Paste Items" 
-       * should be still enabled.
-       */
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      /*
-       * 7. Select "test 2" item and then select "Edit->Paste Items" topmenu command.
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + "folder 2/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER2);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      /*
-       * Check, that file name stays the same (IDE-225 issue).
-       */
-      assertEquals("file.groovy",IDE.EDITOR.getTabTitle(0));
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + "folder 1/folder 2/");
       checkItemsOnWebDav();
 
-      /*
-       * 10. Change content of opened file "file.groovy", 
-       * save file, close file tab and open file "folder 2/folder 2/file.groovy".
-       */
-     IDE.EDITOR.typeTextIntoEditor(0, CHANGED_FILE_CONTENT);
-      saveCurrentFile();
-     IDE.EDITOR.closeFile(0);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER2 + "/" + FOLDER2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE);
 
-      IDE.WORKSPACE.selectItem(WS_URL + "folder 2/folder 2/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE);
+      assertEquals(FILE_CONTENT, IDE.EDITOR.getTextFromCodeEditor(0));
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + "folder 2/folder 2/file.groovy", false);
-      Assert.assertTrue(IDE.EDITOR.isTabPresentInEditorTabset("file.groovy"));
-      assertEquals(CHANGED_FILE_CONTENT + FILE_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 1/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/folder 2/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + "folder 2/folder 2/file.groovy");
-
-      /*
-       * check there is no "folder 1/folder 2" in the tree
-       */
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + "folder 1/folder 2/");
-
-      /*
-       * close editor
-       */
-     IDE.EDITOR.closeFile(0);
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER1));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER2));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER2 + "/" + FOLDER2));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE));
+      assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER1 + "/" + FOLDER2));
+      IDE.EDITOR.closeFile(1);
    }
 
    /**
@@ -230,11 +178,12 @@ public class CutFolderTest extends BaseTest
     */
    private void checkItemsOnWebDav() throws Exception
    {
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 1").getStatusCode());
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + "folder 1/folder 2").getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2").getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2/folder 2").getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2/folder 2/file.groovy").getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER1).getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER1 + "/" + FOLDER2).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER2).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER2 + "/" + FOLDER2).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE)
+         .getStatusCode());
    }
 
 }

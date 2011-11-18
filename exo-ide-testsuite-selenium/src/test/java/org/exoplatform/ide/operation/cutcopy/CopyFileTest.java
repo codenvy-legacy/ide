@@ -19,10 +19,13 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -36,8 +39,9 @@ import org.junit.Test;
  */
 public class CopyFileTest extends BaseTest
 {
+   private static final String PROJECT = CopyFileTest.class.getSimpleName();
 
-   private static final String FOLDER_1 = CopyFileTest.class.getSimpleName() + "-1";
+   private static final String FOLDER_1 = "folder";
 
    private static final String FILE_GROOVY = "testgroovy";
 
@@ -55,9 +59,10 @@ public class CopyFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
-         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/"
-            + FILE_GROOVY);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1);
+         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + PROJECT + "/"
+            + FOLDER_1 + "/" + FILE_GROOVY);
       }
       catch (Exception e)
       {
@@ -70,8 +75,7 @@ public class CopyFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_1);
-         VirtualFileSystemUtils.delete(WS_URL + FILE_GROOVY);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -79,68 +83,34 @@ public class CopyFileTest extends BaseTest
       }
    }
 
-   /*
-    * Create folder "Test 1" in root. After this folder "Test 1" must be selected.
-    * Create Groovy Script file
-    * Type "hello"
-    * Save as "test.groovy"
-    * Close editor
-    * Select "/Test1/test.groovy" file
-    * 
-    * Check Cut and Copy commands must be enabled
-    * Check Paste command must be disabled
-    * Click Copy command on toolbar
-    * 
-    * Check Paste must be enabled 
-    * 
-    * Select Root in workspace panel
-    * Click Paste command
-    * 
-    * Check Paste command must be disabled
-    * 
-    * Open "Test 1" folder
-    * Open file "/Test 1/test.groovy"
-    * Type "file content"
-    * Call "Ctrl+S"
-    * Close file 
-    * 
-    * Open file "/Test 1/test.groovy"
-    * 
-    * Open "/test.groovy"
-    * Check content of the file must be "hello"
-    * 
-    * Close both files
-    * 
-    * Delete files
-    * 
-    */
-
    @Test
    public void testCopyFile() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_1 + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
 
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
 
       /*
        * Check Cut and Copy commands must be enabled
        */
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU, true);
-      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.COPY_TOOLBAR, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.COPY_TOOLBAR));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU, true);
-      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.CUT_TOOLBAR, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.CUT_TOOLBAR));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
 
       /*
        * Check Paste command must be disabled
        */
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.TOOLBAR.assertButtonExistAtLeft(MenuCommands.Edit.PASTE_TOOLBAR, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
 
       /*
        * Click Copy command on toolbar
@@ -150,84 +120,51 @@ public class CopyFileTest extends BaseTest
       /*
        * Check Paste must be enabled 
        */
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
 
       /*
-       * Select Root in workspace panel
+       * Select project in workspace panel
        */
-      IDE.WORKSPACE.selectRootItem();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       /*
        * Click Paste command
        */
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_GROOVY);
 
       /*
        * Check Paste command must be disabled
        */
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU, false);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR, false);
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
 
-      /*
-       * Open "Test 1" folder
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
 
-      /*
-       * Open file "/Test 1/test.groovy"
-       */
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_GROOVY, false);
-
-      /*
-       * Type "file content"
-       */
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_GROOVY);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_GROOVY);
       IDE.EDITOR.typeTextIntoEditor(0, FILE_CONTENT_2);
+      IDE.EDITOR.waitFileContentModificationMark(FILE_GROOVY);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(FILE_GROOVY);
+      IDE.EDITOR.closeFile(FILE_GROOVY);
 
       /*
-       * Save file
+       * Open files
        */
-      saveCurrentFile();
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
 
-      /*
-       * Close file
-       */
-      IDE.EDITOR.closeFile(0);
-
-      /*
-       * Open "/test.groovy"
-       */
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
-      IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
-
-      /*
-       * Select FILE_GROOVY file in FOLDER_1
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
-
-      /*
-       * Open FILE_GROOVY file from FOLDER_1
-       */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
-
-      /*
-       * Select FILE_GROOVY file in root folder
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + FILE_GROOVY);
-
-      /*
-       * Open FILE_GROOVY file from root folder
-       */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FILE_GROOVY);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_GROOVY);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_GROOVY);
 
       /*
        * Check files content
        */
-      assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(0));
-      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(1));
-
+      assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(1));
+      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(2));
    }
 
 }

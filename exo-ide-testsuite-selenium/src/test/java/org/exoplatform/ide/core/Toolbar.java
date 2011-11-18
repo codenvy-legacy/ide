@@ -19,14 +19,15 @@
 package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * 
@@ -53,6 +54,9 @@ public class Toolbar extends AbstractTestModule
 
       String RIGHT_SIDE_BUTTON_LOCATOR = "//div[@id='" + TOOLBAR_ID
          + "']//div[@class='exoToolbarElementRight']//div[@class='exoIconButtonPanel' and @title='%s']";
+
+      String LEFT_SIDE_BUTTON_LOCATOR = "//div[@id='" + TOOLBAR_ID
+         + "']//div[@class='exoToolbarElementLeft']//div[@class='exoIconButtonPanel' and @title='%s']";
    }
 
    @FindBy(className = Locators.LOCKLAYER_CLASS)
@@ -188,38 +192,24 @@ public class Toolbar extends AbstractTestModule
       }
    }
 
-   public void waitForButtonEnabled(String name, boolean enabled) throws Exception
+   /**
+    * Wait for button change the enabled state.
+    * 
+    * @param name button's name
+    * @param enabled <code>true</code> if wait for enabled state, otherwise - for disabled
+    * @throws Exception
+    */
+   public void waitForButtonEnabled(final String name, boolean enabled) throws Exception
    {
-      String locator = null;
-      if (enabled)
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
       {
-         locator =
-            "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"true\" and @title=\"" + name
-               + "\"]";
-      }
-      else
-      {
-         locator =
-            "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"false\" and @title=\"" + name
-               + "\"]";
-      }
 
-      long startTime = System.currentTimeMillis();
-      while (true)
-      {
-         if (selenium().isElementPresent(locator))
+         @Override
+         public Boolean apply(WebDriver driver)
          {
-            break;
+            return isButtonEnabled(name);
          }
-
-         long time = System.currentTimeMillis() - startTime;
-         if (time > TestConstants.TIMEOUT)
-         {
-            fail("timeout for element " + locator);
-         }
-
-         Thread.sleep(1000);
-      }
+      });
    }
 
    /**
@@ -227,7 +217,9 @@ public class Toolbar extends AbstractTestModule
     * 
     * @param name button name (title in DOM)
     * @param isPresent is present
+    * use {@link #isButtonPresentAtLeft(String)}
     */
+   @Deprecated
    public void assertButtonExistAtLeft(String name, boolean exist)
    {
       String locator =
@@ -255,6 +247,23 @@ public class Toolbar extends AbstractTestModule
       try
       {
          return driver().findElement(By.xpath(String.format(Locators.RIGHT_SIDE_BUTTON_LOCATOR, name))) != null;
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+
+   /**
+   * Check is button present on toolbar
+   * 
+   * @param name button name (title in DOM)
+   */
+   public boolean isButtonPresentAtLeft(String name)
+   {
+      try
+      {
+         return driver().findElement(By.xpath(String.format(Locators.LEFT_SIDE_BUTTON_LOCATOR, name))) != null;
       }
       catch (NoSuchElementException e)
       {

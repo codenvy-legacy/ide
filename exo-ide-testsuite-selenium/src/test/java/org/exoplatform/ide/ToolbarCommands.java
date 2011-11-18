@@ -52,6 +52,8 @@ public interface ToolbarCommands
       String CUT_SELECTED_ITEM = "Cut Selected Item(s)";
 
       String COPY_SELECTED_ITEM = "Copy Selected Item(s)";
+      
+      String PASTE = "Paste Selected Item(s)";
 
       final String SEARCH = "Search...";
    }
