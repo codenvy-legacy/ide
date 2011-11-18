@@ -24,26 +24,40 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
-import org.exoplatform.ide.extension.samples.client.github.SamplesContinuable;
-import org.exoplatform.ide.extension.samples.client.github.SamplesReturnable;
 import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,57 +68,57 @@ import java.util.List;
  *
  */
 public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandler, ItemsSelectedHandler,
-   SamplesContinuable, SamplesReturnable
+   VfsChangedHandler
 {
 
    public interface Display extends IsView
    {
-      HasClickHandlers getNextButton();
+      HasClickHandlers getFinishButton();
 
       HasClickHandlers getCancelButton();
 
-      ListGridItem<Repository> getSamplesListGrid();
+      ListGridItem<ProjectData> getSamplesListGrid();
 
-      List<Repository> getSelectedItems();
+      List<ProjectData> getSelectedItems();
 
-      void enableNextButton(boolean enable);
+      void enableFinishButton(boolean enable);
    }
 
    private static SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
 
    private Display display;
 
-   List<Repository> sampleRepos;
-
-   List<Repository> selectedRepos;
-
    List<Item> selectedItems;
 
-   private SamplesContinuable samplesContinuable;
+   private VirtualFileSystemInfo vfs;
+
+   private List<ProjectData> selectedProjects;
+
+   private ProjectData selectedProjectData;
 
    public ShowSamplesPresenter()
    {
       IDE.addHandler(ShowSamplesEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    private void bindDisplay()
    {
-      display.getNextButton().addClickHandler(new ClickHandler()
+      display.getFinishButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            if (selectedRepos == null || selectedRepos.isEmpty())
+            if (selectedProjects == null || selectedProjects.isEmpty())
             {
                Dialogs.getInstance().showError(lb.showSamplesErrorSelectRepository());
                return;
             }
-            Repository repo = selectedRepos.get(0);
-            samplesContinuable.onContinue(repo);
-            closeView();
+            selectedProjectData = selectedProjects.get(0);
+            createEmptyProject();
          }
       });
 
@@ -118,25 +132,22 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
          }
       });
 
-      display.getSamplesListGrid().addSelectionHandler(new SelectionHandler<Repository>()
+      display.getSamplesListGrid().addSelectionHandler(new SelectionHandler<ProjectData>()
       {
          @Override
-         public void onSelection(SelectionEvent<Repository> event)
+         public void onSelection(SelectionEvent<ProjectData> event)
          {
-            selectedRepos = display.getSelectedItems();
-            if (selectedRepos == null || selectedRepos.isEmpty())
+            selectedProjects = display.getSelectedItems();
+            if (selectedProjects == null || selectedProjects.isEmpty())
             {
-               display.enableNextButton(false);
+               display.enableFinishButton(false);
             }
             else
             {
-               display.enableNextButton(true);
+               display.enableFinishButton(true);
             }
          }
       });
-
-      display.getSamplesListGrid().setValue(sampleRepos);
-      display.enableNextButton(false);
    }
 
    /**
@@ -162,8 +173,15 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
          @Override
          protected void onSuccess(List<Repository> result)
          {
-            sampleRepos = result;
             openView();
+            List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+            for (Repository repo : result)
+            {
+               String[] arr = parseDescription(repo.getDescription());
+               projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+            }
+            display.getSamplesListGrid().setValue(projectDataList);
+            display.enableFinishButton(false);
          }
       });
    }
@@ -198,27 +216,121 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       this.selectedItems = event.getSelectedItems();
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.SamplesReturnable#onReturn()
-    */
-   @Override
-   public void onReturn()
+   private void createEmptyProject()
    {
-      openView();
+      FolderModel parent = (FolderModel)vfs.getRoot();
+      ProjectModel model = new ProjectModel();
+      model.setName(selectedProjectData.getName());
+      model.setProjectType(selectedProjectData.getType());
+      model.setParent(parent);
+      try
+      {
+         VirtualFileSystem.getInstance().createProject(
+            parent,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(
+               new ProjectUnmarshaller(model))
+            {
+
+               @Override
+               protected void onSuccess(ProjectModel result)
+               {
+                  cloneRepository(selectedProjectData, result);
+                  closeView();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   private void cloneRepository(ProjectData repo, final ProjectModel project)
+   {
+      String remoteUri = repo.getRepositoryUrl();
+      if (!remoteUri.endsWith(".git"))
+      {
+         remoteUri += ".git";
+      }
+
+      try
+      {
+         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            {
+
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+                  IDE.fireEvent(new ProjectCreatedEvent(project));
+                  IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         handleError(e);
+      }
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.SamplesContinuable#onContinue()
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
-   public void onContinue(Repository repository)
+   public void onVfsChanged(VfsChangedEvent event)
    {
-      openView();
+      this.vfs = event.getVfsInfo();
    }
-   
-   public void setSamplesContinuable(SamplesContinuable samplesContinuable)
+
+   private void handleError(Throwable t)
    {
-      this.samplesContinuable = samplesContinuable;
+      String errorMessage =
+         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
-   
+
+   /**
+    * Parse description of repository on GitHub, that store in such form:
+    * <p/>
+    * <code>Type: &lt;project type&gt; Desc: &lt;project description&gt;</code>
+    * <p/>
+    * Return an array with 2 elements, where element[0] is the type of project
+    * and element[1] is the description
+    * @param text
+    * @return
+    */
+   private static String[] parseDescription(String text)
+   {
+      String[] projectData = new String[2];
+      String[] res = text.split("^Type: | Desc:");
+      if (res.length < 3)
+      {
+         projectData[0] = ProjectResolver.getProjectsTypes().toArray(new String[1])[0];
+         projectData[1] = text;
+         Dialogs.getInstance().showError(
+            "Can't parse project description: " + text
+               + ". <br/> It must be in format: Type: &lt;project type&gt; Desc: &lt;project description&gt;");
+      }
+      else
+      {
+         projectData[0] = res[1];
+         projectData[1] = res[2];
+      }
+      return projectData;
+   }
+
 }

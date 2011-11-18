@@ -111,7 +111,13 @@ public interface SamplesLocalizationConstant extends Messages
     * SamplesListGrid
     */
    @Key("samplesListGrid.column.name")
-   String samplesListListColumnName();
+   String samplesListRepositoryColumn();
+   
+   @Key("samplesListGrid.column.description")
+   String samplesListDescriptionColumn();
+   
+   @Key("samplesListGrid.column.type")
+   String samplesListTypeColumn();
    
    /*
     * ShowSamplesView

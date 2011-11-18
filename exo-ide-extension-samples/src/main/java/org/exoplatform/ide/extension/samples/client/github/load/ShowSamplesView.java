@@ -29,7 +29,6 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    
    private static final int HEIGHT = 345;
 
-   private static final int WIDTH = 450;
+   private static final int WIDTH = 550;
    
    /**
     * 
@@ -65,7 +64,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    SamplesListGrid samplesListGrid;
    
    @UiField
-   ImageButton nextButton;
+   ImageButton finishButton;
    
    @UiField
    ImageButton cancelButton;
@@ -80,9 +79,9 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
     * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getFinishButton()
     */
    @Override
-   public HasClickHandlers getNextButton()
+   public HasClickHandlers getFinishButton()
    {
-      return nextButton;
+      return finishButton;
    }
 
    /**
@@ -95,19 +94,19 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#enableNextButton(boolean)
+    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#enableFinishButton(boolean)
     */
    @Override
-   public void enableNextButton(boolean enable)
+   public void enableFinishButton(boolean enable)
    {
-      nextButton.setEnabled(enable);
+      finishButton.setEnabled(enable);
    }
 
    /**
     * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getSamplesListGridAlt()
     */
    @Override
-   public ListGridItem<Repository> getSamplesListGrid()
+   public ListGridItem<ProjectData> getSamplesListGrid()
    {
       return samplesListGrid;
    }
@@ -116,7 +115,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
     * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getSelectedItems()
     */
    @Override
-   public List<Repository> getSelectedItems()
+   public List<ProjectData> getSelectedItems()
    {
       return samplesListGrid.getSelectedItems();
    }

@@ -155,7 +155,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#enableNextButton(boolean)
+    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#enableFinishButton(boolean)
     */
    @Override
    public void enableFinishButton(boolean enable)

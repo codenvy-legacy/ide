@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
-import org.exoplatform.ide.extension.samples.client.github.selecttype.SelectTypePresenter;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
@@ -68,11 +67,8 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new StartPagePresenter();
       new ConvertToProjectPresenter();
       
-      //wizard Import from GitHub
-      ShowSamplesPresenter showSamplesStep = new ShowSamplesPresenter();
-      SelectTypePresenter selectTypeSamplesStep = new SelectTypePresenter();
-      showSamplesStep.setSamplesContinuable(selectTypeSamplesStep);
-      selectTypeSamplesStep.setSamplesReturnable(showSamplesStep);
+      //Import from GitHub
+      new ShowSamplesPresenter();
       
       //wizard Create new Java Project
 //      WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter();
