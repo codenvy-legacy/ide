@@ -131,6 +131,9 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("showSamples.text")
    String showSamplesSelectProjectText();
    
+   @Key("showSamples.label.projectName")
+   String showSamplesProjectNameLabel();
+   
    /*
     * ShowSamplesPresenter
     */

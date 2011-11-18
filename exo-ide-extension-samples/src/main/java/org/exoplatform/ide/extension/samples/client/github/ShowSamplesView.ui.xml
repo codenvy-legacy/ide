@@ -14,11 +14,11 @@
       .left-float {
       float: left;
       }
-
-      .rightButton {
-      position: absolute;
-      right: 0;
+      
+      .spacing-left {
+      margin-left: 4px;
       }
+
    </ui:style>
 
    <g:LayoutPanel>
@@ -41,12 +41,14 @@
 
       <g:layer height="33px" bottom="0">
          <g:FlowPanel width="auto" styleName="{style.buttonsBox}">
-            <f:ImageButton ui:field="cancelButton" styleName="{style.left-float}" width="90px" text="{locale.cancelButton}" imageName="cancel"
+            <g:Label text="{locale.showSamplesProjectNameLabel}" width="auto" styleName="{style.left-float}"></g:Label>
+            <f:TextInput ui:field="nameField" width="200px" height="22" styleName="{style.left-float} {style.spacing-left}" ></f:TextInput>
+            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            
+            <f:ImageButton ui:field="cancelButton" styleName="{resource.css.middle}" width="90px" text="{locale.cancelButton}" imageName="cancel"
                buttonId="ideImportSamplesCloseButtonId"></f:ImageButton>
 
-            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-
-            <f:ImageButton ui:field="finishButton" text="{locale.finishButton}" width="90px" styleName="{style.rightButton}"
+            <f:ImageButton ui:field="finishButton" text="{locale.finishButton}" width="90px" styleName="{resource.css.right}"
                imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}" buttonId="ideImportSamplesFinishButtonId"></f:ImageButton>
 
          </g:FlowPanel>

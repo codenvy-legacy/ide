@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.github;
 
+import com.google.gwt.user.client.ui.HasValue;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
@@ -68,6 +71,9 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    
    @UiField
    ImageButton cancelButton;
+   
+   @UiField
+   TextInput nameField;
    
    public ShowSamplesView()
    {
@@ -118,5 +124,14 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    public List<ProjectData> getSelectedItems()
    {
       return samplesListGrid.getSelectedItems();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.github.ShowSamplesPresenter.Display#getNameField()
+    */
+   @Override
+   public HasValue<String> getNameField()
+   {
+      return nameField;
    }
 }

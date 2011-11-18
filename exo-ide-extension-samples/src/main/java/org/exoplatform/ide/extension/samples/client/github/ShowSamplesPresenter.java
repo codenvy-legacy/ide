@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.github;
 
+import com.google.gwt.user.client.ui.HasValue;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -80,6 +82,8 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       ListGridItem<ProjectData> getSamplesListGrid();
 
       List<ProjectData> getSelectedItems();
+      
+      HasValue<String> getNameField();
 
       void enableFinishButton(boolean enable);
    }
@@ -145,6 +149,8 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
             else
             {
                display.enableFinishButton(true);
+               String value = selectedProjects.get(0).getName();
+               display.getNameField().setValue(value);
             }
          }
       });
@@ -220,7 +226,12 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    {
       FolderModel parent = (FolderModel)vfs.getRoot();
       ProjectModel model = new ProjectModel();
-      model.setName(selectedProjectData.getName());
+      String name = display.getNameField().getValue();
+      if (name == null || name.isEmpty())
+      {
+         name = selectedProjectData.getName();
+      }
+      model.setName(name);
       model.setProjectType(selectedProjectData.getType());
       model.setParent(parent);
       try
