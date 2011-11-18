@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
-import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
+import org.exoplatform.ide.extension.samples.client.github.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;

@@ -32,14 +32,11 @@ import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.github.location.SelectLocationView;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
 /**
- * TODO: this view duplicates some functionality from
- * {@link SelectLocationView}.
  * In future this must be fix.
  * 
  * View, that displays tree with folders to select location

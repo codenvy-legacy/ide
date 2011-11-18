@@ -1,0 +1,56 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:e="urn:import:org.exoplatform.ide.extension.samples.client.github">
+
+   <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .buttonsBox {
+      display: block;
+      margin: 0 8px;
+      }
+
+      .left-float {
+      float: left;
+      }
+
+      .rightButton {
+      position: absolute;
+      right: 0;
+      }
+   </ui:style>
+
+   <g:LayoutPanel>
+      <g:layer>
+         <g:FlowPanel stylePrimaryName="{resource.css.topBox}">
+            <g:Label text="{locale.showSamplesSelectProjectTitle}" styleName="{resource.css.labelTitle}"></g:Label>
+            <g:Label text="{locale.showSamplesSelectProjectText}" styleName="{resource.css.labelDescription}"></g:Label>
+         </g:FlowPanel>
+      </g:layer>
+
+      <g:layer top="60px" bottom="33px">
+         <f:Border margin="8">
+            <f:layer>
+               <g:ScrollPanel>
+                  <e:SamplesListGrid width="100%" ui:field="samplesListGrid"></e:SamplesListGrid>
+               </g:ScrollPanel>
+            </f:layer>
+         </f:Border>
+      </g:layer>
+
+      <g:layer height="33px" bottom="0">
+         <g:FlowPanel width="auto" styleName="{style.buttonsBox}">
+            <f:ImageButton ui:field="cancelButton" styleName="{style.left-float}" width="90px" text="{locale.cancelButton}" imageName="cancel"
+               buttonId="ideImportSamplesCloseButtonId"></f:ImageButton>
+
+            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+
+            <f:ImageButton ui:field="finishButton" text="{locale.finishButton}" width="90px" styleName="{style.rightButton}"
+               imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}" buttonId="ideImportSamplesFinishButtonId"></f:ImageButton>
+
+         </g:FlowPanel>
+      </g:layer>
+
+   </g:LayoutPanel>
+</ui:UiBinder> 

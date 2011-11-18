@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.ProjectProperties;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
-import org.exoplatform.ide.extension.samples.client.github.location.SelectLocationPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
