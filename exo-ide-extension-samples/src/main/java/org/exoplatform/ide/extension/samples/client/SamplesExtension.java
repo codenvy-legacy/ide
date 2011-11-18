@@ -71,13 +71,10 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new ShowSamplesPresenter();
       
       //wizard Create new Java Project
-//      WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter();
       WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter();
       WizardDeploymentStepPresenter wizardDeploymentStep = new WizardDeploymentStepPresenter();
       WizardFinishStepPresenter wizardFinishStep = new WizardFinishStepPresenter();
       
-//      wizardSourceStep.setWizardContinuable(wizardDefinitionStep);
-//      wizardDefinitionStep.setWizardReturnable(wizardSourceStep);
       wizardDefinitionStep.setWizardContinuable(wizardDeploymentStep);
       wizardDeploymentStep.setWizardReturnable(wizardDefinitionStep);
       wizardDeploymentStep.setWizardContinuable(wizardFinishStep);
