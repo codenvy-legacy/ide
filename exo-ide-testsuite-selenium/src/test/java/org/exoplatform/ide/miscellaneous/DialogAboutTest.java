@@ -21,9 +21,14 @@ package org.exoplatform.ide.miscellaneous;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -42,33 +47,15 @@ public class DialogAboutTest extends BaseTest
    @Test
    public void testDialogAbout() throws Exception
    {
-      //TODO: you can change information in About window
-      //as you see fit
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
-      //      Thread.sleep(TestConstants.SLEEP);
-      //check About form
-      assertTrue(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]"));
-      assertTrue(selenium().isElementPresent("ideAboutViewOkButton"));
-      assertTrue(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
-      assertTrue(selenium().isTextPresent(PRODUCT_NAME));
-      assertTrue(selenium().isTextPresent(COMPANY));
-      assertTrue(selenium().isTextPresent("Revision:"));
-      assertTrue(selenium().isTextPresent("Build Time:"));
 
-      //click Ok button
-      selenium().click("ideAboutViewOkButton");
-      waitForElementNotPresent("ideAboutViewOkButton");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      //call heplp menu and submenu About
+      IDE.ABOUT.callHelpMenu();
+      IDE.ABOUT.callAboutMenu();
 
-      //check About form dissapeared
-      assertFalse(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]"));
-      assertFalse(selenium().isElementPresent("ideAboutFormOkButton"));
-      assertFalse(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
-      assertFalse(selenium().isTextPresent("About"));
-      //  assertFalse(selenium().isTextPresent(PRODUCT_NAME));
-      //      assertFalse(selenium().isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
-      assertFalse(selenium().isTextPresent(COMPANY));
-      assertFalse(selenium().isTextPresent("Revision:"));
-      assertFalse(selenium().isTextPresent("Build Time:"));
+      //check all basic elements on About form
+      IDE.ABOUT.checkAboutWindow();
+      //close dialogAboutMenu
+      IDE.ABOUT.closeDialogAbout();
    }
 }
