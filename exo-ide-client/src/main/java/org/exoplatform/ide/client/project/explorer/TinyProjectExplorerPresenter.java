@@ -223,6 +223,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.addHandler(CloseProjectEvent.TYPE, this);
       
       IDE.addHandler(AllFilesClosedEvent.TYPE, this);
+      IDE.addHandler(SelectItemEvent.TYPE, this);
    }
    
    @Override
@@ -586,6 +587,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
     */
    public void onSelectItem(SelectItemEvent event)
    {
+      if (display == null) {
+         return;
+      }
+      
       display.selectItem(event.getItemHref());
    }
 

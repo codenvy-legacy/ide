@@ -550,6 +550,10 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
     */
    public void onSelectItem(SelectItemEvent event)
    {
+      if (display == null) {
+         return;
+      }
+      
       display.selectItem(event.getItemHref());
    }
 
