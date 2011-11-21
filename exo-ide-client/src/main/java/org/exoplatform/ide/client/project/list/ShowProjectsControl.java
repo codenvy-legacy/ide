@@ -52,7 +52,6 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    public ShowProjectsControl()
    {
       super(ID);
-      System.out.println("ShowProjectsControl.ShowProjectsControl()");
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
