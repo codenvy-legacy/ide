@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
@@ -77,25 +79,26 @@ private final static String FILE_NAME = "JspCodeOutline.jsp";
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       waitForElementPresent(Locators.CodeHelperPanel.OUTLINE_TAB_LOCATOR);
       
-      IDE.OUTLINE.assertOutlineTreePresent();
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
+      assertTrue(IDE.OUTLINE.isOutlineViewVisible());
       
-      IDE.OUTLINE.assertElmentPresentById("html:TAG:1");
+      assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:1"));
       goToLine(9);
       
       waitForElementPresent("a:VARIABLE:9");
-      IDE.OUTLINE.assertElmentPresentById("a:VARIABLE:9");
+      assertTrue(IDE.OUTLINE.isItemPresentById("a:VARIABLE:9"));
       
       goToLine(23);
       
       waitForElementPresent("a:PROPERTY:23");
-      IDE.OUTLINE.assertElmentPresentById("a:PROPERTY:23");
-      IDE.OUTLINE.assertElmentPresentById("head:TAG:2");
-      IDE.OUTLINE.assertElmentPresentById("script:TAG:8");
-      IDE.OUTLINE.assertElmentPresentById("body:TAG:12");
-      IDE.OUTLINE.assertElmentPresentById("java code:JSP_TAG:13");
-      IDE.OUTLINE.assertElmentPresentById("curentState:PROPERTY:14");
-      IDE.OUTLINE.assertElmentPresentById("identity:PROPERTY:17");
-      IDE.OUTLINE.assertElmentPresentById("i:PROPERTY:18");      
+      assertTrue(IDE.OUTLINE.isItemPresentById("a:PROPERTY:23"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:2"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:8"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("body:TAG:12"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("java code:JSP_TAG:13"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("curentState:PROPERTY:14"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("identity:PROPERTY:17"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("i:PROPERTY:18"));      
       
       IDE.EDITOR.closeFile(0);
    }

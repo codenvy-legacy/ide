@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
@@ -37,7 +38,7 @@ import org.junit.Test;
  */
 public class CodeOutLineGroovyTemplateTest extends BaseTest
 {
-   
+
    private final static String FILE_NAME = "GroovyTemplateCodeOutline.gtmpl";
 
    private final static String TEST_FOLDER = JavaTypeValidationAndFixingTest.class.getSimpleName();
@@ -104,26 +105,25 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       //check tree correctly created:
       //IDE.OUTLINE.assertElmentPresentById("groovy code");
       
-      IDE.OUTLINE.assertElmentPresentById("groovy code:GROOVY_TAG:1");
-      IDE.OUTLINE.assertElmentPresentById("a1:PROPERTY:2");
-      IDE.OUTLINE.assertElmentPresentById("a2:PROPERTY:3");
-      IDE.OUTLINE.assertElmentPresentById("a2:METHOD:4");
-      IDE.OUTLINE.assertElmentPresentById("a3:METHOD:7");
-      IDE.OUTLINE.assertElmentPresentById("cTab:PROPERTY:10");
-      IDE.OUTLINE.assertElmentPresentById("cName:PROPERTY:10");
-      IDE.OUTLINE.assertElmentPresentById("description:PROPERTY:10");
-      IDE.OUTLINE.assertElmentPresentById("displayName:PROPERTY:10");
-      IDE.OUTLINE.assertElmentPresentById("isSelected:PROPERTY:11");
-      IDE.OUTLINE.assertElmentPresentById("a4:PROPERTY:22");
+      assertTrue(IDE.OUTLINE.isItemPresentById("groovy code:GROOVY_TAG:1"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("a1:PROPERTY:2"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("a2:PROPERTY:3"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("a2:METHOD:4"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("a3:METHOD:7"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("cTab:PROPERTY:10"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("cName:PROPERTY:10"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("description:PROPERTY:10"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("displayName:PROPERTY:10"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("isSelected:PROPERTY:11"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("a4:PROPERTY:22"));
       //check other nodes
-      IDE.OUTLINE.assertElmentPresentById("groovy code:GROOVY_TAG:26");
-      IDE.OUTLINE.assertElmentPresentById("div:TAG:27");
-      IDE.OUTLINE.assertElmentPresentById("div:TAG:28");
-      IDE.OUTLINE.assertElmentPresentById("groovy code:GROOVY_TAG:29");
-      IDE.OUTLINE.assertElmentPresentById("groovy code:GROOVY_TAG:32");
-      IDE.OUTLINE.assertElmentPresentById("div:TAG:33");
-      IDE.OUTLINE.assertElmentPresentById("a:TAG:34");
-      IDE.OUTLINE.assertElmentPresentById("groovy code:GROOVY_TAG:34");
+      assertTrue(IDE.OUTLINE.isItemPresentById("groovy code:GROOVY_TAG:26"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("div:TAG:27"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("div:TAG:28"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("groovy code:GROOVY_TAG:29"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("groovy code:GROOVY_TAG:32"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("div:TAG:33"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("a:TAG:34"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("groovy code:GROOVY_TAG:34"));
    }
-
 }

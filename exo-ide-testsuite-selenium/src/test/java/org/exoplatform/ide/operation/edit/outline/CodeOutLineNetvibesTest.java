@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
@@ -99,31 +101,31 @@ public class CodeOutLineNetvibesTest extends BaseTest
    private void checkTreeCorrectlyCreated() throws Exception
    {
       //check html node
-      IDE.OUTLINE.assertElmentPresentById("html:TAG:4");
+      assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:4"));
 
       //check head tag and subnodes head
-      IDE.OUTLINE.assertElmentPresentById("head:TAG:6");
-      IDE.OUTLINE.assertElmentPresentById("meta:TAG:7");
-      IDE.OUTLINE.assertElmentPresentById("meta:TAG:8");
-      IDE.OUTLINE.assertElmentPresentById("meta:TAG:9");
-      IDE.OUTLINE.assertElmentPresentById("meta:TAG:10");
-      IDE.OUTLINE.assertElmentPresentById("meta:TAG:11");
-      IDE.OUTLINE.assertElmentPresentById("link:TAG:12");
-      IDE.OUTLINE.assertElmentPresentById("script:TAG:14");
-      IDE.OUTLINE.assertElmentPresentById("title:TAG:16");
-      IDE.OUTLINE.assertElmentPresentById("link:TAG:17");
-      IDE.OUTLINE.assertElmentPresentById("widget:preferences:TAG:20");
-      IDE.OUTLINE.assertElmentPresentById("style:TAG:22");
+      assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:6"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:7"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:8"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:9"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:10"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:11"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("link:TAG:12"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:14"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("title:TAG:16"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("link:TAG:17"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("widget:preferences:TAG:20"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:22"));
 
       //check script tag and subnodes script
-      IDE.OUTLINE.assertElmentPresentById("script:TAG:26");
-      IDE.OUTLINE.assertElmentPresentById("YourWidgetName:VARIABLE:31");
-      IDE.OUTLINE.assertElmentPresentById("function:FUNCTION:37");
-      IDE.OUTLINE.assertElmentPresentById("function:FUNCTION:44");
+      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:26"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("YourWidgetName:VARIABLE:31"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("function:FUNCTION:37"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("function:FUNCTION:44"));
 
       //check body tag and subnodes body
-      IDE.OUTLINE.assertElmentPresentById("body:TAG:50");
-      IDE.OUTLINE.assertElmentPresentById("p:TAG:51");
+      assertTrue(IDE.OUTLINE.isItemPresentById("body:TAG:50"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("p:TAG:51"));
 
    }
 

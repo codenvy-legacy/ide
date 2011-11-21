@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -47,20 +49,21 @@ import java.io.IOException;
  */
 public class CodeOutlineJavaScriptTest extends BaseTest
 {
-   
+
    private final static String FILE_NAME = "TestJavaScriptFile.js";
 
    private final static String FOLDER = CodeOutlineJavaScriptTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER + "/";
+
    private OulineTreeHelper outlineTreeHelper;
-   
+
    public CodeOutlineJavaScriptTest()
    {
       this.outlineTreeHelper = new OulineTreeHelper();
    }
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -74,8 +77,8 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       {
          e.printStackTrace();
       }
-   }   
-   
+   }
+
    @Test
    public void testCodeOutlineJavaScript() throws Exception
    {
@@ -89,14 +92,14 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
 
       // check for presence and visibility of outline tab
-      IDE.OUTLINE.assertOutlineTreePresent();
-      IDE.OUTLINE.checkOutlinePanelVisibility(true);
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
+      assertTrue(IDE.OUTLINE.isOutlineViewVisible());
 
       // create initial outline tree map
       outlineTreeHelper.init();
@@ -106,14 +109,14 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       outlineTreeHelper.addOutlineItem("d()", 12, TokenType.FUNCTION, "d");
       outlineTreeHelper.addOutlineItem("g()", 18, TokenType.FUNCTION, "g");
       outlineTreeHelper.addOutlineItem("e", 24, TokenType.VARIABLE, "e");
-      outlineTreeHelper.addOutlineItem("f()", 27, false, TokenType.FUNCTION, "f");   // "false" to prevent opening "f()" node 
+      outlineTreeHelper.addOutlineItem("f()", 27, false, TokenType.FUNCTION, "f"); // "false" to prevent opening "f()" node 
       outlineTreeHelper.addOutlineItem("a : Object", 30, TokenType.VARIABLE, "a");
       outlineTreeHelper.addOutlineItem("h : Object", 31, TokenType.VARIABLE, "h");
       outlineTreeHelper.addOutlineItem("l : Object", 32, TokenType.VARIABLE, "l");
       outlineTreeHelper.addOutlineItem("b : Number", 35, TokenType.VARIABLE, "b");
       outlineTreeHelper.addOutlineItem("c : Boolean", 36, TokenType.VARIABLE, "c");
       outlineTreeHelper.addOutlineItem("f : null", 37, TokenType.VARIABLE, "f");
-      outlineTreeHelper.addOutlineItem("g : String", 37, false, TokenType.VARIABLE, "g");  // false, because with same line in file, like previous node
+      outlineTreeHelper.addOutlineItem("g : String", 37, false, TokenType.VARIABLE, "g"); // false, because with same line in file, like previous node
       outlineTreeHelper.addOutlineItem("e : Object", 39, TokenType.VARIABLE, "e");
       outlineTreeHelper.addOutlineItem("k : Object", 40, TokenType.VARIABLE, "k");
       outlineTreeHelper.addOutlineItem("i : Object", 43, TokenType.VARIABLE, "i");
@@ -124,36 +127,36 @@ public class CodeOutlineJavaScriptTest extends BaseTest
 
       // create opened outline tree map
       outlineTreeHelper.clearOutlineTreeInfo();
-      outlineTreeHelper.init();      
+      outlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("a : Object", 1, false, TokenType.VARIABLE, "a"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("b : Object", 8, TokenType.VARIABLE, "b");
       outlineTreeHelper.addOutlineItem("c()", 10, TokenType.FUNCTION, "c");
       outlineTreeHelper.addOutlineItem("d()", 12, TokenType.FUNCTION, "d");
       outlineTreeHelper.addOutlineItem("d1 : Object", 13, TokenType.VARIABLE, "d1");
       outlineTreeHelper.addOutlineItem("d4()", 14, TokenType.FUNCTION, "d4");
-      outlineTreeHelper.addOutlineItem("d5()", 15, TokenType.FUNCTION, "d5");      
+      outlineTreeHelper.addOutlineItem("d5()", 15, TokenType.FUNCTION, "d5");
       outlineTreeHelper.addOutlineItem("g()", 18, TokenType.FUNCTION, "g");
       outlineTreeHelper.addOutlineItem("g1 : Object", 19, TokenType.VARIABLE, "g1");
-      outlineTreeHelper.addOutlineItem("g4()", 20, TokenType.FUNCTION, "g4");      
-      outlineTreeHelper.addOutlineItem("g5()", 21, TokenType.FUNCTION, "g5");      
+      outlineTreeHelper.addOutlineItem("g4()", 20, TokenType.FUNCTION, "g4");
+      outlineTreeHelper.addOutlineItem("g5()", 21, TokenType.FUNCTION, "g5");
       outlineTreeHelper.addOutlineItem("e", 24, TokenType.VARIABLE, "e");
-      outlineTreeHelper.addOutlineItem("f()", 27, false, TokenType.FUNCTION, "f");  // false, because with same line in file, like next node
-      outlineTreeHelper.addOutlineItem("i : Object", 27, TokenType.VARIABLE, "i");      
+      outlineTreeHelper.addOutlineItem("f()", 27, false, TokenType.FUNCTION, "f"); // false, because with same line in file, like next node
+      outlineTreeHelper.addOutlineItem("i : Object", 27, TokenType.VARIABLE, "i");
       outlineTreeHelper.addOutlineItem("a : Object", 30, TokenType.VARIABLE, "a");
       outlineTreeHelper.addOutlineItem("h : Object", 31, TokenType.VARIABLE, "h");
       outlineTreeHelper.addOutlineItem("l : Object", 32, TokenType.VARIABLE, "l");
       outlineTreeHelper.addOutlineItem("b : Number", 35, TokenType.VARIABLE, "b");
       outlineTreeHelper.addOutlineItem("c : Boolean", 36, TokenType.VARIABLE, "c");
       outlineTreeHelper.addOutlineItem("f : null", 37, TokenType.VARIABLE, "f");
-      outlineTreeHelper.addOutlineItem("g : String", 37, false, TokenType.VARIABLE, "g");  // false, because with same line in file, like previous node
+      outlineTreeHelper.addOutlineItem("g : String", 37, false, TokenType.VARIABLE, "g"); // false, because with same line in file, like previous node
       outlineTreeHelper.addOutlineItem("e : Object", 39, TokenType.VARIABLE, "e");
       outlineTreeHelper.addOutlineItem("k : Object", 40, TokenType.VARIABLE, "k");
       outlineTreeHelper.addOutlineItem("i : Object", 43, false, TokenType.VARIABLE, "i"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("j : Array", 44, false, TokenType.VARIABLE, "j"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
 
       // expand outline tree
-      outlineTreeHelper.expandOutlineTree();      
-      
+      outlineTreeHelper.expandOutlineTree();
+
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
    }

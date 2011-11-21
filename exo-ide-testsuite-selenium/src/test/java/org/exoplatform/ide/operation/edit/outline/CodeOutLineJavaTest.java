@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -87,9 +89,9 @@ public class CodeOutLineJavaTest extends BaseTest
       IDE.OUTLINE.waitOutlineTreeVisible();
       
       // check for presence and visibility of outline tab
-      IDE.OUTLINE.assertOutlineTreePresent();
-      IDE.OUTLINE.checkOutlinePanelVisibility(true);
-      
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
+      assertTrue(IDE.OUTLINE.isOutlineViewVisible());
+
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
       

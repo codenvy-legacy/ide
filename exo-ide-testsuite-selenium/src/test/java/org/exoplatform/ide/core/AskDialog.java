@@ -109,7 +109,14 @@ public class AskDialog extends AbstractTestModule
     */
    public boolean isOpened()
    {
-      return (view != null && view.isDisplayed());
+      try
+      {
+         return view != null && view.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
    }
 
    /**

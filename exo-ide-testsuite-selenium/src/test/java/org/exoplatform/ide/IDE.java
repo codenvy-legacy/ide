@@ -85,7 +85,7 @@ public class IDE
 
    public Editor EDITOR;
 
-   public Outline OUTLINE = new Outline();
+   public Outline OUTLINE;
 
    public Navigation NAVIGATION = new Navigation();
 
@@ -170,6 +170,7 @@ public class IDE
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
       INPUT = PageFactory.initElements(driver, Input.class);
       MENU = PageFactory.initElements(driver, Menu.class);
+      OUTLINE = PageFactory.initElements(driver, Outline.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);
       RENAME = PageFactory.initElements(driver, Rename.class);

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -101,25 +103,25 @@ public class CodeOutlineXmlTest extends BaseTest
    private void checkTreeCorrectlyCreated() throws Exception
    {
       //check web-app and sub nodes
-      IDE.OUTLINE.assertElmentPresentById("web-app:TAG:2");
-      IDE.OUTLINE.assertElmentPresentById("display-name:TAG:3");
+      assertTrue(IDE.OUTLINE.isItemPresentById("web-app:TAG:2"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("display-name:TAG:3"));
 
       //check context-param and node and sub nodes
-      IDE.OUTLINE.assertElmentPresentById("context-param:TAG:7");
-      IDE.OUTLINE.assertElmentPresentById("param-name:TAG:8");
-      IDE.OUTLINE.assertElmentPresentById("param-value:TAG:12");
+      assertTrue(IDE.OUTLINE.isItemPresentById("context-param:TAG:7"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("param-name:TAG:8"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("param-value:TAG:12"));
 
       //check context-param and node and sub nodes
-      IDE.OUTLINE.assertElmentPresentById("context-param:TAG:19");
-      IDE.OUTLINE.assertElmentPresentById("param-name:TAG:20");
-      IDE.OUTLINE.assertElmentPresentById("param-value:TAG:21");
+      assertTrue(IDE.OUTLINE.isItemPresentById("context-param:TAG:19"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("param-name:TAG:20"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("param-value:TAG:21"));
 
       //check cdata tag
-      IDE.OUTLINE.assertElmentPresentById("CDATA:CDATA:24");
+      assertTrue(IDE.OUTLINE.isItemPresentById("CDATA:CDATA:24"));
 
       //check filter tag and sub nodes
-      IDE.OUTLINE.assertElmentPresentById("filter:TAG:27");
-      IDE.OUTLINE.assertElmentPresentById("filter-name:TAG:28");
-      IDE.OUTLINE.assertElmentPresentById("filter-class:TAG:29");
+      assertTrue(IDE.OUTLINE.isItemPresentById("filter:TAG:27"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("filter-name:TAG:28"));
+      assertTrue(IDE.OUTLINE.isItemPresentById("filter-class:TAG:29"));
    }
 }

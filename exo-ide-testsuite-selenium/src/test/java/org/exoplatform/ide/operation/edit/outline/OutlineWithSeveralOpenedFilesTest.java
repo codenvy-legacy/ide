@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
@@ -69,7 +72,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
 
       //no outline panel
-      IDE.OUTLINE.assertOutlineTreeNotPresent();
+      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
 
       //---- 2 --------------
       //show outline
@@ -80,21 +83,21 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //we can't use checkOutlineVisibility() method,
       //because when outline appears at first time, element div
       //doesn't have in style attribute visibility attribute
-      IDE.OUTLINE.assertOutlineTreePresent();
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
 
       //---- 3 --------------
       //open new html file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
 
       //      //check outline present
-      IDE.OUTLINE.assertOutlineTreePresent();
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
 
       //---- 4 --------------
       //Close Outline tab 
       IDE.OUTLINE.closeOutline();
 
       waitForElementNotPresent("ideOutlineTreeGrid");
-      IDE.OUTLINE.assertOutlineTreeNotPresent();
+      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
 
       //---- 5 --------------
       //go to javascript file

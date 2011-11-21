@@ -22,7 +22,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * Created by The eXo Platform SAS .
@@ -45,6 +46,11 @@ public class Perspective extends AbstractTestModule
 
       String OPERATION = "operation";
 
+   }
+
+   interface Locators
+   {
+      String CLOSE_BUTTON_SELECTOR = "div.tabTitleCloseButton[tab-title=%s]";
    }
 
    /**
@@ -118,21 +124,28 @@ public class Perspective extends AbstractTestModule
     */
    public void clickOnIconPropertiesTab(String viewId) throws Exception
    {
-      selenium().click("//div[@panel-id='operation']//table/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
-	   //selenium().click("//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
+      selenium()
+         .click(
+            "//div[@panel-id='operation']//table/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
+      //selenium().click("//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
    }
 
-   public boolean isViewActive(String viewId)
+   /**
+    * Returns the active state of the view.
+    * 
+    * @param view view
+    * @return boolean view's active state 
+    */
+   public boolean isViewActive(WebElement view)
    {
-      fail();
-      return false;
+      return (view != null) ? Boolean.parseBoolean(view.getAttribute("is-active")) : false;
    }
 
    public void activateView(String viewId)
    {
       fail();
    }
-   
+
    /**
     * Forms view locator by its id.
     * 
@@ -144,4 +157,14 @@ public class Perspective extends AbstractTestModule
       return "//div[@view-id=\"" + viewId + "\"]";
    }
 
+   /**
+    * Get close button of the view.
+    * 
+    * @param viewTitle view's title
+    * @return {@link WebElement} close button
+    */
+   public WebElement getCloseViewButton(String viewTitle)
+   {
+      return driver().findElement(By.cssSelector(String.format(Locators.CLOSE_BUTTON_SELECTOR, viewTitle)));
+   }
 }

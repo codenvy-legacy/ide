@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.operation.browse;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.EnumBrowserCommand;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import java.io.IOException;
 
@@ -45,21 +47,20 @@ public class UsingKeyboardTest extends BaseTest
 
    private static final String TEST_SUBFOLDER = UsingKeyboardTest.class.getSimpleName() + "1";
 
-   private static final String TEST_FOLDER = UsingKeyboardTest.class.getSimpleName() + "2";
+   private static final String PROJECT = UsingKeyboardTest.class.getSimpleName() + "2";
 
    private static final String TEST_FILE = "usingKeyboardTestGoogleGadget.xml";
 
    private static final String TEST_FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + TEST_FILE;
-
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
 
    @Before
    public void setUp() throws Exception
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + TEST_SUBFOLDER);
+         VirtualFileSystemUtils.put(TEST_FILE_PATH, MimeType.GOOGLE_GADGET, WS_URL + PROJECT + "/" + TEST_FILE);
       }
       catch (Exception e)
       {
@@ -74,51 +75,29 @@ public class UsingKeyboardTest extends BaseTest
    @Test
    public void testUsingKeyboardInNavigationPanel() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
-      // Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
-      if (!BROWSER_COMMAND.equals(EnumBrowserCommand.CHROME)
-         && !BROWSER_COMMAND.toString().toLowerCase().contains("firefox"))
-      {
-         return;
-      }
-      //create subfolder 
-      VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
-      //refresh workspace    
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForRootItem();
-      // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      IDE.WORKSPACE.waitForRootItem();
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      IDE.WORKSPACE.waitForRootItem();
-      
-      //wait for appear attribute "Notvisible" in DOM (fix for cloud-ide assembly)
-      Thread.sleep(1000);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
+      IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_UP.toString() + Keys.ARROW_LEFT);
+      IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
-      IDE.WORKSPACE.waitForRootItem();
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_RIGHT.toString() + Keys.ARROW_DOWN);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
       // test keyboard with opened Content Panel
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.xml");
+
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      IDE.WORKSPACE.waitForRootItem();
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
+      IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_UP.toString() + Keys.ARROW_LEFT);
+      IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
+
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
    /**
@@ -128,33 +107,25 @@ public class UsingKeyboardTest extends BaseTest
    @Test
    public void testUsingKeyboardInSearchPanel() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
-      // Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
-      if (!BROWSER_COMMAND.equals(EnumBrowserCommand.CHROME)
-         && !BROWSER_COMMAND.toString().toLowerCase().contains("firefox"))
-      {
-         return;
-      }
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.xml");
+      IDE.EDITOR.saveAndCloseFile(1, TEST_FILE);
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
-      createSaveAndCloseFile(MenuCommands.New.GOOGLE_GADGET_FILE, TEST_FILE, 0);
-
-      IDE.SEARCH.performSearch("/" + TEST_FOLDER + "/", "", MimeType.GOOGLE_GADGET);
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
+      IDE.SEARCH.performSearch(PROJECT, "", MimeType.GOOGLE_GADGET);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(PROJECT + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
+      IDE.NAVIGATION.selectItemInSearchTree(PROJECT + "/" + TEST_FILE);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
+      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(PROJECT + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
@@ -163,91 +134,57 @@ public class UsingKeyboardTest extends BaseTest
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       //IDE.NAVIGATION.selectItemInSerchTree(WS_URL);
 
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(PROJECT + "/" + TEST_FILE);
    }
 
    /**
     * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
     * @throws Exception
     */
-   //@Test
+   @Test
    public void testUsingKeyboardInOutlinePanel() throws Exception
    {
-      // Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
-      if (!BROWSER_COMMAND.equals(EnumBrowserCommand.CHROME)
-         && !BROWSER_COMMAND.toString().toLowerCase().contains("firefox"))
-      {
-         return;
-      }
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
 
-      // copy test file into repository
-      try
-      {
-         VirtualFileSystemUtils.put(TEST_FILE_PATH, MimeType.GOOGLE_GADGET, URL + TEST_FOLDER + "/" + TEST_FILE);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-
-      // refresh page and open test file
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + TEST_FOLDER + "/" + TEST_FILE, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FILE);
 
       // open Outline Panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTLINE.waitOpened();
 
-      IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.clickOnEditor(0);
-
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-
+      IDE.EDITOR.moveCursorDown(0, 2);
       Thread.sleep(TestConstants.SLEEP);
 
       // check outline tree
-      IDE.OUTLINE.assertElementPresentOutlineTree("Module");
-      IDE.OUTLINE.assertElementPresentOutlineTree("ModulePrefs");
-      IDE.OUTLINE.assertElementPresentOutlineTree("Content");
+      assertTrue(IDE.OUTLINE.isItemPresent("Module"));
+      assertTrue(IDE.OUTLINE.isItemPresent("ModulePrefs"));
+      assertTrue(IDE.OUTLINE.isItemPresent("Content"));
       //IDE.OUTLINE.assertElementNotPresentOutlineTree("CDATA");
 
       // verify keyboard key pressing within the outline
-      IDE.OUTLINE.selectItemInOutlineTree("Module");
-      assertEquals("2 : 1", getCursorPositionUsingStatusBar());
+      IDE.OUTLINE.selectItem("Module");
+      IDE.STATUSBAR.waitCursorPositionControl();
+      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
 
       // open "Content" node in the Outline Panel and got to "CDATA" node
 
-      IDE.OUTLINE.selectItemInOutlineTree("Content");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.OUTLINE.selectItem("Content");
+      IDE.OUTLINE.typeKeys(Keys.ARROW_DOWN.toString() + Keys.ARROW_DOWN + Keys.ARROW_RIGHT + Keys.ARROW_DOWN);
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      assertTrue(IDE.OUTLINE.isItemPresent("CDATA"));
+      assertEquals("6 : 1", IDE.STATUSBAR.getCursorPosition());
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      // check outline tree     
-      IDE.OUTLINE.assertElementPresentOutlineTree("CDATA");
-      assertEquals("6 : 1", getCursorPositionUsingStatusBar());
-
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(1);
    }
 
    @After
    public void tearDown() throws Exception
    {
-      VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
-      selectWorkspaceTab();
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }
 
 }

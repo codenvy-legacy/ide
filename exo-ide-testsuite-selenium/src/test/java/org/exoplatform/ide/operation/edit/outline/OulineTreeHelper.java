@@ -226,7 +226,7 @@ public class OulineTreeHelper extends BaseTest
    private void checkItemPresent(String itemId)
    {
       if (itemId != null)    
-         IDE.OUTLINE.assertElmentPresentById(itemId);
+         assertTrue(IDE.OUTLINE.isItemPresentById(itemId));
    }
 
    /**
@@ -248,7 +248,7 @@ public class OulineTreeHelper extends BaseTest
       {
          // Press down key on keyboard.         
          selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(Outline.Locators.SELECT_OUTLINE_DELAY * 2);
+         Thread.sleep(Outline.SELECT_OUTLINE_DELAY * 2);
       } 
       while ((fileLineNumbers -= 1) > 0);
       
@@ -284,7 +284,7 @@ public class OulineTreeHelper extends BaseTest
    {
       goToLine(fileLineNumber);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(itemRowNumber, itemLabel, true);
+      assertTrue(IDE.OUTLINE.isItemSelected(itemRowNumber));
    }
    
    /**

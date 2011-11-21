@@ -34,6 +34,7 @@ import org.openqa.selenium.By;
  * @version $Id: Jan 10, 2011 $
  *
  */
+@Deprecated
 public class Navigation extends AbstractTestModule
 {
 

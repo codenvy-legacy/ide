@@ -18,11 +18,15 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -35,16 +39,29 @@ import org.junit.Test;
 //http://jira.exoplatform.org/browse/IDE-417
 public class OutlineClosingTest extends BaseTest
 {
+   private final static String PROJECT = OutlineClosingTest.class.getSimpleName();
 
-   static private String OUTLINE_TAB_LABEL =
-      "//div[@panel-id='information']//table/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[2]['Outline']";
+   @BeforeClass
+   public static void setUp() throws Exception
+   {
+      VirtualFileSystemUtils.createDefaultProject(PROJECT);
+   }
+
+   @AfterClass
+   public static void tearDown() throws Exception
+   {
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+   }
 
    @Test
    public void test() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
 
       openAndCloseOutline();
 
@@ -61,15 +78,15 @@ public class OutlineClosingTest extends BaseTest
    {
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent("ideOutlineTreeGrid");
+      IDE.OUTLINE.waitOpened();
 
       // check for presence of tab outline
-      IDE.OUTLINE.assertOutlineTreePresent();
-      assertEquals("Outline", selenium().getText(OUTLINE_TAB_LABEL));
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
+      assertTrue(IDE.OUTLINE.isOutlineViewVisible());
 
       IDE.OUTLINE.closeOutline();
-      waitForElementNotPresent("ideOutlineTreeGrid");
-      IDE.OUTLINE.assertOutlineTreeNotPresent();
+      IDE.OUTLINE.waitClosed();
+      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
+      assertFalse(IDE.OUTLINE.isOutlineViewVisible());
    }
-
 }

@@ -19,16 +19,19 @@
 package org.exoplatform.ide.operation.edit.outline;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
+
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -39,13 +42,9 @@ import org.openqa.selenium.Keys;
   */
 public class CodeOutLineBaseOperationTest extends BaseTest
 {
-   
+   private final static String PROJECT = CodeOutLineBaseOperationTest.class.getSimpleName();
+
    private final static String FILE_NAME = "GroovyTemplateCodeOutline.gtmpl";
-
-   private final static String TEST_FOLDER = CodeOutLineBaseOperationTest.class.getSimpleName();
-
-   private static final String WAIT_FOR_PARSING_TEST_LOCATOR =
-      "//html[@style='border-width: 0pt;']//body[@class='editbox']//span[284][@class='xml-tagname']";
 
    @BeforeClass
    public static void setUp()
@@ -53,8 +52,9 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/GroovyTemplateCodeOutline.gtmpl";
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_TEMPLATE, WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_TEMPLATE, filePath);
       }
       catch (Exception e)
       {
@@ -67,7 +67,7 @@ public class CodeOutLineBaseOperationTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -79,57 +79,42 @@ public class CodeOutLineBaseOperationTest extends BaseTest
    @Test
    public void testNavigationOnOutLineGroovyTemplate() throws Exception
    {
-      //---- 1-2 -----------------
-      //open file with text
-      // Open groovy file with test content
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      waitForElementPresent(WAIT_FOR_PARSING_TEST_LOCATOR);
-
-      //---- 3 -----------------
-      //open Outline Panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent("ideOutlineTreeGrid");
+      IDE.OUTLINE.waitOpened();
+      
       //click on second groovy code node
       IDE.OUTLINE.selectRow(2);
-
+      
       //check, than cursor go to line
       assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
-
-      //---- 4 -----------------
-      //delete some tags in groovy template file
-      for (int i = 0; i < 7; i++)
-      {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
-      }
+      IDE.EDITOR.deleteLinesInEditor(0, 7);
       
+      //TODO redraw condition
       Thread.sleep(TestConstants.SLEEP);
-      
-      assertEquals("26 : 1", getCursorPositionUsingStatusBar());
-      //check outline tree
+
+      assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
+      
       IDE.OUTLINE.doubleClickItem(1);
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
       assertEquals("a1 : Object", IDE.OUTLINE.getItemLabel(2));
-      //check selection in outline tree
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "groovy code", true);
+      assertTrue(IDE.OUTLINE.isItemSelected(1));
 
-      //---- 5 -----------------
-      //click on editor
-      goToLine(27);
-      assertEquals("27 : 1", getCursorPositionUsingStatusBar());
-      
-      //check outline tree
+      IDE.GOTOLINE.goToLine(27);
+      assertEquals("27 : 1", IDE.STATUSBAR.getCursorPosition());
+
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
-
       assertEquals("a", IDE.OUTLINE.getItemLabel(13));
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(14));
-      //check selection in outline tree
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(14, "groovy code", true);
 
+      assertTrue(IDE.OUTLINE.isItemSelected(14));
    }
 }

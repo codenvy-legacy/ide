@@ -18,16 +18,20 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 //http://jira.exoplatform.org/browse/IDE-417
 /**
@@ -42,14 +46,14 @@ import org.junit.Test;
  */
 public class OutlineWithOtherTabsInPanelTest extends BaseTest
 {
-   
+
    private final static String TEXT_FILE_NAME = "file-1.txt";
 
    private final static String HTML_FILE_NAME = "file-2.html";
 
    private final static String XML_FILE_NAME = "file-3.xml";
 
-   private final static String FOLDER_NAME = OutlineWithOtherTabsInPanelTest.class.getSimpleName();
+   private final static String PROJECT = OutlineWithOtherTabsInPanelTest.class.getSimpleName();
 
    @Before
    public void setUp()
@@ -60,15 +64,14 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
 
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-
-         VirtualFileSystemUtils.put(textFilePath, MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME + "/" + TEXT_FILE_NAME);
-         VirtualFileSystemUtils.put(xmlFilePath, MimeType.TEXT_XML, WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
-         VirtualFileSystemUtils.put(htmlFilePath, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, TEXT_FILE_NAME, MimeType.TEXT_PLAIN, textFilePath);
+         VirtualFileSystemUtils.createFileFromLocal(link, XML_FILE_NAME, MimeType.TEXT_XML, xmlFilePath);
+         VirtualFileSystemUtils.createFileFromLocal(link, HTML_FILE_NAME, MimeType.TEXT_HTML, htmlFilePath);
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail("Can't create folder and files");
       }
    }
@@ -79,7 +82,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -90,88 +93,78 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
    @Test
    public void testOutlineWithOtherTabsInPanel() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-
-      //----- 1 -------------
-      //open xml file
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
-      //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
-      //Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      //----- 2 -------------
-      //open outline panel
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEXT_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + XML_FILE_NAME);
+      
+      //Open XML file
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
+      
+      //Open Outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent("ideOutlineTreeGrid");
-      //check outline visible
-      IDE.OUTLINE.assertOutlineTreePresent();
+      IDE.OUTLINE.waitOpened();
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
 
-      //----- 3 -------------
-      //open html file
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      //Open HTML file
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.OUTLINE.waitOpened();
+      //Check Outline visible
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
 
-      //check outline visible
-      IDE.OUTLINE.assertOutlineTreePresent();
-
-      //----- 4 -------------
-      //open text file
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + TEXT_FILE_NAME);
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + TEXT_FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      //Open text file
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEXT_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEXT_FILE_NAME);
+      IDE.OUTLINE.waitClosed();
       //check outline is not visible
-      IDE.OUTLINE.checkOtlineTreeIsNotPresent();
+      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
 
-      //----- 5 -------------
-      //type text to file and save (create new version)
+      //Type text to file and save (create new version)
       IDE.EDITOR.typeTextIntoEditor(2, "hello");
-      saveCurrentFile();
-
-      //----- 6 -------------
-      //open version tab
+      IDE.EDITOR.waitFileContentModificationMark(TEXT_FILE_NAME);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(TEXT_FILE_NAME);
+      
+      //Open version tab
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
       //check version tab is visible, outline tab is not visible
 
-      IDE.OUTLINE.checkOutlinePanelIsNotActive();
+      assertFalse(IDE.OUTLINE.isOutlineViewActive());
       IDE.VERSIONS.checkVersionPanelIsActive();
 
-      //----- 7 -------------
-      //go to xml file
-      IDE.EDITOR.selectTab(0);
+      //Go to XML file
+      IDE.EDITOR.selectTab(1);
 
       //version tab is closed, outline is visible
-      IDE.OUTLINE.assertOutlineTreePresent();
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
       IDE.VERSIONS.checkViewVersionsListPanel(false);
 
-      //----- 8 -------------
-      //type text and save
+      //Type text and save
       IDE.EDITOR.typeTextIntoEditor(0, "abc");
-      saveCurrentFile();
-
-      //----- 9 -------------
-      //open versions tab
+      IDE.EDITOR.waitFileContentModificationMark(XML_FILE_NAME);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(XML_FILE_NAME);
+      
+      //Open versions tab
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
-      IDE.OUTLINE.assertOutlineTreePresent();
+      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
       IDE.VERSIONS.checkVersionPanelIsActive();
 
-      //----- 10 -------------
-      //close outline tab by clicking on close icon (x)
+      //Close outline tab by clicking on close icon (x)
       IDE.OUTLINE.closeOutline();
+      IDE.OUTLINE.waitClosed();
+      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
 
-      //outline panel is closed and versions tab is visible
-      IDE.OUTLINE.assertOutlineTreeNotPresent();
-
-      //----- 11 -------------
-      //select text file
+      //Select text file
       IDE.EDITOR.selectTab(2);
-      IDE.OUTLINE.assertOutlineTreeNotPresent();
+      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
 
-      //----- 12 -------------
-      //select html file
+      //Select HTML file
       IDE.EDITOR.selectTab(1);
-      IDE.OUTLINE.assertOutlineTreeNotPresent();
-
+      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
    }
 
 }

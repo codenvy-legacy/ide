@@ -139,6 +139,27 @@ public class ProjectExplorer extends AbstractTestModule
       });
    }
 
+   public void waitForItemNotVisible(final String path) throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement item = driver().findElement(By.id(getItemId(path)));
+               return item == null || !item.isDisplayed();
+            }
+            catch (Exception e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
    /**
     * Select item in project explorer view.
     * 
@@ -228,5 +249,10 @@ public class ProjectExplorer extends AbstractTestModule
          return null;
       }
       return rootItem.getText();
+   }
+
+   public void typeKeys(String keys)
+   {
+      new Actions(driver()).sendKeys(treeGrid, keys).build().perform();
    }
 }
