@@ -21,6 +21,13 @@ package org.exoplatform.ide.client;
 
 /**
  * 
+ * This class was creates to helps developers to use native browser's alert function.
+ * When any file is opened, CKEditor overwrites native function and any
+ * trying to do alert prevents to opens CKEditor's dialog window.
+ * 
+ *   Call init() function at the start of application to remember browser's alert function
+ *   and then use alert(...) like Window.alert(...)
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>

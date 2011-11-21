@@ -21,11 +21,16 @@ package org.exoplatform.ide.extension.groovy.client.handlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptEvent;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxEvent;
@@ -34,6 +39,7 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import com.google.gwt.http.client.URL;
 
@@ -46,16 +52,20 @@ import com.google.gwt.http.client.URL;
  */
 
 public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, DeployGroovyScriptSandboxHandler,
-   EditorActiveFileChangedHandler//, GroovyDeployResultReceivedHandler
+   EditorActiveFileChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private FileModel activeFile;
+   
+   private ProjectModel currentProject;
 
    public DeployGroovyCommandHandler()
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(DeployGroovyScriptEvent.TYPE, this);
       IDE.addHandler(DeployGroovyScriptSandboxEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -68,10 +78,14 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
+      if (activeFile == null || currentProject == null) {
+         Dialogs.getInstance().showError("Could not deploy Groovy Service.");
+         return;
+      }
+      
       GroovyService.getInstance().deploy(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
-         activeFile.getProject().getId(), new AsyncRequestCallback<String>()
+         currentProject.getId(), new AsyncRequestCallback<String>()
          {
-
             @Override
             protected void onSuccess(String result)
             {
@@ -88,7 +102,6 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
 
    private void deploySuccess(String href)
    {
-
       String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> deployed successfully.";
       IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
       IDE.fireEvent(new GroovyDeployResultReceivedEvent(href));
@@ -125,10 +138,14 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScriptSandbox(DeployGroovyScriptSandboxEvent event)
    {
+      if (activeFile == null || currentProject == null) {
+         Dialogs.getInstance().showError("Could not deploy Groovy Service.");
+         return;
+      }      
+      
       GroovyService.getInstance().deploySandbox(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
-         activeFile.getProject().getId(), new AsyncRequestCallback<String>()
+         currentProject.getId(), new AsyncRequestCallback<String>()
          {
-
             @Override
             protected void onSuccess(String result)
             {
@@ -141,6 +158,18 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
                deployFailure(this.getResult(), exception);
             }
          });
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      currentProject = null;
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      currentProject = event.getProject();
    }
 
 }

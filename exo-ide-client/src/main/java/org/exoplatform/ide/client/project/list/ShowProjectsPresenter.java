@@ -19,29 +19,6 @@
 
 package org.exoplatform.ide.client.project.list;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
-import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
-import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.project.OpenProjectEvent;
-import org.exoplatform.ide.client.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.project.ProjectOpenedHandler;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -51,6 +28,29 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
+import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
+import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.project.OpenProjectEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 
