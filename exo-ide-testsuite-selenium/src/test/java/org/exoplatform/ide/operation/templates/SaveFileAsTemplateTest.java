@@ -132,10 +132,10 @@ public class SaveFileAsTemplateTest extends BaseTest
       //click save button
       IDE.SAVE_AS_TEMPLATE.clickSaveButton();
       //check info dialog, that template crated successfully
-      IDE.INFORMATION_DIALOG.waitForInfoDialog("Template created successfully!");
+      IDE.INFORMATION_DIALOG.waitOpened("Template created successfully!");
       //click ok button
       IDE.INFORMATION_DIALOG.clickOk();
-      IDE.INFORMATION_DIALOG.waitForInfoDialogNotPresent();
+      IDE.INFORMATION_DIALOG.waitClosed();
       
       //------------ 3 ----------
       //Click on "New->From Template" button and then click on "test groovy template" item.

@@ -100,11 +100,11 @@ public class PullTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String message = IDE.ERROR_DIALOG.getMessage();
+      IDE.WARNING_DIALOG.waitOpened();
+      String message = IDE.WARNING_DIALOG.getWarningMessage();
       Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
@@ -117,11 +117,11 @@ public class PullTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
 
       //Get error message - no remote repositories:
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String errorMessage = IDE.ERROR_DIALOG.getMessage();
+      IDE.WARNING_DIALOG.waitOpened();
+      String errorMessage = IDE.WARNING_DIALOG.getWarningMessage();
       Assert.assertEquals(GIT.Messages.NO_REMOTE_REPOSITORIES, errorMessage);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
    }
 
    /**

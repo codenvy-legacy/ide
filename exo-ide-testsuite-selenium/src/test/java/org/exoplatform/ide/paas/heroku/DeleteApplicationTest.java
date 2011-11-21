@@ -19,7 +19,6 @@
 package org.exoplatform.ide.paas.heroku;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -74,9 +73,10 @@ public class DeleteApplicationTest extends BaseTest
       
       IDE.HEROKU.CREATE_APP.createApplication(TEST_FOLDER);
       IDE.HEROKU.DELETE_APP.callDeleteApplication();
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
-      assertTrue(IDE.ASK_DIALOG.isOpened("Delete application from Heroku"));
+      IDE.ASK_DIALOG.waitOpened();
+      assertEquals("Delete application from Heroku", IDE.ASK_DIALOG.getQuestion());
       IDE.ASK_DIALOG.clickYes();
+      IDE.ASK_DIALOG.waitClosed();
       
       IDE.OUTPUT.waitForMessageShow(3);
       String text = IDE.OUTPUT.getOutputMessageText(3);

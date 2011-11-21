@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.operation.templates;
 
+import static org.junit.Assert.assertEquals;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -97,11 +98,10 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
       IDE.TEMPLATES.clickDeleteButton();
       
       //check delete confirmation dialog
-      IDE.ASK_DIALOG.waitForDialog("Do you want to delete template " + PROJECT_TEMPLATE_NAME_1 + "?");
-      //click OK button
+      IDE.ASK_DIALOG.waitOpened();
+      assertEquals("Do you want to delete template " + PROJECT_TEMPLATE_NAME_1 + "?", IDE.ASK_DIALOG.getQuestion());      
       IDE.ASK_DIALOG.clickYes();
-      waitForLoaderDissapeared();
-      IDE.ASK_DIALOG.waitForDialogNotPresent();
+      IDE.ASK_DIALOG.waitClosed();
       IDE.TEMPLATES.waitForTemplateDeleted(PROJECT_TEMPLATE_NAME_1);
       
       //----- 4 ----------------

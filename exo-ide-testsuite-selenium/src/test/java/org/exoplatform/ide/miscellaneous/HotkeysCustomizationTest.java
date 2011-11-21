@@ -157,7 +157,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
 
       //waitForElementNotPresent(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
-      IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+      IDE.ASK_FOR_VALUE_DIALOG.waitClosed();
    }
 
    /**

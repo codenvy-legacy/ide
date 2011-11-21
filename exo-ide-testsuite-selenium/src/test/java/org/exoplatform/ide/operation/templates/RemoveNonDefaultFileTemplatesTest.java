@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.operation.templates;
 
+import static org.junit.Assert.assertEquals;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -98,13 +98,13 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       //click Delete button
       IDE.TEMPLATES.clickDeleteButton();
       // check warning dialog appeared
-      IDE.ASK_DIALOG.waitForDialog();
+      IDE.ASK_DIALOG.waitOpened();
       
       //------ 3 ----------
       //Click on button "Yes".
       IDE.ASK_DIALOG.clickYes();
       waitForLoaderDissapeared();
-      IDE.ASK_DIALOG.waitForDialogNotPresent();
+      IDE.ASK_DIALOG.waitClosed();
       IDE.TEMPLATES.waitForTemplateDeleted(FILE_TEMPLATE_NAME_1);
       
       //"Create file" window should contain only default("red") templates.
@@ -147,7 +147,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       //click Delete button
       IDE.TEMPLATES.clickDeleteButton();
       // check warning dialog appeared
-      IDE.ASK_DIALOG.waitForDialog();
+      IDE.ASK_DIALOG.waitOpened();
       
       //------ 3 --------
       //Click on button "Yes".
@@ -156,11 +156,11 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       //------ 4 --------
       //check warn dialog, that this template is used in project template
       final String msg = "File template " + FILE_TEMPLATE_NAME_2 + " is used in Test Project Template project template(s)";
-      IDE.ASK_DIALOG.waitForDialog(msg);
-      
-      //Click on button "Yes".
+      IDE.ASK_DIALOG.waitOpened();
+      assertEquals(msg, IDE.ASK_DIALOG.getQuestion());
       IDE.ASK_DIALOG.clickYes();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.ASK_DIALOG.waitClosed();
+      
       IDE.TEMPLATES.waitForTemplateDeleted(FILE_TEMPLATE_NAME_2);
       
       //"Create file" window should contain only default("red") templates.

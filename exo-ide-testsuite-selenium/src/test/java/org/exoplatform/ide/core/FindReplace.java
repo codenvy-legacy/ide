@@ -302,11 +302,19 @@ public class FindReplace extends AbstractTestModule
       assertEquals(NOT_FOUND_RESULT, getFindResultText());
    }
 
+   /**
+    * Returns the value of the find text result label. 
+    * 
+    * @return {@link String} result of the find text operation
+    */
    public String getFindResultText()
    {
       return resultLabel.getText();
    }
 
+   /**
+    * Click on case sensitive field.
+    */
    public void clickCaseSensitiveField()
    {
       caseSensitiveField.click();

@@ -31,7 +31,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -47,7 +46,7 @@ public class Menu extends AbstractTestModule
 
       String TOP_MENU_ITEM_LOCATOR = "//td[@class='exo-menuBarItem' and text()='%s']";
 
-      String MENU_ITEM_LOCATOR = "//td[contains(@class,'exo-popupMenuTitleField') and contains(., '%s')]";
+      String MENU_ITEM_LOCATOR = "//td[contains(@class,'exo-popupMenuTitleField') and contains(., '%s')]//nobr";
 
       String POPUP_SELECTOR = "table.exo-popupMenuTable";
 
@@ -60,35 +59,51 @@ public class Menu extends AbstractTestModule
    private WebElement lockLayer;
 
    /**
-    * Open command from top menu.
+    * Run command from top menu.
     * 
     * @param topMenuName name of menu
     * @param commandName command name
     */
    public void runCommand(String topMenuName, String commandName) throws Exception
    {
-      String menuItemLocator = "//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']";
+      //Call top menu command:
+      WebElement topMenuItem =
+         driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
+      topMenuItem.click();
+      waitMenuPopUp();
 
-      selenium().mouseDown("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']");
-      waitForElementPresent(menuItemLocator);
-      selenium().click(menuItemLocator);
+      //Call command from menu popup:
+      WebElement menuItem = driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName)));
+      menuItem.click();
 
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      waitMenuPopUpClosed();
    }
 
+   /**
+    * Run command from sub menu.
+    * 
+    * @param menuName
+    * @param commandName
+    * @param subCommandName
+    * @throws Exception
+    */
    public void runCommand(String menuName, String commandName, String subCommandName) throws Exception
    {
-      String menuItemLocator1 = "//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']";
-      String menuItemLocator2 = "//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']";
+      //Call top menu command:
+      WebElement topMenuItem = driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, menuName)));
+      topMenuItem.click();
+      waitMenuPopUp();
 
-      selenium().mouseDown("//td[@class='exo-menuBarItem' and text()='" + menuName + "']");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      //Call command from menu popup:
+      WebElement menuItem = driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName)));
+      menuItem.click();
 
-      selenium().click(menuItemLocator1);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      selenium().click(menuItemLocator2);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      //Call sub menu command
+      waitForMenuItemPresent(subCommandName);
+      WebElement subMenuItem =
+         driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, subCommandName)));
+      subMenuItem.click();
+      waitMenuPopUpClosed();
    }
 
    /**
@@ -170,6 +185,30 @@ public class Menu extends AbstractTestModule
    }
 
    /**
+    * Wait for menu popup to close.
+    */
+   protected void waitMenuPopUpClosed()
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   /**
     * Check is command in top menu enabled or disabled.
     * 
     * @param topMenuName mane of menu
@@ -235,31 +274,52 @@ public class Menu extends AbstractTestModule
    }
 
    /**
-    * Get the XPATH locator for top menu command.
+    * Wait for menu item to appear.
     * 
-    * @param title - the title of top menu command.
-    * 
-    * @return {@link String}
+    * @param itemName name of item to wait
+    * @throws Exception
     */
-   public String getMenuLocator(String title)
+   protected void waitForMenuItemPresent(final String itemName) throws Exception
    {
-      return "//td[@class='exo-menuBarItem' and text()='" + title + "']";
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, itemName))) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
-   public void waitForMenuItemPresent(String itemName) throws Exception
-   {
-      waitForElementPresent(getMenuLocator(itemName));
-   }
-
+   /**
+    * Wait for command from menu.
+    * 
+    * @param menuName name of the top menu
+    * @param itemName name of the menu item to wait
+    * @throws Exception
+    */
    public void waitForMenuItemPresent(String menuName, String itemName) throws Exception
    {
-      final String menuLocator = getMenuLocator(menuName);
-      waitForElementPresent(menuLocator);
-      selenium().mouseDown(menuLocator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      waitForElementPresent("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + itemName + "']");
-      selenium().mouseDown("//div[@class='exo-lockLayer']/");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      //Call top menu command:
+      WebElement topMenuItem = driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, menuName)));
+      topMenuItem.click();
+      waitMenuPopUp();
+      try
+      {
+         waitForMenuItemPresent(itemName);
+      }
+      finally
+      {
+         lockLayer.click();
+         waitMenuPopUpClosed();
+      }
    }
 
 }

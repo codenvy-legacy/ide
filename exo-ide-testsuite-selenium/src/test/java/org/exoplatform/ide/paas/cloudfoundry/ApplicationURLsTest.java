@@ -100,9 +100,9 @@ public class ApplicationURLsTest extends CloudFoundryTest
       assertEquals(2, CloudFoundry.APPLICATION_URLS.getURLsCount());
 
       CloudFoundry.APPLICATION_URLS.clickUnMapButton(1);
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
+      IDE.ASK_DIALOG.waitOpened();
       IDE.ASK_DIALOG.clickYes();
-      IDE.ASK_DIALOG.waitForAskDialogClosed();
+      IDE.ASK_DIALOG.waitClosed();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertEquals(1, CloudFoundry.APPLICATION_URLS.getURLsCount());
       

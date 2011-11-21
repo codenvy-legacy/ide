@@ -350,7 +350,7 @@ public class Navigation extends AbstractTestModule
    {
       IDE().TOOLBAR.runCommand(ToolbarCommands.File.SAVE_AS);
 
-      IDE().ASK_FOR_VALUE_DIALOG.waitForPresent();
+      IDE().ASK_FOR_VALUE_DIALOG.waitOpened();
 
       if (fileName != null)
       {
@@ -358,7 +358,7 @@ public class Navigation extends AbstractTestModule
       }
 
       IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
-      IDE().ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+      IDE().ASK_FOR_VALUE_DIALOG.waitClosed();
 
       String locator =
          "//div[@id='exoIDEToolbar']//div[@class='exoIconButtonPanel' and @enabled='false' and @title='"

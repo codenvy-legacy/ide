@@ -147,10 +147,10 @@ public class Editor extends AbstractTestModule
       selectTab(tabIndex);
 
       IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
-      IDE().ASK_FOR_VALUE_DIALOG.waitForPresent();
+      IDE().ASK_FOR_VALUE_DIALOG.waitOpened();
       IDE().ASK_FOR_VALUE_DIALOG.setValue(name);
       IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
-      IDE().ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+      IDE().ASK_FOR_VALUE_DIALOG.waitClosed();
    }
 
    /**

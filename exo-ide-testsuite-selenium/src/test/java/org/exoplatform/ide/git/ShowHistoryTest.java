@@ -91,11 +91,11 @@ public class ShowHistoryTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY, true);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String message = IDE.ERROR_DIALOG.getMessage();
+      IDE.WARNING_DIALOG.waitClosed();
+      String message = IDE.WARNING_DIALOG.getWarningMessage();
       Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();

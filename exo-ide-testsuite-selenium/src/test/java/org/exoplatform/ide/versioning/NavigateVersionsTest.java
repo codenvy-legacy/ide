@@ -101,7 +101,6 @@ public class NavigateVersionsTest extends BaseTest
    public void testNavigateOlderVersion() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      IDE.MENU.waitForMenuItemPresent(MenuCommands.View.VIEW);
 
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");

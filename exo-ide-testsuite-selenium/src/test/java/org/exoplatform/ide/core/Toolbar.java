@@ -283,7 +283,8 @@ public class Toolbar extends AbstractTestModule
          "//div[@class='exo-toolbar16ButtonPanel_Right' and @title='" + name
             + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']");
    }
-
+   
+   @Deprecated
    public void assertButtonPresent(String name, boolean present)
    {
       //      String locator =

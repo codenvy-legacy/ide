@@ -28,7 +28,7 @@ import org.exoplatform.ide.Utils;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@Deprecated
 public class Workspace extends AbstractTestModule
 {
 

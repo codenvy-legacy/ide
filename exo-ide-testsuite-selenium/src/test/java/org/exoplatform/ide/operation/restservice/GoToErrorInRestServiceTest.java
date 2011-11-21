@@ -185,13 +185,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
 
-      IDE.ERROR_DIALOG.waitIsOpened();
+      IDE.WARNING_DIALOG.waitOpened();
       //check, error dialog appeared
-      IDE.ERROR_DIALOG.checkMessageContains("404");
-
-      //click Ok button
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
+      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains("404"));
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
       //---- 5 -----------------
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);

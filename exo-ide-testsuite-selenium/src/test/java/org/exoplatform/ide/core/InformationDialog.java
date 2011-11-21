@@ -18,9 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-
-import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Operations with information dialogs.
@@ -31,31 +35,30 @@ import org.exoplatform.ide.TestConstants;
 
 public class InformationDialog extends AbstractTestModule
 {
-   private static final String INFO_DIALOG_ID = "exoInfoDialog";
+   interface Locators
+   {
+      String VIEW_ID = "exoInfoDialog";
 
-   private static final String INFO_BUTTON_OK_ID = "OkButton";
+      String OK_BUTTON_ID = "OkButton";
 
-   private static final String INFO_MESSAGE_LOCATOR = "//div[@id=\"" + INFO_DIALOG_ID
-      + "\"]//div[@class=\"gwt-Label\"]";
+      String MESSAGE_SELECTOR = "div#" + VIEW_ID + " div.gwt-Label";
+   }
+
+   @FindBy(id = Locators.VIEW_ID)
+   private WebElement view;
+
+   @FindBy(id = Locators.OK_BUTTON_ID)
+   private WebElement okButton;
+
+   @FindBy(css = Locators.MESSAGE_SELECTOR)
+   private WebElement message;
 
    /**
     * Check, is information dialog appeared.
     */
-   public void checkIsOpened()
+   public boolean isOpened()
    {
-      assertTrue(selenium().isElementPresent(INFO_DIALOG_ID));
-      assertTrue(selenium().isElementPresent(INFO_BUTTON_OK_ID));
-   }
-
-   /**
-    * Check, is information dialog with <code>message</code> appeared.
-    * @param message - the message
-    * @throws Exception
-    */
-   public void checkIsOpened(String message) throws Exception
-   {
-      checkIsOpened();
-      assertTrue(selenium().isTextPresent(message));
+      return (view != null) && view.isDisplayed() && (okButton != null);
    }
 
    /**
@@ -64,46 +67,75 @@ public class InformationDialog extends AbstractTestModule
     */
    public void clickOk() throws InterruptedException
    {
-      selenium().click(INFO_BUTTON_OK_ID);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   public void clickYes()
-   {
-   }
-
-   public void clickNo()
-   {
+      okButton.click();
    }
 
    /**
-    * Wait for information dialog.
+    * Wait for information dialog opened.
     * @throws Exception
     */
-   public void waitForInfoDialog() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(INFO_DIALOG_ID);
-      waitForElementPresent(INFO_BUTTON_OK_ID);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return view != null && view.isDisplayed();
+         }
+      });
    }
 
    /**
-    * Wait for information dialog with <code>message</code>.
-    * @param message - the message at information dialog.
+    * Wait dialog opened with pointed message.
+    * 
+    * @param message message
     * @throws Exception
     */
-   public void waitForInfoDialog(String message) throws Exception
+   public void waitOpened(final String message) throws Exception
    {
-      waitForInfoDialog();
-      waitForTextPresent(message);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return view != null && view.isDisplayed() && message.equals(getMessage());
+         }
+      });
    }
 
-   public void waitForInfoDialogNotPresent() throws Exception
+   /**
+    * Wait information dialog closed.
+    * 
+    * @throws Exception
+    */
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(INFO_DIALOG_ID);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.id(Locators.VIEW_ID));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
+   /**
+    * Get information message.
+    * 
+    * @return {@link String} message
+    */
    public String getMessage()
    {
-      return selenium().getText(INFO_MESSAGE_LOCATOR);
+      return message.getText();
    }
 }

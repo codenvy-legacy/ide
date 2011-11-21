@@ -18,9 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.IDE;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,39 +38,55 @@ public class AskForValueDialog extends AbstractTestModule
 
    public interface Locator
    {
+      String VIEW_LOCATOR = "//div[@view-id='ideAskForValueView']";
 
-      String VIEW_ID = "ideAskForValueView";
+      String OK_BUTTON_ID = "ideAskForValueViewYesButton";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String NO_BUTTON_ID = "ideAskForValueViewNoButton";
 
-      String OK_BUTTON_LOCATOR = "ideAskForValueViewYesButton";
+      String CANCEL_BUTTON_ID = "ideAskForValueViewCancelButton";
 
-      String NO_BUTTON_LOCATOR = "ideAskForValueViewNoButton";
-
-      String CANCEL_BUTTON_LOCATOR = "ideAskForValueViewCancelButton";
-
-      String TEXT_FIELD_LOCATOR = "ideAskForValueViewValueField";
-
+      String VALUE_FIELD_ID = "ideAskForValueViewValueField";
    }
 
+   @FindBy(xpath = Locator.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locator.OK_BUTTON_ID)
+   private WebElement okButton;
+
+   @FindBy(id = Locator.NO_BUTTON_ID)
+   private WebElement noButton;
+
+   @FindBy(id = Locator.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locator.VALUE_FIELD_ID)
+   private WebElement valueField;
+
    /**
-    * Determines whether the Dialog is open.
-    * 
-    * @return
+    * @return {@link Boolean}
     */
    public boolean isOpened()
    {
-      return selenium().isElementPresent(Locator.VIEW_LOCATOR);
+      return view != null && view.isDisplayed();
    }
 
    /**
-    * Waits until AskForValue dialog will be present.
+    * Waits until AskForValue dialog will be opened.
     * 
     * @throws Exception
     */
-   public void waitForPresent() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locator.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return view != null && view.isDisplayed();
+         }
+      });
    }
 
    /**
@@ -74,21 +94,24 @@ public class AskForValueDialog extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForAskDialogNotPresent() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locator.VIEW_LOCATOR);
-   }
-
-   /**
-    * Closes AskForValue dialog.
-    * 
-    * @throws Exception
-    */
-   public void closeDialog() throws Exception
-   {
-      String locator = "//div[@id='ideAskForValueView-window']//img[@title='Close']";
-      selenium().click(locator);
-      waitForElementNotPresent(Locator.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locator.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -98,8 +121,7 @@ public class AskForValueDialog extends AbstractTestModule
     */
    public void clickOkButton() throws Exception
    {
-      selenium().click(Locator.OK_BUTTON_LOCATOR);
-      waitForElementNotPresent(Locator.VIEW_LOCATOR);
+      okButton.click();
    }
 
    /**
@@ -109,8 +131,7 @@ public class AskForValueDialog extends AbstractTestModule
     */
    public void clickNoButton() throws Exception
    {
-      selenium().click(Locator.NO_BUTTON_LOCATOR);
-      waitForElementNotPresent(Locator.VIEW_LOCATOR);
+      noButton.click();
    }
 
    /**
@@ -120,7 +141,7 @@ public class AskForValueDialog extends AbstractTestModule
     */
    public boolean isNoButtonPresent()
    {
-      return selenium().isElementPresent(Locator.NO_BUTTON_LOCATOR);
+      return noButton != null && noButton.isDisplayed();
    }
 
    /**
@@ -130,8 +151,7 @@ public class AskForValueDialog extends AbstractTestModule
     */
    public void clickCancelButton() throws Exception
    {
-      selenium().click(Locator.CANCEL_BUTTON_LOCATOR);
-      waitForElementNotPresent(Locator.VIEW_LOCATOR);
+      cancelButton.click();
    }
 
    /**
@@ -142,8 +162,7 @@ public class AskForValueDialog extends AbstractTestModule
     */
    public void setValue(String value) throws Exception
    {
-      WebElement inputElement = driver().findElement(By.name(Locator.TEXT_FIELD_LOCATOR));
-      IDE().INPUT.typeToElement(inputElement, value, true);
+      IDE().INPUT.typeToElement(valueField, value, true);
    }
 
 }

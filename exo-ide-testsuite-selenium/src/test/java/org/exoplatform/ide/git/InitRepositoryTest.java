@@ -200,10 +200,10 @@ public class InitRepositoryTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
 
-      IDE.INFORMATION_DIALOG.waitForInfoDialog();
+      IDE.INFORMATION_DIALOG.waitOpened();
       Assert.assertEquals(GIT.Messages.GIT_REPO_EXISTS, IDE.INFORMATION_DIALOG.getMessage());
 
       IDE.INFORMATION_DIALOG.clickOk();
-      IDE.INFORMATION_DIALOG.waitForInfoDialogNotPresent();
+      IDE.INFORMATION_DIALOG.waitClosed();
    }
 }

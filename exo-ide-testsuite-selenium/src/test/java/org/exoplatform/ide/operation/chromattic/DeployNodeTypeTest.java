@@ -20,6 +20,7 @@ package org.exoplatform.ide.operation.chromattic;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -169,9 +170,10 @@ public class DeployNodeTypeTest extends BaseTest
       selenium().click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
       waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
-      IDE.INFORMATION_DIALOG.waitForInfoDialog("Node type successfully deployed.");
+      IDE.INFORMATION_DIALOG.waitOpened();
+      assertEquals("Node type successfully deployed.", IDE);
       IDE.INFORMATION_DIALOG.clickOk();
-      IDE.INFORMATION_DIALOG.waitForInfoDialogNotPresent();
+      IDE.INFORMATION_DIALOG.waitClosed();
 
       //check, that there is no view with generated code
       assertFalse(selenium().isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));

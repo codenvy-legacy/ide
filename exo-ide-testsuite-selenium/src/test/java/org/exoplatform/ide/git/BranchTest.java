@@ -97,11 +97,11 @@ public class BranchTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES, true);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String message = IDE.ERROR_DIALOG.getMessage();
+      IDE.WARNING_DIALOG.waitOpened();
+      String message = IDE.WARNING_DIALOG.getWarningMessage();
       Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
       //Select repository:
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
@@ -212,20 +212,20 @@ public class BranchTest extends BaseTest
 
       //Try delete and click "No"
       IDE.GIT.BRANCHES.clickDeleteButton();
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
+      IDE.ASK_DIALOG.waitOpened();
       Assert.assertEquals(String.format(GIT.Messages.DELETE_BRANCH_QUESTION, "refs/heads/" + BRANCH1),
          IDE.ASK_DIALOG.getQuestion());
       IDE.ASK_DIALOG.clickNo();
-      IDE.ASK_DIALOG.waitForDialogNotPresent();
+      IDE.ASK_DIALOG.waitClosed();
 
       //Check branch is not deleted:
       Assert.assertEquals(3, IDE.GIT.BRANCHES.getBranchesCount());
 
       //Try delete and click "Yes"
       IDE.GIT.BRANCHES.clickDeleteButton();
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
+      IDE.ASK_DIALOG.waitOpened();
       IDE.ASK_DIALOG.clickYes();
-      IDE.ASK_DIALOG.waitForDialogNotPresent();
+      IDE.ASK_DIALOG.waitClosed();
       IDE.GIT.BRANCHES.waitForBranchesCount(2);
 
       //Check branch is deleted:

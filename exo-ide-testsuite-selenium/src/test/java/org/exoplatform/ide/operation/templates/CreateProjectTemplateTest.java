@@ -117,8 +117,9 @@ public class CreateProjectTemplateTest extends BaseTest
       IDE.PROJECT.TEMPLATE.waitForDialogNotPresent();
 
       //check info dialog appears
-      IDE.INFORMATION_DIALOG.waitForInfoDialog("Template created successfully!");
+      IDE.INFORMATION_DIALOG.waitOpened("Template created successfully!");
       IDE.INFORMATION_DIALOG.clickOk();
+      IDE.INFORMATION_DIALOG.waitClosed();
 
       //----- 10 ----------------
       //check cancel button

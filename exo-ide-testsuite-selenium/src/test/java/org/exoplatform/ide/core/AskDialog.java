@@ -18,7 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -30,69 +36,100 @@ public class AskDialog extends AbstractTestModule
 
    interface Locators
    {
+      String VIEW_ID = "exoAskDialog";
 
-      String ASK_DIALOG_ID = "exoAskDialog";
+      String ASK_TITLE_SELECTOR = "div#" + VIEW_ID + " div.Caption>span";
 
-      String ASK_TITLE = "//div[@id='" + ASK_DIALOG_ID + "']//div[@class='Caption']/span";
+      String QUESTION_SELECTOR = "div#" + VIEW_ID + " div.gwt-Label";
 
-      String QUESTION_LOCATOR = "//div[@id=\"" + ASK_DIALOG_ID + "\"]//div[@class=\"gwt-Label\"]";
-      
-      String YES_BUTTON = "YesButton";
-      
-      String NO_BUTTON = "NoButton";
+      String YES_BUTTON_ID = "YesButton";
+
+      String NO_BUTTON_ID = "NoButton";
    }
 
-   public void waitForAskDialogOpened() throws Exception
+   @FindBy(id = Locators.VIEW_ID)
+   private WebElement view;
+
+   @FindBy(css = Locators.ASK_TITLE_SELECTOR)
+   private WebElement askTitle;
+
+   @FindBy(css = Locators.QUESTION_SELECTOR)
+   private WebElement question;
+
+   @FindBy(id = Locators.YES_BUTTON_ID)
+   private WebElement yesButton;
+
+   @FindBy(id = Locators.NO_BUTTON_ID)
+   private WebElement noButton;
+
+   /**
+    * Wait dialog view opened.
+    * 
+    * @throws Exception
+    */
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.ASK_DIALOG_ID);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return view != null && view.isDisplayed();
+         }
+      });
    }
 
-   public void waitForAskDialogClosed() throws Exception
+   /**
+    * Wait dialog view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.ASK_DIALOG_ID);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.id(Locators.VIEW_ID));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
-   public void assertOpened(String title)
-   {
-      assertTrue(isOpened(title));
-   }
-
+   /**
+    * @return {@link Boolean} 
+    */
    public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.ASK_DIALOG_ID);
+      return (view != null && view.isDisplayed());
    }
 
-   public boolean isOpened(String title)
-   {
-      return selenium().isElementPresent(Locators.ASK_TITLE + "[contains(text(), '" + title + "')]");
-   }
-
+   /**
+    * Click No button.
+    * 
+    * @throws Exception
+    */
    public void clickNo() throws Exception
    {
-      selenium().click(Locators.NO_BUTTON);
-      waitForElementNotPresent(Locators.ASK_DIALOG_ID);
+      noButton.click();
    }
 
+   /**
+    * Click Yes button.
+    * 
+    * @throws Exception
+    */
    public void clickYes() throws Exception
    {
-      selenium().click(Locators.YES_BUTTON);
-      waitForElementNotPresent(Locators.ASK_DIALOG_ID);
-   }
-
-   public void waitForDialog() throws Exception
-   {
-      waitForElementPresent(Locators.ASK_DIALOG_ID);
-   }
-
-   public void waitForDialog(String message) throws Exception
-   {
-      waitForDialog();
-      waitForTextPresent(message);
-   }
-
-   public void waitForDialogNotPresent() throws Exception
-   {
-      waitForElementNotPresent(Locators.ASK_DIALOG_ID);
+      yesButton.click();
    }
 
    /**
@@ -102,6 +139,16 @@ public class AskDialog extends AbstractTestModule
     */
    public String getQuestion()
    {
-      return selenium().getText(Locators.QUESTION_LOCATOR);
+      return question.getText();
+   }
+
+   /**
+    * Returns the title(caption) of the ask dialog.
+    * 
+    * @return {@link String} title of the ask dialog
+    */
+   public String getTitle()
+   {
+      return askTitle.getText();
    }
 }

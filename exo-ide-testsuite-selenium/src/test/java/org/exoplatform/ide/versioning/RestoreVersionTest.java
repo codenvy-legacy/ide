@@ -122,9 +122,9 @@ public class RestoreVersionTest extends BaseTest
 
       //Restore version and check opened file has restored content
       IDE.TOOLBAR.runCommand(MenuCommands.File.RESTORE_VERSION);
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
+      IDE.ASK_DIALOG.waitOpened();
       IDE.ASK_DIALOG.clickYes();
-      IDE.ASK_DIALOG.waitForAskDialogClosed();
+      IDE.ASK_DIALOG.waitClosed();
       Thread.sleep(TestConstants.SLEEP);
 
       assertEquals(version1Text + version2Text + version3Text, IDE.EDITOR.getTextFromCodeEditor(0));
@@ -180,9 +180,9 @@ public class RestoreVersionTest extends BaseTest
       //Restore version and check opened file has restored content
       IDE.TOOLBAR.runCommand(MenuCommands.File.RESTORE_VERSION);
 
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
+      IDE.ASK_DIALOG.waitOpened();
       IDE.ASK_DIALOG.clickYes();
-      IDE.ASK_DIALOG.waitForAskDialogClosed();
+      IDE.ASK_DIALOG.waitClosed();
 
       Thread.sleep(TestConstants.SLEEP);
       assertEquals(version1Text + version2Text, IDE.EDITOR.getTextFromCodeEditor(0));
@@ -276,11 +276,9 @@ public class RestoreVersionTest extends BaseTest
       //Restore version and check opened file has restored content
       IDE.TOOLBAR.runCommand(MenuCommands.File.RESTORE_VERSION);
 
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
-      
+      IDE.ASK_DIALOG.waitOpened();
       IDE.ASK_DIALOG.clickYes();
-      
-      IDE.ASK_DIALOG.waitForAskDialogClosed();
+      IDE.ASK_DIALOG.waitClosed();
       IDE.EDITOR.waitTabPresent(0);
       assertEquals(version1Text + version2Text, IDE.EDITOR.getTextFromCodeEditor(0));
       IDE.VERSIONS.checkOlderVersionButtonState(true);

@@ -88,11 +88,11 @@ public class RemoteRepositoriesTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
       
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String message = IDE.ERROR_DIALOG.getMessage();
+      IDE.WARNING_DIALOG.waitOpened();
+      String message = IDE.WARNING_DIALOG.getWarningMessage();
       Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
@@ -232,11 +232,11 @@ public class RemoteRepositoriesTest extends BaseTest
       IDE.GIT.REMOTES.clickDeleteButton();
 
       //Check confirmation dialog:
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
+      IDE.ASK_DIALOG.waitOpened();
       Assert.assertEquals(String.format(GIT.Messages.DELETE_REMOTE_QUESTION, REMOTE2_NAME),
          IDE.ASK_DIALOG.getQuestion());
       IDE.ASK_DIALOG.clickYes();
-      IDE.ASK_DIALOG.waitForDialogNotPresent();
+      IDE.ASK_DIALOG.waitClosed();
 
       IDE.GIT.REMOTES.waitForRemotesCount(1);
       Assert.assertEquals(1, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
@@ -247,11 +247,11 @@ public class RemoteRepositoriesTest extends BaseTest
       IDE.GIT.REMOTES.clickDeleteButton();
 
       //Check confirmation dialog:
-      IDE.ASK_DIALOG.waitForAskDialogOpened();
+      IDE.ASK_DIALOG.waitOpened();
       Assert.assertEquals(String.format(GIT.Messages.DELETE_REMOTE_QUESTION, REMOTE1_NAME),
          IDE.ASK_DIALOG.getQuestion());
       IDE.ASK_DIALOG.clickYes();
-      IDE.ASK_DIALOG.waitForDialogNotPresent();
+      IDE.ASK_DIALOG.waitClosed();
 
       waitForLoaderDissapeared();
       Assert.assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());

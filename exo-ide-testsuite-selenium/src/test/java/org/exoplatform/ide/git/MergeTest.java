@@ -101,11 +101,11 @@ public class MergeTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
 
       //Not Git repository:
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String message = IDE.ERROR_DIALOG.getMessage();
+      IDE.WARNING_DIALOG.waitOpened();
+      String message = IDE.WARNING_DIALOG.getWarningMessage();
       Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");

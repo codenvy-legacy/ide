@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide;
 
+import com.gargoylesoftware.htmlunit.Page;
+
 import com.thoughtworks.selenium.Selenium;
 
 import org.exoplatform.ide.core.AskDialog;
@@ -26,7 +28,6 @@ import org.exoplatform.ide.core.Button;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Delete;
 import org.exoplatform.ide.core.Editor;
-import org.exoplatform.ide.core.ErrorDialog;
 import org.exoplatform.ide.core.FindReplace;
 import org.exoplatform.ide.core.Folder;
 import org.exoplatform.ide.core.GoToLine;
@@ -100,11 +101,9 @@ public class IDE
 
    public WarningDialog WARNING_DIALOG;
 
-   public ErrorDialog ERROR_DIALOG = new ErrorDialog();
+   public AskDialog ASK_DIALOG;
 
-   public AskDialog ASK_DIALOG = new AskDialog();
-
-   public AskForValueDialog ASK_FOR_VALUE_DIALOG = new AskForValueDialog();
+   public AskForValueDialog ASK_FOR_VALUE_DIALOG;
 
    public InformationDialog INFORMATION_DIALOG = new InformationDialog();
 
@@ -146,9 +145,9 @@ public class IDE
 
    public Project PROJECT;
 
-   public Input INPUT = new Input();
+   public Input INPUT;
 
-   public Button BUTTON = new Button();
+   public Button BUTTON;
 
    public Delete DELETE;
 
@@ -162,12 +161,16 @@ public class IDE
       this.driver = driver;
       instance = this;
 
+      ASK_DIALOG = PageFactory.initElements(driver, AskDialog.class);
+      ASK_FOR_VALUE_DIALOG = PageFactory.initElements(driver, AskForValueDialog.class);
+      BUTTON = PageFactory.initElements(driver, Button.class);
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       DELETE = PageFactory.initElements(driver, Delete.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
       FOLDER = PageFactory.initElements(driver, Folder.class);
       FINDREPLACE = PageFactory.initElements(driver, FindReplace.class);
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
+      INPUT = PageFactory.initElements(driver, Input.class);
       MENU = PageFactory.initElements(driver, Menu.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);
@@ -175,6 +178,7 @@ public class IDE
       STATUSBAR = PageFactory.initElements(driver, Statusbar.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
       WARNING_DIALOG = PageFactory.initElements(driver, WarningDialog.class);
+
    }
 
    public Selenium getSelenium()

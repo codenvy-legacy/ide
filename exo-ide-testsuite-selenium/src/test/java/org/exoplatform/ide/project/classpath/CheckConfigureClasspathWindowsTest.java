@@ -19,6 +19,7 @@
 package org.exoplatform.ide.project.classpath;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -120,9 +121,10 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * Error dialog appeared
        */
-      IDE.ERROR_DIALOG.waitIsOpened();
-      IDE.ERROR_DIALOG.checkMessageContains(ERROR_MSG);
-      IDE.ERROR_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitOpened();
+      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(ERROR_MSG));
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
       /*
        * 2. Try to configure classpath for workspace
@@ -134,9 +136,10 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * Error dialog appeared
        */
-      IDE.ERROR_DIALOG.waitIsOpened();
-      IDE.ERROR_DIALOG.checkMessageContains(ERROR_MSG);
-      IDE.ERROR_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitOpened();
+      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(ERROR_MSG));
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
       /*
        * 3. Try to configure classpath for project.

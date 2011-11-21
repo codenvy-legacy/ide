@@ -74,14 +74,14 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       assertTrue(IDE.ASK_FOR_VALUE_DIALOG.isOpened());
 
       IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
-      IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+      IDE.ASK_FOR_VALUE_DIALOG.waitClosed();
 
       IDE.EDITOR.selectTab(1);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
-      IDE.ASK_FOR_VALUE_DIALOG.waitForPresent();
+      IDE.ASK_FOR_VALUE_DIALOG.waitOpened();
       IDE.ASK_FOR_VALUE_DIALOG.setValue(FILE);
       IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
-      IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+      IDE.ASK_FOR_VALUE_DIALOG.waitClosed();
 
       IDE.WORKSPACE.waitForItem("/" + PROJECT + "/" + FILE);
 
@@ -105,10 +105,10 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       IDE.EDITOR.waitTabPresent(1);
 
       IDE.EDITOR.clickCloseEditorButton(1);
-      IDE.ASK_FOR_VALUE_DIALOG.waitForPresent();
+      IDE.ASK_FOR_VALUE_DIALOG.waitOpened();
 
-      IDE.ASK_FOR_VALUE_DIALOG.closeDialog();
-      IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+      IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
+      IDE.ASK_FOR_VALUE_DIALOG.waitClosed();
 
       IDE.EDITOR.saveAndCloseFile(1, FILE2);
 

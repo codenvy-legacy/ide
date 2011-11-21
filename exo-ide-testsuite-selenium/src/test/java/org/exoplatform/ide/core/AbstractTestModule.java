@@ -51,7 +51,8 @@ public abstract class AbstractTestModule
    {
       return IDE.getInstance();
    }
-
+   
+   @Deprecated
    protected void waitForElementPresent(String locator) throws Exception
    {
       waitForElementPresent(locator, TestConstants.TIMEOUT);

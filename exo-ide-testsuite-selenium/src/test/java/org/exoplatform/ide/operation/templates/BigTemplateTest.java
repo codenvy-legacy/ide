@@ -84,13 +84,11 @@ public class BigTemplateTest extends BaseTest
       selenium().type(SaveAsTemplate.NAME_FIELD_ID, "Calc");
 
       selenium().click(SaveAsTemplate.SAVE_BUTTON_ID);
-      IDE.INFORMATION_DIALOG.waitForInfoDialog("Template created successfully!");
-
-      //check info dialog, that template crated successfully
-      IDE.INFORMATION_DIALOG.checkIsOpened("Template created successfully!");
+      IDE.INFORMATION_DIALOG.waitOpened("Template created successfully!");
 
       //click OK button
       IDE.INFORMATION_DIALOG.clickOk();
+      IDE.INFORMATION_DIALOG.waitClosed();
 
       IDE.EDITOR.closeFile(0);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);

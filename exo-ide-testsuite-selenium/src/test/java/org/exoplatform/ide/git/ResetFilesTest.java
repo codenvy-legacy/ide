@@ -91,11 +91,11 @@ public class ResetFilesTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES, true);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String message = IDE.ERROR_DIALOG.getMessage();
+      IDE.WARNING_DIALOG.waitOpened();
+      String message = IDE.WARNING_DIALOG.getWarningMessage();
       Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
@@ -107,11 +107,11 @@ public class ResetFilesTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
 
-      IDE.INFORMATION_DIALOG.waitForInfoDialog();
+      IDE.INFORMATION_DIALOG.waitOpened();
       message = IDE.INFORMATION_DIALOG.getMessage();
       Assert.assertEquals(GIT.Messages.NOTHING_TO_COMMIT, message);
       IDE.INFORMATION_DIALOG.clickOk();
-      IDE.INFORMATION_DIALOG.waitForInfoDialogNotPresent();
+      IDE.INFORMATION_DIALOG.waitClosed();
    }
 
    /**
@@ -305,10 +305,10 @@ public class ResetFilesTest extends BaseTest
       Assert.assertEquals(GIT.Messages.RESET_FILES_SUCCESS, message);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
-      IDE.INFORMATION_DIALOG.waitForInfoDialog();
+      IDE.INFORMATION_DIALOG.waitOpened();
       message = IDE.INFORMATION_DIALOG.getMessage();
       Assert.assertEquals(GIT.Messages.NOTHING_TO_COMMIT, message);
       IDE.INFORMATION_DIALOG.clickOk();
-      IDE.INFORMATION_DIALOG.waitForInfoDialogNotPresent();
+      IDE.INFORMATION_DIALOG.waitClosed();
    }
 }
