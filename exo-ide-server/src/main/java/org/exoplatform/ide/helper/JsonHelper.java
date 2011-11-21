@@ -38,7 +38,7 @@ import java.util.Map;
 public class JsonHelper
 {
    /** Use StringBuilder instead of StringBuffer as it done in {@link java.io.StringWriter}. */
-   static class FastStrWriter extends Writer
+   public static class FastStrWriter extends Writer
    {
       private final StringBuilder buf;
 
@@ -95,7 +95,7 @@ public class JsonHelper
    }
 
    @SuppressWarnings("unchecked")
-   static <O> String toJson(O instance)
+   public static <O> String toJson(O instance)
    {
       try
       {
@@ -121,7 +121,7 @@ public class JsonHelper
    }
 
    @SuppressWarnings({"unchecked", "rawtypes"})
-   static <O> O fromJson(String json, Class<O> klass, Type type) throws ParsingResponseException
+   public static <O> O fromJson(String json, Class<O> klass, Type type) throws ParsingResponseException
    {
       try
       {

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.ApplicationFile;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateResponse;
@@ -32,6 +35,8 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
+import org.exoplatform.ide.helper.JsonHelper;
+import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -1067,7 +1072,7 @@ public class Cloudfoundry
       CloudfoundryException
    {
       // Hard for parsing JSON for system services :( , so need do some manually job.
-      return JsonHelper.parseSystemServices(getJson(credential.target + "/info/services", credential.token, 200));
+      return parseSystemServices(getJson(credential.target + "/info/services", credential.token, 200));
    }
 
    private ProvisionedService[] provisionedServices(Credential credential) throws IOException,
@@ -2042,5 +2047,34 @@ public class Cloudfoundry
       seconds -= minutes * 60;
       String s = days + "d:" + hours + "h:" + minutes + "m:" + seconds + "s";
       return s;
+   }
+   
+   private static SystemService[] parseSystemServices(String json) throws ParsingResponseException
+   {
+      try
+      {
+         JsonValue jservices = org.exoplatform.ide.helper.JsonHelper.parseJson(json);
+         List<SystemService> result = new ArrayList<SystemService>(3);
+         for (Iterator<String> types = jservices.getKeys(); types.hasNext();)
+         {
+            String type = types.next();
+            for (Iterator<String> vendors = jservices.getElement(type).getKeys(); vendors.hasNext();)
+            {
+               String vendor = vendors.next();
+               for (Iterator<String> versions = jservices.getElement(type).getElement(vendor).getKeys(); versions
+                  .hasNext();)
+               {
+                  String version = versions.next();
+                  result.add(ObjectBuilder.createObject(SystemService.class, jservices.getElement(type).getElement(vendor)
+                     .getElement(version)));
+               }
+            }
+         }
+         return result.toArray(new SystemService[result.size()]);
+      }
+      catch (JsonException jsone)
+      {
+         throw new ParsingResponseException(jsone.getMessage(), jsone);
+      }
    }
 }
