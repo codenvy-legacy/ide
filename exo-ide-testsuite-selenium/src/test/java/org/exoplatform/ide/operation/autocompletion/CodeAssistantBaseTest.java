@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.autocompletion;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 
@@ -61,7 +62,7 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       createProject(name, null);
    }
 
-//   @AfterClass
+   @AfterClass
    public static void deleteProject() throws IOException
    {
       if (project != null)
@@ -75,6 +76,13 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(projectName);
       IDE.PROJECT.EXPLORER.waitForItem(projectName);
+   }
+   
+   protected void openFile(String name) throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + name);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + name);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + name);
    }
 
 }

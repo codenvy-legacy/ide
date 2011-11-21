@@ -22,9 +22,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,10 +34,8 @@ import org.junit.Test;
  * @version $Id: AutoCompleteJspTest Apr 26, 2011 11:07:34 AM evgen $
  *
  */
-public class AutoCompleteJspTest extends BaseTest
+public class AutoCompleteJspTest extends CodeAssistantBaseTest
 {
-
-   private static final String FOLDER_NAME = AutoCompleteJspTest.class.getSimpleName();
 
    private static final String FILE_NAME = "JSPtest.jsp";
 
@@ -45,10 +44,10 @@ public class AutoCompleteJspTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/jsp/testJsp.jsp",
-            MimeType.APPLICATION_JSP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         createProject(AutoCompleteJspTest.class.getSimpleName());
+         VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
+            MimeType.APPLICATION_JSP,
+            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/jsp/testJsp.jsp");
       }
       catch (Exception e)
       {
@@ -57,60 +56,45 @@ public class AutoCompleteJspTest extends BaseTest
       }
    }
 
+   @Before
+   public void openFile() throws Exception
+   {
+      openFile(FILE_NAME);
+   }
+
    @Test
    public void testAutocompleteJsp() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
-
-      goToLine(6);
+      IDE.GOTOLINE.goToLine(6);
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("background-attachment");
       IDE.CODEASSISTANT.checkElementPresent("counter-increment");
       IDE.CODEASSISTANT.insertSelectedItem();
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("!important"));
 
-      goToLine(11);
-      IDE.EDITOR.typeTextIntoEditor(0, "Coll");
+      IDE.GOTOLINE.goToLine(11);
+      IDE.EDITOR.typeTextIntoEditor(0, "Collection");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("Collection");
       IDE.CODEASSISTANT.checkElementPresent("Collections");
       IDE.CODEASSISTANT.insertSelectedItem();
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collection"));
 
-      goToLine(18);
+      IDE.GOTOLINE.goToLine(18);
 
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("a");
       IDE.CODEASSISTANT.checkElementPresent("Window");
       IDE.CODEASSISTANT.closeForm();
 
-      goToLine(24);
+      IDE.GOTOLINE.goToLine(24);
 
       IDE.EDITOR.typeTextIntoEditor(0, "<t");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("table");
       IDE.CODEASSISTANT.checkElementPresent("textarea");
       IDE.CODEASSISTANT.closeForm();
-
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
    }
 
 }

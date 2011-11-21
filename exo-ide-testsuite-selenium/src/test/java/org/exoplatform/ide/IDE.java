@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide;
 
-import com.gargoylesoftware.htmlunit.Page;
-
 import com.thoughtworks.selenium.Selenium;
 
 import org.exoplatform.ide.core.AskDialog;
@@ -178,7 +176,7 @@ public class IDE
       STATUSBAR = PageFactory.initElements(driver, Statusbar.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
       WARNING_DIALOG = PageFactory.initElements(driver, WarningDialog.class);
-
+      GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
    }
 
    public Selenium getSelenium()

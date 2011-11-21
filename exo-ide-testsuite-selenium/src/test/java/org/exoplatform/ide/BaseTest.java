@@ -843,6 +843,7 @@ public abstract class BaseTest
     * Go to line with lineNumber in the Code Editor by using top menu command "Edit > Go to Line..."
     * @param lineNumber
     * @throws InterruptedException
+    * Use IDE.GOTOLINE
     */
    @Deprecated
    public void goToLine(int lineNumber) throws Exception

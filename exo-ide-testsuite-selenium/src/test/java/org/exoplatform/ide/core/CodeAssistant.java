@@ -165,7 +165,7 @@ public class CodeAssistant extends AbstractTestModule
       //RETURN key is used instead of ENTER because 
       //of issue http://code.google.com/p/selenium/issues/detail?id=2180
       input.sendKeys(Keys.RETURN);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
    /**
