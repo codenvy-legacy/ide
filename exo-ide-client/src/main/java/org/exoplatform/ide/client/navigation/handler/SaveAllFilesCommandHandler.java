@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -29,6 +27,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.AllFilesSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesHandler;
@@ -38,7 +37,11 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -63,72 +66,63 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
+   private List<FileModel> savedFiles = new ArrayList<FileModel>();
+
    public void onSaveAllFiles(SaveAllFilesEvent event)
    {
-      saveNextUnsavedFile();
+      savedFiles.clear();
+      saveNextFile();
    }
 
-   protected void saveNextUnsavedFile()
+   private void saveNextFile()
    {
-      for (final FileModel file : openedFiles.values())
+      final FileModel fileToSave = getUnsavedFile();
+      if (fileToSave == null)
       {
-         if (file.isPersisted() && file.isContentChanged())
+         IDE.fireEvent(new AllFilesSavedEvent());
+         return;
+      }
+
+      try
+      {
+         VirtualFileSystem.getInstance().updateContent(fileToSave, new AsyncRequestCallback<FileModel>()
          {
-            try
+            @Override
+            protected void onSuccess(FileModel result)
             {
-               VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
-               {
-
-                  @Override
-                  protected void onSuccess(FileModel result)
-                  {
-                     //TODO 
-                     //                     if (file.isPropertiesChanged())
-                     //                     {
-                     //                        String lockToken = lockTokens.get(result.getFile().getHref());
-                     //                        saveFileProperties(result.getFile(), lockToken);
-                     //                     }
-                     //                     else
-                     //                     {
-
-                     IDE.fireEvent(new FileSavedEvent(file, null));
-                     saveNextUnsavedFile();
-                     //                     }
-
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception,
-                        "Service is not deployed.<br>Resource not found."));
-                  }
-               });
-            }
-            catch (RequestException e)
-            {
-               e.printStackTrace();
-               IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
+               savedFiles.add(fileToSave);
+               fileToSave.setContentChanged(false);
+               IDE.fireEvent(new FileSavedEvent(fileToSave, null));
+               saveNextFile();
             }
 
-            return;
-         }
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               exception.printStackTrace();
+               IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
       }
 
    }
 
-   private void saveFileProperties(FileModel file, String lockToken)
+   private FileModel getUnsavedFile()
    {
-      //TODO
-      //      VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
-      //      {
-      //         @Override
-      //         protected void onSuccess(Item result)
-      //         {
-      //            eventBus.fireEvent(new FileSavedEvent((FileModel)result, null));
-      //            saveNextUnsavedFile();
-      //         }
-      //      });
+      for (FileModel file : openedFiles.values())
+      {
+         if (file.isContentChanged() && file.isPersisted())
+         {
+            return file;
+         }
+      }
+
+      return null;
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)

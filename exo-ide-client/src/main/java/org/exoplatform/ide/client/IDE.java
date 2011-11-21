@@ -109,6 +109,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
          System.out.println();
       }
       
+      Alert.init();
+      
       new GWTDialogs();
       
       /*
