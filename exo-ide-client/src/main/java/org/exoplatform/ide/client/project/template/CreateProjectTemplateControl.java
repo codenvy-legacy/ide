@@ -50,7 +50,6 @@ public class CreateProjectTemplateControl extends SimpleControl implements IDECo
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setGroup(3);
       setEnabled(true);
       setImages(IDEImageBundle.INSTANCE.createProjectTemplate(),
          IDEImageBundle.INSTANCE.createProjectTemplateDisabled());

@@ -57,7 +57,7 @@ public class XmlEditor extends Extension
          CONSTANT.controlNewXmlTitle(),
          CONSTANT.controlNewXmlPrompt(),
          Images.XML,
-         MimeType.TEXT_XML).setGroup(1));      
+         MimeType.TEXT_XML));      
       
       CodeAssistant xmlAssistant = new XmlCodeAssistant();
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, CONSTANT.xmlEditor(), "xml",

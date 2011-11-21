@@ -96,7 +96,7 @@ public class NavigationModule implements
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
             IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN)
-            .setGroup(1));
+            .setDelimiterBefore(true));
 
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */

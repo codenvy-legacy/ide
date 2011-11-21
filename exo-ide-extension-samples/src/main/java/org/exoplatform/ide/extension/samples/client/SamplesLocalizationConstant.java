@@ -355,5 +355,17 @@ public interface SamplesLocalizationConstant extends Messages
    
    @Key("selectType.lable")
    String samplesProjectTypeLable();
+   
+   /*
+    * Controls
+    */
+   @Key("control.importFromGithub.id")
+   String importFromGithubControlId();
+   
+   @Key("control.importFromGithub.title")
+   String importFromGithubControlTitle();
+   
+   @Key("control.importFromGithub.prompt")
+   String importFromGithubControlPrompt();
 
 }

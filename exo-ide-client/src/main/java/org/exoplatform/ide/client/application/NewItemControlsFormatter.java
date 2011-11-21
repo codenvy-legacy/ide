@@ -40,46 +40,43 @@ import java.util.List;
 
 public class NewItemControlsFormatter implements ControlsFormatter
 {
-   class Group
-   {
-      private int number;
-      
-      private List<Control> controls;
-      
-      public Group(int number)
-      {
-         this.number = number;
-      }
-      
-      /**
-       * @return the number
-       */
-      public int getNumber()
-      {
-         return number;
-      }
-      
-      /**
-       * @return the controls
-       */
-      public List<Control> getControls()
-      {
-         if (controls == null)
-            controls = new ArrayList<Control>();
-         return controls;
-      }
-   }
+private List<String> controlIdsOrder;
    
    /**
-    * Each group will be separated by delimiter in menu.
+    * Initialize the order of the controls in menu "New".
     */
-   private List<Group> groups = new ArrayList<NewItemControlsFormatter.Group>();
+   private void initControlsOrder()
+   {
+      controlIdsOrder = new ArrayList<String>();
+      controlIdsOrder.add("File/New/Create Folder...");
+
+      controlIdsOrder.add("File/New/New TEXT");
+      controlIdsOrder.add("File/New/New Google Gadget");
+      controlIdsOrder.add("File/New/New Netvibes Widget");
+      controlIdsOrder.add("File/New/New XML");
+      controlIdsOrder.add("File/New/New Java Script");
+      controlIdsOrder.add("File/New/New HTML");
+      controlIdsOrder.add("File/New/New CSS");
+      
+      controlIdsOrder.add("File/New/New REST Service");
+      controlIdsOrder.add("File/New/New POGO");
+      controlIdsOrder.add("File/New/New Template");
+      controlIdsOrder.add("File/New/New Data Object");
+      controlIdsOrder.add("File/New/New Java Class");
+      controlIdsOrder.add("File/New/New JSP File");
+      controlIdsOrder.add("File/New/New Ruby File");
+      controlIdsOrder.add("File/New/New PHP File");
+      
+      controlIdsOrder.add("File/New/Create File From Template...");
+
+   }
    
    /**
     * @param eventBus
     */
    public NewItemControlsFormatter()
    {
+      initControlsOrder();
    }
 
    /**
@@ -87,11 +84,7 @@ public class NewItemControlsFormatter implements ControlsFormatter
     */
    public void format(List<Control> controls)
    {
-      createGroups(controls);
-      Collections.sort(groups, groupComparator);
-      
-      List<Control> newItemControls = sortNewItemsControls();
-      
+      List<Control> newItemControls = sortNewItemsControls(controls);
       //Remove new items controls:
       controls.removeAll(newItemControls);
       //Add sorted items controls:
@@ -100,51 +93,28 @@ public class NewItemControlsFormatter implements ControlsFormatter
       createNewItemGroup(controls);
       fillNewItemPopupControl(controls);
    }
-   
-   private List<Control> sortNewItemsControls()
+
+   /**
+    * Sort new items controls and return them.
+    * 
+    * @param controls all controls
+    * @return sorted only new item controls
+    */
+   private List<Control> sortNewItemsControls(List<Control> controls)
    {
       List<Control> newItemControls = new ArrayList<Control>();
-      for (Group group : groups)
-      {
-         if (newItemControls.size() > 0)
-         {
-            group.getControls().get(0).setDelimiterBefore(true);
-         }
-         newItemControls.addAll(group.getControls());
-      }
-      return newItemControls;
-   }
-   
-   private void createGroups(List<Control> controls)
-   {
       for (Control control : controls)
       {
          if (control.getId().startsWith("File/New/"))
          {
-            int groupNumber = ((SimpleControl)control).getGroup();
-            
-            Group group = getGroup(groupNumber);
-            if (group == null)
-            {
-               group = new Group(groupNumber);
-               groups.add(group);
-            }
-            
-            group.getControls().add(control);
+            newItemControls.add(control);
          }
       }
+      
+      Collections.sort(newItemControls, controlComparator);
+      return newItemControls;
    }
    
-   private Group getGroup(int groupNumber)
-   {
-      for (Group group : groups)
-      {
-         if (group.getNumber() == groupNumber)
-            return group;
-      }
-      return null;
-   }
-
    /**
     * Fill new item popup control with sub controls.
     * 
@@ -175,15 +145,26 @@ public class NewItemControlsFormatter implements ControlsFormatter
       }
    }
 
-   private Comparator<Group> groupComparator = new Comparator<NewItemControlsFormatter.Group>()
+   /**
+    * Comparator for items order.
+    */
+   private Comparator<Control> controlComparator = new Comparator<Control>()
    {
-      @Override
-      public int compare(Group group1, Group group2)
+      public int compare(Control control1, Control control2)
       {
-         Integer number1 = group1.getNumber();
-         Integer number2 = group2.getNumber();
+         if (!control1.getId().startsWith("File/New/") || !control2.getId().startsWith("File/New/"))
+         {
+            return 0;
+         }
          
-         return number1.compareTo(number2);
+         Integer index1 = controlIdsOrder.indexOf(control1.getId());
+         Integer index2 = controlIdsOrder.indexOf(control2.getId());
+         
+         //If item is not found in order list, then put it at the end of the list
+         if (index2 == -1) return -1;
+         if (index1 == -1) return 1;
+         
+         return index1.compareTo(index2);
       }
    };
 

@@ -62,7 +62,7 @@ public class NetvibesEditorExtension extends Extension
             
       IDE.getInstance().addEditor(producer);
       IDE.getInstance().addControl(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
-         "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET).setGroup(1));
+         "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.UWA_WIDGET, new HtmlOutlineItemCreator());
    }

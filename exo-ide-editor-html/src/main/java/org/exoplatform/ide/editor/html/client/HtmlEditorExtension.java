@@ -58,7 +58,7 @@ public class HtmlEditorExtension extends Extension
          MESSAGES.controlNewHtmlTitle(),
          MESSAGES.controlNewHtmlPrompt(),
          Images.HTML,
-         MimeType.TEXT_HTML).setGroup(1));
+         MimeType.TEXT_HTML));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, MESSAGES.codeMirrorHtmlEditor(), "html",
          Images.INSTANCE.html(), true, 

@@ -98,6 +98,15 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/images/convertToProject.png")
    ImageResource convertToProject();
    
+   /*
+    * Controls
+    */
+   @Source("org/exoplatform/ide/extension/samples/images/import-from-github.png")
+   ImageResource importFromGithubControl();
+   
+   @Source("org/exoplatform/ide/extension/samples/images/import-from-github_Disabled.png")
+   ImageResource importFromGithubDisabledControl();
+   
    public interface Style extends CssResource
    {
       String table();

@@ -65,7 +65,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New JSP File", "JSP", "Create JSP",
             JSPClientBundle.INSTANCE.jspFile(), JSPClientBundle.INSTANCE.jspFileDisabled(),
-            MimeType.APPLICATION_JSP).setGroup(2));
+            MimeType.APPLICATION_JSP));
    }
 
    /**

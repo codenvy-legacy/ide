@@ -16,48 +16,48 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.client.project.list;
+package org.exoplatform.ide.extension.samples.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
+import org.exoplatform.ide.extension.samples.client.github.ShowSamplesEvent;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
- * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * Control to call Import from GitHub form.
+ * <p/>
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: ImportFromGithubControl.java Nov 18, 2011 5:06:02 PM vereshchaka $
  */
-
-public class ShowProjectsControl extends SimpleControl implements IDEControl, VfsChangedHandler
+@RolesAllowed({"administrators", "developers"})
+public class ImportFromGithubControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
-   public static final String ID = "Project/Open...";
+   private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlId();
 
-   private static final String TITLE = "Open...";
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlTitle();
 
-   private static final String PROMPT = "Open Project...";
+   private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlPrompt();
 
    private VirtualFileSystemInfo vfsInfo;
 
    /**
-    * 
+    * @param id
     */
-   public ShowProjectsControl()
+   public ImportFromGithubControl()
    {
       super(ID);
-      System.out.println("ShowProjectsControl.ShowProjectsControl()");
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
-      setEvent(new ShowProjectsEvent());
-//      setDelimiterBefore(true);
+      setImages(SamplesClientBundle.INSTANCE.importFromGithubControl(),
+         SamplesClientBundle.INSTANCE.importFromGithubDisabledControl());
+      setEvent(new ShowSamplesEvent());
    }
 
    /**
@@ -66,24 +66,16 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    @Override
    public void initialize()
    {
+      setVisible(true);
+
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      update();
+
+      updateEnabling();
    }
 
-   /**
-    * 
-    */
-   private void update()
+   private void updateEnabling()
    {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-
-      setEnabled(true);
-      setVisible(true);
+      setEnabled(vfsInfo != null);
    }
 
    /**
@@ -93,7 +85,7 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      update();
+      updateEnabling();
    }
 
 }

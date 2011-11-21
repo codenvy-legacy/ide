@@ -57,7 +57,7 @@ public class JavaScriptEditorExtension extends Extension
             MESSAGES.controlNewJavascriptTitle(),
             MESSAGES.controlNewJavascriptPrompt(),
             Images.JAVA_SCRIPT,
-            MimeType.APPLICATION_JAVASCRIPT).setGroup(1));
+            MimeType.APPLICATION_JAVASCRIPT));
 
       JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT,

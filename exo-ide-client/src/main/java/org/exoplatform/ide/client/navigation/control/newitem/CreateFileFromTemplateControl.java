@@ -43,7 +43,7 @@ public class CreateFileFromTemplateControl extends NewFileCommand
    {
       super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
-      setGroup(3);
+      setDelimiterBefore(true);
    }
 
 }

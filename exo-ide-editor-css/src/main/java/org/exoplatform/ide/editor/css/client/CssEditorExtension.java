@@ -56,7 +56,7 @@ public class CssEditorExtension extends Extension
          MESSAGES.controlNewCssTitle(),
          MESSAGES.controlNewCssPrompt(),
          Images.CSS,
-         MimeType.TEXT_CSS).setGroup(1));
+         MimeType.TEXT_CSS));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css",
          RESOURCES.cssImage(), true, 

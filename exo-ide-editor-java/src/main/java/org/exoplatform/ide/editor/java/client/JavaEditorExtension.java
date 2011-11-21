@@ -68,7 +68,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
             "Java Class", "Create Java Class",
             JavaClientBundle.INSTANCE.java(),
             JavaClientBundle.INSTANCE.javaDisabled(),
-            MimeType.APPLICATION_JAVA).setGroup(2));
+            MimeType.APPLICATION_JAVA));
 
       JavaClientBundle.INSTANCE.css().ensureInjected();
    }

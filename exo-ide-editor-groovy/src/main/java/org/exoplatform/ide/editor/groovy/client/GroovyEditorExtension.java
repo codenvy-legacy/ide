@@ -64,11 +64,10 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service", Images.REST_SERVICE,
-            MimeType.GROOVY_SERVICE).setGroup(2));
+            MimeType.GROOVY_SERVICE).setDelimiterBefore(true));
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.GROOVY, MimeType.APPLICATION_GROOVY)
-            .setGroup(2));
+         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.GROOVY, MimeType.APPLICATION_GROOVY));
    }
 
    /**

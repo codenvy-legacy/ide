@@ -64,7 +64,7 @@ public class GtmplEditorExtension extends Extension implements InitializeService
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Template", "Template", "Create Template", Images.GROOVY_TEMPLATE,
-            MimeType.GROOVY_TEMPLATE).setGroup(2));
+            MimeType.GROOVY_TEMPLATE));
    }
 
    /**

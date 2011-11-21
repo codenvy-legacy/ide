@@ -53,29 +53,30 @@ import java.util.List;
  * @version $
  */
 
-public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler,
-   MigrateTemplatesHandler
+public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler, MigrateTemplatesHandler
 {
-   
-   private TemplatesMigratedCallback callback;
-   
-   public ProjectSupportingModule() {   
-//      IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
-      
-      new CreateProjectPresenter();
 
-      new CreateProjectFromTemplatePresenter();
-      
-      new CreateProjectTemplatePresenter();
+   private TemplatesMigratedCallback callback;
+
+   public ProjectSupportingModule()
+   {
+
+      //      new CreateProjectFromTemplatePresenter();
+
+      //      new CreateProjectTemplatePresenter();
 
       new ShowProjectsPresenter();
-      
+
       new TinyProjectExplorerPresenter();
+
+      new CreateProjectPresenter();
+      
+      IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
 
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       IDE.addHandler(MigrateTemplatesEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
     */
@@ -83,13 +84,14 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    {
       if (TemplateService.getInstance() == null)
       {
-         new TemplateServiceImpl(IDE.eventBus(), IDELoader.getInstance(), event.getConfiguration().getRegistryURL() + "/"
-            + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration().getContext());
+         new TemplateServiceImpl(IDE.eventBus(), IDELoader.getInstance(), event.getConfiguration().getRegistryURL()
+            + "/" + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration()
+            .getContext());
       }
       //only for test, will be removed
-//      saveSomeTemplatesToRegistry();
+      //      saveSomeTemplatesToRegistry();
    }
-   
+
    private void moveTemplatesFromRegistryToPlainText()
    {
       TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>(IDE.eventBus())
@@ -109,12 +111,12 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
          }
       });
    }
-   
+
    private void saveTemplatesOnServer(List<Template> templates)
    {
       if (templates.isEmpty())
          return;
-      
+
       List<FileTemplate> fileTemplates = new ArrayList<FileTemplate>();
       final List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
       for (Template template : templates)
@@ -129,31 +131,33 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
             projectTemplates.add((ProjectTemplate)template);
          }
       }
-      
+
       TemplateService.getInstance().addFileTemplateList(fileTemplates, new AsyncRequestCallback<String>(IDE.eventBus())
       {
          @Override
          protected void onSuccess(String result)
          {
-            TemplateService.getInstance().addProjectTemplateList(projectTemplates, new AsyncRequestCallback<String>(IDE.eventBus())
-            {
-               @Override
-               protected void onSuccess(String result)
+            TemplateService.getInstance().addProjectTemplateList(projectTemplates,
+               new AsyncRequestCallback<String>(IDE.eventBus())
                {
-                  TemplateService.getInstance().deleteTemplatesFromRegistry(new AsyncRequestCallback<String>(IDE.eventBus())
+                  @Override
+                  protected void onSuccess(String result)
                   {
-                     @Override
-                     protected void onSuccess(String result)
-                     {
-                        IDE.fireEvent(new TemplatesMigratedEvent());
-                        if (callback != null)
+                     TemplateService.getInstance().deleteTemplatesFromRegistry(
+                        new AsyncRequestCallback<String>(IDE.eventBus())
                         {
-                           callback.onTemplatesMigrated();
-                        }
-                     }
-                  });
-               }
-            });
+                           @Override
+                           protected void onSuccess(String result)
+                           {
+                              IDE.fireEvent(new TemplatesMigratedEvent());
+                              if (callback != null)
+                              {
+                                 callback.onTemplatesMigrated();
+                              }
+                           }
+                        });
+                  }
+               });
          }
       });
    }
@@ -167,7 +171,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       this.callback = event.getTemplatesMigratedCallback();
       moveTemplatesFromRegistryToPlainText();
    }
-   
+
    //----only for test, will be removed.
    /**
     * Method, for testing migrating templates from registry to plain text file.

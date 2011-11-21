@@ -68,7 +68,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object", Images.CHROMATTIC,
-            MimeType.CHROMATTIC_DATA_OBJECT).setGroup(2));
+            MimeType.CHROMATTIC_DATA_OBJECT));
    }
 
    /**
