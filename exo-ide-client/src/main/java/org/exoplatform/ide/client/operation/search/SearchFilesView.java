@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -61,13 +61,13 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
 
    private final int BUTTON_HEIGHT = 22;
 
-   private static int FIELD_WIDTH = 300;
+   private static String FIELD_WIDTH = "300px";
 
-   private static int FIELD_HEIGHT = 18;
+   private static String FIELD_HEIGHT = "18px";
 
-   private TextField contentField;
+   private TextInput contentField;
 
-   private TextField pathField;
+   private TextInput pathField;
 
    private ImageButton searchButton;
 
@@ -149,9 +149,9 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       return paramForm;
    }
 
-   private TextField createValueField(String title, String id)
+   private TextInput createValueField(String title, String id)
    {
-      TextField textField = new TextField();
+      TextInput textField = new TextInput();
       textField.setName(id);
       textField.setTitle(title);
       textField.setHeight(FIELD_HEIGHT);

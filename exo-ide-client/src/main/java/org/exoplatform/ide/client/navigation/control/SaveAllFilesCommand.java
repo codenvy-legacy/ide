@@ -39,8 +39,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
@@ -51,7 +49,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveAllFilesCommand extends SimpleControl implements IDEControl, EditorFileContentChangedHandler,
-   FileContentSavedHandler, EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+   EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    VfsChangedHandler, FileSavedHandler
 {
 
@@ -80,7 +78,7 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
    public void initialize()
    {
       IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
-      IDE.addHandler(FileContentSavedEvent.TYPE, this);
+      //IDE.addHandler(FileContentSavedEvent.TYPE, this);
       IDE.addHandler(FileSavedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -108,10 +106,10 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
       checkItemEnabling();
    }
 
-   public void onFileContentSaved(FileContentSavedEvent event)
-   {
-      checkItemEnabling();
-   }
+//   public void onFileContentSaved(FileContentSavedEvent event)
+//   {
+//      checkItemEnabling();
+//   }
 
    @Override
    public void onFileSaved(FileSavedEvent event)

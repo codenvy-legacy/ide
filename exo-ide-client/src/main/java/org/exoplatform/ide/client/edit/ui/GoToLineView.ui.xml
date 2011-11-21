@@ -29,7 +29,7 @@
       <f:layer>
          <g:VerticalPanel spacing="3" horizontalAlignment="center">
 
-            <f:TextField ui:field="lineNumberField" width="100%" height="22px"></f:TextField>
+            <f:TextInput ui:field="lineNumberField" width="100%" height="22px"></f:TextInput>
 
             <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
                <f:ImageButton ui:field="goButton" width="90" height="22" text="{editorLocal.goToLineGoButton}"

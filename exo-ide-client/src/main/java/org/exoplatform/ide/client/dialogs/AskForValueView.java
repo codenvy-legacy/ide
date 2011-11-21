@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.dialogs;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
@@ -57,7 +57,7 @@ public class AskForValueView extends ViewImpl implements org.exoplatform.ide.cli
    Label promptLabel;
 
    @UiField
-   TextField textField;
+   TextInput textField;
 
    @UiField
    ImageButton yesButton;
@@ -126,8 +126,7 @@ public class AskForValueView extends ViewImpl implements org.exoplatform.ide.cli
          @Override
          public void execute()
          {
-            textField.focusInItem();
-            textField.selectValue();
+            textField.setFocus(true);
          }
       };
       

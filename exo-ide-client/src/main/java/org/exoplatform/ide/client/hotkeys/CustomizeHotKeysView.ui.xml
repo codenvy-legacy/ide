@@ -44,8 +44,7 @@
                   </td>
 
                   <td>
-                     <c:TextField ui:field="hotKeyField" name="ideCustomizeHotKeysViewHotKeyField" width="100px"
-                        height="22px" showTitle="false"></c:TextField>
+                     <c:TextInput ui:field="hotKeyField"  width="100px"  height="22px"></c:TextInput>
                   </td>
 
                   <td style="width:3px;">

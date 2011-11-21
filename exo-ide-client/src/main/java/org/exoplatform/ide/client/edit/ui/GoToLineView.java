@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.edit.ui;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -59,7 +59,7 @@ public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client
    }
 
    @UiField
-   TextField lineNumberField;
+   TextInput lineNumberField;
 
    @UiField
    ImageButton goButton;
@@ -118,7 +118,7 @@ public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client
    @Override
    public void setFocusInLineNumberField()
    {
-      lineNumberField.focusInItem();
+      lineNumberField.setFocus(true);
    }
 
    /**

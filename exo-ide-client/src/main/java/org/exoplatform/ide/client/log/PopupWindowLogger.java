@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.client.log;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.exoplatform.gwtframework.commons.util.Log;
+
+import java.util.Date;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
@@ -31,7 +30,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**

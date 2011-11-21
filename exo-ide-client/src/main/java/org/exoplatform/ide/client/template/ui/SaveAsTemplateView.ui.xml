@@ -24,19 +24,37 @@
    <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
    <ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
    <ui:with field="ideTemplateLocale" type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant"></ui:with>
+   
+   <ui:style>
+      .spacing {
+        margin-top: 10px;
+      }
+      
+      .spacingFields {
+        margin-bottom: 7px;
+      }
+      
+      .label {
+        margin-bottom: 5px;
+        cursor: default;
+        font-family: Verdana, Bitstream Vera Sans, sans-serif;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: normal;
+        text-align: left;
+      }
+   </ui:style>
 
    <f:Border margin="15" borderColor="transparent">
       <f:layer>
-         <g:VerticalPanel spacing="3" horizontalAlignment="center">
-
-            <f:TextField ui:field="nameField" width="100%" title="{ideTemplateLocale.saveAsTemplateName}" height="22px"></f:TextField>
-
-            <f:TextAreaItem ui:field="descriptionField" width="100%" title="{ideTemplateLocale.saveAsTemplateDescription}"
-               height="22px"></f:TextAreaItem>
-
-            <f:TextField ui:field="typeField" width="100%" title="{ideTemplateLocale.saveAsTemplateType}" height="22px"></f:TextField>
-
-            <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+         <g:VerticalPanel spacing="3" horizontalAlignment="center" width="100%">
+           <f:Label text="{ideTemplateLocale.saveAsTemplateName}" styleName="{style.label}"></f:Label>
+           <f:TextInput ui:field="nameField" width="100%" title="{ideTemplateLocale.saveAsTemplateName}" height="22px"></f:TextInput>
+           <f:Label text="{ideTemplateLocale.saveAsTemplateDescription}" styleName="{style.label}"></f:Label>
+           <f:TextAreaInput ui:field="descriptionField" width="100%"  height="55px"></f:TextAreaInput>
+           <f:Label text="{ideTemplateLocale.saveAsTemplateType}" styleName="{style.label}"></f:Label>
+           <f:TextInput ui:field="typeField" width="100%" height="22px"></f:TextInput>
+           <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
                <f:ImageButton ui:field="saveButton" width="90" height="22" text="{ideLocale.saveButton}"
                   imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}"></f:ImageButton>
                <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}"

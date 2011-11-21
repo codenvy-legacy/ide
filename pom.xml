@@ -675,10 +675,6 @@
 
       <module>exo-ide-framework-client</module>
 
-      <module>exo-ide-vfs-webdav-client</module>
-
-      
-
       <module>exo-ide-codeassistant-framework</module>
 
       <module>exo-ide-maven</module>

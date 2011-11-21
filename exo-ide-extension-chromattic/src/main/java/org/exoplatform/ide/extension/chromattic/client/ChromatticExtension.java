@@ -25,7 +25,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.chromattic.client.controls.DeployNodeTypeControl;
 import org.exoplatform.ide.extension.chromattic.client.controls.GenerateNodeTypeControl;
-import org.exoplatform.ide.extension.chromattic.client.handler.CompileGroovyCommandHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticServiceImpl;
 import org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter;
 import org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter;
@@ -52,15 +51,9 @@ public class ChromatticExtension extends Extension implements InitializeServices
    {
       IDE.getInstance().addControl(new GenerateNodeTypeControl(), Docking.TOOLBAR_RIGHT);
       IDE.getInstance().addControl(new DeployNodeTypeControl(), Docking.TOOLBAR_RIGHT);
-
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      
       new GenerateNodeTypePresenter();
-      
       new DeployNodeTypePresenter();
-      
-      new CompileGroovyCommandHandler();
-
    }
 
    /**

@@ -22,7 +22,7 @@ import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
@@ -57,9 +57,9 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    private final String BUTTON_HEIGHT = "22px";
 
-   private final int FIELD_WIDTH = 340;
+   private final String FIELD_WIDTH = "340px";
 
-   private final int FIELD_HEIGHT = 20;
+   private final String FIELD_HEIGHT = "20px";
 
    private final int BUTTONS_SPACE = 5;
 
@@ -91,9 +91,9 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    private ImageButton replaceAllButton;
 
-   private TextField findField;
+   private TextInput findField;
 
-   private TextField replaceField;
+   private TextInput replaceField;
 
    private CheckboxItem caseSensitiveField;
 
@@ -212,14 +212,14 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
       return findResultLabel;
    }
 
-   private TextField createTextField(String title, String id)
+   private TextInput createTextField(String title, String id)
    {
-      TextField textField = new TextField();
+      TextInput textField = new TextInput();
       textField.setName(id);
       textField.setWidth(FIELD_WIDTH);
       textField.setHeight(FIELD_HEIGHT);
       textField.setTitle(title);
-      textField.setShowTitle(true);
+//      textField.setTitle(true);
       return textField;
    }
 
@@ -360,7 +360,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
    @Override
    public void focusInFindField()
    {
-      findField.focusInItem();
+      findField.setFocus(true);
    }
 
 }

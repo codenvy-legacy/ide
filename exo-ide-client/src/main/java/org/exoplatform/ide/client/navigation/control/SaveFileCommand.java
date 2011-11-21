@@ -38,8 +38,6 @@ import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
@@ -50,7 +48,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ItemPropertiesSavedHandler, EditorFileContentChangedHandler, FileSavedHandler, VfsChangedHandler,
+   EditorFileContentChangedHandler, FileSavedHandler, VfsChangedHandler,
    ApplicationSettingsReceivedHandler
 {
 
@@ -95,7 +93,6 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    public void initialize()
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ItemPropertiesSavedEvent.TYPE, this);
       IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
       IDE.addHandler(FileSavedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -159,34 +156,6 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler#onItemPropertiesSaved(org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent)
-    */
-   @Override
-   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
-   {
-      //TODO
-      //      if (!(event.getItem() instanceof FileModel))
-      //      {
-      //         return;
-      //      }
-      //
-      //      if ((FileModel)event.getItem() != activeFile)
-      //      {
-      //         return;
-      //      }
-      //
-      //      File file = (File)event.getItem();
-      //
-      //      if (file.isContentChanged())
-      //      {
-      //         setEnabled(true);
-      //      }
-      //      else
-      //      {
-      //         setEnabled(false);
-      //      }
-   }
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent)

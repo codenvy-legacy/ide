@@ -53,8 +53,8 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private static final String USER_SETTINGS = "userSettings";
 
-   @Deprecated
-   private static final String DEFAUTL_ENTRY_POINT = "defaultEntrypoint";
+//   @Deprecated
+//   private static final String DEFAUTL_ENTRY_POINT = "defaultEntrypoint";
    
    private static final String VFS_ID = "vfsId";
    
@@ -116,11 +116,11 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
                new ApplicationSettingsUnmarshaller(applicationSettings).parseSettings(object.get(USER_SETTINGS));
             }
 
-            if (object.containsKey(DEFAUTL_ENTRY_POINT))
-            {
-               initializationConfiguration.getIdeConfiguration().setDefaultEntryPoint(
-                  object.get(DEFAUTL_ENTRY_POINT).isString().stringValue());
-            }
+//            if (object.containsKey(DEFAUTL_ENTRY_POINT))
+//            {
+//               initializationConfiguration.getIdeConfiguration().setDefaultEntryPoint(
+//                  object.get(DEFAUTL_ENTRY_POINT).isString().stringValue());
+//            }
             
             if (object.containsKey(VFS_BASE_URL))
             {

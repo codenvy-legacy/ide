@@ -30,8 +30,7 @@
                   </td>
 
                   <td style="width:210px;">
-                     <c:TextField ui:field="fileNameField" title="{ideTemplateConst.createFileFromTemplateName}"
-                        titleOrientation="left" name="ideCreateFileFromTemplateFormFileNameField"></c:TextField>
+                     <c:TextInput ui:field="fileNameField"></c:TextInput>
                   </td>
 
                   <td>

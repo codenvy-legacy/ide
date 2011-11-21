@@ -28,10 +28,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
@@ -43,8 +39,7 @@ import com.google.gwt.core.client.GWT;
  * @version @version $Id: $
  */
 
-public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler,
-   EditorActiveFileChangedHandler, ShowPropertiesHandler, ViewClosedHandler, FileSavedHandler
+public class PropertiesPresenter implements EditorActiveFileChangedHandler, ShowPropertiesHandler, ViewClosedHandler, FileSavedHandler
 {
 
    public interface Display extends IsView
@@ -61,8 +56,6 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
    public PropertiesPresenter()
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ItemPropertiesSavedEvent.TYPE, this);
-      IDE.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       IDE.addHandler(ShowPropertiesEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(FileSavedEvent.TYPE, this);
@@ -107,23 +100,22 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       }
    }
 
-   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
-   {
-      //TODO
+   //TODO: need rework according new VFS
+//   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
+//   {
 //      if (event.getItem() instanceof FileModel)
 //      {
 //         refreshProperties((FileModel)event.getItem());
 //      }
-   }
+//   }
 
-   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   {
-      //TODO
+//   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+//   {
 //      if (event.getItem() instanceof File)
 //      {
 //         refreshProperties((File)event.getItem());
 //      }
-   }
+//   }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {

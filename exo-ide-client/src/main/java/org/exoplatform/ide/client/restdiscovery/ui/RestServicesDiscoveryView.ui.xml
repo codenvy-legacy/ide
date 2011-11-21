@@ -1,8 +1,27 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:rd="urn:import:org.exoplatform.ide.client.restdiscovery.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:rd="urn:import:org.exoplatform.ide.client.restdiscovery.ui">
    <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
    <ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="preflocal"></ui:with>
+
+   <ui:style>
+      .spacing {
+      	margin-top: 15px;
+      }
+      
+      .spacingFields {
+      	margin-bottom: 7px;
+      }
+      
+      .label {
+      	margin-bottom: 5px;
+      	cursor: default;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      	font-style: normal;
+      	font-weight: normal;
+      }
+   </ui:style>
 
    <g:LayoutPanel>
       <g:layer bottom="40px" top="0px">
@@ -20,23 +39,20 @@
                <c:Border borderSize="5" borderColor="transparent">
                   <c:layer top="0px" height="120px">
                      <g:FlowPanel width="100%">
-                        <c:TextField ui:field="pathField" name="ideMethodPathField" title="{preflocal.restServicesDiscoveryPath}"
-                           height="40px" showDisabled="false" visible="true" titleOrientation="top" width="100%"></c:TextField>
-                        <c:TextField ui:field="requestTypeField" name="ideRequestType"
-                           title="{preflocal.restServicesDiscoveryRequestMediaType}" height="40px" showDisabled="false" width="100%" visible="true"
-                           titleOrientation="top"></c:TextField>
-                        <c:TextField ui:field="responseTypeField" name="ideResponseType"
-                           title="{preflocal.restServicesDiscoveryResponseMediaType}" height="40px" width="100%" showDisabled="false" visible="true"
-                           titleOrientation="top"></c:TextField>
+                        <c:Label text="{preflocal.restServicesDiscoveryPath}" styleName="{style.label}"></c:Label>
+                        <c:TextInput ui:field="pathField" name="ideMethodPathField" height="40px" width="100%"></c:TextInput>
+                        <c:Label text="{preflocal.restServicesDiscoveryRequestMediaType}" styleName="{style.label}"></c:Label>
+                        <c:TextInput ui:field="requestTypeField" name="ideRequestType" height="40px" width="100%"></c:TextInput>
+                        <c:Label text="{preflocal.restServicesDiscoveryResponseMediaType}" styleName="{style.label}"></c:Label>
+                        <c:TextInput ui:field="responseTypeField" name="ideResponseType" height="40px" width="100%"></c:TextInput>
                      </g:FlowPanel>
                   </c:layer>
                   <c:layer bottom="0px" top="126px">
-                  <c:Border ui:field="parametersListGridContainer">
-                     <c:layer>
-                        <rd:RestServiceParameterListGrid ui:field="parametersListGrid"
-                           ID="ideRestServiceDiscoveryParameters"></rd:RestServiceParameterListGrid>
-                     </c:layer>
-                  </c:Border>
+                     <c:Border ui:field="parametersListGridContainer">
+                        <c:layer>
+                           <rd:RestServiceParameterListGrid ui:field="parametersListGrid" ID="ideRestServiceDiscoveryParameters"></rd:RestServiceParameterListGrid>
+                        </c:layer>
+                     </c:Border>
                   </c:layer>
                </c:Border>
             </g:center>

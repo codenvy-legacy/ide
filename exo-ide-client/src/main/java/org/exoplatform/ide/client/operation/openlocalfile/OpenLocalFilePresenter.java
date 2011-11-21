@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -249,7 +248,9 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          return;
       }
 
-      String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
+      //FIXME
+      //String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
+      String contentNodeType = "nt:resource";
 
       String fileName = display.getFileNameField().getValue();
       if (fileName.contains("/"))

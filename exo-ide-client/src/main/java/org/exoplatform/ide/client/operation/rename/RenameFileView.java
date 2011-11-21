@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.operation.rename;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -67,7 +67,7 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
    private static final String WARNING_MSG_STYLE = "exo-rename-warning-msg";
    
    @UiField
-   TextField nameField;
+   TextInput nameField;
    
    @UiField
    ComboBoxField mimeTypesField;
@@ -173,6 +173,6 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
    @Override
    public void focusInNameField()
    {
-      nameField.focusInItem();
+      nameField.setFocus(true);
    }
 }

@@ -43,8 +43,7 @@
 
                      <tr>
                         <td width="100%">
-                           <c:TextField showTitle="false" textItemHeight="18" width="100%" ui:field="fileNameField"
-                              textFieldId="ideUploadFormFilenameField" readOnly="true"></c:TextField>
+                           <c:TextInput width="100%" ui:field="fileNameField" readOnly="true"></c:TextInput>
                         </td>
 
                         <td style="width:80px;">

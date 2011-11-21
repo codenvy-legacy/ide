@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -62,7 +62,7 @@ public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFr
    FileTemplateListGrid fileTemplateListGrid;
    
    @UiField
-   TextField fileNameField;
+   TextInput fileNameField;
    
    @UiField
    ImageButton createButton;

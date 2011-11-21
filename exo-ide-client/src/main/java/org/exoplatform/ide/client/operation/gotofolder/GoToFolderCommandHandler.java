@@ -1,3 +1,4 @@
+//TODO: need rework according new VFS
 /*
  * Copyright (C) 2010 eXo Platform SAS.
  *
@@ -27,8 +28,6 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
@@ -109,20 +108,21 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
 //      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
 //      openNextFolder(new Folder(pathToOpen));
    }
-   
-   public void openNextFolder(Folder folderToOpen)
-   {
-      /*
-       * Folder content received handler.
-       * Get subfolder content here
-       */
-      VirtualFileSystem.getInstance().getChildren(folderToOpen, new AsyncRequestCallback<Folder>()
-      {
-         
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            //TODO
+
+//TODO   
+//   public void openNextFolder(Folder folderToOpen)
+//   {
+//      /*
+//       * Folder content received handler.
+//       * Get subfolder content here
+//       */
+//      VirtualFileSystem.getInstance().getChildren(folderToOpen, new AsyncRequestCallback<Folder>()
+//      {
+//         
+//         @Override
+//         protected void onSuccess(Folder result)
+//         {
+//           
 //            new Timer()
 //            {
 //               @Override
@@ -143,15 +143,15 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
 //                  }
 //               }
 //            }.schedule(100);
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            exception.printStackTrace();
-            IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_FAILURE));
-         }
-      });
-   }
+//         }
+//         
+//         @Override
+//         protected void onFailure(Throwable exception)
+//         {
+//            exception.printStackTrace();
+//            IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_FAILURE));
+//         }
+//      });
+//   }
 
 }

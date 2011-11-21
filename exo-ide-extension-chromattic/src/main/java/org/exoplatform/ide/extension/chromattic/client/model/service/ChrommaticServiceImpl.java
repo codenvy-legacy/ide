@@ -25,11 +25,11 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.marshaller.GenerateNodeTypeResultUnmarshaller;
+import org.exoplatform.ide.vfs.shared.File;
 
 /**
  * The concrete implementation of {@link ChrommaticService}.
@@ -73,19 +73,7 @@ public class ChrommaticServiceImpl extends ChrommaticService
       this.loader = loader;
    }
 
-   /**
-    * @see org.exoplatform.ide.client.module.chromattic.model.service.ChrommaticService#compile(org.exoplatform.ide.client.framework.vfs.File)
-    */
-   @Override
-   public void compile(File file, AsyncRequestCallback<String> callback)
-   {
-      String url = restServiceContext + COMPILE_METHOD_CONTEXT;
-
-      callback.setResult(file.getHref());
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.LOCATION, file.getHref()).send(callback);
-   }
-
+   
    
    @Override
    public void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat, AsyncRequestCallback<GenerateNodeTypeResult> callback)

@@ -35,7 +35,7 @@
 										<table>
 											<tr>
 												<td><c:Label text="User ID:"></c:Label></td>
-												<td><c:TextField ui:field="loginField" textFieldId="ideLoginViewLoginField"></c:TextField></td>
+												<td><c:TextInput ui:field="loginField" ></c:TextInput></td>
 											</tr>
 											<tr>						
 												<td><c:Label text="Password:"></c:Label></td>

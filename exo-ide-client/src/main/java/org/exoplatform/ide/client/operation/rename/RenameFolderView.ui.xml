@@ -29,7 +29,7 @@
       <f:layer>
          <g:VerticalPanel spacing="3" horizontalAlignment="center">
 
-            <f:TextField ui:field="nameField" width="100%" title="{ideNavigationLocale.renameItemTo}" height="22px"></f:TextField>
+            <f:TextInput ui:field="nameField" width="100%" title="{ideNavigationLocale.renameItemTo}" height="22px"></f:TextInput>
 
             <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
                <f:ImageButton ui:field="renameButton" width="90" height="22" text="{ideNavigationLocale.renameItemRenameBtn}"

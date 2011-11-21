@@ -25,7 +25,7 @@
       <f:layer>
          <g:FlowPanel>
             <g:Label text="{locale.projectName}" styleName="{style.label}"></g:Label>
-            <f:TextField ui:field="projectName" width="99%" textItemHeight="18" styleName="{style.spacingFields}"></f:TextField>
+            <f:TextInput ui:field="projectName" width="99%" styleName="{style.spacingFields}"></f:TextInput>
             <g:Label text="{locale.projectType}" styleName="{style.label}"></g:Label>
             <f:SelectItem ui:field="projectType" width="99%" visibleItemCount="1"></f:SelectItem>
             <g:HorizontalPanel height="40" width="100%" spacing="5" styleName="{style.spacing}">

@@ -18,6 +18,14 @@
  */
 package org.exoplatform.ide.client.template.ui;
 
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextAreaInput;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -25,14 +33,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -61,13 +61,13 @@ public class SaveAsTemplateView extends ViewImpl implements SaveAsTemplatePresen
    private static final String TITLE = IDE.TEMPLATE_CONSTANT.saveAsTemplateTitle();
    
    @UiField
-   TextField nameField;
+   TextInput nameField;
 
    @UiField
-   TextAreaItem descriptionField;
+   TextAreaInput descriptionField;
 
    @UiField
-   TextField typeField;
+   TextInput typeField;
 
    @UiField
    ImageButton saveButton;
@@ -152,7 +152,7 @@ public class SaveAsTemplateView extends ViewImpl implements SaveAsTemplatePresen
    @Override
    public void focusInNameField()
    {
-      nameField.focusInItem();
+      nameField.setFocus(true);
    }
 
 }

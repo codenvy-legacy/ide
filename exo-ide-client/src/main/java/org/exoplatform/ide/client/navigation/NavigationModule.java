@@ -68,14 +68,6 @@ import org.exoplatform.ide.client.progress.ProgressPresenter;
 import org.exoplatform.ide.client.remote.OpenFileByURLPresenter;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
-import org.exoplatform.ide.client.versioning.VersionsListPresenter;
-import org.exoplatform.ide.client.versioning.control.RestoreToVersionControl;
-import org.exoplatform.ide.client.versioning.control.ViewNextVersionControl;
-import org.exoplatform.ide.client.versioning.control.ViewPreviousVersionControl;
-import org.exoplatform.ide.client.versioning.control.ViewVersionHistoryControl;
-import org.exoplatform.ide.client.versioning.control.ViewVersionListControl;
-import org.exoplatform.ide.client.versioning.handler.RestoreToVersionCommandHandler;
-import org.exoplatform.ide.client.versioning.handler.VersionHistoryCommandHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
@@ -109,11 +101,12 @@ public class NavigationModule implements
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
 
-      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
-      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
-      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
-      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
-      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);
+      
+//      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
+//      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
+//      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
+//      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
+//      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);
 
       new UploadFilePresenter();
       new UploadZipPresenter();
@@ -163,9 +156,10 @@ public class NavigationModule implements
       new SaveAllFilesCommandHandler();
       new FileClosedHandler();
 
-      new VersionHistoryCommandHandler();
-      new RestoreToVersionCommandHandler();
-      new VersionsListPresenter();
+//TODO: need rework according with VFS       
+//      new VersionHistoryCommandHandler();
+//      new RestoreToVersionCommandHandler();
+//      new VersionsListPresenter();
 
       new NavigatorPresenter();
       new SaveAsTemplatePresenter();

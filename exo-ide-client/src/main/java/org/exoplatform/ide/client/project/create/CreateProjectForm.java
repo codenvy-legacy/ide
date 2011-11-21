@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
@@ -57,7 +57,7 @@ public class CreateProjectForm extends ViewImpl implements
    private static final String CANCEL_BUTTON_ID = "CreateProjectFormCancelButton";
 
    @UiField
-   TextField projectName;
+   TextInput projectName;
 
    @UiField
    SelectItem projectType;

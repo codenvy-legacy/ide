@@ -19,10 +19,10 @@
 package org.exoplatform.ide.extension.chromattic.client.model.service;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
+import org.exoplatform.ide.vfs.shared.File;
 
 /**
  * Service is used to do actions with chromattic application and data objects.
@@ -54,13 +54,6 @@ public abstract class ChrommaticService
       instance = this;
    }
 
-   /**
-    * Compile groovy file.
-    * @param file
-    * @param callback - callback to handler result from server
-    */
-   public abstract void compile(File file, AsyncRequestCallback<String> callback);
-   
    /**
     * Generate the node type XML representation.
     * 

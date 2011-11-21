@@ -17,7 +17,7 @@
             <c:Label ui:field="promptLabel" text="ask message" height="30px"></c:Label>
             <g:LayoutPanel height="22px">
                <g:layer width="100%" height="22px">
-                  <c:TextField ui:field="textField" showTitle="false" height="22px" width="100%" name="ideAskForValueViewValueField"></c:TextField>
+                  <c:TextInput ui:field="textField" height="22px" width="100%" ></c:TextInput>
                </g:layer>
             </g:LayoutPanel>
             <g:SimplePanel height="20px" styleName="{style.panel-float}" width="20px"></g:SimplePanel>

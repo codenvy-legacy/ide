@@ -20,7 +20,7 @@
       <c:layer>
          <g:FlowPanel width="100%">
             <c:Label value="{locale.openFileByURL_URLFieldTitle}" width="100%" styleName="{style.label}"></c:Label>
-            <c:TextField ui:field="urlField" textItemHeight="18" textFieldId="ide.openFileByURL.urlField" width="99%"></c:TextField>
+            <c:TextInput ui:field="urlField" width="99%"></c:TextInput>
             <g:HorizontalPanel spacing="5" width="100%" styleName="{style.spacing}">
                <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
                   <c:ImageButton text="{locale.openFileByURL_OpenButtonTitle}" ui:field="openButton" imageName="ok"

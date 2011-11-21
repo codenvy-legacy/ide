@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.restdiscovery.ui;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -98,19 +98,19 @@ public class RestServicesDiscoveryView extends ViewImpl implements
     * Text field for displaying Path to selected Rest Service
     */
    @UiField
-   TextField pathField;
+   TextInput pathField;
 
    /**
     * Text field that displays type of Request
     */
    @UiField
-   TextField requestTypeField;
+   TextInput requestTypeField;
 
    /**
     * Test field that displays type of Response
     */
    @UiField
-   TextField responseTypeField;
+   TextInput responseTypeField;
 
    /**
     * Border over service parameters table 

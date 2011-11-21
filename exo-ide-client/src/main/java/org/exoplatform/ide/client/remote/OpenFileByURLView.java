@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.remote;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -71,7 +71,7 @@ public class OpenFileByURLView extends ViewImpl implements org.exoplatform.ide.c
     * URL text field.
     */
    @UiField
-   TextField urlField;
+   TextInput urlField;
    
    /**
     * Open button.

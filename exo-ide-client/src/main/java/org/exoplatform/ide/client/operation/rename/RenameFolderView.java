@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.operation.rename;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -59,7 +59,7 @@ public class RenameFolderView extends ViewImpl implements RenameFolderPresenter.
    private static final String RENAME_FIELD = "ideRenameItemFormRenameField";
 
    @UiField
-   TextField nameField;
+   TextInput nameField;
 
    @UiField
    ImageButton renameButton;
@@ -119,7 +119,7 @@ public class RenameFolderView extends ViewImpl implements RenameFolderPresenter.
    @Override
    public void focusInNameField()
    {
-      nameField.focusInItem();
+      nameField.setFocus(true);
    }
 
 }

@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.hotkeys;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -82,7 +83,7 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
    HotKeyItemListGrid hotKeyItemListGrid;
    
    @UiField
-   TextField hotKeyField;
+   TextInput hotKeyField;
    
    @UiField
    Label messageLabel;
@@ -163,7 +164,7 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
    @Override
    public void focusOnHotKeyField()
    {
-      hotKeyField.focusInItem();
+      hotKeyField.setFocus(true);
    }
 
    @Override
