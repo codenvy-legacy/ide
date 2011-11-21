@@ -866,9 +866,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
         editor.removeLine(currentLine);
       }
 
-//      currentLineNumber = editor.lineNumber(currentLine);
-
-//      this.@org.exoplatform.ide.editor.codemirror.CodeMirror::goToPosition(II)(currentLineNumber,1);
+      currentLineNumber = editor.lineNumber(currentLine);
+      this.@org.exoplatform.ide.editor.codemirror.CodeMirror::goToPosition(II)(currentLineNumber,1);        
    }-*/;
 
    /**
