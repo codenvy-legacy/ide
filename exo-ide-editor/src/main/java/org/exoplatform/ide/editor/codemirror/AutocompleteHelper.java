@@ -50,7 +50,7 @@ public abstract class AutocompleteHelper
       
       String statement = "";
       
-      while (node != null && !(node).equals("BR"))
+      while (node != null && ! Node.getName(node).equals("BR"))
       {         
          // pass nodes after the cursor
          if (Node.getNodePositionInLine(node) >= cursorPosition) 
@@ -214,9 +214,8 @@ public abstract class AutocompleteHelper
       return null;
    }
 
-
-   static TokenBeenImpl possibleContainerToken;
-   static int nearestTokenLineNumber;   
+   TokenBeenImpl possibleContainerToken;
+   int nearestTokenLineNumber;   
    
    /**
     * Recognize container token of line with lineNumber.  

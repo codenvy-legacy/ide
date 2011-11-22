@@ -250,7 +250,7 @@ public class CKEditor extends Editor
    public void setText(String text)
    {
       // removed odd "\r" symbols 
-      text.replace("\r", "");
+      text = text.replace("\r", "");
       
       // extract CDATA section from google gadget
       if (getMimeType().equals(MimeType.GOOGLE_GADGET))
