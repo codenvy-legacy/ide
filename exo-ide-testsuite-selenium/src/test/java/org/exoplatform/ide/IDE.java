@@ -56,7 +56,7 @@ import org.exoplatform.ide.paas.heroku.core.Heroku;
 import org.exoplatform.ide.paas.openshift.core.OpenShift;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-
+import org.exoplatform.ide.core.AboutDialog;
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -79,11 +79,15 @@ public class IDE
       return instance;
    }
 
-   public Menu MENU;
+   
 
+   public Menu MENU;
+   
    public Toolbar TOOLBAR;
 
    public Editor EDITOR;
+   
+   public AboutDialog ABOUT= new AboutDialog();
 
    public Outline OUTLINE;
 
@@ -158,7 +162,8 @@ public class IDE
       this.workspaceURL = workspaceURL;
       this.driver = driver;
       instance = this;
-
+      
+      ABOUT = PageFactory.initElements(driver, AboutDialog.class);
       ASK_DIALOG = PageFactory.initElements(driver, AskDialog.class);
       ASK_FOR_VALUE_DIALOG = PageFactory.initElements(driver, AskForValueDialog.class);
       BUTTON = PageFactory.initElements(driver, Button.class);
