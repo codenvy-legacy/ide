@@ -132,7 +132,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
       //check version tab is visible, outline tab is not visible
 
-      assertFalse(IDE.OUTLINE.isOutlineViewActive());
+      assertFalse(IDE.OUTLINE.isActive());
       IDE.VERSIONS.checkVersionPanelIsActive();
 
       //Go to XML file

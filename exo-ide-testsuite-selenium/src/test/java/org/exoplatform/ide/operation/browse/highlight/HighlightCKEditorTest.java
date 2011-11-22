@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -64,7 +67,7 @@ public class HighlightCKEditorTest extends BaseTest {
 	public void testHighlightCKEdditor() throws Exception {
 		IDE.WORKSPACE.waitForRootItem();
 
-		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+		assertTrue(IDE.PROJECT.EXPLORER.isActive());
 
 		IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
 		IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
@@ -78,9 +81,9 @@ public class HighlightCKEditorTest extends BaseTest {
 		IDE.MENU
 				.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 		Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-		IDE.PERSPECTIVE.checkViewIsActive("idePreviewHTMLView");
-		IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
-
+		assertTrue(IDE.PROJECT.EXPLORER.isActive());
+		assertFalse(IDE.EDITOR.isActive(0));
+		
 		IDE.EDITOR.clickOnEditor(0);
 
 		// TODO should be compled should be completed after fix problem|

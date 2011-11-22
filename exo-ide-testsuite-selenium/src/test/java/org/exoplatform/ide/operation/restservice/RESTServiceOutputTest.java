@@ -100,7 +100,7 @@ public class RESTServiceOutputTest extends BaseTest
 
       //Expected 3
 
-      String mess = IDE.OUTPUT.getOutputMessageText(2);
+      String mess = IDE.OUTPUT.getOutputMessage(2);
 
       assertTrue(mess
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
@@ -123,7 +123,7 @@ public class RESTServiceOutputTest extends BaseTest
       checkHeaderParameter(1, "Test-Header1", "string", "", "test");
       //Step 6
       IDE.REST_SERVICE.sendRequst();
-      mess = IDE.OUTPUT.getOutputMessageText(3);
+      mess = IDE.OUTPUT.getOutputMessage(3);
 
       assertTrue(mess.contains("Param List 1:param1; Test Query Parameter 1: ; Test-Header 1: test; Body:"));
 
@@ -143,7 +143,7 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.REST_SERVICE.sendRequst();
 
       //Expected 8
-      mess = IDE.OUTPUT.getOutputMessageText(4);
+      mess = IDE.OUTPUT.getOutputMessage(4);
 
       assertTrue(mess
          .contains("Param List 1:param1; Test Query Parameter 1: value 1; Test-Header 1: value 2; Body:Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�"));
@@ -171,7 +171,7 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.REST_SERVICE.sendRequst();
 
       //Expected 11
-      mess = IDE.OUTPUT.getOutputMessageText(5);
+      mess = IDE.OUTPUT.getOutputMessage(5);
 
       assertTrue(mess
          .contains("Param List 2:param1/param2/param3; Test Query Parameter 2: value 1; Test-Header 2: value 2"));

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -58,22 +61,23 @@ public class HighlightNavigatorTabTest extends BaseTest
    @Test
    public void testHighlightNavigatorTab() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      IDE.PROJECT.EXPLORER.waitOpened();
+
+      assertTrue(IDE.PROJECT.EXPLORER.isActive());
 
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       waitForElementPresent("//div[@panel-id='editor']");
-      IDE.PERSPECTIVE.checkViewIsActive("editor-0");
+      assertTrue(IDE.EDITOR.isActive(0));
       IDE.EDITOR.typeTextIntoEditor(0, "Testing yo!  4test.");
       // Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.PERSPECTIVE.checkViewIsActive("editor-0");
-      IDE.PERSPECTIVE.checkViewIsNotActive("ideWorkspaceView");
+      assertTrue(IDE.EDITOR.isActive(0));
+      assertFalse(IDE.PROJECT.EXPLORER.isActive());
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
-      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+      assertTrue(IDE.PROJECT.EXPLORER.isActive());
+      assertFalse(IDE.EDITOR.isActive(0));
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(0);
    }

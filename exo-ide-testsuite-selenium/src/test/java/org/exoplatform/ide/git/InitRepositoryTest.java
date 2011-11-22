@@ -173,7 +173,7 @@ public class InitRepositoryTest extends BaseTest
       IDE.GIT.INIT_REPOSITORY.waitForViewClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
       selenium().open(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER);

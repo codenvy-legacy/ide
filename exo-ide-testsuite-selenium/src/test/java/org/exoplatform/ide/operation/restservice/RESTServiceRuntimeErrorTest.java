@@ -76,7 +76,7 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
 
       IDE.OUTPUT.waitForMessageShow(2);
 
-      String mess = IDE.OUTPUT.getOutputMessageText(2);
+      String mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess
          .startsWith("[ERROR]"));
       assertTrue(mess.contains("helloworld/{name} 500 Internal Server Error"));

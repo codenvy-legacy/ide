@@ -399,6 +399,19 @@ public class Editor extends AbstractTestModule
       }
    }
 
+   /**
+    * Returns the active state of the editor.
+    * Index starts from <code>0</code>.
+    *   
+    * @param editorIndex editor's index
+    * @return {@link Boolean} <code>true</code> if active
+    */
+   public boolean isActive(int editorIndex)
+   {
+      WebElement view = editor.findElement(By.xpath(String.format(Locators.EDITOR_TAB_LOCATOR, editorIndex)));
+      return IDE().PERSPECTIVE.isViewActive(view);
+   }
+
    public boolean isTabPresentInEditorTabset(String tabTitle)
    {
       try

@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
+import org.everrest.core.PerRequestObjectFactory;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -34,53 +38,50 @@ import org.junit.Test;
  */
 public class ChangeHighlightTest extends BaseTest
 {
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
-   private static String FOLDER_NAME = ChangeHighlightTest.class.getSimpleName();
-
+   private static String PROJECT = ChangeHighlightTest.class.getSimpleName();
+   
+   private static String FILE_NAME = "gadget";
+      
    @Before
-   public void setUp()
+   public void setUp() throws Exception
    {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      VirtualFileSystemUtils.createDefaultProject(PROJECT);
    }
 
    @Test
    public void testChangeHighlihtTest() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();      
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      assertTrue(IDE.PROJECT.EXPLORER.isActive());
 
-      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      //Open new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      waitForElementPresent("//div[@panel-id='editor']");
-      IDE.PERSPECTIVE.checkViewIsActive("editor-0");
-      IDE.PERSPECTIVE.checkViewIsNotActive("ideWorkspaceView");
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
+      assertTrue(IDE.EDITOR.isActive(0));
+      assertFalse(IDE.PROJECT.EXPLORER.isActive());    
+      
+      //Close file:
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.waitTabNotPresent(1);
+      assertTrue(IDE.PROJECT.EXPLORER.isActive());
 
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-      IDE.EDITOR.waitTabNotPresent(0);
-      IDE.PERSPECTIVE.checkViewIsNotPresent("editor-0");
-      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      assertTrue(IDE.PROJECT.EXPLORER.isActive());
+      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      saveAsUsingToolbarButton("Gadget");
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      waitForElementPresent("//div[@view-id='gadgetpreview']");
-
-      IDE.PREVIEW.checkPreviewGadgetIsOpened(true);
-      IDE.PERSPECTIVE.checkViewIsActive("gadgetpreview");
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
-
+      IDE.PREVIEW.waitGadgetPreviewOpened();
+      
+      assertTrue(IDE.PREVIEW.isGadgetPreviewOpened());
+      assertTrue(IDE.PREVIEW.isGadgetPreviewActive());
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      assertTrue(IDE.PROJECT.EXPLORER.isActive());
    }
 
    @After
@@ -89,7 +90,7 @@ public class ChangeHighlightTest extends BaseTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {

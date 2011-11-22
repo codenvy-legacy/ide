@@ -79,7 +79,7 @@ public class UpdateApplicationTest extends CloudFoundryTest
    @Test
    public void testUpdateApplication() throws Exception
    {
-      if (IDE.OUTPUT.isOutputOpened()) {
+      if (IDE.OUTPUT.isOpened()) {
          IDE.OUTPUT.clickClearButton();
       }
       
@@ -112,8 +112,8 @@ public class UpdateApplicationTest extends CloudFoundryTest
       CloudFoundry.CREATE_APPLICATION.waitForFormClosed();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      assertTrue(IDE.OUTPUT.isOutputOpened());
-      assertEquals("[INFO] Application " + PROJECT_NAME + " successfully created.", IDE.OUTPUT.getOutputMessageText(messageIndex));
+      assertTrue(IDE.OUTPUT.isOpened());
+      assertEquals("[INFO] Application " + PROJECT_NAME + " successfully created.", IDE.OUTPUT.getOutputMessage(messageIndex));
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.MENU.runCommand(MenuCommands.PaaS.PAAS, MenuCommands.PaaS.CloudFoundry.CLOUDFOUNDRY, MenuCommands.PaaS.CloudFoundry.UPDATE_APPLICATION);
@@ -123,7 +123,7 @@ public class UpdateApplicationTest extends CloudFoundryTest
       /*
        * mock service always responses with project name test-spring-project
        */
-      assertEquals("[INFO] Application test-spring-project successfully updated.", IDE.OUTPUT.getOutputMessageText(messageIndex));
+      assertEquals("[INFO] Application test-spring-project successfully updated.", IDE.OUTPUT.getOutputMessage(messageIndex));
       Thread.sleep(10000);
    }
 

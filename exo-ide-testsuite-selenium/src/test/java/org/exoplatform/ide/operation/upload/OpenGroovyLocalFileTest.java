@@ -89,7 +89,6 @@ public class OpenGroovyLocalFileTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
-      assertEquals("exo:groovyResourceContainer", IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
       IDE.EDITOR.closeFile(0);
    }

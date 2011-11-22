@@ -100,7 +100,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       assertFalse(selenium().isElementPresent(IDE.REST_SERVICE.REST_SERVICE_FORM));
 
       // Check received message:
-      String mess = IDE.OUTPUT.getOutputMessageText(1);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
 
       assertTrue(mess
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
@@ -134,7 +134,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // Check received message:
-      mess = IDE.OUTPUT.getOutputMessageText(2);
+      mess = IDE.OUTPUT.getOutputMessage(2);
 
       assertTrue(mess.contains("Body: value4"));
 
@@ -167,7 +167,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP * 5);
 
       // Check received message:
-      mess = IDE.OUTPUT.getOutputMessageText(3);
+      mess = IDE.OUTPUT.getOutputMessage(3);
       System.out.print("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:" + mess + "<<<<<<<<<<<<<" + "\n");
       assertTrue(mess.contains("Body: value4"));
       // TODO define more exactly

@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,7 +36,6 @@ public class Perspective extends AbstractTestModule
 
    public interface Panel
    {
-
       String NAVIGATION = "navigation";
 
       String EDITOR = "editor";
@@ -45,89 +43,96 @@ public class Perspective extends AbstractTestModule
       String INFORMATION = "information";
 
       String OPERATION = "operation";
-
    }
 
    interface Locators
    {
       String CLOSE_BUTTON_SELECTOR = "div.tabTitleCloseButton[tab-title=%s]";
+
+      String PANEL_MAXIMIZED_ATTRIBUTE = "panel-maximized";
+
+      String PANEL_LOCATOR = "//div[@panel-id='%s']";
+
+      String VIEW_LOCATOR = "//div[@view-id='%s']";
+
+      String ACTIVE_VIEW_ATTRIBUTE = "is-active";
+
+      String RESORE_BUTTON_ID = "%s-restore";
+
+      String MAXIMIZE_BUTTON_ID = "%s-maximize";
    }
 
    /**
-    * Maximize panel with specified ID
+    * Maximize panel by click on maximize button.
     * 
-    * @param panelId ID of panel
+    * @param panelId panel's id
+    * @throws Exception
     */
    public void maximizePanel(String panelId) throws Exception
    {
-      String locator = "//div[@id='" + panelId + "-maximize']";
-      selenium().click(locator);
-      String panelLocator = "//div[@panel-id='" + panelId + "']";
-      selenium().waitForCondition(
-         "var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
-            + "\"); value.getAttribute('panel-maximized') == 'true' ", "5000");
-   }
-
-   public void restorePanel(String panelId) throws Exception
-   {
-      String locator = "//div[@id='" + panelId + "-restore']";
-      selenium().click(locator);
-      String panelLocator = "//div[@panel-id='" + panelId + "']";
-      selenium().waitForCondition(
-         "var value = selenium.browserbot.findElementOrNull(\"" + panelLocator
-            + "\"); value.getAttribute('panel-maximized') == 'false' ", "5000");
-   }
-
-   public void checkPanelIsMaximized(String panelId, boolean isMaximized)
-   {
-      String panelLocator = "//div[@panel-id='" + panelId + "' and @panel-maximized='" + isMaximized + "']";
-      selenium().isVisible(panelLocator);
-
-      String maximizeButtonLocator = "//div[@id='" + panelId + "-maximize']";
-      String restoreButtonLocator = "//div[@id='" + panelId + "-restore']";
-
-      if (isMaximized)
-      {
-         assertFalse(selenium().isVisible(maximizeButtonLocator));
-         assertTrue(selenium().isVisible(restoreButtonLocator));
-      }
-      else
-      {
-         assertTrue(selenium().isVisible(maximizeButtonLocator));
-         assertFalse(selenium().isVisible(restoreButtonLocator));
-      }
-   }
-
-   public void checkViewIsActive(String viewId) throws Exception
-   {
-      assertTrue(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='true']"));
-   }
-
-   public void checkViewIsNotActive(String viewId) throws Exception
-   {
-      assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='true']"));
-      assertTrue(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='false']"));
-   }
-
-   public void checkViewIsNotPresent(String viewId) throws Exception
-   {
-      assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='true']"));
-      assertFalse(selenium().isElementPresent("//div[@view-id='" + viewId + "'" + "and @is-active='false']"));
+      WebElement maximizeButton = driver().findElement(By.id(String.format(Locators.MAXIMIZE_BUTTON_ID, panelId)));
+      maximizeButton.click();
+      waitMaximized(panelId);
    }
 
    /**
-    * Locator in this method can be used to select the other menus 
-    * (change index in this part for select next tab.Start index value of 2 
-    * (mark *)//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[*])
-    * @param viewId
+    * Restore panel's size by clicking restore button.
+    * 
+    * @param panelId panel's id
     * @throws Exception
     */
-   public void clickOnIconPropertiesTab(String viewId) throws Exception
+   public void restorePanel(String panelId) throws Exception
    {
-      selenium()
-         .click(
-            "//div[@panel-id='operation']//table/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
-      //selenium().click("//table[@id='operation-panel-switcher']/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img");
+      WebElement restoreButton = driver().findElement(By.id(String.format(Locators.RESORE_BUTTON_ID, panelId)));
+      restoreButton.click();
+      waitRestored(panelId);
+   }
+
+   /**
+    * Wait panel is maximized.
+    * 
+    * @param panelId panel's id
+    */
+   private void waitMaximized(final String panelId)
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return isPanelMaximized(panelId);
+         }
+      });
+   }
+
+   /**
+    * Wait panel is restored.
+    * 
+    * @param panelId panel's id
+    */
+   private void waitRestored(final String panelId)
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !isPanelMaximized(panelId);
+         }
+      });
+   }
+
+   /**
+    * Returns whether panel is maximized.
+    * 
+    * @param panelId panel's id
+    * @return {@link Boolean} <code>true</code> if panel is maximized
+    */
+   public boolean isPanelMaximized(String panelId)
+   {
+      WebElement panel = driver().findElement(By.xpath(String.format(Locators.PANEL_LOCATOR, panelId)));
+      String attribute = panel.getAttribute(Locators.PANEL_MAXIMIZED_ATTRIBUTE);
+      return panel.isDisplayed() && attribute != null && Boolean.parseBoolean(attribute);
    }
 
    /**
@@ -138,12 +143,7 @@ public class Perspective extends AbstractTestModule
     */
    public boolean isViewActive(WebElement view)
    {
-      return (view != null) ? Boolean.parseBoolean(view.getAttribute("is-active")) : false;
-   }
-
-   public void activateView(String viewId)
-   {
-      fail();
+      return (view != null) ? Boolean.parseBoolean(view.getAttribute(Locators.ACTIVE_VIEW_ATTRIBUTE)) : false;
    }
 
    /**
@@ -154,7 +154,7 @@ public class Perspective extends AbstractTestModule
     */
    public String getViewLocator(String viewId)
    {
-      return "//div[@view-id=\"" + viewId + "\"]";
+      return String.format(Locators.VIEW_LOCATOR, viewId);
    }
 
    /**

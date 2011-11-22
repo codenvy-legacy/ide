@@ -18,10 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-
-import org.exoplatform.ide.Locators;
-import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -30,63 +33,124 @@ import org.exoplatform.ide.TestConstants;
  */
 public class Output extends AbstractTestModule
 {
+   interface Locators
+   {
+      String VIEW_ID = "ideOutputView";
+
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
+
+      String CLEAR_BUTTON_SELECTOR = "div#" + VIEW_ID + " div[title='Clear output']>img";
+
+      String OUTPUT_CONTENT_ID = "ideOutputContent";
+
+      String OUTPUT_ROW_BY_INDEX = "//div[@id='" + OUTPUT_CONTENT_ID + "']/div[%d]";
+   }
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(css = Locators.CLEAR_BUTTON_SELECTOR)
+   private WebElement clearButton;
+
+   @FindBy(id = Locators.OUTPUT_CONTENT_ID)
+   private WebElement outputContent;
 
    /**
+    * Wait Output view opened.
     * 
+    * @throws Exception
     */
-   private static final String IDE_OUTPUT_CONTENT_DIV_1S = "//div[@id='ideOutputContent']/div[%1s]/";
-
-   private static final String CLEAR_OUTPUT_BUTTON = "//div[@title='Clear output']";
-
-   /**
-    * Get Output message text
-    * @param messageNumber Number of message. <b>Message count starts with 1 !</b>
-    * @return Text of output message 
-    */
-   public String getOutputMessageText(int messageNumber)
+   public void waitOpened() throws Exception
    {
-      String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageNumber);
-      return selenium().getText(locator);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return view != null && view.isDisplayed();
+         }
+      });
    }
 
    /**
-    * Check is Output form opened 
-    */
-   public void checkOutputOpened()
-   {
-      assertTrue(isOutputOpened());
-   }
-
-   /**
-    * Determines whether the Output view opened.
+    * Wait Output view closed.
     * 
-    * @return
+    * @throws Exception
     */
-   public boolean isOutputOpened()
+   public void waitClosed() throws Exception
    {
-      return selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return view == null || !view.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
-   public void waitForOutputOpened() throws Exception
-   {
-      waitForElementPresent("ideOutputContent");
-   }
-
-   public void waitForMessageShow(int messageIndex, int timeOut) throws Exception
-   {
-      String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageIndex);
-      waitForElementPresent(locator, timeOut);      
-   }
-   
    /**
-    *  Wait for Output message present
-    * @param messageIndex of message. <b>Message count starts with 1 !</b>
-    * @throws Exception 
+    * Get Output message by its index.
+    * 
+    * @param index message's index. <b>Message count starts with 1.</b>
+    * @return {@link String} text of the message
     */
-   public void waitForMessageShow(int messageIndex) throws Exception
+   public String getOutputMessage(int index)
    {
-      String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageIndex);
-      waitForElementPresent(locator);
+      WebElement message = getMessageByIndex(index);
+      return message.getText();
+   }
+
+   /**
+    * Check is Output form opened.
+    */
+   public boolean isOpened()
+   {
+      try
+      {
+         return view != null && view.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+   }
+
+   /**
+    * @param messageIndex index of the message to wait
+    * @param timeOut seconds
+    * @throws Exception
+    */
+   public void waitForMessageShow(final int messageIndex, int timeout) throws Exception
+   {
+      new WebDriverWait(driver(), timeout).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               WebElement message = getMessageByIndex(messageIndex);
+               return message != null && message.isDisplayed();
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   public void waitForMessageShow(final int messageIndex) throws Exception
+   {
+      waitForMessageShow(messageIndex, 3);
    }
 
    /**
@@ -97,8 +161,17 @@ public class Output extends AbstractTestModule
     */
    public void clickOnErrorMessage(int messageNumber)
    {
-      String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageNumber) + "/font/span";
-      selenium().click(locator);
+      WebElement message = getMessageByIndex(messageNumber);
+      message.click();
+   }
+
+   /**
+    * @param index
+    * @return
+    */
+   private WebElement getMessageByIndex(int index)
+   {
+      return outputContent.findElement(By.xpath(String.format(Locators.OUTPUT_ROW_BY_INDEX, index)));
    }
 
    /**
@@ -106,16 +179,21 @@ public class Output extends AbstractTestModule
     */
    public void clickClearButton() throws Exception
    {
-      selenium().click(CLEAR_OUTPUT_BUTTON);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      clearButton.click();
    }
 
-   public void clearOutputIfIsOpened() throws Exception
+   /**
+    * Wait output panel is cleaned.
+    */
+   public void waitOutputCleaned()
    {
-      if (isOutputOpened())
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
       {
-         clickClearButton();
-      }
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return outputContent.getText() == null || outputContent.getText().isEmpty();
+         }
+      });
    }
-
 }

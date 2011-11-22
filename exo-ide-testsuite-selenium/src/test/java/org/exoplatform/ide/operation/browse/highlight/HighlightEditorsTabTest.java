@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
@@ -73,33 +76,34 @@ public class HighlightEditorsTabTest extends BaseTest
    @Test
    public void testHighlightEditorTab() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();      
-      IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
-
+      IDE.PROJECT.EXPLORER.waitOpened();
+      
+      assertTrue(IDE.PROJECT.EXPLORER.isActive());
+      
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       waitForElementPresent("//div[@panel-id='editor']");
-      IDE.PERSPECTIVE.checkViewIsActive("editor-0");
+      assertTrue(IDE.EDITOR.isActive(0));
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       waitForElementPresent("ideOutlineTreeGrid");
-      IDE.PERSPECTIVE.checkViewIsActive("ideOutlineView");
-      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+      assertTrue(IDE.OUTLINE.isActive());
+      assertFalse(IDE.EDITOR.isActive(0));
 
       IDE.OUTLINE.closeOutline();
       waitForElementNotPresent("ideOutlineTreeGrid");
-      IDE.PERSPECTIVE.checkViewIsNotPresent("ideOutlineView");
-      IDE.PERSPECTIVE.checkViewIsActive("editor-0");
-
-      IDE.EDITOR.closeFile(0);
+      assertFalse(IDE.OUTLINE.isOutlineViewVisible());
+      assertTrue(IDE.EDITOR.isActive(0));
+      
+      IDE.EDITOR.closeFile(1);
 
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.clickDesignButton();
       waitForElementPresent("//div[@panel-id='editor']");
-      IDE.PERSPECTIVE.checkViewIsActive("editor-1");
-
+      assertTrue(IDE.EDITOR.isActive(1));
+      
       //TODO should be compled should be completed after fix problem issue IDE-804
       //IDE.EDITOR.closeFile(0);
       //waitForElementNotPresent("//div[@panel-id='editor']");

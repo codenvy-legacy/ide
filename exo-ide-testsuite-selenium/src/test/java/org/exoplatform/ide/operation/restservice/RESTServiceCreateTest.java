@@ -117,11 +117,8 @@ public class RESTServiceCreateTest extends BaseTest
     */
    private void assertProperties(String name)
    {
-      assertEquals("false", IDE.PROPERTIES.getAutoloadProperty());
-      assertEquals(TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
       assertEquals(name, IDE.PROPERTIES.getDisplayName());
-      assertEquals(TestConstants.NodeTypes.NT_FILE, IDE.PROPERTIES.getFileNodeType());
    }
 
 }

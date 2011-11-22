@@ -79,7 +79,10 @@ public class ApplicationInfoTest extends BaseTest {
 		/*
 		 * Clear Output
 		 */
-		IDE.OUTPUT.clearOutputIfIsOpened();
+		if (IDE.OUTPUT.isOpened())
+		{
+		   IDE.OUTPUT.clickClearButton();
+		}
 
 		/*
 		 * Create test domain "domain1"

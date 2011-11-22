@@ -128,9 +128,9 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 5 -----------------
       //check messages
-      assertEquals("[INFO] " + SIMPLE_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessageText(1));
+      assertEquals("[INFO] " + SIMPLE_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessage(1));
       assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-         + FOLDER_NAME + "/" + SIMPLE_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(2));
+         + FOLDER_NAME + "/" + SIMPLE_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessage(2));
 
       //---- 6 -----------------
       //check, that hanlders removed, and after validation and deploying 
@@ -174,11 +174,11 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 3 -----------------
       //call Run Groovy Service command
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      IDE.OUTPUT.waitForOutputOpened();
-
+      IDE.OUTPUT.waitOpened();
+      IDE.OUTPUT.waitForMessageShow(1);
       //---- 4 -----------------
       //check that validation fails message appears.
-      String msg = IDE.OUTPUT.getOutputMessageText(1);
+      String msg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(msg.contains("[ERROR] " + NON_VALID_FILE_NAME + " validation failed. Error (400: Bad Request)"));
 
       //---- 5 -----------------
@@ -195,7 +195,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 7 -----------------
       //check messages
-      assertEquals("[INFO] " + NON_VALID_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessageText(2));
+      assertEquals("[INFO] " + NON_VALID_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessage(2));
 
       //check Launch Rest Service form doesn't appear
       IDE.REST_SERVICE.checkIsFormNotOpened();
@@ -239,10 +239,10 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 6 -----------------
       //check messages
       assertEquals("[INFO] " + FILE_FOR_CHANGE_CONTENT_NAME + " validated successfully.",
-         IDE.OUTPUT.getOutputMessageText(1));
+         IDE.OUTPUT.getOutputMessage(1));
       assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
          + FOLDER_NAME + "/" + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
-         IDE.OUTPUT.getOutputMessageText(2));
+         IDE.OUTPUT.getOutputMessage(2));
 
    }
 
@@ -287,9 +287,9 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 7 -----------------
       //check messages
-      assertEquals("[INFO] " + NEW_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessageText(1));
+      assertEquals("[INFO] " + NEW_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessage(1));
       assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-         + FOLDER_NAME + "/" + NEW_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(2));
+         + FOLDER_NAME + "/" + NEW_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessage(2));
 
    }
 

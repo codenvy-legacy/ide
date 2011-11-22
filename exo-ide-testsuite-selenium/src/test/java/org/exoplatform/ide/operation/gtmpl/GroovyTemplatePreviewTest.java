@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Preview;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -81,17 +80,17 @@ public class GroovyTemplatePreviewTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
-      waitForElementPresent(Preview.Locators.GROOVY_TEMPLATE_PREVIEW);
+      IDE.PREVIEW.waitGtmplPreviewOpened();
       IDE.PREVIEW.selectPreviewIFrame();
       assertTrue(selenium().isTextPresent("root"));
       IDE.selectMainFrame();
       
       //close preview tab and open again
-      IDE.PREVIEW.close();
-      waitForElementNotPresent(Preview.Locators.GROOVY_TEMPLATE_PREVIEW);
-      assertFalse(IDE.PREVIEW.isGroovyTemplateVisible());
+      IDE.PREVIEW.closeView();
+      IDE.PREVIEW.waitGtmplPreviewClosed();
+      assertFalse(IDE.PREVIEW.isGtmplPreviewOpened());
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
-      waitForElementPresent(Preview.Locators.GROOVY_TEMPLATE_PREVIEW);
+      IDE.PREVIEW.waitGtmplPreviewOpened();
       IDE.PREVIEW.selectPreviewIFrame();
       assertTrue(selenium().isTextPresent("root"));
       IDE.selectMainFrame();

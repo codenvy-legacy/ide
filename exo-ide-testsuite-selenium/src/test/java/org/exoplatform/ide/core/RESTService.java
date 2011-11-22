@@ -19,13 +19,11 @@
 package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 
 import java.awt.event.KeyEvent;
@@ -115,11 +113,11 @@ public class RESTService extends AbstractTestModule
    public void validate(String fileName, int numberOfRecord) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
-      waitForElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);
-      assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR));
-
-      final String msg = IDE().OUTPUT.getOutputMessageText(numberOfRecord);
-
+      IDE().OUTPUT.waitOpened();
+      assertTrue(IDE().OUTPUT.isOpened());
+      
+      IDE().OUTPUT.waitForMessageShow(numberOfRecord);
+      final String msg = IDE().OUTPUT.getOutputMessage(numberOfRecord);
       assertEquals("[INFO] " + fileName + " validated successfully.", msg);
    }
 
@@ -132,11 +130,10 @@ public class RESTService extends AbstractTestModule
    public void deploy(String filePath, int numberOfRecord) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE().OUTPUT.waitOpened();
+      IDE().OUTPUT.waitForMessageShow(numberOfRecord);
 
-      assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR));
-
-      final String msg = IDE().OUTPUT.getOutputMessageText(numberOfRecord);
+      final String msg = IDE().OUTPUT.getOutputMessage(numberOfRecord);
 
       final String validateSuccessMsg =
          "[INFO] " + BaseTest.ENTRY_POINT_URL_IDE + BaseTest.WS_NAME + "/" + filePath + " deployed successfully.";

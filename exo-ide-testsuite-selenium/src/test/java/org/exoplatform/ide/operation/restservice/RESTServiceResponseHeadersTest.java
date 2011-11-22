@@ -79,10 +79,10 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForOutputOpened();
+      IDE.OUTPUT.waitOpened();
 
       assertEquals("[INFO] " + BASE_URL + "IDE/rest/private/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-         + FOLDER_NAME + "/" + FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(1));
+         + FOLDER_NAME + "/" + FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessage(1));
 
       IDE.REST_SERVICE.launchRestService();
 
@@ -92,7 +92,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       IDE.REST_SERVICE.sendRequst();
 
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      String mess = IDE.OUTPUT.getOutputMessageText(2);
+      String mess = IDE.OUTPUT.getOutputMessage(2);
 
       assertTrue(mess.contains("[OUTPUT] - -Status - - - - - - - -"));
       assertTrue(mess.contains("200 OK"));

@@ -75,7 +75,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       openAndValidateRestService();
       //check, validation fails
-      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      final String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
       //click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
@@ -95,7 +95,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       openAndValidateRestService();
       //check, validation fails
-      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      final String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
       //close tab
       IDE.EDITOR.closeFile(0);
@@ -131,7 +131,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       openAndValidateRestService();
       //check, validation fails
-      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      final String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
       
       //open another tab
@@ -169,7 +169,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       openAndValidateRestService();
       //check, validation fails
-      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      final String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
       
       //close tab
@@ -221,7 +221,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(1);
       
       //check, validation fails
-      String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
 
       //---- 3 -----------------
@@ -250,7 +250,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(2);
       
       //check, validation fails
-      validationMsg = IDE.OUTPUT.getOutputMessageText(2);
+      validationMsg = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(validationMsg.contains("validation failed"));
 
       //---- 5 -----------------

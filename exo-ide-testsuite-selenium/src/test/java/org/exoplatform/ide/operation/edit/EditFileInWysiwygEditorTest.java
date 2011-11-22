@@ -180,7 +180,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertTrue(selenium().isElementPresent("//div[@view-id=\"idePreviewHTMLView\"]"));
 
       //select iframe in Preview tab
-      IDE.PREVIEW.selectIFrame(IDE_URL + FILE_NAME);
+      IDE.PREVIEW.selectPreviewIFrame();
 
       checkTable2x3Present();
 

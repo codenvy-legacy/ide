@@ -76,7 +76,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
 
       IDE.MENU.runCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
 
-      String mess = IDE.OUTPUT.getOutputMessageText(1);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
 
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
@@ -87,8 +87,6 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNSET_AUTOLOAD, true);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-
-      assertEquals("true", IDE.PROPERTIES.getAutoloadProperty());
 
 //      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "/// test comment 1\n");
       IDE.EDITOR.typeTextIntoEditor(0, "/// test comment 1\n");
@@ -111,7 +109,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
 
-      mess = IDE.OUTPUT.getOutputMessageText(2);
+      mess = IDE.OUTPUT.getOutputMessage(2);
 
       assertTrue(mess.contains("[INFO]"));
       assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));

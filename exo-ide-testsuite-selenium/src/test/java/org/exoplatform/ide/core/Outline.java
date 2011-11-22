@@ -358,7 +358,7 @@ public class Outline extends AbstractTestModule
     * @return {@link Boolean} active state of outline view
     * @throws Exception
     */
-   public boolean isOutlineViewActive() throws Exception
+   public boolean isActive() throws Exception
    {
       return IDE().PERSPECTIVE.isViewActive(view);
    }
@@ -380,6 +380,12 @@ public class Outline extends AbstractTestModule
       }
    }
 
+   /**
+    * Type keys with Outline tree.
+    * Is used for navigation (up, down, left or right).
+    * 
+    * @param keys keys to type
+    */
    public void typeKeys(String keys)
    {
       new Actions(driver()).sendKeys(tree, keys).build().perform();

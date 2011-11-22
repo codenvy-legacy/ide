@@ -104,7 +104,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       IDE.REST_SERVICE.sendRequst();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //3
-      String text = IDE.OUTPUT.getOutputMessageText(4);
+      String text = IDE.OUTPUT.getOutputMessage(4);
       assertTrue(text.endsWith(SIMPLE_FILE_NAME + " undeployed successfully."));
 
       IDE.EDITOR.closeFile(0);
@@ -133,7 +133,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //3
-      String text = IDE.OUTPUT.getOutputMessageText(3);
+      String text = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(text.endsWith(FILE_NAME + " undeployed successfully."));
 
       IDE.EDITOR.closeFile(0);

@@ -136,12 +136,12 @@ public class AddTest extends BaseTest
 
       //Check successfully added:
       IDE.OUTPUT.waitForMessageShow(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessageText(1));
+      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessage(1));
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(2);
-      String statusMessage = IDE.OUTPUT.getOutputMessageText(2);
+      String statusMessage = IDE.OUTPUT.getOutputMessage(2);
       //Get list of files in index:
       List<String> addedFiles = IDE.GIT.STATUS.getNotCommited(statusMessage);
       Assert.assertEquals(1, addedFiles.size());
@@ -185,7 +185,7 @@ public class AddTest extends BaseTest
 
       //Check successfully added:
       IDE.OUTPUT.waitForMessageShow(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessageText(1));
+      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessage(1));
    }
 
    /**
@@ -228,12 +228,12 @@ public class AddTest extends BaseTest
 
       //Check successfully added:
       IDE.OUTPUT.waitForMessageShow(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessageText(1));
+      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessage(1));
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(2);
-      String statusMessage = IDE.OUTPUT.getOutputMessageText(2);
+      String statusMessage = IDE.OUTPUT.getOutputMessage(2);
       //Get list of files in index:
       List<String> addedFiles = IDE.GIT.STATUS.getNotCommited(statusMessage);
       Assert.assertEquals(1, addedFiles.size());
@@ -284,12 +284,12 @@ public class AddTest extends BaseTest
 
       //Check successfully added:
       IDE.OUTPUT.waitForMessageShow(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessageText(1));
+      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessage(1));
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(2);
-      String statusMessage = IDE.OUTPUT.getOutputMessageText(2);
+      String statusMessage = IDE.OUTPUT.getOutputMessage(2);
 
       //Get list of untracked files:
       List<String> untrackedFiles = IDE.GIT.STATUS.getUntracked(statusMessage);

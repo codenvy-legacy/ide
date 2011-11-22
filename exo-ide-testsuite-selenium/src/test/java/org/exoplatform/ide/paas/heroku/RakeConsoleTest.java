@@ -93,19 +93,19 @@ public class RakeConsoleTest extends BaseTest
       
       IDE.HEROKU.RAKE.pressHelpButton();
       IDE.OUTPUT.waitForMessageShow(3);
-      String text = IDE.OUTPUT.getOutputMessageText(3);
+      String text = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(text.contains(Commands.HELP));
       
       IDE.HEROKU.RAKE.typeCommand("status");
       IDE.HEROKU.RAKE.runCommand();
       IDE.OUTPUT.waitForMessageShow(4);
-      text = IDE.OUTPUT.getOutputMessageText(4);
+      text = IDE.OUTPUT.getOutputMessage(4);
       assertTrue(text.contains(Commands.STATUS));
       
       IDE.HEROKU.RAKE.typeCommand(Commands.DB_CREATE);
       IDE.HEROKU.RAKE.runCommand();
       IDE.OUTPUT.waitForMessageShow(5);
-      text = IDE.OUTPUT.getOutputMessageText(5);
+      text = IDE.OUTPUT.getOutputMessage(5);
       assertTrue(text.contains(Commands.DB_CREATE));
       
    }

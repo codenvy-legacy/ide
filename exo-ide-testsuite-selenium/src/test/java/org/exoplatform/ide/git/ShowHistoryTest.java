@@ -100,7 +100,7 @@ public class ShowHistoryTest extends BaseTest
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
       IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessageText(1);
+      message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
       //Check show history is available:
@@ -435,13 +435,13 @@ public class ShowHistoryTest extends BaseTest
       //Add to index:
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Commit file:
       IDE.GIT.COMMIT.commit(commitMessage);
       IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      message = IDE.OUTPUT.getOutputMessage(2);
       Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
    }
 

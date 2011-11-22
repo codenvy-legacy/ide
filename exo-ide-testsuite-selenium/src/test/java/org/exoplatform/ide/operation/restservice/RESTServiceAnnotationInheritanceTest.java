@@ -104,7 +104,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       assertParameters();
 
       IDE.REST_SERVICE.sendRequst();
-      String mess = IDE.OUTPUT.getOutputMessageText(2);
+      String mess = IDE.OUTPUT.getOutputMessage(2);
 
       assertTrue(mess.contains("PathParam:Ñ‚ÐµÑ�Ñ‚"));
       

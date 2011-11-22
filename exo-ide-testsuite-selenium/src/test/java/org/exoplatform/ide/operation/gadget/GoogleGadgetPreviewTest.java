@@ -25,7 +25,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Preview;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -56,7 +55,8 @@ public class GoogleGadgetPreviewTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, TestConstants.NodeTypes.EXO_GOOGLE_GADGET, URL + FILE_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, TestConstants.NodeTypes.EXO_GOOGLE_GADGET, URL
+            + FILE_NAME);
       }
       catch (Exception e)
       {
@@ -73,7 +73,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-      
+
       assertTrue(selenium().isElementPresent("//div[@class='LeftCalculator']"));
 
       assertTrue(selenium().isElementPresent("//div[@class='Display']"));
@@ -93,25 +93,25 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, hello);
       saveCurrentFile();
       Thread.sleep(TestConstants.SLEEP);
-      
+
       IDE.MENU.waitForMenuItemPresent(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      waitForElementPresent(Preview.Locators.GADGET_PREVIEW);
+      IDE.PREVIEW.waitGadgetPreviewOpened();
 
       assertTrue(selenium().isElementPresent("//div[contains(text(), 'Hello,world!')]"));
-      
+
       //close preview
-      IDE.PREVIEW.close();
-      waitForElementNotPresent(Preview.Locators.GADGET_PREVIEW);
-      
+      IDE.PREVIEW.closeView();
+      IDE.PREVIEW.waitGadgetPreviewClosed();
+
       //and open again
       IDE.MENU.waitForMenuItemPresent(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      waitForElementPresent(Preview.Locators.GADGET_PREVIEW);
+      IDE.PREVIEW.waitGadgetPreviewOpened();
 
       assertTrue(selenium().isElementPresent("//div[contains(text(), 'Hello,world!')]"));
-      
-      IDE.EDITOR.closeFile(0);
+
+      IDE.EDITOR.closeFile(1);
    }
 
    @AfterClass

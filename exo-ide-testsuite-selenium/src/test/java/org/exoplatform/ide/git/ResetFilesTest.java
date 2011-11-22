@@ -100,7 +100,7 @@ public class ResetFilesTest extends BaseTest
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
       IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessageText(1);
+      message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
       //Check Reset files is available:
@@ -139,7 +139,7 @@ public class ResetFilesTest extends BaseTest
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Reset files view:
@@ -186,7 +186,7 @@ public class ResetFilesTest extends BaseTest
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Reset files view:
@@ -204,13 +204,13 @@ public class ResetFilesTest extends BaseTest
 
       //Check reset files sucess message:
       IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      message = IDE.OUTPUT.getOutputMessage(2);
       Assert.assertEquals(GIT.Messages.RESET_FILES_SUCCESS, message);
 
       //Get status message:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(3);
-      message = IDE.OUTPUT.getOutputMessageText(3);
+      message = IDE.OUTPUT.getOutputMessage(3);
 
       //Check untracked files after reset
       List<String> untracked = IDE.GIT.STATUS.getUntracked(message);
@@ -236,7 +236,7 @@ public class ResetFilesTest extends BaseTest
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Reset files view:
@@ -281,7 +281,7 @@ public class ResetFilesTest extends BaseTest
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Reset files view:
@@ -301,7 +301,7 @@ public class ResetFilesTest extends BaseTest
 
       //Check success reset files message:
       IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      message = IDE.OUTPUT.getOutputMessage(2);
       Assert.assertEquals(GIT.Messages.RESET_FILES_SUCCESS, message);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);

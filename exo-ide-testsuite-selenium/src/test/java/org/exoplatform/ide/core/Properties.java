@@ -58,7 +58,7 @@ public class Properties extends AbstractTestModule
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
-   private WebElement propertiesView;
+   private WebElement view;
 
    /*Properties*/
    @FindBy(xpath = Locators.NAME_PROPERTY_LOCATOR)
@@ -81,28 +81,6 @@ public class Properties extends AbstractTestModule
 
    @FindBy(xpath = Locators.CLOSE_VIEW_BUTTON_LOCATOR)
    private WebElement closeViewButton;
-
-   /**
-    * Get Autoload property value
-    * @return String value
-    */
-   @Deprecated
-   public String getAutoloadProperty()
-   {
-      //TODO No such property
-      return null;
-   }
-
-   /**
-    * Get Content Node Type property value 
-    * @return String value
-    */
-   @Deprecated
-   public String getContentNodeType()
-   {
-      //TODO No such property
-      return null;
-   }
 
    /**
     * Get Content Length property value.
@@ -132,14 +110,33 @@ public class Properties extends AbstractTestModule
    }
 
    /**
-    * Get File Node Type property value
-    * @return String value
+    * Get the value of path property.
+    * 
+    * @return {@link String} path value
     */
-   @Deprecated
-   public String getFileNodeType()
+   public String getPath()
    {
-      //TODO No such property
-      return null;
+      return pathProperty.getText();
+   }
+
+   /**
+    * Get the value of last modified property.
+    * 
+    * @return {@link String} last modified value
+    */
+   public String getLastModified()
+   {
+      return lastModifiedProperty.getText();
+   }
+
+   /**
+    * Get the value of created property.
+    * 
+    * @return {@link String} created value
+    */
+   public String getCreated()
+   {
+      return createdProperty.getText();
    }
 
    /**
@@ -175,7 +172,7 @@ public class Properties extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return (propertiesView != null && propertiesView.isDisplayed() && contentLenghtProperty != null
+            return (view != null && view.isDisplayed() && contentLenghtProperty != null
                && contentLenghtProperty.isDisplayed() && nameProperty != null && nameProperty.isDisplayed());
          }
       });
@@ -205,5 +202,15 @@ public class Properties extends AbstractTestModule
             }
          }
       });
+   }
+
+   /**
+    * Returns active state of properties view.
+    * 
+    * @return {@link Boolean} active state of properties view
+    */
+   public boolean isActive()
+   {
+      return IDE().PERSPECTIVE.isViewActive(view);
    }
 }

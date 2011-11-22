@@ -95,7 +95,7 @@ public class DeleteRepositoryTest extends BaseTest
       IDE.ASK_DIALOG.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(2);
-      String message = IDE.OUTPUT.getOutputMessageText(2);
+      String message = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(message.endsWith(GIT.Messages.DELETE_SUCCESS));
 
       selenium().open(URL);

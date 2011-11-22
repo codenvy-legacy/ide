@@ -85,7 +85,7 @@ public class UpdateInstancesTest extends CloudFoundryTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      if (IDE.OUTPUT.isOutputOpened()) {         
+      if (IDE.OUTPUT.isOpened()) {         
          IDE.OUTPUT.clickClearButton();
       }
       
@@ -108,7 +108,7 @@ public class UpdateInstancesTest extends CloudFoundryTest
       waitForElementNotPresent("exoAskForValueDialog");
       Thread.sleep(1000);
 
-      String outputMessage = IDE.OUTPUT.getOutputMessageText(1);
+      String outputMessage = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals("[INFO] Number of instances set to 1.", outputMessage);
    }
 

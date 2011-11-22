@@ -181,7 +181,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.waitForViewClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.contains(Merge.Messages.FAST_FORWARD));
       Assert.assertTrue(message.contains(Merge.Messages.MERGED_COMMITS));
       Assert.assertTrue(message.contains(Merge.Messages.NEW_HEAD_COMMIT));
@@ -233,7 +233,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.waitForViewClosed();
 
       IDE.OUTPUT.waitForMessageShow(3);
-      String message = IDE.OUTPUT.getOutputMessageText(3);
+      String message = IDE.OUTPUT.getOutputMessage(3);
       Assert.assertTrue(message.contains(Merge.Messages.CONFLICTING));
       Assert.assertTrue(message.contains(String.format(Merge.Messages.CONFLICTS, "- " + TEST_FILE)));
    }
@@ -263,7 +263,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.waitForViewClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.contains(Merge.Messages.UP_TO_DATE));
    }
 }

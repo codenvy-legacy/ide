@@ -116,13 +116,13 @@ public class RolesWithRESTServiceTest extends BaseTest
       //Check Launch Rest Service form appears
       IDE.REST_SERVICE.waitForLaunchRestServiceViewOpened();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message =  IDE.OUTPUT.getOutputMessageText(1);
+      String message =  IDE.OUTPUT.getOutputMessage(1);
 
       assertTrue(message.contains("[INFO]"));
       assertTrue(message.contains(FILE1 + " validated successfully."));
       
       IDE.OUTPUT.waitForMessageShow(2);
-      message =  IDE.OUTPUT.getOutputMessageText(2);
+      message =  IDE.OUTPUT.getOutputMessage(2);
 
       assertTrue(message.contains("[INFO]"));
       assertTrue(message.contains(FILE1 + " deployed successfully."));
@@ -151,8 +151,9 @@ public class RolesWithRESTServiceTest extends BaseTest
          IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
          IDE.OUTPUT.waitForMessageShow(1);
          //Check successfully deployed message
-         IDE.OUTPUT.waitForOutputOpened();
-         String message = IDE.OUTPUT.getOutputMessageText(1);
+         IDE.OUTPUT.waitOpened();
+         IDE.OUTPUT.waitForMessageShow(1);
+         String message = IDE.OUTPUT.getOutputMessage(1);
          assertTrue(message.contains("[INFO]"));
          assertTrue(message.contains(FILE1 + " deployed successfully."));
 
@@ -160,7 +161,7 @@ public class RolesWithRESTServiceTest extends BaseTest
          IDE.TOOLBAR.runCommand(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE);
          IDE.OUTPUT.waitForMessageShow(2);
          //Check successfully undeployed message
-         message = IDE.OUTPUT.getOutputMessageText(2);
+         message = IDE.OUTPUT.getOutputMessage(2);
          assertTrue(message.contains("[INFO]"));
          assertTrue(message.contains(FILE1 + " undeployed successfully."));
       }

@@ -182,7 +182,7 @@ public class CloneRepositoryTest extends BaseTest
       IDE.GIT.CLONE_REPOSITORY.waitForViewClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.CLONE_SUCCESS));
 
       //Sleep is necessary for files to appear in Davfs:
@@ -225,7 +225,7 @@ public class CloneRepositoryTest extends BaseTest
       IDE.GIT.CLONE_REPOSITORY.clickCloneButton();
 
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.startsWith(GIT.Messages.CLONE_REPO_EXISTS));
       Assert.assertTrue(message.endsWith(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/"
          + REPOSITORY + "/.git"));

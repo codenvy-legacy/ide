@@ -77,7 +77,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      String mess = IDE.OUTPUT.getOutputMessageText(2);
+      String mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess.startsWith("[ERROR]"));
       assertTrue(mess.contains(SECOND_NAME + " deploy failed. Error (400: Bad Request)"));
 
@@ -95,7 +95,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      mess = IDE.OUTPUT.getOutputMessageText(4);
+      mess = IDE.OUTPUT.getOutputMessage(4);
 
       assertTrue(mess.contains("[INFO]"));
 

@@ -81,7 +81,7 @@ public class TestCreateApplication extends CloudFoundryTest
    
    @Test
    public void testCreateRORApplication() throws Exception {
-      if (IDE.OUTPUT.isOutputOpened()) {
+      if (IDE.OUTPUT.isOpened()) {
          IDE.OUTPUT.clickClearButton();
       }
       
@@ -110,14 +110,14 @@ public class TestCreateApplication extends CloudFoundryTest
       CloudFoundry.CREATE_APPLICATION.waitForFormClosed();      
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      assertTrue(IDE.OUTPUT.isOutputOpened());
-      assertEquals("[INFO] Application cloudfoundry-test-ror-project successfully created.", IDE.OUTPUT.getOutputMessageText(successMessageIndex));
+      assertTrue(IDE.OUTPUT.isOpened());
+      assertEquals("[INFO] Application cloudfoundry-test-ror-project successfully created.", IDE.OUTPUT.getOutputMessage(successMessageIndex));
    }
 
    @Test
    public void testCreateApplication() throws Exception
    {
-      if (IDE.OUTPUT.isOutputOpened()) {
+      if (IDE.OUTPUT.isOpened()) {
          IDE.OUTPUT.clickClearButton();
       }
       
@@ -126,11 +126,8 @@ public class TestCreateApplication extends CloudFoundryTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.NAVIGATION.createFolder(TEST_FOLDER);
 
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.New.NEW, MenuCommands.New.JAVA_SPRING_PROJECT);
-      IDE.PROJECT.waitForDialogOpened();
-      IDE.PROJECT.typeProjectName(PROJECT_NAME);
-      assertTrue(IDE.PROJECT.isCreateButtonEnabled());
-      IDE.PROJECT.clickCreateButton();
+
+      IDE.PROJECT.CREATE.createProject(PROJECT_NAME);
       
       int successMessageIndex = 1;
       
@@ -143,10 +140,8 @@ public class TestCreateApplication extends CloudFoundryTest
          successMessageIndex = 2;
       }      
       
-      IDE.PROJECT.waitForDialogClosed();
-
-      IDE.OUTPUT.waitForOutputOpened();
-      String outputMessage = IDE.OUTPUT.getOutputMessageText(successMessageIndex);
+      IDE.OUTPUT.waitOpened();
+      String outputMessage = IDE.OUTPUT.getOutputMessage(successMessageIndex);
       assertEquals("[INFO] Java project " + PROJECT_NAME + " is successfully created.", outputMessage);
 
       IDE.OUTPUT.clickClearButton();
@@ -159,7 +154,7 @@ public class TestCreateApplication extends CloudFoundryTest
       IDE.GIT.INIT_REPOSITORY.waitForViewClosed();
 
       IDE.OUTPUT.waitForMessageShow(1, 30000);
-      String mes1 = IDE.OUTPUT.getOutputMessageText(1);
+      String mes1 = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(mes1.endsWith(GIT.Messages.INIT_SUCCESS));
 
       IDE.OUTPUT.clickClearButton();
@@ -179,7 +174,7 @@ public class TestCreateApplication extends CloudFoundryTest
       CloudFoundry.CREATE_APPLICATION.waitForFormClosed();
       
       IDE.OUTPUT.waitForMessageShow(1, 30000);
-      String mes2 = IDE.OUTPUT.getOutputMessageText(1);
+      String mes2 = IDE.OUTPUT.getOutputMessage(1);
       System.out.println("ORIGINAL MESSAGE [" + mes2 + "]");
       Assert.assertTrue(mes2.equals("[INFO] Logged in CloudFoundry successfully."));
       

@@ -91,7 +91,7 @@ public class RenameApplicationTest extends BaseTest
       IDE.HEROKU.RENAME_APP.typeNewApplication(NEW_APP_NAME);
       IDE.HEROKU.RENAME_APP.clickReanmeButton();
       IDE.OUTPUT.waitForMessageShow(3);
-      String text = IDE.OUTPUT.getOutputMessageText(3);
+      String text = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(text.contains("Application " + APP_NAME +" is successfully renamed to " + NEW_APP_NAME));
       
    }

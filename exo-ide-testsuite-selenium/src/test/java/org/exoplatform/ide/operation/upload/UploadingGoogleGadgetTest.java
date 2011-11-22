@@ -84,7 +84,6 @@ public class UploadingGoogleGadgetTest extends BaseTest
       
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       IDE.PROPERTIES.waitOpened();
-      assertEquals("exo:googleGadget", IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.GOOGLE_GADGET, IDE.PROPERTIES.getContentType());
     }
    

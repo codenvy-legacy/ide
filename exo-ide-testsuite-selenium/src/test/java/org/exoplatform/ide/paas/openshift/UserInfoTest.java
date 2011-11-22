@@ -129,8 +129,11 @@ public class UserInfoTest extends BaseTest
       /*
        * Clear Output
        */
-      IDE.OUTPUT.clearOutputIfIsOpened();
-
+      if (IDE.OUTPUT.isOpened())
+      {
+         IDE.OUTPUT.clickClearButton();
+      }
+      
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.createFolder("application-1");
 

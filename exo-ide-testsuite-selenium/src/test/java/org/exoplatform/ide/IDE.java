@@ -20,6 +20,7 @@ package org.exoplatform.ide;
 
 import com.thoughtworks.selenium.Selenium;
 
+import org.exoplatform.ide.core.AboutDialog;
 import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.AskForValueDialog;
 import org.exoplatform.ide.core.Button;
@@ -56,7 +57,6 @@ import org.exoplatform.ide.paas.heroku.core.Heroku;
 import org.exoplatform.ide.paas.openshift.core.OpenShift;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-import org.exoplatform.ide.core.AboutDialog;
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -79,25 +79,23 @@ public class IDE
       return instance;
    }
 
-   
-
    public Menu MENU;
-   
+
    public Toolbar TOOLBAR;
 
    public Editor EDITOR;
    
-   public AboutDialog ABOUT= new AboutDialog();
-
+   public AboutDialog ABOUT;
+   
    public Outline OUTLINE;
 
    public Navigation NAVIGATION = new Navigation();
 
-   public Perspective PERSPECTIVE = new Perspective();
+   public Perspective PERSPECTIVE;
 
    public CodeAssistant CODEASSISTANT;
 
-   public Preview PREVIEW = new Preview();
+   public Preview PREVIEW;
 
    public SaveAs SAVE_AS = new SaveAs();
 
@@ -129,7 +127,7 @@ public class IDE
 
    public Search SEARCH = new Search();
 
-   public Output OUTPUT = new Output();
+   public Output OUTPUT;
 
    public Properties PROPERTIES;
 
@@ -176,6 +174,9 @@ public class IDE
       INPUT = PageFactory.initElements(driver, Input.class);
       MENU = PageFactory.initElements(driver, Menu.class);
       OUTLINE = PageFactory.initElements(driver, Outline.class);
+      OUTPUT = PageFactory.initElements(driver, Output.class);
+      PREVIEW = PageFactory.initElements(driver, Preview.class);
+      PERSPECTIVE = PageFactory.initElements(driver, Perspective.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);
       RENAME = PageFactory.initElements(driver, Rename.class);

@@ -90,7 +90,7 @@ public class CreateApplicationTest extends BaseTest
 
       IDE.OUTPUT.waitForMessageShow(2);
 
-      String message = IDE.OUTPUT.getOutputMessageText(2);
+      String message = IDE.OUTPUT.getOutputMessage(2);
 
       String url = "http://" + APP_NAME + ".heroku.com/";
       assertTrue(message.contains(url));

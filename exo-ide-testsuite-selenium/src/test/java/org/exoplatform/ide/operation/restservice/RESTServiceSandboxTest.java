@@ -79,10 +79,10 @@ public class RESTServiceSandboxTest extends BaseTest
 
       //Deploy service to sandbox:
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX);
-      IDE.OUTPUT.waitForOutputOpened();
+      IDE.OUTPUT.waitOpened();
 
       //Check deploy request:
-      String mess = IDE.OUTPUT.getOutputMessageText(1);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(mess.contains("[INFO]"));
       assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
 
@@ -91,7 +91,7 @@ public class RESTServiceSandboxTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(2);
 
       //Check undeploy request:
-      mess = IDE.OUTPUT.getOutputMessageText(2);
+      mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess.contains("[INFO]"));
       assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
 
@@ -99,7 +99,7 @@ public class RESTServiceSandboxTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
       IDE.OUTPUT.waitForMessageShow(3);
 
-      mess = IDE.OUTPUT.getOutputMessageText(3);
+      mess = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
 

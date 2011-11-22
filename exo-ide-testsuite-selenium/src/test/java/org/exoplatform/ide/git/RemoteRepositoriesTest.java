@@ -97,7 +97,7 @@ public class RemoteRepositoriesTest extends BaseTest
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
       IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessageText(1);
+      message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
       //Check Remove files is available:

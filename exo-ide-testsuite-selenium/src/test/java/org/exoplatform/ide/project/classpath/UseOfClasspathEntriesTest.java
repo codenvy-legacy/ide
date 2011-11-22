@@ -143,7 +143,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
       /*
        * Check output message.
        */
-      final String msg = IDE.OUTPUT.getOutputMessageText(3);
+      final String msg = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(msg.endsWith("Hello {name} Ivanov"));
    }
 

@@ -90,7 +90,7 @@ public class HerokuLoginTest extends BaseTest
   //TODO    assertFalse(IDE.WARNING_DIALOG.isDialogOpened());
       IDE.OUTPUT.waitForMessageShow(1);
       
-      assertEquals(Messages.LOGED_IN, IDE.OUTPUT.getOutputMessageText(1));
+      assertEquals(Messages.LOGED_IN, IDE.OUTPUT.getOutputMessage(1));
    }
    
    @Test

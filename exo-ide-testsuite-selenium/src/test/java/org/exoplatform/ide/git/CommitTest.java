@@ -96,7 +96,7 @@ public class CommitTest extends BaseTest
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
       IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessageText(1);
+      message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
       //Check commit is available:
@@ -155,12 +155,12 @@ public class CommitTest extends BaseTest
 
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Check status before commit:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      message = IDE.OUTPUT.getOutputMessage(2);
       List<String> notCommited = IDE.GIT.STATUS.getNotCommited(message);
       Assert.assertEquals(2, notCommited.size());
 
@@ -175,13 +175,13 @@ public class CommitTest extends BaseTest
       IDE.GIT.COMMIT.waitForViewClosed();
 
       IDE.OUTPUT.waitForMessageShow(3);
-      message = IDE.OUTPUT.getOutputMessageText(3);
+      message = IDE.OUTPUT.getOutputMessage(3);
       Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
 
       //Check status after commit:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(4);
-      message = IDE.OUTPUT.getOutputMessageText(4);
+      message = IDE.OUTPUT.getOutputMessage(4);
       Assert.assertTrue(message.contains(Status.Messages.NOTHING_TO_COMMIT));
    }
 
@@ -210,7 +210,7 @@ public class CommitTest extends BaseTest
       //Check status before commit:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       List<String> notUpdated = IDE.GIT.STATUS.getNotUdated(message);
       Assert.assertEquals(1, notUpdated.size());
       Assert.assertTrue(notUpdated.contains(String.format(Status.Messages.MODIFIED, TEST_FILE1)));
@@ -227,13 +227,13 @@ public class CommitTest extends BaseTest
       IDE.GIT.COMMIT.waitForViewClosed();
 
       IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      message = IDE.OUTPUT.getOutputMessage(2);
       Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
 
       //Check status after commit:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(3);
-      message = IDE.OUTPUT.getOutputMessageText(3);
+      message = IDE.OUTPUT.getOutputMessage(3);
       Assert.assertTrue(message.contains(Status.Messages.NOTHING_TO_COMMIT));
    }
 

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -64,32 +66,28 @@ public class HighlightBottomTabSetTest extends BaseTest
    {
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL+FOLDER_NAME + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      waitForElementPresent(SHOW_PROPERTIES_ICON_LOCATOR);
-      
+      IDE.PROPERTIES.waitOpened();
 
-    
-      IDE.PERSPECTIVE.checkViewIsActive("ideFilePropertiesView");
-      
+      assertTrue(IDE.PROPERTIES.isActive());
+
       // assertTrue(selenium().isElementPresent("//div[@eventproxy='isc_PropertiesForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
       selenium().click(SHOW_PROPERTIES_ICON_LOCATOR);
-      IDE.PERSPECTIVE.checkViewIsActive("ideFilePropertiesView");
-      
-      
+      assertTrue(IDE.PROPERTIES.isActive());
+
       IDE.EDITOR.clickOnEditor(0);
-      
 
       //TODO should be completed after fix problem highlighting in codeeditor after setting cursor in text
-//
-//      IDE.PERSPECTIVE.checkViewIsNotActive("ideFilePropertiesView");
-//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-//      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
-//
-//      IDE.EDITOR.typeTextIntoEditor(0, "test test");
-//      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+      //
+      //      IDE.PERSPECTIVE.checkViewIsNotActive("ideFilePropertiesView");
+      //      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      //      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+      //
+      //      IDE.EDITOR.typeTextIntoEditor(0, "test test");
+      //      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
 
    }
 

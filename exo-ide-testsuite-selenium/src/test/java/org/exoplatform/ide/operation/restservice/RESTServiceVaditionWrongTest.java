@@ -48,10 +48,9 @@ public class RESTServiceVaditionWrongTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, "1");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
-
-      waitForElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);
-
-      String mess = IDE.OUTPUT.getOutputMessageText(1);
+      IDE.OUTPUT.waitOpened();
+      IDE.OUTPUT.waitForMessageShow(1);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(mess.contains("[ERROR] Untitled file.grs validation failed. Error (400: Bad Request)"));
    }
 

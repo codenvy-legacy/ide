@@ -132,7 +132,7 @@ public class RESTServiceOutputErrorTest extends BaseTest
       IDE.REST_SERVICE.sendRequst();
 
       Thread.sleep(TestConstants.SLEEP);
-      String mess = IDE.OUTPUT.getOutputMessageText(2);
+      String mess = IDE.OUTPUT.getOutputMessage(2);
 
       assertTrue(mess.contains("First Param:first; Second Param:second; Param List:node1/node2/node3"));
    }

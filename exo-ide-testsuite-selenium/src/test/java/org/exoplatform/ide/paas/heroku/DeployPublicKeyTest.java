@@ -84,7 +84,7 @@ private static final String TEST_FOLDER = DeployPublicKeyTest.class.getSimpleNam
       IDE.HEROKU.deployPublicKey();
       IDE.OUTPUT.waitForMessageShow(3);
       
-      String text = IDE.OUTPUT.getOutputMessageText(3);
+      String text = IDE.OUTPUT.getOutputMessage(3);
       assertEquals(Messages.KEYS_DEPLOYED, text);
       
    }

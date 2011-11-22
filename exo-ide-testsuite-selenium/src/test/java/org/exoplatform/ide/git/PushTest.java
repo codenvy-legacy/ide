@@ -105,7 +105,7 @@ public class PushTest extends BaseTest
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
       IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessageText(1);
+      message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
       //Check Push command is available:
@@ -195,7 +195,7 @@ public class PushTest extends BaseTest
 
       //Check pushed message:
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(String.format(GIT.Messages.PUSH_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/"
          + TEST_FOLDER + "/" + REMOTE), message);
 

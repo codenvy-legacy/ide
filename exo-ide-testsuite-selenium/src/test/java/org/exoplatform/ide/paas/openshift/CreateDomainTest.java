@@ -52,8 +52,11 @@ public class CreateDomainTest extends BaseTest {
 		/*
 		 * Clear Output
 		 */
-		IDE.OUTPUT.clearOutputIfIsOpened();
-
+		if (IDE.OUTPUT.isOpened())
+      {
+         IDE.OUTPUT.clickClearButton();
+      }
+		
 		/*
 		 * Open PaaS > OpenShift > Create Domain...
 		 */
@@ -85,7 +88,7 @@ public class CreateDomainTest extends BaseTest {
 		 */
 		String expectedDomainCreatedOutputMessage = "[INFO] Domain mydomain is successfully created.";
 		assertEquals(expectedDomainCreatedOutputMessage, IDE.OUTPUT
-				.getOutputMessageText(1));
+				.getOutputMessage(1));
 	}
 
 }

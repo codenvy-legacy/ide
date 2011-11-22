@@ -86,8 +86,11 @@ public class CreateApplicationTest extends BaseTest {
 		/*
 		 * Clear Output
 		 */
-		IDE.OUTPUT.clearOutputIfIsOpened();
-
+		if (IDE.OUTPUT.isOpened())
+      {
+         IDE.OUTPUT.clickClearButton();
+      }
+		
 		/*
 		 * Create test domain "domain1"
 		 */
@@ -126,7 +129,7 @@ public class CreateApplicationTest extends BaseTest {
 		 */
 		String expectedAppCreatedOutputMessage = "[INFO] Domain domain1 is successfully created.";
 		assertEquals(expectedAppCreatedOutputMessage, IDE.OUTPUT
-				.getOutputMessageText(1));
+				.getOutputMessage(1));
 	}
 
 }

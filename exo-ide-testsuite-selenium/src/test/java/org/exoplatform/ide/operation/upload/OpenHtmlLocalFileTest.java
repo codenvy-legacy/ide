@@ -89,7 +89,6 @@ public class OpenHtmlLocalFileTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
-      assertEquals("nt:resource", IDE.PROPERTIES.getContentNodeType());
 
       assertEquals(MimeType.TEXT_HTML, IDE.PROPERTIES.getContentType());
 

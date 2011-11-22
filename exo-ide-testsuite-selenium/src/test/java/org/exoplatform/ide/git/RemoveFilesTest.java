@@ -103,7 +103,7 @@ public class RemoveFilesTest extends BaseTest
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
       IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessageText(1);
+      message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
       //Check Remove files is available:
@@ -142,7 +142,7 @@ public class RemoveFilesTest extends BaseTest
       //Add file to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Remove files view:
@@ -183,7 +183,7 @@ public class RemoveFilesTest extends BaseTest
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -231,7 +231,7 @@ public class RemoveFilesTest extends BaseTest
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Remove files view:

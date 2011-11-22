@@ -83,7 +83,6 @@ public class UploadingGroovyFileTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       IDE.PROPERTIES.waitOpened();
-      assertEquals("exo:groovyResourceContainer", IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
    }
 

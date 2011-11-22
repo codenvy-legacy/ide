@@ -95,13 +95,9 @@ public class RESTServiceFilterParametersTest extends BaseTest
       IDE.REST_SERVICE.changeHeaderParameterSendCheckBoxState(1, false);      
 
       IDE.REST_SERVICE.sendRequst();
-
-      waitForElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);
-
-      IDE.OUTPUT.checkOutputOpened();
-
-      Thread.sleep(TestConstants.SLEEP);
-      String mess = IDE.OUTPUT.getOutputMessageText(1);
+      IDE.OUTPUT.waitOpened();
+      IDE.OUTPUT.waitForMessageShow(1);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(mess
          .contains("POST PathParam: {pathParam}; POST Test-Header: 3; POST TestQueryParam: false; POST Body:"));
    }

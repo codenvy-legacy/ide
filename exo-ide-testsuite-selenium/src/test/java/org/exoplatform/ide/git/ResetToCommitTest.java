@@ -153,7 +153,7 @@ public class ResetToCommitTest extends BaseTest
 
       //Check successfully reverted message:
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
 
       //Check file in tree:
@@ -163,7 +163,7 @@ public class ResetToCommitTest extends BaseTest
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      message = IDE.OUTPUT.getOutputMessage(2);
       List<String> notCommited = IDE.GIT.STATUS.getNotCommited(message);
       Assert.assertEquals(1, notCommited.size());
       Assert.assertTrue(notCommited.contains(String.format(Status.Messages.NEW_FILE, TEST_FILE1)));
@@ -200,13 +200,13 @@ public class ResetToCommitTest extends BaseTest
       //Add changes to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Commit file:
       IDE.GIT.COMMIT.commit(SECOND_COMMIT);
       IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      message = IDE.OUTPUT.getOutputMessage(2);
       Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
 
       //Open Reset files view:
@@ -223,7 +223,7 @@ public class ResetToCommitTest extends BaseTest
 
       //Check successfully reverted message:
       IDE.OUTPUT.waitForMessageShow(3);
-      message = IDE.OUTPUT.getOutputMessageText(3);
+      message = IDE.OUTPUT.getOutputMessage(3);
       Assert.assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
 
       //Check file in tree:
@@ -234,7 +234,7 @@ public class ResetToCommitTest extends BaseTest
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(4);
-      message = IDE.OUTPUT.getOutputMessageText(4);
+      message = IDE.OUTPUT.getOutputMessage(4);
       List<String> untracked = IDE.GIT.STATUS.getUntracked(message);
       Assert.assertEquals(1, untracked.size());
       Assert.assertTrue(untracked.contains(TEST_FILE2));
@@ -275,7 +275,7 @@ public class ResetToCommitTest extends BaseTest
 
       //Check successfully reverted message:
       IDE.OUTPUT.waitForMessageShow(1);
-     String message = IDE.OUTPUT.getOutputMessageText(1);
+     String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
 
       //Check file in tree:
@@ -286,7 +286,7 @@ public class ResetToCommitTest extends BaseTest
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      message = IDE.OUTPUT.getOutputMessage(2);
       Assert.assertTrue(message.contains(Status.Messages.NOTHING_TO_COMMIT));
 
       //Check number of commits:

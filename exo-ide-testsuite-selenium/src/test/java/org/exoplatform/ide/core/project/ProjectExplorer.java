@@ -85,6 +85,16 @@ public class ProjectExplorer extends AbstractTestModule
    }
 
    /**
+    * Returns the active state of the view.
+    * 
+    * @return {@link Boolean} view's active state
+    */
+   public boolean isActive()
+   {
+      return IDE().PERSPECTIVE.isViewActive(view);
+   }
+
+   /**
     * Generate item id 
     * @param path item's name 
     * @return id of item

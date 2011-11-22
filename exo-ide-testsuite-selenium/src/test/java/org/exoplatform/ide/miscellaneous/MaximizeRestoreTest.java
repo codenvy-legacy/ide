@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.core.Perspective;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -36,29 +35,16 @@ import org.junit.Test;
 public class MaximizeRestoreTest extends BaseTest
 {
 
-   @BeforeClass
-   public static void setUp()
-   {
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-   }
-
    @Test
    public void maximizeRestoreNavigationPanel() throws Exception
    {
-      //prepare file
-      IDE.WORKSPACE.waitForRootItem();
-      waitForElementPresent("//div[@id='navigation-maximize']");
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      
+      IDE.PROJECT.EXPLORER.waitOpened();
+
       IDE.PERSPECTIVE.maximizePanel(Perspective.Panel.NAVIGATION);
-      IDE.PERSPECTIVE.checkPanelIsMaximized(Perspective.Panel.NAVIGATION, true);
-      
+      assertTrue(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.NAVIGATION));
+
       IDE.PERSPECTIVE.restorePanel(Perspective.Panel.NAVIGATION);
-      IDE.PERSPECTIVE.checkPanelIsMaximized(Perspective.Panel.NAVIGATION, false);
+      assertFalse(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.NAVIGATION));
    }
 
 }

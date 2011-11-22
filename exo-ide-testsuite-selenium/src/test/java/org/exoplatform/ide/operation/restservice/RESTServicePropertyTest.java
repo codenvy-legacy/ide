@@ -82,11 +82,8 @@ public class RESTServicePropertyTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, true);
 
       IDE.PROPERTIES.openProperties();
-      assertEquals("false", IDE.PROPERTIES.getAutoloadProperty());
-      assertEquals(TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
       assertEquals(FILE_NAME, IDE.PROPERTIES.getDisplayName());
-      assertEquals(TestConstants.NodeTypes.NT_FILE, IDE.PROPERTIES.getFileNodeType());
       
       IDE.EDITOR.closeFile(0);
    }

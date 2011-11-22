@@ -116,7 +116,7 @@ public class PreviewHtmlFileTest extends BaseTest
       
     //TODO  rework following all steps when ready preview:
       
-      IDE.PREVIEW.selectIFrame(PROJECT + "/" + FILE_NAME);
+      IDE.PREVIEW.selectPreviewIFrame();
 
       assertTrue(selenium().isElementPresent("//p/b/i[text()='Changed Content.']"));
       assertTrue(selenium()
@@ -126,7 +126,7 @@ public class PreviewHtmlFileTest extends BaseTest
       /*
        * 7. Close "Preview".
        */
-      IDE.PREVIEW.close();
+      IDE.PREVIEW.closeView();
 
       /*
        * 8. Close "PreviewHtmlFile.html" and check "Preview" button.
@@ -147,8 +147,8 @@ public class PreviewHtmlFileTest extends BaseTest
       /*
        * 10. Check "Preview" again.
        */
-      IDE.PREVIEW.checkPreviewHTMLIsOpened(true);
-      IDE.PREVIEW.selectIFrame(WS_URL_IDE + PROJECT + "/" + FILE_NAME);
+      assertTrue(IDE.PREVIEW.isHtmlPreviewOpened());
+      IDE.PREVIEW.selectPreviewIFrame();
       assertTrue(selenium().isElementPresent("//p/b/i[text()='Changed Content.']"));
       assertTrue(selenium()
          .isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
@@ -160,7 +160,7 @@ public class PreviewHtmlFileTest extends BaseTest
       IDE.EDITOR.closeFile(1);
       IDE.EDITOR.closeTabIgnoringChanges(0);
 
-      IDE.PREVIEW.close();
+      IDE.PREVIEW.closeView();
    }
 
 }

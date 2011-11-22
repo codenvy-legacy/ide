@@ -79,7 +79,7 @@ public class DeleteApplicationTest extends BaseTest
       IDE.ASK_DIALOG.waitClosed();
       
       IDE.OUTPUT.waitForMessageShow(3);
-      String text = IDE.OUTPUT.getOutputMessageText(3);
+      String text = IDE.OUTPUT.getOutputMessage(3);
       assertEquals(Messages.DELETED, text);
       
       

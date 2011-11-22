@@ -64,11 +64,11 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_URL, false);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTPUT.waitOpened();
+      
+      assertTrue(IDE.OUTPUT.isOpened());
 
-      IDE.OUTPUT.checkOutputOpened();
-
-      String mess = IDE.OUTPUT.getOutputMessageText(1);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
 
       assertTrue(mess.contains("[INFO]"));
       assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
@@ -77,12 +77,12 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //**********fix TODO static string message 
-      assertTrue(IDE.OUTPUT.getOutputMessageText(2).contains(FOLDER_NAME + "/" + FILE_NAME + " undeployed successfully."));
+      assertTrue(IDE.OUTPUT.getOutputMessage(2).contains(FOLDER_NAME + "/" + FILE_NAME + " undeployed successfully."));
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       Thread.sleep(TestConstants.SLEEP);
 
-      mess = IDE.OUTPUT.getOutputMessageText(3);
+      mess = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(mess.contains("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
 

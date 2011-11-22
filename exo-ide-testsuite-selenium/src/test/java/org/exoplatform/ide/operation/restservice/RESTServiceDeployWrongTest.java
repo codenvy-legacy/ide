@@ -78,12 +78,11 @@ public class RESTServiceDeployWrongTest extends BaseTest
       saveAsUsingToolbarButton(FILE_NAME);
       Thread.sleep(TestConstants.SLEEP);
 
-      IDE.MENU.runCommand("Run", MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitOpened();
+      assertTrue(IDE.OUTPUT.isOpened());
 
-      IDE.OUTPUT.checkOutputOpened();
-
-      String mess = IDE.OUTPUT.getOutputMessageText(1);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
 
       assertTrue(mess.startsWith("[ERROR]"));
       assertTrue(mess.contains(FILE_NAME + " deploy failed. Error (400: Bad Request)"));

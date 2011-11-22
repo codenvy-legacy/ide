@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertEquals;
-
-import org.exoplatform.ide.TestConstants;
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -35,23 +31,30 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
 public class Preview extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
-      public static final String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='Preview']";
+      String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='Preview']";
 
-      public static final String GADGET_PREVIEW = "//div[@view-id='gadgetpreview']";
+      String GADGET_PREVIEW = "//div[@view-id='gadgetpreview']";
 
-      public static final String HTML_PREVIEW = "//div[@view-id='idePreviewHTMLView']";
+      String HTML_PREVIEW = "//div[@view-id='idePreviewHTMLView']";
+      
+      String PREVIEW_FRAME_ID = "eXo-IDE-preview-frame";
    }
-   
+
+   private static final String VIEW_TITLE = "Preview";
    
    @FindBy(xpath = Locators.HTML_PREVIEW)
    private WebElement htmlPreview;
 
-   
+   @FindBy(xpath = Locators.GADGET_PREVIEW)
+   private WebElement gadgetPreview;
+
+   @FindBy(xpath = Locators.GROOVY_TEMPLATE_PREVIEW)
+   private WebElement gtmplPreview;
+
    /**
     * Wait for HTML preview view opened.
     * 
@@ -65,7 +68,14 @@ public class Preview extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return (htmlPreview != null && htmlPreview.isDisplayed());
+            try
+            {
+               return (htmlPreview != null && htmlPreview.isDisplayed());
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
          }
       });
    }
@@ -85,8 +95,7 @@ public class Preview extends AbstractTestModule
          {
             try
             {
-               input.findElement(By.xpath(Locators.HTML_PREVIEW));
-               return false;
+               return htmlPreview == null || !htmlPreview.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -96,44 +105,198 @@ public class Preview extends AbstractTestModule
       });
    }
 
-   public void checkPreviewHTMLIsOpened(boolean isOpened)
+   /**
+    * Wait for Gadget preview view opened.
+    * 
+    * @throws Exception
+    */
+   public void waitGadgetPreviewOpened() throws Exception
    {
-      String locator = "//div[@view-id='idePreviewHTMLView']";
-      assertEquals(isOpened, selenium().isElementPresent(locator));
-   }
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
 
-   public void checkPreviewGadgetIsOpened(boolean isOpened)
-   {
-      assertEquals(isOpened, selenium().isElementPresent(Locators.GADGET_PREVIEW));
-   }
-
-   public void selectIFrame(String iFrameURL)
-   {
-      selenium().selectFrame("//iframe[@src='" + iFrameURL + "']");
-   }
-
-   public boolean isGroovyTemplateVisible()
-   {
-      return selenium().isElementPresent(Locators.GROOVY_TEMPLATE_PREVIEW);
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return (gadgetPreview != null && gadgetPreview.isDisplayed());
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
-    * Selenium selects preview iframe.
+    * Wait for Gadget preview view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitGadgetPreviewClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return gadgetPreview == null || !gadgetPreview.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait for GTMPL preview view opened.
+    * 
+    * @throws Exception
+    */
+   public void waitGtmplPreviewOpened() throws Exception
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return (gtmplPreview != null && gtmplPreview.isDisplayed());
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait for GTMPL preview view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitGtmplPreviewClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return gtmplPreview == null || !gtmplPreview.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   /**
+    * Returns opened state of HTML preview view.
+    * 
+    * @return {@link Boolean} opened state of HTML preview
+    */
+   public boolean isHtmlPreviewOpened()
+   {
+      try
+      {
+         return htmlPreview != null && htmlPreview.isDisplayed();
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+   
+   /**
+    * Returns opened state of Gadget preview view.
+    * 
+    * @return {@link Boolean} opened state of Gadget preview
+    */
+   public boolean isGadgetPreviewOpened()
+   {
+      try
+      {
+         return gadgetPreview != null && gadgetPreview.isDisplayed();
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+   
+   /**
+    * Returns opened state of GTMPL preview view.
+    * 
+    * @return {@link Boolean} opened state of GTMPL preview
+    */
+   public boolean isGtmplPreviewOpened()
+   {
+      try
+      {
+         return gtmplPreview != null && gtmplPreview.isDisplayed();
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+
+   /**
+    * Returns active state of HTML preview view.
+    * 
+    * @return {@link Boolean} active state of HTML preview
+    */
+   public boolean isHtmlPreviewActive()
+   {
+      return IDE().PERSPECTIVE.isViewActive(htmlPreview);
+   }
+   
+   /**
+    * Returns active state of GTMPL preview view.
+    * 
+    * @return {@link Boolean} active state of GTMPL preview
+    */
+   public boolean isGtmplPreviewActive()
+   {
+      return IDE().PERSPECTIVE.isViewActive(gtmplPreview);
+   }
+   
+   /**
+    * Returns active state of Gadget preview view.
+    * 
+    * @return {@link Boolean} active state of Gadget preview
+    */
+   public boolean isGadgetPreviewActive()
+   {
+      return IDE().PERSPECTIVE.isViewActive(gadgetPreview);
+   }
+
+   /**
+    * Select preview frame.
     */
    public void selectPreviewIFrame()
    {
-      selenium().selectFrame("eXo-IDE-preview-frame");
+      driver().switchTo().frame(Locators.PREVIEW_FRAME_ID);
    }
 
-   public void close() throws Exception
+   public void closeView()
    {
-      String locator =
-         "//div[@panel-id='operation']//table[@class='gwt-DecoratedTabBar']//div[@role='tab']//div[@button-name='close-tab' and @tab-title='Preview']";
-      selenium().mouseOver(locator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      selenium().click(locator);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE).click();
    }
 
 }

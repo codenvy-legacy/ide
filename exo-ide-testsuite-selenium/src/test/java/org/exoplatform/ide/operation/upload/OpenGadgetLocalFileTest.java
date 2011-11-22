@@ -92,7 +92,6 @@ public class OpenGadgetLocalFileTest extends BaseTest
 
       IDE.PROPERTIES.openProperties();
 
-      assertEquals("exo:googleGadget", IDE.PROPERTIES.getContentNodeType());
       assertEquals(MimeType.GOOGLE_GADGET, IDE.PROPERTIES.getContentType());
       IDE.EDITOR.closeFile(0);
    }
