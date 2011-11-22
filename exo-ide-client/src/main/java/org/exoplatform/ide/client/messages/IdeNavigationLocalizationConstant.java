@@ -35,6 +35,9 @@ public interface IdeNavigationLocalizationConstant extends Messages
    
    @Key("folder.has.opened.file")
    String cutFolderHasOpenFile(String folderName, String fileName);
+   
+   @Key("cut.opened.file")
+   String cutOpenFile(String fileName);
    /*
     * WorkspaceViewExtended
     */

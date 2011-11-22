@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.client.edit.ui;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextInput;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import com.google.gwt.user.client.ui.Label;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -31,6 +26,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -44,7 +46,7 @@ public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final int WIDTH = 400;
 
-   private static final int HEIGHT = 165;
+   private static final int HEIGHT = 160;
 
    private static final String GO_BUTTON_ID = "ideGoToLineFormGoButton";
 
@@ -52,8 +54,10 @@ public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final String LINE_NUMBER_FIELD = "ideGoToLineFormLineNumberField";
 
+   private static final String LINE_NUMBER_RANGE_LABEL = "ideGoToLineFormLineRangeLabel";
+
    private static GoTolineViewUiBinder uiBinder = GWT.create(GoTolineViewUiBinder.class);
-   
+
    interface GoTolineViewUiBinder extends UiBinder<Widget, GoToLineView>
    {
    }
@@ -62,19 +66,23 @@ public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client
    TextInput lineNumberField;
 
    @UiField
+   Label rangeLabel;
+
+   @UiField
    ImageButton goButton;
 
    @UiField
    ImageButton cancelButton;
-   
+
    private static final String TITLE = IDE.EDITOR_CONSTANT.goToLineTitle();
 
    public GoToLineView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.goToLine()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      
+
       lineNumberField.setName(LINE_NUMBER_FIELD);
+      rangeLabel.getElement().setId(LINE_NUMBER_RANGE_LABEL);
       goButton.setButtonId(GO_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -127,7 +135,7 @@ public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client
    @Override
    public void setCaptionLabel(String caption)
    {
-      lineNumberField.setTitle(caption);
+      rangeLabel.setText(caption);
    }
 
 }

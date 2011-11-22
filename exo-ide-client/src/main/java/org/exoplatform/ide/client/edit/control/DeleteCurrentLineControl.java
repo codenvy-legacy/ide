@@ -65,7 +65,7 @@ public class DeleteCurrentLineControl extends SimpleControl implements IDEContro
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
 
-      if (event.getFile() == null || event.getEditor() == null || (event.getFile().getVersionId() != null))
+      if (event.getFile() == null || event.getEditor() == null)
       {
          setVisible(false);
          setEnabled(false);

@@ -130,7 +130,12 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       {
          for (Item i : selectedItems)
          {
-            if (f.getPath().startsWith(i.getPath()))
+            if (f.getPath().equals(i.getPath()))
+            {
+               Dialogs.getInstance().showError(IDE.NAVIGATION_CONSTANT.cutOpenFile(f.getName()));
+               return;
+            }
+            else if (f.getPath().startsWith(i.getPath()))
             {
                Dialogs.getInstance().showError(IDE.NAVIGATION_CONSTANT.cutFolderHasOpenFile(i.getName(), f.getName()));
                return;
