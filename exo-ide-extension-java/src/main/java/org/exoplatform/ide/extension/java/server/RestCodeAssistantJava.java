@@ -18,18 +18,29 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -55,7 +66,15 @@ import javax.ws.rs.core.UriInfo;
 public class RestCodeAssistantJava
 {
 
+   /**
+    * Default Maven 'sourceDirectory' value
+    */
+   private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
+
    private final CodeAssistant codeAssistantStorage;
+
+   @Inject
+   private VirtualFileSystemRegistry vfsRegistry;
 
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantJava.class);
@@ -170,32 +189,103 @@ public class RestCodeAssistantJava
       return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
          + codeAssistantStorage.getClassDoc(fqn) + "</body></html>";
    }
-   
+
    /**
     * Find all classes in project
     * @param uriInfo
     * @param location
     * @return set of FQNs matched to project at file location 
     * @throws CodeAssistantException
+    * @throws VirtualFileSystemException 
+    * @throws PermissionDeniedException 
+    * @throws ItemNotFoundException 
     */
    @GET
-   @Path("/find-by-project")
+   @Path("/find-in-package")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findClassesByProject(@Context UriInfo uriInfo,
-      @HeaderParam("location") String location) throws CodeAssistantException
+   public List<ShortTypeInfo> findClassesInPackage(@QueryParam("fileid") String fileId,
+      @QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId) throws CodeAssistantException,
+      VirtualFileSystemException
    {
       List<ShortTypeInfo> classNames = null;
-      try
-      {
-         classNames = codeAssistantStorage.findClassesByProject(uriInfo.getBaseUri().toASCIIString(), URLDecoder.decode(location,"UTF-8"));
-      }
-      catch (UnsupportedEncodingException e)
-      {
-         e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, e.getMessage());
-      }
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      Item item = vfs.getItem(fileId, PropertyFilter.ALL_FILTER);
+      if (item.getItemType() != ItemType.FILE)
+         throw new InvalidArgumentException("Unable find Classes. Item " + item.getName() + " is not a file. ");
+
+      Item p = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+
+      Project project = null;
+      if (p instanceof Project)
+         project = (Project)p;
+      else
+         throw new InvalidArgumentException("Unable find Classes. Item " + p.getName() + " is not a project. ");
+
+      classNames = findClassesInPackage((File)item, project, vfs);
 
       return classNames;
    }
-   
+
+   /**
+    * Return word until first point like "ClassName" on file name "ClassName.java"
+    * @param fileName
+    * @return
+    */
+   private String getClassNameOnFileName(String fileName)
+   {
+      if (fileName != null)
+         return fileName.substring(0, fileName.indexOf("."));
+
+      return null;
+   }
+
+   /**
+    * Return possible FQN like "org.exoplatform.example.ClassName" on file path "/org/exoplatform/example/ClassName.java"
+    * @param fileName
+    * @return
+    */
+   private String getFQNByFilePath(File file, Project project)
+   {
+      String sourceFolderPath = (String)project.getPropertyValue("sourceFolder");
+      if (sourceFolderPath == null)
+      {
+         sourceFolderPath = DEFAULT_SOURCE_FOLDER;
+      }
+      String fqn = file.getPath().substring((project.getPath() + "/" + sourceFolderPath).length() + 1);
+      // remove file extension from path like ".java" from path "org/exoplatform/example/ClassName.java"
+      if (fqn.matches(".*[.][^/]*$"))
+         fqn = fqn.substring(0, fqn.lastIndexOf("."));
+      // replace "/" on "."
+      fqn = fqn.replaceAll("/", ".");
+
+      return fqn;
+   }
+
+   /**
+    * Find classes in package 
+    * @param fileId
+    * @param vfsId 
+    * @return
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException  
+    * TODO move this method to Java project code assistant
+    */
+   public List<ShortTypeInfo> findClassesInPackage(File file, Project project, VirtualFileSystem vfs)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      List<ShortTypeInfo> classes = new ArrayList<ShortTypeInfo>();
+      ItemList<Item> children = vfs.getChildren(file.getParentId(), -1, 0, PropertyFilter.ALL_FILTER);
+      for (Item i : children.getItems())
+      {
+         if (i.getName().endsWith(".java"))
+         {
+            if (file.getId().equals(i.getId()) || ItemType.FILE != i.getItemType())
+               continue;
+            classes.add(new ShortTypeInfo(0, getClassNameOnFileName(i.getName()), getFQNByFilePath((File)i, project),
+               "CLASS"));
+         }
+      }
+      return classes;
+   }
+
 }

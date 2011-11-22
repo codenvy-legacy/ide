@@ -136,7 +136,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       {
          javaCodeAssistant.setactiveFileHref(event.getFile().getId());
 
-         javaCodeValidator.loadClassesFromProject(event.getFile().getId());
+         javaCodeValidator.loadClassesFromProject(event.getFile().getId(), event.getFile().getProject().getId());
       }
    }
 

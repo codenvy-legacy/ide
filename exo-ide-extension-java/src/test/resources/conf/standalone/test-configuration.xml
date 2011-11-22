@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
-   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
-   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
-   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
-   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
-   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
-   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can 
+   redistribute it and/or modify it under the terms of the GNU Lesser General 
+   Public License as published by the Free Software Foundation; either version 
+   2.1 of the License, or (at your option) any later version. This software 
+   is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+   PURPOSE. See the GNU Lesser General Public License for more details. You 
+   should have received a copy of the GNU Lesser General Public License along 
+   with this software; if not, write to the Free Software Foundation, Inc., 
+   51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: 
+   http://www.fsf.org. -->
+<!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can 
+   redistribute it and/or modify it under the terms of the GNU Lesser General 
+   Public License as published by the Free Software Foundation; either version 
+   2.1 of the License, or (at your option) any later version. This software 
+   is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+   PURPOSE. See the GNU Lesser General Public License for more details. You 
+   should have received a copy of the GNU Lesser General Public License along 
+   with this software; if not, write to the Free Software Foundation, Inc., 
+   51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: 
+   http://www.fsf.org. -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
    <component>
-      <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
-      <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
+      <key>org.exoplatform.services.log.LogConfigurationInitializer
+      </key>
+      <type>org.exoplatform.services.log.LogConfigurationInitializer
+      </type>
       <init-params>
          <value-param>
             <name>logger</name>
-            <value>org.exoplatform.services.log.impl.BufferedLog4JLogger</value>
+            <value>org.exoplatform.services.log.impl.BufferedLog4JLogger
+            </value>
          </value-param>
          <value-param>
             <name>configurator</name>
-            <value>org.exoplatform.services.log.impl.Log4JConfigurator</value>
+            <value>org.exoplatform.services.log.impl.Log4JConfigurator
+            </value>
          </value-param>
          <properties-param>
             <name>properties</name>
@@ -30,28 +47,58 @@
             <property name="log4j.rootLogger" value="INFO, stdout, file" />
 
             <property name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender" />
-            <property name="log4j.appender.stdout.threshold" value="INFO" />
+            <property name="log4j.appender.stdout.threshold"
+               value="INFO" />
 
-            <property name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout" />
-            <property name="log4j.appender.stdout.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
+            <property name="log4j.appender.stdout.layout"
+               value="org.apache.log4j.PatternLayout" />
+            <property name="log4j.appender.stdout.layout.ConversionPattern"
+               value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
 
             <property name="log4j.appender.file" value="org.apache.log4j.FileAppender" />
             <property name="log4j.appender.file.File" value="target/jcr.log" />
 
             <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
-            <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
+            <property name="log4j.appender.file.layout.ConversionPattern"
+               value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
 
-            <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
-            <property name="log4j.category.jcr.ext.RestRepositoryService" value="DEBUG" />
+            <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> 
+               <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
+            <property name="log4j.category.jcr.ext.RestRepositoryService"
+               value="DEBUG" />
 
-            <property name="log4j.logger.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" />
-            <property name="log4j.logger.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
+            <property name="log4j.logger.exo.ws.rest.core.RequestHandlerImpl"
+               value="DEBUG" />
+            <property
+               name="log4j.logger.exo.ws.rest.core.DefaultMethodInvoker"
+               value="DEBUG" />
 
 
          </properties-param>
       </init-params>
    </component>
-   
+
+   <component>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication
+      </type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry
+      </type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer
+      </type>
+      <init-params>
+         <values-param>
+            <name>workspaces</name>
+            <value>ws</value>
+         </values-param>
+      </init-params>
+   </component>
+
    <component>
       <type>org.everrest.exoplatform.EverrestInitializer</type>
    </component>
@@ -84,22 +131,27 @@
          </value-param>
       </init-params>
    </component>
-   
+
 
    <component>
-      <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
+      <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant
+      </key>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl
+      </type>
    </component>
    <component>
-   <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
+      <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage</type>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage
+      </type>
       <init-params>
          <object-param>
             <name>classinfostrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+            <object
+               type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
                <field name="wsName">
                   <string>ws</string>
                </field>
@@ -109,9 +161,11 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object
+                           type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
-                              <string>${jre.lib}${file.separator}rt.jar</string>
+                              <string>${jre.lib}${file.separator}rt.jar
+                              </string>
                            </field>
                            <field name="includePkg">
                               <collection type="java.util.ArrayList">
@@ -130,11 +184,13 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage</type>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage
+      </type>
       <init-params>
          <object-param>
             <name>docstrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+            <object
+               type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
                <field name="wsName">
                   <string>ws</string>
                </field>
@@ -144,7 +200,8 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object
+                           type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
                               <string>${java.src}</string>
                            </field>
@@ -166,30 +223,36 @@
 
    <component>
       <key>org.exoplatform.services.jcr.RepositoryService</key>
-      <type>org.exoplatform.services.jcr.impl.RepositoryServiceImpl</type>
+      <type>org.exoplatform.services.jcr.impl.RepositoryServiceImpl
+      </type>
       <component-plugins>
          <component-plugin>
             <name>add.nodeType</name>
             <set-method>addPlugin</set-method>
-            <type>org.exoplatform.services.jcr.impl.AddNodeTypePlugin</type>
+            <type>org.exoplatform.services.jcr.impl.AddNodeTypePlugin
+            </type>
             <init-params>
                <values-param>
                   <name>autoCreatedInNewRepository</name>
-                  <description>Node types configuration file</description>
+                  <description>Node types configuration file
+                  </description>
                   <value>jar:/conf/ext-nodetypes-config.xml</value>
                   <value>jar:/conf/code-assitant-nodetypes.xml</value>
+                  <value>jar:/conf/vfs-node-types.xml</value>
                </values-param>
             </init-params>
          </component-plugin>
          <component-plugin>
             <name>add.namespaces</name>
             <set-method>addPlugin</set-method>
-            <type>org.exoplatform.services.jcr.impl.AddNamespacesPlugin</type>
+            <type>org.exoplatform.services.jcr.impl.AddNamespacesPlugin
+            </type>
             <init-params>
                <properties-param>
                   <name>namespaces</name>
                   <property name="dc" value="http://purl.org/dc/elements/1.1/" />
                   <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />
+                  <property name="vfs" value="http://exoplatform.org/vfs" />
                </properties-param>
             </init-params>
          </component-plugin>
@@ -197,8 +260,10 @@
    </component>
 
    <component>
-      <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
-      <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl</type>
+      <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration
+      </key>
+      <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl
+      </type>
       <init-params>
          <value-param>
             <name>conf-path</name>
@@ -208,13 +273,15 @@
       </init-params>
    </component>
 
-   
+
    <component>
-      <type>org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher</type>
+      <type>org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
+      <type>org.exoplatform.services.jcr.ext.registry.RegistryService
+      </type>
       <init-params>
          <properties-param>
             <name>locations</name>
@@ -224,17 +291,20 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
+      <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService
+      </type>
    </component>
 
 
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.resource.NodeRepresentationService</type>
+      <type>org.exoplatform.services.jcr.ext.resource.NodeRepresentationService
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.resource.XMLViewNodeRepresentationRenderer</type>
+      <type>org.exoplatform.services.jcr.ext.resource.XMLViewNodeRepresentationRenderer
+      </type>
    </component>
 
    <component>
@@ -242,40 +312,49 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService</type>
+      <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService
+      </type>
    </component>
 
    <component>
       <key>org.exoplatform.services.security.Authenticator</key>
-      <type>org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl</type>
+      <type>org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog</type>
+      <type>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog
+      </type>
    </component>
 
 
    <component>
-      <type>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog</type>
+      <type>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog
+      </type>
       <component-plugins>
          <component-plugin>
             <name>addActions</name>
             <set-method>addPlugin</set-method>
-            <type>org.exoplatform.services.jcr.impl.ext.action.AddActionsPlugin</type>
+            <type>org.exoplatform.services.jcr.impl.ext.action.AddActionsPlugin
+            </type>
             <description>add actions plugin</description>
             <init-params>
                <object-param>
                   <name>actions</name>
-                  <object type="org.exoplatform.services.jcr.impl.ext.action.AddActionsPlugin$ActionsConfig">
+                  <object
+                     type="org.exoplatform.services.jcr.impl.ext.action.AddActionsPlugin$ActionsConfig">
                      <field name="actions">
                         <collection type="java.util.ArrayList">
                            <value>
-                              <object type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
+                              <object
+                                 type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
                                  <field name="eventTypes">
-                                    <string>addProperty,changeProperty</string>
+                                    <string>addProperty,changeProperty
+                                    </string>
                                  </field>
                                  <field name="path">
-                                    <string>/MetaDataActionTest/testAddContent</string>
+                                    <string>/MetaDataActionTest/testAddContent
+                                    </string>
                                  </field>
                                  <field name="isDeep">
                                     <boolean>true</boolean>
@@ -284,28 +363,33 @@
                                     <string>nt:resource</string>
                                  </field>
                                  <field name="actionClassName">
-                                    <string>org.exoplatform.services.jcr.ext.metadata.AddMetadataAction</string>
+                                    <string>org.exoplatform.services.jcr.ext.metadata.AddMetadataAction
+                                    </string>
                                  </field>
                               </object>
                            </value>
                            <value>
-                              <object type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
+                              <object
+                                 type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
                                  <field name="eventTypes">
                                     <string>addNode</string>
                                  </field>
                                  <field name="path">
-                                    <string>/MetaDataActionTest/testSetMetaData</string>
+                                    <string>/MetaDataActionTest/testSetMetaData
+                                    </string>
                                  </field>
                                  <field name="isDeep">
                                     <boolean>false</boolean>
                                  </field>
                                  <field name="actionClassName">
-                                    <string>org.exoplatform.services.jcr.ext.metadata.SetDCMetadataAction</string>
+                                    <string>org.exoplatform.services.jcr.ext.metadata.SetDCMetadataAction
+                                    </string>
                                  </field>
                               </object>
                            </value>
                            <value>
-                              <object type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
+                              <object
+                                 type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
                                  <field name="eventTypes">
                                     <string>addNode</string>
                                  </field>
@@ -316,7 +400,8 @@
                                     <boolean>true</boolean>
                                  </field>
                                  <field name="actionClassName">
-                                    <string>org.exoplatform.services.jcr.ext.owner.AddOwneableAction</string>
+                                    <string>org.exoplatform.services.jcr.ext.owner.AddOwneableAction
+                                    </string>
                                  </field>
                               </object>
                            </value>
@@ -331,29 +416,21 @@
 
 
 
-   <!-- external-component-plugins>
-      <target-component>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</target-component>
-      <component-plugin>
-         <name>add groovy repo</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.jcr.ext.script.groovy.GroovyScriptAddRepoPlugin</type>
-         <init-params>
-            <properties-param>
-               <name>repo1</name>
-               <property name="repository" value="db1" />
-               <property name="workspace" value="ws" />
-               <property name="path" value="/repo" />
-            </properties-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins-->
+   <!-- external-component-plugins> <target-component>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</target-component> 
+      <component-plugin> <name>add groovy repo</name> <set-method>addPlugin</set-method> 
+      <type>org.exoplatform.services.jcr.ext.script.groovy.GroovyScriptAddRepoPlugin</type> 
+      <init-params> <properties-param> <name>repo1</name> <property name="repository" 
+      value="db1" /> <property name="workspace" value="ws" /> <property name="path" 
+      value="/repo" /> </properties-param> </init-params> </component-plugin> </external-component-plugins -->
 
    <external-component-plugins>
-      <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
+      <target-component>org.exoplatform.services.naming.InitialContextInitializer
+      </target-component>
       <component-plugin>
          <name>bind.datasource</name>
          <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.naming.BindReferencePlugin</type>
+         <type>org.exoplatform.services.naming.BindReferencePlugin
+         </type>
          <init-params>
             <value-param>
                <name>bind-name</name>
@@ -365,13 +442,15 @@
             </value-param>
             <value-param>
                <name>factory</name>
-               <value>org.apache.commons.dbcp.BasicDataSourceFactory</value>
+               <value>org.apache.commons.dbcp.BasicDataSourceFactory
+               </value>
             </value-param>
             <properties-param>
                <name>ref-addresses</name>
                <description>ref-addresses</description>
                <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-               <property name="url" value="jdbc:hsqldb:file:target/temp/data/portal" />
+               <property name="url"
+                  value="jdbc:hsqldb:file:target/temp/data/portal" />
                <property name="username" value="sa" />
                <property name="password" value="" />
             </properties-param>

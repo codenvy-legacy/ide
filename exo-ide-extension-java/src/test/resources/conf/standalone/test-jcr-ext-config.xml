@@ -31,7 +31,7 @@
                   <properties>
                      <property name="source-name" value="jdbcjcr" />
                      <property name="dialect" value="hsqldb" />
-                     <property name="multi-db" value="true" />
+                     <property name="multi-db" value="false" />
                      <property name="update-storage" value="true" />
                      <property name="max-buffer-size" value="200k" />
                      <property name="swap-directory" value="target/temp/swap/ws" />

@@ -66,11 +66,11 @@ public class JavaCodeValidator extends CodeValidator
    /**
     * Find all classes in project by using rest service with url "find-by-project" for file with relPath
     */
-   public void loadClassesFromProject(String fileRelPath)
+   public void loadClassesFromProject(String fileId, String projectId)
    {
       if (service != null && errorHandler != null)
       {
-         service.findClassesByProject(fileRelPath, new AsyncRequestCallback<List<Token>>()
+         service.findClassesByProject(fileId, projectId, new AsyncRequestCallback<List<Token>>()
          {
             @Override
             protected void onSuccess(List<Token> result)

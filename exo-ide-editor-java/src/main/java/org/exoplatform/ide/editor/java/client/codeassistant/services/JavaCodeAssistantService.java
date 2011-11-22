@@ -18,18 +18,18 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import com.google.gwt.http.client.RequestBuilder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of {@link CodeAssistantService}
@@ -45,7 +45,7 @@ public class JavaCodeAssistantService extends CodeAssistantService
 
    private static JavaCodeAssistantService instance;
    
-	private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-by-project/";
+	private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-in-package";
    
    public JavaCodeAssistantService(String restServiceContext, Loader loader)
    {
@@ -68,12 +68,12 @@ public class JavaCodeAssistantService extends CodeAssistantService
     * @param fileRelPath for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public void findClassesByProject(String fileRelPath, AsyncRequestCallback<List<Token>> callback)
+   public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<List<Token>> callback)
    {
-      if (fileRelPath != null)
+      if (fileId != null)
       {
          String url = restServiceContext + FIND_BY_PROJECT;
-   
+         url += "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="  + VirtualFileSystem.getInstance().getInfo().getId();
          List<Token> classes = new ArrayList<Token>();
          callback.setResult(classes);
    
@@ -81,7 +81,7 @@ public class JavaCodeAssistantService extends CodeAssistantService
    
          callback.setEventBus(IDE.eventBus());
          callback.setPayload(unmarshaller);
-            AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileRelPath).send(callback);
+            AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
       }
    }
    

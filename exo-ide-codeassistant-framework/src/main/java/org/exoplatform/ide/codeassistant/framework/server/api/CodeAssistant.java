@@ -20,8 +20,6 @@ package org.exoplatform.ide.codeassistant.framework.server.api;
 
 import java.util.List;
 
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistantStorage Feb 8, 2011 2:33:41 PM evgen $
@@ -135,15 +133,5 @@ public interface CodeAssistant
     * @throws CodeAssistantException
     */
    public String getClassDoc(String fqn) throws CodeAssistantException;
-
-   /**
-    * Find class names into the project
-    * @param baseUri
-    * @param location
-    * @return list of class names
-    * @throws CodeAssistantException 
-    * @throws JsonException 
-    */
-   public List<ShortTypeInfo> findClassesByProject(String baseUri, String location) throws CodeAssistantException;
 
 }
