@@ -72,14 +72,7 @@ public class PreviewGroovyTemplateControl extends SimpleControl implements IDECo
       if (MimeType.GROOVY_TEMPLATE.equals(event.getFile().getMimeType()))
       {
          setVisible(true);
-         if (event.getFile().isPersisted())
-         {
-            setEnabled(false);
-         }
-         else
-         {
-            setEnabled(true);
-         }
+         setEnabled(event.getFile().isPersisted());
       }
       else
       {

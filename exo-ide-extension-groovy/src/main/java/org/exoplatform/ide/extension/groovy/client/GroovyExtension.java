@@ -248,7 +248,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
          previewForm.setIcon(new Image(GroovyClientBundle.INSTANCE.preview()));
       }
 
-      previewForm.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + activeFile.getId() + "&vfsid="
+      previewForm.showPreview(configuration.getContext() + "/ide/gtmpl/render?id=" + activeFile.getId() + "&vfsid="
          + VirtualFileSystem.getInstance().getInfo().getId());
 
       if (previewOpened)
