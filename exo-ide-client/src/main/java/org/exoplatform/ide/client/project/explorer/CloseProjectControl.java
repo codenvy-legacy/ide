@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.project.CloseProjectEvent;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * 
@@ -49,8 +48,6 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
    private static final String TITLE = "Close";
 
    private static final String PROMPT = "Close Project";
-
-   private ProjectModel openedProject;
 
    /**
     * 
@@ -83,7 +80,6 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
-      openedProject = null;
       setEnabled(false);
    }
 
@@ -93,7 +89,6 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      openedProject = event.getProject();
       setEnabled(true);
    }
 

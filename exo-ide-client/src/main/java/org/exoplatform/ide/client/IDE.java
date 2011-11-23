@@ -137,7 +137,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(ideForm, controlsRegistration);
       
-      EditorController editorController = new EditorController();
+      new EditorController();
 
       new LoginPresenter();
       
