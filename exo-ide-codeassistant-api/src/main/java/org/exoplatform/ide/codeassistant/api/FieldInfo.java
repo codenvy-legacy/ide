@@ -16,41 +16,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.framework.server.api;
+
+package org.exoplatform.ide.codeassistant.api;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class CodeAssistantException extends Exception
+public class FieldInfo extends Member
 {
-   /**
-    * 
-    */
-   private static final long serialVersionUID = -2413708596186268688L;
-  
-   private int status;
    
+   private String type;
    
-   public CodeAssistantException(int status, String message)
-   {
-      super(message);
-      this.setStatus(status);
-   }
-   
-   public int getStatus()
-   {
-      return status;
-   }
+   private String declaringClass; 
 
-   /**
-    * @param status the status to set
-    */
-   public void setStatus(int status)
+   public FieldInfo(String type, Integer modifiers, String name, String declaringClass)
    {
-      this.status = status;
+      super(modifiers, name);
+      this.type = type;
+      this.declaringClass = declaringClass;
    }
    
+   public FieldInfo()
+   {
+      
+   }
+   
+   public String getType()
+   {
+      return type;
+   }
+   
+   public void setType(String type)
+   {
+      this.type = type;
+   }
+   
+   public String getDeclaringClass()
+   {
+      return declaringClass;
+   }
+   
+   public void setDeclaringClass(String declaringClass)
+   {
+      this.declaringClass = declaringClass;
+   }
 
 }

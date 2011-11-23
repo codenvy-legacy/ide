@@ -16,37 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.framework.server.api;
+package org.exoplatform.ide.codeassistant.api;
 
 import java.util.List;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CodeAssistantStorage Feb 8, 2011 2:33:41 PM evgen $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version ${Id}:  Nov 22, 2011 11:58:42 AM evgen $
  *
  */
-public interface CodeAssistant
+public interface CodeAssistantStorage
 {
+   public enum JavaType {
+      CLASS, INTERFACE, ANNOTATION
+   }
+
+   public enum Where {
+      FQN("fqn"), CLASSNAME("className");
+
+      private final String where;
+
+      Where(String where)
+      {
+         this.where = where;
+      }
+
+      public String getWhere()
+      {
+         return where;
+      }
+   }
 
    /**
     * Returns the Class object associated with the class or interface with the given string name.
     * 
     * @param fqn the Full Qualified Name
-    * @return {@link TypeInfo} 
+    * @return {@link TypeInfo} or null if Class object not found.
     * @throws CodeAssistantException
     */
    TypeInfo getClassByFQN(String fqn) throws CodeAssistantException;
-
-   /**
-    * Returns the Class object associated with the class or interface with the given string name.
-    * (Search in project)
-    * 
-    * @param fqn the Full Qualified Name
-    * @param location of file
-    * @return {@link TypeInfo}
-    * @throws CodeAssistantException
-    */
-   TypeInfo getClassByFQNFromProject(String fqn, String location) throws CodeAssistantException;
 
    /**
     * Returns the Class object associated with the class or interface with the given string name.
@@ -56,18 +64,6 @@ public interface CodeAssistant
     * @throws CodeAssistantException
     */
    List<ShortTypeInfo> findFQNsByClassName(String className) throws CodeAssistantException;
-
-   /**
-    * Returns the Class object associated with the class or interface with the given string name.
-    * (Search in project)
-    * 
-    * @param className
-    * @param location of file
-    * @return {@link ShortTypeInfo}
-    * @throws CodeAssistantException
-    */
-   List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String location)
-      throws CodeAssistantException;
 
    /**
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)
@@ -87,34 +83,9 @@ public interface CodeAssistant
     *  }
     * 
     * @param prefix the string for matching FQNs
-    * @param where the string that indicate where find (must be "className" or "fqn")
+    * @param where the string that indicate where find (must be "className" or "fqn"), if null search do for class names
     */
-   List<ShortTypeInfo> findFQNsByPrefix(String prefix, String where) throws CodeAssistantException;
-
-   /**
-    * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)<br>
-    * Warning: <b>This method search only in class names!</b>
-    * <br>
-    * Example :
-    * if prefix = "java.util.c"
-    * set must content:
-    * <pre>
-    *  {
-    *   java.util.Comparator<T>
-    *   java.util.Calendar
-    *   java.util.Collection<E>
-    *   java.util.Collections
-    *   java.util.ConcurrentModificationException
-    *   java.util.Currency
-    *   java.util.concurrent
-    *   java.util.concurrent.atomic
-    *   java.util.concurrent.locks
-    *  }
-    * </pre>
-    * @param prefix the string for matching FQNs
-    * @param where the string that indicate where find (must be "className" or "fqn")
-    */
-   List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, String location) throws CodeAssistantException;
+   List<ShortTypeInfo> findFQNsByPrefix(String prefix, Where where) throws CodeAssistantException;
 
    /**
     * Find all classes or annotations or interfaces
@@ -124,7 +95,7 @@ public interface CodeAssistant
     * @return Returns set of FQNs matched to class type
     * @throws CodeAssistantException
     */
-   public ShortTypeInfo[] findByType(String type, String prefix) throws CodeAssistantException;
+   List<ShortTypeInfo> findByType(JavaType type, String prefix) throws CodeAssistantException;
 
    /**
     * Find JavaDoc for FQN
@@ -133,5 +104,4 @@ public interface CodeAssistant
     * @throws CodeAssistantException
     */
    public String getClassDoc(String fqn) throws CodeAssistantException;
-
 }

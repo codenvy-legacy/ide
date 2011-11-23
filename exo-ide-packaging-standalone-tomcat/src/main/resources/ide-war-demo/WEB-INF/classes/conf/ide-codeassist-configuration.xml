@@ -6,10 +6,17 @@
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+   <component>
+      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
+   </component>
 
    <component>
-      <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
    </component>
 
    <component>
@@ -17,7 +24,7 @@
       <init-params>
          <object-param>
             <name>classinfostrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+            <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig">
                <field name="wsName">
                   <string>production</string>
                </field>
@@ -27,7 +34,7 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
                            <field name="jarPath">
                               <string>${jre.lib}${file.separator}rt.jar</string>
                            </field>
@@ -44,7 +51,7 @@
                         </object>
                      </value>
                      <!--value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
                            <field name="jarPath">
                               <string>
                                  ../lib/jcr-1.0.jar;
@@ -88,7 +95,7 @@
       <init-params>
          <object-param>
             <name>docstrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+            <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig">
                <field name="wsName">
                   <string>production</string>
                </field>
@@ -98,7 +105,7 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
                            <field name="jarPath">
                               <string>${javasrc}</string>
                            </field>
@@ -115,7 +122,7 @@
                         </object>
                      </value>
                      <!--value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
                            <field name="jarPath">
                               <string>
                                  ../lib-docs/jcr-1.0-sources.jar;

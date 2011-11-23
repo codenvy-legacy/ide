@@ -24,8 +24,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.api.TypeInfo;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -122,15 +122,15 @@ public class RestCodeAssistantJavaTest extends Base
    }
 
    @Test
+   @SuppressWarnings("unchecked")
    public void testFindByType() throws Exception
    {
       String type = "class";
       ContainerResponse cres =
          launcher.service("GET", "/ide/code-assistant/java/find-by-type/" + type, "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
-      assertTrue(cres.getEntity().getClass().isArray());
-      ShortTypeInfo[] types = (ShortTypeInfo[])cres.getEntity();
-      assertEquals(10, types.length);
+      List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
+      assertEquals(10, types.size());
    }
 
    @Test

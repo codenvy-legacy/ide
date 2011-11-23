@@ -22,8 +22,8 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
-import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.api.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
 import org.exoplatform.ide.extension.groovy.server.Base;
@@ -51,7 +51,6 @@ import javax.jcr.version.VersionException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
 
 /**
  * Created by The eXo Platform SAS.
@@ -97,8 +96,9 @@ public class CodeAssitantTest extends Base
    public void getClassByFqn() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/class-description?fqn=" + Address.class.getCanonicalName(), "",
-            null, null, null, null);
+         launcher.service("GET",
+            "/ide/code-assistant/groovy/class-description?fqn=" + Address.class.getCanonicalName(), "", null, null,
+            null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       TypeInfo cd = (TypeInfo)cres.getEntity();
       Assert.assertEquals(methods, cd.getMethods().length);
@@ -112,7 +112,8 @@ public class CodeAssitantTest extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/services/" + SERVICE_NAME);
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/class-description?fqn=PHelloTest", "", headers, null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/class-description?fqn=PHelloTest", "", headers, null,
+            null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       TypeInfo cd = (TypeInfo)cres.getEntity();
       Assert.assertEquals("PHelloTest", cd.getName());
@@ -132,8 +133,8 @@ public class CodeAssitantTest extends Base
    public void findClassByName() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find?class=" + Address.class.getSimpleName(), "", null, null,
-            null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find?class=" + Address.class.getSimpleName(), "", null,
+            null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(1, types.size());
@@ -160,8 +161,8 @@ public class CodeAssitantTest extends Base
    {
       String pkg = Address.class.getPackage().getName();
       ContainerResponse cres =
-         launcher
-            .service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + pkg + "?where=fqn", "", null, null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + pkg + "?where=fqn", "", null, null,
+            null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       //      assertTrue(cres.getEntity().getClass().isArray());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
@@ -177,15 +178,15 @@ public class CodeAssitantTest extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/services/" + SERVICE_NAME);
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className", "", headers, null,
-            null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className", "", headers,
+            null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       //      assertTrue(cres.getEntity().getClass().isArray());
       @SuppressWarnings("unchecked")
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(2, types.size());
    }
-   
+
    @Test
    @Ignore
    public void findRestServiceClassByPartName() throws Exception
@@ -194,8 +195,8 @@ public class CodeAssitantTest extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/data/" + POGO);
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className", "", headers, null,
-            null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className", "", headers,
+            null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       //      assertTrue(cres.getEntity().getClass().isArray());
       @SuppressWarnings("unchecked")
@@ -210,9 +211,8 @@ public class CodeAssitantTest extends Base
       ContainerResponse cres =
          launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
-      Assert.assertTrue(cres.getEntity().getClass().isArray());
-      ShortTypeInfo[] types = (ShortTypeInfo[])cres.getEntity();
-      Assert.assertEquals(2, types.length);
+      List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
+      Assert.assertEquals(2, types.size());
    }
 
    @Test
@@ -220,11 +220,11 @@ public class CodeAssitantTest extends Base
    {
       String type = "ANNOTATION";
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type + "?prefix=Fo", "", null, null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type + "?prefix=Fo", "", null, null,
+            null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
-      Assert.assertTrue(cres.getEntity().getClass().isArray());
-      ShortTypeInfo[] types = (ShortTypeInfo[])cres.getEntity();
-      Assert.assertEquals(1, types.length);
+      List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
+      Assert.assertEquals(1, types.size());
    }
 
    @Test
@@ -232,8 +232,8 @@ public class CodeAssitantTest extends Base
    {
       Assert.assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/java.math.BigDecimal/jcr:content"));
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/class-doc?fqn=" + BigDecimal.class.getCanonicalName(), "", null,
-            null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/class-doc?fqn=" + BigDecimal.class.getCanonicalName(), "",
+            null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       Assert.assertNotNull(cres.getEntity());
       String doc = (String)cres.getEntity();

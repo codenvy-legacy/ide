@@ -23,9 +23,6 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -40,7 +37,7 @@ public class GroovyScriptServiceApplication extends Application
 
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public GroovyScriptServiceApplication(ThreadLocalSessionProviderService sessionProvider, RepositoryService repositoryService)
+   public GroovyScriptServiceApplication()
    {
       classes.add(GroovyTemplateService.class);
       classes.add(RestCodeAssistantGroovy.class);

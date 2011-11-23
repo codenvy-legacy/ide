@@ -16,51 +16,59 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.exoplatform.ide.codeassistant.framework.server.extractors;
 
-package org.exoplatform.ide.codeassistant.framework.server.api;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
-public class FieldInfo extends Member
+ *
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: Dec 20, 2010 11:22:58 AM evgen $
+ *
+ */
+public class JarEntry
 {
-   
-   private String type;
-   
-   private String declaringClass; 
 
-   public FieldInfo(String type, Integer modifiers, String name, String declaringClass)
+   private String jarPath;
+
+   private List<String> includePkg = new ArrayList<String>();
+
+   public JarEntry()
    {
-      super(modifiers, name);
-      this.type = type;
-      this.declaringClass = declaringClass;
    }
-   
-   public FieldInfo()
+
+   /**
+    * @return the jarPath
+    */
+   public String getJarPath()
    {
-      
+      return jarPath;
    }
-   
-   public String getType()
+
+   /**
+    * @param jarPath the jarPath to set
+    */
+   public void setJarPath(String jarPath)
    {
-      return type;
+      this.jarPath = jarPath;
    }
-   
-   public void setType(String type)
+
+   /**
+    * @return the includePkj
+    */
+   public List<String> getIncludePkgs()
    {
-      this.type = type;
+      return includePkg;
    }
-   
-   public String getDeclaringClass()
+
+   /**
+    * @param includePkg the includePkj to set
+    */
+   public void setIncludePkg(String includePkg)
    {
-      return declaringClass;
-   }
-   
-   public void setDeclaringClass(String declaringClass)
-   {
-      this.declaringClass = declaringClass;
+      this.includePkg.add(includePkg);
    }
 
 }

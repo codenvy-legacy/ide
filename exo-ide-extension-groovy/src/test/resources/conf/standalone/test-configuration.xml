@@ -27,19 +27,19 @@
          <properties-param>
             <name>properties</name>
             <description>Log4J properties</description>
-            <property name="log4j.rootLogger" value="INFO, stdout, file" />
+            <property name="log4j.rootLogger" value="INFO, stdout, file"/>
 
-            <property name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender" />
-            <property name="log4j.appender.stdout.threshold" value="DEBUG" />
+            <property name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender"/>
+            <property name="log4j.appender.stdout.threshold" value="DEBUG"/>
 
-            <property name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout" />
-            <property name="log4j.appender.stdout.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
+            <property name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout"/>
+            <property name="log4j.appender.stdout.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n"/>
 
-            <property name="log4j.appender.file" value="org.apache.log4j.FileAppender" />
-            <property name="log4j.appender.file.File" value="target/jcr.log" />
+            <property name="log4j.appender.file" value="org.apache.log4j.FileAppender"/>
+            <property name="log4j.appender.file.File" value="target/jcr.log"/>
 
-            <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
-            <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
+            <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout"/>
+            <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n"/>
 
             <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ --><!--
             
@@ -111,18 +111,22 @@
    </component>
 
    <component>
-      <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
+      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>
       <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
    </component>
-   
-      <component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
+   </component>
+
+   <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
    </component>
 
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
       <init-params>
@@ -165,7 +169,7 @@
       <init-params>
          <object-param>
             <name>classinfostrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+            <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig">
                <field name="wsName">
                   <string>ws</string>
                </field>
@@ -175,7 +179,7 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
                            <field name="jarPath">
                               <string>${java.src}</string>
                            </field>
@@ -200,7 +204,7 @@
       <init-params>
          <object-param>
             <name>docstrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+            <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig">
                <field name="wsName">
                   <string>ws</string>
                </field>
@@ -210,7 +214,7 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
                            <field name="jarPath">
                               <string>${java.src}</string>
                            </field>
@@ -258,8 +262,8 @@
             <init-params>
                <properties-param>
                   <name>namespaces</name>
-                  <property name="dc" value="http://purl.org/dc/elements/1.1/" />
-                  <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />
+                  <property name="dc" value="http://purl.org/dc/elements/1.1/"/>
+                  <property name="exoide" value="http://exoplatform.org/ide/1.1.x/"/>
                </properties-param>
             </init-params>
          </component-plugin>
@@ -292,7 +296,7 @@
       <init-params>
          <properties-param>
             <name>locations</name>
-            <property name="db1" value="ws" />
+            <property name="db1" value="ws"/>
          </properties-param>
       </init-params>
    </component>
@@ -346,15 +350,15 @@
             <properties-param>
                <name>ref-addresses</name>
                <description>ref-addresses</description>
-               <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-               <property name="url" value="jdbc:hsqldb:file:target/temp/data/portal" />
-               <property name="username" value="sa" />
-               <property name="password" value="" />
+               <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+               <property name="url" value="jdbc:hsqldb:file:target/temp/data/portal"/>
+               <property name="username" value="sa"/>
+               <property name="password" value=""/>
             </properties-param>
          </init-params>
       </component-plugin>
    </external-component-plugins>
-   
+
    <external-component-plugins>
       <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
       <component-plugin>
@@ -377,20 +381,20 @@
          <init-params>
             <properties-param>
                <name>namespaces</name>
-               <property name="dc" value="http://purl.org/dc/elements/1.1/" />
-               <property name="gtn" value="http://www.gatein.org/jcr/gatein/1.0/" />
-               <property name="mop" value="http://www.gatein.org/jcr/mop/1.0/" />
-               <property name="app" value="http://www.gatein.org/jcr/application-registry/1.0/" />
-               <property name="tkn" value="http://www.gatein.org/jcr/token/1.0/" />
-               <property name="wsrp" value="http://www.gatein.org/jcr/wsrp/1.0/" />
-               <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/" />
-               <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/" />
-               <property name="exoide" value="http://exoplatform.org/ide/1.2.x/" />
-               <property name="vfs" value="http://exoplatform.org/vfs" />
+               <property name="dc" value="http://purl.org/dc/elements/1.1/"/>
+               <property name="gtn" value="http://www.gatein.org/jcr/gatein/1.0/"/>
+               <property name="mop" value="http://www.gatein.org/jcr/mop/1.0/"/>
+               <property name="app" value="http://www.gatein.org/jcr/application-registry/1.0/"/>
+               <property name="tkn" value="http://www.gatein.org/jcr/token/1.0/"/>
+               <property name="wsrp" value="http://www.gatein.org/jcr/wsrp/1.0/"/>
+               <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/"/>
+               <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/"/>
+               <property name="exoide" value="http://exoplatform.org/ide/1.2.x/"/>
+               <property name="vfs" value="http://exoplatform.org/vfs"/>
             </properties-param>
          </init-params>
       </component-plugin>
    </external-component-plugins>
-   
+
 </configuration>
 

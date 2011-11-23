@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -11,6 +12,10 @@
    <packaging>jar</packaging>
    <name>eXo IDE :: CodeAssitant : Framework</name>
    <dependencies>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-api</artifactId>
+      </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
@@ -82,12 +87,8 @@
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
-      </dependency><!--
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-test</artifactId>
-      </dependency>
-      -->
+      </dependency><!-- <dependency> <groupId>org.everrest</groupId> <artifactId>everrest-test</artifactId> 
+         </dependency> -->
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-groovy</artifactId>

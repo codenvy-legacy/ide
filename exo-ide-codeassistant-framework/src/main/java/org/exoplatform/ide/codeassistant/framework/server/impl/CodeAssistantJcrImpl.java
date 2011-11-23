@@ -18,8 +18,23 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.impl;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.codeassistant.api.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage;
+import org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage;
+import org.exoplatform.ide.codeassistant.framework.server.utils.JcrUtils;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,47 +45,27 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
-import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.extractors.GroovyClassNamesExtractor;
-import org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage;
-import org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage;
-import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.ide.codeassistant.framework.server.utils.JcrUtils;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistantStorageImpl Feb 8, 2011 2:22:22 PM evgen $
  *
  */
-public class CodeAssistantJcrImpl implements CodeAssistant
+public class CodeAssistantJcrImpl implements CodeAssistantStorage
 {
    private final RepositoryService repositoryService;
 
    private final ThreadLocalSessionProviderService sessionProviderService;
 
    private final String wsClassStorage;
-   
+
    private final String wsDocStorage;
 
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(CodeAssistantJcrImpl.class);
 
    public CodeAssistantJcrImpl(RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService, ClassInfoStorage classInfoStrorage, DocStorage docStorage)
+      ThreadLocalSessionProviderService sessionProviderService, ClassInfoStorage classInfoStrorage,
+      DocStorage docStorage)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
@@ -79,7 +74,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#getClassByFQN(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getClassByFQN(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
    public TypeInfo getClassByFQN(String fqn) throws CodeAssistantException
@@ -129,59 +124,59 @@ public class CodeAssistantJcrImpl implements CodeAssistant
 
    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#getClassByFQNFromProject(java.lang.String, java.lang.String, java.lang.String)
-    */
-   @Override
-   public TypeInfo getClassByFQNFromProject(String fqn, String location) throws CodeAssistantException
-   {
-      try
-      {
-         if (location != null)
-         {
-            DependentResources dependentResources =
-               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
-            if (dependentResources != null)
-            {
-               TypeInfo classInfo =
-                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassInfo(fqn,
-                     dependentResources);
-               if (classInfo == null)
-                  throw new CodeAssistantException(404, "Class info for " + fqn + " not found");
-               return classInfo;
-            }
+   //   /**
+   //    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getClassByFQNFromProject(java.lang.String, java.lang.String, java.lang.String)
+   //    */
+   //   @Override
+   //   public TypeInfo getClassByFQNFromProject(String fqn, String location) throws CodeAssistantException
+   //   {
+   //      try
+   //      {
+   //         if (location != null)
+   //         {
+   //            DependentResources dependentResources =
+   //               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
+   //            if (dependentResources != null)
+   //            {
+   //               TypeInfo classInfo =
+   //                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassInfo(fqn,
+   //                     dependentResources);
+   //               if (classInfo == null)
+   //                  throw new CodeAssistantException(404, "Class info for " + fqn + " not found");
+   //               return classInfo;
+   //            }
+   //
+   //         }
+   //      }
+   //      catch (MalformedURLException e)
+   //      {
+   //         if (LOG.isDebugEnabled())
+   //            e.printStackTrace();
+   //         throw new CodeAssistantException(500, e.getMessage());
+   //      }
+   //      catch (URISyntaxException e)
+   //      {
+   //         if (LOG.isDebugEnabled())
+   //            e.printStackTrace();
+   //         throw new CodeAssistantException(500, e.getMessage());
+   //      }
+   //      catch (RepositoryException e)
+   //      {
+   //         if (LOG.isDebugEnabled())
+   //            e.printStackTrace();
+   //         throw new CodeAssistantException(404, e.getMessage());
+   //      }
+   //      catch (RepositoryConfigurationException e)
+   //      {
+   //         if (LOG.isDebugEnabled())
+   //            e.printStackTrace();
+   //         throw new CodeAssistantException(404, e.getMessage());
+   //      }
+   //      return null;
+   //   }
 
-         }
-      }
-      catch (MalformedURLException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(500, e.getMessage());
-      }
-      catch (URISyntaxException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(500, e.getMessage());
-      }
-      catch (RepositoryException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(404, e.getMessage());
-      }
-      catch (RepositoryConfigurationException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(404, e.getMessage());
-      }
-      return null;
-   }
-
    /**
-    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#findFQNsByClassName(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByClassName(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> findFQNsByClassName(String className) throws CodeAssistantException
@@ -222,73 +217,70 @@ public class CodeAssistantJcrImpl implements CodeAssistant
 
    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#findFQNsByClassNameInProject(java.lang.String, java.lang.String, java.lang.String)
-    */
-   @Override
-   public List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String location)
-      throws CodeAssistantException
-   {
-      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-      try
-      {
-         if (location != null && !location.isEmpty())
-         {
-            DependentResources dependentResources =
-               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
-            if (dependentResources != null)
-            {
-               types =
-                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(className,
-                     dependentResources);
-            }
-         }
-         return types;
-      }
-      catch (MalformedURLException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(400, e.getMessage());
-      }
-      catch (URISyntaxException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(400, e.getMessage());
-      }
-      catch (RepositoryException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(404, e.getMessage());
-      }
-      catch (RepositoryConfigurationException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(404, e.getMessage());
-      }
-   }
+   //   /**
+   //    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByClassNameInProject(java.lang.String, java.lang.String, java.lang.String)
+   //    */
+   //   @Override
+   //   public List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String location)
+   //      throws CodeAssistantException
+   //   {
+   //      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+   //      try
+   //      {
+   //         if (location != null && !location.isEmpty())
+   //         {
+   //            DependentResources dependentResources =
+   //               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
+   //            if (dependentResources != null)
+   //            {
+   //               types =
+   //                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(className,
+   //                     dependentResources);
+   //            }
+   //         }
+   //         return types;
+   //      }
+   //      catch (MalformedURLException e)
+   //      {
+   //         if (LOG.isDebugEnabled())
+   //            e.printStackTrace();
+   //         throw new CodeAssistantException(400, e.getMessage());
+   //      }
+   //      catch (URISyntaxException e)
+   //      {
+   //         if (LOG.isDebugEnabled())
+   //            e.printStackTrace();
+   //         throw new CodeAssistantException(400, e.getMessage());
+   //      }
+   //      catch (RepositoryException e)
+   //      {
+   //         if (LOG.isDebugEnabled())
+   //            e.printStackTrace();
+   //         throw new CodeAssistantException(404, e.getMessage());
+   //      }
+   //      catch (RepositoryConfigurationException e)
+   //      {
+   //         if (LOG.isDebugEnabled())
+   //            e.printStackTrace();
+   //         throw new CodeAssistantException(404, e.getMessage());
+   //      }
+   //   }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public List<ShortTypeInfo> findFQNsByPrefix(String prefix, String where) throws CodeAssistantException
+   public List<ShortTypeInfo> findFQNsByPrefix(String prefix, Where where) throws CodeAssistantException
    {
 
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
       //by default search in className
-      if (where == null || "".equals(where))
+      if (where == null)
       {
-         where = "className";
+         where = Where.CLASSNAME;
       }
-      else if (!"className".equals(where) && !"fqn".equals(where))
-      {
-         throw new CodeAssistantException(400, "\"where\" parameter must be className or fqn");
-      }
-      String sql = "SELECT * FROM exoide:classDescription WHERE exoide:" + where + " LIKE '" + prefix + "%'";
+
+      String sql = "SELECT * FROM exoide:classDescription WHERE exoide:" + where.getWhere() + " LIKE '" + prefix + "%'";
       try
       {
          Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsClassStorage);
@@ -322,67 +314,66 @@ public class CodeAssistantJcrImpl implements CodeAssistant
       return types;
    }
 
+//   /**
+//    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String, java.lang.String)
+//    */
+//   @Override
+//   public List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, String location) throws CodeAssistantException
+//   {
+//      List<ShortTypeInfo> groovyClass = null;
+//      try
+//      {
+//         if (location != null && !location.isEmpty())
+//         {
+//
+//            DependentResources dependentResources =
+//               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
+//            if (dependentResources != null)
+//            {
+//               groovyClass =
+//                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(prefix,
+//                     dependentResources);
+//
+//            }
+//         }
+//      }
+//      catch (RepositoryException e)
+//      {
+//         if (LOG.isDebugEnabled())
+//            e.printStackTrace();
+//         //TODO:need fix status code
+//         throw new CodeAssistantException(404, e.getMessage());
+//      }
+//      catch (RepositoryConfigurationException e)
+//      {
+//         if (LOG.isDebugEnabled())
+//            e.printStackTrace();
+//         //TODO:need fix status code
+//         throw new CodeAssistantException(404, e.getMessage());
+//      }
+//      catch (MalformedURLException e)
+//      {
+//         if (LOG.isDebugEnabled())
+//            e.printStackTrace();
+//         throw new CodeAssistantException(400, e.getMessage());
+//      }
+//      catch (URISyntaxException e)
+//      {
+//         if (LOG.isDebugEnabled())
+//            e.printStackTrace();
+//         throw new CodeAssistantException(400, e.getMessage());
+//      }
+//
+//      return groovyClass;
+//   }
+
    /**
-    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findByType(java.lang.String, java.lang.String)
     */
    @Override
-   public List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, String location)
-      throws CodeAssistantException
+   public List<ShortTypeInfo> findByType(JavaType type, String prefix) throws CodeAssistantException
    {
-      List<ShortTypeInfo> groovyClass = null;
-      try
-      {
-         if (location != null && !location.isEmpty())
-         {
-
-            DependentResources dependentResources =
-               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
-            if (dependentResources != null)
-            {
-               groovyClass =
-                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(prefix,
-                     dependentResources);
-
-            }
-         }
-      }
-      catch (RepositoryException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         //TODO:need fix status code
-         throw new CodeAssistantException(404, e.getMessage());
-      }
-      catch (RepositoryConfigurationException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         //TODO:need fix status code
-         throw new CodeAssistantException(404, e.getMessage());
-      }
-      catch (MalformedURLException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(400, e.getMessage());
-      }
-      catch (URISyntaxException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         throw new CodeAssistantException(400, e.getMessage());
-      }
-
-      return groovyClass;
-   }
-
-   /**
-    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#findByType(java.lang.String, java.lang.String)
-    */
-   @Override
-   public ShortTypeInfo[] findByType(String type, String prefix) throws CodeAssistantException
-   {
-      String sql = "SELECT * FROM exoide:classDescription WHERE exoide:type = '" + type.toUpperCase() + "'";
+      String sql = "SELECT * FROM exoide:classDescription WHERE exoide:type = '" + type.toString() + "'";
       if (prefix != null && !prefix.isEmpty())
       {
          sql += " AND exoide:className LIKE '" + prefix + "%'";
@@ -395,14 +386,13 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
 
-         ShortTypeInfo[] types = new ShortTypeInfo[(int)nodes.getSize()];
-         int i = 0;
+         List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>((int)nodes.getSize());
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types[i++] =
+            types.add(
                new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), node.getProperty(
-                  "exoide:fqn").getString(), node.getProperty("exoide:type").getString());
+                  "exoide:fqn").getString(), node.getProperty("exoide:type").getString()));
          }
          return types;
       }
@@ -423,7 +413,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#getClassDoc(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getClassDoc(java.lang.String)
     */
    @Override
    public String getClassDoc(String fqn) throws CodeAssistantException

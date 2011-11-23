@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.framework.server.api;
+package org.exoplatform.ide.codeassistant.framework.server.extractors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
  * @version $Id: Dec 20, 2010 11:52:57 AM evgen $
  *
  */
-public class GroovyAutocompletionConfig
+public class CodeAssistantConfig
 {
    private List<JarEntry> jars = new ArrayList<JarEntry>();
 

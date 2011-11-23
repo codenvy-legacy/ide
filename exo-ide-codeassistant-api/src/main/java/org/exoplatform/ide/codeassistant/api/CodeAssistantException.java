@@ -16,49 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.framework.server.api;
+package org.exoplatform.ide.codeassistant.api;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class MethodInfo extends RoutineInfo
+public class CodeAssistantException extends Exception
 {
-
-   private String genericReturnType;
+   /**
+    * 
+    */
+   private static final long serialVersionUID = -2413708596186268688L;
+  
+   private int status;
    
-   private String returnType;
-
-   public MethodInfo()
+   
+   public CodeAssistantException(int status, String message)
    {
-   }
-
-   public MethodInfo(Integer modifiers, String name, String[] genericExceptionTypes,
-      String genericParameterTypes,  String parameterTypes, String generic, String declaringClass, String genericReturnType, String returnType)
-   {
-      super(modifiers, name, genericExceptionTypes,genericParameterTypes,parameterTypes, generic, declaringClass);
-      this.genericReturnType = genericReturnType;
-      this.returnType = returnType;
-   }
-
-   public String getGenericReturnType()
-   {
-      return genericReturnType;
-   }
-
-   public void setGenericReturnType(String genericReturnType)
-   {
-      this.genericReturnType = genericReturnType;
+      super(message);
+      this.setStatus(status);
    }
    
-   public void setReturnType(String returnType)
+   public int getStatus()
    {
-      this.returnType = returnType;
+      return status;
+   }
+
+   /**
+    * @param status the status to set
+    */
+   public void setStatus(int status)
+   {
+      this.status = status;
    }
    
-   public String getReturnType()
-   {
-      return returnType;
-   }
+
 }

@@ -39,10 +39,10 @@ import javax.jcr.version.VersionException;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig;
-import org.exoplatform.ide.codeassistant.framework.server.api.JarEntry;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.api.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.ClassNamesExtractor;
+import org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig;
+import org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.framework.server.utils.JcrUtils;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -100,8 +100,8 @@ public class ClassInfoStorage implements Startable
       this.repositoryService = repositoryService;
       if (initParams != null)
       {
-         GroovyAutocompletionConfig config =
-            (GroovyAutocompletionConfig)initParams.getObjectParam("classinfostrorage.configuration").getObject();
+         CodeAssistantConfig config =
+            (CodeAssistantConfig)initParams.getObjectParam("classinfostrorage.configuration").getObject();
          this.wsName = config.getWsName();
          this.jars = config.getJars();
          this.runInThread = config.isRunInThread();

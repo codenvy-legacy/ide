@@ -16,59 +16,56 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.framework.server.api;
+package org.exoplatform.ide.codeassistant.api;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 20, 2010 11:22:58 AM evgen $
- *
- */
-public class JarEntry
+ * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+public class ShortTypeInfo extends Member
 {
-
-   private String jarPath;
-
-   private List<String> includePkg = new ArrayList<String>();
-
-   public JarEntry()
+   
+   private String qualifiedName;
+   
+   private String type;
+   
+   public ShortTypeInfo()
    {
    }
 
-   /**
-    * @return the jarPath
-    */
-   public String getJarPath()
+   public ShortTypeInfo(Integer modifiers, String name, String qualifiedName, String type)
    {
-      return jarPath;
+      super(modifiers, name);
+      this.qualifiedName = qualifiedName;
+      this.type = type;
    }
-
-   /**
-    * @param jarPath the jarPath to set
-    */
-   public void setJarPath(String jarPath)
+   
+   public void setQualifiedName(String qualifiedName)
    {
-      this.jarPath = jarPath;
+      this.qualifiedName = qualifiedName;
    }
-
-   /**
-    * @return the includePkj
-    */
-   public List<String> getIncludePkgs()
+   
+   public String getQualifiedName()
    {
-      return includePkg;
+      return qualifiedName;
    }
-
-   /**
-    * @param includePkg the includePkj to set
-    */
-   public void setIncludePkg(String includePkg)
+   
+   public String getType()
    {
-      this.includePkg.add(includePkg);
+      return type;
    }
+   
+   public void setType(String type)
+   {
+      this.type = type;
+   }
+   
+   
+   
+   
+   
+   
 
 }

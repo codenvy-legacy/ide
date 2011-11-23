@@ -12,6 +12,10 @@
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-codeassistant-framework</artifactId>
       </dependency>
       <dependency>

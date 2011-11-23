@@ -18,15 +18,19 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
-import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.api.CodeAssistant;
+import org.exoplatform.ide.codeassistant.api.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
+import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where;
+import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -37,11 +41,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-/**
- * Created by The eXo Platform SAS.
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
 /**
  * Service provide Autocomplete of source code is also known as code completion feature. 
  * In a source code editor autocomplete is greatly simplified by the regular structure 
@@ -57,14 +56,14 @@ import javax.ws.rs.core.UriInfo;
 public class RestCodeAssistantGroovy
 {
 
-   private final CodeAssistant codeAssistantStorage;
+   @Inject
+   private GroovyCodeAssistant codeAssistant;
 
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantGroovy.class);
 
-   public RestCodeAssistantGroovy(CodeAssistant codeAssistantStorage)
+   public RestCodeAssistantGroovy()
    {
-      this.codeAssistantStorage = codeAssistantStorage;
    }
 
    /**
@@ -73,28 +72,15 @@ public class RestCodeAssistantGroovy
     * @param fqn the Full Qualified Name
     * @return {@link TypeInfo} 
     * @throws CodeAssistantException
+    * @throws VirtualFileSystemException 
     */
    @GET
    @Path("/class-description")
    @Produces(MediaType.APPLICATION_JSON)
-   public TypeInfo getClassByFQN(@Context UriInfo uriInfo, @QueryParam("fqn") String fqn,
-      @HeaderParam("location") String location) throws CodeAssistantException
+   public TypeInfo getClassByFQN(@QueryParam("fqn") String fqn, @QueryParam("projectid") String projectId,
+      @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
-      TypeInfo info = codeAssistantStorage.getClassByFQN(fqn);
-      if (info == null)
-      {
-         info = codeAssistantStorage.getClassByFQNFromProject(fqn, location);
-         if (info != null)
-            return info;
-      }
-      else
-      {
-         return info;
-      }
-
-      if (LOG.isDebugEnabled())
-         LOG.error("Class info for " + fqn + " not found");
-      return null;
+      return codeAssistant.getClassByFQN(fqn, projectId, vfsId);
    }
 
    /**
@@ -119,20 +105,16 @@ public class RestCodeAssistantGroovy
     * }
     * @param className the string for matching FQNs 
     * @return
-    * @throws Exception 
+    * @throws VirtualFileSystemException 
     * */
    @GET
    @Path("/find")
    @Produces(MediaType.APPLICATION_JSON)
    public List<ShortTypeInfo> findFQNsByClassName(@Context UriInfo uriInfo, @QueryParam("class") String className,
-      @HeaderParam("location") String location) throws CodeAssistantException
+      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
    {
-      List<ShortTypeInfo> info = codeAssistantStorage.findFQNsByClassName(className);
-
-      info.addAll(codeAssistantStorage.findFQNsByClassNameInProject(className, location));
-
-      return info;
-
+      return codeAssistant.findFQNsByClassName(className, projectId, vfsId);
    }
 
    /**
@@ -154,22 +136,16 @@ public class RestCodeAssistantGroovy
     * 
     * @param prefix the string for matching FQNs
     * @param where the string that indicate where find (must be "className" or "fqn")
+    * @throws VirtualFileSystemException 
     */
    @GET
    @Path("/find-by-prefix/{prefix}")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findFQNsByPrefix(@Context UriInfo uriInfo, @PathParam("prefix") String prefix,
-      @QueryParam("where") String where, @HeaderParam("location") String location) throws CodeAssistantException
+   public List<ShortTypeInfo> findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where,
+      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
-      List<ShortTypeInfo> info = codeAssistantStorage.findFQNsByPrefix(prefix, where);
+      return codeAssistant.findFQNsByPrefix(prefix, Where.valueOf(where.toUpperCase()), prefix, vfsId);
 
-      if ("className".equals(where))
-      {
-         List<ShortTypeInfo> projectInfo = codeAssistantStorage.findFQNsByPrefixInProject(prefix, location);
-         if (projectInfo != null)
-            info.addAll(projectInfo);
-      }
-      return info;
    }
 
    /**
@@ -179,23 +155,25 @@ public class RestCodeAssistantGroovy
     * @param prefix optional parameter that matching first letter of type name
     * @return Returns set of FQNs matched to class type
     * @throws CodeAssistantException
+    * @throws VirtualFileSystemException 
     */
    @GET
    @Path("/find-by-type/{type}")
    @Produces(MediaType.APPLICATION_JSON)
-   public ShortTypeInfo[] findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix)
-      throws CodeAssistantException
+   public List<ShortTypeInfo> findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
+      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
-      return codeAssistantStorage.findByType(type, prefix);
+      return codeAssistant.findByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
 
    }
 
    @GET
    @Path("/class-doc")
    @Produces(MediaType.TEXT_HTML)
-   public String getClassDoc(@QueryParam("fqn") String fqn) throws CodeAssistantException
+   public String getClassDoc(@QueryParam("fqn") String fqn, @QueryParam("projectid") String projectId,
+      @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
       return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
-         + codeAssistantStorage.getClassDoc(fqn) + "</body></html>";
+         + codeAssistant.getClassDoc(fqn, projectId, vfsId) + "</body></html>";
    }
 }

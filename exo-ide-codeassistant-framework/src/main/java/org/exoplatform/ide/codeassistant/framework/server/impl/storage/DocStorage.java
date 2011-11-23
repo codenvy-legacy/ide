@@ -40,9 +40,9 @@ import org.codehaus.groovy.groovydoc.GroovyMethodDoc;
 import org.codehaus.groovy.groovydoc.GroovyParameter;
 import org.codehaus.groovy.groovydoc.GroovyRootDoc;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig;
-import org.exoplatform.ide.codeassistant.framework.server.api.JarEntry;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.DocExtractor;
+import org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig;
+import org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry;
 import org.exoplatform.ide.codeassistant.framework.server.utils.JcrUtils;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
@@ -82,8 +82,8 @@ public class DocStorage implements Startable
       this.sessionProviderService = sessionProviderService;
       if (initParams != null)
       {
-         GroovyAutocompletionConfig config =
-            (GroovyAutocompletionConfig)initParams.getObjectParam("docstrorage.configuration").getObject();
+         CodeAssistantConfig config =
+            (CodeAssistantConfig)initParams.getObjectParam("docstrorage.configuration").getObject();
          this.wsName = config.getWsName();
          this.jars = config.getJars();
          this.runInThread = config.isRunInThread();
