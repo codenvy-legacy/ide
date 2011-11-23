@@ -50,12 +50,15 @@ public class DialogAboutTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.waitOpened();
       //call heplp menu and submenu About
-      IDE.ABOUT.callHelpMenu();
-      IDE.ABOUT.callAboutMenu();
-
+      IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
+      
+      //check present logo
+      assertTrue(IDE.ABOUT.isLogoPresent());
+      
       //check all basic elements on About form
-      IDE.ABOUT.checkAboutWindow();
+      assertTrue(IDE.ABOUT.isCheckInfoAboutWindow());
+      
       //close dialogAboutMenu
-      IDE.ABOUT.closeDialogAbout();
+      IDE.ABOUT.closeDialogAboutForm();
    }
 }
