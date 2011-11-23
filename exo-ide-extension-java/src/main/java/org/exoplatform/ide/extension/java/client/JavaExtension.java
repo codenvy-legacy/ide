@@ -57,9 +57,6 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
 //    IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB));
 //    IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING));
 //    new CreateJavaProjectPresenter(eventBus);
-      
-      //new ProjectExplorerPresenter();
-      
    }
 
 }

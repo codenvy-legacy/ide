@@ -91,6 +91,7 @@ public class OpenFileByURLView extends ViewImpl implements org.exoplatform.ide.c
    public OpenFileByURLView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.url()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
 

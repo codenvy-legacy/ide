@@ -77,6 +77,7 @@ public class CreateProjectForm extends ViewImpl implements
    public CreateProjectForm()
    {
       super(ID, ViewType.MODAL, "Create Project", null, WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
       projectName.setName(PROJECT_NAME_ID);

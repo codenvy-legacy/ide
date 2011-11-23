@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
@@ -28,10 +25,6 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.navigation.control.DownloadFileCommand;
 import org.exoplatform.ide.client.navigation.control.DownloadZippedFolderCommand;
 import org.exoplatform.ide.client.navigation.control.RefreshBrowserControl;
@@ -43,7 +36,6 @@ import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTempl
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.navigation.handler.CreateFileCommandHandler;
-import org.exoplatform.ide.client.navigation.handler.CutCopyPasteItemsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.FileClosedHandler;
 import org.exoplatform.ide.client.navigation.handler.OpenFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
@@ -52,6 +44,7 @@ import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter;
+import org.exoplatform.ide.client.operation.cutcopy.CutCopyPasteItemsCommandHandler;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter;
 import org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter;
 import org.exoplatform.ide.client.operation.gotofolder.GoToFolderCommandHandler;
@@ -69,18 +62,14 @@ import org.exoplatform.ide.client.remote.OpenFileByURLPresenter;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class NavigationModule implements
-   InitializeServicesHandler, EditorFileClosedHandler, EditorFileOpenedHandler
+public class NavigationModule implements InitializeServicesHandler
 {
-
-   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    public NavigationModule()
    {
@@ -145,9 +134,6 @@ public class NavigationModule implements
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-
       new CreateFileCommandHandler();
       new CreateFileFromTemplatePresenter();
       new OpenFileCommandHandler();
@@ -174,24 +160,6 @@ public class NavigationModule implements
             .getVfsBaseUrl() + event.getApplicationConfiguration().getVfsId() : event.getApplicationConfiguration()
             .getVfsBaseUrl() + "/" + event.getApplicationConfiguration().getVfsId();
             new VirtualFileSystem(workspace);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
-    */
-   @Override
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
-    */
-   @Override
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
    }
 
 }

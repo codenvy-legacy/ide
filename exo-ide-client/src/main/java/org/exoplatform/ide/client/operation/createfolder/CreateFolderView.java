@@ -84,6 +84,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
    public CreateFolderView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       
       folderNameField.setName(NAME_FIELD);

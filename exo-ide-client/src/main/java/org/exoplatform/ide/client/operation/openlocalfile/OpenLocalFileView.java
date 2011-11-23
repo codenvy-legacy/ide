@@ -87,6 +87,7 @@ public class OpenLocalFileView extends ViewImpl implements
    public OpenLocalFileView()
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT, false);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
 

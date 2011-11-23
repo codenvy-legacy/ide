@@ -84,6 +84,7 @@ public class SaveAsTemplateView extends ViewImpl implements SaveAsTemplatePresen
    public SaveAsTemplateView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       
       nameField.setName(NAME_FIELD);

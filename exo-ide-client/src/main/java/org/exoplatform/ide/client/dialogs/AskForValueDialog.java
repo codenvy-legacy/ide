@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.client.dialogs;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,6 +28,12 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasText;
+
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * Created by The eXo Platform SAS .

@@ -87,6 +87,7 @@ public class SelectWorkspaceView extends ViewImpl implements
    public SelectWorkspaceView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
 

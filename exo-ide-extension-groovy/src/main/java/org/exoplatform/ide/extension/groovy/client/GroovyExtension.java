@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter;
-import org.exoplatform.ide.extension.groovy.client.controls.ConfigureBuildPathCommand;
+import org.exoplatform.ide.extension.groovy.client.controls.ConfigureClasspathCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.DeployGroovyCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.DeployGroovySandboxCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.PreviewGroovyTemplateControl;
@@ -112,7 +112,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(InitializeServicesEvent.TYPE, this));
 
       IDE.getInstance().addControl(new SetAutoloadCommand(), Docking.TOOLBAR_RIGHT);
-      IDE.getInstance().addControl(new ConfigureBuildPathCommand());
+      IDE.getInstance().addControl(new ConfigureClasspathCommand());
       IDE.getInstance().addControl(new ValidateGroovyCommand(), Docking.TOOLBAR_RIGHT);
       IDE.getInstance().addControl(new DeployGroovyCommand(), Docking.TOOLBAR_RIGHT);
       IDE.getInstance().addControl(new UndeployGroovyCommand(), Docking.TOOLBAR_RIGHT);

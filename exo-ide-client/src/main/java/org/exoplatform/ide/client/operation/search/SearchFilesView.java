@@ -110,6 +110,7 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
    public SearchFilesView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setHeight("100%");

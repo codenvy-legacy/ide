@@ -37,16 +37,8 @@ public class ProjectCreatedEvent extends GwtEvent<ProjectCreatedHandler>
     */
    public static final GwtEvent.Type<ProjectCreatedHandler> TYPE = new GwtEvent.Type<ProjectCreatedHandler>();
 
-   private ProjectModel project;
-   
-   /**
-    * 
-    */
-   public ProjectCreatedEvent()
-   {
-      this.project = null;
-   }
-   
+   private ProjectModel project;   
+
    public ProjectCreatedEvent(ProjectModel project)
    {
       this.project = project;

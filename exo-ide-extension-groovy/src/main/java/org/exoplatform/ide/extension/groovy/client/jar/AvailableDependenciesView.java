@@ -115,6 +115,7 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
    public AvailableDependenciesView()
    {
       super(ID, "popup", TITLE, new Image(GroovyClientBundle.INSTANCE.jarLibrary()), INITIAL_WIDTH, INITIAL_HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       
       jarsListGrid = new JarFilesListGrid();

@@ -68,6 +68,7 @@ public class DeleteItemView extends ViewImpl implements
    public DeleteItemView()
    {
       super(ID, ViewType.MODAL, TITLE, new Image(IDEImageBundle.INSTANCE.delete()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      setCloseOnEscape(true);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");

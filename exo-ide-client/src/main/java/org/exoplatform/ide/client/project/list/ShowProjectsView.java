@@ -77,6 +77,7 @@ public class ShowProjectsView extends ViewImpl implements org.exoplatform.ide.cl
    public ShowProjectsView()
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
 

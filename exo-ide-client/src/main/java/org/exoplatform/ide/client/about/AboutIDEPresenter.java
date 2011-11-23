@@ -18,16 +18,20 @@
  */
 package org.exoplatform.ide.client.about;
 
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
+import org.exoplatform.ide.client.Alert;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -61,6 +65,48 @@ public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHand
    @Override
    public void onShowAboutDialog(ShowAboutDialogEvent event)
    {
+//      Dialogs.getInstance().askForValue("ask for value title", "ask for value message", "this is default value", new StringValueReceivedHandler()
+//      {
+//         @Override
+//         public void stringValueReceived(String value)
+//         {
+//            Alert.alert("VALUE > " + value);
+//         }
+//      });
+      
+//      Dialogs.getInstance().ask("ask title", "ask message", new BooleanValueReceivedHandler()
+//      {
+//         @Override
+//         public void booleanValueReceived(Boolean value)
+//         {
+//            Alert.alert("VALUE > " + value);
+//         }
+//      });
+      
+      
+//      Dialogs.getInstance().showError("error title", "error message", new BooleanValueReceivedHandler()
+//      {
+//         @Override
+//         public void booleanValueReceived(Boolean value)
+//         {
+//            Alert.alert("VALUE > " + value);
+//         }
+//      });
+      
+      
+//      Dialogs.getInstance().showInfo("my title", "my message", new BooleanValueReceivedHandler()
+//      {
+//         @Override
+//         public void booleanValueReceived(Boolean value)
+//         {
+//            Alert.alert("VALUE > " + value);
+//         }
+//      });
+      
+//      if (true) {
+//         return;
+//      }
+      
       if (display == null)
       {
          display = GWT.create(Display.class);

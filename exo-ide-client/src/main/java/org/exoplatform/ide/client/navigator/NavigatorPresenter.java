@@ -18,12 +18,23 @@
  */
 package org.exoplatform.ide.client.navigator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -54,13 +65,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
-import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
-import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
+import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
+import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
+import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
 import org.exoplatform.ide.client.project.OpenProjectEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -79,23 +88,12 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Lock;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.

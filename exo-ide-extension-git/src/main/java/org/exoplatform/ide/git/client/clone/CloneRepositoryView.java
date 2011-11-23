@@ -77,6 +77,7 @@ public class CloneRepositoryView extends ViewImpl implements
    public CloneRepositoryView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.cloneTitle(), null, 480, 260);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
       workdirField.setName(WORKDIR_FIELD_ID);

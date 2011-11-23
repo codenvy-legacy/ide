@@ -40,6 +40,7 @@ public class SshKeyManagerView extends ViewImpl implements Display
    public SshKeyManagerView()
    {
       super(ID, ViewType.MODAL, "Ssh Keys", null, 333, 400);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
    

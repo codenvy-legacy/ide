@@ -384,8 +384,10 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
          IDE.fireEvent(new ExceptionThrownEvent(SELECT_ITEM_TO_RENAME));
          return;
       }
-      if (selectedItems.get(0) instanceof FileModel)
+      
+      if (selectedItems.get(0) instanceof FileModel) {
          openView();
+      }
    }
 
    /**

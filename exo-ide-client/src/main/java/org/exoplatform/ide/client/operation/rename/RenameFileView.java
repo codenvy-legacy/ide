@@ -90,6 +90,7 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
    public RenameFileView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       
       nameField.setName(RENAME_FIELD);

@@ -71,6 +71,7 @@ public class AskForValueView extends ViewImpl implements org.exoplatform.ide.cli
    public AskForValueView()
    {
       super(ID, "modal", "view title", new Image(IDEImageBundle.INSTANCE.about()), 450, 170);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
 

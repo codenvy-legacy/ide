@@ -40,8 +40,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.extension.groovy.client.GroovyExtension;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
@@ -49,6 +53,8 @@ import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntr
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathEvent;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathHandler;
+import org.exoplatform.ide.extension.groovy.client.event.ConfigureClasspathEvent;
+import org.exoplatform.ide.extension.groovy.client.event.ConfigureClasspathHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
@@ -74,7 +80,7 @@ import java.util.Set;
  *
  */
 public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSourceToBuildPathHandler,
-   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, VfsChangedHandler
+   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, VfsChangedHandler, ConfigureClasspathHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
    /**
     * 
@@ -158,6 +164,8 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    private Map<String, FileModel> openedFiles;
 
    private VirtualFileSystemInfo vfsInfo;
+   
+   private ProjectModel currentProject;
 
    /**
     * @param eventBus
@@ -170,6 +178,9 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(AddSourceToBuildPathEvent.TYPE, this);
+      IDE.addHandler(ConfigureClasspathEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);      
    }
 
    /**
@@ -252,14 +263,30 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     */
    public void onProjectCreated(ProjectCreatedEvent event)
    {
-      if (event.getProject() == null)
+      tryShowClasspathForProject(event.getProject());      
+   }
+   
+   @Override
+   public void onConfigureClasspath(ConfigureClasspathEvent event)
+   {
+      if (currentProject == null) {
+         Dialogs.getInstance().showError("The first you should open the project.");
+         return;
+      }
+      
+      tryShowClasspathForProject(currentProject);
+   }
+   
+   private void tryShowClasspathForProject(ProjectModel project) {
+      if (project == null)
       {
          getClassPathLocation(null);
          return;
       }
-      if (projectTypes.contains(event.getProject().getProjectType()))
+      
+      if (projectTypes.contains(project.getProjectType()))
       {
-         getClassPathLocation(event.getProject());
+         getClassPathLocation(project);
       }
    }
 
@@ -567,4 +594,17 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
       getFileContent(file);
    }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      currentProject = null;
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      currentProject = event.getProject();
+   }
+
 }

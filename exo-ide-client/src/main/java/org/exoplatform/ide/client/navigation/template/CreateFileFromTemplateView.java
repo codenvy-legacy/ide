@@ -76,6 +76,7 @@ public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFr
    public CreateFileFromTemplateView()
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.createFromTemplate()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
 

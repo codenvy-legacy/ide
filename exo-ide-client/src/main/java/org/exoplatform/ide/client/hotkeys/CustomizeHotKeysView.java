@@ -91,6 +91,7 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
    public CustomizeHotKeysView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.customizeHotKeys()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       messageLabel.getElement().setId(MSG_LABEL_ID);
    }

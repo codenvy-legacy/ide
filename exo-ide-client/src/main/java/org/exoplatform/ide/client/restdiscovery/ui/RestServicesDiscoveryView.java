@@ -125,6 +125,7 @@ public class RestServicesDiscoveryView extends ViewImpl implements
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()),
          INITIAL_WIDTH, INITIAL_HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
 

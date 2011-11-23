@@ -96,6 +96,7 @@ public class CustomizeToolbarView extends ViewImpl implements
    public CustomizeToolbarView()
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.customizeToolbar()), WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
 

@@ -22,7 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.IDEForm;
@@ -31,6 +30,7 @@ import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
+import org.exoplatform.ide.client.dialogs.IDEDialogs;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
@@ -110,17 +110,14 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       }
       
       Alert.init();
-      
-      new GWTDialogs();
-      
+
       /*
        * Registering Icons
        */
       IDEIconSet.init();
       
-      //new PopupEventLogger();
-      //new PopupWindowLogger();
-
+      new IDEDialogs();
+      
       /*
        * Initialize SeleniumTestsHelper
        */
@@ -173,7 +170,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).
        */
-      //disableTextSelectInternal(RootPanel.get().getElement(), true);
+      //disableTextSelectInternal(RootPanel.get().getElement(), true);      
    }
    
    /**

@@ -77,6 +77,7 @@ public class InitRepositoryView extends ViewImpl implements
    public InitRepositoryView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.createTitle(), null, 475, 195);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
       bareField.setName(BARE_FIELD_ID);

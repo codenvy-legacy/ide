@@ -79,6 +79,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
 
       new ToolbarBuilder(IDE.eventBus(), display.getToolbar(), display.getStatusbar());
       new VirtualFileSystemSwitcher();
+      new CloseViewsOnEscapePressedHandler();
 
       new Timer()
       {

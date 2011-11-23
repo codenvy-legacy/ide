@@ -82,6 +82,8 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
     */
    private boolean canBeClosed = true;
 
+   private boolean closeOnEscape = false;
+
    /**
     * View's icon
     */
@@ -481,6 +483,17 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
    public String toString()
    {
       return "ViewImpl [ ID: " + id + " ]";
+   }
+
+   protected void setCloseOnEscape(boolean closeOnEscape)
+   {
+      this.closeOnEscape = closeOnEscape;
+   }
+
+   @Override
+   public boolean closeOnEscape()
+   {
+      return closeOnEscape;
    }
 
 }

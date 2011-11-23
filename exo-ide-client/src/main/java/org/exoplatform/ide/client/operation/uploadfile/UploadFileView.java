@@ -98,6 +98,7 @@ public class UploadFileView extends ViewImpl implements
    public UploadFileView()
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT, false);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       
       nameHiddenField = new Hidden(NAME_HIDDED_FIELD);

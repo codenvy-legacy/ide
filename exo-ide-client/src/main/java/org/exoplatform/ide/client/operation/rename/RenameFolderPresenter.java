@@ -290,8 +290,10 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
          //throwing an exception is in RenameFilePresenter
          return;
       }
-      if (selectedItems.get(0) instanceof FolderModel)
+      
+      if (selectedItems.get(0) instanceof FolderModel) {
          openView();
+      }
    }
 
    private void openView()

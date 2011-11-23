@@ -72,6 +72,7 @@ public class GetItemURLView extends ViewImpl implements
    public GetItemURLView()
    {
       super(ID, ViewType.POPUP, TITLE, new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      setCloseOnEscape(true);
 
       add(uiBinder.createAndBindUi(this));
       okButton.setButtonId(ID_OK_BUTTON);

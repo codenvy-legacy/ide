@@ -99,6 +99,7 @@ public class UploadZipView extends ViewImpl implements
    public UploadZipView()
    {
       super(ID, "modal", UPLOAD_FOLDER_TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT,false);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       overwriteHiddenField = new Hidden(OVERWRITE_HIDDED_FIELD);
    }

@@ -133,4 +133,6 @@ public interface View extends HasBeforeViewLoseActivityHandler, HasViewLostActiv
     */
    boolean isActive();
    
+   boolean closeOnEscape();
+   
 }
