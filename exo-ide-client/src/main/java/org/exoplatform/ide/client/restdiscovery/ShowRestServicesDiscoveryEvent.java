@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ShowRestServicesDiscoveryEvent extends GwtEvent<ShowRestServicesDiscoveryHandler>
 {
 
-   public static GwtEvent.Type<ShowRestServicesDiscoveryHandler> TYPE = new Type<ShowRestServicesDiscoveryHandler>();
+   public static final GwtEvent.Type<ShowRestServicesDiscoveryHandler> TYPE = new Type<ShowRestServicesDiscoveryHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()

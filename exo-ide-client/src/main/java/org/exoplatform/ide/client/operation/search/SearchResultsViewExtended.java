@@ -48,12 +48,12 @@ public class SearchResultsViewExtended extends ViewImpl implements org.exoplatfo
    /**
     * Initial width of this view
     */
-   private static int WIDTH = 250;
+   private static final int WIDTH = 250;
 
    /**
     * Initial height of this view
     */
-   private static int HEIGHT = 450;   
+   private static final int HEIGHT = 450;   
 
    private static SearchResultsViewExtendedUiBinder uiBinder = GWT.create(SearchResultsViewExtendedUiBinder.class);
 

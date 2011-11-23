@@ -18,16 +18,6 @@
  */
 package org.exoplatform.ide.client.properties;
 
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
-
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
-
-import org.exoplatform.gwtframework.commons.xml.QName;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -38,9 +28,16 @@ import org.exoplatform.ide.vfs.shared.Property;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -56,8 +53,6 @@ public class PropertiesView extends ViewImpl implements
    private static final String ID = "ideFilePropertiesView";
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.propertiesTitle();
-
-   private static final String NO_PROPERTIES_MSG = IDE.IDE_LOCALIZATION_CONSTANT.propertiesNoPropertiesMsg();
 
    private Grid propertiesGrid;
 
@@ -95,13 +90,11 @@ public class PropertiesView extends ViewImpl implements
 
       propertiesGrid.resize(properties.size() + 1, 2);
 
-      Iterator<String> iterator = properties.keySet().iterator();
       int row = 0;
-      while (iterator.hasNext())
+      Set<String> keys = properties.keySet();
+      for (String key : keys)
       {
-         String key = iterator.next();
          String value = properties.get(key);
-
          propertiesGrid.setHTML(row, 0, "<b>" + key + ":&nbsp;&nbsp;</b>");
          propertiesGrid.setHTML(row, 1, value);
 

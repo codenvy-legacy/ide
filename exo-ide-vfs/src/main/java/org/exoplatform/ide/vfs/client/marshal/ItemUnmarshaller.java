@@ -57,7 +57,6 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
     */
    public ItemUnmarshaller(ItemWrapper item)
    {
-      super();
       this.item = item;
    }
 
@@ -89,7 +88,12 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
             }
          }
          else
-            item.setItem(new FileModel(object));
+         {
+            FolderModel parent = ((FileModel)item.getItem()).getParent();
+            FileModel file = new FileModel(object);
+            file.setParent(parent);
+            item.setItem(file);
+         }
       }
       catch (Exception e)
       {

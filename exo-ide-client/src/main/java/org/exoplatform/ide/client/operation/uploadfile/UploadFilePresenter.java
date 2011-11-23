@@ -46,7 +46,7 @@ import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.client.operation.overwrite.ui.OverwriteDialog;
+import org.exoplatform.ide.client.operation.overwrite.ui.AbstarctOverwriteDialog;
 import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
@@ -285,7 +285,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       ErrorData errData = UploadHelper.parseError(uploadServiceResponse);
       if (ExitCodes.ITEM_EXISTS == errData.code)
       {
-         OverwriteDialog dialog = new OverwriteDialog(fileName, errData.text)
+         AbstarctOverwriteDialog dialog = new AbstarctOverwriteDialog(fileName, errData.text)
          {
             
             @Override

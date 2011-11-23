@@ -509,7 +509,7 @@ public interface IDEImageBundle extends ClientBundle
    ImageResource documentation();
 
    @Source("../public/images/bundled/documentation/documentation_Disabled.png")
-   ImageResource documentation_Disabled();
+   ImageResource documentationDisabled();
 
    /*
     * Maximize, Restore for Panels

@@ -50,9 +50,9 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final String OK_BUTTON_ID = "ideAboutViewOkButton";
 
-   private final int LOGO_WIDTH = 200;
+   private static final int LOGO_WIDTH = 200;
 
-   private final int LOGO_HEIGHT = 75;
+   private static final int LOGO_HEIGHT = 75;
 
    private final String VERSION;
 

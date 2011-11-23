@@ -112,7 +112,7 @@ public class JobWidget extends Composite
    /**
     * @param job
     */
-   public void updateJob(Job job)
+   public final void updateJob(Job job)
    {
       switch (job.getStatus())
       {

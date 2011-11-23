@@ -53,33 +53,33 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final int DEFAULT_HEIGHT = 230;
 
-   private final String BUTTON_WIDTH = "100px";
+   private static final String BUTTON_WIDTH = "100px";
 
-   private final String BUTTON_HEIGHT = "22px";
+   private static final String BUTTON_HEIGHT = "22px";
 
-   private final String FIELD_WIDTH = "340px";
+   private static final String FIELD_WIDTH = "340px";
 
-   private final String FIELD_HEIGHT = "20px";
+   private static final String FIELD_HEIGHT = "20px";
 
-   private final int BUTTONS_SPACE = 5;
+   private static final int BUTTONS_SPACE = 5;
 
-   private final String REPLACE_FIELD = "ideFindReplaceTextFormReplaceField";
+   private static final String REPLACE_FIELD = "ideFindReplaceTextFormReplaceField";
 
-   private final String FIND_FIELD = "ideFindReplaceTextFormFindField";
+   private static final String FIND_FIELD = "ideFindReplaceTextFormFindField";
 
-   private final String ID_FIND_RESULT = "ideFindReplaceTextFormFindResult";
+   private static final String ID_FIND_RESULT = "ideFindReplaceTextFormFindResult";
 
-   private final String CASE_SENSITIVE_FIELD = "ideFindReplaceTextFormCaseSensitiveField";
+   private static final String CASE_SENSITIVE_FIELD = "ideFindReplaceTextFormCaseSensitiveField";
 
-   private final String ID_FIND_BUTTON = "ideFindReplaceTextFormFindButton";
+   private static final String ID_FIND_BUTTON = "ideFindReplaceTextFormFindButton";
 
-   private final String ID_REPLACE_FIND_BUTTON = "ideFindReplaceTextFormReplaceFindButton";
+   private static final String ID_REPLACE_FIND_BUTTON = "ideFindReplaceTextFormReplaceFindButton";
 
-   private final String ID_REPLACE_BUTTON = "ideFindReplaceTextFormReplaceButton";
+   private static final String ID_REPLACE_BUTTON = "ideFindReplaceTextFormReplaceButton";
 
-   private final String ID_REPLACE_ALL_BUTTON = "ideFindReplaceTextFormReplaceAllButton";
+   private static final String ID_REPLACE_ALL_BUTTON = "ideFindReplaceTextFormReplaceAllButton";
 
-   private final String ID_CANCEL_BUTTON = "ideFindReplaceTextFormCancelButton";
+   private static final String ID_CANCEL_BUTTON = "ideFindReplaceTextFormCancelButton";
 
    private ImageButton findButton;
 

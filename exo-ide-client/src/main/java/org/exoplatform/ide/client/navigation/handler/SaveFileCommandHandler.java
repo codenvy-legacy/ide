@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
@@ -34,9 +31,11 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+
+import java.util.LinkedHashMap;
 
 import com.google.gwt.http.client.RequestException;
 
@@ -52,8 +51,8 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
 {
 
    private FileModel activeFile;
-
-   private Map<String, String> lockTokens;
+//TODO
+//   private Map<String, String> lockTokens;
 
    public SaveFileCommandHandler()
    {
@@ -71,8 +70,6 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
          IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
          return;
       }
-
-      String lockToken = lockTokens.get(file.getId());
 
       if (file.isContentChanged())
       {
@@ -126,13 +123,13 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
       //TODO
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Link.REL_SELF).getHref(),
-            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
+         VirtualFileSystem.getInstance().getItemById(file.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file)))
             {
                @Override
-               protected void onSuccess(FileModel result)
+               protected void onSuccess(ItemWrapper result)
                {
-                  IDE.fireEvent(new FileSavedEvent(result, null));
+                  IDE.fireEvent(new FileSavedEvent((FileModel)result.getItem(), null));
                }
 
                @Override
@@ -163,8 +160,8 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-
-      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+//TODO
+//      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }

@@ -18,18 +18,12 @@
  */
 package org.exoplatform.ide.client.project.create;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -39,8 +33,9 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -56,7 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class CreateProjectPresenter implements ItemsSelectedHandler, CreateProjectHandler, VfsChangedHandler, ViewClosedHandler
+public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedHandler, ViewClosedHandler
 {
 
    public interface ErrorMessage extends Constants
@@ -92,8 +87,6 @@ public class CreateProjectPresenter implements ItemsSelectedHandler, CreateProje
    
    private Display display;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
-   
    private VirtualFileSystemInfo vfsInfo;
    
    public CreateProjectPresenter() {
@@ -101,7 +94,6 @@ public class CreateProjectPresenter implements ItemsSelectedHandler, CreateProje
       IDE.getInstance().addControl(new CreateProjectControl());
 
       IDE.addHandler(CreateProjectEvent.TYPE, this);      
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
@@ -138,24 +130,6 @@ public class CreateProjectPresenter implements ItemsSelectedHandler, CreateProje
       }
 
       FolderModel parent = (FolderModel)vfsInfo.getRoot();
-      
-//      Window.alert("Selected Items > " + selectedItems);
-//      
-//      if (selectedItems != null && selectedItems.size() > 0) {
-//         Window.alert("Selected Items Count > " + selectedItems.size());
-//         
-//         if (selectedItems.size() > 1)
-//         {
-//            IDE.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfMultiselectionParent()));
-//            return;
-//         }
-//         
-//         if (selectedItems.get(0).getItemType() == ItemType.FILE)
-//         {
-//            IDE.fireEvent(new ExceptionThrownEvent("Can't create project you must select as parent folder"));
-//            return;
-//         }         
-//      }
       
       ProjectModel model = new ProjectModel();
       model.setName(display.getProjectName().getValue());
@@ -208,11 +182,6 @@ public class CreateProjectPresenter implements ItemsSelectedHandler, CreateProje
       this.errorMessage = errorMessage;
    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
 
    @Override
    public void onCreateProject(CreateProjectEvent event)

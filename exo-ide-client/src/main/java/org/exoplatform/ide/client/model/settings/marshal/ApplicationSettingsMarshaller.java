@@ -110,17 +110,18 @@ public class ApplicationSettingsMarshaller implements Marshallable
    @SuppressWarnings("unchecked")
    private String getListNode(String key, Object value)
    {
-      String xml = "\"" + key + "\":[";
+      StringBuffer xml = new StringBuffer();
+      xml.append("\"").append(key).append("\":[");
       List<String> values = (List<String>)value;
       for (String v : values)
       {
-         xml +=  JsonUtils.escapeValue(v) + ",";
+         xml.append(JsonUtils.escapeValue(v)).append(",");
       }
-      if (xml.endsWith(","))
-         xml = xml.substring(0, xml.length() - 1);
-      xml += "],";
       
-      return xml;
+      if (xml.lastIndexOf(",") != -1)
+         xml = xml.deleteCharAt(xml.lastIndexOf(","));
+      xml.append("],");
+      return xml.toString();
    }
 
    @SuppressWarnings("unchecked")

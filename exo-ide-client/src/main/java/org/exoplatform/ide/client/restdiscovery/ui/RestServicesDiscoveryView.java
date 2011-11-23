@@ -58,12 +58,12 @@ public class RestServicesDiscoveryView extends ViewImpl implements
    /**
     * Initial width of this view
     */
-   private static int INITIAL_WIDTH = 500;
+   private static final int INITIAL_WIDTH = 500;
 
    /**
     * Initial height of this view
     */
-   private static int INITIAL_HEIGHT = 330;
+   private static final int INITIAL_HEIGHT = 330;
    
    private static final String TITLE = IDE.PREFERENCES_CONSTANT.restServicesDiscoveryTitle();
 

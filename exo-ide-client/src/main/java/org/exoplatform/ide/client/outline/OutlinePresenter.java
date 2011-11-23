@@ -181,7 +181,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          IDE.getInstance().openView((View)d);
          bindDisplay(d);
 
-         applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
+         applicationSettings.setValue("outline", Boolean.valueOf(event.isShow()), Store.COOKIES);
          SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
 
          return;
@@ -190,7 +190,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       if (!event.isShow() && display != null)
       {
          IDE.getInstance().closeView(display.asView().getId());
-         applicationSettings.setValue("outline", new Boolean(event.isShow()), Store.COOKIES);
+         applicationSettings.setValue("outline", Boolean.valueOf(event.isShow()), Store.COOKIES);
          SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
 
          return;
@@ -375,7 +375,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private boolean selectTokenByRow(List<TokenBeenImpl> tokens)
    {
-      if (tokens == null || tokens.size() == 0)
+      if (tokens == null || tokens.isEmpty())
       {
          return false;
       }

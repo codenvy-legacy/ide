@@ -18,14 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.search;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -42,6 +36,10 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -55,7 +53,7 @@ import com.google.gwt.user.client.ui.HasValue;
  *
  */
 public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler,
-   ItemsSelectedHandler, VfsChangedHandler
+   ItemsSelectedHandler
 {
 
    public interface Display extends IsView
@@ -82,14 +80,11 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private String entryPoint;
-
    public SearchFilesPresenter()
    {
-      IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR);      
-      
+      IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR);
+
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(SearchFilesEvent.TYPE, this);
       IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -169,8 +164,12 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       folder.setPath(path);
       try
       {
-         VirtualFileSystem.getInstance().search(query, -1, 0,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+         VirtualFileSystem.getInstance().search(
+            query,
+            -1,
+            0,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 
                @Override
@@ -245,12 +244,6 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       {
          setPath();
       }
-   }
-
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      entryPoint = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
    }
 
 }

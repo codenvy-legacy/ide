@@ -110,8 +110,6 @@ public class ItemsCellTree extends Composite
       @Override
       public <T> NodeInfo<?> getNodeInfo(T value)
       {
-         System.out.println("GET NODE INFO FOR > " + value);
-         
          if (value == null)
          {
             List<Item> projects = new ArrayList<Item>();
@@ -132,8 +130,6 @@ public class ItemsCellTree extends Composite
       @Override
       public boolean isLeaf(Object value)
       {
-         System.out.println("IS LEAF > " + value);
-         
          if (value == null) {
             return false;
          }

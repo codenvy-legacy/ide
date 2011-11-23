@@ -48,7 +48,7 @@ public class ShowDocumentationControl extends SimpleControl implements IDEContro
    {
       super(ID);
       setTitle(TITLE);
-      setImages(IDEImageBundle.INSTANCE.documentation(), IDEImageBundle.INSTANCE.documentation_Disabled());
+      setImages(IDEImageBundle.INSTANCE.documentation(), IDEImageBundle.INSTANCE.documentationDisabled());
       setEvent(new ShowDocumentationEvent(true));
       setEnabled(true);
       setDelimiterBefore(true);

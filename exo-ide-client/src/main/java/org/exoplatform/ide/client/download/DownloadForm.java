@@ -23,6 +23,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -49,7 +50,7 @@ import org.exoplatform.ide.vfs.shared.Link;
 
 public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHandler, ItemsSelectedHandler
 {
-   private static final IdeUploadLocalizationConstant lb = GWT.create(IdeUploadLocalizationConstant.class);
+   private static final IdeUploadLocalizationConstant UPLOAD_LOCALIZATION_CONSTANT = GWT.create(IdeUploadLocalizationConstant.class);
 
    private AbsolutePanel panel;
 
@@ -70,10 +71,10 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
 
    private void downloadResource(String url)
    {
-      String iframe =
-         "<iframe src=\"" + url
-            + "\" frameborder=0 width=\"100%\" height=\"100%\" style=\"overflow:visible;\"></iframe>";
-      panel.getElement().setInnerHTML(iframe);
+      Frame frame = new Frame(url);
+      frame.setHeight("100%");
+      frame.setWidth("100%");
+      panel.add(frame);
    }
 
    public void onDownloadFile(DownloadFileEvent event)
@@ -84,7 +85,7 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
       }
       else
       {
-         Dialogs.getInstance().showError(lb.downloadFileError());
+         Dialogs.getInstance().showError(UPLOAD_LOCALIZATION_CONSTANT.downloadFileError());
       }
    }
 
@@ -96,7 +97,7 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
       }
       else
       {
-         Dialogs.getInstance().showError(lb.downloadFolderError());
+         Dialogs.getInstance().showError(UPLOAD_LOCALIZATION_CONSTANT.downloadFolderError());
       }
    }
 

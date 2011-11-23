@@ -46,9 +46,9 @@ import org.exoplatform.ide.client.messages.IdeOverwriteLocalizationConstant;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OverwriteDialog.java Nov 11, 2011 9:38:33 AM vereshchaka $
  */
-public abstract class OverwriteDialog extends ViewImpl
+public abstract class AbstarctOverwriteDialog extends ViewImpl
 {
-   public static final IdeOverwriteLocalizationConstant lb = GWT.create(IdeOverwriteLocalizationConstant.class);
+   public static final IdeOverwriteLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(IdeOverwriteLocalizationConstant.class);
    
    public static final String ID = "ideOverwriteForm";
 
@@ -56,14 +56,14 @@ public abstract class OverwriteDialog extends ViewImpl
 
    public static final int HEIGHT = 180;
 
-   public static final String TITLE = lb.dialogTitle();
+   public static final String TITLE = LOCALIZATION_CONSTANT.dialogTitle();
    
    
-   interface OverwriteDialogUiBinder extends UiBinder<Widget, OverwriteDialog>
+   interface AbstarctOverwriteDialogUiBinder extends UiBinder<Widget, AbstarctOverwriteDialog>
    {
    }
    
-   private static OverwriteDialogUiBinder uiBinder = GWT.create(OverwriteDialogUiBinder.class);
+   private static AbstarctOverwriteDialogUiBinder uiBinder = GWT.create(AbstarctOverwriteDialogUiBinder.class);
    
    @UiField
    TextInput renameField;
@@ -86,7 +86,7 @@ public abstract class OverwriteDialog extends ViewImpl
     * @param defaultName item name, that will be displayed in name field
     * @param errMsg message with error, that occurs
     */
-   public OverwriteDialog(String defaultName, String errMsg)
+   public AbstarctOverwriteDialog(String defaultName, String errMsg)
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
@@ -155,11 +155,6 @@ public abstract class OverwriteDialog extends ViewImpl
    {
       defaultItemName = value;
       renameField.setValue(value);
-   }
-   
-   public void setErrorMessage(String mgs)
-   {
-      
    }
    
    public abstract void onOverwrite();

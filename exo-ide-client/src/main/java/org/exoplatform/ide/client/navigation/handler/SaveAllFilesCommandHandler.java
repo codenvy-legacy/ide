@@ -51,19 +51,16 @@ import java.util.Map;
  */
 
 public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+   EditorFileClosedHandler
 {
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
-
-   private Map<String, String> lockTokens;
 
    public SaveAllFilesCommandHandler()
    {
       IDE.addHandler(SaveAllFilesEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    private List<FileModel> savedFiles = new ArrayList<FileModel>();
@@ -135,17 +132,5 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
       openedFiles = event.getOpenedFiles();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
-      {
-         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
-
-      lockTokens = (Map<String, String>)event.getApplicationSettings().getValueAsMap("lock-tokens");
-   }
 
 }

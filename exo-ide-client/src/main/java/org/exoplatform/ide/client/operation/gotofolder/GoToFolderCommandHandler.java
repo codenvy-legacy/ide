@@ -37,6 +37,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version $
  */
 
+//TODO IDE-1234
 public class GoToFolderCommandHandler implements GoToFolderHandler, 
    VfsChangedHandler, EditorActiveFileChangedHandler
 {

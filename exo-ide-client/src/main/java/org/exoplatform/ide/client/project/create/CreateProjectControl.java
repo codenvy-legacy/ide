@@ -45,8 +45,6 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
 
    private static final String PROMPT = "Create Empty Project...";
 
-   private List<Item> selectedItems;
-
    private VirtualFileSystemInfo vfsInfo;
 
    /**

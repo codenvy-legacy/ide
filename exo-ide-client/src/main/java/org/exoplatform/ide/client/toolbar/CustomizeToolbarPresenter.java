@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.client.toolbar;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -44,6 +38,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.toolbar.ToolbarItem.Type;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -304,10 +304,9 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
       }
 
       List<CommandItemEx> commandList = new ArrayList<CommandItemEx>();
-      Iterator<String> keyIter = groups.keySet().iterator();
-      while (keyIter.hasNext())
+      Set<String> keys = groups.keySet();
+      for (String groupName : keys)
       {
-         String groupName = keyIter.next();
          commandList.add(new CommandItemEx(groupName));
          List<Control> commands = groups.get(groupName);
          for (Control command : commands)

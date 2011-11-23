@@ -45,7 +45,6 @@ public class FolderDataProvider extends AbstractDataProvider<Item>
    @Override
    protected void onRangeChanged(HasData<Item> display)
    {
-      System.out.println(">>>>>>>>>>>>> RANGE CHANGED FOR > " + display.getRowCount());
    }
 
 }

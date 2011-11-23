@@ -256,13 +256,13 @@ public interface IdeLocalizationConstant extends Constants
    String openFileByURLViewTitle();
 
    @Key("view.openFileByURL.urlFieldTitle")
-   String openFileByURL_URLFieldTitle();
+   String openFileByURLFieldTitle();
 
    @Key("view.openFileByURL.openButton")
-   String openFileByURL_OpenButtonTitle();
+   String openFileByURLOpenButtonTitle();
 
    @Key("view.openFileByURL.cancelButton")
-   String openFileByURL_CancelButtonTitle();
+   String openFileByURLCancelButtonTitle();
 
    /*
     * GET FILE URL

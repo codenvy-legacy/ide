@@ -40,7 +40,7 @@ public class DocumentationView extends ViewImpl implements DocumentationPresente
 
    private static final String FRAME_ID = "ideDocumentationFrame";
 
-   private Image DOCUMENTATION_TAB_ICON = new Image(IDEImageBundle.INSTANCE.documentation());
+   private static final Image DOCUMENTATION_TAB_ICON = new Image(IDEImageBundle.INSTANCE.documentation());
 
    private Frame iFrame;
 
@@ -69,18 +69,4 @@ public class DocumentationView extends ViewImpl implements DocumentationPresente
    {
       iFrame.setUrl(url);
    }
-
-   private native void addHandler(Element e)/*-{
-      var type = "mousedown";
-      var instance = this;
-      if(typeof e.contentDocument != "undefined")
-      {
-         e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.documentation.DocumentationView::activate()();},false);
-      }
-      else
-      {
-         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.documentation.DocumentationView::activate()();});
-      }
-   }-*/;
-
 }

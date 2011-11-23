@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.edit;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -34,17 +31,17 @@ import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.userinfo.UserInfo;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
-import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.LockUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.LockToken;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.google.gwt.http.client.RequestException;
 
@@ -57,25 +54,20 @@ import com.google.gwt.http.client.RequestException;
  * @version $Id:
  *
  */
-public class LockUnlockFileHandler implements LockFileHandler, UserInfoReceivedHandler, EditorActiveFileChangedHandler,
+public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileChangedHandler,
    ApplicationSettingsReceivedHandler
 {
 
    /* Error messages */
    private static final String SERVICE_NOT_DEPLOYED = IDE.ERRORS_CONSTANT.lockFileServiceNotDeployed();
 
-   private static final String LOCK_FILE_FAILURE = IDE.ERRORS_CONSTANT.lockFileLockOperationFailure();
-
    private Map<String, String> lockTokens;
-
-   private UserInfo userInfo;
 
    private FileModel activeFile;
 
    public LockUnlockFileHandler()
    {
       IDE.addHandler(LockFileEvent.TYPE, this);
-      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
@@ -201,14 +193,14 @@ public class LockUnlockFileHandler implements LockFileHandler, UserInfoReceivedH
    {
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Link.REL_SELF).getHref(),
-            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
+         VirtualFileSystem.getInstance().getItemById(file.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file)))
             {
 
                @Override
-               protected void onSuccess(FileModel result)
+               protected void onSuccess(ItemWrapper result)
                {
-                  IDE.fireEvent(new EditorReplaceFileEvent(file, result));
+                  IDE.fireEvent(new EditorReplaceFileEvent(file, (FileModel)result.getItem()));
                }
 
                @Override
@@ -224,13 +216,7 @@ public class LockUnlockFileHandler implements LockFileHandler, UserInfoReceivedH
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent)
-    */
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
-   {
-      userInfo = event.getUserInfo();
-   }
+   
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)

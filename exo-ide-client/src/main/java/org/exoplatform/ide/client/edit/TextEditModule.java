@@ -84,7 +84,7 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
     */
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
-      applicationSettings.setValue("line-numbers", new Boolean(event.isShowLineNumber()), Store.COOKIES);
+      applicationSettings.setValue("line-numbers", Boolean.valueOf(event.isShowLineNumber()), Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
       /*
        * fire event for show-hide line numbers command be able to update state.

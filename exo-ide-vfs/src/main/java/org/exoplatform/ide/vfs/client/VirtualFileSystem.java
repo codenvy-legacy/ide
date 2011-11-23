@@ -345,19 +345,6 @@ public class VirtualFileSystem
    }
 
    /**
-    * Get item by location(self relation).
-    * @param location of item
-    * @param callback
-    * @throws RequestException 
-    */
-   @Deprecated
-   public void getItemByLocation(String location, AsyncRequestCallback<? extends Item> callback)
-      throws RequestException
-   {
-      AsyncRequest.build(RequestBuilder.GET, URL.encode(location)).send(callback);
-   }
-
-   /**
     * Get item by path.
     * Path MUST not start with "\"
     * @param path to item

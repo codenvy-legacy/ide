@@ -18,14 +18,6 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -47,6 +39,14 @@ import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysHandler;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant;
 import org.exoplatform.ide.client.model.settings.SettingsService;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -268,10 +268,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       }
 
       hotKeys = new ArrayList<HotKeyItem>();
-      Iterator<String> keyIter = groups.keySet().iterator();
-      while (keyIter.hasNext())
+      for (String groupName : groups.keySet())
       {
-         String groupName = keyIter.next();
          hotKeys.add(new HotKeyItem(groupName, null, true, groupName));
          List<SimpleControl> commands = groups.get(groupName);
          for (SimpleControl command : commands)

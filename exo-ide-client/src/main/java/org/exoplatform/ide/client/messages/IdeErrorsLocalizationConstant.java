@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.messages;
 
-import javax.ws.rs.DefaultValue;
-
 import com.google.gwt.i18n.client.Constants;
 
 /**

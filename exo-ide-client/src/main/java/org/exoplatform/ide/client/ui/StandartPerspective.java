@@ -18,15 +18,6 @@
  */
 package org.exoplatform.ide.client.ui;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
-
-import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
-import org.exoplatform.gwtframework.ui.client.window.ResizeableWindow;
-import org.exoplatform.gwtframework.ui.client.window.Window;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.HasViews;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
@@ -41,20 +32,25 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.client.ui.panel.HidePanelEvent;
-import org.exoplatform.ide.client.ui.panel.HidePanelHandler;
-import org.exoplatform.ide.client.ui.panel.MaximizePanelEvent;
-import org.exoplatform.ide.client.ui.panel.MaximizePanelHandler;
 import org.exoplatform.ide.client.ui.panel.PanelImpl;
-import org.exoplatform.ide.client.ui.panel.RestorePanelEvent;
-import org.exoplatform.ide.client.ui.panel.RestorePanelHandler;
-import org.exoplatform.ide.client.ui.panel.ShowPanelEvent;
-import org.exoplatform.ide.client.ui.panel.ShowPanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.HidePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.HidePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.MaximizePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.MaximizePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.RestorePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.RestorePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.ShowPanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.ShowPanelHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

@@ -89,9 +89,7 @@ public class SettingsServiceImpl extends SettingsService
       //      String url =
       //         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/"
       //            + IDEConfigurationLoader.APPLICATION_NAME;
-      String url = restContext + "/ide/configuration";
-
-      return url;
+      return restContext + "/ide/configuration";
    }
 
    /**
@@ -321,7 +319,7 @@ public class SettingsServiceImpl extends SettingsService
    {
       String n = getName(name, "_bool");
       String value = getCookie(name);
-      applicationSettings.setValue(n, new Boolean(value), Store.COOKIES);
+      applicationSettings.setValue(n, Boolean.valueOf(value), Store.COOKIES);
    }
 
    private void restoreListValue(ApplicationSettings applicationSettings, String name)

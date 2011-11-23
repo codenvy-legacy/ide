@@ -18,15 +18,6 @@
  */
 package org.exoplatform.ide.client.restdiscovery;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
@@ -47,6 +38,15 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.discovery.marshal.RestServicesUnmarshaller;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -308,10 +308,9 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       }
 
       List<ParamExt> paramsExtList = new ArrayList<ParamExt>();
-      Iterator<String> keyIter = groups.keySet().iterator();
-      while (keyIter.hasNext())
+      Set<String> keys = groups.keySet();
+      for (String groupName : keys)
       {
-         final String groupName = keyIter.next();
          paramsExtList.add(new ParamExt(groupName));
          List<Param> paramsToAdd = groups.get(groupName);
          for (Param param : paramsToAdd)

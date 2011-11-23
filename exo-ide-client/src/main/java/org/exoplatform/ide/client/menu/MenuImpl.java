@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.client.menu;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.command.ui.MenuItemControl;
 import org.exoplatform.gwtframework.ui.client.menu.MenuBar;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 import org.exoplatform.ide.client.framework.module.IDE;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS .
@@ -57,13 +57,13 @@ public class MenuImpl extends MenuBar implements Menu
          createdMenuItems.put(control, createdItem);
       }
 
-      Iterator<SimpleControl> controlIterator = createdMenuItems.keySet().iterator();
-      while (controlIterator.hasNext())
+      Set<SimpleControl> controls = createdMenuItems.keySet();
+      for (SimpleControl control : controls)
       {
-         SimpleControl control = controlIterator.next();
          MenuItem menuItem = createdMenuItems.get(control);
          new MenuItemControl(IDE.eventBus(), menuItem, control);
       }
+      
    }
 
    private MenuItem add(MenuItem parent, SimpleControl control, int depth)

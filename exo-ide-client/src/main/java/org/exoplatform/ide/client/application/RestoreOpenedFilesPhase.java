@@ -38,8 +38,9 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -135,8 +136,8 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       filesToLoad.remove(0);
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(fileId,
-            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(fileToLoad))
+         VirtualFileSystem.getInstance().getItemById(fileId,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(fileToLoad)))
             {
 
                @Override
@@ -146,19 +147,20 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                }
 
                @Override
-               protected void onSuccess(FileModel result)
+               protected void onSuccess(ItemWrapper result)
                {
-                  fileToLoad.setContentChanged(false);
+                  FileModel file = (FileModel)result.getItem();
+                  file.setContentChanged(false);
                   try
                   {
                      VirtualFileSystem.getInstance().getContent(
-                        new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(fileToLoad))
+                        new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file))
                         {
 
                            @Override
                            protected void onSuccess(FileModel result)
                            {
-                              openedFiles.put(fileToLoad.getId(), fileToLoad);
+                              openedFiles.put(result.getId(), result);
                               preloadNextFile();
 
                            }
@@ -177,6 +179,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                      e.printStackTrace();
                   }
                }
+              
             });
       }
       catch (RequestException e)

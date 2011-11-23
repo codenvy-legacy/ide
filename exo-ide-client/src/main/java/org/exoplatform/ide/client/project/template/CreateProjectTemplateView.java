@@ -18,18 +18,17 @@
  */
 package org.exoplatform.ide.client.project.template;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.component.TextAreaInput;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.template.ui.TemplateTree;
+
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -91,10 +90,10 @@ public class CreateProjectTemplateView extends ViewImpl implements CreateProject
    TemplateTree templateTreeGrid;
 
    @UiField
-   TextField nameField;
+   TextInput nameField;
 
    @UiField
-   TextAreaItem descriptionField;
+   TextAreaInput descriptionField;
    
    @UiField
    ScrollPanel scrollPanel;
@@ -116,10 +115,7 @@ public class CreateProjectTemplateView extends ViewImpl implements CreateProject
       addFileButton.setButtonId(ID_ADD_FILE_BUTTON);
       deleteButton.setButtonId(ID_DELETE_BUTTON);
       nameField.setName(TEMPLATE_NAME_FIELD);
-      nameField.setTitleOrientation(TitleOrientation.LEFT);
       descriptionField.setName(DESCRIPTION_FIELD);
-      descriptionField.setTitleOrientation(TitleOrientation.LEFT);
-      
       DOM.setStyleAttribute(scrollPanel.getElement(), "zIndex", "0");
    }
 

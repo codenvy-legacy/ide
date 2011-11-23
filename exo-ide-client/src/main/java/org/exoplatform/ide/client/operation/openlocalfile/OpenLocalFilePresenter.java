@@ -96,9 +96,9 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
 
    private IDEConfiguration configuration;
 
-   private String file_name;
+   private String fileName;
 
-   private String file_mimeType;
+   private String fileMimeType;
 
    public OpenLocalFilePresenter()
    {
@@ -188,7 +188,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          }
 
          display.getFileNameField().setValue(file);
-         file_name = file;
+         fileName = file;
          display.setMimeTypeFieldEnabled(true);
 
          List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
@@ -203,7 +203,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          if (proposalMimeTypes != null && proposalMimeTypes.size() > 0)
          {
             String mimeTYpe = proposalMimeTypes.get(0);
-            file_mimeType = mimeTYpe;
+            fileMimeType = mimeTYpe;
             display.setSelectedMimeType(mimeTYpe);
             display.setOpenButtonEnabled(true);
          }
@@ -248,16 +248,9 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          return;
       }
 
-      //FIXME
-      //String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
+      //FIXME 
+//      String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
       String contentNodeType = "nt:resource";
-
-      String fileName = display.getFileNameField().getValue();
-      if (fileName.contains("/"))
-      {
-         fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-      }
-
       display.setHiddenFields("", mimeType, "", contentNodeType);
       display.getUploadForm().submit();
    }
@@ -363,7 +356,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
     */
    private void openFile(String submittedFileContent)
    {
-      FileModel submittedFile = new FileModel(file_name, file_mimeType, submittedFileContent, new FolderModel());
+      FileModel submittedFile = new FileModel(fileName, fileMimeType, submittedFileContent, new FolderModel());
       submittedFile.setContentChanged(true);
       IDE.fireEvent(new OpenFileEvent(submittedFile));
    }

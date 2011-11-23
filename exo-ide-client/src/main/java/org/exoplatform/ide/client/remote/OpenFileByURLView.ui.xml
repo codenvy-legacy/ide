@@ -19,15 +19,15 @@
    <c:Border margin="20" borderColor="transparent">
       <c:layer>
          <g:FlowPanel width="100%">
-            <c:Label value="{locale.openFileByURL_URLFieldTitle}" width="100%" styleName="{style.label}"></c:Label>
+            <c:Label value="{locale.openFileByURLFieldTitle}" width="100%" styleName="{style.label}"></c:Label>
             <c:TextInput ui:field="urlField" width="99%"></c:TextInput>
             <g:HorizontalPanel spacing="5" width="100%" styleName="{style.spacing}">
                <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
-                  <c:ImageButton text="{locale.openFileByURL_OpenButtonTitle}" ui:field="openButton" imageName="ok"
+                  <c:ImageButton text="{locale.openFileByURLOpenButtonTitle}" ui:field="openButton" imageName="ok"
                      buttonId="ide.openFileByURL.openButton"></c:ImageButton>
                </g:cell>
                <g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE">
-                  <c:ImageButton text="{locale.openFileByURL_CancelButtonTitle}" ui:field="cancelButton" imageName="cancel"
+                  <c:ImageButton text="{locale.openFileByURLCancelButtonTitle}" ui:field="cancelButton" imageName="cancel"
                      buttonId="ide.openFileByURL.cancelButton"></c:ImageButton>
                </g:cell>
 

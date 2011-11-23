@@ -42,7 +42,6 @@ public class ItemWrapper
     */
    public ItemWrapper(Item item)
    {
-      super();
       this.item = item;
    }
 

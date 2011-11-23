@@ -76,20 +76,19 @@ public abstract class CodeValidator
     */
    public static String getErrorSummary(List<CodeLine> lineCodeErrorList)
    {
-      String errorSummary = "";
+      StringBuffer errorSummary = new StringBuffer();
       
       for (CodeLine codeError: lineCodeErrorList)
       {
          switch(codeError.getType()) {
             case TYPE_ERROR:
-               errorSummary += "'" + codeError.getLineContent() + "' cannot be resolved to a type; ";
+               errorSummary.append("'").append(codeError.getLineContent()).append("' cannot be resolved to a type; ");
                break;
                
             default:
          }
       }
-      
-      return errorSummary;
+      return errorSummary.toString();
    }
    
    /**

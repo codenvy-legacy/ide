@@ -105,17 +105,15 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
    public IDE()
    {
-      for (int i = 0; i < 10; i++) {
-         System.out.println();
-      }
-      
       Alert.init();
-
+      
+            
       /*
        * Registering Icons
        */
       IDEIconSet.init();
       
+
       new IDEDialogs();
       
       /*
@@ -136,9 +134,9 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(ideForm, controlsRegistration);
-      
-      new EditorController();
 
+      new EditorController();
+      
       new LoginPresenter();
       
       new DownloadForm();      
@@ -170,7 +168,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).
        */
-      //disableTextSelectInternal(RootPanel.get().getElement(), true);      
+      //disableTextSelectInternal(RootPanel.get().getElement(), true);
    }
    
    /**

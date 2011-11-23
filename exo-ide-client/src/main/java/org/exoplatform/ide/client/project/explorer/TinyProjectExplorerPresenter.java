@@ -75,9 +75,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
-import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
-import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
+import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
+import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
+import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
 import org.exoplatform.ide.client.project.CloseProjectEvent;
 import org.exoplatform.ide.client.project.CloseProjectHandler;
@@ -195,8 +195,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private List<Item> navigatorSelectedItems = new ArrayList<Item>();
 
-   private String vfsBaseUrl;
-   
    private ProjectModel openedProject;
 
    public TinyProjectExplorerPresenter()
@@ -724,7 +722,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
-      this.vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();      
       showProjectExplorer();
    }
 

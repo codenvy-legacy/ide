@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ShowPermissionsEvent extends GwtEvent<ShowPermissionsHandler>
 {
 
-   public static GwtEvent.Type<ShowPermissionsHandler> TYPE = new Type<ShowPermissionsHandler>();
+   public static final GwtEvent.Type<ShowPermissionsHandler> TYPE = new Type<ShowPermissionsHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()

@@ -51,6 +51,18 @@ import org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewTitleHand
 import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
+import org.exoplatform.ide.client.ui.panel.event.HasHidePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.HasMaximizePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.HasRestorePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.HasShowPanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.HidePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.HidePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.MaximizePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.MaximizePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.RestorePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.RestorePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.ShowPanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.ShowPanelHandler;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -114,8 +126,6 @@ public class PanelImpl implements Panel, HasViewVisibilityChangedHandler, SetVie
     * Image for Restore button
     */
    private Image restoreImage = new Image(IDEImageBundle.INSTANCE.restore());
-
-   private boolean maximized = false;
 
    /**
     * List of types of views, which can be opened by this panel.

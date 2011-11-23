@@ -58,7 +58,10 @@ import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Link;
 
 import com.google.gwt.http.client.RequestException;
@@ -77,16 +80,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
 
    private ApplicationSettings applicationSettings;
 
-   /**
-    * Need for versions. 
-    * 
-    * Number of errors, which we will ignore
-    * or number of attempts to get versions.
-    */
-   private int ignoreErrorsCount = 0;
-
-   private FileModel fileToOpenOnError;
-
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    public OpenFileCommandHandler()
@@ -102,7 +95,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
     */
    public void onOpenFile(OpenFileEvent event)
    {
-      ignoreErrorsCount = event.getIgnoreErrorsCount();
       selectedEditor = event.getEditor();
 
       FileModel file = event.getFile();
@@ -135,20 +127,13 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
    {
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Link.REL_SELF).getHref(),
-            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
+         VirtualFileSystem.getInstance().getItemById(file.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file)))
             {
                @Override
-               protected void onSuccess(FileModel result)
+               protected void onSuccess(ItemWrapper result)
                {
-                  FileModel f = (FileModel)result;
-
-                  if (f.getContent() != null)
-                  {
-                     openFile(f);
-                     return;
-                  }
-                  getFileContent(f);
+                  getFileContent((FileModel)result.getItem());
                }
 
                @Override
@@ -169,8 +154,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
 
    private void getFileContent(FileModel file)
    {
-      fileToOpenOnError = file;
-      //      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
       try
       {
          VirtualFileSystem.getInstance().getContent(
@@ -185,8 +168,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception,
-                     "Service is not deployed.<br>Resource not found."));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
                }
             });
       }

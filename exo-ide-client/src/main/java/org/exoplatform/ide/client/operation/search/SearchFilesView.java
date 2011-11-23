@@ -59,11 +59,11 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
 
    private static final String ID_DYNAMIC_FORM = "ideSearchFormDynamicForm";
 
-   private final int BUTTON_HEIGHT = 22;
+   private static final int BUTTON_HEIGHT = 22;
 
-   private static String FIELD_WIDTH = "300px";
+   private static final String FIELD_WIDTH = "300px";
 
-   private static String FIELD_HEIGHT = "18px";
+   private static final String FIELD_HEIGHT = "18px";
 
    private TextInput contentField;
 

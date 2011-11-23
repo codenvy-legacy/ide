@@ -54,12 +54,12 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
    /**
     * Initial width of this view
     */
-   private static int WIDTH = 600;
+   private static final int WIDTH = 600;
 
    /**
     * Initial height of this view
     */
-   private static int HEIGHT = 300;   
+   private static final int HEIGHT = 300;   
 
    private static CustomizeHotKeysViewUiBinder uiBinder = GWT.create(CustomizeHotKeysViewUiBinder.class);
 

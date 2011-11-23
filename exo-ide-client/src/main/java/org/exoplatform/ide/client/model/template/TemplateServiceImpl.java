@@ -115,11 +115,6 @@ public class TemplateServiceImpl extends TemplateService
 
    private static final String TEMPLATE = "template-";
 
-   /* Template constants */
-   private static final String EMPTY_PROJECT_NAME = IDE.TEMPLATE_CONSTANT.templateEmptyProjectName();
-
-   private static final String EMPTY_PROJECT_DESCRIPTION = IDE.TEMPLATE_CONSTANT.templateEmptyProjectDescription();
-
    /* Fields */
    private String registryContext;
 
@@ -176,14 +171,6 @@ public class TemplateServiceImpl extends TemplateService
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
-   private static ProjectTemplate getEmptyProject()
-   {
-      ProjectTemplate sampleProject = new ProjectTemplate(EMPTY_PROJECT_NAME);
-      sampleProject.setDescription(EMPTY_PROJECT_DESCRIPTION);
-      sampleProject.setDefault(true);
-
-      return sampleProject;
-   }
 
    /**
     * @see org.exoplatform.ide.client.model.template.TemplateService#addFileTemplate(org.exoplatform.ide.client.model.template.Template, org.exoplatform.ide.client.model.template.TemplateCreatedCallback)

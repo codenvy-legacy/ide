@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,7 +33,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 public class FileTemplates
 {
 
-   private static final HashMap<String,String> templates = new HashMap<String,String>();
+   private static final Map<String,String> TEMPLATES = new HashMap<String,String>();
 
    static
    {
@@ -57,7 +55,7 @@ public class FileTemplates
 
    public static String getTemplateFor(String mimeType)
    {
-      String content = templates.get(mimeType);
+      String content = TEMPLATES.get(mimeType);
       if (content == null)
       {
          content = "";
@@ -81,7 +79,7 @@ public class FileTemplates
        " </div>\n" +
        " </body>\n"+
        "</html>";
-    templates.put(MimeType.APPLICATION_JSP, content);
+    TEMPLATES.put(MimeType.APPLICATION_JSP, content);
    }
    
    private static void addJavaTemplate()
@@ -91,7 +89,7 @@ public class FileTemplates
       "    public static void main(String[] args) {\n" +
       "      System.out.println(\"Hello World!\");\n" +
       "    }\n}";
-      templates.put(MimeType.APPLICATION_JAVA, content);
+      TEMPLATES.put(MimeType.APPLICATION_JAVA, content);
   }
 
    private static void addPhpTemplate()
@@ -105,7 +103,7 @@ public class FileTemplates
          "     <?php echo '<p>Hello World</p>'; ?>\n" + 
          "  </body>\n" +
          "</html>";
-      templates.put(MimeType.APPLICATION_PHP, content);
+      TEMPLATES.put(MimeType.APPLICATION_PHP, content);
    }
 
    private static void addGtmplTemplate()
@@ -118,7 +116,7 @@ public class FileTemplates
             + "         Identity identity = curentState.getIdentity();\n" + "         3.times\n" + "         {\n"
             + "           println \"Hello \" + identity.getUserId();\n" + "         }\n" + "       }\n" + "     %>\n"
             + "   </body>\n" + "</html>";
-      templates.put(MimeType.GROOVY_TEMPLATE, content);
+      TEMPLATES.put(MimeType.GROOVY_TEMPLATE, content);
    }
    
    private static void addRubyTemplate()
@@ -133,13 +131,13 @@ public class FileTemplates
       "ob = HelloClass.new\n"+
       "ob.sayHello\n";
          
-      templates.put(MimeType.APPLICATION_RUBY, content);
+      TEMPLATES.put(MimeType.APPLICATION_RUBY, content);
    }
 
    private static void addXMLFileContent()
    {
       String content = "<?xml version='1.0' encoding='UTF-8'?>\n";
-      templates.put(MimeType.TEXT_XML, content);
+      TEMPLATES.put(MimeType.TEXT_XML, content);
    }
    
    private static void addClassPathTemplate()
@@ -158,7 +156,7 @@ public class FileTemplates
       String content =
          "" + "<html>\r\n" + "  <head>\r\n    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\r\n" + "    <title></title>\r\n" + "  </head>\r\n" + "  <body>\r\n"
             + "  </body>\r\n" + "</html>";
-      templates.put(MimeType.TEXT_HTML, content);
+      TEMPLATES.put(MimeType.TEXT_HTML, content);
    }
 
    private static void addHTMLContent()
@@ -172,7 +170,7 @@ public class FileTemplates
             + "      }\n" + "    </style>\n" + "  </head>\n" + "  <body>\n" + "    <p>Hello</p>\n" + "  </body>\n"
             + "</html>";
 
-      templates.put(MimeType.TEXT_HTML, content);
+      TEMPLATES.put(MimeType.TEXT_HTML, content);
    }
 
    private static void addGroovyContent()
@@ -184,12 +182,12 @@ public class FileTemplates
             + "  public String hello(@PathParam(\"name\") String name) {\n" + "    return \"Hello \" + name\n"
             + "  }\n" + "}\n";
 
-      templates.put(MimeType.GROOVY_SERVICE, content);
+      TEMPLATES.put(MimeType.GROOVY_SERVICE, content);
    }
 
    private static void addEmptyTXT()
    {
-      templates.put(MimeType.TEXT_PLAIN, "");
+      TEMPLATES.put(MimeType.TEXT_PLAIN, "");
    }
 
    private static void addGadgetContent()
@@ -198,7 +196,7 @@ public class FileTemplates
          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
             + "<Content type=\"html\">\n" + "<![CDATA[ Hello, world! ]]>" + "</Content>" + "</Module>";
 
-      templates.put(MimeType.GOOGLE_GADGET, content);
+      TEMPLATES.put(MimeType.GOOGLE_GADGET, content);
    }
 
    private static void addUWAWidgetContent()
@@ -253,7 +251,7 @@ public class FileTemplates
 //      list.add(NetvibseWidgetTemplates.CHART);
 //      list.add(NetvibseWidgetTemplates.TABVIEW);
 //      list.add(NetvibseWidgetTemplates.W3C);
-      templates.put(MimeType.UWA_WIDGET, content);
+      TEMPLATES.put(MimeType.UWA_WIDGET, content);
    }
 
 }

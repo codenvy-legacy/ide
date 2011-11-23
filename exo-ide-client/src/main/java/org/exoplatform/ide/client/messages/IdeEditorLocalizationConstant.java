@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.messages;
 
-import com.google.gwt.i18n.client.LocalizableResource.Key;
-
 import com.google.gwt.i18n.client.Messages;
 
 /**

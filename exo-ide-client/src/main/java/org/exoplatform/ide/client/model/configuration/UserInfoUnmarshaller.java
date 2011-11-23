@@ -36,11 +36,11 @@ import com.google.gwt.json.client.JSONParser;
 public class UserInfoUnmarshaller implements Unmarshallable
 {
 
-   public static String USER_ID = "userId";
+   public static final String USER_ID = "userId";
 
-   public static String ROLES = "roles";
+   public static final String ROLES = "roles";
 
-   public static String GROUPS = "groups";
+   public static final String GROUPS = "groups";
 
    private UserInfo userInfo;
 
@@ -51,8 +51,7 @@ public class UserInfoUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response)
    {
-      JSONObject json = JSONParser.parseLenient(response.getText()).isObject();
-      parseUserInfo(json);
+      parseUserInfo(JSONParser.parseLenient(response.getText()).isObject());
    }
 
    /**

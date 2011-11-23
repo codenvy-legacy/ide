@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.template.ui.TemplateListGrid;
 
 /**
  * Created by The eXo Platform SAS .
@@ -59,7 +60,7 @@ public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFr
    }
    
    @UiField
-   FileTemplateListGrid fileTemplateListGrid;
+   TemplateListGrid<FileTemplate> fileTemplateListGrid;
    
    @UiField
    TextInput fileNameField;

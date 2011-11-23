@@ -211,7 +211,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       List<Item> selectedItems = event.getSelectedItems();
-      if (selectedItems != null && selectedItems.size() != 0)
+      if (selectedItems != null && selectedItems.isEmpty())
       {
          Item item = selectedItems.get(0);
          if (item instanceof FileModel)
@@ -382,24 +382,25 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     */
    private String getDefaultNewFileName(FolderModel folder, String proposedName)
    {
+      String name = proposedName;
       if (openedFiles == null || openedFiles.isEmpty())
       {
-         return proposedName;
+         return name;
       }
 
-      final String nameWithoutExt = proposedName.substring(0, proposedName.lastIndexOf("."));
-      String extension = proposedName.substring(proposedName.lastIndexOf(".") + 1, proposedName.length());
+      final String nameWithoutExt = name.substring(0, name.lastIndexOf("."));
+      String extension = name.substring(name.lastIndexOf(".") + 1, name.length());
       int index = 1;
       for (FileModel file : openedFiles.values())
       {
-         if (file.getParentId().equals(folder.getId()) && file.getName().equals(proposedName))
+         if (file.getParentId().equals(folder.getId()) && file.getName().equals(name))
          {
-            proposedName = nameWithoutExt + " " + index + "." + extension;
+            name = nameWithoutExt + " " + index + "." + extension;
             index++;
          }
       }
 
-      return proposedName;
+      return name;
    }
 
    private boolean isPresentInProjectTemplate(FolderTemplate projectTemplate, FileTemplate fileTemplate)
@@ -538,7 +539,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       display.setDeleteButtonEnabled(false);
       display.setFileNameFieldEnabled(false);
 
-      if (fileTemplates.size() > 0)
+      if (!fileTemplates.isEmpty())
       {
          display.selectTemplate(fileTemplates.get(0));
       }
@@ -566,7 +567,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
             fileTemplates = result.getFileTemplates();
             selectedTemplate = null;
             display.getTemplateListGrid().setValue(fileTemplates);
-            if (fileTemplates.size() > 0)
+            if (!fileTemplates.isEmpty())
             {
                display.selectTemplate(fileTemplates.get(0));
             }
@@ -625,7 +626,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          }
       }
 
-      if (usedProjectTemplates.size() == 0)
+      if (usedProjectTemplates.isEmpty())
       {
          TemplateService.getInstance().deleteFileTemplate(selectedTemplate.getName(),
             new AsyncRequestCallback<String>(IDE.eventBus())
@@ -641,17 +642,15 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          return;
       }
 
-      String projectsNames = "";
+      StringBuffer projectsNames = new StringBuffer();
       for (ProjectTemplate template : usedProjectTemplates)
       {
-         projectsNames += template.getName() + ", ";
+         projectsNames.append(template.getName()).append(", ");
       }
-
-      projectsNames = projectsNames.substring(0, projectsNames.length() - 2);
 
       final String message =
          org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.askDeleteTemplateUsedInOtherProjects(
-            selectedTemplate.getName(), projectsNames);
+            selectedTemplate.getName(), projectsNames.substring(0, projectsNames.length() - 2));
 
       Dialogs.getInstance().ask(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.askDeleteTemplateDialogTitle(),
          message, new BooleanValueReceivedHandler()

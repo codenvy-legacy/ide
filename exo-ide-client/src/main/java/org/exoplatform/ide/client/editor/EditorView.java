@@ -65,11 +65,11 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    private EditorType currentEditorType = EditorType.DEFAULT;
 
-   List<Editor> supportedEditors;
+   private List<Editor> supportedEditors;
 
-   FileModel file;
+   private FileModel file;
 
-   HandlerManager eventBus;
+   private HandlerManager eventBus;
 
    private LayoutPanel  editorArea;
 
@@ -89,13 +89,13 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    private static final String FILE_IS_READ_ONLY = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
       .editorControllerFileIsReadOnly();
 
-   private final int BUTTON_WIDTH = 55;
+   private static final int BUTTON_WIDTH = 55;
 
-   private final int BUTTON_HEIGHT = 22;
+   private static final int BUTTON_HEIGHT = 22;
 
-   private final int EDITOR_SWITCHER_OFFSET = Math.round(BUTTON_HEIGHT / 4);
+   private static final int EDITOR_SWITCHER_OFFSET = Math.round(BUTTON_HEIGHT / 4);
 
-   private final String BUTTON_LABEL_FONT_SIZE = "11px";
+   private static final String BUTTON_LABEL_FONT_SIZE = "11px";
 
    /**
     * @param title
@@ -266,8 +266,8 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
             + iconUrl + "' style='margin-right: 3px; margin-top: -2px;'/><span style='vertical-align: top; font-size: "
             + BUTTON_LABEL_FONT_SIZE + "'>" + label + "</span></div>";
       button.setHTML(buttonFace);
-      button.setWidth("" + BUTTON_WIDTH);
-      button.setHeight("" + BUTTON_HEIGHT);
+      button.setWidth(String.valueOf(BUTTON_WIDTH));
+      button.setHeight(String.valueOf(BUTTON_HEIGHT));
 
       button.addClickHandler(buttonClickHandler);
 
@@ -428,13 +428,13 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
          if (this.supportedEditors.size() == 1)
          {
             lastEditorHeight = editorArea.getOffsetHeight();
-            editors.get(editorType).setHeight("" + lastEditorHeight);
+            editors.get(editorType).setHeight(String.valueOf(lastEditorHeight));
          }
          
          else if (getEditorAreaHeight() > BUTTON_HEIGHT + EDITOR_SWITCHER_OFFSET)
          {
             lastEditorHeight = getEditorAreaHeight();
-            editors.get(editorType).setHeight("" + (lastEditorHeight - BUTTON_HEIGHT - EDITOR_SWITCHER_OFFSET));
+            editors.get(editorType).setHeight(String.valueOf(lastEditorHeight - BUTTON_HEIGHT - EDITOR_SWITCHER_OFFSET));
          }
       }
    }

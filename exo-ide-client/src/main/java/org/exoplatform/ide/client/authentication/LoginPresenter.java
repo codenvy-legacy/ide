@@ -132,7 +132,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      Loader loader = event.getLoader();
+      //Nothing todo
    }
 
    /**

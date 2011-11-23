@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:t="urn:import:org.exoplatform.ide.client.navigation.template">
+   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:t="urn:import:org.exoplatform.ide.client.template.ui">
    <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
    <ui:with type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant" field="ideTemplateConst"></ui:with>
 
@@ -16,7 +16,7 @@
       <g:layer top="0px" bottom="40px">
          <c:Border margin="5">
             <c:layer>
-               <t:FileTemplateListGrid ui:field="fileTemplateListGrid" width="100%"></t:FileTemplateListGrid>
+               <t:TemplateListGrid ui:field="fileTemplateListGrid" width="100%"></t:TemplateListGrid>
             </c:layer>
          </c:Border>
       </g:layer>
