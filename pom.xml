@@ -145,7 +145,11 @@
             <artifactId>exo-ide-server</artifactId>
             <version>${project.version}</version>
          </dependency>
-
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-api</artifactId>
+            <version>${project.version}</version>
+         </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-framework</artifactId>
@@ -674,7 +678,7 @@
       <module>exo-ide-testframework</module>
 
       <module>exo-ide-framework-client</module>
-
+      <module>exo-ide-codeassistant-api</module>
       <module>exo-ide-codeassistant-framework</module>
 
       <module>exo-ide-maven</module>
