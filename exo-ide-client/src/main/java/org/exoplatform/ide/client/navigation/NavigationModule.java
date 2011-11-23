@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTempl
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.navigation.handler.CreateFileCommandHandler;
-import org.exoplatform.ide.client.navigation.handler.CutCopyPasteItemsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.FileClosedHandler;
 import org.exoplatform.ide.client.navigation.handler.OpenFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
@@ -45,6 +44,7 @@ import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter;
+import org.exoplatform.ide.client.operation.cutcopy.CutCopyPasteItemsCommandHandler;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter;
 import org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter;
 import org.exoplatform.ide.client.operation.gotofolder.GoToFolderCommandHandler;
