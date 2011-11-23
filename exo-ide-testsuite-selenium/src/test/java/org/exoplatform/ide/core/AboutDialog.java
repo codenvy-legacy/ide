@@ -50,17 +50,10 @@ public class AboutDialog extends AbstractTestModule
    //Locators basic elements Dialog About Menu
    interface Locators
    {
-      String HELP_MENU_LOCATOR =
-         "//table[@class=\"exo-menuBarTable\"]//td[@class=\"exo-menuBarItem\" and text()=\"Help\"]";
 
-      String ABOUT_MENU_LOCATOR =
-         "//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleField\"]/nobr[text()=\"About...\"]";
-
-      String ABOUT_WINDOW_LOCATOR = "ideAboutView-window";
+      String VIEW_ID = "ideAboutView";
 
       String OK_BUTTON_DIALOGABOUT = "ideAboutViewOkButton";
-
-      String HELP_MENU = "table.exo-popupMenuTable";
 
       String INFO_CONTETNT = "//div[@view-id=\"ideAboutView\"]//table/tbody//tr//div[@class=\"gwt-Label\"]";
 
@@ -68,12 +61,6 @@ public class AboutDialog extends AbstractTestModule
    }
 
    //WebElemnts DialogAbout menu
-   @FindBy(xpath = Locators.HELP_MENU_LOCATOR)
-   public WebElement help;
-
-   @FindBy(xpath = Locators.ABOUT_MENU_LOCATOR)
-   private WebElement about;
-
    @FindBy(id = Locators.OK_BUTTON_DIALOGABOUT)
    private WebElement okButton;
 
@@ -84,32 +71,10 @@ public class AboutDialog extends AbstractTestModule
    private WebElement logo;
 
    /**
-    * Call help menu (with the help of click)
-    * @throws Exception
-    * 
-    */
-   public void callHelpMenu() throws Exception
-   {
-      WebElement check = driver().findElement(By.xpath(Locators.HELP_MENU_LOCATOR));
-      help.click();
-      waitOpenedMenuHelp();
-   }
-
-   /**
-    * click on About submenu
-    * @throws Exception
-    */
-   public void callAboutMenu() throws Exception
-   {
-      about.click();
-      waitOpenedDialogAbout();
-   }
-
-   /**
     * Click on button 'ok' and closing About menu 
     * @throws Exception
     */
-   public void closeDialogAbout() throws Exception
+   public void closeDialogAboutForm() throws Exception
    {
       okButton.click();
       waitClosedDialogAbout();
@@ -118,66 +83,18 @@ public class AboutDialog extends AbstractTestModule
    /**
     * Check basic elements DialogAbout form 
     */
-   public void checkAboutWindow()
+   public boolean isCheckInfoAboutWindow()
    {
 
-      logo.isDisplayed();
       String textContentAbout = content.getText();
-      Assert.assertTrue(textContentAbout.contains("eXo IDE"));
-      Assert.assertTrue(textContentAbout.contains("Version:"));
-      Assert.assertTrue(textContentAbout.contains("eXo Platform SAS (c)"));
-      Assert.assertTrue(textContentAbout.contains("Revision:"));
-      Assert.assertTrue(textContentAbout.contains("Build Time:"));
-
+      return (textContentAbout.contains("eXo IDE") && textContentAbout.contains("Version:")
+         && textContentAbout.contains("eXo Platform SAS (c)") && textContentAbout.contains("Revision:") && textContentAbout
+         .contains("Build Time:"));
    }
 
-   /**
-    * Wait DialogAbout dialog opened.
-    * 
-    * @throws Exception
-    */
-   public void waitOpenedDialogAbout() throws Exception
+   public boolean isLogoPresent()
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement view = input.findElement(By.id(Locators.ABOUT_WINDOW_LOCATOR));
-               return (view != null && view.isDisplayed());
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
-   }
-
-   /**
-    * Wait opened Help Menu
-    * @throws Exception
-    */
-   public void waitOpenedMenuHelp() throws Exception
-   {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement view = input.findElement(By.cssSelector(Locators.HELP_MENU));
-               return (view != null && view.isDisplayed());
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
+      return (logo.isDisplayed());
    }
 
    /**
@@ -194,7 +111,7 @@ public class AboutDialog extends AbstractTestModule
          {
             try
             {
-               input.findElement(By.id(Locators.ABOUT_WINDOW_LOCATOR));
+               input.findElement(By.id(Locators.VIEW_ID));
                return false;
             }
             catch (NoSuchElementException e)
