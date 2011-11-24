@@ -109,7 +109,7 @@
 
    <component>
       <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantStorageVfsImpl</type>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
    </component>
    <component>
       <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage</type>
