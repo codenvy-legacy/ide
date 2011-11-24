@@ -211,7 +211,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       List<Item> selectedItems = event.getSelectedItems();
-      if (selectedItems != null && selectedItems.isEmpty())
+      if (selectedItems != null && !selectedItems.isEmpty())
       {
          Item item = selectedItems.get(0);
          if (item instanceof FileModel)

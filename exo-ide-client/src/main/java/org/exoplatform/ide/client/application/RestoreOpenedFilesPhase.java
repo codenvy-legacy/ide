@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.http.client.RequestException;
-
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -33,14 +34,21 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.model.settings.Settings;
+import org.exoplatform.ide.client.project.OpenProjectEvent;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -55,10 +63,13 @@ import java.util.Map;
  * @version $
  */
 
-public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorActiveFileChangedHandler
+public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorActiveFileChangedHandler,
+   ProjectOpenedHandler
 {
 
    public static final int SCHEDULE_START = 100;
+
+   private RestoreOpenedFilesPhase instance;
 
    private HandlerManager eventBus;
 
@@ -85,10 +96,16 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
 
+      instance = this;
+
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
+      rememberFilesToBeRestored();
+      isLoadingOpenedFiles = false;
+      isRestoringOpenedFiles = false;
 
       new Timer()
       {
@@ -102,19 +119,91 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
    protected void execute()
    {
-      filesToLoad = applicationSettings.getValueAsList("opened-files");
-      if (filesToLoad == null)
+      String openedProjectId = applicationSettings.getValueAsString(Settings.OPENED_PROJECT_ID);
+
+      if (openedProjectId == null || openedProjectId.isEmpty())
       {
-         filesToLoad = new ArrayList<String>();
-         applicationSettings.setValue("opened-files", filesToLoad, Store.SERVER);
+         lazyRestoreOpenedFiles();
+      }
+      else
+      {
+         try
+         {
+            final ProjectModel project = new ProjectModel();
+            project.setId(openedProjectId);
+
+            VirtualFileSystem.getInstance().getItemById(openedProjectId,
+               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project)))
+               {
+                  @Override
+                  protected void onSuccess(ItemWrapper result)
+                  {
+                     final Item item = result.getItem();
+                     IDE.addHandler(ProjectOpenedEvent.TYPE, instance);
+                     Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                     {
+                        @Override
+                        public void execute()
+                        {
+                           IDE.fireEvent(new OpenProjectEvent((ProjectModel)item));
+                        }
+                     });
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     exception.printStackTrace();
+                  }
+               });
+
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
       }
 
-      defaultEditors = applicationSettings.getValueAsMap("default-editors");
-      if (defaultEditors == null)
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      IDE.removeHandler(ProjectOpenedEvent.TYPE, instance);
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-         defaultEditors = new LinkedHashMap<String, String>();
+         @Override
+         public void execute()
+         {
+            lazyRestoreOpenedFiles();
+         }
+      });
+   }
+
+   private void rememberFilesToBeRestored()
+   {
+      if (!applicationSettings.containsKey(Settings.OPENED_FILES))
+      {
+         applicationSettings.setValue(Settings.OPENED_FILES, new ArrayList<String>(), Store.SERVER);
       }
 
+      filesToLoad = new ArrayList<String>();
+      filesToLoad.addAll(applicationSettings.getValueAsList(Settings.OPENED_FILES));
+
+      if (!applicationSettings.containsKey(Settings.DEFAULT_EDITORS))
+      {
+         applicationSettings.setValue(Settings.DEFAULT_EDITORS, new LinkedHashMap<String, String>(), Store.SERVER);
+      }
+
+      defaultEditors = new LinkedHashMap<String, String>();
+      defaultEditors.putAll(applicationSettings.getValueAsMap(Settings.DEFAULT_EDITORS));
+
+      activeFileURL = applicationSettings.getValueAsString(Settings.ACTIVE_FILE);
+   }
+
+   protected void lazyRestoreOpenedFiles()
+   {
       isLoadingOpenedFiles = true;
       isRestoringOpenedFiles = false;
 
@@ -132,14 +221,13 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
       String fileId = filesToLoad.get(0);
       fileToLoad = new FileModel();
-      //      fileToLoad.setPath(href);
+      fileToLoad.setId(fileId);
       filesToLoad.remove(0);
       try
       {
          VirtualFileSystem.getInstance().getItemById(fileId,
             new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(fileToLoad)))
             {
-
                @Override
                protected void onFailure(Throwable exception)
                {
@@ -156,13 +244,11 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                      VirtualFileSystem.getInstance().getContent(
                         new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file))
                         {
-
                            @Override
                            protected void onSuccess(FileModel result)
                            {
                               openedFiles.put(result.getId(), result);
                               preloadNextFile();
-
                            }
 
                            @Override
@@ -179,7 +265,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                      e.printStackTrace();
                   }
                }
-              
+
             });
       }
       catch (RequestException e)
@@ -187,7 +273,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
          eventBus.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
       }
-
    }
 
    private void openFilesInEditor()
@@ -195,7 +280,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
 
       isRestoringOpenedFiles = true;
-      activeFileURL = applicationSettings.getValueAsString("active-file");
       filesToOpen = new ArrayList<String>(openedFiles.keySet());
       openNextFileInEditor();
    }

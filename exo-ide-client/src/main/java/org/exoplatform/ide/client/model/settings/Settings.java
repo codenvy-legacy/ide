@@ -17,11 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.project;
-
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import com.google.gwt.event.shared.GwtEvent;
+package org.exoplatform.ide.client.model.settings;
 
 /**
  * 
@@ -31,33 +27,23 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class OpenProjectEvent extends GwtEvent<OpenProjectHandler>
+public interface Settings
 {
-
-   public static final GwtEvent.Type<OpenProjectHandler> TYPE = new GwtEvent.Type<OpenProjectHandler>();
-
-   private ProjectModel project;
-
-   public OpenProjectEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
-
-   public ProjectModel getProject()
-   {
-      return project;
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   @Override
-   protected void dispatch(OpenProjectHandler handler)
-   {
-      handler.onOpenProject(this);
-   }
+   
+   public static final String LOCK_TOKENS = "lock-tokens";
+   
+   public static final String OPENED_FILES = "opened-files";
+   
+   public static final String ACTIVE_FILE = "active-file";
+   
+   public static final String ENTRY_POINT = "entry-point";
+   
+   public static final String OPENED_PROJECT_ID = "opened-project-id";
+   
+   public static final String TOOLBAR_ITEMS = "toolbar-items";
+   
+   public static final String TOOLBAR_DEFAULT_ITEMS = "toolbar-default-items";
+   
+   public static final String DEFAULT_EDITORS = "default-editors";
 
 }

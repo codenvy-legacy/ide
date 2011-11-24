@@ -43,8 +43,6 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
@@ -65,6 +63,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
@@ -75,6 +74,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
@@ -116,14 +116,14 @@ import java.util.Map;
 
 public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
-   ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
-   ConfigurationReceivedSuccessfullyHandler, ShowProjectExplorerHandler, ItemsSelectedHandler, ViewActivatedHandler,
-   OpenProjectHandler, VfsChangedHandler, ProjectCreatedHandler, CloseProjectHandler, AllFilesClosedHandler
+   ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
+   ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, ProjectCreatedHandler,
+   CloseProjectHandler, AllFilesClosedHandler
 {
-   
+
    public interface Display extends IsView
    {
-      
+
       void setProjectExplorerTreeVisible(boolean visible);
 
       /**
@@ -177,8 +177,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
 
    }
-   
-   private static final String DEFAULT_TITLE = "&nbsp;Project Explorer&nbsp;";
+
+   private static final String DEFAULT_TITLE = "Project Explorer";
 
    private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
       .workspaceReceiveChildrenError();
@@ -211,7 +211,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ItemLockedEvent.TYPE, this);
       IDE.addHandler(ItemUnlockedEvent.TYPE, this);
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
@@ -219,56 +218,23 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectCreatedEvent.TYPE, this);
       IDE.addHandler(CloseProjectEvent.TYPE, this);
-      
+
       IDE.addHandler(AllFilesClosedEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
    }
-   
-   @Override
-   public void onShowProjectExplorer(ShowProjectExplorerEvent event)
+
+   private void ensureProjectExplorerDisplayCreated()
    {
       if (display != null)
       {
-         IDE.getInstance().closeView(display.asView().getId());
          return;
       }
 
-      showProjectExplorer();
-
-      if (navigatorSelectedItems.size() == 0)
-      {
-         display.setProjectExplorerTreeVisible(false);
-         return;
-      }
-      
-      display.setProjectExplorerTreeVisible(true);
-
-      display.getBrowserTree().setValue(navigatorSelectedItems.get(0));
-      display.asView().setTitle("&nbsp;" + navigatorSelectedItems.get(0).getName() + "&nbsp;");
-      display.selectItem(navigatorSelectedItems.get(0).getId());
-      selectedItems = display.getSelectedItems();
-
-      if (!(navigatorSelectedItems.get(0) instanceof Folder))
-      {
-         return;
-      }
-
-      Folder folder = (Folder)navigatorSelectedItems.get(0);
-      foldersToRefresh.clear();
-      foldersToRefresh.add(folder);
-      refreshNextFolder();
-   }
-   
-   private void showProjectExplorer() {
-      if (display != null) {
-         return;
-      }
-      
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
    }
-   
+
    public void bindDisplay()
    {
       display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
@@ -456,7 +422,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          return;
       }
-      
+
       final Folder folder = foldersToRefresh.get(0);
       try
       {
@@ -552,7 +518,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       List<Item> itemsToRemove = new ArrayList<Item>();
       for (Item item : items)
       {
-         if (item.getName().startsWith(".")) {
+         if (item.getName().startsWith("."))
+         {
             itemsToRemove.add(item);
          }
       }
@@ -585,10 +552,11 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
     */
    public void onSelectItem(SelectItemEvent event)
    {
-      if (display == null) {
+      if (display == null)
+      {
          return;
       }
-      
+
       display.selectItem(event.getItemHref());
    }
 
@@ -620,7 +588,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
    }
 
-
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
     */
@@ -631,12 +598,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
 
-      if (display == null)
+      if (display != null)
       {
-         return;
+         display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
       }
-
-      display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
+      
+      ensureProjectExplorerDisplayCreated();
    }
 
    // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5 seems because of SmartGWT issues
@@ -712,17 +679,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       if (event.getView() instanceof Display)
       {
          display = null;
-         openedProject = null;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent)
-    */
-   @Override
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      showProjectExplorer();
    }
 
    @Override
@@ -742,70 +699,92 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if ("ideWorkspaceView".equals(event.getView().getId())  &&!event.getView().getId().equals(lastNavigatorId))
+      if ("ideWorkspaceView".equals(event.getView().getId()) && !event.getView().getId().equals(lastNavigatorId))
       {
          lastNavigatorId = "ideWorkspaceView";
       }
-      else if ("ideTinyProjectExplorerView".equals(event.getView().getId()) && !event.getView().getId().equals(lastNavigatorId))
+      else if ("ideTinyProjectExplorerView".equals(event.getView().getId())
+         && !event.getView().getId().equals(lastNavigatorId))
       {
          lastNavigatorId = "ideTinyProjectExplorerView";
       }
-      
-      if (event.getView() instanceof Display) {
+
+      if (event.getView() instanceof Display)
+      {
          onItemSelected();
       }
    }
 
-   @Override
-   public void onOpenProject(OpenProjectEvent event)
+   private void loadProject()
    {
-      if (display == null) {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();         
-      }
-      
-      display.setProjectExplorerTreeVisible(true);
-      
-      if (openedProject != null) {
-         if (openedProject.getId().equals(event.getProject().getId())) {
-            return;
-         }
-      }
-      
-      doOpenProject(event.getProject());
-   }
-
-   private void doOpenProject(ProjectModel project) {
       needCloseProject = false;
-      
+
       display.setProjectExplorerTreeVisible(true);
-      
-      openedProject = new ProjectModel(project);
       display.getBrowserTree().setValue(null);
       display.getBrowserTree().setValue(openedProject);
-      display.asView().setTitle("&nbsp;" + openedProject.getName() + "&nbsp;");
+      display.asView().setTitle(openedProject.getName());
       display.selectItem(openedProject.getId());
       selectedItems = display.getSelectedItems();
-      
+
       IDE.fireEvent(new ProjectOpenedEvent(openedProject));
-      
+
       navigatorSelectedItems.clear();
       navigatorSelectedItems.add(openedProject);
-      
-//      Folder folder = (Folder)navigatorSelectedItems.get(0);
+
+      //      Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();
       foldersToRefresh.add(openedProject);
       refreshNextFolder();
    }
 
    @Override
-   public void onVfsChanged(VfsChangedEvent event)
+   public void onOpenProject(OpenProjectEvent event)
    {
-      if (display == null) {
+      ensureProjectExplorerDisplayCreated();
+
+      display.setProjectExplorerTreeVisible(true);
+
+      if (openedProject != null)
+      {
+         if (openedProject.getId().equals(event.getProject().getId()))
+         {
+            return;
+         }
+      }
+
+      openedProject = new ProjectModel(event.getProject());
+      loadProject();
+   }
+
+   @Override
+   public void onShowProjectExplorer(ShowProjectExplorerEvent event)
+   {
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
          return;
       }
-      
+
+      ensureProjectExplorerDisplayCreated();
+
+      if (openedProject == null)
+      {
+         display.setProjectExplorerTreeVisible(true);
+      }
+      else
+      {
+         loadProject();
+      }
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      if (display == null)
+      {
+         return;
+      }
+
       display.setProjectExplorerTreeVisible(false);
       display.asView().setTitle(DEFAULT_TITLE);
    }
@@ -813,59 +792,70 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onProjectCreated(final ProjectCreatedEvent event)
    {
-      if (display == null) {
-         return;
-      }
-      
-      if (openedProject == null) {
-         doOpenProject(event.getProject());
+      if (display == null)
+      {
          return;
       }
 
-      Dialogs.getInstance().ask("IDE", "Open project " + event.getProject().getName() + " ?", new BooleanValueReceivedHandler()
+      if (openedProject == null)
       {
-         @Override
-         public void booleanValueReceived(Boolean value)
+         openedProject = new ProjectModel(event.getProject());
+         loadProject();
+         return;
+      }
+
+      Dialogs.getInstance().ask("IDE", "Open project " + event.getProject().getName() + " ?",
+         new BooleanValueReceivedHandler()
          {
-            if (true == value) {
-               doOpenProject(event.getProject());
+            @Override
+            public void booleanValueReceived(Boolean value)
+            {
+               if (true == value)
+               {
+                  openedProject = new ProjectModel(event.getProject());
+                  loadProject();
+               }
             }
-         }
-      });
+         });
    }
-   
+
    @Override
    public void onCloseProject(CloseProjectEvent event)
    {
-      if (openedProject == null || display == null) {
+      if (openedProject == null)
+      {
          return;
       }
-      
-      needCloseProject = true;      
+
+      needCloseProject = true;
       IDE.fireEvent(new CloseAllFilesEvent());
    }
-   
+
    private boolean needCloseProject = false;
 
    @Override
    public void onAllFilesClosed(AllFilesClosedEvent event)
    {
-      if (openedProject == null || display == null || !needCloseProject) {
+      if (openedProject == null || !needCloseProject)
+      {
          return;
-      }      
+      }
       needCloseProject = false;
-      
+
       ProjectClosedEvent projectClosedEvent = new ProjectClosedEvent(openedProject);
-      
+
       openedProject = null;
-      
-      display.getBrowserTree().setValue(null);
-      display.asView().setTitle(DEFAULT_TITLE);
-      display.setProjectExplorerTreeVisible(false);
-      
+
+      if (display != null)
+      {
+         display.getBrowserTree().setValue(null);
+         display.asView().setTitle(DEFAULT_TITLE);
+         display.setProjectExplorerTreeVisible(false);
+      }
+
       selectedItems.clear();
       IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
-      
+
       IDE.fireEvent(projectClosedEvent);
    }
 

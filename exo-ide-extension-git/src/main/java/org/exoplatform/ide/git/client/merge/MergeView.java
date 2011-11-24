@@ -83,6 +83,7 @@ public class MergeView extends ViewImpl implements MergePresenter.Display
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.mergeTitle(), new Image(GitClientBundle.INSTANCE.merge()), WIDTH,
          HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       mergeButton.setButtonId(MERGE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);

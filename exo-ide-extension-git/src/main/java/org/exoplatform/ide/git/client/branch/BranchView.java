@@ -93,6 +93,7 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
    public BranchView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.branchTitle(), null, WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
       checkoutButton.setButtonId(CHECKOUT_BUTTON_ID);

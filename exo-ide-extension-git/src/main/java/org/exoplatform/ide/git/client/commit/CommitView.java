@@ -81,7 +81,8 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    public CommitView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.commitTitle(), null, WIDTH, HEIGHT);
-     add(uiBinder.createAndBindUi(this));
+      setCloseOnEscape(true);
+      add(uiBinder.createAndBindUi(this));
       
       allField.setName(ALL_FIELD_ID);
 

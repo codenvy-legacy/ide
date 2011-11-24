@@ -78,6 +78,7 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
    public RemoveFilesView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFilesViewTitle(), null, WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
       removeButton.setButtonId(REMOVE_BUTTON_ID);

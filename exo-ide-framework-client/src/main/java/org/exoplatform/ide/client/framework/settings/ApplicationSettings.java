@@ -43,9 +43,15 @@ public class ApplicationSettings
     * Values can be only next types: String, Integer, Boolean, Map, List
     */
    private HashMap<String, Object> values = new HashMap<String, Object>();
-   
-   public Map<String, Object> getValues() {
+
+   public Map<String, Object> getValues()
+   {
       return values;
+   }
+
+   public boolean containsKey(String key)
+   {
+      return values.containsKey(key);
    }
 
    public void setValue(String key, Object value, Store store)
@@ -58,45 +64,54 @@ public class ApplicationSettings
    {
       return values.get(key);
    }
-   
-   public String getValueAsString(String key) {
+
+   public String getValueAsString(String key)
+   {
       return (String)values.get(key);
    }
-   
-   public Integer getValueAsInteger(String key) {
-      if (values.get(key) == null) {
+
+   public Integer getValueAsInteger(String key)
+   {
+      if (values.get(key) == null)
+      {
          return 0;
       }
-      
+
       return new Integer((String)values.get(key));
    }
-   
-   public Boolean getValueAsBoolean(String key) {
-      if (values.get(key) == null) {
+
+   public Boolean getValueAsBoolean(String key)
+   {
+      if (values.get(key) == null)
+      {
          return null;
       }
-      
+
       return (Boolean)values.get(key);
    }
-   
+
    @SuppressWarnings("unchecked")
-   public List<String> getValueAsList(String key) {
-      if (values.get(key) == null) {
+   public List<String> getValueAsList(String key)
+   {
+      if (values.get(key) == null)
+      {
          return null;
       }
-      
-      return (List<String>)(values.get(key));      
+
+      return (List<String>)(values.get(key));
    }
-   
+
    @SuppressWarnings("unchecked")
-   public Map<String, String> getValueAsMap(String key) {
-      if (values.get(key) == null) {
+   public Map<String, String> getValueAsMap(String key)
+   {
+      if (values.get(key) == null)
+      {
          return null;
       }
-      
+
       return (Map<String, String>)(values.get(key));
    }
-   
+
    public Store getStore(String key)
    {
       if (stores.get(key) == null)

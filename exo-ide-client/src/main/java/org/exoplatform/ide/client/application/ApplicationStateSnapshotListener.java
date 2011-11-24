@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -35,10 +29,15 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.model.settings.Settings;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
@@ -50,7 +49,12 @@ import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Link;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -60,8 +64,8 @@ import org.exoplatform.ide.vfs.shared.Link;
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, VfsChangedHandler,
-   EditorReplaceFileHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler
-{
+   EditorReplaceFileHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler, ProjectOpenedHandler, ProjectClosedHandler
+{   
 
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
@@ -82,16 +86,18 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       IDE.addHandler(ItemUnlockedEvent.TYPE, this);
       IDE.addHandler(ItemDeletedEvent.TYPE, this);
       IDE.addHandler(ItemMovedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
-      if (applicationSettings.getValueAsMap("lock-tokens") == null)
+      if (applicationSettings.getValueAsMap(Settings.LOCK_TOKENS) == null)
       {
-         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+         applicationSettings.setValue(Settings.LOCK_TOKENS, new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
+      lockTokens = applicationSettings.getValueAsMap(Settings.LOCK_TOKENS);
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)
@@ -127,12 +133,12 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
             continue;
          }
 
-         files.add(file.getLinkByRelation(Link.REL_SELF).getHref());
+         files.add(file.getId());
       }
 
       if (applicationSettings != null)
       {
-         applicationSettings.setValue("opened-files", files, Store.COOKIES);
+         applicationSettings.setValue(Settings.OPENED_FILES, files, Store.COOKIES);
          SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
       }
    }
@@ -147,7 +153,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
 
       if (applicationSettings != null)
       {
-         applicationSettings.setValue("active-file", activeFile, Store.COOKIES);
+         applicationSettings.setValue(Settings.ACTIVE_FILE, activeFile, Store.COOKIES);
          SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
       }
    }
@@ -158,7 +164,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    public void onVfsChanged(VfsChangedEvent event)
    {
       String workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
-      applicationSettings.setValue("entry-point", workspace, Store.COOKIES);
+      applicationSettings.setValue(Settings.ENTRY_POINT, workspace, Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
@@ -175,7 +181,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
     */
    private void storeLockTokens()
    {
-      applicationSettings.setValue("lock-tokens", lockTokens, Store.COOKIES);
+      applicationSettings.setValue(Settings.LOCK_TOKENS, lockTokens, Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
@@ -256,6 +262,20 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    {
       lockTokens.put(event.getItem().getId(), event.getLockToken().getLockToken());
       storeLockTokens();
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      applicationSettings.setValue(Settings.OPENED_PROJECT_ID, "", Store.COOKIES);
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);      
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      applicationSettings.setValue(Settings.OPENED_PROJECT_ID, event.getProject().getId(), Store.COOKIES);
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);      
    }
 
    //   /**

@@ -77,6 +77,7 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
    public AddToIndexView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       messageField.getElement().setId(MESSAGE_FIELD_ID);
       updateField.setName(UPDATE_FIELD_ID);

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -38,6 +41,7 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.configuration.IDEInitializationConfiguration;
+import org.exoplatform.ide.client.model.settings.Settings;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
@@ -68,7 +72,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       super();
       this.controls = controls;
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      //IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    public void loadConfiguration()
@@ -115,26 +118,33 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       /*
        * verify entry point
        */
-      if (applicationSettings.getValueAsString("entry-point") == null && applicationConfiguration.getVfsId() != null)
+      if (!applicationSettings.containsKey(Settings.ENTRY_POINT) && applicationConfiguration.getVfsId() != null)
       {
-         applicationSettings.setValue("entry-point", applicationConfiguration.getVfsId(), Store.COOKIES);
+         applicationSettings.setValue(Settings.ENTRY_POINT, applicationConfiguration.getVfsId(), Store.COOKIES);
       }
 
-      if (applicationSettings.getValueAsString("entry-point") != null)
+      if (applicationSettings.getValueAsString(Settings.ENTRY_POINT) != null)
       {
-         String entryPoint = applicationSettings.getValueAsString("entry-point");
-         IDE.fireEvent(new SwitchVFSEvent(entryPoint));
+         final String entryPoint = applicationSettings.getValueAsString(Settings.ENTRY_POINT);
+         IDE.addHandler(VfsChangedEvent.TYPE, this);
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               IDE.fireEvent(new SwitchVFSEvent(entryPoint));
+            }
+         });         
       }
       else
-      {
+      {        
          promptToSelectEntryPoint();
       }
    }
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      //TODO maybe remove handling of VfsChangedEvent
-      
       IDE.removeHandler(VfsChangedEvent.TYPE, this);
       if (event.getVfsInfo() == null || event.getVfsInfo().getId() == null)
       {
@@ -169,12 +179,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
        * verify toolbar items
        */
 
-      applicationSettings.setValue("toolbar-default-items", controls.getToolbarDefaultControls(), Store.NONE);
-      if (applicationSettings.getValueAsList("toolbar-items") == null)
+      applicationSettings.setValue(Settings.TOOLBAR_DEFAULT_ITEMS, controls.getToolbarDefaultControls(), Store.NONE);
+      if (applicationSettings.getValueAsList(Settings.TOOLBAR_ITEMS) == null)
       {
          List<String> toolbarItems = new ArrayList<String>();
          toolbarItems.addAll(controls.getToolbarDefaultControls());
-         applicationSettings.setValue("toolbar-items", toolbarItems, Store.SERVER);
+         applicationSettings.setValue(Settings.TOOLBAR_ITEMS, toolbarItems, Store.SERVER);
       }
 
       initServices();
@@ -189,7 +199,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
        */
       IDE.fireEvent(new RefreshMenuEvent());
 
-      List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
+      List<String> toolbarItems = applicationSettings.getValueAsList(Settings.TOOLBAR_ITEMS);
       if (toolbarItems == null)
       {
          toolbarItems = new ArrayList<String>();

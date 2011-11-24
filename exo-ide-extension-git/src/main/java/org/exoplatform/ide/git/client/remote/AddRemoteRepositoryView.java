@@ -88,6 +88,7 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
    public AddRemoteRepositoryView(String title)
    {
       super(ID, ViewType.MODAL, title, null, WIDTH, HEIGHT);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);
