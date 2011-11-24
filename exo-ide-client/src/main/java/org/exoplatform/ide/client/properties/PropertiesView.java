@@ -81,7 +81,7 @@ public class PropertiesView extends ViewImpl implements
          DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(file.getCreationDate())));
       properties.put("Last modified",
          DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(file.getLastModificationDate())));
-      properties.put("Content lenght", "" + file.getLength());
+      properties.put("Content length", "" + file.getLength());
 
       if (file.getProperties() != null && !file.getProperties().isEmpty())
       {
