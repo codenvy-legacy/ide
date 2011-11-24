@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.exoplatform.ide.codeassistant.api.CodeAssistant;
 import org.exoplatform.ide.codeassistant.api.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
 import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where;
@@ -32,7 +31,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;

@@ -130,7 +130,7 @@ public class RestCodeAssistantJavaTest extends Base
          launcher.service("GET", "/ide/code-assistant/java/find-by-type/" + type, "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
-      assertEquals(10, types.size());
+      assertEquals(9, types.size());
    }
 
    @Test
