@@ -94,6 +94,9 @@ public class JavaClassTokenWidget extends JavaTokenWidgetBase
 
          case ANNOTATION :
             return new Image(JavaClientBundle.INSTANCE.annotationItem());
+            
+         case ENUM: 
+            return new Image(JavaClientBundle.INSTANCE.enumItem());
 
          case CLASS :
          default :

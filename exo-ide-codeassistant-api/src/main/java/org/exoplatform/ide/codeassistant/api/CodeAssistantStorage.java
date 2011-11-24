@@ -28,7 +28,7 @@ import java.util.List;
 public interface CodeAssistantStorage
 {
    public enum JavaType {
-      CLASS, INTERFACE, ANNOTATION
+      CLASS, INTERFACE, ANNOTATION, ENUM
    }
 
    public enum Where {
@@ -66,7 +66,7 @@ public interface CodeAssistantStorage
    List<ShortTypeInfo> findFQNsByClassName(String className) throws CodeAssistantException;
 
    /**
-    * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)
+    * Returns set of FQNs matched to prefix (means FQN or Class simple name begin on {prefix} )
     * Example :
     * if prefix = "java.util.c"
     * set must content:
@@ -88,9 +88,9 @@ public interface CodeAssistantStorage
    List<ShortTypeInfo> findFQNsByPrefix(String prefix, Where where) throws CodeAssistantException;
 
    /**
-    * Find all classes or annotations or interfaces
+    * Find all classes, annotations or interfaces
     *   
-    * @param type the string that represent one of Java class type (i.e. CLASS, INTERFACE, ANNOTATION) 
+    * @param type the enum that represent one of Java class type (i.e. CLASS, INTERFACE, ANNOTATION) 
     * @param prefix optional parameter that matching first letter of type name
     * @return Returns set of FQNs matched to class type
     * @throws CodeAssistantException
@@ -100,8 +100,8 @@ public interface CodeAssistantStorage
    /**
     * Find JavaDoc for FQN
     * @param fqn of type
-    * @return string JavaDoc
-    * @throws CodeAssistantException
+    * @return string Java doc  
+    * @throws CodeAssistantException if Java doc not found
     */
    public String getClassDoc(String fqn) throws CodeAssistantException;
 }

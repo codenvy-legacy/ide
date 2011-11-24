@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services.marshal;
 
+import com.google.gwt.json.client.JSONParser;
+
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
@@ -78,13 +80,9 @@ public class FindClassesUnmarshaller implements Unmarshallable
 
    }
 
-   private native JavaScriptObject getClasses(String json)/*-{
-      return eval('(' + json + ')');
-   }-*/;
-
    private void parseClassesName(String body)
    {
-      JSONArray jArray = new JSONArray(getClasses(body));
+      JSONArray jArray = JSONParser.parseLenient(body).isArray();
 
       for (int i = 0; i < jArray.size(); i++)
       {

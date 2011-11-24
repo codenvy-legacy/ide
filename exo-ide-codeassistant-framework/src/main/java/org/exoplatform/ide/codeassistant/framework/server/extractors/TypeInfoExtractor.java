@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.extractors;
 
+import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
 import org.exoplatform.ide.codeassistant.api.FieldInfo;
 import org.exoplatform.ide.codeassistant.api.MethodInfo;
 import org.exoplatform.ide.codeassistant.api.RoutineInfo;
@@ -38,22 +39,6 @@ import java.lang.reflect.Method;
 */
 public class TypeInfoExtractor
 {
-
-   /**
-    * 
-    */
-   public static final String ANNOTATION = "ANNOTATION";
-
-   /**
-    * 
-    */
-   public static final String INTERFACE = "INTERFACE";
-
-   /**
-    * 
-    */
-   public static final String CLASS = "CLASS";
-
    /**
     * @param clazz
     * @return
@@ -132,15 +117,19 @@ public class TypeInfoExtractor
 
       if (clazz.isAnnotation())
       {
-         classDescription.setType(ANNOTATION);
+         classDescription.setType(JavaType.ANNOTATION.name());
       }
       else if (clazz.isInterface())
       {
-         classDescription.setType(INTERFACE);
+         classDescription.setType(JavaType.INTERFACE.name());
+      }
+      else if(clazz.isEnum())
+      {
+         classDescription.setType(JavaType.ENUM.name());
       }
       else
       {
-         classDescription.setType(CLASS);
+         classDescription.setType(JavaType.CLASS.name());
       }
 
       return classDescription;

@@ -43,6 +43,9 @@ public interface JavaClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/java/client/images/innerinterface_public.gif")
    ImageResource interfaceItem();
+   
+   @Source("org/exoplatform/ide/editor/java/client/images/enum_item.gif")
+   ImageResource enumItem();
 
    @Source("org/exoplatform/ide/editor/java/client/images/default-field.png")
    ImageResource defaultField();

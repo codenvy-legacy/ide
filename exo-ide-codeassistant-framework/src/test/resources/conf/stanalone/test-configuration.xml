@@ -108,16 +108,15 @@
    </component>
 
    <component>
-      <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
+      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantStorageVfsImpl</type>
    </component>
-
    <component>
       <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage</type>
       <init-params>
          <object-param>
             <name>classinfostrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+            <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig">
                <field name="wsName">
                   <string>ws</string>
                </field>
@@ -127,7 +126,7 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
                            <field name="jarPath">
                               <string>${java.src}</string>
                            </field>
@@ -152,7 +151,7 @@
       <init-params>
          <object-param>
             <name>docstrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+            <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig">
                <field name="wsName">
                   <string>ws</string>
                </field>
@@ -162,7 +161,7 @@
                <field name="jars">
                   <collection type="java.util.ArrayList">
                      <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
                            <field name="jarPath">
                               <string>${java.src}</string>
                            </field>

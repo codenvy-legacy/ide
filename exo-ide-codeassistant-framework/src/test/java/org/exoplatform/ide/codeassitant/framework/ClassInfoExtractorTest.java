@@ -28,6 +28,7 @@ import junit.framework.TestCase;
 import org.exoplatform.ide.codeassistant.api.FieldInfo;
 import org.exoplatform.ide.codeassistant.api.MethodInfo;
 import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 
 /**
@@ -108,6 +109,14 @@ public class ClassInfoExtractorTest extends TestCase
          assertEquals(methods[i].getModifiers(), md.getModifiers().intValue());
       }
    }
+   
+   public void testEnumExtract()
+   {
+      TypeInfo en = TypeInfoExtractor.extract(E.class);
+      assertEquals(JavaType.ENUM.name(), en.getType());
+      assertEquals("ONE", en.getFields()[0].getName());
+   }
+   
 
    private MethodInfo getMethodInfo(MethodInfo[] mds, String generic)
    {

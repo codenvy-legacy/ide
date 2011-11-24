@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services.marshal;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
@@ -32,11 +35,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @see Unmarshallable
@@ -99,14 +99,10 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
       }
    }
 
-   private native JavaScriptObject getClasses(String json)/*-{
-                                                          return eval('(' + json + ')');
-                                                          }-*/;
-
    private void parseClassDescription(String json)
    {
 
-      JSONObject jObject = new JSONObject(getClasses(json));
+      JSONObject jObject = JSONParser.parseLenient(json).isObject();
       if (jObject.containsKey(CONSTRUCTORS))
       {
          classInfo.getPublicConstructors().addAll(getPublicConstructors(jObject.get(CONSTRUCTORS)));
