@@ -20,8 +20,11 @@
 -->
 <module>
    <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.extension.samples.client.github.ShowSamplesView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.github.ShowSamplesPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter.Display" />
+   </replace-with>
+   <replace-with class="org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.startpage.StartPageView">

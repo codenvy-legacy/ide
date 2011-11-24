@@ -64,7 +64,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    SamplesListGrid samplesListGrid;
    
    @UiField
-   ImageButton finishButton;
+   ImageButton nextButton;
    
    @UiField
    ImageButton cancelButton;
@@ -76,12 +76,12 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getFinishButton()
+    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getNextButton()
     */
    @Override
-   public HasClickHandlers getFinishButton()
+   public HasClickHandlers getNextButton()
    {
-      return finishButton;
+      return nextButton;
    }
 
    /**
@@ -94,12 +94,12 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#enableFinishButton(boolean)
+    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#enableNextButton(boolean)
     */
    @Override
-   public void enableFinishButton(boolean enable)
+   public void enableNextButton(boolean enable)
    {
-      finishButton.setEnabled(enable);
+      nextButton.setEnabled(enable);
    }
 
    /**

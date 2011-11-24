@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.paas.cloudbees;
+package org.exoplatform.ide.extension.samples.client.paas.openshift;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -25,20 +25,15 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
-import org.exoplatform.ide.extension.samples.client.paas.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
 
 /**
- * Asynchronous CloudBees request.
- * The {{@link #onFailure(Throwable)}} method contains the check for 
- * user not authorized exception, in this case - the {@link LoginEvent} is fired.
- * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: CloudBeesAsyncRequestCallback.java Sep 12, 2011 6:04:02 PM vereshchaka $
+ * @version $Id: OpenShiftAsyncRequestCallback.java Nov 24, 2011 3:48:28 PM vereshchaka $
  *
  * @param <T>
  */
-public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallback<T>
+public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
    /**
     * Events handler.
@@ -47,21 +42,13 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
    
    private LoggedInHandler loggedIn;
    
-   private LoginCanceledHandler loginCanceled;
-   
-   public CloudBeesAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
-   {
-      this(eventBus, loggedIn, null);
-   }
-   
-   public CloudBeesAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
+   public OpenShiftAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
    {
       this.eventbus = eventBus;
       this.loggedIn = loggedIn;
-      this.loginCanceled = loginCanceled;
       setEventBus(eventBus);
    }
-
+   
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
@@ -71,14 +58,10 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
       if (exception instanceof ServerException)
       {
          ServerException serverException = (ServerException)exception;
-         //because of CloudBees returned not 401 status, but 500 status
-         //and explanation, that user not autherised in text message,
-         //that's why we must parse text message
-         final String exceptionMsg = serverException.getMessage();
-         if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()  && serverException.getMessage() != null
-                  && exceptionMsg.contains("AuthFailure"))
+         if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
+            && serverException.getMessage().contains("Authentication required"))
          {
-            eventbus.fireEvent(new LoginEvent(SamplesClientService.Paas.CLOUDBEES, loggedIn, loginCanceled));
+            eventbus.fireEvent(new LoginEvent(SamplesClientService.Paas.OPENSHIFT, loggedIn));
             return;
          }
       }

@@ -31,10 +31,12 @@ import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarsha
 import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
+import org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.CredentailsMarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.DomainsUnmarshaller;
+import org.exoplatform.ide.extension.samples.client.paas.marshal.OpenShiftTypesUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
@@ -73,6 +75,19 @@ public class SamplesClientServiceImpl extends SamplesClientService
    private static final String CLOUDFOUNDRY_CREATE = "/ide/cloudfoundry/apps/create";
    
    private static final String CF_TARGETS = "/ide/cloudfoundry/target/all";
+   
+   /** OpenShift **/
+   
+   private static final String OPENSHIFT_TYPES = "/ide/openshift/express/apps/type";
+   
+   private static final String OPENSHIFT_CREATE = "/ide/openshift/express/apps/create";
+   
+   private static final String OPENSHIFT_LOGIN = "/ide/openshift/express/login";
+   
+   /** Heroku **/
+   private static final String HEROKU_CREATE = "/ide/heroku/apps/create";
+   
+   private static final String HEROKU_LOGIN = "/ide/heroku/login";
 
    
    /**
@@ -194,15 +209,31 @@ public class SamplesClientServiceImpl extends SamplesClientService
       {
          url += CLOUDFOUNDRY_LOGIN;
       }
+      else if (Paas.HEROKU == paas)
+      {
+         url += HEROKU_LOGIN;
+      }
+      else if (Paas.OPENSHIFT == paas)
+      {
+         url += OPENSHIFT_LOGIN;
+      }
       else
       {
          eventBus.fireEvent(new ExceptionThrownEvent("Unknown PaaS: " + paas + ". Can't login."));
          return;
       }
-
+      
       HashMap<String, String> credentials = new HashMap<String, String>();
-      credentials.put("email", email);
-      credentials.put("password", password);
+      if (Paas.OPENSHIFT == paas)
+      {
+         credentials.put("rhlogin", email);
+         credentials.put("password", password);
+      }
+      else
+      {
+         credentials.put("email", email);
+         credentials.put("password", password);
+      }
       CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
 
       callback.setEventBus(eventBus);
@@ -274,6 +305,58 @@ public class SamplesClientServiceImpl extends SamplesClientService
       
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
       .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getOpenShiftTypes(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getOpenShiftTypes(AsyncRequestCallback<List<String>> callback)
+   {
+      String url = restServiceContext + OPENSHIFT_TYPES;
+
+      List<String> types = new ArrayList<String>();
+      OpenShiftTypesUnmarshaller unmarshaller = new OpenShiftTypesUnmarshaller(types);
+      callback.setResult(types);
+      callback.setPayload(unmarshaller);
+      callback.setEventBus(eventBus);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createOpenShitfApplication(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void createOpenShitfApplication(String name, String vfsId, String projectId, String type,
+      AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + OPENSHIFT_CREATE;
+
+      callback.setResult(name);
+      callback.setEventBus(eventBus);
+      String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
+      AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createHerokuApplication(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback)
+    */
+   @Override
+   public void createHerokuApplication(String applicationName, String vfsId, String projectid, String remoteName,
+      HerokuAsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + HEROKU_CREATE;
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+
+      callback.setResult(applicationName);
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
 }

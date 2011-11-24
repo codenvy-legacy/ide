@@ -39,6 +39,8 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    
    private LoggedInHandler loggedIn;
    
+   private LoginCanceledHandler loginCanceled;
+   
    /**
     * Paas you want to login.
     */
@@ -46,13 +48,27 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    
    public LoginEvent(SamplesClientService.Paas paas, LoggedInHandler loggedIn)
    {
+      this(paas, loggedIn, null);
+   }
+   
+   public LoginEvent(SamplesClientService.Paas paas, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
+   {
       this.loggedIn = loggedIn;
       this.paas = paas;
+      this.loginCanceled = loginCanceled;
    }
    
    public LoggedInHandler getLoggedIn()
    {
       return loggedIn;
+   }
+   
+   /**
+    * @return the loginCanceled
+    */
+   public LoginCanceledHandler getLoginCanceled()
+   {
+      return loginCanceled;
    }
    
    /**

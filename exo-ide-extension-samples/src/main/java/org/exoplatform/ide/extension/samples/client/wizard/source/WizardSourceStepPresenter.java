@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.source;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasValue;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -25,15 +31,9 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.ProjectProperties;
-import org.exoplatform.ide.extension.samples.client.github.ShowSamplesEvent;
+import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
 import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for Step1 (Source) of Wizard for creation Java Project.
@@ -143,7 +143,7 @@ public class WizardSourceStepPresenter implements ShowWizardHandler, ViewClosedH
       }
       else
       {
-         IDE.fireEvent(new ExceptionThrownEvent("Show Wizard must be null"));
+         IDE.fireEvent(new ExceptionThrownEvent("Show Wizard View must be null"));
       }
    }
    

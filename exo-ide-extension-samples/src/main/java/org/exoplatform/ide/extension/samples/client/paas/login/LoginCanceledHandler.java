@@ -16,37 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.github;
-
-import com.google.gwt.event.shared.GwtEvent;
+package org.exoplatform.ide.extension.samples.client.paas.login;
 
 /**
- * Event to show list of repositories with sample projects on GitHub.
- * 
+ * Can be called if Cancel button was clicked in login dialog.
+ * <p/>
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesShowEvent.java Aug 30, 2011 12:07:32 PM vereshchaka $
+ * @version $Id: LoginCanceledHandler.java Nov 24, 2011 11:29:08 AM vereshchaka $
  */
-public class ShowSamplesEvent extends GwtEvent<ShowSamplesHandler>
+public interface LoginCanceledHandler
 {
-   public static final GwtEvent.Type<ShowSamplesHandler> TYPE = new GwtEvent.Type<ShowSamplesHandler>();
-   
-   public ShowSamplesEvent()
-   {
-   }
-
-   @Override
-   protected void dispatch(ShowSamplesHandler handler)
-   {
-      handler.onShowSamples(this);
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowSamplesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
+   void onCancelLogin();
 }

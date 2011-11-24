@@ -46,8 +46,8 @@
 
             <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
 
-            <f:ImageButton ui:field="finishButton" text="{locale.finishButton}" width="90px" styleName="{style.rightButton}"
-               imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}" buttonId="ideImportSamplesFinishButtonId"></f:ImageButton>
+            <f:ImageButton ui:field="nextButton" text="{locale.nextButton}" width="90px" styleName="{style.rightButton}"
+               imageResource="{resource.next}" disabledImageResource="{resource.nextDisabled}" buttonId="ideImportSamplesNextButtonId"></f:ImageButton>
 
          </g:FlowPanel>
       </g:layer>

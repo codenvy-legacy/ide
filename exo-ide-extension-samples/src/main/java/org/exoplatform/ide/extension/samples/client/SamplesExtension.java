@@ -26,7 +26,10 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.control.ImportFromGithubControl;
 import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
-import org.exoplatform.ide.extension.samples.client.github.ShowSamplesPresenter;
+import org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter;
+import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
+import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
+import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
@@ -70,7 +73,10 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new ConvertToProjectPresenter();
       
       //Import from GitHub
-      new ShowSamplesPresenter();
+      GithubStep<ProjectData> firstStep = new ShowSamplesPresenter();
+      GithubStep<ProjectData> secondStep = new DeploySamplesPresenter();
+      firstStep.setNextStep(secondStep);
+      secondStep.setPreviousStep(firstStep);
       
       //wizard Create new Java Project
       WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter();

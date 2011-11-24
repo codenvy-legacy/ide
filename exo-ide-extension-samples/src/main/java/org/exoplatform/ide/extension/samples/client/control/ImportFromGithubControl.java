@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.github.ShowSamplesEvent;
+import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**

@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
+import org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.List;
@@ -37,7 +38,7 @@ import java.util.Map;
 public abstract class SamplesClientService
 {
    public enum Paas {
-      CLOUDBEES, CLOUDFOUNDRY;
+      CLOUDBEES, CLOUDFOUNDRY, HEROKU, OPENSHIFT;
    }
 
    private static SamplesClientService instance;
@@ -118,5 +119,17 @@ public abstract class SamplesClientService
     * @param callback
     */
    public abstract void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback);
+   
+   /**
+    * Get the types of application on OpenShift.
+    * @param callback
+    */
+   public abstract void getOpenShiftTypes(AsyncRequestCallback<List<String>> callback);
+   
+   public abstract void createOpenShitfApplication(String name, String vfsId, String projectId, String type,
+      AsyncRequestCallback<String> callback);
+   
+   public abstract void createHerokuApplication(String applicationName, String vfsId, String projectid, String remoteName,
+      HerokuAsyncRequestCallback<String> callback);
 
 }

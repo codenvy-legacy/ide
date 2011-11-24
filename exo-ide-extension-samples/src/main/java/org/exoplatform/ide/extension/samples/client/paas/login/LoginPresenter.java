@@ -108,6 +108,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
 
    private LoggedInHandler loggedIn;
    
+   private LoginCanceledHandler loginCanceled;
+   
    /**
     * PaaS you want to login.
     */
@@ -133,6 +135,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          @Override
          public void onClick(ClickEvent event)
          {
+            if (loginCanceled != null)
+            {
+               loginCanceled.onCancelLogin();
+            }
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
@@ -184,6 +190,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    public void onLogin(LoginEvent event)
    {
       loggedIn = event.getLoggedIn();
+      loginCanceled = event.getLoginCanceled();
       paas = event.getPaas();
       if (display == null)
       {
@@ -196,9 +203,17 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          {
             display.getLoginLabel().setValue(lb.loginViewLabel("CloudBees"));
          }
-         else
+         else if (paas == SamplesClientService.Paas.CLOUDFOUNDRY)
          {
             display.getLoginLabel().setValue(lb.loginViewLabel("CloudFoundry"));
+         }
+         else if (paas == SamplesClientService.Paas.HEROKU)
+         {
+            display.getLoginLabel().setValue(lb.loginViewLabel("Heroku"));
+         }
+         else if (paas == SamplesClientService.Paas.OPENSHIFT)
+         {
+            display.getLoginLabel().setValue(lb.loginViewLabel("OpenShift"));
          }
       }
    }
@@ -220,9 +235,21 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
             {
                IDE.fireEvent(new OutputEvent(lb.loginSuccess("CloudBees"), Type.INFO));
             }
-            else
+            else if (paas == SamplesClientService.Paas.CLOUDFOUNDRY)
             {
                IDE.fireEvent(new OutputEvent(lb.loginSuccess("CloudFoundry"), Type.INFO));
+            }
+            else if (paas == SamplesClientService.Paas.HEROKU)
+            {
+               IDE.fireEvent(new OutputEvent(lb.loginSuccess("Heroku"), Type.INFO));
+            }
+            else if (paas == SamplesClientService.Paas.OPENSHIFT)
+            {
+               IDE.fireEvent(new OutputEvent(lb.loginSuccess("OpenShift"), Type.INFO));
+            }
+            else
+            {
+               IDE.fireEvent(new OutputEvent(lb.loginSuccess(String.valueOf(paas)), Type.INFO));
             }
             if (loggedIn != null)
             {
@@ -238,9 +265,17 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
             {
                IDE.fireEvent(new OutputEvent(lb.loginFail("CloudBees"), Type.INFO));
             }
-            else
+            else if (paas == SamplesClientService.Paas.CLOUDFOUNDRY)
             {
                IDE.fireEvent(new OutputEvent(lb.loginFail("CloudFoundry"), Type.INFO));
+            }
+            else if (paas == SamplesClientService.Paas.HEROKU)
+            {
+               IDE.fireEvent(new OutputEvent(lb.loginFail("Heroku"), Type.INFO));
+            }
+            else if (paas == SamplesClientService.Paas.OPENSHIFT)
+            {
+               IDE.fireEvent(new OutputEvent(lb.loginFail("OpenShift"), Type.INFO));
             }
             super.onFailure(exception);
          }

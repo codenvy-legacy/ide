@@ -55,61 +55,61 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: WizardDeploymentStepPresenter.java Sep 9, 2011 3:01:50 PM vereshchaka $
  *
  */
-public class WizardDeploymentStepPresenter implements ViewClosedHandler, 
-ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
+public class WizardDeploymentStepPresenter implements ViewClosedHandler, ProjectCreationFinishedHandler,
+   WizardContinuable, WizardReturnable
 {
    public interface Display extends IsView
    {
       HasClickHandlers getNextButton();
-      
+
       HasClickHandlers getCancelButton();
-      
+
       HasClickHandlers getBackButton();
-      
+
       HasValue<String> getSelectPaasField();
-      
+
       HasValue<String> getSelectCloudBeesDomainField();
-      
+
       HasValue<String> getCloudFoundryNameField();
-      
+
       HasValue<String> getCloudFoundryUrlField();
-      
+
       HasValue<String> getCloudFoundryTargetField();
-      
+
       HasValue<String> getCloudBeesNameField();
-      
+
       HasValue<String> getCloudBeesIdField();
-      
+
       void setCloudFoundryAvailableTargets(String[] targets);
-      
+
       void setPaasValueMap(String[] values, String selected);
-      
+
       void setVisibleCloudBeesPanel(boolean visible);
-      
+
       void setVisibleCloudFoundryPanel(boolean visible);
-      
+
       void setCloudBeesDomainsValueMap(String[] values);
-      
+
       void enableNextButton(boolean enable);
    }
-   
+
    /**
     * Default CloudFoundry target.
     */
    public static final String DEFAULT_CLOUDFOUNDRY_TARGET = "http://api.cloudfoundry.com";
-   
+
    public static final String DEFAULT_URL_PREFIX = "<name>.";
-   
+
    private static final String[] PAAS;
-   
+
    private Display display;
-   
+
    /**
     * Project properties.
     * Got from previous step.
     */
    private ProjectProperties projectProperties;
-   
+
    static
    {
       PAAS = new String[3];
@@ -117,17 +117,17 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
       PAAS[1] = ProjectProperties.Paas.CLOUDFOUNDRY;
       PAAS[2] = ProjectProperties.Paas.CLOUDBEES;
    }
-   
+
    private WizardContinuable wizardContinuable;
-   
+
    private WizardReturnable wizardReturnable;
-   
+
    public WizardDeploymentStepPresenter()
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ProjectCreationFinishedEvent.TYPE, this);
    }
-   
+
    /**
     * @param wizardContinuable the wizardContinuable to set
     */
@@ -135,7 +135,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
    {
       this.wizardContinuable = wizardContinuable;
    }
-   
+
    /**
     * @param wizardReturnable the wizardReturnable to set
     */
@@ -143,7 +143,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
    {
       this.wizardReturnable = wizardReturnable;
    }
-   
+
    private void bindDisplay()
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -155,7 +155,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             closeView();
          }
       });
-      
+
       display.getNextButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -172,7 +172,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             closeView();
          }
       });
-      
+
       display.getBackButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -182,7 +182,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             closeView();
          }
       });
-      
+
       display.getSelectPaasField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -208,7 +208,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             }
          }
       });
-      
+
       display.getCloudBeesNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -224,7 +224,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             }
          }
       });
-      
+
       display.getSelectCloudBeesDomainField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -239,7 +239,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             }
          }
       });
-      
+
       display.getCloudFoundryTargetField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -261,7 +261,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             }
          }
       });
-      
+
       display.getCloudFoundryNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -283,7 +283,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             }
          }
       });
-      
+
       display.getCloudFoundryUrlField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -305,7 +305,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             }
          }
       });
-      
+
       //fill PaaS fields if projectProperties have saved PaaS
       if (projectProperties.getPaas() == null)
       {
@@ -318,7 +318,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          //and fill necessary fields
          display.setPaasValueMap(PAAS, projectProperties.getPaas());
       }
-      
+
    }
 
    /**
@@ -341,7 +341,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
    {
       projectProperties = null;
    }
-   
+
    private void openView()
    {
       if (display == null)
@@ -357,7 +357,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          IDE.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
@@ -376,7 +376,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          projectProperties.getProperties().put("cf-name", name);
       }
       display.getCloudFoundryNameField().setValue(name);
-      
+
       if (projectProperties.getProperties().get("target") != null)
       {
          display.getCloudFoundryTargetField().setValue(projectProperties.getProperties().get("target"));
@@ -402,9 +402,9 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          String url = prefix + urlSufix;
          display.getCloudFoundryUrlField().setValue(url);
       }
-      
+
    }
-   
+
    /**
     * Fill cloudbees name and domain fields with values, that user
     * entered before (they are stored in Map in projectProperties variable).
@@ -418,18 +418,18 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          projectProperties.getProperties().get("cb-name") != null ? projectProperties.getProperties().get("cb-name")
             : projectProperties.getName();
       display.getCloudBeesNameField().setValue(deployName);
-      
+
       if (projectProperties.getProperties().get("domain") != null)
       {
          display.getSelectCloudBeesDomainField().setValue(projectProperties.getProperties().get("domain"));
       }
-      
+
       String id = deployName + "/" + display.getSelectCloudBeesDomainField().getValue();
       display.getCloudBeesIdField().setValue(id);
-      
+
       display.enableNextButton(deployName != null && !deployName.isEmpty());
    }
-   
+
    /**
     * Get the list of domains of CloudBees from server.
     * <p/>
@@ -447,7 +447,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             {
                display.setVisibleCloudFoundryPanel(false);
                display.setVisibleCloudBeesPanel(true);
-               
+
                String[] domains = new String[result.size()];
                result.toArray(domains);
                display.setCloudBeesDomainsValueMap(domains);
@@ -455,7 +455,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             }
          });
    }
-   
+
    private LoggedInHandler domainsLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -464,7 +464,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          getListOfCloudBeesDomains();
       }
    };
-   
+
    private LoggedInHandler validationLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -473,24 +473,25 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          validateCloudFoundryParams();
       }
    };
-   
+
    /**
     * Call the server validation of CloudFoundry params (name of application).
     */
    private void validateCloudFoundryParams()
    {
-      SamplesClientService.getInstance().validateCloudfoundryAction(projectProperties.getProperties().get("target"), 
-         projectProperties.getProperties().get("cf-name"), null, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validationLoggedInHandler)
+      SamplesClientService.getInstance().validateCloudfoundryAction(projectProperties.getProperties().get("target"),
+         projectProperties.getProperties().get("cf-name"), null,
+         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validationLoggedInHandler)
          {
             @Override
             protected void onSuccess(String result)
             {
                wizardContinuable.onContinue(projectProperties);
-               closeView();               
+               closeView();
             }
          });
    }
-   
+
    /**
     * Get the list of targes and put them to select field.
     */
@@ -523,7 +524,7 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
          }
       });
    }
-   
+
    /**
     * @see org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable#onContinue(ProjectProperties)
     */

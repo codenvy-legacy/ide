@@ -47,6 +47,7 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
+import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -68,12 +69,12 @@ import java.util.List;
  *
  */
 public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandler, ItemsSelectedHandler,
-   VfsChangedHandler
+   VfsChangedHandler, GithubStep<ProjectData>
 {
 
    public interface Display extends IsView
    {
-      HasClickHandlers getFinishButton();
+      HasClickHandlers getNextButton();
 
       HasClickHandlers getCancelButton();
 
@@ -81,7 +82,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
 
       List<ProjectData> getSelectedItems();
 
-      void enableFinishButton(boolean enable);
+      void enableNextButton(boolean enable);
    }
 
    private static SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
@@ -96,6 +97,8 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
 
    private ProjectData selectedProjectData;
 
+   private GithubStep<ProjectData> nextStep;
+
    public ShowSamplesPresenter()
    {
       IDE.addHandler(ShowSamplesEvent.TYPE, this);
@@ -106,7 +109,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
 
    private void bindDisplay()
    {
-      display.getFinishButton().addClickHandler(new ClickHandler()
+      display.getNextButton().addClickHandler(new ClickHandler()
       {
 
          @Override
@@ -118,7 +121,9 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                return;
             }
             selectedProjectData = selectedProjects.get(0);
-            createEmptyProject();
+            nextStep.onOpen(selectedProjectData);
+            closeView();
+            //            createEmptyProject();
          }
       });
 
@@ -140,11 +145,11 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
             selectedProjects = display.getSelectedItems();
             if (selectedProjects == null || selectedProjects.isEmpty())
             {
-               display.enableFinishButton(false);
+               display.enableNextButton(false);
             }
             else
             {
-               display.enableFinishButton(true);
+               display.enableNextButton(true);
             }
          }
       });
@@ -181,7 +186,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
             }
             display.getSamplesListGrid().setValue(projectDataList);
-            display.enableFinishButton(false);
+            display.enableNextButton(false);
          }
       });
    }
@@ -331,6 +336,57 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
          projectData[1] = res[2];
       }
       return projectData;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onOpen(java.lang.Object)
+    */
+   @Override
+   public void onOpen(ProjectData value)
+   {
+      //it is the first step
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onReturn()
+    */
+   @Override
+   public void onReturn()
+   {
+      SamplesClientService.getInstance().getRepositoriesList(new AsyncRequestCallback<List<Repository>>()
+      {
+         @Override
+         protected void onSuccess(List<Repository> result)
+         {
+            openView();
+            List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+            for (Repository repo : result)
+            {
+               String[] arr = parseDescription(repo.getDescription());
+               projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+            }
+            display.getSamplesListGrid().setValue(projectDataList);
+            display.enableNextButton(false);
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setNextStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
+    */
+   @Override
+   public void setNextStep(GithubStep<ProjectData> step)
+   {
+      nextStep = step;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setPreviousStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
+    */
+   @Override
+   public void setPreviousStep(GithubStep<ProjectData> step)
+   {
+      //has no prev step
    }
 
 }

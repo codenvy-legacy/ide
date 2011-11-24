@@ -16,16 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.github;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.extension.samples.client.github.deploy;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesShowHandler.java Aug 30, 2011 12:07:21 PM vereshchaka $
- *
+ * @version $Id: GithubStep.java Nov 22, 2011 11:53:47 AM vereshchaka $
  */
-public interface ShowSamplesHandler extends EventHandler
+public interface GithubStep<T>
 {
-   void onShowSamples(ShowSamplesEvent event);
+
+   /**
+    * What to do, when open this screen.
+    * 
+    * @param value context data of wizard
+    */
+   void onOpen(T value);
+
+   /**
+    * What to do, when you return to this screen from next.
+    */
+   void onReturn();
+
+   void setNextStep(GithubStep<T> step);
+
+   void setPreviousStep(GithubStep<T> step);
+
 }

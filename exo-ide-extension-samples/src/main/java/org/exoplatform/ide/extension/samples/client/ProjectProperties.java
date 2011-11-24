@@ -46,6 +46,10 @@ public class ProjectProperties
       public static final String CLOUDFOUNDRY = "CloudFoundry";
       
       public static final String CLOUDBEES = "CloudBees";
+      
+      public static final String HEROKU = "Heroku";
+      
+      public static final String OPENSHIFT = "OpenShift";
    }
    
    private String name;

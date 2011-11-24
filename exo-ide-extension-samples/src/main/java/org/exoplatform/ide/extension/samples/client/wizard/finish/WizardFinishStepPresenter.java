@@ -108,7 +108,6 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
    public WizardFinishStepPresenter()
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
    }
    
    /**
