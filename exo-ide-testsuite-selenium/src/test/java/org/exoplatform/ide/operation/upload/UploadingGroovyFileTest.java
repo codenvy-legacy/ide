@@ -95,7 +95,7 @@ public class UploadingGroovyFileTest extends BaseTest
       //----- 1 --------------
       //open upload form
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
-      IDE.UPLOAD.waitUploadViewOpened();
+      IDE.UPLOAD.waitOpened();
 
       //----- 2 --------------
       //type path to file on local system to upload
@@ -112,14 +112,13 @@ public class UploadingGroovyFileTest extends BaseTest
 
       //----- 2 --------------
       //click to open mime types list
-      IDE.UPLOAD.openMimeTypesList();
       //check, all mime types for groovy extention are present
-      IDE.UPLOAD.checkMimeTypeContainsProposes("script/groovy", "application/x-groovy", "application/x-jaxrs+groovy",
-         "application/x-groovy+html", "application/x-chromattic+groovy");
+      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("script/groovy", "application/x-groovy",
+         "application/x-jaxrs+groovy", "application/x-groovy+html", "application/x-chromattic+groovy"));
 
       //close form
       IDE.UPLOAD.clickCancelButton();
-      IDE.UPLOAD.waitUploadViewClosed();
+      IDE.UPLOAD.waitClosed();
    }
 
    @AfterClass

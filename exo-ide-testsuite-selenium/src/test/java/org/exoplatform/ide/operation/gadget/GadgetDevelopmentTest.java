@@ -67,14 +67,12 @@ public class GadgetDevelopmentTest extends BaseTest
       IDE.WORKSPACE.selectItem(URL);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-
-      //wait for File from template form appeared
-      IDE.TEMPLATES.waitForFileFromTemplateForm();
+      IDE.TEMPLATES.waitOpened();
 
       //Select "Google Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
-      IDE.TEMPLATES.selectFileTemplate("Google Gadget");
+      IDE.TEMPLATES.selectTemplate("Google Gadget");
 
-      IDE.TEMPLATES.typeNameToInputField(FILE_NAME);
+      IDE.TEMPLATES.setFileName(FILE_NAME);
       IDE.TEMPLATES.clickCreateButton();
 
       IDE.EDITOR.waitTabPresent(0);

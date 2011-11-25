@@ -84,7 +84,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.WORKSPACE.selectRootItem();
 
       IDE.SEARCH.performSearch("/", "", "");
-      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.SEARCH.waitSearchResultsOpened();
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + restFileName);
 
       IDE.WORKSPACE.doubleClickOnFileFromSearchTab(WS_URL + TEST_FOLDER + "/" + restFileName);
@@ -147,7 +147,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.WORKSPACE.selectRootItem();
 
       IDE.SEARCH.performSearch("/", "", "");
-      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.SEARCH.waitSearchResultsOpened();
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
 
       IDE.WORKSPACE.doubleClickOnFileFromSearchTab(WS_URL + TEST_FOLDER + "/" + gadgetFileName);

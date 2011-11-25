@@ -84,14 +84,14 @@ public class SearchByMimeTypeTest extends BaseTest
       
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
       IDE.SEARCH.performSearch("/" + FOLDER_NAME_2 + "/", "", MimeType.APPLICATION_JAVASCRIPT);
-      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.SEARCH.waitSearchResultsOpened();
       
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + FOLDER_NAME_2 + "/" + FILE_NAME_2);
       IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
       IDE.SEARCH.doubleClickOnFile(WS_URL + FOLDER_NAME_2 + "/" + FILE_NAME_2);
       IDE.EDITOR.waitTabPresent(0);
-      assertEquals(rootFolderName + "/" + FOLDER_NAME_2, IDE.STATUSBAR.getStatusbarText());
+      assertEquals(rootFolderName + "/" + FOLDER_NAME_2, IDE.STATUSBAR.getNavigationStatus());
    }
 
    @AfterClass

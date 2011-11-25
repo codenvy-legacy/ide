@@ -23,11 +23,8 @@ import static org.junit.Assert.assertFalse;
 
 import junit.framework.Assert;
 
-import com.google.gwt.editor.client.Editor.Ignore;
-
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Templates;
 import org.junit.Test;
 
 import java.awt.Robot;
@@ -420,8 +417,8 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      //check no Crate File From Template form
-      assertFalse(selenium().isElementPresent(Templates.FILE_FROM_TEMPLATE_FORM_ID));
+      //check no Create File From Template form
+      assertFalse(IDE.TEMPLATES.isOpened());
 
       //----- 5 ------------
       //Call "Customize Hotkeys" window

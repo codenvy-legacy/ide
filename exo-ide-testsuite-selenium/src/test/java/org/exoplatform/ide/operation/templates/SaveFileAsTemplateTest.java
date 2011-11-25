@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.templates;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -26,7 +27,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.SaveAsTemplate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -105,50 +105,42 @@ public class SaveFileAsTemplateTest extends BaseTest
       //set "Name" field on "test REST template", 
       //"Description" field on "test REST Service template description", and then click on "Save" button.
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
-      IDE.SAVE_AS_TEMPLATE.waitForDialog();
+      IDE.SAVE_AS_TEMPLATE.waitOpened();
       // check "Save file as template" dialog window
-      IDE.SAVE_AS_TEMPLATE.checkSaveAsTemplateWindow();
+      assertTrue(IDE.SAVE_AS_TEMPLATE.isOpened());
       
       //check save button disabled
-      IDE.SAVE_AS_TEMPLATE.checkButtonState(SaveAsTemplate.SAVE_BUTTON_ID, false);
+      assertFalse(IDE.SAVE_AS_TEMPLATE.isSaveButtonEnabled());
       
       //type some text to name field
-      IDE.SAVE_AS_TEMPLATE.typeNameToInputField("a");
-      
-      //check save button enabled
-      IDE.SAVE_AS_TEMPLATE.checkButtonState(SaveAsTemplate.SAVE_BUTTON_ID, true);
+      IDE.SAVE_AS_TEMPLATE.setName("a");
+      assertTrue(IDE.SAVE_AS_TEMPLATE.isSaveButtonEnabled());
       
       //remove text from name field
-      IDE.SAVE_AS_TEMPLATE.typeNameToInputField("");
+      IDE.SAVE_AS_TEMPLATE.setName("");
+      assertFalse(IDE.SAVE_AS_TEMPLATE.isSaveButtonEnabled());
       
-      //check save button disabled
-      IDE.SAVE_AS_TEMPLATE.checkButtonState(SaveAsTemplate.SAVE_BUTTON_ID, false);
-      
-      //set name
-      IDE.SAVE_AS_TEMPLATE.typeNameToInputField(REST_SERVICE_TEMPLATE_NAME);
-      
-      //set description
-      IDE.SAVE_AS_TEMPLATE.typeDescriptionToInputField(REST_SERVICE_TEMPLATE_DESCRIPTION);
-      //click save button
+      IDE.SAVE_AS_TEMPLATE.setName(REST_SERVICE_TEMPLATE_NAME);
+      IDE.SAVE_AS_TEMPLATE.setDescription(REST_SERVICE_TEMPLATE_DESCRIPTION);
       IDE.SAVE_AS_TEMPLATE.clickSaveButton();
-      //check info dialog, that template crated successfully
+      IDE.SAVE_AS_TEMPLATE.waitClosed();
+      
       IDE.INFORMATION_DIALOG.waitOpened("Template created successfully!");
-      //click ok button
       IDE.INFORMATION_DIALOG.clickOk();
       IDE.INFORMATION_DIALOG.waitClosed();
       
       //------------ 3 ----------
       //Click on "New->From Template" button and then click on "test groovy template" item.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      IDE.TEMPLATES.waitForFileFromTemplateForm();
+      IDE.TEMPLATES.waitOpened();
       
       // check "Create file" dialog window
-      IDE.TEMPLATES.checkCreateFileFromTemplateWindow();
-      IDE.TEMPLATES.selectFileTemplate(REST_SERVICE_TEMPLATE_NAME);
+      assertTrue(IDE.TEMPLATES.isOpened());
+      IDE.TEMPLATES.selectTemplate(REST_SERVICE_TEMPLATE_NAME);
       
       //------------ 4 ----------
       //Change "File Name.groovy" field text on "Test Groovy File.groovy" name, click on "Create" button.
-      IDE.TEMPLATES.typeNameToInputField(REST_SERVICE_FILE_NAME);
+      IDE.TEMPLATES.setFileName(REST_SERVICE_FILE_NAME);
       //click Create button
       IDE.TEMPLATES.clickCreateButton();
       IDE.EDITOR.waitTabPresent(1);

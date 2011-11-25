@@ -19,13 +19,14 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.core.Upload;
 import org.junit.Test;
 
 import java.io.File;
@@ -50,8 +51,8 @@ public class OpenLocalFileTest extends BaseTest
 
       //call Open Local File form
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE);
-      IDE.UPLOAD.waitUploadViewOpened();
-      IDE.UPLOAD.checkButtonState(Upload.UPLOAD_BUTTON_ID, false);
+      IDE.UPLOAD.waitOpened();
+      assertFalse(IDE.UPLOAD.isUploadButtonEnabled());
       
       //select file from local driver without file extention
       try
@@ -69,18 +70,16 @@ public class OpenLocalFileTest extends BaseTest
       assertEquals(fileName, IDE.UPLOAD.getFilePathValue());
       
       assertEquals("", IDE.UPLOAD.getMimeTypeValue());
-      IDE.UPLOAD.checkButtonState(Upload.UPLOAD_BUTTON_ID, false);
-
-      IDE.UPLOAD.typeToMimeTypeField(MimeType.TEXT_HTML);
+      assertFalse(IDE.UPLOAD.isUploadButtonEnabled());
+      
+      IDE.UPLOAD.setMimeType(MimeType.TEXT_HTML);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
-      IDE.UPLOAD.checkButtonState(Upload.UPLOAD_BUTTON_ID, true);
+      assertTrue(IDE.UPLOAD.isUploadButtonEnabled());
       
       IDE.UPLOAD.clickUploadButton();
-
-      IDE.UPLOAD.waitUploadViewClosed();
+      IDE.UPLOAD.waitClosed();
       
-      IDE.UPLOAD.checkIsOpened(false);
       IDE.EDITOR.waitTabPresent(0);
 
    }

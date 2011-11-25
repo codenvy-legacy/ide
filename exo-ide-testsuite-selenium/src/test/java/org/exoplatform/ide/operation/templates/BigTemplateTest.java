@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.operation.templates;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.SaveAsTemplate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,6 +42,8 @@ import java.io.IOException;
 public class BigTemplateTest extends BaseTest
 {
    private final static String FILE_NAME = "Calculator.xml";
+
+   private final static String TEMPLATE_NAME = "Calc";
 
    private final static String FOLDER = BigTemplateTest.class.getSimpleName();
 
@@ -78,12 +81,12 @@ public class BigTemplateTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
+      IDE.SAVE_AS_TEMPLATE.waitOpened();
+      assertTrue(IDE.SAVE_AS_TEMPLATE.isOpened());
+      IDE.SAVE_AS_TEMPLATE.setName(TEMPLATE_NAME);
+      IDE.SAVE_AS_TEMPLATE.clickSaveButton();
+      IDE.SAVE_AS_TEMPLATE.waitClosed();
 
-      IDE.SAVE_AS_TEMPLATE.checkSaveAsTemplateWindow();
-
-      selenium().type(SaveAsTemplate.NAME_FIELD_ID, "Calc");
-
-      selenium().click(SaveAsTemplate.SAVE_BUTTON_ID);
       IDE.INFORMATION_DIALOG.waitOpened("Template created successfully!");
 
       //click OK button
@@ -92,14 +95,15 @@ public class BigTemplateTest extends BaseTest
 
       IDE.EDITOR.closeFile(0);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      IDE.TEMPLATES.waitForFileFromTemplateForm();
+      IDE.TEMPLATES.waitOpened();
 
       // check "Create file" dialog window
-      IDE.TEMPLATES.checkCreateFileFromTemplateWindow();
-      IDE.TEMPLATES.selectFileTemplate("Calc");
+      assertTrue(IDE.TEMPLATES.isOpened());
+      IDE.TEMPLATES.selectTemplate(TEMPLATE_NAME);
       //click Create button
       IDE.TEMPLATES.clickCreateButton();
-
+      IDE.TEMPLATES.waitClosed();
+      
       IDE.EDITOR.waitTabPresent(0);
 
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);

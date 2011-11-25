@@ -91,13 +91,13 @@ public class SearchInRootFolderTest extends BaseTest
       IDE.WORKSPACE.selectRootItem();
 
       IDE.SEARCH.performSearch("/", "Hello", "text/html");
-      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.SEARCH.waitSearchResultsOpened();
 
       assertEquals(0, IDE.SEARCH.getResultsCount());
 
       selectWorkspaceTab();
       IDE.SEARCH.performSearch("/", "Hello", restFileMimeType);
-      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.SEARCH.waitSearchResultsOpened();
       assertEquals(3, IDE.SEARCH.getResultsCount());
 
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folder1Name + "/" + restFileName);

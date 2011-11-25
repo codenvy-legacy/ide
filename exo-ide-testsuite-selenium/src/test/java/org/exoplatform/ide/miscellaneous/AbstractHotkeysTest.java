@@ -154,8 +154,9 @@ public abstract class AbstractHotkeysTest extends BaseTest
 
    void checkCreateFileFromTemplateFormAndClose() throws Exception
    {
-      assertTrue(selenium().isElementPresent(Templates.FILE_FROM_TEMPLATE_FORM_ID));
+      assertTrue(IDE.TEMPLATES.isOpened());
       IDE.TEMPLATES.clickCancelButton();
+      IDE.TEMPLATES.waitClosed();
    }
 
    void checkCustomizeHotkeyDialogWindow()

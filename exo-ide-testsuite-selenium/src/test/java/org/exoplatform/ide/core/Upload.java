@@ -19,10 +19,15 @@
 package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 
@@ -58,91 +63,106 @@ public class Upload extends AbstractTestModule
       public static final String OPEN_LOCAL_FILE = "Open Local File...";
    }
 
-   //---------- Id of elements, needed in this test ------------------
-   /**
-    * Id of upload form div.
-    */
-   public static final String UPLOAD_FORM_ID = "ideUploadForm";
-
-   public static final String BROWSER_BUTTON_ID = "ideUploadFormBrowseButton";
-
-   public static final String FILE_NAME_FIELD_ID = "ideUploadFormFilenameField";
-
-   public static final String MIME_TYPE_FILED_ID = "ideUploadFormMimeTypeField";
-
-   public static final String UPLOAD_BUTTON_ID = "ideUploadFormUploadButton";
-
-   public static final String CANCEL_BUTTON_ID = "ideUploadFormCloseButton";
-
-   //---------- Locators ------------------
-   /**
-    * Locator for div, that contains upload form.
-    */
-   public static final String UPLOAD_FORM_LOCATOR = "//div[@id='" + UPLOAD_FORM_ID + "']";
-
-   public static final String INPUT_FILE_FIELD_LOCATOR = "//input[@type='file']";
-
-   private static final String MIME_TYPE_SUGGEST_PANEL_TEXT_LOCATOR =
-      "//div[@id=\"exoSuggestPanel\"]//td[contains(., '%1s')]";
-
-   /**
-    * Check Upload view is opened.
-    */
-   public void checkIsOpened()
+   private interface Locators
    {
-      assertTrue(selenium().isElementPresent(UPLOAD_FORM_ID));
-      assertTrue(selenium().isElementPresent(UPLOAD_BUTTON_ID));
+      String VIEW_ID = "ideUploadForm";
+
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
+
+      String BROWSER_BUTTON_ID = "ideUploadFormBrowseButton";
+
+      String FILE_NAME_FIELD_ID = "ideUploadFormFilenameField";
+
+      String MIME_TYPE_FIELD_ID = "ideUploadFormMimeTypeField";
+
+      String UPLOAD_BUTTON_ID = "ideUploadFormUploadButton";
+
+      String CANCEL_BUTTON_ID = "ideUploadFormCloseButton";
+
+      String FILE_FIELD_LOCATOR = "//input[@type='file']";
    }
 
-   /**
-    * Check the opened state of the Upload view.
-    * 
-    * @param isOpened if <code>true</code> view is opened
-    */
-   public void checkIsOpened(boolean isOpened)
-   {
-      if (isOpened)
-      {
-         checkIsOpened();
-      }
-      else
-      {
-         assertFalse(selenium().isElementPresent(UPLOAD_FORM_ID));
-         assertFalse(selenium().isElementPresent(UPLOAD_BUTTON_ID));
-      }
-   }
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   WebElement view;
+
+   @FindBy(name = Locators.FILE_NAME_FIELD_ID)
+   WebElement fileNameField;
+
+   @FindBy(name = Locators.MIME_TYPE_FIELD_ID)
+   WebElement mimeTypeField;
+
+   @FindBy(id = Locators.UPLOAD_BUTTON_ID)
+   WebElement uploadButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   WebElement cancelButton;
+
+   @FindBy(id = Locators.BROWSER_BUTTON_ID)
+   WebElement browserButton;
+
+   @FindBy(xpath = Locators.FILE_FIELD_LOCATOR)
+   WebElement fileField;
 
    /**
-    * Wait for upload view to be opened.
+    * Wait Upload view opened.
     * 
     * @throws Exception
     */
-   public void waitUploadViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(UPLOAD_FORM_ID);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return (view != null && view.isDisplayed());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
-    * Wait for upload view to be closed.
+    * Wait Upload view closed.
     * 
     * @throws Exception
     */
-   public void waitUploadViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(UPLOAD_FORM_ID);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   public boolean isOpened()
+   {
+      return (view != null && view.isDisplayed() && browserButton != null && browserButton.isDisplayed()
+         && uploadButton != null && uploadButton.isDisplayed() && cancelButton != null && uploadButton.isDisplayed()
+         && fileNameField != null && fileNameField.isDisplayed());
    }
 
    public void open(String formName, String filePath, String mimeType) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, formName);
-      waitForElementPresent(UPLOAD_FORM_ID);
-
-      final String uploadForm = "uploadFormId";
-      selenium().assignId(UPLOAD_FORM_LOCATOR, uploadForm);
-
-      assertTrue(selenium().isElementPresent(uploadForm));
-      assertTrue(selenium().isElementPresent(BROWSER_BUTTON_ID));
-
+      waitOpened();
       try
       {
          File file = new File(filePath);
@@ -155,23 +175,21 @@ public class Upload extends AbstractTestModule
       String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
       assertEquals(fileName, getFilePathValue());
 
-      selenium().type(MIME_TYPE_FILED_ID, mimeType);
-      assertTrue(selenium().isElementPresent(UPLOAD_BUTTON_ID));
-
+      setMimeType(mimeType);
       clickUploadButton();
-      waitForElementNotPresent(uploadForm);
 
-      assertFalse(selenium().isElementPresent(uploadForm));
+      waitClosed();
    }
 
    /**
     * Set path of the file to be uploaded to file's upload input.
     * 
     * @param path file's path
+    * @throws InterruptedException 
     */
-   public void setUploadFilePath(String path)
+   public void setUploadFilePath(String path) throws InterruptedException
    {
-      selenium().type(INPUT_FILE_FIELD_LOCATOR, path);
+      IDE().INPUT.typeToElement(fileField, path, true);
    }
 
    /**
@@ -179,24 +197,27 @@ public class Upload extends AbstractTestModule
     * 
     * @param proposes proposes to be contained
     */
-   public void checkMimeTypeContainsProposes(String... proposes)
+   public boolean isMimeTypeContainsProposes(String... proposes)
    {
       for (String propose : proposes)
       {
-         String locator = String.format(MIME_TYPE_SUGGEST_PANEL_TEXT_LOCATOR, propose);
-         assertTrue(selenium().isElementPresent(locator));
+         if (!IDE().INPUT.isComboboxValuePresent(mimeTypeField, propose))
+         {
+            return false;
+         }
       }
+      return true;
    }
 
    /**
     * Type text to Mime type field.
     * 
     * @param text text to type
+    * @throws InterruptedException 
     */
-   public void typeToMimeTypeField(String text)
+   public void setMimeType(String mimeType) throws InterruptedException
    {
-      selenium().type(MIME_TYPE_FILED_ID, "");
-      selenium().typeKeys(MIME_TYPE_FILED_ID, text);
+      IDE().INPUT.setComboboxValue(mimeTypeField, mimeType);
    }
 
    /**
@@ -206,8 +227,7 @@ public class Upload extends AbstractTestModule
     */
    public void selectMimeTypeByName(String mimetype)
    {
-      String locator = String.format(MIME_TYPE_SUGGEST_PANEL_TEXT_LOCATOR, mimetype);
-      selenium().click(locator);
+      IDE().INPUT.selectComboboxValue(mimeTypeField, mimetype);
    }
 
    /**
@@ -217,7 +237,7 @@ public class Upload extends AbstractTestModule
     */
    public String getMimeTypeValue()
    {
-      return selenium().getValue(MIME_TYPE_FILED_ID);
+      return mimeTypeField.getText();
    }
 
    /**
@@ -227,34 +247,42 @@ public class Upload extends AbstractTestModule
     */
    public String getFilePathValue()
    {
-      return selenium().getValue(FILE_NAME_FIELD_ID);
+      return fileNameField.getText();
    }
 
    /**
-    * Click upload button.
+    * Click Upload button.
     */
    public void clickUploadButton()
    {
-      selenium().click(UPLOAD_BUTTON_ID);
+      uploadButton.click();
    }
 
    /**
-    * Click cancel button.
+    * Click Cancel button.
     */
    public void clickCancelButton()
    {
-      selenium().click(CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
-    * Open list with proposed Mime types to autocomplete.
+    * Returns enabled state of browser button.
     * 
-    * @throws Exception
+    * @return {@link Boolean} enabled state
     */
-   public void openMimeTypesList() throws Exception
+   public boolean isBrowserButtonEnabled()
    {
-      selenium().click("//div[@id='"+UPLOAD_FORM_ID+"']//td/img");
-      waitForElementPresent("exoSuggestPanel");
+      return IDE().BUTTON.isButtonEnabled(browserButton);
    }
-   
+
+   /**
+    * Returns enabled state of upload button.
+    * 
+    * @return {@link Boolean} enabled state
+    */
+   public boolean isUploadButtonEnabled()
+   {
+      return IDE().BUTTON.isButtonEnabled(uploadButton);
+   }
 }

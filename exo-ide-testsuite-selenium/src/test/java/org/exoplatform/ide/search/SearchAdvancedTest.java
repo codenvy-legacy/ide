@@ -63,7 +63,7 @@ public class SearchAdvancedTest extends BaseTest
 
       //Step 5
       IDE.SEARCH.performSearch("/", "text", "");
-      IDE.SEARCH.waitSearchResultsPresent();
+      IDE.SEARCH.waitSearchResultsOpened();
       IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
 
       //Step 6

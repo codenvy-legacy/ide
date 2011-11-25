@@ -28,7 +28,6 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
-import org.exoplatform.ide.core.Templates;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -300,7 +299,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       
       //1. Create new project: New -> Project from template
-      IDE.TEMPLATES.createProjectFromTemplate(Templates.DEFAULT_PROJECT_TEMPLATE_NAME, CREATED_PROJECT_NAME);
+      //TODO no such functionality : IDE.TEMPLATES.createProjectFromTemplate(Templates.DEFAULT_PROJECT_TEMPLATE_NAME, CREATED_PROJECT_NAME);
       
       IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
       //Check, Configure Classpath window appeared.

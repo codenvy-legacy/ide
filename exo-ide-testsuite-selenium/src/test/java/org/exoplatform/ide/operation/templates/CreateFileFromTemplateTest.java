@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.templates;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -136,13 +137,14 @@ public class CreateFileFromTemplateTest extends BaseTest
        * 2. Open "Create file from template" form.
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      IDE.TEMPLATES.waitForFileFromTemplateForm();
+      IDE.TEMPLATES.waitOpened();
 
       /*
        * 3. Select "Empty HTML" template and click "Create" button
        */
-      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
+      IDE.TEMPLATES.selectTemplate(EMPTY_HTML);
       IDE.TEMPLATES.clickCreateButton();
+      IDE.TEMPLATES.waitClosed();
       IDE.EDITOR.waitTabPresent(2);
 
       /*
@@ -162,8 +164,9 @@ public class CreateFileFromTemplateTest extends BaseTest
        * 5. Create new Netvibes widget from template:
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      IDE.TEMPLATES.waitForFileFromTemplateForm();
-      IDE.TEMPLATES.selectFileTemplate(NETVIBES_WIDGET);
+      IDE.TEMPLATES.waitOpened();
+      IDE.TEMPLATES.selectTemplate(NETVIBES_WIDGET);
+      IDE.TEMPLATES.waitClosed();
       IDE.TEMPLATES.clickCreateButton();
       IDE.EDITOR.waitTabPresent(3);
 
@@ -250,14 +253,15 @@ public class CreateFileFromTemplateTest extends BaseTest
       // ---------2--------
       //Click on "New->From Template" button.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      IDE.TEMPLATES.waitForFileFromTemplateForm();
-      IDE.TEMPLATES.checkCreateFileFromTemplateWindow();
+      IDE.TEMPLATES.waitOpened();
+      assertTrue(IDE.TEMPLATES.isOpened());
       // -------3-------
       //Select "Groovy REST Service" item in the "Create file" window, 
       //change "File Name" field text on "Test Groovy File.groovy" name, click on "Create" button.
-      IDE.TEMPLATES.selectFileTemplate(templateName);
-      IDE.TEMPLATES.typeNameToInputField(fileName);
+      IDE.TEMPLATES.selectTemplate(templateName);
+      IDE.TEMPLATES.setFileName(fileName);
       IDE.TEMPLATES.clickCreateButton();
+      IDE.TEMPLATES.waitClosed();
       IDE.EDITOR.waitTabPresent(0);
       //new file with appropriate titles and highlighting should be opened in the Content Panel
       assertEquals(fileName + " *", IDE.EDITOR.getTabTitle(0));

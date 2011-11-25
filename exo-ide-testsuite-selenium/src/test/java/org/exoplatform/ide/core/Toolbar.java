@@ -36,15 +36,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
 public class Toolbar extends AbstractTestModule
 {
 
-   interface Locators
+   private interface Locators
    {
       String TOOLBAR_ID = "exoIDEToolbar";
 
-      String BUTTON_LOCATOR = "//div[@id='" + TOOLBAR_ID + "']//div[@title='%s']";
+      String BUTTON_SELECTOR = "div[title='%s']";
 
       String POPUP_PANEL_LOCTOR = "//table[@class='exo-popupMenuTable']";
 
@@ -52,77 +51,77 @@ public class Toolbar extends AbstractTestModule
 
       String LOCKLAYER_CLASS = "exo-lockLayer";
 
-      String RIGHT_SIDE_BUTTON_LOCATOR = "//div[@id='" + TOOLBAR_ID
-         + "']//div[@class='exoToolbarElementRight']//div[@class='exoIconButtonPanel' and @title='%s']";
+      String POPUP_SELECTOR = "table.exo-popupMenuTable";
 
-      String LEFT_SIDE_BUTTON_LOCATOR = "//div[@id='" + TOOLBAR_ID
-         + "']//div[@class='exoToolbarElementLeft']//div[@class='exoIconButtonPanel' and @title='%s']";
+      String SELECTED_BUTTON_SELECTOR = "div#" + TOOLBAR_ID + " div.exoIconButtonPanelSelected[title='%s']";
+
+      String RIGHT_SIDE_BUTTON_SELECTOR = "div#" + TOOLBAR_ID + " div.exoToolbarElementRight div[title='%s']";
+
+      String LEFT_SIDE_BUTTON_SELECTOR = "div#" + TOOLBAR_ID + " div.exoToolbarElementLeft div[title='%s']";
    }
 
    @FindBy(className = Locators.LOCKLAYER_CLASS)
    WebElement lockLayer;
 
+   @FindBy(id = Locators.TOOLBAR_ID)
+   WebElement toolbar;
+
    /**
-    * Performs click on toolbar button and makes pause after it.
-    * @param buttonTitle toolbar button title
+    * Performs click on toolbar button.
+    * 
+    * @param buttonTitle button's title
     */
    public void runCommand(String buttonTitle) throws Exception
    {
-      String locator =
-         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + buttonTitle + "\"]";
-      selenium().click(locator);
-
-      if ("New".equals(buttonTitle))
-      {
-         waitForElementPresent("//div[@id='menu-lock-layer-id']//table[@class='exo-popupMenuTable']");
-      }
+      WebElement button = toolbar.findElement(By.cssSelector(String.format(Locators.BUTTON_SELECTOR, buttonTitle)));
+      button.click();
    }
 
    /**
     * Clicks on New button on toolbar and then clicks on 
     * menuName from list
-    * @param menuName
+    * 
+    * @param commandName command's name from New popup
     */
-   public void runCommandFromNewPopupMenu(String menuItemName) throws Exception
+   public void runCommandFromNewPopupMenu(final String commandName) throws Exception
    {
-      runCommand("New");
+      runCommand(MenuCommands.New.NEW);
+      waitMenuPopUp();
+      try
+      {
+         WebElement button =
+            driver().findElement(By.xpath(String.format(Locators.BUTTON_FROM_NEW_POPUP_LOCATOR, commandName)));
+         button.click();
+      }
+      finally
+      {
+         if (lockLayer != null)
+         {
+            lockLayer.click();
+         }
+      }
+   }
 
-      String locator = "//table[@class='exo-popupMenuTable']//tbody//td//nobr[text()='" + menuItemName + "']";
-      selenium().click(locator);
-
-      if (menuItemName.equals(MenuCommands.New.PROJECT_TEMPLATE))
+   /**
+    * Wait for popup to draw.
+    */
+   protected void waitMenuPopUp()
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
       {
-         waitForElementPresent("ideCreateProjectTemplateForm");
-      }
-      else if (menuItemName.equals(MenuCommands.New.FOLDER))
-      {
-         waitForElementPresent("//div[@view-id='ideCreateFolderForm']");
-      }
-      else if (menuItemName.equals(MenuCommands.New.PROJECT_FROM_TEMPLATE))
-      {
-         waitForElementPresent("//div[@view-id='ideCreateProjectFromTemplateView']");
-      }
-      else if (menuItemName.equals(MenuCommands.New.FILE_FROM_TEMPLATE))
-      {
-         waitForElementPresent("//div[@view-id='ideCreateFileFromTemplateForm']");
-      }
-      else if (menuItemName.equals(MenuCommands.New.GOOGLE_GADGET_FILE)
-         || menuItemName.equals(MenuCommands.New.REST_SERVICE_FILE)
-         || menuItemName.equals(MenuCommands.New.GROOVY_SCRIPT_FILE)
-         || menuItemName.equals(MenuCommands.New.CHROMATTIC) || menuItemName.equals(MenuCommands.New.HTML_FILE)
-         || menuItemName.equals(MenuCommands.New.JAVASCRIPT_FILE) || menuItemName.equals(MenuCommands.New.CSS_FILE)
-         || menuItemName.equals(MenuCommands.New.GROOVY_TEMPLATE_FILE)
-         || menuItemName.equals(MenuCommands.New.XML_FILE) || menuItemName.equals(MenuCommands.New.TEXT_FILE)
-         || menuItemName.equals(MenuCommands.New.NETVIBES_WIDGET) || menuItemName.equals(MenuCommands.New.JAVA_CLASS)
-         || menuItemName.equals(MenuCommands.New.JSP) || menuItemName.equals(MenuCommands.New.RUBY)
-         || menuItemName.equals(MenuCommands.New.PHP))
-      {
-         IDE().EDITOR.waitTabPresent(0);
-      }
-      else
-      {
-         waitForElementNotPresent("menu-lock-layer-id");
-      }
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -153,6 +152,8 @@ public class Toolbar extends AbstractTestModule
    }
 
    /**
+    * Returns the enabled state of the Toolbar button.
+    * 
     * @param name button's title
     * @return enabled state of the button
     */
@@ -160,7 +161,7 @@ public class Toolbar extends AbstractTestModule
    {
       try
       {
-         WebElement button = driver().findElement(By.xpath(String.format(Locators.BUTTON_LOCATOR, name)));
+         WebElement button = driver().findElement(By.cssSelector(String.format(Locators.BUTTON_SELECTOR, name)));
          return Boolean.parseBoolean(button.getAttribute("enabled"));
       }
       catch (NoSuchElementException e)
@@ -169,6 +170,13 @@ public class Toolbar extends AbstractTestModule
       }
    }
 
+   /**
+    * Returns the enabled state of button from new popup.
+    * 
+    * @param name button's name
+    * @return {@link Boolean} enabled state
+    * @throws Exception
+    */
    public boolean isButtonFromNewPopupMenuEnabled(String name) throws Exception
    {
       runCommand(MenuCommands.New.NEW);
@@ -238,7 +246,7 @@ public class Toolbar extends AbstractTestModule
    }
 
    /**
-    * Check is button present on toolbar
+    * Check is button present on right part of Toolbar.
     * 
     * @param name button name (title in DOM)
     */
@@ -246,7 +254,7 @@ public class Toolbar extends AbstractTestModule
    {
       try
       {
-         return driver().findElement(By.xpath(String.format(Locators.RIGHT_SIDE_BUTTON_LOCATOR, name))) != null;
+         return driver().findElement(By.cssSelector(String.format(Locators.RIGHT_SIDE_BUTTON_SELECTOR, name))) != null;
       }
       catch (NoSuchElementException e)
       {
@@ -255,7 +263,7 @@ public class Toolbar extends AbstractTestModule
    }
 
    /**
-   * Check is button present on toolbar
+   * Check is button present on left part of  Toolbar.
    * 
    * @param name button name (title in DOM)
    */
@@ -263,7 +271,7 @@ public class Toolbar extends AbstractTestModule
    {
       try
       {
-         return driver().findElement(By.xpath(String.format(Locators.LEFT_SIDE_BUTTON_LOCATOR, name))) != null;
+         return driver().findElement(By.cssSelector(String.format(Locators.LEFT_SIDE_BUTTON_SELECTOR, name))) != null;
       }
       catch (NoSuchElementException e)
       {
@@ -279,26 +287,15 @@ public class Toolbar extends AbstractTestModule
     */
    public boolean isButtonSelected(String name)
    {
-      return selenium().isElementPresent(
-         "//div[@class='exo-toolbar16ButtonPanel_Right' and @title='" + name
-            + "']/div[@class='exo-toolbar16Button-selected' and @elementenabled='true']");
+      try
+      {
+         WebElement button =
+            driver().findElement(By.cssSelector(String.format(Locators.SELECTED_BUTTON_SELECTOR, name)));
+         return button != null && button.isDisplayed();
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
    }
-   
-   @Deprecated
-   public void assertButtonPresent(String name, boolean present)
-   {
-      //      String locator =
-      //         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@class=\"exoIconButtonPanel\" and @title=\"" + name + "\"]";
-      //
-      //      if (present)
-      //      {
-      //         assertTrue(selenium().isElementPresent(locator));
-      //      }
-      //      else
-      //      {
-      //         assertFalse(selenium().isElementPresent(locator));
-      //      }
-
-   }
-
 }

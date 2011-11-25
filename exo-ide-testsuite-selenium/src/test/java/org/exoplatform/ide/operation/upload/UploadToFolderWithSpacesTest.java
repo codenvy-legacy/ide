@@ -71,7 +71,7 @@ public class UploadToFolderWithSpacesTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + FOLDER + "/");
 
        IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
-       IDE.UPLOAD.waitUploadViewOpened();
+       IDE.UPLOAD.waitOpened();
        try
        {
           File file = new File(FILE_PATH);
@@ -82,7 +82,7 @@ public class UploadToFolderWithSpacesTest extends BaseTest
        }
 
        IDE.UPLOAD.clickUploadButton();
-       IDE.UPLOAD.waitUploadViewClosed();
+       IDE.UPLOAD.waitClosed();
 
        IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FOLDER + "/" + TEST_FILE);
    }

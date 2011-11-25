@@ -113,13 +113,13 @@ public class CursorPositionStatusBarTest extends BaseTest
 
       //TODO fix problem see issue IDE -713
       //		check status bar
-      assertEquals("7 : 8", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("7 : 8", IDE.STATUSBAR.getCursorPosition());
       //	refresh
       refresh();
 
       waitForElementPresent("//td[@class='exo-statusText-table-middle']/nobr[text()='1 : 1']");
       //			check status bar
-      assertEquals("1 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       IDE.EDITOR.closeFile(0);
    }
 

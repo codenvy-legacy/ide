@@ -35,12 +35,16 @@ public class Statusbar extends AbstractTestModule
 {
    interface Locators
    {
-      String CURSOR_POSITION_LOCATOR =
-         "//div[@control-id='__editor_cursor_position']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']";
+      String CURSOR_POSITION_LOCATOR = "//div[@control-id='__editor_cursor_position']";
+
+      String NAVIGATION_STATUS_LOCATOR = "//div[@control-id='__navigator_status']";
    }
 
    @FindBy(xpath = Locators.CURSOR_POSITION_LOCATOR)
    private WebElement cursorPosition;
+
+   @FindBy(xpath = Locators.NAVIGATION_STATUS_LOCATOR)
+   private WebElement navigationStatus;
 
    /**
     * Get cursor position.
@@ -74,15 +78,12 @@ public class Statusbar extends AbstractTestModule
    }
 
    /**
-    * Get text shown in status bar.
+    * Get navigation status.
     * 
     * @return {@link String} text
     */
-   @Deprecated
-   public String getStatusbarText()
+   public String getNavigationStatus()
    {
-      return selenium()
-         .getText(
-            "//div[@id='exoIDEStatusbar']//div[@class='exoToolbarElementLeft']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']");
+      return navigationStatus.getText();
    }
 }

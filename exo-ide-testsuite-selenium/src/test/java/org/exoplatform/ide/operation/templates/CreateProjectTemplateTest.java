@@ -79,7 +79,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //=================== Check adding file ====================
       //----- 4 ----------------
       //add file
-      addFile("Google Gadget", gadgetFileName);
+   //   addFile("Google Gadget", gadgetFileName);
       //check new file selected
       //      checkTreeNodeSelected(gadgetFileName + "(from Google Gadget)");
       //check buttons
@@ -93,7 +93,7 @@ public class CreateProjectTemplateTest extends BaseTest
 
       //----- 6 ----------------
       //try to add file with existing name
-      addFile("Google Gadget", gadgetFileName);
+    //  addFile("Google Gadget", gadgetFileName);
 
       //error dialog appears
       IDE.WARNING_DIALOG.waitOpened();
@@ -185,7 +185,7 @@ public class CreateProjectTemplateTest extends BaseTest
       IDE.PROJECT.TEMPLATE.clickCancelButton();
    }
 
-   private void addFile(String templateName, String fileName) throws Exception
+  /* private void addFile(String templateName, String fileName) throws Exception
    {
       //click add file button
       IDE.PROJECT.TEMPLATE.clickAddFileButton();
@@ -198,7 +198,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //click ok button
       IDE.TEMPLATES.clickCreateButton();
 
-   }
+   }*/
 
    private void addFolder(String folderName) throws Exception
    {

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -41,9 +42,9 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
    public void testMimeTypeAutoCompletion() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
 
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
+      IDE.UPLOAD.waitOpened();
       try
       {
          File file = new File(FILE_PATH);
@@ -54,11 +55,11 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
          e.printStackTrace();
       }
 
-      IDE.UPLOAD.typeToMimeTypeField("text/");
-      IDE.UPLOAD.checkMimeTypeContainsProposes("text/any", "text/html", "text/css", "text/plain", "text/xml");
+      IDE.UPLOAD.setMimeType("text/");
+      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("text/any", "text/html", "text/css", "text/plain", "text/xml"));
       String mimeTypeToSelect = "text/richtext";
       IDE.UPLOAD.selectMimeTypeByName(mimeTypeToSelect);
-      
+
       assertEquals(mimeTypeToSelect, IDE.UPLOAD.getMimeTypeValue());
    }
 

@@ -60,23 +60,14 @@ public class WorkspaceTest extends BaseTest
       //check form Workspace
       //call select workspace window
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
-      IDE.SELECT_WORKSPACE.waitForDialog();
+      IDE.SELECT_WORKSPACE.waitOpened();
       //check select workspace window
-      assertTrue(selenium().isElementPresent(SelectWorkspace.SELECT_WORKSPACE_FORM_LOCATOR));
-      assertTrue(selenium().isElementPresent(IDE.SELECT_WORKSPACE.getGwtDialogCaptionLocator("Workspace")));
-      assertTrue(selenium().isElementPresent(SelectWorkspace.OK_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(SelectWorkspace.CANCEL_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(SelectWorkspace.LIST_GRID_ID));
-      assertTrue(selenium().isTextPresent(ENTRY_POINT_URL_IDE + WS_NAME_2 + "/"));
-      assertTrue(selenium().isTextPresent(ENTRY_POINT_URL_IDE + WS_NAME + "/"));
+      assertTrue(IDE.SELECT_WORKSPACE.isOpened());
 
-      //check Ok button is disabled
-      assertFalse(IDE.SELECT_WORKSPACE.getOkButtonState());
-      //check Cancel button is enabled
-      assertTrue(IDE.SELECT_WORKSPACE.getCancelButtonState());
-      //click Cancel button and check form disappeared
+      assertFalse(IDE.SELECT_WORKSPACE.isOkButtonEnabled());
+      assertTrue(IDE.SELECT_WORKSPACE.isCancelButtonEnabled());
       IDE.SELECT_WORKSPACE.clickCancelButton();
-      IDE.SELECT_WORKSPACE.waitForDialogNotPresent();
+      IDE.SELECT_WORKSPACE.waitClosed();
       //check workspace doesn't changed
       assertEquals(WS_NAME, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL)));
 

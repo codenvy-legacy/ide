@@ -37,6 +37,8 @@ public class Input extends AbstractTestModule
    interface Locators
    {
       String SUGGEST_BOX_ID = "exoSuggestPanel";
+
+      String COMBOBOX_VALUE_LOCATOR = "//div[@id='" + SUGGEST_BOX_ID + "']//td[contains(., '%s')]";
    }
 
    /**
@@ -78,6 +80,11 @@ public class Input extends AbstractTestModule
    {
       typeToElement(element, value, true);
       typeToElement(element, Keys.ENTER.toString());
+      waitSuggestBoxHide();
+   }
+
+   private void waitSuggestBoxHide()
+   {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
       {
          @Override
@@ -94,5 +101,52 @@ public class Input extends AbstractTestModule
             }
          }
       });
+   }
+
+   private void waitSuggestBoxShow()
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return driver.findElement(By.id(Locators.SUGGEST_BOX_ID)) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   public void selectComboboxValue(WebElement combobox, String value)
+   {
+      combobox.sendKeys(Keys.ARROW_DOWN);
+      waitSuggestBoxShow();
+      WebElement item = driver().findElement(By.xpath(String.format(Locators.COMBOBOX_VALUE_LOCATOR, value)));
+      item.click();
+      waitSuggestBoxHide();
+   }
+
+   public boolean isComboboxValuePresent(WebElement combobox, String value)
+   {
+      combobox.sendKeys(Keys.ARROW_DOWN);
+      waitSuggestBoxShow();
+      try
+      {
+         WebElement item = driver().findElement(By.xpath(String.format(Locators.COMBOBOX_VALUE_LOCATOR, value)));
+         return item != null;
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+      finally
+      {
+         //TODO think how to close
+      }
    }
 }

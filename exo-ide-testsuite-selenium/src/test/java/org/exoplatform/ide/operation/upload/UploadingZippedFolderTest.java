@@ -128,7 +128,7 @@ public class UploadingZippedFolderTest extends BaseTest
    protected void uploadZippedFolder(String filePath) throws Exception
    {
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FOLDER);
-      IDE.UPLOAD.waitUploadViewOpened();
+      IDE.UPLOAD.waitOpened();
       
       try
       {
@@ -142,6 +142,6 @@ public class UploadingZippedFolderTest extends BaseTest
       assertEquals(
          filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()), IDE.UPLOAD.getFilePathValue());
       IDE.UPLOAD.clickUploadButton();
-      IDE.UPLOAD.waitUploadViewClosed();
+      IDE.UPLOAD.waitClosed();
    }
 }

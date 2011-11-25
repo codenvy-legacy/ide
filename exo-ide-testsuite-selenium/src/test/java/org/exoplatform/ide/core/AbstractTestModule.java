@@ -250,7 +250,10 @@ public abstract class AbstractTestModule
     * 
     * @param buttonId - the id of button
     * @param isEnabled - is enabled
+    * 
+    * @use {@link Button#isButtonEnabled(org.openqa.selenium.WebElement)}
     */
+   @Deprecated
    public void checkButtonState(String buttonId, boolean isEnabled)
    {
       assertTrue(selenium().isElementPresent(

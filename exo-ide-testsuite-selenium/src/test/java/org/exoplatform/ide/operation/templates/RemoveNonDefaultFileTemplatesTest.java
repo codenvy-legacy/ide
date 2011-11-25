@@ -19,6 +19,8 @@
 package org.exoplatform.ide.operation.templates;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -86,14 +88,14 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       //------ 1 ----------
       //Click on "File->New->From Template..." topmenu item.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      IDE.TEMPLATES.waitForFileFromTemplateForm();
+      IDE.TEMPLATES.waitOpened();
       
       // check "Create file" dialog window
-      IDE.TEMPLATES.checkCreateFileFromTemplateWindow();
+      assertTrue(IDE.TEMPLATES.isOpened());
       
       //------ 2 ----------
       // In "Create file"  window select "test template", then click "Delete" button.
-      IDE.TEMPLATES.selectFileTemplate(FILE_TEMPLATE_NAME_1);
+      IDE.TEMPLATES.selectTemplate(FILE_TEMPLATE_NAME_1);
       
       //click Delete button
       IDE.TEMPLATES.clickDeleteButton();
@@ -108,7 +110,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       IDE.TEMPLATES.waitForTemplateDeleted(FILE_TEMPLATE_NAME_1);
       
       //"Create file" window should contain only default("red") templates.
-      IDE.TEMPLATES.checkTemplatePresent(FILE_TEMPLATE_NAME_1, false);
+      assertFalse(IDE.TEMPLATES.isTemplatePresent(FILE_TEMPLATE_NAME_1));
       
       //------ 4 ----------
       // Close "Create file" window, and all opened tabs in content panel.
@@ -135,14 +137,17 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       //------ 1 --------
       //Click on "File->New->From Template..." topmenu item.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      IDE.TEMPLATES.waitForFileFromTemplateForm();
+      IDE.TEMPLATES.waitOpened();
       
       // check "Create file" dialog window
-      IDE.TEMPLATES.checkCreateFileFromTemplateWindow();
+      assertTrue(IDE.TEMPLATES.isOpened());
+      assertTrue(IDE.TEMPLATES.isCancelButtonEnabled());
+      assertFalse(IDE.TEMPLATES.isCreateButtonEnabled());
+      assertFalse(IDE.TEMPLATES.isDeleteButtonEnabled());
       
       //------ 2 --------
       // In "Create file"  window select "test template", then click "Delete" button.
-      IDE.TEMPLATES.selectFileTemplate(FILE_TEMPLATE_NAME_2);
+      IDE.TEMPLATES.selectTemplate(FILE_TEMPLATE_NAME_2);
       
       //click Delete button
       IDE.TEMPLATES.clickDeleteButton();
@@ -164,7 +169,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       IDE.TEMPLATES.waitForTemplateDeleted(FILE_TEMPLATE_NAME_2);
       
       //"Create file" window should contain only default("red") templates.
-      IDE.TEMPLATES.checkTemplatePresent(FILE_TEMPLATE_NAME_2, false);
+      assertFalse(IDE.TEMPLATES.isTemplatePresent(FILE_TEMPLATE_NAME_2));
       
       //------ 5 --------
       // Close "Create file" window, and all opened tabs in content panel.

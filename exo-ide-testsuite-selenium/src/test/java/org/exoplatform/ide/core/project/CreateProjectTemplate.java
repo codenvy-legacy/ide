@@ -109,7 +109,6 @@ public class CreateProjectTemplate extends AbstractTestModule
    public void clickAddFileButton() throws Exception
    {
       selenium().click(ADD_FILE_BUTTON_ID);
-      IDE().TEMPLATES.waitForFileAddFromTemplateForm();
    }
    
    /**

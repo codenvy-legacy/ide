@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Operations with form for selection and changing current workspace.
@@ -30,123 +36,180 @@ import org.exoplatform.ide.TestConstants;
 */
 public class SelectWorkspace extends AbstractTestModule
 {
-   public static final String SELECT_WORKSPACE_FORM_LOCATOR = "//div[@view-id='ideSelectWorkspaceView']";
-   
-   public static final String LIST_GRID_ID = "ideEntryPointListGrid";
-   
-   public static final String OK_BUTTON_ID = "ideEntryPointOkButton";
-   
-   public static final String CANCEL_BUTTON_ID = "ideEntryPointCancelButton";
-   
+
+   private interface Locators
+   {
+      String VIEW_ID = "ideSelectWorkspaceView";
+
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
+
+      String LIST_GRID_ID = "ideEntryPointListGrid";
+
+      String OK_BUTTON_ID = "ideEntryPointOkButton";
+
+      String CANCEL_BUTTON_ID = "ideEntryPointCancelButton";
+
+      String WORKSPACE_LOCATOR = "//table[@id='" + LIST_GRID_ID + "']//div[text()='%s']";
+   }
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.LIST_GRID_ID)
+   private WebElement grid;
+
+   @FindBy(id = Locators.OK_BUTTON_ID)
+   private WebElement okButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
    /**
-    * Call "Select workspace" dialog and select workspace by workspaceName.
+    * Wait Select workspace view opened.
+    * 
+    * @throws Exception
+    */
+   public void waitOpened() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return (view != null && view.isDisplayed() && grid != null && grid.isDisplayed());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait Select workspace view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   /**
+    * Returns opened state of the dialog.
+    * 
+    * @return {@link Boolean} <code>true</code> if opened
+    */
+   public boolean isOpened()
+   {
+      try
+      {
+         return view != null && view.isDisplayed() && okButton != null && okButton.isDisplayed()
+            && cancelButton != null && cancelButton.isDisplayed() && grid != null && grid.isDisplayed();
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+
+   /**
+    * Call "Select workspace" dialog and select workspace by workspaceId.
     *  
-    * @param workspaceName
+    * @param workspaceId workspace's id
     * @throws Exception
     * @throws InterruptedException
     */
-   public void changeWorkspace(String workspaceName) throws Exception, InterruptedException
+   public void changeWorkspace(String workspaceId) throws Exception, InterruptedException
    {
       IDE().MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
-
-      waitForElementPresent(SELECT_WORKSPACE_FORM_LOCATOR);
-      waitForElementPresent(LIST_GRID_ID);
-      waitForElementPresent(OK_BUTTON_ID);
-      waitForElementPresent(CANCEL_BUTTON_ID);
-      String url = BaseTest.ENTRY_POINT_URL_IDE + workspaceName;
-      if (!url.endsWith("/"))
-      {
-         url += "/";
-      }
-      selectWorkspaceInListGrid(url);
-      
-      // test is "Ok" button enabled
-      checkButtonState(OK_BUTTON_ID, true);
-
-      // click the "Ok" button 
+      waitOpened();
+      selectWorkspace(workspaceId);
       clickOkButton();
-      waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
+      waitClosed();
    }
-   
+
    /**
-    * Select workspace by URL in list grid.
-    * @param workspaceUrl - the URL of workspace
+    * Select workspace by id in grid.
+    * 
+    * @param workspaceId workspace's id
     * @throws InterruptedException
     */
-   public void selectWorkspaceInListGrid(String workspaceUrl) throws InterruptedException
+   public void selectWorkspace(String workspaceId) throws InterruptedException
    {
-      selenium().click(SELECT_WORKSPACE_FORM_LOCATOR + "//span[text()='" + workspaceUrl + "']");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+      WebElement workspace = driver().findElement(By.xpath(String.format(Locators.WORKSPACE_LOCATOR, workspaceId)));
+      workspace.click();
    }
-   
+
    /**
-    * Wait while "Select workspace" dialog appears.
-    * 
-    * @throws Exception
-    */
-   public void waitForDialog() throws Exception
-   {
-      waitForElementPresent(SELECT_WORKSPACE_FORM_LOCATOR);
-   }
-   
-   /**
-    * Wait while "Select workspace" dialog disappears.
-    * 
-    * @throws Exception
-    */
-   public void waitForDialogNotPresent() throws Exception
-   {
-      waitForElementNotPresent(SELECT_WORKSPACE_FORM_LOCATOR);
-   }
-   
-   /**
-    * Return is Ok button enabled.
+    * Return Ok button's enabled state.
     * 
     * @return boolean
     * @throws Exception
     */
-   public boolean getOkButtonState() throws Exception
+   public boolean isOkButtonEnabled() throws Exception
    {
-      return getButtonState(OK_BUTTON_ID);
+      return IDE().BUTTON.isButtonEnabled(okButton);
    }
-   
+
    /**
-    * Return is Ok button enabled.
+    * Return is Cancel button's enabled state.
+    * 
     * @return boolean
     * @throws Exception
     */
-   public boolean getCancelButtonState() throws Exception
+   public boolean isCancelButtonEnabled() throws Exception
    {
-      return getButtonState(CANCEL_BUTTON_ID);
+      return IDE().BUTTON.isButtonEnabled(cancelButton);
    }
-   
+
    /**
     * Click Ok button.
+    * 
     * @throws Exception
     */
    public void clickOkButton() throws Exception
    {
-      selenium().click(OK_BUTTON_ID);
+      okButton.click();
    }
-   
+
    /**
     * Click Cancel button.
+    * 
     * @throws Exception
     */
    public void clickCancelButton() throws Exception
    {
-      selenium().click(CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
-   
+
    /**
-    * Make double click on workspace pointed by name.
+    * Double click on workspace's id.
     * 
-    * @param workspaceUrl workspace's name
+    * @param workspaceId workspace's id
     * @throws InterruptedException
     */
-   public void doubleClickInListGrid(String workspaceName) throws InterruptedException
+   public void doubleClickWorkspace(String workspaceId) throws InterruptedException
    {
-      selenium().click("//table[@id='"+LIST_GRID_ID+"']//tr//span[contains(., '" + workspaceName + "')]");
-      selenium().doubleClick("//table[@id='"+LIST_GRID_ID+"']//tr//span[contains(., '" + workspaceName + "')]");
+      WebElement workspace = driver().findElement(By.xpath(String.format(Locators.WORKSPACE_LOCATOR, workspaceId)));
+      new Actions(driver()).doubleClick(workspace).build().perform();
    }
 }

@@ -129,17 +129,18 @@ public class GetItemUrlTest extends BaseTest
    {
       IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SEARCH);
-      IDE.SEARCH.checkSearchViewVisible();
+      IDE.SEARCH.waitPerformSearchOpened();
 
       //Check form inputs
-      assertEquals("/", IDE.SEARCH.getPathFieldValue());
-      assertEquals("", IDE.SEARCH.getContainingTextFieldValue());
-      assertEquals("", IDE.SEARCH.getMimeTypeFieldValue());
+      assertEquals("/", IDE.SEARCH.getPathValue());
+      assertEquals("", IDE.SEARCH.getContainingTextValue());
+      assertEquals("", IDE.SEARCH.getMimeTypeValue());
       //Type content to input
-      IDE.SEARCH.typeContainingTextFieldValue(searchPhrase);
+      IDE.SEARCH.setContainingTextValue(searchPhrase);
       //Click "Search" button
       IDE.SEARCH.clickSearchButton();
-      IDE.SEARCH.checkSearchViewClosed();
+      IDE.SEARCH.waitPerformSearchClosed();
+      IDE.SEARCH.waitSearchResultsOpened();
 
       //Check files are found
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + file1Name);

@@ -18,9 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-
-import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Class for operations with templates: file and projects from templates.
@@ -31,88 +35,173 @@ import org.exoplatform.ide.TestConstants;
  */
 public class SaveAsTemplate extends AbstractTestModule
 {
-   //------Save as template form elements----------------------
-   public static final String SAVE_AS_TEMPLATE_FORM_LOCATOR = "//div[@view-id='ideSaveAsTemplateForm']";
-   
-   public static final String CANCEL_BUTTON_ID = "ideSaveAsTemplateFormCancelButton";
-   
-   public static final String SAVE_BUTTON_ID = "ideSaveAsTemplateFormSaveButton";
-   
-   public static final String TYPE_FIELD_ID = "ideSaveAsTemplateFormTypeField";
-   
-   public static final String NAME_FIELD_ID = "ideSaveAsTemplateFormNameField";
-   
-   public static final String DESCRIPTION_FIELD_ID = "ideSaveAsTemplateFormDescriptionField";
-   
-   public void checkSaveAsTemplateWindow()
+   interface Locators
    {
-      assertTrue(selenium().isElementPresent(SAVE_AS_TEMPLATE_FORM_LOCATOR));
-      assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(SAVE_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(TYPE_FIELD_ID));
-      assertTrue(selenium().isElementPresent(NAME_FIELD_ID));
-      assertTrue(selenium().isElementPresent(DESCRIPTION_FIELD_ID));
-      assertTrue(selenium().isTextPresent("Type:"));
-      assertTrue(selenium().isTextPresent("Name:"));
-      assertTrue(selenium().isTextPresent("Description:"));
+      String VIEW_ID = "ideSaveAsTemplateForm";
+
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
+
+      String CANCEL_BUTTON_ID = "ideSaveAsTemplateFormCancelButton";
+
+      String SAVE_BUTTON_ID = "ideSaveAsTemplateFormSaveButton";
+
+      String TYPE_FIELD_ID = "ideSaveAsTemplateFormTypeField";
+
+      String NAME_FIELD_ID = "ideSaveAsTemplateFormNameField";
+
+      String DESCRIPTION_FIELD_ID = "ideSaveAsTemplateFormDescriptionField";
+
    }
-   
-   public void waitForDialog() throws Exception
-   {
-      waitForElementPresent(SAVE_AS_TEMPLATE_FORM_LOCATOR);
-   }
-   
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.SAVE_BUTTON_ID)
+   private WebElement saveButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locators.NAME_FIELD_ID)
+   private WebElement nameField;
+
+   @FindBy(name = Locators.DESCRIPTION_FIELD_ID)
+   private WebElement descriptionField;
+
+   @FindBy(name = Locators.TYPE_FIELD_ID)
+   private WebElement typeField;
+
    /**
-    * Check is button enabled or disabled.
+    * Wait Save as template view opened.
     * 
-    * @param buttonId - the id of button
-    * @param isEnabled - is button enabled
+    * @throws Exception
     */
-   public void checkButtonState(String buttonId, boolean isEnabled)
+   public void waitOpened() throws Exception
    {
-      assertTrue(selenium().isElementPresent(
-         "//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement view = input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return (view != null && view.isDisplayed());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
-   
+
    /**
-    * Type new name to input name field.
+    * Wait Save as template view closed.
     * 
-    * @param name - the new name of item.
+    * @throws Exception
+    */
+   public void waitClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   /**
+    * Returns opened state of the dialog.
+    * 
+    * @return {@link Boolean} opened  
+    */
+   public boolean isOpened()
+   {
+      try
+      {
+         return view != null && view.isDisplayed() && saveButton != null && saveButton.isDisplayed()
+            && cancelButton != null && cancelButton.isDisplayed() && nameField != null && nameField.isDisplayed()
+            && typeField != null && typeField.isDisplayed() && descriptionField != null
+            && descriptionField.isDisplayed();
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+
+   /**
+    * Returns the enabled state of the save button.
+    * 
+    * @return {@link Boolean} <code>true<code> if enabled
+    */
+   public boolean isSaveButtonEnabled()
+   {
+      return IDE().BUTTON.isButtonEnabled(saveButton);
+   }
+
+   /**
+    * Set name of the template.
+    * 
+    * @param name template's name
     * @throws InterruptedException
     */
-   public void typeNameToInputField(String name) throws InterruptedException
+   public void setName(String name) throws InterruptedException
    {
-      selenium().type(NAME_FIELD_ID, name);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE().INPUT.typeToElement(nameField, name, true);
    }
-   
+
    /**
-    * Enter the type of template
+    * Set type of the template.
+    * 
     * @param type - the type
     * @throws InterruptedException
     */
-   public void typeFileTypeToInputField(String type) throws InterruptedException
+   public void setType(String type) throws InterruptedException
    {
-      selenium().type(TYPE_FIELD_ID, type);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE().INPUT.typeToElement(typeField, type, true);
    }
-   
+
    /**
-    * Enter the description for new template.
+    * Set description of the template.
+    * 
     * @param description - the description
     * @throws InterruptedException
     */
-   public void typeDescriptionToInputField(String description) throws InterruptedException
+   public void setDescription(String description) throws InterruptedException
    {
-      selenium().type(DESCRIPTION_FIELD_ID, description);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE().INPUT.typeToElement(descriptionField, description, true);
    }
-   
+
+   /**
+    * Click save button.
+    * 
+    * @throws Exception
+    */
    public void clickSaveButton() throws Exception
    {
-      selenium().click(SAVE_BUTTON_ID);
+      saveButton.click();
+   }
 
-      waitForElementNotPresent(SAVE_AS_TEMPLATE_FORM_LOCATOR);
+   /**
+    * Click cancel button.
+    * 
+    * @throws Exception
+    */
+   public void clickCancelButton() throws Exception
+   {
+      cancelButton.click();
    }
 
 }

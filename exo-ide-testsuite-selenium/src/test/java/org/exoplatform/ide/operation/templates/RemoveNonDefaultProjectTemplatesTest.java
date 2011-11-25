@@ -85,13 +85,15 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       //----- 1 ----------------
       //open create project from template form
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
+     /*//TODO No create project from template!
+      * 
+      *  IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       IDE.TEMPLATES.waitForProjectCreateForm();
       IDE.TEMPLATES.checkProjectCreateForm();
       
       //----- 2 ----------------
       //select project template from list, type project name, click Create button
-      IDE.TEMPLATES.selectProjectTemplate(PROJECT_TEMPLATE_NAME_1);
+      IDE.TEMPLATES.selectProjectTemplate(PROJECT_TEMPLATE_NAME_1);*/
       
       //----- 3 ----------------
       //delete project template
@@ -106,7 +108,7 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
       
       //----- 4 ----------------
       //check template deleted
-      IDE.TEMPLATES.checkTemplatePresent(PROJECT_TEMPLATE_NAME_1, false);
+     //TODO IDE.TEMPLATES.checkTemplatePresent(PROJECT_TEMPLATE_NAME_1, false);
       
       //close
       IDE.TEMPLATES.clickCancelButton();

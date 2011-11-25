@@ -31,7 +31,7 @@ import java.awt.event.KeyEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RESTService May 11, 2011 2:29:11 PM evgen $
- *
+ *FIXME
  */
 public class RESTService extends AbstractTestModule
 {

@@ -42,7 +42,6 @@ import org.exoplatform.ide.core.Project;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
 import org.exoplatform.ide.core.Rename;
-import org.exoplatform.ide.core.SaveAs;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.exoplatform.ide.core.Search;
 import org.exoplatform.ide.core.SelectWorkspace;
@@ -57,6 +56,7 @@ import org.exoplatform.ide.paas.heroku.core.Heroku;
 import org.exoplatform.ide.paas.openshift.core.OpenShift;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
+
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -84,9 +84,9 @@ public class IDE
    public Toolbar TOOLBAR;
 
    public Editor EDITOR;
-   
+
    public AboutDialog ABOUT;
-   
+
    public Outline OUTLINE;
 
    public Navigation NAVIGATION = new Navigation();
@@ -96,8 +96,6 @@ public class IDE
    public CodeAssistant CODEASSISTANT;
 
    public Preview PREVIEW;
-
-   public SaveAs SAVE_AS = new SaveAs();
 
    public WarningDialog WARNING_DIALOG;
 
@@ -109,7 +107,7 @@ public class IDE
 
    public Statusbar STATUSBAR;
 
-   public SelectWorkspace SELECT_WORKSPACE = new SelectWorkspace();
+   public SelectWorkspace SELECT_WORKSPACE;
 
    public Workspace WORKSPACE = new Workspace();
 
@@ -121,7 +119,7 @@ public class IDE
 
    public Templates TEMPLATES = new Templates();
 
-   public SaveAsTemplate SAVE_AS_TEMPLATE = new SaveAsTemplate();
+   public SaveAsTemplate SAVE_AS_TEMPLATE;
 
    public RESTService REST_SERVICE = new RESTService();
 
@@ -160,7 +158,7 @@ public class IDE
       this.workspaceURL = workspaceURL;
       this.driver = driver;
       instance = this;
-      
+
       ABOUT = PageFactory.initElements(driver, AboutDialog.class);
       ASK_DIALOG = PageFactory.initElements(driver, AskDialog.class);
       ASK_FOR_VALUE_DIALOG = PageFactory.initElements(driver, AskForValueDialog.class);
@@ -180,6 +178,8 @@ public class IDE
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);
       RENAME = PageFactory.initElements(driver, Rename.class);
+      SAVE_AS_TEMPLATE = PageFactory.initElements(driver, SaveAsTemplate.class);
+      SELECT_WORKSPACE = PageFactory.initElements(driver, SelectWorkspace.class);
       STATUSBAR = PageFactory.initElements(driver, Statusbar.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
       WARNING_DIALOG = PageFactory.initElements(driver, WarningDialog.class);
