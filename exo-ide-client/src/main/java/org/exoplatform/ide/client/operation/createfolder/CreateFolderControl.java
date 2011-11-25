@@ -28,6 +28,13 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
+import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,8 +47,6 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    ViewVisibilityChangedHandler
 {
 
-   private boolean folderItemSelected = true;
-
    private boolean browserPanelSelected = true;
 
    public final static String ID = "File/New/Create Folder...";
@@ -49,6 +54,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFolderTitleControl();
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createFolderPromptControl();
+
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
     * 
@@ -83,7 +90,9 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
          setEnabled(false);
          return;
       }
-      if (folderItemSelected)
+
+      if (selectedItems.size() == 1
+         && (selectedItems.get(0) instanceof FolderModel || selectedItems.get(0) instanceof ProjectModel))
       {
          setEnabled(true);
       }
@@ -99,14 +108,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
-      {
-         folderItemSelected = false;
-         updateEnabling();
-         return;
-      }
-
-      folderItemSelected = true;
+      selectedItems = event.getSelectedItems();
       updateEnabling();
    }
 
@@ -116,11 +118,17 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof NavigatorPresenter.Display)
+      if ((event.getView().isViewVisible() && event.getView() instanceof NavigatorPresenter.Display)
+         || (event.getView().isViewVisible() && event.getView() instanceof TinyProjectExplorerPresenter.Display))
       {
-         browserPanelSelected = event.getView().isViewVisible();
-         updateEnabling();
+         browserPanelSelected = true;
       }
+      else
+      {
+         browserPanelSelected = false;
+      }
+
+      updateEnabling();
    }
 
 }

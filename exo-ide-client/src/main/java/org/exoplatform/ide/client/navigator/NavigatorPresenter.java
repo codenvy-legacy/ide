@@ -18,6 +18,24 @@
  */
 package org.exoplatform.ide.client.navigator;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Timer;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -75,24 +93,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Timer;
-
 /**
  * Created by The eXo Platform SAS.
  * 
@@ -101,12 +101,11 @@ import com.google.gwt.user.client.Timer;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHandler,
-   ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
-   ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
-   ViewActivatedHandler, ShowNavigatorHandler, VfsChangedHandler
+public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHandler, ViewVisibilityChangedHandler,
+   ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler, ViewClosedHandler,
+   AddItemTreeIconHandler, RemoveItemTreeIconHandler, ViewActivatedHandler, ShowNavigatorHandler, VfsChangedHandler
 {
-   
+
    public interface Display extends IsView
    {
 
@@ -190,23 +189,24 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       IDE.addHandler(ShowNavigatorEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      
+
       IDE.getInstance().addControl(new ShowNavigatorControl());
    }
-   
+
    @Override
    public void onShowNavigator(ShowNavigatorEvent event)
    {
-      if (display != null) {
+      if (display != null)
+      {
          IDE.getInstance().closeView(display.asView().getId());
          return;
       }
-      
+
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
       openRootFolder();
-   }   
+   }
 
    public void bindDisplay()
    {
@@ -249,14 +249,16 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
             onKeyPressed(event.getNativeEvent().getKeyCode(), event.isControlKeyDown());
          }
       });
-      
+
    }
-   
-   private void openRootFolder() {
+
+   private void openRootFolder()
+   {
       IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
       display.getBrowserTree().setValue(rootFolder);
-      
-      if (rootFolder == null) {
+
+      if (rootFolder == null)
+      {
          return;
       }
 
@@ -270,7 +272,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       catch (Exception e)
       {
          e.printStackTrace();
-      }      
+      }
    }
 
    /**
@@ -366,7 +368,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       {
          return;
       }
-      
+
       if (event.getItemToSelect() != null)
       {
          itemToSelect = event.getItemToSelect().getId();
@@ -395,11 +397,12 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          if (selectedItems.size() > 0)
          {
             Item item = selectedItems.get(0);
-            
+
             if (item instanceof FileModel)
             {
                foldersToRefresh.add(((FileModel)item).getParent());
-            } else if (item instanceof Folder && !(item instanceof ProjectModel))
+            }
+            else if (item instanceof Folder && !(item instanceof ProjectModel))
             {
                foldersToRefresh.add((Folder)item);
             }
@@ -543,10 +546,11 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
     */
    public void onSelectItem(SelectItemEvent event)
    {
-      if (display == null) {
+      if (display == null)
+      {
          return;
       }
-      
+
       display.selectItem(event.getItemHref());
    }
 
@@ -561,8 +565,9 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          FileModel file = (FileModel)item;
          file.setLocked(false);
          file.setLock(null);
-         
-         if (display != null) {            
+
+         if (display != null)
+         {
             display.updateItemState(file);
          }
       }
@@ -578,12 +583,13 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          file.setLocked(true);
          file.setLock(new Lock("", event.getLockToken().getLockToken(), 0));
 
-         if (display != null) {            
+         if (display != null)
+         {
             display.updateItemState(file);
          }
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
     */
@@ -666,29 +672,34 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    @Override
    public void onAddItemTreeIcon(AddItemTreeIconEvent event)
    {
-      display.addItemsIcons(event.getTreeItemIcons());
+      if (display != null)
+      {
+         display.addItemsIcons(event.getTreeItemIcons());
+      }
    }
 
    @Override
    public void onViewClosed(final ViewClosedEvent event)
    {
       if (event.getView() instanceof Display)
-      {         
+      {
          display = null;
 
-         if (!event.getView().isActive()) {
+         if (!event.getView().isActive())
+         {
             return;
          }
 
-         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
             @Override
             public void execute()
             {
                selectedItems.clear();
-               IDE.fireEvent(new ItemsSelectedEvent(selectedItems, event.getView().getId()));         
+               IDE.fireEvent(new ItemsSelectedEvent(selectedItems, event.getView().getId()));
             }
          });
-         
+
       }
    }
 
@@ -701,12 +712,14 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       {
          lastNavigatorId = "ideWorkspaceView";
       }
-      else if ("ideTinyProjectExplorerView".equals(event.getView().getId()) && !event.getView().getId().equals(lastNavigatorId))
+      else if ("ideTinyProjectExplorerView".equals(event.getView().getId())
+         && !event.getView().getId().equals(lastNavigatorId))
       {
          lastNavigatorId = "ideTinyProjectExplorerView";
       }
-      
-      if (event.getView() instanceof Display) {
+
+      if (event.getView() instanceof Display)
+      {
          onItemSelected();
       }
    }
@@ -714,17 +727,19 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() == null) {
+      if (event.getVfsInfo() == null)
+      {
          rootFolder = null;
          return;
       }
-      
+
       rootFolder = event.getVfsInfo().getRoot();
-      
-      if (display != null) {
+
+      if (display != null)
+      {
          openRootFolder();
       }
-      
+
    }
 
 }
