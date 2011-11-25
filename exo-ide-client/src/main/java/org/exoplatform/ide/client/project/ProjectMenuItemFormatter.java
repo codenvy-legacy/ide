@@ -38,7 +38,7 @@ public class ProjectMenuItemFormatter implements ControlsFormatter
    {
       controlIdsOrder = new ArrayList<String>();
 
-      controlIdsOrder.add("Project/New");
+      controlIdsOrder.add("Project/New...");
       controlIdsOrder.add("Project/Open...");
       controlIdsOrder.add("Project/Close");
    }

@@ -90,8 +90,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    private VirtualFileSystemInfo vfsInfo;
    
    public CreateProjectPresenter() {
-      IDE.getInstance().addControl(new NewProjectMenuGroup());
-      IDE.getInstance().addControl(new CreateProjectControl());
+//      IDE.getInstance().addControl(new NewProjectMenuGroup());
+//      IDE.getInstance().addControl(new CreateProjectControl());
 
       IDE.addHandler(CreateProjectEvent.TYPE, this);      
       IDE.addHandler(VfsChangedEvent.TYPE, this);

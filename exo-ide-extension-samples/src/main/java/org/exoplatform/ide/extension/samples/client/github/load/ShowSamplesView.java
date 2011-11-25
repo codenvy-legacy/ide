@@ -42,7 +42,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    
    private static final String ID = "GithubSamplesView";
    
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.showSamplesTitle();
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importLoadDialogTitle();
    
    private static final int HEIGHT = 345;
 

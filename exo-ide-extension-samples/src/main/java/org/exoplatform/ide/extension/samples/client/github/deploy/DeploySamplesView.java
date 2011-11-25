@@ -45,7 +45,7 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
 {
    private static final String ID = "DeploySamplesView";
 
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.wizardDeploymentDialogTitle();
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importLoadDialogTitle();
 
    private static final int HEIGHT = 345;
 

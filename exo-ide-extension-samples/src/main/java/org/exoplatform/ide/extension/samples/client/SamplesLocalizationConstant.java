@@ -367,5 +367,18 @@ public interface SamplesLocalizationConstant extends Messages
    
    @Key("control.importFromGithub.prompt")
    String importFromGithubControlPrompt();
+   
+   /*
+    * ImportFromGitHub
+    */
+   @Key("import.load.dialog.title")
+   String importLoadDialogTitle();
+   
+   @Key("import.load.title")
+   String importLoadTitle();
+   
+   @Key("import.load.text")
+   String importLoadText();
+   
 
 }

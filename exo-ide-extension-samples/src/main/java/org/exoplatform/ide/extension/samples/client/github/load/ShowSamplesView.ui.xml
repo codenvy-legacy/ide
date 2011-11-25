@@ -24,8 +24,8 @@
    <g:LayoutPanel>
       <g:layer>
          <g:FlowPanel stylePrimaryName="{resource.css.topBox}">
-            <g:Label text="{locale.showSamplesSelectProjectTitle}" styleName="{resource.css.labelTitle}"></g:Label>
-            <g:Label text="{locale.showSamplesSelectProjectText}" styleName="{resource.css.labelDescription}"></g:Label>
+            <g:Label text="{locale.importLoadTitle}" styleName="{resource.css.labelTitle}"></g:Label>
+            <g:Label text="{locale.importLoadText}" styleName="{resource.css.labelDescription}"></g:Label>
          </g:FlowPanel>
       </g:layer>
 
