@@ -15,6 +15,11 @@
       .formLine {
       margin-top: 8px;
       }
+
+      .cancelBbutton {
+      position: absolute;
+      right: 200px;
+      }
    </ui:style>
    <g:LayoutPanel>
       <g:layer>
@@ -135,8 +140,8 @@
       <!-- Buttons -->
       <g:layer height="33px" bottom="0">
          <g:FlowPanel width="auto" styleName="{resource.css.innerBox}">
-            <f:ImageButton ui:field="cancelButton" styleName="{resource.css.leftFloat}" width="90px" text="{locale.cancelButton}"
-               imageName="cancel" buttonId="ideWizardDeploymentCancelButtonId"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" styleName="{style.cancelBbutton}" width="90px" text="{locale.cancelButton}"
+               imageName="cancel" buttonId="ideLoadDeploymentCancelButtonId"></f:ImageButton>
 
             <g:FlowPanel width="10px" height="22px" styleName="{resource.css.leftFloat}"></g:FlowPanel>
 

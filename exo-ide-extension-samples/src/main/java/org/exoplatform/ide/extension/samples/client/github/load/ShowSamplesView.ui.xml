@@ -19,6 +19,10 @@
       position: absolute;
       right: 0;
       }
+      .formLine {
+      margin-top:
+      8px;
+      }
    </ui:style>
 
    <g:LayoutPanel>
@@ -41,13 +45,21 @@
 
       <g:layer height="33px" bottom="0">
          <g:FlowPanel width="auto" styleName="{style.buttonsBox}">
-            <f:ImageButton ui:field="cancelButton" styleName="{style.left-float}" width="90px" text="{locale.cancelButton}" imageName="cancel"
+            <g:DockLayoutPanel width="260px" unit="PX" height="22px" stylePrimaryName="{style.left-float}">
+               <g:west size="60">
+                  <g:Label text="Name" height="18px"></g:Label>
+               </g:west>
+               <g:center>
+                  <f:TextInput ui:field="loadProjectName" width="160px" height="22px"></f:TextInput>
+               </g:center>
+            </g:DockLayoutPanel>
+            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            
+            <f:ImageButton ui:field="cancelButton" styleName="{resource.css.middle}" width="90px" text="{locale.cancelButton}" imageName="cancel"
                buttonId="ideImportSamplesCloseButtonId"></f:ImageButton>
 
-            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-
-            <f:ImageButton ui:field="nextButton" text="{locale.nextButton}" width="90px" styleName="{style.rightButton}"
-               imageResource="{resource.next}" disabledImageResource="{resource.nextDisabled}" buttonId="ideImportSamplesNextButtonId"></f:ImageButton>
+            <f:ImageButton ui:field="nextButton" text="{locale.nextButton}" width="90px" styleName="{style.rightButton}" imageResource="{resource.next}"
+               disabledImageResource="{resource.nextDisabled}" buttonId="ideImportSamplesNextButtonId"></f:ImageButton>
 
          </g:FlowPanel>
       </g:layer>

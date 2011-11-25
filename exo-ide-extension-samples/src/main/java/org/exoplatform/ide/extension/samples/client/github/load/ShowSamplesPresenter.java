@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.github.load;
 
+import com.google.gwt.user.client.ui.HasValue;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -81,6 +83,8 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       ListGridItem<ProjectData> getSamplesListGrid();
 
       List<ProjectData> getSelectedItems();
+      
+      HasValue<String> getProjectNameField();
 
       void enableNextButton(boolean enable);
    }
@@ -121,6 +125,11 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                return;
             }
             selectedProjectData = selectedProjects.get(0);
+            String name = display.getProjectNameField().getValue();
+            if (name != null && !name.isEmpty())
+            {
+               selectedProjectData.setName(name);
+            }
             nextStep.onOpen(selectedProjectData);
             closeView();
             //            createEmptyProject();
