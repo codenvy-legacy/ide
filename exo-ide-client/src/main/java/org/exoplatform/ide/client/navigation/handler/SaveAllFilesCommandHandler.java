@@ -31,15 +31,12 @@ import org.exoplatform.ide.client.framework.event.AllFilesSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.navigation.control.SaveAllFilesControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +55,8 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
 
    public SaveAllFilesCommandHandler()
    {
+      IDE.getInstance().addControl(new SaveAllFilesControl());
+      
       IDE.addHandler(SaveAllFilesEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);

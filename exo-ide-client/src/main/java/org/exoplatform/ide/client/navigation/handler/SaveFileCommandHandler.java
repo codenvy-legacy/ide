@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -30,14 +33,13 @@ import org.exoplatform.ide.client.framework.event.SaveFileHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 
 import java.util.LinkedHashMap;
-
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -56,6 +58,8 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
 
    public SaveFileCommandHandler()
    {
+      IDE.getInstance().addControl(new SaveFileCommand(), Docking.TOOLBAR);
+      
       IDE.addHandler(SaveFileEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);

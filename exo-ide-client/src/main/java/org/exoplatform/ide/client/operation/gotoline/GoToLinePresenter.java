@@ -16,23 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.edit;
-
-import org.exoplatform.gwtframework.commons.util.BrowserResolver;
-import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.edit.event.GoToLineEvent;
-import org.exoplatform.ide.client.edit.event.GoToLineHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.vfs.client.model.FileModel;
+package org.exoplatform.ide.client.operation.gotoline;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,6 +25,21 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.control.Docking;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -84,6 +83,9 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
 
    public GoToLinePresenter()
    {
+      IDE.getInstance().addControl(new GoToLineControl());
+      IDE.getInstance().addControl(new CursorPositionControl(), Docking.STATUSBAR_RIGHT);      
+      
       IDE.addHandler(GoToLineEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -206,9 +208,9 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
    }
 
    // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
-   if (this.@org.exoplatform.ide.client.edit.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
+   if (this.@org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
    {          
-   return content.split("\n").length;
+      return content.split("\n").length;
    }
 
    return content.split("\n").length - 1;

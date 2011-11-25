@@ -71,12 +71,12 @@
       <when-type-is class="org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.edit.ui.FindTextView">
-      <when-type-is class="org.exoplatform.ide.client.edit.FindTextPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.findtext.FindTextView">
+      <when-type-is class="org.exoplatform.ide.client.operation.findtext.FindTextPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.client.edit.ui.GoToLineView">
-      <when-type-is class="org.exoplatform.ide.client.edit.GoToLinePresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.gotoline.GoToLineView">
+      <when-type-is class="org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplateForm">

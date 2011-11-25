@@ -21,20 +21,19 @@ package org.exoplatform.ide.client.navigation;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.download.DownloadHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.navigation.control.DownloadFileCommand;
-import org.exoplatform.ide.client.navigation.control.DownloadZippedFolderCommand;
+import org.exoplatform.ide.client.navigation.control.CreateFileFromTemplateControl;
+import org.exoplatform.ide.client.navigation.control.NewItemMenuGroup;
+import org.exoplatform.ide.client.navigation.control.NewItemPopupToolbarControl;
 import org.exoplatform.ide.client.navigation.control.RefreshBrowserControl;
-import org.exoplatform.ide.client.navigation.control.SaveAllFilesCommand;
+import org.exoplatform.ide.client.navigation.control.SaveAllFilesControl;
 import org.exoplatform.ide.client.navigation.control.SaveFileAsCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileAsTemplateCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
-import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTemplateControl;
-import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommandMenuGroup;
-import org.exoplatform.ide.client.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.navigation.handler.CreateFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.FileClosedHandler;
 import org.exoplatform.ide.client.navigation.handler.OpenFileCommandHandler;
@@ -70,46 +69,57 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
  */
 public class NavigationModule implements InitializeServicesHandler
 {
-
+   
    public NavigationModule()
    {
-      NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
+      IDE.getInstance().addControl(new NewItemPopupToolbarControl(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new NewItemMenuGroup());
 
-      IDE.getInstance().addControl(newFilePopupMenuControl, Docking.TOOLBAR);
-      IDE.getInstance().addControl(new NewFileCommandMenuGroup());
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
       IDE.getInstance().addControl(new CreateFileFromTemplateControl());
 
       new CreateFolderPresenter();
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
-            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN)
-            .setDelimiterBefore(true));
+         new NewItemControl(
+            "File/New/New TEXT",
+            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
+            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(),
+            Images.FileTypes.TXT,
+            MimeType.TEXT_PLAIN, true));
 
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
 
       
+      //TODO: need rework according with VFS       
 //      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
 //      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
 //      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
 //      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
-//      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);
+//      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);      
+//    new VersionHistoryCommandHandler();
+//    new RestoreToVersionCommandHandler();
+//    new VersionsListPresenter();
+      
 
       new UploadFilePresenter();
       new UploadZipPresenter();
+      
       new OpenLocalFilePresenter();
       new OpenFileByPathPresenter();
       new OpenFileByURLPresenter();
 
-      IDE.getInstance().addControl(new DownloadFileCommand());
-      IDE.getInstance().addControl(new DownloadZippedFolderCommand());
-      IDE.getInstance().addControl(new SaveFileCommand(), Docking.TOOLBAR);
-      IDE.getInstance().addControl(new SaveFileAsCommand(), Docking.TOOLBAR);
-      IDE.getInstance().addControl(new SaveAllFilesCommand());
-      IDE.getInstance().addControl(new SaveFileAsTemplateCommand());
+      new DownloadHandler();
       
+      new SaveFileCommandHandler();
+
+      new SaveFileAsCommandHandler();
+      
+      new SaveAllFilesCommandHandler();
+      
+      new SaveAsTemplatePresenter();
+
       new CutCopyPasteItemsCommandHandler();
       
       IDE.getInstance().addControl(new RenameItemCommand());
@@ -137,18 +147,9 @@ public class NavigationModule implements InitializeServicesHandler
       new CreateFileCommandHandler();
       new CreateFileFromTemplatePresenter();
       new OpenFileCommandHandler();
-      new SaveFileCommandHandler();
-      new SaveFileAsCommandHandler();
-      new SaveAllFilesCommandHandler();
       new FileClosedHandler();
 
-//TODO: need rework according with VFS       
-//      new VersionHistoryCommandHandler();
-//      new RestoreToVersionCommandHandler();
-//      new VersionsListPresenter();
-
       new NavigatorPresenter();
-      new SaveAsTemplatePresenter();
       new ProgressPresenter();
       new ShellLinkUpdater();
    }

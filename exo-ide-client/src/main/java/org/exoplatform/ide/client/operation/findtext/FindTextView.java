@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.edit.ui;
+package org.exoplatform.ide.client.operation.findtext;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextView extends ViewImpl implements org.exoplatform.ide.client.edit.FindTextPresenter.Display
+public class FindTextView extends ViewImpl implements org.exoplatform.ide.client.operation.findtext.FindTextPresenter.Display
 {
    
    private static final String ID = "ideFindReplaceTextView";   

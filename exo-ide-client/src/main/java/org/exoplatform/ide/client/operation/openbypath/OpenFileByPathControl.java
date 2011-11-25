@@ -16,7 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.control.newitem;
+package org.exoplatform.ide.client.operation.openbypath;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -25,31 +28,38 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
+ * @version $Id: $
+*/
 @RolesAllowed({"administrators", "developers"})
-public class NewFileCommandMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
+public class OpenFileByPathControl extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler
 {
 
-   public static final String ID = "File/New";
+   private final static String ID = "File/Open File By Path...";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
+   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openFileByPathControl();
+
+   private List<Item> selectedItems = new ArrayList<Item>();
+
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * 
     */
-   public NewFileCommandMenuGroup()
+   public OpenFileByPathControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
-      setEnabled(true);
+      setImages(IDEImageBundle.INSTANCE.openFileByPath(), IDEImageBundle.INSTANCE.openFileByPathDisabled());
+      setEvent(new OpenFileByPathEvent());
    }
 
    /**
@@ -59,6 +69,7 @@ public class NewFileCommandMenuGroup extends SimpleControl implements IDEControl
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -67,13 +78,26 @@ public class NewFileCommandMenuGroup extends SimpleControl implements IDEControl
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
+      vfsInfo = event.getVfsInfo();
+      updateEnabling();
    }
+
+   /**
+    * 
+    */
+   private void updateEnabling()
+   {
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      updateEnabling();
+   }
+
 }

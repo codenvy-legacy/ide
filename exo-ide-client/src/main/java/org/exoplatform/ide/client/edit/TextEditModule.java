@@ -20,9 +20,7 @@ package org.exoplatform.ide.client.edit;
 
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
-import org.exoplatform.ide.client.edit.control.FindTextControl;
 import org.exoplatform.ide.client.edit.control.FormatSourceControl;
-import org.exoplatform.ide.client.edit.control.GoToLineControl;
 import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
 import org.exoplatform.ide.client.edit.control.RedoTypingControl;
 import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
@@ -37,7 +35,8 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
+import org.exoplatform.ide.client.operation.findtext.FindTextPresenter;
+import org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -55,27 +54,20 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR);
 
-      IDE.getInstance().addControl(new FindTextControl(), Docking.TOOLBAR);
       new FindTextPresenter();
-      
+
       IDE.getInstance().addControl(new ShowLineNumbersControl());
-      
+
       IDE.getInstance().addControl(new DeleteCurrentLineControl());
 
-      IDE.getInstance().addControl(new GoToLineControl());
       new GoToLinePresenter();
 
-      IDE.getInstance().addControl(new EditorCursorPositionControl(), Docking.STATUSBAR_RIGHT);
-      
       IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR);
-
-      
       new LockUnlockFileHandler();
-      
-      
+
       IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      
+
       new CloseAllFilesEventHandler();
    }
 

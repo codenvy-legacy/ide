@@ -102,10 +102,11 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
 
    public OpenLocalFilePresenter()
    {
+      IDE.getInstance().addControl(new OpenLocalFileCommand());
+
       IDE.addHandler(OpenLocalFileEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      IDE.getInstance().addControl(new OpenLocalFileCommand());
    }
 
    @Override

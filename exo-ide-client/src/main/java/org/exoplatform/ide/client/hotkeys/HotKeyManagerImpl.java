@@ -18,33 +18,33 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
-import org.exoplatform.ide.client.edit.control.FindTextControl;
-import org.exoplatform.ide.client.edit.control.GoToLineControl;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
-import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
-import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
-import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTemplateControl;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
+
+import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
+import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
+import org.exoplatform.ide.client.navigation.control.CreateFileFromTemplateControl;
+import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
+import org.exoplatform.ide.client.operation.findtext.FindTextControl;
+import org.exoplatform.ide.client.operation.gotoline.GoToLineControl;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -180,9 +180,6 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       hotKeys.put("Ctrl+78", CreateFileFromTemplateControl.ID); //Ctrl+N
       
       hotKeys.putAll(hotKeys);
-      
-      
-      
    }
 
    public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)

@@ -32,7 +32,6 @@ import org.exoplatform.ide.client.authentication.LoginPresenter;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.dialogs.IDEDialogs;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
-import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.editor.EditorFactory;
@@ -115,14 +114,18 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       Alert.init();
       
       /*
-       * Registering Icons
+       * Create the list of available icons.
+       * 
        */
       IDEIconSet.init();
 
       new IDEDialogs();
+      new AskForValueDialog();
       
       /*
-       * Initialize SeleniumTestsHelper
+       * Initialize SeleniumTestsHelper.
+       * It creates HTML DIV elements and logs to them IDE current application state.
+       * ( opened files, active file, current project, etc. )
        */
       new SeleniumTestsHelper();
 
@@ -135,7 +138,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
       controlsRegistration.addControlsFormatter(new NewItemControlsFormatter());
 
-      new AskForValueDialog();
 
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(ideForm, controlsRegistration);
@@ -143,8 +145,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new EditorController();
       
       new LoginPresenter();
-      
-      new DownloadForm();      
       
       new ViewHighlightManager(IDE.eventBus());
       

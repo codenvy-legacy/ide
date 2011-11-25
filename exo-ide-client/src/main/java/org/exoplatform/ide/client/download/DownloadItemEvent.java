@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.event;
+package org.exoplatform.ide.client.download;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +27,21 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface DownloadFileHandler extends EventHandler
+public class DownloadItemEvent extends GwtEvent<DownloadItemHandler>
 {
 
-   void onDownloadFile(DownloadFileEvent event);
+   public static final GwtEvent.Type<DownloadItemHandler> TYPE = new GwtEvent.Type<DownloadItemHandler>();
+   
+   @Override
+   protected void dispatch(DownloadItemHandler handler)
+   {
+      handler.onDownloadItem(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<DownloadItemHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

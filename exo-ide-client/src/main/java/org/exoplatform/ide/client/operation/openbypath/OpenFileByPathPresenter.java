@@ -68,7 +68,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
 
    public OpenFileByPathPresenter()
    {
-      IDE.getInstance().addControl(new OpenFileByPathCommand());
+      IDE.getInstance().addControl(new OpenFileByPathControl());
       
       IDE.addHandler(OpenFileByPathEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);

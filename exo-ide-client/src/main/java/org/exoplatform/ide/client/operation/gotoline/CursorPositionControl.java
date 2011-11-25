@@ -16,11 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.statusbar;
+package org.exoplatform.ide.client.operation.gotoline;
+
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.component.TextButton.TextAlignment;
-import org.exoplatform.ide.client.edit.event.GoToLineEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -31,15 +32,13 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.user.client.Timer;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class EditorCursorPositionControl extends StatusTextControl implements IDEControl, EditorCursorActivityHandler,
+public class CursorPositionControl extends StatusTextControl implements IDEControl, EditorCursorActivityHandler,
    EditorActiveFileChangedHandler
 {
    public static final String ID = "__editor_cursor_position";
@@ -47,7 +46,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
    /**
     * 
     */
-   public EditorCursorPositionControl()
+   public CursorPositionControl()
    {
       super(ID);
 

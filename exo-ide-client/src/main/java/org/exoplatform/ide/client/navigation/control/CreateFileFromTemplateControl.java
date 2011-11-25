@@ -16,9 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.event;
+package org.exoplatform.ide.client.navigation.control;
 
-import com.google.gwt.event.shared.GwtEvent;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -26,22 +29,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
-public class DownloadFileEvent extends GwtEvent<DownloadFileHandler>
+@RolesAllowed({"administrators", "developers"})
+public class CreateFileFromTemplateControl extends NewFileCommand
 {
 
-   public static final GwtEvent.Type<DownloadFileHandler> TYPE = new GwtEvent.Type<DownloadFileHandler>();
+   public final static String ID = "File/New/Create File From Template...";
    
-   @Override
-   protected void dispatch(DownloadFileHandler handler)
-   {
-      handler.onDownloadFile(this);
-   }
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplateTitleControl();
+   
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplatePromptControl();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DownloadFileHandler> getAssociatedType()
+   public CreateFileFromTemplateControl()
    {
-      return TYPE;
+      super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(),
+         IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
+      setDelimiterBefore(true);
    }
 
 }

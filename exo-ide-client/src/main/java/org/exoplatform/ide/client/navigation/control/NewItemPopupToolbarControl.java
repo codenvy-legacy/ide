@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.control.newitem;
+package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.ide.client.IDE;
@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $Id: $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewFilePopupMenuControl extends PopupMenuControl implements IDEControl, VfsChangedHandler
+public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler
 {
 
    public static final String ID = "File/New *";
@@ -40,7 +40,7 @@ public class NewFilePopupMenuControl extends PopupMenuControl implements IDECont
    /**
     * 
     */
-   public NewFilePopupMenuControl()
+   public NewItemPopupToolbarControl()
    {
       super(ID);
       setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.newMenu());

@@ -42,7 +42,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class UploadFileCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+public class UploadFileControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
    ViewVisibilityChangedHandler, VfsChangedHandler
 {
 
@@ -57,7 +57,7 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
    /**
     * 
     */
-   public UploadFileCommand()
+   public UploadFileControl()
    {
       super(ID);
       setTitle(TITLE);

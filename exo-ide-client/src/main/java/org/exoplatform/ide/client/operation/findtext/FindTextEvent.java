@@ -16,30 +16,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.event;
+package org.exoplatform.ide.client.operation.findtext;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS .
+ * Event occurs , when clients chooses to search text in editor.
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * Created by The eXo Platform SAS.
+ *	
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:   ${date} ${time}
+ *
  */
-
-public class DownloadZippedFolderEvent extends GwtEvent<DownloadZippedFolderHandler>
+public class FindTextEvent extends GwtEvent<FindTextHandler>
 {
-
-   public static final GwtEvent.Type<DownloadZippedFolderHandler> TYPE = new GwtEvent.Type<DownloadZippedFolderHandler>();
-
+   
+   public static final GwtEvent.Type<FindTextHandler> TYPE = new GwtEvent.Type<FindTextHandler>();
+   
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
-   protected void dispatch(DownloadZippedFolderHandler handler)
+   protected void dispatch(FindTextHandler handler)
    {
-      handler.onDownloadZippedFolder(this);
+      handler.onFindText(this);
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DownloadZippedFolderHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<FindTextHandler> getAssociatedType()
    {
       return TYPE;
    }

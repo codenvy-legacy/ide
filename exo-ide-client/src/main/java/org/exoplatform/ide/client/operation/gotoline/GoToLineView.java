@@ -16,15 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.edit.ui;
-
-import com.google.gwt.user.client.ui.Label;
+package org.exoplatform.ide.client.operation.gotoline;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
@@ -39,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
  * @version $Id: $
  *
  */
-public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client.edit.GoToLinePresenter.Display
+public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display
 {
 
    private static final String ID = "ideGoToLineForm";

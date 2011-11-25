@@ -109,7 +109,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
    public UploadFilePresenter()
    {
-      IDE.getInstance().addControl(new UploadFileCommand());
+      IDE.getInstance().addControl(new UploadFileControl());
       IDE.addHandler(UploadFileEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);

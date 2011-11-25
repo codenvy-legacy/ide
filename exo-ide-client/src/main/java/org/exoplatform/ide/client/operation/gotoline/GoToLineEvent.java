@@ -16,18 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.edit.event;
+package org.exoplatform.ide.client.operation.gotoline;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public interface GoToLineHandler extends EventHandler
+public class GoToLineEvent extends GwtEvent<GoToLineHandler>
 {
 
-   void onGoToLine(GoToLineEvent event);
+   public static final GwtEvent.Type<GoToLineHandler> TYPE = new GwtEvent.Type<GoToLineHandler>();
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(GoToLineHandler handler)
+   {
+      handler.onGoToLine(this);
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<GoToLineHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

@@ -48,7 +48,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SaveAllFilesCommand extends SimpleControl implements IDEControl, EditorFileContentChangedHandler,
+public class SaveAllFilesControl extends SimpleControl implements IDEControl, EditorFileContentChangedHandler,
    EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    VfsChangedHandler, FileSavedHandler
 {
@@ -62,7 +62,7 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
    /**
     * 
     */
-   public SaveAllFilesCommand()
+   public SaveAllFilesControl()
    {
       super(ID);
       setTitle(TITLE);

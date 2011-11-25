@@ -16,13 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.edit;
+package org.exoplatform.ide.client.operation.findtext;
 
-import java.util.HashMap;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.edit.event.FindTextEvent;
-import org.exoplatform.ide.client.edit.event.FindTextHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -38,14 +44,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -101,6 +100,8 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
    public FindTextPresenter()
    {
+      IDE.getInstance().addControl(new FindTextControl(), Docking.TOOLBAR);      
+      
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);

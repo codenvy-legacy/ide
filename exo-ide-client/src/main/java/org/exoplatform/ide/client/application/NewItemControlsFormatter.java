@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommand;
-import org.exoplatform.ide.client.navigation.control.newitem.NewFilePopupMenuControl;
+import org.exoplatform.ide.client.navigation.control.NewFileCommand;
+import org.exoplatform.ide.client.navigation.control.NewItemPopupToolbarControl;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
 
 import java.util.ArrayList;
@@ -122,12 +122,12 @@ private List<String> controlIdsOrder;
     */
    private void fillNewItemPopupControl(List<Control> controls)
    {
-      NewFilePopupMenuControl popup = null;
+      NewItemPopupToolbarControl popup = null;
       for (Control control : controls)
       {
-         if (NewFilePopupMenuControl.ID.equals(control.getId()))
+         if (NewItemPopupToolbarControl.ID.equals(control.getId()))
          {
-            popup = (NewFilePopupMenuControl)control;
+            popup = (NewItemPopupToolbarControl)control;
          }
       }
 
