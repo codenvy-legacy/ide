@@ -25,8 +25,8 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewVisibilityChangedHandler
+   ViewActivatedHandler
 {
 
    private boolean browserPanelSelected = true;
@@ -76,8 +76,9 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void initialize()
    {
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      //IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -109,17 +110,25 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+
+      if (event.getView() instanceof NavigatorPresenter.Display
+         || event.getView() instanceof TinyProjectExplorerPresenter.Display)
+      {
+         browserPanelSelected = true;
+      }
+      else
+      {
+         browserPanelSelected = false;
+      }
+
       updateEnabling();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
    @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   public void onViewActivated(ViewActivatedEvent event)
    {
-      if ((event.getView().isViewVisible() && event.getView() instanceof NavigatorPresenter.Display)
-         || (event.getView().isViewVisible() && event.getView() instanceof TinyProjectExplorerPresenter.Display))
+      if (event.getView() instanceof NavigatorPresenter.Display
+         || event.getView() instanceof TinyProjectExplorerPresenter.Display)
       {
          browserPanelSelected = true;
       }

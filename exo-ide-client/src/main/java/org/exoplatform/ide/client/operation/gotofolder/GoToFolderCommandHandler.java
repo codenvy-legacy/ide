@@ -19,16 +19,15 @@
  */
 package org.exoplatform.ide.client.operation.gotofolder;
 
-import java.util.ArrayList;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.Alert;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import java.util.ArrayList;
 
 /**
  * Created by The eXo Platform SAS .
@@ -77,6 +76,8 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
     */
    public void onGoToFolder(GoToFolderEvent event)
    {
+      Alert.alert("GO TO FOLDER!!!!!!!!!!!");
+      
       //TODO
 //      if (activeFile == null)
 //      {

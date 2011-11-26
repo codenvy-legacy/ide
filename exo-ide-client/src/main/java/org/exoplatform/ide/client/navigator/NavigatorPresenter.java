@@ -313,7 +313,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          }
 
          selectedItems = display.getSelectedItems();
-         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
       }
    };
 
@@ -696,7 +696,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
             public void execute()
             {
                selectedItems.clear();
-               IDE.fireEvent(new ItemsSelectedEvent(selectedItems, event.getView().getId()));
+               IDE.fireEvent(new ItemsSelectedEvent(selectedItems, event.getView()));
             }
          });
 

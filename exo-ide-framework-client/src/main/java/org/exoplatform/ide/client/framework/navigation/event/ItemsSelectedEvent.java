@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.framework.navigation.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -38,12 +39,12 @@ public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
 
    private List<Item> selectedItems;
 
-   private String viewId;
+   private View view;
 
-   public ItemsSelectedEvent(List<Item> selectedItems, String panelId)
+   public ItemsSelectedEvent(List<Item> selectedItems, View view)
    {
       this.selectedItems = selectedItems;
-      this.viewId = panelId;
+      this.view = view;
    }
 
    @Override
@@ -63,9 +64,9 @@ public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
       return selectedItems;
    }
 
-   public String getViewId()
+   public View getView()
    {
-      return viewId;
+      return view;
    }
 
 }

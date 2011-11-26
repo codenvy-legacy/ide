@@ -180,7 +180,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    protected void openAskDialog(String title, String message)
    {
       HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), message);
-      final IDEDialogsView view = new IDEDialogsView("ideAskModalView", title, 400, 130, content);
+      final IDEDialogsView view = new IDEDialogsView("ideAskModalView", title, 430, 150, content);
       
       ImageButton yesButton = createButton("Yes", null);
       view.getButtonsLayout().add(yesButton);

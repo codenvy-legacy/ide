@@ -153,7 +153,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     exception.printStackTrace();
+                     //exception.printStackTrace();
                   }
                });
 

@@ -164,7 +164,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (!openedViews.contains(event.getViewId())) {
+      if (!openedViews.contains(event.getView().getId())) {
          return;
       }
       

@@ -63,7 +63,6 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
@@ -74,7 +73,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
@@ -318,7 +316,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          }
 
          selectedItems = display.getSelectedItems();
-         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
       }
    };
 
@@ -854,7 +852,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       selectedItems.clear();
-      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
 
       IDE.fireEvent(projectClosedEvent);
    }

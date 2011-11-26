@@ -104,10 +104,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
    public IDE()
    {
-      for (int i = 0; i < 10; i++) {
-         System.out.println();
-      }
-      
       /*
        * Remember browser's window.alert(...) function
        */

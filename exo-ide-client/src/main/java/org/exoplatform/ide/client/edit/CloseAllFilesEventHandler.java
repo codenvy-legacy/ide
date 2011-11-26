@@ -176,7 +176,6 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
       openedFiles = event.getOpenedFiles();
    }
 
-   
    @Override
    public void onFileSaved(FileSavedEvent event)
    {

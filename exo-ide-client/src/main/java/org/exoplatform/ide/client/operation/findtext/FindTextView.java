@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.DOM;
@@ -119,7 +120,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    public FindTextView()
    {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.findText()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, ViewType.POPUP, TITLE, new Image(IDEImageBundle.INSTANCE.findText()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
       layout = new VerticalPanel();
       layout.setSize("100%", "100%");
