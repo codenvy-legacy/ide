@@ -47,6 +47,8 @@ public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFr
    
    private static final String ID = "ideCreateFileFromTemplateForm";
    
+   private static final String NAME_FIELD_ID = "ideCreateFileFromTemplateFormNameField";
+   
    private static final int WIDTH = 550;
 
    private static final int HEIGHT = 300;
@@ -79,6 +81,7 @@ public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFr
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.createFromTemplate()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
+      fileNameField.setName(NAME_FIELD_ID);
    }
 
    @Override
