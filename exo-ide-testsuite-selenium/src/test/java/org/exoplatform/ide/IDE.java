@@ -108,7 +108,8 @@ public class IDE
    public Statusbar STATUSBAR;
 
    public SelectWorkspace SELECT_WORKSPACE;
-
+   
+   @Deprecated
    public Workspace WORKSPACE = new Workspace();
 
    public GoToLine GOTOLINE;
@@ -135,7 +136,7 @@ public class IDE
 
    public Rename RENAME;
 
-   public org.exoplatform.ide.git.core.GIT GIT = new org.exoplatform.ide.git.core.GIT(selenium);
+   public org.exoplatform.ide.git.core.GIT GIT;
 
    public Heroku HEROKU = new Heroku();
 
@@ -158,7 +159,7 @@ public class IDE
       this.workspaceURL = workspaceURL;
       this.driver = driver;
       instance = this;
-
+      GIT = new org.exoplatform.ide.git.core.GIT(selenium, driver);
       ABOUT = PageFactory.initElements(driver, AboutDialog.class);
       ASK_DIALOG = PageFactory.initElements(driver, AskDialog.class);
       ASK_FOR_VALUE_DIALOG = PageFactory.initElements(driver, AskForValueDialog.class);

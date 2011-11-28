@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.git.core;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
+
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -80,10 +83,24 @@ public class GIT
       return instance;
    }
 
-   public GIT(Selenium selenium)
+   public GIT(Selenium selenium, WebDriver driver)
    {
       this.selenium = selenium;
       instance = this;
+
+      INIT_REPOSITORY = PageFactory.initElements(driver, InitRepository.class);
+      CLONE_REPOSITORY = PageFactory.initElements(driver, CloneRepository.class);
+      ADD = PageFactory.initElements(driver, Add.class);
+      BRANCHES = PageFactory.initElements(driver, Branches.class);
+      COMMIT = PageFactory.initElements(driver, Commit.class);
+      MERGE = PageFactory.initElements(driver, Merge.class);
+      SHOW_HISTORY = PageFactory.initElements(driver, ShowHistory.class);
+      RESET_FILES = PageFactory.initElements(driver, ResetFiles.class);
+      REMOVE_FILES = PageFactory.initElements(driver, RemoveFiles.class);
+      RESET_TO_COMMIT = PageFactory.initElements(driver, ResetToCommit.class);
+      REMOTES = PageFactory.initElements(driver, Remotes.class);
+      PUSH = PageFactory.initElements(driver, Push.class);
+      PULL = PageFactory.initElements(driver, Pull.class);
    }
 
    public Selenium getSelenium()
@@ -91,31 +108,31 @@ public class GIT
       return selenium;
    }
 
-   public InitRepository INIT_REPOSITORY = new InitRepository();
+   public InitRepository INIT_REPOSITORY;
 
-   public CloneRepository CLONE_REPOSITORY = new CloneRepository();
+   public CloneRepository CLONE_REPOSITORY;
 
-   public Add ADD = new Add();
+   public Add ADD;
 
-   public Branches BRANCHES = new Branches();
+   public Branches BRANCHES;
 
-   public Commit COMMIT = new Commit();
+   public Commit COMMIT;
 
-   public Merge MERGE = new Merge();
+   public Merge MERGE;
 
    public Status STATUS = new Status();
 
-   public ShowHistory SHOW_HISTORY = new ShowHistory();
+   public ShowHistory SHOW_HISTORY;
 
-   public ResetFiles RESET_FILES = new ResetFiles();
+   public ResetFiles RESET_FILES;
 
-   public RemoveFiles REMOVE_FILES = new RemoveFiles();
+   public RemoveFiles REMOVE_FILES;
 
-   public ResetToCommit RESET_TO_COMMIT = new ResetToCommit();
+   public ResetToCommit RESET_TO_COMMIT;
 
-   public Remotes REMOTES = new Remotes();
+   public Remotes REMOTES;
 
-   public Push PUSH = new Push();
+   public Push PUSH;
 
-   public Pull PULL = new Pull();
+   public Pull PULL;
 }

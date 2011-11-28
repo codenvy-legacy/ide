@@ -45,9 +45,11 @@ public class Toolbar extends AbstractTestModule
 
       String BUTTON_SELECTOR = "div[title='%s']";
 
-      String POPUP_PANEL_LOCTOR = "//table[@class='exo-popupMenuTable']";
+      String POPUP_PANEL_LOCATOR = "//table[@class='exo-popupMenuTable']";
 
-      String BUTTON_FROM_NEW_POPUP_LOCATOR = POPUP_PANEL_LOCTOR + "//tr[contains(., '%s')]";
+      String ROW_FROM_NEW_POPUP_LOCATOR = POPUP_PANEL_LOCATOR + "//tr[contains(., '%s')]";
+
+      String BUTTON_FROM_NEW_POPUP_LOCATOR = ROW_FROM_NEW_POPUP_LOCATOR + "//nobr";
 
       String LOCKLAYER_CLASS = "exo-lockLayer";
 
@@ -95,9 +97,15 @@ public class Toolbar extends AbstractTestModule
       }
       finally
       {
-         if (lockLayer != null)
+         try
          {
-            lockLayer.click();
+            if (lockLayer != null && lockLayer.isDisplayed())
+            {
+               lockLayer.click();
+            }
+         }
+         catch (NoSuchElementException e)
+         {
          }
       }
    }
@@ -183,8 +191,7 @@ public class Toolbar extends AbstractTestModule
 
       try
       {
-         WebElement button =
-            driver().findElement(By.xpath(String.format(Locators.BUTTON_FROM_NEW_POPUP_LOCATOR, name)));
+         WebElement button = driver().findElement(By.xpath(String.format(Locators.ROW_FROM_NEW_POPUP_LOCATOR, name)));
          return Boolean.parseBoolean(button.getAttribute("item-enabled"));
       }
       catch (NoSuchElementException e)

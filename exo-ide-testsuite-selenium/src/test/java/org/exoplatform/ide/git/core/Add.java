@@ -81,14 +81,14 @@ public class Add extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
             try
             {
-               return (view != null && view.isDisplayed());
+               return isOpened();
             }
             catch (NoSuchElementException e)
             {
@@ -128,7 +128,7 @@ public class Add extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
       return view != null && view.isDisplayed() && addButton != null && addButton.isDisplayed() && updateField != null
          && updateField.isDisplayed() && messageField != null && messageField.isDisplayed();

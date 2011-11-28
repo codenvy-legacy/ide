@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git;
 
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.BaseTest;
@@ -39,7 +41,7 @@ import java.util.List;
  */
 public class AddTest extends BaseTest
 {
-   private static final String TEST_FOLDER = AddTest.class.getSimpleName();
+   private static final String PROJECT = AddTest.class.getSimpleName();
 
    private static final String TEST_ADD_FILE = "TestAddFile";
 
@@ -54,7 +56,7 @@ public class AddTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.upoadZipFolder("src/test/resources/org/exoplatform/ide/git/AddTest.zip", WS_URL);
+         VirtualFileSystemUtils.importZipProject(PROJECT, "src/test/resources/org/exoplatform/ide/git/AddTest.zip");
       }
       catch (Exception e)
       {
@@ -67,7 +69,7 @@ public class AddTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+       //  VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -79,17 +81,16 @@ public class AddTest extends BaseTest
     * Test command is not available for adding to index in not Git repository.
     * @throws Exception 
     */
-   @Test
+   //@Test
    public void testAddCommand() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.ADD, false);
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Check Add to index is available:
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.ADD, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.ADD));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
       IDE.GIT.ADD.waitOpened();
 
@@ -105,20 +106,22 @@ public class AddTest extends BaseTest
    @Test
    public void testAddFile() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      driver.navigate().refresh();
+      
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_ADD_FILE);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_ADD_FILE);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_ADD_FILE);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_ADD_FILE);
+      IDE.EDITOR.closeFile(TEST_ADD_FILE);
+      IDE.EDITOR.waitTabNotPresent(TEST_ADD_FILE);
 
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_ADD_FILE);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_ADD_FILE);
 
       //Add file to Git index:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
@@ -154,20 +157,18 @@ public class AddTest extends BaseTest
     * 
     * @throws Exception
     */
-   @Test
+  // @Test
    public void testAddFolder() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //Create new folder:
-      IDE.NAVIGATION.createFolder(TEST_ADD_FOLDER);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_ADD_FOLDER + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_ADD_FOLDER + "/");
+      IDE.FOLDER.createFolder(TEST_ADD_FOLDER);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_ADD_FOLDER);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_ADD_FOLDER);
 
       //Add file to Git index:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
@@ -193,24 +194,24 @@ public class AddTest extends BaseTest
     * 
     * @throws Exception
     */
-   @Test
+ //  @Test
    public void testAllChanges() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE2);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE2);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE2);
+      IDE.EDITOR.closeFile(TEST_FILE2);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE2);
 
       //Select Git work directory:
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Add file to Git index:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
@@ -245,24 +246,23 @@ public class AddTest extends BaseTest
     * 
     * @throws Exception
     */
-   @Test
+ //  @Test
    public void testAddOnlyUpdate() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE_FOR_UPDATE);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE_FOR_UPDATE);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE_FOR_UPDATE);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE_FOR_UPDATE);
+      IDE.EDITOR.closeFile(TEST_FILE_FOR_UPDATE);
 
       //Select Git work directory:
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Add file to Git index:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
