@@ -119,8 +119,6 @@ public class CodeMirrorParserImpl extends Parser
 
    private static String possibleMimeType;
 
-   private static int nearestTokenLineNumber;
-   
    /**
     * Recognize mimeType of line with lineNumber.  
     * @param targetLineNumber
@@ -177,7 +175,6 @@ public class CodeMirrorParserImpl extends Parser
    class GetTokenListInBackgroundCommand implements RepeatingCommand
    {
       boolean isBusy = false;
-      boolean isReady = false;
       boolean shouldStop = false;
             
       private HandlerManager eventBus;
@@ -210,7 +207,6 @@ public class CodeMirrorParserImpl extends Parser
       private void init()
       {
          isBusy = true;
-         isReady = false;
          shouldStop = false;
          
          preparedTokenList = new ArrayList<TokenBeenImpl>();
@@ -339,7 +335,6 @@ public class CodeMirrorParserImpl extends Parser
       private void finish()
       {
          preparedTokenList = rootToken.getSubTokenList();
-         isReady = true;
          interrupt();
          eventBus.fireEvent(new EditorTokenListPreparedEvent(this.editorId, preparedTokenList));
       }

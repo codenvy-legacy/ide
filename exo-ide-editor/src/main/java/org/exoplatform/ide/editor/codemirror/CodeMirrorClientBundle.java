@@ -21,7 +21,6 @@ package org.exoplatform.ide.editor.codemirror;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>

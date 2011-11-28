@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.editor.api.codeassitant;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationForm;
@@ -30,6 +26,8 @@ import org.exoplatform.ide.editor.api.codeassitant.ui.AutocompletionForm;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+
+import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

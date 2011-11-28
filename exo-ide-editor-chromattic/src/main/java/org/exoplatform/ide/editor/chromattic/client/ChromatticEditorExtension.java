@@ -88,7 +88,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
 
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", IMAGES
-            .CHROMATTIC(), true, new CodeMirrorConfiguration()
+            .chromattic(), true, new CodeMirrorConfiguration()
             .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
             .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
@@ -106,14 +106,14 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
       if (exc instanceof ServerException)
       {
          ServerException exception = (ServerException)exc;
-         String outputContent =
-            "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         StringBuffer outputContent = new StringBuffer();
+         outputContent.append("Error (<i>").append(exception.getHTTPStatus()).append("</i>: <i>").append(exception.getStatusText()).append("</i>)");
          if (!exception.getMessage().equals(""))
          {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+            outputContent.append("<br />").append(exception.getMessage().replace("\n", "<br />")); // replace "end of line" symbols on "<br />"
          }
 
-         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(outputContent.toString(), OutputMessage.Type.ERROR));
       }
       else
       {

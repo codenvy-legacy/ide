@@ -51,4 +51,22 @@ public class StringProperty extends TokenProperty
    {
       return value;
    }
+
+   @Override
+   public NumericProperty isNumericProperty()
+   {
+      return null;
+   }
+
+   @Override
+   public ArrayProperty isArrayProperty()
+   {
+      return null;
+   }
+
+   @Override
+   public ObjectProperty isObjectProperty()
+   {
+      return null;
+   }
 }

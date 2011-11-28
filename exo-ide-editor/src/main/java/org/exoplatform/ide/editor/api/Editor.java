@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.editor.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
+
+import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -51,7 +50,7 @@ public abstract class Editor extends AbsolutePanel
 
    protected Map<String, Object> params;
 
-   public Editor(String content, HashMap<String, Object> params, HandlerManager eventBus)
+   public Editor(String content, Map<String, Object> params, HandlerManager eventBus)
    {
       this.content = content;
       this.eventBus = eventBus;

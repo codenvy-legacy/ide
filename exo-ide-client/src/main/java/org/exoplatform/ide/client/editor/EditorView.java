@@ -346,12 +346,12 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    public void onViewInnerEditorSwitched(Editor editor)
    {
-      this.eventBus.fireEvent(new EditorActiveFileChangedEvent(this.file, editor));
+      this.eventBus.fireEvent(new EditorActiveFileChangedEvent(file, editor));
    }
 
    public FileModel getFile()
    {
-      return this.file;
+      return file;
    }
 
    public void setTitle(FileModel file, boolean isFileReadOnly)

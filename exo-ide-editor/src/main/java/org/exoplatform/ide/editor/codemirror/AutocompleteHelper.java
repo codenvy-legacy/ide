@@ -31,7 +31,6 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id
  *
  */
-@SuppressWarnings("serial")
 public abstract class AutocompleteHelper
 {
    

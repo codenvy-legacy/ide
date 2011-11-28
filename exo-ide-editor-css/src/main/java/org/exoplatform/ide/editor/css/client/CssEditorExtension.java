@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.css.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -38,6 +39,7 @@ import com.google.gwt.core.client.GWT;
 public class CssEditorExtension extends Extension
 {
 
+   private static final String CSS_ICON = UIHelper.getGadgetImagesURL() + "css/css.png";
    
    public static final CssMessages MESSAGES = GWT.create(CssMessages.class);
    
@@ -55,7 +57,7 @@ public class CssEditorExtension extends Extension
          "File/New/New CSS",
          MESSAGES.controlNewCssTitle(),
          MESSAGES.controlNewCssPrompt(),
-         Images.CSS,
+         CSS_ICON,
          MimeType.TEXT_CSS));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css",

@@ -31,10 +31,10 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
  */
 public interface Images extends ClientBundle
 {
-   public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
+   String IMAGE_URL = UIHelper.getGadgetImagesURL();
    
-   static final String CHROMATTIC = IMAGE_URL + "chromattic.png";
+   String CHROMATTIC = IMAGE_URL + "chromattic.png";
    
    @Source("org/exoplatform/ide/editor/chromattic/public/images/chromattic.png")
-   ImageResource CHROMATTIC();
+   ImageResource chromattic();
 }

@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.ckeditor;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -63,7 +64,7 @@ public class CKEditor extends Editor
    
    private CKEditorConfiguration configuration;
    
-   public CKEditor(String content, HashMap<String, Object> params, HandlerManager eventBus)
+   public CKEditor(String content, Map<String, Object> params, HandlerManager eventBus)
    {
       super(content, params, eventBus);
       this.editorId = "CKEditor - " + String.valueOf(this.hashCode());
