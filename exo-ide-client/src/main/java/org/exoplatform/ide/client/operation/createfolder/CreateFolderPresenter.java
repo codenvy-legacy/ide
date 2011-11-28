@@ -125,9 +125,8 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    protected void createFolder()
    {
       final String newFolderName = display.getFolderNameField().getValue();
-      final FolderModel baseFolder =
-         (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent() : new FolderModel(
-            (Folder)selectedItems.get(0));
+      final Folder baseFolder =
+         (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent() : (Folder)selectedItems.get(0);
 
       FolderModel newFolder = new FolderModel();
       newFolder.setName(newFolderName);

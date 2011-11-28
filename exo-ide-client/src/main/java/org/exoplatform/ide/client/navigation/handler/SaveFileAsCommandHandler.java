@@ -44,8 +44,6 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -189,8 +187,8 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
 
    private void saveFileAs(FileModel file, String name)
    {
-      FolderModel folderToSave = getFilePath(selectedItems.get(0));
-      FileModel newFile = new FileModel(name, file.getMimeType(), file.getContent(), folderToSave);
+      final Folder folderToSave = (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent() : (Folder)selectedItems.get(0);
+      FileModel newFile = new FileModel(name, file.getMimeType(), file.getContent(), new FolderModel(folderToSave));
 
       if (file.isPersisted())
       {
@@ -206,7 +204,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
                protected void onSuccess(FileModel result)
                {
                   IDE.fireEvent(new FileSavedEvent(result, sourceId));
-                  refreshBrowser(result.getParent());
+                  IDE.fireEvent(new RefreshBrowserEvent(folderToSave));
                }
 
                @Override
@@ -253,24 +251,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    //      });
    //   }
 
-   private FolderModel getFilePath(Item item)
-   {
-      if (item instanceof FileModel)
-      {
-         return ((FileModel)item).getParent();
-      }
-      else if (item instanceof FolderModel)
-      {
-         return (FolderModel)item;
-      }
-      else if (item instanceof ProjectModel)
-      {
-         return new FolderModel((Folder)item);
-      }
-      return new FolderModel(item.getName(), ((ItemContext)item).getParent(), item.getLinks());
-   }
-
-   //   private void getProperties(Item item)
+     //   private void getProperties(Item item)
    //   {
    //      VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
    //      {
@@ -284,11 +265,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    //         }
    //      });
    //   }
-
-   private void refreshBrowser(FolderModel folder)
-   {
-      IDE.fireEvent(new RefreshBrowserEvent(folder));
-   }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
