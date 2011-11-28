@@ -118,7 +118,7 @@ public class IDE
 
    public FindReplace FINDREPLACE;
 
-   public Templates TEMPLATES = new Templates();
+   public Templates TEMPLATES;
 
    public SaveAsTemplate SAVE_AS_TEMPLATE;
 
@@ -183,6 +183,7 @@ public class IDE
       SELECT_WORKSPACE = PageFactory.initElements(driver, SelectWorkspace.class);
       STATUSBAR = PageFactory.initElements(driver, Statusbar.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
+      TEMPLATES = PageFactory.initElements(driver, Templates.class);
       WARNING_DIALOG = PageFactory.initElements(driver, WarningDialog.class);
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
    }
