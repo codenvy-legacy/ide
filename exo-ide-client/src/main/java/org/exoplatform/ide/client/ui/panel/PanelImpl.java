@@ -212,6 +212,7 @@ public class PanelImpl implements Panel, HasViewVisibilityChangedHandler, SetVie
       }
       maximizePanelButton.setVisible(false);
       restorePanelButton.setVisible(true);
+      asWidget().getElement().setAttribute("panel-maximized", String.valueOf(true));
    }
 
    public void restore()
@@ -223,6 +224,7 @@ public class PanelImpl implements Panel, HasViewVisibilityChangedHandler, SetVie
       }
       maximizePanelButton.setVisible(true);
       restorePanelButton.setVisible(false);
+      asWidget().getElement().setAttribute("panel-maximized", String.valueOf(false));
    }
 
    /**
