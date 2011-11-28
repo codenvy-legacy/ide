@@ -40,7 +40,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Menu extends AbstractTestModule
 {
 
-   interface Locators
+   private interface Locators
    {
       String LOCK_LAYER_CLASS = "exo-lockLayer";
 

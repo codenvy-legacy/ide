@@ -112,10 +112,10 @@ public class MergeTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
-      IDE.GIT.MERGE.waitForViewOpened();
+      IDE.GIT.MERGE.waitOpened();
 
       IDE.GIT.MERGE.clickCancelButton();
-      IDE.GIT.MERGE.waitForViewClosed();
+      IDE.GIT.MERGE.waitClosed();
    }
 
    @Test
@@ -130,8 +130,8 @@ public class MergeTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
-      IDE.GIT.MERGE.waitForViewOpened();
-      Assert.assertTrue(IDE.GIT.MERGE.isViewComponentsPresent());
+      IDE.GIT.MERGE.waitOpened();
+      Assert.assertTrue(IDE.GIT.MERGE.isOpened());
       Assert.assertFalse(IDE.GIT.MERGE.isMergeButtonEnabled());
 
       Assert.assertTrue(IDE.GIT.MERGE.isRererencePresent(LOCAL_BRANCHES));
@@ -153,7 +153,7 @@ public class MergeTest extends BaseTest
       Assert.assertFalse(IDE.GIT.MERGE.isMergeButtonEnabled());
 
       IDE.GIT.MERGE.clickCancelButton();
-      IDE.GIT.MERGE.waitForViewClosed();
+      IDE.GIT.MERGE.waitClosed();
    }
 
    @Test
@@ -168,7 +168,7 @@ public class MergeTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
-      IDE.GIT.MERGE.waitForViewOpened();
+      IDE.GIT.MERGE.waitOpened();
 
       IDE.GIT.MERGE.selectReference(LOCAL_BRANCHES);
       IDE.GIT.MERGE.doubleClickReference(LOCAL_BRANCHES);
@@ -178,7 +178,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.selectReference(BRANCH1);
 
       IDE.GIT.MERGE.clickMergeButton();
-      IDE.GIT.MERGE.waitForViewClosed();
+      IDE.GIT.MERGE.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
       String message = IDE.OUTPUT.getOutputMessage(1);
@@ -220,7 +220,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.COMMIT.commit("change");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
-      IDE.GIT.MERGE.waitForViewOpened();
+      IDE.GIT.MERGE.waitOpened();
 
       IDE.GIT.MERGE.selectReference(LOCAL_BRANCHES);
       IDE.GIT.MERGE.doubleClickReference(LOCAL_BRANCHES);
@@ -230,7 +230,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.selectReference(BRANCH2);
 
       IDE.GIT.MERGE.clickMergeButton();
-      IDE.GIT.MERGE.waitForViewClosed();
+      IDE.GIT.MERGE.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(3);
       String message = IDE.OUTPUT.getOutputMessage(3);
@@ -250,7 +250,7 @@ public class MergeTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
-      IDE.GIT.MERGE.waitForViewOpened();
+      IDE.GIT.MERGE.waitOpened();
 
       IDE.GIT.MERGE.selectReference(LOCAL_BRANCHES);
       IDE.GIT.MERGE.doubleClickReference(LOCAL_BRANCHES);
@@ -260,7 +260,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.selectReference(BRANCH3);
 
       IDE.GIT.MERGE.clickMergeButton();
-      IDE.GIT.MERGE.waitForViewClosed();
+      IDE.GIT.MERGE.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
       String message = IDE.OUTPUT.getOutputMessage(1);

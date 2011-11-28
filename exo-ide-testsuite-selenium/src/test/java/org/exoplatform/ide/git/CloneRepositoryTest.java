@@ -91,8 +91,8 @@ public class CloneRepositoryTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.CLONE);
-      IDE.GIT.CLONE_REPOSITORY.waitForViewOpened();
-      Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isViewComponentsPresent());
+      IDE.GIT.CLONE_REPOSITORY.waitOpened();
+      Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isOpened());
       Assert.assertFalse(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
       Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isCancelButtonEnabled());
 
@@ -101,13 +101,13 @@ public class CloneRepositoryTest extends BaseTest
       Assert.assertEquals(DEFAULT_REMOTE_NAME, IDE.GIT.CLONE_REPOSITORY.getRemoteNameFieldValue());
 
       //Check Clone button is disabled, when remote URI field is empty:
-      IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField(GIT_PATH + "/" + REPO_NAME);
+      IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME);
       Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
-      IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField("");
+      IDE.GIT.CLONE_REPOSITORY.setRemoteUri("");
       Assert.assertFalse(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
 
       IDE.GIT.CLONE_REPOSITORY.clickCancelButton();
-      IDE.GIT.CLONE_REPOSITORY.waitForViewClosed();
+      IDE.GIT.CLONE_REPOSITORY.waitClosed();
    }
 
    /**
@@ -169,17 +169,17 @@ public class CloneRepositoryTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.CLONE);
-      IDE.GIT.CLONE_REPOSITORY.waitForViewOpened();
+      IDE.GIT.CLONE_REPOSITORY.waitOpened();
 
       Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.getWorkDirectoryValue().endsWith(CLONE_FOLDER + "/"));
       Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.getRemoteUriFieldValue().isEmpty());
       Assert.assertEquals(DEFAULT_REMOTE_NAME, IDE.GIT.CLONE_REPOSITORY.getRemoteNameFieldValue());
 
       //Check Clone button is disabled, when remote URI field is empty:
-      IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+      IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
          + "/" + REPOSITORY);
       IDE.GIT.CLONE_REPOSITORY.clickCloneButton();
-      IDE.GIT.CLONE_REPOSITORY.waitForViewClosed();
+      IDE.GIT.CLONE_REPOSITORY.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
       String message = IDE.OUTPUT.getOutputMessage(1);
@@ -219,8 +219,8 @@ public class CloneRepositoryTest extends BaseTest
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.CLONE);
-      IDE.GIT.CLONE_REPOSITORY.waitForViewOpened();
-      IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+      IDE.GIT.CLONE_REPOSITORY.waitOpened();
+      IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
          + "/" + REPOSITORY);
       IDE.GIT.CLONE_REPOSITORY.clickCloneButton();
 

@@ -77,9 +77,9 @@ public class ProgressViewTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
-      IDE.GIT.INIT_REPOSITORY.waitForViewOpened();
+      IDE.GIT.INIT_REPOSITORY.waitOpened();
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
-      IDE.GIT.INIT_REPOSITORY.waitForViewClosed();
+      IDE.GIT.INIT_REPOSITORY.waitClosed();
 
       Assert.assertTrue(selenium().isElementPresent(ID_CONTROL));
       Assert.assertTrue(selenium().isVisible(ID_CONTROL));

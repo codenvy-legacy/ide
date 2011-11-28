@@ -111,10 +111,10 @@ public class BranchTest extends BaseTest
       //Check branches is available:
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      IDE.GIT.BRANCHES.waitForViewOpened();
+      IDE.GIT.BRANCHES.waitOpened();
 
       IDE.GIT.BRANCHES.clickCloseButton();
-      IDE.GIT.BRANCHES.waitForViewClosed();
+      IDE.GIT.BRANCHES.waitClosed();
 
    }
 
@@ -134,10 +134,10 @@ public class BranchTest extends BaseTest
 
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      IDE.GIT.BRANCHES.waitForViewOpened();
+      IDE.GIT.BRANCHES.waitOpened();
 
       IDE.GIT.BRANCHES.selectBranchByName("master");
-      Assert.assertTrue(IDE.GIT.BRANCHES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.BRANCHES.isOpened());
       Assert.assertFalse(IDE.GIT.BRANCHES.isCheckoutButtonEnabled());
       Assert.assertFalse(IDE.GIT.BRANCHES.isDeleteButtonEnabled());
       Assert.assertTrue(IDE.GIT.BRANCHES.isCreateButtonEnabled());
@@ -146,7 +146,7 @@ public class BranchTest extends BaseTest
       Assert.assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));
 
       IDE.GIT.BRANCHES.clickCloseButton();
-      IDE.GIT.BRANCHES.waitForViewClosed();
+      IDE.GIT.BRANCHES.waitClosed();
    }
 
    /**
@@ -165,21 +165,21 @@ public class BranchTest extends BaseTest
 
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      IDE.GIT.BRANCHES.waitForViewOpened();
+      IDE.GIT.BRANCHES.waitOpened();
 
       //Create new branch:
       IDE.GIT.BRANCHES.clickCreateButton();
-      IDE.GIT.BRANCHES.waitForNewBranchViewOpened();
-      IDE.GIT.BRANCHES.typeNewBranchName(BRANCH3);
+      IDE.GIT.BRANCHES.waitNewBranchViewOpened();
+      IDE.GIT.BRANCHES.setNewBranchName(BRANCH3);
       IDE.GIT.BRANCHES.clickNewBranchOkButton();
-      IDE.GIT.BRANCHES.waitForNewBranchViewClosed();
+      IDE.GIT.BRANCHES.waitNewBranchViewClosed();
       IDE.GIT.BRANCHES.waitForBranchesCount(4);
 
       Assert.assertEquals(4, IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));
 
       IDE.GIT.BRANCHES.clickCloseButton();
-      IDE.GIT.BRANCHES.waitForViewClosed();
+      IDE.GIT.BRANCHES.waitClosed();
       Thread.sleep(2000);
    }
 
@@ -199,7 +199,7 @@ public class BranchTest extends BaseTest
 
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      IDE.GIT.BRANCHES.waitForViewOpened();
+      IDE.GIT.BRANCHES.waitOpened();
       Assert.assertEquals(3, IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));
 
@@ -232,7 +232,7 @@ public class BranchTest extends BaseTest
       Assert.assertEquals(2, IDE.GIT.BRANCHES.getBranchesCount());
 
       IDE.GIT.BRANCHES.clickCloseButton();
-      IDE.GIT.BRANCHES.waitForViewClosed();
+      IDE.GIT.BRANCHES.waitClosed();
    }
 
    /**
@@ -251,7 +251,7 @@ public class BranchTest extends BaseTest
 
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      IDE.GIT.BRANCHES.waitForViewOpened();
+      IDE.GIT.BRANCHES.waitOpened();
       Assert.assertEquals(3, IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));
 
@@ -270,7 +270,7 @@ public class BranchTest extends BaseTest
       Assert.assertFalse(IDE.GIT.BRANCHES.isBranchChecked("master"));
 
       IDE.GIT.BRANCHES.clickCloseButton();
-      IDE.GIT.BRANCHES.waitForViewClosed();
+      IDE.GIT.BRANCHES.waitClosed();
    }
 
    /**
@@ -289,7 +289,7 @@ public class BranchTest extends BaseTest
 
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      IDE.GIT.BRANCHES.waitForViewOpened();
+      IDE.GIT.BRANCHES.waitOpened();
       Assert.assertEquals(3, IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertFalse(IDE.GIT.BRANCHES.isBranchChecked("master"));
 
@@ -298,7 +298,7 @@ public class BranchTest extends BaseTest
       IDE.GIT.BRANCHES.clickCheckoutButton();
       IDE.GIT.BRANCHES.waitBranchChecked(BRANCH1);
       IDE.GIT.BRANCHES.clickCloseButton();
-      IDE.GIT.BRANCHES.waitForViewClosed();
+      IDE.GIT.BRANCHES.waitClosed();
 
       Thread.sleep(2000);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
@@ -308,12 +308,12 @@ public class BranchTest extends BaseTest
 
       //Check second branch:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      IDE.GIT.BRANCHES.waitForViewOpened();
+      IDE.GIT.BRANCHES.waitOpened();
       IDE.GIT.BRANCHES.selectBranchByName(BRANCH2);
       IDE.GIT.BRANCHES.clickCheckoutButton();
       IDE.GIT.BRANCHES.waitBranchChecked(BRANCH2);
       IDE.GIT.BRANCHES.clickCloseButton();
-      IDE.GIT.BRANCHES.waitForViewClosed();
+      IDE.GIT.BRANCHES.waitClosed();
 
       //Check file from first branch is not present:
       Thread.sleep(2000);

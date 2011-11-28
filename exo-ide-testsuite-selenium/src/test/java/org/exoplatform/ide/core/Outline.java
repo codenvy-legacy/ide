@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class Outline extends AbstractTestModule
 {
-   interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideOutlineView";
 

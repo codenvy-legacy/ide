@@ -144,13 +144,13 @@ public class ResetFilesTest extends BaseTest
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
-      IDE.GIT.RESET_FILES.waitForViewOpened();
+      IDE.GIT.RESET_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_FILES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.RESET_FILES.isOpened());
       Assert.assertEquals(1, IDE.GIT.RESET_FILES.getFilesCount());
 
       IDE.GIT.RESET_FILES.clickCancelButton();
-      IDE.GIT.RESET_FILES.waitForViewClosed();
+      IDE.GIT.RESET_FILES.waitClosed();
    }
 
    /**
@@ -191,16 +191,16 @@ public class ResetFilesTest extends BaseTest
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
-      IDE.GIT.RESET_FILES.waitForViewOpened();
+      IDE.GIT.RESET_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_FILES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.RESET_FILES.isOpened());
       Assert.assertEquals(2, IDE.GIT.RESET_FILES.getFilesCount());
 
       //Uncheck file contained in folder:
       IDE.GIT.RESET_FILES.checkFileByName(SRC_FOLDER + "/" + TEST_FILE3);
       IDE.GIT.RESET_FILES.clickResetButton();
 
-      IDE.GIT.RESET_FILES.waitForViewClosed();
+      IDE.GIT.RESET_FILES.waitClosed();
 
       //Check reset files sucess message:
       IDE.OUTPUT.waitForMessageShow(2);
@@ -241,26 +241,26 @@ public class ResetFilesTest extends BaseTest
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
-      IDE.GIT.RESET_FILES.waitForViewOpened();
+      IDE.GIT.RESET_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_FILES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.RESET_FILES.isOpened());
       Assert.assertEquals(3, IDE.GIT.RESET_FILES.getFilesCount());
 
       //Check file contained in folder:
       IDE.GIT.RESET_FILES.checkFileByName(TEST_FILE2);
       IDE.GIT.RESET_FILES.clickCancelButton();
 
-      IDE.GIT.RESET_FILES.waitForViewClosed();
+      IDE.GIT.RESET_FILES.waitClosed();
 
       //Open Reset files view and check index doesn't contain folder with file:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
-      IDE.GIT.RESET_FILES.waitForViewOpened();
+      IDE.GIT.RESET_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_FILES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.RESET_FILES.isOpened());
       Assert.assertEquals(3, IDE.GIT.RESET_FILES.getFilesCount());
 
       IDE.GIT.RESET_FILES.clickCancelButton();
-      IDE.GIT.RESET_FILES.waitForViewClosed();
+      IDE.GIT.RESET_FILES.waitClosed();
    }
 
    /**
@@ -286,9 +286,9 @@ public class ResetFilesTest extends BaseTest
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
-      IDE.GIT.RESET_FILES.waitForViewOpened();
+      IDE.GIT.RESET_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_FILES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.RESET_FILES.isOpened());
       Assert.assertEquals(3, IDE.GIT.RESET_FILES.getFilesCount());
 
       //Check all files to reset:
@@ -297,7 +297,7 @@ public class ResetFilesTest extends BaseTest
       IDE.GIT.RESET_FILES.checkFileByName(SRC_FOLDER + "/" + TEST_FILE3);
       IDE.GIT.RESET_FILES.clickResetButton();
 
-      IDE.GIT.RESET_FILES.waitForViewClosed();
+      IDE.GIT.RESET_FILES.waitClosed();
 
       //Check success reset files message:
       IDE.OUTPUT.waitForMessageShow(2);

@@ -18,8 +18,14 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -28,11 +34,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class Pull extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "idePullView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String PULL_BUTTON_ID = "idePullViewPullButton";
 
@@ -45,15 +51,46 @@ public class Pull extends AbstractTestModule
       String LOCAL_BRANCHES_FIELD_ID = "idePullViewLocalBranchesField";
    }
 
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.PULL_BUTTON_ID)
+   private WebElement pullButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locators.REMOTE_FIELD_ID)
+   private WebElement remoteField;
+
+   @FindBy(name = Locators.REMOTE_BRANCHES_FIELD_ID)
+   private WebElement remoteBranchesField;
+
+   @FindBy(name = Locators.LOCAL_BRANCHES_FIELD_ID)
+   private WebElement localBranchesField;
+
    /**
     * Waits for Pull view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -61,9 +98,24 @@ public class Pull extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -71,13 +123,12 @@ public class Pull extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.PULL_BUTTON_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID)
-         && selenium().isElementPresent(Locators.REMOTE_FIELD_ID)
-         && selenium().isElementPresent(Locators.LOCAL_BRANCHES_FIELD_ID)
-         && selenium().isElementPresent(Locators.REMOTE_BRANCHES_FIELD_ID);
+      return (view != null && view.isDisplayed() && remoteBranchesField != null && remoteBranchesField.isDisplayed()
+         && localBranchesField != null && localBranchesField.isDisplayed() && remoteField != null
+         && remoteField.isDisplayed() && pullButton != null && pullButton.isDisplayed() && cancelButton != null && cancelButton
+         .isDisplayed());
    }
 
    /**
@@ -85,7 +136,7 @@ public class Pull extends AbstractTestModule
     */
    public void clickPullButton()
    {
-      selenium().click(Locators.PULL_BUTTON_ID);
+      pullButton.click();
    }
 
    /**
@@ -93,7 +144,7 @@ public class Pull extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -103,8 +154,7 @@ public class Pull extends AbstractTestModule
     */
    public boolean isPullButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.PULL_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(pullButton);
    }
 
    /**
@@ -114,8 +164,7 @@ public class Pull extends AbstractTestModule
     */
    public boolean isCancelButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CANCEL_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(cancelButton);
    }
 
    /**
@@ -125,7 +174,7 @@ public class Pull extends AbstractTestModule
     */
    public String getRemoteRepositoryValue()
    {
-      return selenium().getText(Locators.REMOTE_FIELD_ID);
+      return remoteField.getText();
    }
 
    /**
@@ -135,27 +184,29 @@ public class Pull extends AbstractTestModule
     */
    public String getRemoteBranchValue()
    {
-      return selenium().getValue(Locators.REMOTE_BRANCHES_FIELD_ID);
+      return remoteBranchesField.getText();
    }
 
    /**
     * Type pointed text to remote branch field.
     * 
     * @return {@link String} text to type
+    * @throws InterruptedException 
     */
-   public void typeToRemoteBranch(String text)
+   public void typeToRemoteBranch(String text) throws InterruptedException
    {
-      selenium().type(Locators.REMOTE_BRANCHES_FIELD_ID, text);
+      IDE().INPUT.setComboboxValue(remoteBranchesField, text);
    }
-   
+
    /**
     * Type pointed text to local branch field.
     * 
     * @return {@link String} text to type
+    * @throws InterruptedException 
     */
-   public void typeToLocalBranch(String text)
+   public void typeToLocalBranch(String text) throws InterruptedException
    {
-      selenium().type(Locators.LOCAL_BRANCHES_FIELD_ID, text);
+      IDE().INPUT.setComboboxValue(localBranchesField, text);
    }
 
    /**
@@ -165,6 +216,6 @@ public class Pull extends AbstractTestModule
     */
    public String getLocalBranchValue()
    {
-      return selenium().getValue(Locators.LOCAL_BRANCHES_FIELD_ID);
+      return localBranchesField.getText();
    }
 }

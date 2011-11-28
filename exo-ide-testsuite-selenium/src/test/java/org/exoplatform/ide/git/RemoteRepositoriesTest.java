@@ -104,9 +104,9 @@ public class RemoteRepositoriesTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
 
-      IDE.GIT.REMOTES.waitForViewOpened();
+      IDE.GIT.REMOTES.waitOpened();
       IDE.GIT.REMOTES.clickCloseButton();
-      IDE.GIT.REMOTES.waitForViewClosed();
+      IDE.GIT.REMOTES.waitClosed();
    }
 
    /**
@@ -126,16 +126,16 @@ public class RemoteRepositoriesTest extends BaseTest
 
       //Open Remote repositories view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
-      IDE.GIT.REMOTES.waitForViewOpened();
+      IDE.GIT.REMOTES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOTES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.REMOTES.isOpened());
       Assert.assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       Assert.assertFalse(IDE.GIT.REMOTES.isDeleteButtonEnabled());
       Assert.assertTrue(IDE.GIT.REMOTES.isAddButtonEnabled());
 
       IDE.GIT.REMOTES.clickCloseButton();
-      IDE.GIT.REMOTES.waitForViewClosed();
+      IDE.GIT.REMOTES.waitClosed();
    }
 
    /**
@@ -155,15 +155,15 @@ public class RemoteRepositoriesTest extends BaseTest
 
       //Open Remote repositories view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
-      IDE.GIT.REMOTES.waitForViewOpened();
+      IDE.GIT.REMOTES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOTES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.REMOTES.isOpened());
       Assert.assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       //Add remote repository:
       IDE.GIT.REMOTES.clickAddButton();
-      IDE.GIT.REMOTES.waitForAddRemoteViewOpened();
-      Assert.assertTrue(IDE.GIT.REMOTES.isAddRepositoryViewComponentsPresent());
+      IDE.GIT.REMOTES.waitAddRemoteViewOpened();
+      Assert.assertTrue(IDE.GIT.REMOTES.isAddRepositoryOpened());
       Assert.assertFalse(IDE.GIT.REMOTES.isOkButtonEnabled());
 
       IDE.GIT.REMOTES.typeToNameField(REMOTE1_NAME);
@@ -171,25 +171,25 @@ public class RemoteRepositoriesTest extends BaseTest
       IDE.GIT.REMOTES.typeToUrlField(REMOTE1_URL);
       Assert.assertTrue(IDE.GIT.REMOTES.isOkButtonEnabled());
       IDE.GIT.REMOTES.clickOkButton();
-      IDE.GIT.REMOTES.waitForAddRemoteViewClosed();
+      IDE.GIT.REMOTES.waitAddRemoteViewClosed();
 
       IDE.GIT.REMOTES.waitForRemotesCount(1);
       Assert.assertEquals(1, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       //Close Remotes view:
       IDE.GIT.REMOTES.clickCloseButton();
-      IDE.GIT.REMOTES.waitForViewClosed();
+      IDE.GIT.REMOTES.waitClosed();
 
       //Open Remotes view again:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
-      IDE.GIT.REMOTES.waitForViewOpened();
+      IDE.GIT.REMOTES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOTES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.REMOTES.isOpened());
       Assert.assertEquals(1, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       //Close Remotes view:
       IDE.GIT.REMOTES.clickCloseButton();
-      IDE.GIT.REMOTES.waitForViewClosed();
+      IDE.GIT.REMOTES.waitClosed();
    }
 
    /**
@@ -209,19 +209,19 @@ public class RemoteRepositoriesTest extends BaseTest
 
       //Open Remote repositories view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
-      IDE.GIT.REMOTES.waitForViewOpened();
+      IDE.GIT.REMOTES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOTES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.REMOTES.isOpened());
       Assert.assertEquals(1, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       //Add remote repository:
       IDE.GIT.REMOTES.clickAddButton();
-      IDE.GIT.REMOTES.waitForAddRemoteViewOpened();
+      IDE.GIT.REMOTES.waitAddRemoteViewOpened();
 
       IDE.GIT.REMOTES.typeToNameField(REMOTE2_NAME);
       IDE.GIT.REMOTES.typeToUrlField(REMOTE2_URL);
       IDE.GIT.REMOTES.clickOkButton();
-      IDE.GIT.REMOTES.waitForAddRemoteViewClosed();
+      IDE.GIT.REMOTES.waitAddRemoteViewClosed();
 
       IDE.GIT.REMOTES.waitForRemotesCount(2);
       Assert.assertEquals(2, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
@@ -259,7 +259,7 @@ public class RemoteRepositoriesTest extends BaseTest
 
       //Close Remotes view:
       IDE.GIT.REMOTES.clickCloseButton();
-      IDE.GIT.REMOTES.waitForViewClosed();
+      IDE.GIT.REMOTES.waitClosed();
    }
 
 }

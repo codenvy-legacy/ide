@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -29,11 +35,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class Branches extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideBranchView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String CREATE_BUTTON_ID = "ideBranchViewCreateButton";
 
@@ -45,26 +51,53 @@ public class Branches extends AbstractTestModule
 
       String BRANCHES_GRID_ID = "ideBranchGrid";
 
-      String branchRowLocator = "//table[@id=\"" + BRANCHES_GRID_ID + "\"]//tr[contains(., \"%s\")]//div";
+      String BRANCH_LOCATOR = "//table[@id=\"" + BRANCHES_GRID_ID + "\"]//div[contains(., \"%s\")]";
 
-      String NEW_BRANCH_VIEW_ID = "exoAskForValueDialog";
+      String BRANCH_CHECKED_LOCATOR = "//table[@id=\"" + BRANCHES_GRID_ID + "\"]//div[contains(., \"%s\")]/img";
 
-      String NEW_BRANCH_VALUE_FIELD = "//div[@id=\"" + NEW_BRANCH_VIEW_ID + "\"]//input[@name=\"valueField\"]";
-
-      String NEW_BRANCH_OK_BUTTON_ID = "OkButton";
-
-      String NEW_BRANCH_CANCEL_BUTTON_ID = "CancelButton";
+      String BRANCH_ROW_SELECTOR = "table#" + BRANCHES_GRID_ID + ">tbody:nth(0) tr";
    }
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.CREATE_BUTTON_ID)
+   private WebElement createButton;
+
+   @FindBy(id = Locators.CHECKOUT_BUTTON_ID)
+   private WebElement checkoutButton;
+
+   @FindBy(id = Locators.DELETE_BUTTON_ID)
+   private WebElement deleteButton;
+
+   @FindBy(id = Locators.CLOSE_BUTTON_ID)
+   private WebElement closeButton;
+
+   @FindBy(id = Locators.BRANCHES_GRID_ID)
+   private WebElement branchesGrid;
 
    /**
    * Waits for Branches view to be opened.
    * 
    * @throws Exception
    */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -72,9 +105,24 @@ public class Branches extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -82,13 +130,11 @@ public class Branches extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.CREATE_BUTTON_ID)
-         && selenium().isElementPresent(Locators.CHECKOUT_BUTTON_ID)
-         && selenium().isElementPresent(Locators.CLOSE_BUTTON_ID)
-         && selenium().isElementPresent(Locators.DELETE_BUTTON_ID)
-         && selenium().isElementPresent(Locators.BRANCHES_GRID_ID);
+      return (view != null && view.isDisplayed() && checkoutButton != null && checkoutButton.isDisplayed()
+         && createButton != null && createButton.isDisplayed() && closeButton != null && closeButton.isDisplayed()
+         && deleteButton != null && deleteButton.isDisplayed() && branchesGrid != null && branchesGrid.isDisplayed());
    }
 
    /**
@@ -96,7 +142,7 @@ public class Branches extends AbstractTestModule
     */
    public void clickCreateButton()
    {
-      selenium().click(Locators.CREATE_BUTTON_ID);
+      createButton.click();
    }
 
    /**
@@ -104,7 +150,7 @@ public class Branches extends AbstractTestModule
     */
    public void clickCheckoutButton()
    {
-      selenium().click(Locators.CHECKOUT_BUTTON_ID);
+      checkoutButton.click();
    }
 
    /**
@@ -112,7 +158,7 @@ public class Branches extends AbstractTestModule
     */
    public void clickDeleteButton()
    {
-      selenium().click(Locators.DELETE_BUTTON_ID);
+      deleteButton.click();
    }
 
    /**
@@ -120,7 +166,7 @@ public class Branches extends AbstractTestModule
     */
    public void clickCloseButton()
    {
-      selenium().click(Locators.CLOSE_BUTTON_ID);
+      closeButton.click();
    }
 
    /**
@@ -130,8 +176,7 @@ public class Branches extends AbstractTestModule
     */
    public boolean isCreateButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CREATE_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(createButton);
    }
 
    /**
@@ -141,8 +186,7 @@ public class Branches extends AbstractTestModule
     */
    public boolean isCheckoutButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CHECKOUT_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(checkoutButton);
    }
 
    /**
@@ -152,8 +196,7 @@ public class Branches extends AbstractTestModule
     */
    public boolean isDeleteButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.DELETE_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(deleteButton);
    }
 
    /**
@@ -163,8 +206,7 @@ public class Branches extends AbstractTestModule
     */
    public boolean isCloseButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CLOSE_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(closeButton);
    }
 
    /**
@@ -174,7 +216,7 @@ public class Branches extends AbstractTestModule
     */
    public int getBranchesCount()
    {
-      return selenium().getXpathCount("//table[@id=\"" + Locators.BRANCHES_GRID_ID + "\"]/tbody[1]//tr").intValue();
+      return driver().findElements(By.cssSelector(Locators.BRANCH_ROW_SELECTOR)).size();
    }
 
    /**
@@ -184,7 +226,8 @@ public class Branches extends AbstractTestModule
     */
    public void selectBranchByName(String branchName)
    {
-      selenium().click(String.format(Locators.branchRowLocator, branchName));
+      WebElement branch = driver().findElement(By.xpath(String.format(Locators.BRANCH_LOCATOR, branchName)));
+      branch.click();
    }
 
    /**
@@ -195,8 +238,16 @@ public class Branches extends AbstractTestModule
     */
    public boolean isBranchChecked(String branchName)
    {
-      return selenium().isElementPresent(
-         "//table[@id=\"" + Locators.BRANCHES_GRID_ID + "\"]//tr[contains(., \"" + branchName + "\")]//img");
+      try
+      {
+         WebElement checkedBranch =
+            driver().findElement(By.xpath(String.format(Locators.BRANCH_CHECKED_LOCATOR, branchName)));
+         return checkedBranch != null;
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
    }
 
    /**
@@ -206,20 +257,25 @@ public class Branches extends AbstractTestModule
     * @return {@link Boolean} checked state of the branch
     * @throws Exception 
     */
-   public void waitBranchChecked(String branchName) throws Exception
+   public void waitBranchChecked(final String branchName) throws Exception
    {
-      waitForElementPresent("//table[@id=\"" + Locators.BRANCHES_GRID_ID + "\"]//tr[contains(., \"" + branchName
-         + "\")]//img");
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return isBranchChecked(branchName);
+         }
+      });
    }
 
    /** Waits for New Branch view to be opened.
    * 
    * @throws Exception
    */
-   public void waitForNewBranchViewOpened() throws Exception
+   public void waitNewBranchViewOpened() throws Exception
    {
-      waitForElementPresent(Locators.NEW_BRANCH_VIEW_ID);
-      waitForElementVisible(Locators.NEW_BRANCH_VIEW_ID);
+      IDE().ASK_FOR_VALUE_DIALOG.waitOpened();
    }
 
    /**
@@ -227,35 +283,38 @@ public class Branches extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForNewBranchViewClosed() throws Exception
+   public void waitNewBranchViewClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.NEW_BRANCH_VIEW_ID);
+      IDE().ASK_FOR_VALUE_DIALOG.waitClosed();
    }
 
    /**
     * Click Ok button.
+    * @throws Exception 
     */
-   public void clickNewBranchOkButton()
+   public void clickNewBranchOkButton() throws Exception
    {
-      selenium().click(Locators.NEW_BRANCH_OK_BUTTON_ID);
+      IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
    }
 
    /**
     * Click Cancel button.
+    * @throws Exception 
     */
-   public void clickNewBranchCancelButton()
+   public void clickNewBranchCancelButton() throws Exception
    {
-      selenium().click(Locators.NEW_BRANCH_CANCEL_BUTTON_ID);
+      IDE().ASK_FOR_VALUE_DIALOG.clickCancelButton();
    }
 
    /**
     * Type the name of new branch.
     * 
     * @param newBranch new branch name
+    * @throws Exception 
     */
-   public void typeNewBranchName(String newBranch)
+   public void setNewBranchName(String newBranch) throws Exception
    {
-      selenium().type(Locators.NEW_BRANCH_VALUE_FIELD, newBranch);
+      IDE().ASK_FOR_VALUE_DIALOG.setValue(newBranch);
    }
 
    /**
@@ -264,9 +323,16 @@ public class Branches extends AbstractTestModule
     * @param count number of branches
     * @throws Exception
     */
-   public void waitForBranchesCount(int count) throws Exception
+   public void waitForBranchesCount(final int count) throws Exception
    {
-      waitForElementPresent("//table[@id=\"" + Locators.BRANCHES_GRID_ID + "\"]/tbody[1]//tr[" + count + "]");
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return count == getBranchesCount();
+         }
+      });
    }
 
    /**
@@ -278,11 +344,11 @@ public class Branches extends AbstractTestModule
    public void switchBranch(String branchName) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
-      waitForViewOpened();
+      waitOpened();
       selectBranchByName(branchName);
       clickCheckoutButton();
       waitBranchChecked(branchName);
       clickCloseButton();
-      waitForViewClosed();
+      waitClosed();
    }
 }

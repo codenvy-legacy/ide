@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -29,11 +35,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class Commit extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideCommitView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String COMMIT_BUTTON_ID = "ideCommitViewCommitButton";
 
@@ -44,15 +50,43 @@ public class Commit extends AbstractTestModule
       String ALL_FIELD_ID = "ideCommitViewAllField";
    }
 
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.COMMIT_BUTTON_ID)
+   private WebElement commitButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locators.MESSAGE_FIELD_ID)
+   private WebElement messageField;
+
+   @FindBy(name = Locators.ALL_FIELD_ID)
+   private WebElement allField;
+
    /**
     * Waits for Commit view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -60,9 +94,24 @@ public class Commit extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -70,12 +119,11 @@ public class Commit extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.COMMIT_BUTTON_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID)
-         && selenium().isElementPresent(Locators.MESSAGE_FIELD_ID)
-         && selenium().isElementPresent(Locators.ALL_FIELD_ID);
+      return (view != null && view.isDisplayed() && commitButton != null && commitButton.isDisplayed()
+         && cancelButton != null && cancelButton.isDisplayed() && messageField != null && messageField.isDisplayed()
+         && allField != null && allField.isDisplayed());
    }
 
    /**
@@ -83,7 +131,7 @@ public class Commit extends AbstractTestModule
     */
    public void clickCommitButton()
    {
-      selenium().click(Locators.COMMIT_BUTTON_ID);
+      commitButton.click();
    }
 
    /**
@@ -91,7 +139,7 @@ public class Commit extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -101,8 +149,7 @@ public class Commit extends AbstractTestModule
     */
    public boolean isCommitButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.COMMIT_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(commitButton);
    }
 
    /**
@@ -112,8 +159,7 @@ public class Commit extends AbstractTestModule
     */
    public boolean isCancelButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CANCEL_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(cancelButton);
    }
 
    /**
@@ -121,7 +167,7 @@ public class Commit extends AbstractTestModule
     */
    public void checkAddField()
    {
-      selenium().check(Locators.ALL_FIELD_ID);
+      allField.click();
    }
 
    /**
@@ -131,17 +177,18 @@ public class Commit extends AbstractTestModule
     */
    public boolean isAddFieldChecked()
    {
-      return selenium().isChecked(Locators.ALL_FIELD_ID);
+      return allField.isSelected();
    }
 
    /**
     * Type message to message field.
     * 
     * @param message
+    * @throws InterruptedException 
     */
-   public void typeToMessageField(String message)
+   public void typeToMessageField(String message) throws InterruptedException
    {
-      selenium().type(Locators.MESSAGE_FIELD_ID, message);
+      IDE().INPUT.typeToElement(messageField, message);
    }
 
    /**
@@ -153,9 +200,9 @@ public class Commit extends AbstractTestModule
    public void commit(String message) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
-      waitForViewOpened();
+      waitOpened();
       typeToMessageField(message);
       clickCommitButton();
-      waitForViewClosed();
+      waitClosed();
    }
 }

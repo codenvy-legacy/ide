@@ -18,8 +18,14 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -28,11 +34,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class CloneRepository extends AbstractTestModule
 {
-   public static interface Locators
+   private static interface Locators
    {
       String VIEW_ID = "ideCloneRepositoryView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String CLONE_BUTTON_ID = "ideCloneRepositoryViewCloneButton";
 
@@ -45,15 +51,46 @@ public class CloneRepository extends AbstractTestModule
       String REMOTE_NAME_FIELD_ID = "ideCloneRepositoryViewRemoteNameField";
    }
 
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.CLONE_BUTTON_ID)
+   private WebElement cloneButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locators.WORKDIR_FIELD_ID)
+   private WebElement workdirField;
+
+   @FindBy(name = Locators.REMOTE_URI_FIELD_ID)
+   private WebElement remoteUriField;
+
+   @FindBy(name = Locators.REMOTE_NAME_FIELD_ID)
+   private WebElement remoteNameField;
+
    /**
     * Waits for Clone Git Repository view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -61,9 +98,24 @@ public class CloneRepository extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -71,13 +123,12 @@ public class CloneRepository extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.WORKDIR_FIELD_ID)
-         && selenium().isElementPresent(Locators.REMOTE_NAME_FIELD_ID)
-         && selenium().isElementPresent(Locators.REMOTE_URI_FIELD_ID)
-         && selenium().isElementPresent(Locators.CLONE_BUTTON_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID);
+      return (view != null && view.isDisplayed() && workdirField != null && workdirField.isDisplayed()
+         && remoteNameField != null && remoteNameField.isDisplayed() && remoteUriField != null
+         && remoteUriField.isDisplayed() && cloneButton != null && cloneButton.isDisplayed() && cancelButton != null && cancelButton
+         .isDisplayed());
    }
 
    /**
@@ -85,7 +136,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public void clickCloneButton()
    {
-      selenium().click(Locators.CLONE_BUTTON_ID);
+      cloneButton.click();
    }
 
    /**
@@ -93,7 +144,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -103,8 +154,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public boolean isCloneButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CLONE_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(cloneButton);
    }
 
    /**
@@ -114,8 +164,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public boolean isCancelButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CANCEL_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(cancelButton);
    }
 
    /**
@@ -125,7 +174,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public String getWorkDirectoryValue()
    {
-      return selenium().getValue(Locators.WORKDIR_FIELD_ID);
+      return workdirField.getText();
    }
 
    /**
@@ -135,7 +184,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public String getRemoteUriFieldValue()
    {
-      return selenium().getValue(Locators.REMOTE_URI_FIELD_ID);
+      return remoteUriField.getText();
    }
 
    /**
@@ -145,26 +194,28 @@ public class CloneRepository extends AbstractTestModule
     */
    public String getRemoteNameFieldValue()
    {
-      return selenium().getValue(Locators.REMOTE_NAME_FIELD_ID);
+      return remoteNameField.getText();
    }
 
    /**
     * Type text to remote URI field.
     * 
     * @param text text to type
+    * @throws InterruptedException 
     */
-   public void typeToRemoteUriField(String text)
+   public void setRemoteUri(String text) throws InterruptedException
    {
-      selenium().type(Locators.REMOTE_URI_FIELD_ID, text);
+      IDE().INPUT.typeToElement(remoteUriField, text, true);
    }
 
    /**
     * Type text to remote name field.
     * 
     * @param text text to type
+    * @throws InterruptedException 
     */
-   public void typeToRemoteNameField(String text)
+   public void setRemoteName(String text) throws InterruptedException
    {
-      selenium().type(Locators.REMOTE_NAME_FIELD_ID, text);
+      IDE().INPUT.typeToElement(remoteNameField, text, true);
    }
 }

@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -29,11 +35,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class Remotes extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideRemoteView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String ADD_BUTTON_ID = "ideRemoteViewAddButton";
 
@@ -45,7 +51,7 @@ public class Remotes extends AbstractTestModule
 
       String ADD_REMOTE_VIEW_ID = "ideAddRemoteRepositoryView";
 
-      String ADD_REMOTE_VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(ADD_REMOTE_VIEW_ID);
+      String ADD_REMOTE_VIEW_LOCATOR = "//div[@view-id='" + ADD_REMOTE_VIEW_ID + "']";
 
       String OK_BUTTON_ID = "ideAddRemoteRepositoryViewOkButton";
 
@@ -55,18 +61,63 @@ public class Remotes extends AbstractTestModule
 
       String URL_FIELD_ID = "ideAddRemoteRepositoryViewUrlField";
 
-      String REMOTE_ROW_LOCATOR = "//table[@id=\"" + REMOTE_GRID_ID + "\"]//tr[contains(., \"%s\")]//div";
+      String REMOTE_REPOSITORY_LOCATOR = "//table[@id=\"" + REMOTE_GRID_ID + "\"]//tr[contains(., \"%s\")]//div";
+
+      String REMOTE_ROW_SELECTOR = "table#" + REMOTE_GRID_ID + ">tbody:nth(0) tr";
    }
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.ADD_BUTTON_ID)
+   private WebElement addButton;
+
+   @FindBy(id = Locators.DELETE_BUTTON_ID)
+   private WebElement deleteButton;
+
+   @FindBy(id = Locators.CLOSE_BUTTON_ID)
+   private WebElement closeButton;
+
+   @FindBy(id = Locators.OK_BUTTON_ID)
+   private WebElement okButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(id = Locators.REMOTE_GRID_ID)
+   private WebElement remotesGrid;
+
+   @FindBy(xpath = Locators.ADD_REMOTE_VIEW_LOCATOR)
+   private WebElement addRemoteView;
+
+   @FindBy(name = Locators.NAME_FIELD_ID)
+   private WebElement nameField;
+
+   @FindBy(name = Locators.URL_FIELD_ID)
+   private WebElement urlField;
 
    /**
     * Waits for Remotes view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -74,9 +125,24 @@ public class Remotes extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.ADD_REMOTE_VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -84,10 +150,23 @@ public class Remotes extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForAddRemoteViewOpened() throws Exception
+   public void waitAddRemoteViewOpened() throws Exception
    {
-      waitForElementPresent(Locators.ADD_REMOTE_VIEW_LOCATOR);
-      waitForElementVisible(Locators.ADD_REMOTE_VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isAddRepositoryOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -95,7 +174,7 @@ public class Remotes extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForAddRemoteViewClosed() throws Exception
+   public void waitAddRemoteViewClosed() throws Exception
    {
       waitForElementNotPresent(Locators.ADD_REMOTE_VIEW_LOCATOR);
    }
@@ -105,12 +184,11 @@ public class Remotes extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.REMOTE_GRID_ID)
-         && selenium().isElementPresent(Locators.CLOSE_BUTTON_ID)
-         && selenium().isElementPresent(Locators.ADD_BUTTON_ID)
-         && selenium().isElementPresent(Locators.DELETE_BUTTON_ID);
+      return (view != null && view.isDisplayed() && closeButton != null && closeButton.isDisplayed()
+         && addButton != null && addButton.isDisplayed() && deleteButton != null && deleteButton.isDisplayed()
+         && remotesGrid != null && remotesGrid.isDisplayed());
    }
 
    /**
@@ -118,11 +196,11 @@ public class Remotes extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isAddRepositoryViewComponentsPresent()
+   public boolean isAddRepositoryOpened()
    {
-      return selenium().isElementPresent(Locators.OK_BUTTON_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID)
-         && selenium().isElementPresent(Locators.NAME_FIELD_ID) && selenium().isElementPresent(Locators.URL_FIELD_ID);
+      return (addRemoteView != null && addRemoteView.isDisplayed() && cancelButton != null && cancelButton.isDisplayed()
+         && okButton != null && okButton.isDisplayed() && nameField != null && nameField.isDisplayed()
+         && urlField != null && urlField.isDisplayed());
    }
 
    /**
@@ -130,7 +208,7 @@ public class Remotes extends AbstractTestModule
     */
    public void clickAddButton()
    {
-      selenium().click(Locators.ADD_BUTTON_ID);
+      addButton.click();
    }
 
    /**
@@ -138,7 +216,7 @@ public class Remotes extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -146,7 +224,7 @@ public class Remotes extends AbstractTestModule
     */
    public void clickCloseButton()
    {
-      selenium().click(Locators.CLOSE_BUTTON_ID);
+      closeButton.click();
    }
 
    /**
@@ -154,7 +232,7 @@ public class Remotes extends AbstractTestModule
     */
    public void clickDeleteButton()
    {
-      selenium().click(Locators.DELETE_BUTTON_ID);
+      deleteButton.click();
    }
 
    /**
@@ -162,27 +240,29 @@ public class Remotes extends AbstractTestModule
     */
    public void clickOkButton()
    {
-      selenium().click(Locators.OK_BUTTON_ID);
+      okButton.click();
    }
 
    /**
     * Type pointed text to repository's name field.
     * 
     * @param text
+    * @throws InterruptedException 
     */
-   public void typeToNameField(String text)
+   public void typeToNameField(String text) throws InterruptedException
    {
-      selenium().type(Locators.NAME_FIELD_ID, text);
+      IDE().INPUT.typeToElement(nameField, text, true);
    }
 
    /**
     * Type pointed text to repository's URL field.
     * 
     * @param text
+    * @throws InterruptedException 
     */
-   public void typeToUrlField(String text)
+   public void typeToUrlField(String text) throws InterruptedException
    {
-      selenium().type(Locators.URL_FIELD_ID, text);
+      IDE().INPUT.typeToElement(urlField, text, true);
    }
 
    /**
@@ -192,8 +272,7 @@ public class Remotes extends AbstractTestModule
     */
    public boolean isOkButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.OK_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(okButton);
    }
 
    /**
@@ -203,8 +282,7 @@ public class Remotes extends AbstractTestModule
     */
    public boolean isAddButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.ADD_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(addButton);
    }
 
    /**
@@ -214,8 +292,7 @@ public class Remotes extends AbstractTestModule
     */
    public boolean isDeleteButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.DELETE_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(deleteButton);
    }
 
    /**
@@ -225,12 +302,19 @@ public class Remotes extends AbstractTestModule
     */
    public int getRemoteRepositoriesCount()
    {
-      return selenium().getXpathCount("//table[@id=\"" + Locators.REMOTE_GRID_ID + "\"]/tbody[1]//tr").intValue();
+      return driver().findElements(By.cssSelector(Locators.REMOTE_ROW_SELECTOR)).size();
    }
 
-   public void waitForRemotesCount(int count) throws Exception
+   public void waitForRemotesCount(final int count) throws Exception
    {
-      waitForElementPresent("//table[@id=\"" + Locators.REMOTE_GRID_ID + "\"]/tbody[1]//tr[" + count + "]");
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return count == getRemoteRepositoriesCount();
+         }
+      });
    }
 
    /**
@@ -240,7 +324,9 @@ public class Remotes extends AbstractTestModule
     */
    public void selectRemoteByName(String remoteName)
    {
-      selenium().click(String.format(Locators.REMOTE_ROW_LOCATOR, remoteName));
+      WebElement remoteRepository =
+         driver().findElement(By.xpath(String.format(Locators.REMOTE_REPOSITORY_LOCATOR, remoteName)));
+      remoteRepository.click();
    }
 
    /**
@@ -253,19 +339,19 @@ public class Remotes extends AbstractTestModule
    public void addRemoteRepository(String name, String location) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
-      waitForViewOpened();
+      waitOpened();
 
       //Add remote repository:
       clickAddButton();
-      waitForAddRemoteViewOpened();
+      waitAddRemoteViewOpened();
 
       typeToNameField(name);
       typeToUrlField(location);
       clickOkButton();
-      waitForAddRemoteViewClosed();
+      waitAddRemoteViewClosed();
 
       //Close Remotes view:
       clickCloseButton();
-      waitForViewClosed();
+      waitClosed();
    }
 }

@@ -73,7 +73,6 @@ public class OpeningFilesTest extends BaseTest
 
       //Open another file from the same folder
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + folderName + "/" + file1Name, false);
-      waitForElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR);
       
       //Check text of opened file
       String text = IDE.EDITOR.getTextFromCodeEditor(0);

@@ -18,8 +18,14 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -28,19 +34,17 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class ShowHistory extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideHistoryView";
 
       String VIEW_TITLE = "History";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String REVISION_GRID_ID = "ideRevisionGrid";
 
       String REVISION_ROW_LOCATOR = "//table[@id=\"" + REVISION_GRID_ID + "\"]//tr[contains(., \"%s\")]//div";
-
-      String BUTTON_LOCATOR = "//div[@title=\"%s\"]";
 
       String CHANGES_IN_PROJECT_BUTTON_TITLE = "Show changes in project";
 
@@ -54,17 +58,17 @@ public class ShowHistory extends AbstractTestModule
 
       String REFRESH_REVISION_LIST_BUTTON_TITLE = "Refresh revision list";
 
-      String CHANGES_IN_PROJECT_BUTTON = String.format(BUTTON_LOCATOR, CHANGES_IN_PROJECT_BUTTON_TITLE);
+      String CHANGES_IN_PROJECT_BUTTON_SELECTOR = "div[title=" + CHANGES_IN_PROJECT_BUTTON_TITLE + "]";
 
-      String CHANGES_OF_RESOURCE_BUTTON = String.format(BUTTON_LOCATOR, CHANGES_OF_RESOURCE_BUTTON_TITLE);
+      String CHANGES_OF_RESOURCE_BUTTON_SELECTOR = "div[title=" + CHANGES_OF_RESOURCE_BUTTON_TITLE + "]";
 
-      String DIFF_INDEX_BUTTON = String.format(BUTTON_LOCATOR, DIFF_INDEX_BUTTON_TITLE);
+      String DIFF_INDEX_BUTTON_SELECTOR = "div[title=" + DIFF_INDEX_BUTTON_TITLE + "]";
 
-      String DIFF_WORK_TREE_BUTTON = String.format(BUTTON_LOCATOR, DIFF_WORK_TREE_BUTTON_TITLE);
+      String DIFF_WORK_TREE_BUTTON_SELECTOR = "div[title=" + DIFF_WORK_TREE_BUTTON_TITLE + "]";
 
-      String DIFF_PREV_REVISION_BUTTON = String.format(BUTTON_LOCATOR, DIFF_PREV_REVISION_BUTTON_TITLE);
+      String DIFF_PREV_REVISION_BUTTON_SELECTOR = "div[title=" + DIFF_PREV_REVISION_BUTTON_TITLE + "]";
 
-      String REFRESH_REVISION_LIST_BUTTON = String.format(BUTTON_LOCATOR, REFRESH_REVISION_LIST_BUTTON_TITLE);
+      String REFRESH_REVISION_LIST_BUTTON_SELCTOR = "div[title=" + REFRESH_REVISION_LIST_BUTTON_TITLE + "]";
 
       String INDEX_STATE = "index state";
 
@@ -72,18 +76,62 @@ public class ShowHistory extends AbstractTestModule
 
       String NOTHING_FOR_COMPARANCE = "nothing for comparance";
 
-      String BUTTON_SELECTED_LOCATOR = "css=div[class*=exoIconButtonPanelSelected][title*=\"%s\"]";
+      String BUTTON_SELECTED = "exoIconButtonPanelSelected";
+
+      String REVISION_ROW_SELECTOR = "table#" + REVISION_GRID_ID + ">tbody:nth(0) tr";
+
+      String CONTENT_FRAME_LOCATOR = Locators.VIEW_LOCATOR + "//frame";
    }
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.REVISION_GRID_ID)
+   private WebElement revisionGrid;
+
+   @FindBy(css = Locators.CHANGES_IN_PROJECT_BUTTON_SELECTOR)
+   private WebElement projectChangesButton;
+
+   @FindBy(css = Locators.CHANGES_OF_RESOURCE_BUTTON_SELECTOR)
+   private WebElement resourceButton;
+
+   @FindBy(css = Locators.DIFF_INDEX_BUTTON_SELECTOR)
+   private WebElement diffIndexButton;
+
+   @FindBy(css = Locators.DIFF_WORK_TREE_BUTTON_SELECTOR)
+   private WebElement diffWorkTreeButton;
+
+   @FindBy(css = Locators.DIFF_PREV_REVISION_BUTTON_SELECTOR)
+   private WebElement diffPrevRevisionButton;
+
+   @FindBy(css = Locators.REFRESH_REVISION_LIST_BUTTON_SELCTOR)
+   private WebElement refreshButton;
+
+   @FindBy(xpath = Locators.CONTENT_FRAME_LOCATOR)
+   private WebElement contentFrame;
 
    /**
     * Waits for History view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -91,9 +139,24 @@ public class ShowHistory extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -101,15 +164,24 @@ public class ShowHistory extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.REVISION_GRID_ID)
-         && selenium().isElementPresent(Locators.CHANGES_IN_PROJECT_BUTTON)
-         && selenium().isElementPresent(Locators.CHANGES_OF_RESOURCE_BUTTON)
-         && selenium().isElementPresent(Locators.DIFF_INDEX_BUTTON)
-         && selenium().isElementPresent(Locators.DIFF_PREV_REVISION_BUTTON)
-         && selenium().isElementPresent(Locators.DIFF_WORK_TREE_BUTTON)
-         && selenium().isElementPresent(Locators.REFRESH_REVISION_LIST_BUTTON);
+      return (view != null && view.isDisplayed() && revisionGrid != null && revisionGrid.isDisplayed()
+         && projectChangesButton != null && projectChangesButton.isDisplayed() && resourceButton != null
+         && resourceButton.isDisplayed() && diffIndexButton != null && diffIndexButton.isDisplayed()
+         && diffPrevRevisionButton != null && diffPrevRevisionButton.isDisplayed() && diffWorkTreeButton != null
+         && diffWorkTreeButton.isDisplayed() && refreshButton != null && refreshButton.isDisplayed());
+   }
+
+   /**
+    * Returns button's selected state.
+    * 
+    * @param button button's element
+    * @return {@link Boolean} selected state of the button
+    */
+   private boolean isButtonSelected(WebElement button)
+   {
+      return button.getAttribute("class").contains(Locators.BUTTON_SELECTED);
    }
 
    /**
@@ -119,8 +191,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public boolean isChangesInProjectButtonSelected()
    {
-      return selenium().isElementPresent(
-         String.format(Locators.BUTTON_SELECTED_LOCATOR, Locators.CHANGES_IN_PROJECT_BUTTON_TITLE));
+      return isButtonSelected(projectChangesButton);
    }
 
    /**
@@ -130,8 +201,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public boolean isChangesOfResourceButtonSelected()
    {
-      return selenium().isElementPresent(
-         String.format(Locators.BUTTON_SELECTED_LOCATOR, Locators.CHANGES_OF_RESOURCE_BUTTON_TITLE));
+      return isButtonSelected(resourceButton);
    }
 
    /**
@@ -141,8 +211,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public boolean isDiffIndexButtonSelected()
    {
-      return selenium().isElementPresent(
-         String.format(Locators.BUTTON_SELECTED_LOCATOR, Locators.DIFF_INDEX_BUTTON_TITLE));
+      return isButtonSelected(diffIndexButton);
    }
 
    /**
@@ -152,8 +221,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public boolean isDiffWorkTreeButtonSelected()
    {
-      return selenium().isElementPresent(
-         String.format(Locators.BUTTON_SELECTED_LOCATOR, Locators.DIFF_WORK_TREE_BUTTON_TITLE));
+      return isButtonSelected(diffWorkTreeButton);
    }
 
    /**
@@ -163,8 +231,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public boolean isDiffPrevRevisionButtonSelected()
    {
-      return selenium().isElementPresent(
-         String.format(Locators.BUTTON_SELECTED_LOCATOR, Locators.DIFF_PREV_REVISION_BUTTON_TITLE));
+      return isButtonSelected(diffPrevRevisionButton);
    }
 
    /**
@@ -172,7 +239,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public void clickChangesInProjectButton()
    {
-      selenium().click(Locators.CHANGES_IN_PROJECT_BUTTON);
+      projectChangesButton.click();
    }
 
    /**
@@ -180,7 +247,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public void clickChangesOfResourceButton()
    {
-      selenium().click(Locators.CHANGES_OF_RESOURCE_BUTTON);
+      resourceButton.click();
    }
 
    /**
@@ -188,7 +255,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public void clickDiffIndexButton()
    {
-      selenium().click(Locators.DIFF_INDEX_BUTTON);
+      diffIndexButton.click();
    }
 
    /**
@@ -196,7 +263,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public void clickDiffWorkTreeStatusButton()
    {
-      selenium().click(Locators.DIFF_WORK_TREE_BUTTON);
+      diffWorkTreeButton.click();
    }
 
    /**
@@ -204,7 +271,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public void clickDiffPrevRevisionButton()
    {
-      selenium().click(Locators.DIFF_PREV_REVISION_BUTTON);
+      diffPrevRevisionButton.click();
    }
 
    /**
@@ -212,7 +279,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public void clickRefreshRevisionListButton()
    {
-      selenium().click(Locators.REFRESH_REVISION_LIST_BUTTON);
+      refreshButton.click();
    }
 
    /**
@@ -222,7 +289,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public int getRevisionsCount()
    {
-      return selenium().getXpathCount("//table[@id=\"" + Locators.REVISION_GRID_ID + "\"]/tbody[1]//tr").intValue();
+      return driver().findElements(By.cssSelector(Locators.REVISION_ROW_SELECTOR)).size();
    }
 
    /**
@@ -232,8 +299,7 @@ public class ShowHistory extends AbstractTestModule
     */
    public void closeView() throws Exception
    {
-      selenium().click("//div[@button-name='close-tab' and @tab-title='" + Locators.VIEW_TITLE + "']");
-      waitForViewClosed();
+      IDE().PERSPECTIVE.getCloseViewButton(Locators.VIEW_TITLE).click();
    }
 
    /**
@@ -242,9 +308,16 @@ public class ShowHistory extends AbstractTestModule
     * @param count number of the commits
     * @throws Exception
     */
-   public void waitForCommitsCount(int count) throws Exception
+   public void waitForRevisionsCount(final int count) throws Exception
    {
-      waitForElementPresent("//table[@id=\"" + Locators.REVISION_GRID_ID + "\"]/tbody[1]//tr[" + count + "]");
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return count == getRevisionsCount();
+         }
+      });
    }
 
    /**
@@ -254,19 +327,50 @@ public class ShowHistory extends AbstractTestModule
     */
    public void selectRevisionByComment(String comment)
    {
-      selenium().click(String.format(Locators.REVISION_ROW_LOCATOR, comment));
+      WebElement revision = driver().findElement(By.xpath(String.format(Locators.REVISION_ROW_LOCATOR, comment)));
+      revision.click();
    }
 
    /**
-    * 
+    * Get the content of diff operation.
     * 
     * @return String diff text
     */
    public String getDiffText()
    {
-      selenium().selectFrame(Locators.VIEW_LOCATOR + "//iframe");
-      String text = selenium().getText("//body");
+      WebElement body = driver().switchTo().frame(contentFrame).findElement(By.tagName("body"));
+      String text = body.getText();
       IDE().selectMainFrame();
       return text;
+   }
+
+   /**
+    * Returns whether it is nothing for comparison state.
+    * 
+    * @return {@link Boolean} 
+    */
+   public boolean isNothingForComparanceState()
+   {
+      return view.getText().contains(Locators.NOTHING_FOR_COMPARANCE);
+   }
+   
+   /**
+    * Returns whether it is compare with index state.
+    * 
+    * @return {@link Boolean} 
+    */
+   public boolean isCompareWithIndexState()
+   {
+      return view.getText().contains(Locators.INDEX_STATE);
+   }
+   
+   /**
+    * Returns whether it is compare with working tree state.
+    * 
+    * @return {@link Boolean} 
+    */
+   public boolean isCompareWithWorkingTree()
+   {
+      return view.getText().contains(Locators.WORKING_TREE_STATE);
    }
 }

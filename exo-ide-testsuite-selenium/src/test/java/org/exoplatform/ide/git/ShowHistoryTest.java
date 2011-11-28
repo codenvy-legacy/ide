@@ -106,7 +106,7 @@ public class ShowHistoryTest extends BaseTest
       //Check show history is available:
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
-      IDE.GIT.SHOW_HISTORY.waitForViewOpened();
+      IDE.GIT.SHOW_HISTORY.waitOpened();
 
       IDE.GIT.SHOW_HISTORY.closeView();
    }
@@ -125,8 +125,8 @@ public class ShowHistoryTest extends BaseTest
 
       //Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
-      IDE.GIT.SHOW_HISTORY.waitForViewOpened();
-      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isViewComponentsPresent());
+      IDE.GIT.SHOW_HISTORY.waitOpened();
+      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isOpened());
       Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isChangesInProjectButtonSelected());
       Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isDiffPrevRevisionButtonSelected());
       Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isChangesOfResourceButtonSelected());
@@ -152,14 +152,14 @@ public class ShowHistoryTest extends BaseTest
 
       //Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
-      IDE.GIT.SHOW_HISTORY.waitForViewOpened();
+      IDE.GIT.SHOW_HISTORY.waitOpened();
       Assert.assertEquals(1, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
       //Make commit:
       createFileAndCommit(TEST_FILE1, COMMIT1);
       Assert.assertEquals(1, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
       IDE.GIT.SHOW_HISTORY.clickRefreshRevisionListButton();
-      IDE.GIT.SHOW_HISTORY.waitForCommitsCount(2);
+      IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(2);
       Assert.assertEquals(2, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
       //Make one more commit:
@@ -168,7 +168,7 @@ public class ShowHistoryTest extends BaseTest
       Thread.sleep(2000);
       
       IDE.GIT.SHOW_HISTORY.clickRefreshRevisionListButton();
-      IDE.GIT.SHOW_HISTORY.waitForCommitsCount(3);
+      IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       Assert.assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
       IDE.GIT.SHOW_HISTORY.closeView();
@@ -190,8 +190,8 @@ public class ShowHistoryTest extends BaseTest
 
       //Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
-      IDE.GIT.SHOW_HISTORY.waitForViewOpened();
-      IDE.GIT.SHOW_HISTORY.waitForCommitsCount(3);
+      IDE.GIT.SHOW_HISTORY.waitOpened();
+      IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       Assert.assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
       //Select first file on the first commit:
@@ -260,8 +260,8 @@ public class ShowHistoryTest extends BaseTest
 
       //Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
-      IDE.GIT.SHOW_HISTORY.waitForViewOpened();
-      IDE.GIT.SHOW_HISTORY.waitForCommitsCount(3);
+      IDE.GIT.SHOW_HISTORY.waitOpened();
+      IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       Assert.assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
       //Check states of diff modes:
       Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isDiffPrevRevisionButtonSelected());
@@ -272,9 +272,9 @@ public class ShowHistoryTest extends BaseTest
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       waitForLoaderDissapeared();
       //Test buttons states
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.contains(TEST_FILE1));
@@ -284,9 +284,9 @@ public class ShowHistoryTest extends BaseTest
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       waitForLoaderDissapeared();
       //Test buttons states
-      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.isEmpty());
@@ -295,9 +295,9 @@ public class ShowHistoryTest extends BaseTest
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       waitForLoaderDissapeared();
       //Test buttons states
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertFalse(diffContent.contains(TEST_FILE1));
@@ -319,8 +319,8 @@ public class ShowHistoryTest extends BaseTest
 
       //Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
-      IDE.GIT.SHOW_HISTORY.waitForViewOpened();
-      IDE.GIT.SHOW_HISTORY.waitForCommitsCount(3);
+      IDE.GIT.SHOW_HISTORY.waitOpened();
+      IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       Assert.assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
       IDE.GIT.SHOW_HISTORY.clickDiffIndexButton();
@@ -332,9 +332,9 @@ public class ShowHistoryTest extends BaseTest
       //Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertFalse(diffContent.contains(TEST_FILE1));
@@ -343,9 +343,9 @@ public class ShowHistoryTest extends BaseTest
       //Select init commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.contains(TEST_FILE1));
@@ -354,9 +354,9 @@ public class ShowHistoryTest extends BaseTest
       //Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.isEmpty());
@@ -377,8 +377,8 @@ public class ShowHistoryTest extends BaseTest
 
       //Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
-      IDE.GIT.SHOW_HISTORY.waitForViewOpened();
-      IDE.GIT.SHOW_HISTORY.waitForCommitsCount(3);
+      IDE.GIT.SHOW_HISTORY.waitOpened();
+      IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       Assert.assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
       IDE.GIT.SHOW_HISTORY.clickDiffWorkTreeStatusButton();
@@ -390,9 +390,9 @@ public class ShowHistoryTest extends BaseTest
       //Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertFalse(diffContent.contains(TEST_FILE1));
@@ -401,9 +401,9 @@ public class ShowHistoryTest extends BaseTest
       //Select init commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.contains(TEST_FILE1));
@@ -412,9 +412,9 @@ public class ShowHistoryTest extends BaseTest
       //Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
+      Assert.assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
+      Assert.assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.isEmpty());

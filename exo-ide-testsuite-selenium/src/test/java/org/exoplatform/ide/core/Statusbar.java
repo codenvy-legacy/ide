@@ -33,7 +33,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Statusbar extends AbstractTestModule
 {
-   interface Locators
+   private interface Locators
    {
       String CURSOR_POSITION_LOCATOR = "//div[@control-id='__editor_cursor_position']";
 

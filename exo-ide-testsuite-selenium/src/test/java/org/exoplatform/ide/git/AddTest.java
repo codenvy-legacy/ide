@@ -91,10 +91,10 @@ public class AddTest extends BaseTest
       //Check Add to index is available:
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.ADD, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
-      IDE.GIT.ADD.waitForViewOpened();
+      IDE.GIT.ADD.waitOpened();
 
       IDE.GIT.ADD.clickCancelButton();
-      IDE.GIT.ADD.waitForViewClosed();
+      IDE.GIT.ADD.waitClosed();
    }
 
    /**
@@ -122,7 +122,7 @@ public class AddTest extends BaseTest
 
       //Add file to Git index:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
-      IDE.GIT.ADD.waitForViewOpened();
+      IDE.GIT.ADD.waitOpened();
 
       Assert.assertTrue(IDE.GIT.ADD.isAddButtonEnabled());
       Assert.assertTrue(IDE.GIT.ADD.isCancelButtonEnabled());
@@ -132,7 +132,7 @@ public class AddTest extends BaseTest
       Assert.assertEquals(String.format(Add.Messages.ADD_FILE, TEST_ADD_FILE), addMessage);
 
       IDE.GIT.ADD.clickAddButton();
-      IDE.GIT.ADD.waitForViewClosed();
+      IDE.GIT.ADD.waitClosed();
 
       //Check successfully added:
       IDE.OUTPUT.waitForMessageShow(1);
@@ -171,7 +171,7 @@ public class AddTest extends BaseTest
 
       //Add file to Git index:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
-      IDE.GIT.ADD.waitForViewOpened();
+      IDE.GIT.ADD.waitOpened();
 
       Assert.assertTrue(IDE.GIT.ADD.isAddButtonEnabled());
       Assert.assertTrue(IDE.GIT.ADD.isCancelButtonEnabled());
@@ -181,7 +181,7 @@ public class AddTest extends BaseTest
       Assert.assertEquals(String.format(Add.Messages.ADD_FOLDER, TEST_ADD_FOLDER), addMessage);
 
       IDE.GIT.ADD.clickAddButton();
-      IDE.GIT.ADD.waitForViewClosed();
+      IDE.GIT.ADD.waitClosed();
 
       //Check successfully added:
       IDE.OUTPUT.waitForMessageShow(1);
@@ -214,7 +214,7 @@ public class AddTest extends BaseTest
 
       //Add file to Git index:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
-      IDE.GIT.ADD.waitForViewOpened();
+      IDE.GIT.ADD.waitOpened();
 
       Assert.assertTrue(IDE.GIT.ADD.isAddButtonEnabled());
       Assert.assertTrue(IDE.GIT.ADD.isCancelButtonEnabled());
@@ -224,7 +224,7 @@ public class AddTest extends BaseTest
       Assert.assertEquals(Add.Messages.ADD_ALL_CHANGES, addMessage);
 
       IDE.GIT.ADD.clickAddButton();
-      IDE.GIT.ADD.waitForViewClosed();
+      IDE.GIT.ADD.waitClosed();
 
       //Check successfully added:
       IDE.OUTPUT.waitForMessageShow(1);
@@ -266,7 +266,7 @@ public class AddTest extends BaseTest
 
       //Add file to Git index:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
-      IDE.GIT.ADD.waitForViewOpened();
+      IDE.GIT.ADD.waitOpened();
 
       Assert.assertTrue(IDE.GIT.ADD.isAddButtonEnabled());
       Assert.assertTrue(IDE.GIT.ADD.isCancelButtonEnabled());
@@ -280,7 +280,7 @@ public class AddTest extends BaseTest
       Assert.assertTrue(IDE.GIT.ADD.isUpdateFieldChecked());
 
       IDE.GIT.ADD.clickAddButton();
-      IDE.GIT.ADD.waitForViewClosed();
+      IDE.GIT.ADD.waitClosed();
 
       //Check successfully added:
       IDE.OUTPUT.waitForMessageShow(1);

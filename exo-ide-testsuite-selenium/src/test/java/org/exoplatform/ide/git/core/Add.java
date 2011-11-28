@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -29,11 +35,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class Add extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideAddToIndexView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String ADD_BUTTON_ID = "ideAddToIndexViewAddButton";
 
@@ -43,6 +49,21 @@ public class Add extends AbstractTestModule
 
       String MESSAGE_FIELD_ID = "ideAddToIndexViewMessageField";
    }
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.ADD_BUTTON_ID)
+   private WebElement addButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locators.UPDATE_FIELD_ID)
+   private WebElement updateField;
+
+   @FindBy(id = Locators.MESSAGE_FIELD_ID)
+   private WebElement messageField;
 
    public interface Messages
    {
@@ -58,10 +79,23 @@ public class Add extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return (view != null && view.isDisplayed());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -69,9 +103,24 @@ public class Add extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -81,10 +130,8 @@ public class Add extends AbstractTestModule
     */
    public boolean isViewComponentsPresent()
    {
-      return selenium().isElementPresent(Locators.UPDATE_FIELD_ID)
-         && selenium().isElementPresent(Locators.MESSAGE_FIELD_ID)
-         && selenium().isElementPresent(Locators.ADD_BUTTON_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID);
+      return view != null && view.isDisplayed() && addButton != null && addButton.isDisplayed() && updateField != null
+         && updateField.isDisplayed() && messageField != null && messageField.isDisplayed();
    }
 
    /**
@@ -92,7 +139,7 @@ public class Add extends AbstractTestModule
     */
    public void clickAddButton()
    {
-      selenium().click(Locators.ADD_BUTTON_ID);
+      addButton.click();
    }
 
    /**
@@ -100,7 +147,7 @@ public class Add extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -110,8 +157,7 @@ public class Add extends AbstractTestModule
     */
    public boolean isAddButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.ADD_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(addButton);
    }
 
    /**
@@ -121,8 +167,7 @@ public class Add extends AbstractTestModule
     */
    public boolean isCancelButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CANCEL_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(cancelButton);
    }
 
    /**
@@ -132,7 +177,7 @@ public class Add extends AbstractTestModule
     */
    public String getAddMessage()
    {
-      return selenium().getText(Locators.MESSAGE_FIELD_ID);
+      return messageField.getText();
    }
 
    /**
@@ -140,7 +185,7 @@ public class Add extends AbstractTestModule
     */
    public void checkUpdateField()
    {
-      selenium().check(Locators.UPDATE_FIELD_ID);
+      updateField.click();
    }
 
    /**
@@ -148,7 +193,7 @@ public class Add extends AbstractTestModule
     */
    public void unCheckUpdateField()
    {
-      selenium().uncheck(Locators.UPDATE_FIELD_ID);
+      updateField.click();
    }
 
    /**
@@ -158,7 +203,7 @@ public class Add extends AbstractTestModule
     */
    public boolean isUpdateFieldChecked()
    {
-      return selenium().isChecked(Locators.UPDATE_FIELD_ID);
+      return updateField.isSelected();
    }
 
    /**
@@ -169,8 +214,8 @@ public class Add extends AbstractTestModule
    public void addToIndex() throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
-      waitForViewOpened();
+      waitOpened();
       clickAddButton();
-      waitForViewClosed();
+      waitClosed();
    }
 }

@@ -34,7 +34,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class AskDialog extends AbstractTestModule
 {
 
-   interface Locators
+   private interface Locators
    {
       String VIEW_ID = "exoAskDialog";
 

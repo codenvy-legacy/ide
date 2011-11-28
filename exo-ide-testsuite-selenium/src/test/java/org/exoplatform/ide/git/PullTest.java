@@ -144,7 +144,7 @@ public class PullTest extends BaseTest
          + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
-      IDE.GIT.PULL.waitForViewOpened();
+      IDE.GIT.PULL.waitOpened();
 
       Assert.assertEquals(BRANCH, IDE.GIT.PULL.getLocalBranchValue());
       Assert.assertEquals(BRANCH, IDE.GIT.PULL.getRemoteBranchValue());
@@ -163,7 +163,7 @@ public class PullTest extends BaseTest
       Assert.assertTrue(IDE.GIT.PULL.isPullButtonEnabled());
 
       IDE.GIT.PULL.clickCancelButton();
-      IDE.GIT.PULL.waitForViewClosed();
+      IDE.GIT.PULL.waitClosed();
    }
 
    /**
@@ -191,14 +191,14 @@ public class PullTest extends BaseTest
          + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
-      IDE.GIT.PULL.waitForViewOpened();
+      IDE.GIT.PULL.waitOpened();
 
       //Pull from remote:
       IDE.GIT.PULL.typeToRemoteBranch(BRANCH);
       IDE.GIT.PULL.typeToLocalBranch(BRANCH);
 
       IDE.GIT.PULL.clickPullButton();
-      IDE.GIT.PULL.waitForViewClosed();
+      IDE.GIT.PULL.waitClosed();
 
       //Check pulled message:
       IDE.OUTPUT.waitForMessageShow(1);

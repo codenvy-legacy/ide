@@ -35,7 +35,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class SaveAsTemplate extends AbstractTestModule
 {
-   interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideSaveAsTemplateForm";
 

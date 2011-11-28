@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -29,11 +35,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class InitRepository extends AbstractTestModule
 {
-   public static interface Locators
+   private static interface Locators
    {
       String VIEW_ID = "ideInitRepositoryView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String INIT_BUTTON_ID = "ideInitRepositoryViewInitButton";
 
@@ -57,15 +63,43 @@ public class InitRepository extends AbstractTestModule
       String BARE_FIELD = "Bare repository";
    }
 
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.INIT_BUTTON_ID)
+   private WebElement initButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locators.WORKDIR_FIELD_ID)
+   private WebElement workdirField;
+
+   @FindBy(name = Locators.BARE_FIELD_ID)
+   private WebElement bareField;
+
    /**
     * Waits for Init Git Repository view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -73,9 +107,24 @@ public class InitRepository extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -83,12 +132,11 @@ public class InitRepository extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.BARE_FIELD_ID)
-         && selenium().isElementPresent(Locators.WORKDIR_FIELD_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID)
-         && selenium().isElementPresent(Locators.INIT_BUTTON_ID);
+      return (view != null && view.isDisplayed() && cancelButton != null && cancelButton.isDisplayed()
+         && bareField != null && bareField.isDisplayed() && workdirField != null && workdirField.isDisplayed()
+         && initButton != null && initButton.isDisplayed());
    }
 
    /**
@@ -96,7 +144,7 @@ public class InitRepository extends AbstractTestModule
     */
    public void clickInitButton()
    {
-      selenium().click(Locators.INIT_BUTTON_ID);
+      initButton.click();
    }
 
    /**
@@ -104,7 +152,7 @@ public class InitRepository extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -112,7 +160,7 @@ public class InitRepository extends AbstractTestModule
     */
    public void checkBareRepositoryField()
    {
-      selenium().check(Locators.BARE_FIELD_ID);
+      bareField.click();
    }
 
    /**
@@ -122,8 +170,7 @@ public class InitRepository extends AbstractTestModule
     */
    public boolean isInitButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.INIT_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(initButton);
    }
 
    /**
@@ -133,8 +180,7 @@ public class InitRepository extends AbstractTestModule
     */
    public boolean isCancelButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.CANCEL_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(cancelButton);
    }
 
    /**
@@ -144,7 +190,7 @@ public class InitRepository extends AbstractTestModule
     */
    public String getWorkDirectoryValue()
    {
-      return selenium().getValue(Locators.WORKDIR_FIELD_ID);
+      return workdirField.getText();
    }
 
    /**
@@ -154,7 +200,7 @@ public class InitRepository extends AbstractTestModule
     */
    public String getInitButtonTitle()
    {
-      return selenium().getText(Locators.INIT_BUTTON_ID);
+      return initButton.getText();
    }
 
    /**
@@ -164,7 +210,7 @@ public class InitRepository extends AbstractTestModule
     */
    public String getCancelButtonTitle()
    {
-      return selenium().getText(Locators.CANCEL_BUTTON_ID);
+      return cancelButton.getText();
    }
 
    /**
@@ -175,9 +221,8 @@ public class InitRepository extends AbstractTestModule
    public void initRepository() throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
-      waitForViewOpened();
-
+      waitOpened();
       clickInitButton();
-      waitForViewClosed();
+      waitClosed();
    }
 }

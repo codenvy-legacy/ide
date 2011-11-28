@@ -147,13 +147,13 @@ public class RemoveFilesTest extends BaseTest
 
       //Open Remove files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE);
-      IDE.GIT.REMOVE_FILES.waitForViewOpened();
+      IDE.GIT.REMOVE_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOVE_FILES.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.REMOVE_FILES.isOpened());
       Assert.assertEquals(1, IDE.GIT.REMOVE_FILES.getFilesCount());
 
       IDE.GIT.REMOVE_FILES.clickCancelButton();
-      IDE.GIT.REMOVE_FILES.waitForViewClosed();
+      IDE.GIT.REMOVE_FILES.waitClosed();
    }
 
    /**
@@ -189,13 +189,13 @@ public class RemoveFilesTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open Remove files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE);
-      IDE.GIT.REMOVE_FILES.waitForViewOpened();
+      IDE.GIT.REMOVE_FILES.waitOpened();
       Assert.assertEquals(2, IDE.GIT.REMOVE_FILES.getFilesCount());
 
       //Remove file in sub folder:
       IDE.GIT.REMOVE_FILES.checkFileByName(TEST_FOLDER2 + "/" + TEST_FILE3);
       IDE.GIT.REMOVE_FILES.clickRemoveButton();
-      IDE.GIT.REMOVE_FILES.waitForViewClosed();
+      IDE.GIT.REMOVE_FILES.waitClosed();
 
       //Check files in Browser tree:
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
@@ -236,13 +236,13 @@ public class RemoveFilesTest extends BaseTest
 
       //Open Remove files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE);
-      IDE.GIT.REMOVE_FILES.waitForViewOpened();
+      IDE.GIT.REMOVE_FILES.waitOpened();
       Assert.assertEquals(2, IDE.GIT.REMOVE_FILES.getFilesCount());
 
       //Remove edited file:
       IDE.GIT.REMOVE_FILES.checkFileByName(TEST_FILE1);
       IDE.GIT.REMOVE_FILES.clickRemoveButton();
-      IDE.GIT.REMOVE_FILES.waitForViewClosed();
+      IDE.GIT.REMOVE_FILES.waitClosed();
 
       //Check files in Browser tree:
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);

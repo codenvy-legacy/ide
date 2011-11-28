@@ -102,10 +102,10 @@ public class CommitTest extends BaseTest
       //Check commit is available:
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
-      IDE.GIT.COMMIT.waitForViewOpened();
+      IDE.GIT.COMMIT.waitOpened();
 
       IDE.GIT.COMMIT.clickCancelButton();
-      IDE.GIT.COMMIT.waitForViewClosed();
+      IDE.GIT.COMMIT.waitClosed();
    }
 
    /**
@@ -122,8 +122,8 @@ public class CommitTest extends BaseTest
 
       //Open Commit view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
-      IDE.GIT.COMMIT.waitForViewOpened();
-      Assert.assertTrue(IDE.GIT.COMMIT.isViewComponentsPresent());
+      IDE.GIT.COMMIT.waitOpened();
+      Assert.assertTrue(IDE.GIT.COMMIT.isOpened());
       Assert.assertFalse(IDE.GIT.COMMIT.isAddFieldChecked());
       Assert.assertFalse(IDE.GIT.COMMIT.isCommitButtonEnabled());
       Assert.assertTrue(IDE.GIT.COMMIT.isCancelButtonEnabled());
@@ -135,7 +135,7 @@ public class CommitTest extends BaseTest
       Assert.assertFalse(IDE.GIT.COMMIT.isCommitButtonEnabled());
 
       IDE.GIT.COMMIT.clickCancelButton();
-      IDE.GIT.COMMIT.waitForViewClosed();
+      IDE.GIT.COMMIT.waitClosed();
    }
 
    /**
@@ -166,13 +166,13 @@ public class CommitTest extends BaseTest
 
       //Open Commit view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
-      IDE.GIT.COMMIT.waitForViewOpened();
+      IDE.GIT.COMMIT.waitOpened();
 
       //Commit:
       String commitMessage = "First commit";
       IDE.GIT.COMMIT.typeToMessageField(commitMessage);
       IDE.GIT.COMMIT.clickCommitButton();
-      IDE.GIT.COMMIT.waitForViewClosed();
+      IDE.GIT.COMMIT.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(3);
       message = IDE.OUTPUT.getOutputMessage(3);
@@ -217,14 +217,14 @@ public class CommitTest extends BaseTest
 
       //Open Commit view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
-      IDE.GIT.COMMIT.waitForViewOpened();
+      IDE.GIT.COMMIT.waitOpened();
 
       //Commit:
       String commitMessage = "Second commit";
       IDE.GIT.COMMIT.typeToMessageField(commitMessage);
       IDE.GIT.COMMIT.checkAddField();
       IDE.GIT.COMMIT.clickCommitButton();
-      IDE.GIT.COMMIT.waitForViewClosed();
+      IDE.GIT.COMMIT.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(2);
       message = IDE.OUTPUT.getOutputMessage(2);

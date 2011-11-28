@@ -45,7 +45,7 @@ public class Perspective extends AbstractTestModule
       String OPERATION = "operation";
    }
 
-   interface Locators
+   private interface Locators
    {
       String CLOSE_BUTTON_SELECTOR = "div.tabTitleCloseButton[tab-title=%s]";
 

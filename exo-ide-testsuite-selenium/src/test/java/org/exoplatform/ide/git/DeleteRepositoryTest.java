@@ -81,9 +81,9 @@ public class DeleteRepositoryTest extends BaseTest
       IDE.WORKSPACE.selectItem(URL + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
-      IDE.GIT.INIT_REPOSITORY.waitForViewOpened();
+      IDE.GIT.INIT_REPOSITORY.waitOpened();
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
-      IDE.GIT.INIT_REPOSITORY.waitForViewClosed();
+      IDE.GIT.INIT_REPOSITORY.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
 

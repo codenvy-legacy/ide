@@ -36,7 +36,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Rename extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
 
       String VIEW_LOCATOR = "//div[@view-id='ideRenameItemForm']";

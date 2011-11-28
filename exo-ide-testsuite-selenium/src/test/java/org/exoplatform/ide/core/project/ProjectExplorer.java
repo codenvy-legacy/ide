@@ -38,7 +38,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class ProjectExplorer extends AbstractTestModule
 {
-   interface Locators
+   private interface Locators
    {
       String VIEW_LOCATOR = "//div[@view-id='ideTinyProjectExplorerView']";
 

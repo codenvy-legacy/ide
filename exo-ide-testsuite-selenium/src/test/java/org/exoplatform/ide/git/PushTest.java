@@ -141,7 +141,7 @@ public class PushTest extends BaseTest
          + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
-      IDE.GIT.PUSH.waitForViewOpened();
+      IDE.GIT.PUSH.waitOpened();
 
       Assert.assertEquals("refs/heads/master", IDE.GIT.PUSH.getLocalBranchValue());
       Assert.assertEquals("refs/heads/master", IDE.GIT.PUSH.getRemoteBranchValue());
@@ -151,13 +151,13 @@ public class PushTest extends BaseTest
       Assert.assertTrue(IDE.GIT.PUSH.isCancelButtonEnabled());
 
       //Test Push button enabled state:
-      IDE.GIT.PUSH.typeToRemoteBranch("");
+      IDE.GIT.PUSH.setRemoteBranch("");
       Assert.assertFalse(IDE.GIT.PUSH.isPushButtonEnabled());
-      IDE.GIT.PUSH.typeToRemoteBranch(TEST_BRANCH);
+      IDE.GIT.PUSH.setRemoteBranch(TEST_BRANCH);
       Assert.assertTrue(IDE.GIT.PUSH.isPushButtonEnabled());
 
       IDE.GIT.PUSH.clickCancelButton();
-      IDE.GIT.PUSH.waitForViewClosed();
+      IDE.GIT.PUSH.waitClosed();
    }
 
    /**
@@ -185,13 +185,13 @@ public class PushTest extends BaseTest
          + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
-      IDE.GIT.PUSH.waitForViewOpened();
+      IDE.GIT.PUSH.waitOpened();
 
       //Push to test branch:
-      IDE.GIT.PUSH.typeToRemoteBranch(TEST_BRANCH);
+      IDE.GIT.PUSH.setRemoteBranch(TEST_BRANCH);
 
       IDE.GIT.PUSH.clickPushButton();
-      IDE.GIT.PUSH.waitForViewClosed();
+      IDE.GIT.PUSH.waitClosed();
 
       //Check pushed message:
       IDE.OUTPUT.waitForMessageShow(1);

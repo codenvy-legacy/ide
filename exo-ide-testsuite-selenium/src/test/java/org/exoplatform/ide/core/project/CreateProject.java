@@ -35,11 +35,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class CreateProject extends AbstractTestModule
 {
-   interface Locators
+   private interface Locators
    {
       String VIEW_ID = "org.exoplatform.ide.client.project.create.CreateProjectForm";
 
-      String VIEW_LOCATOR = "//div[@view-id='org.exoplatform.ide.client.project.create.CreateProjectForm']";
+      String VIEW_LOCATOR = "//div[@view-id='"+ VIEW_ID +"']";
 
       String PROJECT_NAME_ID = "CreateProjectFormProjectName";
 

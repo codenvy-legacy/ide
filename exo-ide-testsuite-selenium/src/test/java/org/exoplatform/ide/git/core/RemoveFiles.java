@@ -18,8 +18,14 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -28,11 +34,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class RemoveFiles extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideRemoveFilesView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String REMOVE_BUTTON_ID = "ideRemoveFilesViewRemoveButton";
 
@@ -42,17 +48,44 @@ public class RemoveFiles extends AbstractTestModule
 
       String ITEM_CHECKBOX_LOCATOR = "//table[@id=\"" + INDEX_FILES_GRID_ID
          + "\"]//tr[contains(., \"%s\")]//input[@type=\"checkbox\"]";
+
+      String FILE_ROW_SELECTOR = "table#" + INDEX_FILES_GRID_ID + ">tbody:nth(0) tr";
    }
-   
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.REMOVE_BUTTON_ID)
+   private WebElement removeButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(id = Locators.INDEX_FILES_GRID_ID)
+   private WebElement filesGrid;
+
    /**
     * Waits for Remove files view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -60,9 +93,24 @@ public class RemoveFiles extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -70,11 +118,10 @@ public class RemoveFiles extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.INDEX_FILES_GRID_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID)
-         && selenium().isElementPresent(Locators.REMOVE_BUTTON_ID);
+      return (view != null && view.isDisplayed() && filesGrid != null && filesGrid.isDisplayed()
+         && removeButton != null && removeButton.isDisplayed() && cancelButton != null && cancelButton.isDisplayed());
    }
 
    /**
@@ -82,7 +129,7 @@ public class RemoveFiles extends AbstractTestModule
     */
    public void clickRemoveButton()
    {
-      selenium().click(Locators.REMOVE_BUTTON_ID);
+      removeButton.click();
    }
 
    /**
@@ -90,7 +137,7 @@ public class RemoveFiles extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -100,7 +147,8 @@ public class RemoveFiles extends AbstractTestModule
     */
    public void checkFileByName(String name)
    {
-      selenium().click(String.format(Locators.ITEM_CHECKBOX_LOCATOR, name));
+      WebElement item = driver().findElement(By.xpath(String.format(Locators.ITEM_CHECKBOX_LOCATOR, name)));
+      item.click();
    }
 
    /**
@@ -110,7 +158,8 @@ public class RemoveFiles extends AbstractTestModule
     */
    public void unCheckFileByName(String name)
    {
-      selenium().uncheck(String.format(Locators.ITEM_CHECKBOX_LOCATOR, name));
+      WebElement item = driver().findElement(By.xpath(String.format(Locators.ITEM_CHECKBOX_LOCATOR, name)));
+      item.click();
    }
 
    /**
@@ -120,6 +169,6 @@ public class RemoveFiles extends AbstractTestModule
     */
    public int getFilesCount()
    {
-      return selenium().getXpathCount("//table[@id=\"" + Locators.INDEX_FILES_GRID_ID + "\"]/tbody[1]//tr").intValue();
+      return driver().findElements(By.cssSelector(Locators.FILE_ROW_SELECTOR)).size();
    }
 }

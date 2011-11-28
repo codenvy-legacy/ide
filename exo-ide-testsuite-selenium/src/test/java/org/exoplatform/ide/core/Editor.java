@@ -45,7 +45,7 @@ public class Editor extends AbstractTestModule
 {
    public static final String MODIFIED_MARK = "*";
 
-   public interface Locators
+   private interface Locators
    {
       /**
        * XPATH CodeMirror locator. 

@@ -96,7 +96,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
 
       IDE.GIT.RESET_TO_COMMIT.clickCancelButton();
-      IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
+      IDE.GIT.RESET_TO_COMMIT.waitClosed();
    }
 
    /**
@@ -116,13 +116,13 @@ public class ResetToCommitTest extends BaseTest
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
-      IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
+      IDE.GIT.RESET_TO_COMMIT.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_TO_COMMIT.isViewComponentsPresent());
+      Assert.assertTrue(IDE.GIT.RESET_TO_COMMIT.isOpened());
       Assert.assertEquals(2, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
 
       IDE.GIT.RESET_TO_COMMIT.clickCancelButton();
-      IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
+      IDE.GIT.RESET_TO_COMMIT.waitClosed();
    }
 
    /**
@@ -141,7 +141,7 @@ public class ResetToCommitTest extends BaseTest
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
-      IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
+      IDE.GIT.RESET_TO_COMMIT.waitOpened();
       Assert.assertEquals(2, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
 
       //Choose "soft" mode, init commit and click "Revert":
@@ -149,7 +149,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.GIT.RESET_TO_COMMIT.selectRevisionByComment(INIT_COMMIT_COMMENT);
       IDE.GIT.RESET_TO_COMMIT.clickRevertButton();
 
-      IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
+      IDE.GIT.RESET_TO_COMMIT.waitClosed();
 
       //Check successfully reverted message:
       IDE.OUTPUT.waitForMessageShow(1);
@@ -170,10 +170,10 @@ public class ResetToCommitTest extends BaseTest
 
       //Check number of commits:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
-      IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
+      IDE.GIT.RESET_TO_COMMIT.waitOpened();
       Assert.assertEquals(1, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
       IDE.GIT.RESET_TO_COMMIT.clickCancelButton();
-      IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
+      IDE.GIT.RESET_TO_COMMIT.waitClosed();
    }
 
    /**
@@ -211,7 +211,7 @@ public class ResetToCommitTest extends BaseTest
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
-      IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
+      IDE.GIT.RESET_TO_COMMIT.waitOpened();
       Assert.assertEquals(3, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
 
       //Choose "mixed" mode, first commit and click "Revert":
@@ -219,7 +219,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.GIT.RESET_TO_COMMIT.selectRevisionByComment(FIRST_COMMIT);
       IDE.GIT.RESET_TO_COMMIT.clickRevertButton();
 
-      IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
+      IDE.GIT.RESET_TO_COMMIT.waitClosed();
 
       //Check successfully reverted message:
       IDE.OUTPUT.waitForMessageShow(3);
@@ -241,10 +241,10 @@ public class ResetToCommitTest extends BaseTest
 
       //Check number of commits:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
-      IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
+      IDE.GIT.RESET_TO_COMMIT.waitOpened();
       Assert.assertEquals(2, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
       IDE.GIT.RESET_TO_COMMIT.clickCancelButton();
-      IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
+      IDE.GIT.RESET_TO_COMMIT.waitClosed();
    }
 
    /**
@@ -263,7 +263,7 @@ public class ResetToCommitTest extends BaseTest
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
-      IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
+      IDE.GIT.RESET_TO_COMMIT.waitOpened();
       Assert.assertEquals(2, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
 
       //Choose "hard" mode, first commit and click "Revert":
@@ -271,7 +271,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.GIT.RESET_TO_COMMIT.selectRevisionByComment(FIRST_COMMIT);
       IDE.GIT.RESET_TO_COMMIT.clickRevertButton();
 
-      IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
+      IDE.GIT.RESET_TO_COMMIT.waitClosed();
 
       //Check successfully reverted message:
       IDE.OUTPUT.waitForMessageShow(1);
@@ -291,9 +291,9 @@ public class ResetToCommitTest extends BaseTest
 
       //Check number of commits:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
-      IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
+      IDE.GIT.RESET_TO_COMMIT.waitOpened();
       Assert.assertEquals(2, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
       IDE.GIT.RESET_TO_COMMIT.clickCancelButton();
-      IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
+      IDE.GIT.RESET_TO_COMMIT.waitClosed();
    }
 }

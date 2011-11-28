@@ -18,21 +18,10 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import junit.framework.Assert;
-
-import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.internal.selenesedriver.FindElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -48,7 +37,7 @@ public class AboutDialog extends AbstractTestModule
 {
 
    //Locators basic elements Dialog About Menu
-   interface Locators
+   private interface Locators
    {
 
       String VIEW_ID = "ideAboutView";

@@ -18,8 +18,15 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -28,43 +35,70 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class Merge extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "MergeView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String MERGE_BUTTON_ID = "MergeViewMergeButton";
 
       String CANCEL_BUTTON_ID = "MergeViewCancelButton";
 
       String REF_TREE_ID = "MergeViewRefTree";
+
+      String REFERENCE_LOCATOR = "//div[@id='" + REF_TREE_ID + "']//div[contains(. , '%s')]";
    }
 
    public interface Messages
    {
       String FAST_FORWARD = "Fast-forward";
-      
+
       String CONFLICTING = "Conflicting";
 
       String MERGED_COMMITS = "Merged commits:";
 
       String NEW_HEAD_COMMIT = "New HEAD commit:";
-      
+
       String CONFLICTS = "Conflicts:\n%s";
-      
+
       String UP_TO_DATE = "Already up-to-date";
    }
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.MERGE_BUTTON_ID)
+   private WebElement mergeButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(id = Locators.REF_TREE_ID)
+   private WebElement tree;
 
    /**
     * Waits for Merge view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -72,9 +106,24 @@ public class Merge extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -82,10 +131,10 @@ public class Merge extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.MERGE_BUTTON_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID) && selenium().isElementPresent(Locators.REF_TREE_ID);
+      return (view != null && view.isDisplayed() && mergeButton != null && mergeButton.isDisplayed()
+         && cancelButton != null && cancelButton.isDisplayed() && tree != null && tree.isDisplayed());
    }
 
    /**
@@ -93,7 +142,7 @@ public class Merge extends AbstractTestModule
     */
    public void clickMergeButton()
    {
-      selenium().click(Locators.MERGE_BUTTON_ID);
+      mergeButton.click();
    }
 
    /**
@@ -101,7 +150,7 @@ public class Merge extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -111,28 +160,63 @@ public class Merge extends AbstractTestModule
     */
    public boolean isMergeButtonEnabled()
    {
-      String attribute = selenium().getAttribute("//div[@id=\"" + Locators.MERGE_BUTTON_ID + "\"]/@button-enabled");
-      return Boolean.parseBoolean(attribute);
+      return IDE().BUTTON.isButtonEnabled(mergeButton);
    }
 
+   /**
+    * @param name reference's name
+    * @return {@link Boolean}
+    */
    public boolean isRererencePresent(String name)
    {
-      return selenium().isElementPresent("//div[@id='" + Locators.REF_TREE_ID + "']//div[contains(*, '" + name + "')]");
+      try
+      {
+         return driver().findElement(By.xpath(String.format(Locators.REFERENCE_LOCATOR, name))) != null;
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
    }
 
-   public void waitRererenceVisible(String name) throws Exception
+   /**
+    * Wait reference is visible.
+    * 
+    * @param name reference's name
+    * @throws Exception
+    */
+   public void waitRererenceVisible(final String name) throws Exception
    {
-      waitForElementVisible("//div[@id='" + Locators.REF_TREE_ID + "']//div[contains(*, '" + name + "')]");
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return isRererencePresent(name);
+         }
+      });
    }
 
+   /**
+    * Select reference by name.
+    *  
+    * @param name reference's name
+    */
    public void selectReference(String name)
    {
-      selenium().clickAt("//div[@id='" + Locators.REF_TREE_ID + "']//div[contains(text(), '" + name + "')]", "1,1");
+      WebElement reference = driver().findElement(By.xpath(String.format(Locators.REFERENCE_LOCATOR, name)));
+      new Actions(driver()).moveToElement(reference, 1, 1).click().build().perform();
    }
 
+   /**
+    * Make double click on reference.
+    * 
+    * @param name reference's name
+    */
    public void doubleClickReference(String name)
    {
-      selenium().doubleClick("//div[@id='" + Locators.REF_TREE_ID + "']//div[contains(text(), '" + name + "')]");
+      WebElement reference = driver().findElement(By.xpath(String.format(Locators.REFERENCE_LOCATOR, name)));
+      new Actions(driver()).doubleClick(reference).build().perform();
    }
 
 }

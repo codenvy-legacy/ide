@@ -149,9 +149,9 @@ public class TestCreateApplication extends CloudFoundryTest
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/" + PROJECT_NAME + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
-      IDE.GIT.INIT_REPOSITORY.waitForViewOpened();
+      IDE.GIT.INIT_REPOSITORY.waitOpened();
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
-      IDE.GIT.INIT_REPOSITORY.waitForViewClosed();
+      IDE.GIT.INIT_REPOSITORY.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(1, 30000);
       String mes1 = IDE.OUTPUT.getOutputMessage(1);

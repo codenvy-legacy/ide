@@ -34,7 +34,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class Input extends AbstractTestModule
 {
-   interface Locators
+   private interface Locators
    {
       String SUGGEST_BOX_ID = "exoSuggestPanel";
 

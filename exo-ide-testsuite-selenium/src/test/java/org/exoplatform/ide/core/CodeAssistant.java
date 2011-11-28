@@ -41,7 +41,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class CodeAssistant extends AbstractTestModule
 {
 
-   public interface Locators
+   private interface Locators
    {
       /**
        * XPath autocompletion panel locator.

@@ -37,7 +37,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class GoToLine extends AbstractTestModule
 {
 
-   interface Locators
+   private interface Locators
    {
       String VIEW_LOCATOR = "//div[@view-id='ideGoToLineForm']";
 

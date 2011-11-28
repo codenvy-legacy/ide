@@ -18,8 +18,14 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -28,11 +34,11 @@ import org.exoplatform.ide.core.AbstractTestModule;
  */
 public class ResetToCommit extends AbstractTestModule
 {
-   public interface Locators
+   private interface Locators
    {
       String VIEW_ID = "ideResetToCommitView";
 
-      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String REVERT_BUTTON_ID = "ideRevertToCommitViewRevertButton";
 
@@ -42,18 +48,63 @@ public class ResetToCommit extends AbstractTestModule
 
       String REVISION_GRID_ID = "ideRevisionGrid";
 
-      String REVISION_ROW_LOCATOR = "//table[@id=\"" + REVISION_GRID_ID + "\"]//tr[contains(., \"%s\")]//div";
+      String REVISION_LOCATOR = "//table[@id=\"" + REVISION_GRID_ID + "\"]//tr[contains(., \"%s\")]//div";
+
+      String SOFT_MODE_LOCATOR = VIEW_LOCATOR + "//label[contains(text(), \"soft\")]";
+
+      String MIXED_MODE_LOCATOR = VIEW_LOCATOR + "//label[contains(text(), \"mixed\")]";
+
+      String HARD_MODE_LOCATOR = VIEW_LOCATOR + "//label[contains(text(), \"hard\")]";
+
+      String REVISION_ROW_SELECTOR = "table#" + REVISION_GRID_ID + ">tbody:nth(0) tr";
    }
+
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   private WebElement view;
+
+   @FindBy(id = Locators.REVERT_BUTTON_ID)
+   private WebElement revertButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(id = Locators.MODE_ID)
+   private WebElement modeField;
+
+   @FindBy(id = Locators.REVISION_GRID_ID)
+   private WebElement revisionsGrid;
+
+   @FindBy(xpath = Locators.SOFT_MODE_LOCATOR)
+   private WebElement softModeField;
+
+   @FindBy(xpath = Locators.MIXED_MODE_LOCATOR)
+   private WebElement mixedModeField;
+
+   @FindBy(xpath = Locators.HARD_MODE_LOCATOR)
+   private WebElement hardModeField;
 
    /**
     * Waits for Reset commit view to be opened.
     * 
     * @throws Exception
     */
-   public void waitForViewOpened() throws Exception
+   public void waitOpened() throws Exception
    {
-      waitForElementPresent(Locators.VIEW_LOCATOR);
-      waitForElementVisible(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -61,9 +112,24 @@ public class ResetToCommit extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitForViewClosed() throws Exception
+   public void waitClosed() throws Exception
    {
-      waitForElementNotPresent(Locators.VIEW_LOCATOR);
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -71,11 +137,11 @@ public class ResetToCommit extends AbstractTestModule
     * 
     * @return {@link Boolean} if <code>true</code> view's elements are present
     */
-   public boolean isViewComponentsPresent()
+   public boolean isOpened()
    {
-      return selenium().isElementPresent(Locators.REVISION_GRID_ID)
-         && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID)
-         && selenium().isElementPresent(Locators.REVERT_BUTTON_ID) && selenium().isElementPresent(Locators.MODE_ID);
+      return (view != null && view.isDisplayed() && revisionsGrid != null && revisionsGrid.isDisplayed()
+         && revertButton != null && revertButton.isDisplayed() && cancelButton != null && cancelButton.isDisplayed()
+         && modeField != null && modeField.isDisplayed());
    }
 
    /**
@@ -83,7 +149,7 @@ public class ResetToCommit extends AbstractTestModule
     */
    public void clickRevertButton()
    {
-      selenium().click(Locators.REVERT_BUTTON_ID);
+      revertButton.click();
    }
 
    /**
@@ -91,7 +157,7 @@ public class ResetToCommit extends AbstractTestModule
     */
    public void clickCancelButton()
    {
-      selenium().click(Locators.CANCEL_BUTTON_ID);
+      cancelButton.click();
    }
 
    /**
@@ -99,7 +165,7 @@ public class ResetToCommit extends AbstractTestModule
     */
    public void selectSoftMode()
    {
-      selenium().click("//label[contains(text(), \"soft\")]");
+      softModeField.click();
    }
 
    /**
@@ -107,7 +173,7 @@ public class ResetToCommit extends AbstractTestModule
     */
    public void selectMixedMode()
    {
-      selenium().click("//label[contains(text(), \"mixed\")]");
+      mixedModeField.click();
    }
 
    /**
@@ -115,7 +181,7 @@ public class ResetToCommit extends AbstractTestModule
     */
    public void selectHardMode()
    {
-      selenium().click("//label[contains(text(), \"hard\")]");
+      hardModeField.click();
    }
 
    /**
@@ -125,7 +191,8 @@ public class ResetToCommit extends AbstractTestModule
     */
    public void selectRevisionByComment(String comment)
    {
-      selenium().click(String.format(Locators.REVISION_ROW_LOCATOR, comment));
+      WebElement revision = driver().findElement(By.xpath(String.format(Locators.REVISION_LOCATOR, comment)));
+      revision.click();
    }
 
    /**
@@ -135,7 +202,7 @@ public class ResetToCommit extends AbstractTestModule
     */
    public int getRevisionsCount()
    {
-      return selenium().getXpathCount("//table[@id=\"" + Locators.REVISION_GRID_ID + "\"]/tbody[1]//tr").intValue();
+      return driver().findElements(By.cssSelector(Locators.REVISION_ROW_SELECTOR)).size();
    }
 
 }

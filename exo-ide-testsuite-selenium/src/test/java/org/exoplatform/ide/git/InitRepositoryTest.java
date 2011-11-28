@@ -88,8 +88,8 @@ public class InitRepositoryTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
-      IDE.GIT.INIT_REPOSITORY.waitForViewOpened();
-      Assert.assertTrue(IDE.GIT.INIT_REPOSITORY.isViewComponentsPresent());
+      IDE.GIT.INIT_REPOSITORY.waitOpened();
+      Assert.assertTrue(IDE.GIT.INIT_REPOSITORY.isOpened());
       Assert.assertTrue(IDE.GIT.INIT_REPOSITORY.isInitButtonEnabled());
       Assert.assertTrue(IDE.GIT.INIT_REPOSITORY.isCancelButtonEnabled());
       Assert.assertFalse(IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue().isEmpty());
@@ -99,7 +99,7 @@ public class InitRepositoryTest extends BaseTest
       Assert.assertEquals(InitRepository.Titles.CANCEL_BUTTON, IDE.GIT.INIT_REPOSITORY.getCancelButtonTitle());
 
       IDE.GIT.INIT_REPOSITORY.clickCancelButton();
-      IDE.GIT.INIT_REPOSITORY.waitForViewClosed();
+      IDE.GIT.INIT_REPOSITORY.waitClosed();
    }
 
    /**
@@ -165,12 +165,12 @@ public class InitRepositoryTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER + "/");
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
-      IDE.GIT.INIT_REPOSITORY.waitForViewOpened();
+      IDE.GIT.INIT_REPOSITORY.waitOpened();
       Assert
          .assertTrue(IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue().endsWith(TEST_FOLDER + "/" + INIT_FOLDER + "/"));
 
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
-      IDE.GIT.INIT_REPOSITORY.waitForViewClosed();
+      IDE.GIT.INIT_REPOSITORY.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(1);
       String message = IDE.OUTPUT.getOutputMessage(1);

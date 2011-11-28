@@ -34,7 +34,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class Properties extends AbstractTestModule
 {
-   interface Locators
+   private interface Locators
    {
       String PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='%1s']";
 
