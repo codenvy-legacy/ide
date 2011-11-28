@@ -76,8 +76,6 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
       HasClickHandlers getReplaceAllButton();
 
-      HasClickHandlers getCancelButton();
-
       void enableFindButton(boolean isEnable);
 
       void enableReplaceFindButton(boolean isEnable);
@@ -169,14 +167,6 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
    public void bindDisplay(Display d)
    {
       this.display = d;
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
 
       display.getFindButton().addClickHandler(new ClickHandler()
       {
