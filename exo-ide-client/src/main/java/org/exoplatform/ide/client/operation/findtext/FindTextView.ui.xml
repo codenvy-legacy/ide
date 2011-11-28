@@ -50,11 +50,16 @@
 
       .floatLeft {
       float: left;
-      margin-left: 3px;
+      margin-left: 15px;
       }
 
       .labelText {
-      vertical-align: bottom;
+      vertical-align:
+      bottom;
+      }
+
+      .checkboxItem {
+      margin-left: -4px;
       }
    </ui:style>
 
@@ -67,10 +72,18 @@
             <g:center>
                <f:TextInput ui:field="findTextField" name="ideFindReplaceTextFormFindField" width="100%" height="22px"></f:TextInput>
             </g:center>
+            <g:east size="220">
+               <g:FlowPanel width="100%" height="auto">
+                  <f:ImageButton ui:field="findTextButton" width="90px" height="22px" text="{editorConst.findTextFindButton}" buttonId="ideFindReplaceTextFormFindButton"
+                     stylePrimaryName="{style.floatLeft}"></f:ImageButton>
+                  <f:ImageButton ui:field="replaceFindButton" width="90px" height="22px" text="{editorConst.findTextReplaceFindButton}"
+                     buttonId="ideFindReplaceTextFormReplaceFindButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
+               </g:FlowPanel>
+            </g:east>
          </g:DockLayoutPanel>
       </g:layer>
 
-      <g:layer top="40px" height="30px">
+      <g:layer top="35px" height="30px">
          <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
             <g:west size="90">
                <g:Label text="{editorConst.findTextReplaceWith}" height="18px"></g:Label>
@@ -78,66 +91,41 @@
             <g:center>
                <f:TextInput ui:field="replaceTextField" name="ideFindReplaceTextFormReplaceField" width="100%" height="22px"></f:TextInput>
             </g:center>
+            <g:east size="220">
+               <g:FlowPanel width="100%" height="auto">
+                  <f:ImageButton ui:field="replaceButton" width="90px" height="22px" text="{editorConst.findTextReplaceButton}"
+                     buttonId="ideFindReplaceTextFormReplaceButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
+                  <f:ImageButton ui:field="replaceAllButton" width="90px" height="22px" text="{editorConst.findTextReplaceAllButton}"
+                     buttonId="ideFindReplaceTextFormReplaceAllButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
+               </g:FlowPanel>
+            </g:east>
          </g:DockLayoutPanel>
       </g:layer>
 
-      <!--g:layer top="80px" height="30px">
+      <!-- Case sensitive -->
+      <g:layer top="70px" bottom="30px">
          <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
             <g:west size="90">
-               <g:Label text="{editorConst.findTextCaseSensitive}" height="18px"></g:Label>
+               <g:FlowPanel width="100%">
+               </g:FlowPanel>
             </g:west>
             <g:center>
-               <g:CheckBox ui:field="caseSensitiveField" name="ideFindReplaceTextFormCaseSensitiveField" width="100%" height="22px"></g:CheckBox>
+               <g:CheckBox ui:field="caseSensitiveField" name="ideFindReplaceTextFormCaseSensitiveField" text="{editorConst.findTextCaseSensitive}"
+                  height="22px" stylePrimaryName="{style.checkboxItem}"></g:CheckBox>
             </g:center>
          </g:DockLayoutPanel>
-      </g:layer-->
+      </g:layer>
 
-      <!-- Buttons -->
-      <g:layer top="80px" bottom="30px">
-         <g:FlowPanel width="100%" height="auto" stylePrimaryName="{style.formLine}">
-            <g:FlowPanel height="22px" stylePrimaryName="{style.floatLeft} {style.labelText}">
-               <f:Label text="{editorConst.findTextCaseSensitive}" height="22px" ></f:Label>
-            </g:FlowPanel>
-            <g:CheckBox ui:field="caseSensitiveField" height="22px" name="ideFindReplaceTextFormCaseSensitiveField" stylePrimaryName="{style.floatLeft}"></g:CheckBox>
-            <f:ImageButton ui:field="findTextButton" width="90px" height="22px" text="{editorConst.findTextFindButton}" buttonId="ideFindReplaceTextFormFindButton"
-               stylePrimaryName="{style.floatLeft}"></f:ImageButton>
-            <f:ImageButton ui:field="replaceFindButton" width="90px" height="22px" text="{editorConst.findTextReplaceFindButton}"
-               buttonId="ideFindReplaceTextFormReplaceFindButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
-            <f:ImageButton ui:field="replaceButton" width="90px" height="22px" text="{editorConst.findTextReplaceButton}" buttonId="ideFindReplaceTextFormReplaceButton"
-               stylePrimaryName="{style.floatLeft}"></f:ImageButton>
-            <f:ImageButton ui:field="replaceAllButton" width="90px" height="22px" text="{editorConst.findTextReplaceAllButton}"
-               buttonId="ideFindReplaceTextFormReplaceAllButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
-         </g:FlowPanel>
-      </g:layer>
-      
-      <!--g:layer top="120px" height="30px">
+      <g:layer top="105px" bottom="30px">
          <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
             <g:west size="90">
-               <f:ImageButton ui:field="findTextButton" width="90px" text="{editorConst.findTextFindButton}" 
-                  buttonId="ideFindReplaceTextFormFindButton"></f:ImageButton>
+               <g:FlowPanel width="100%">
+               </g:FlowPanel>
             </g:west>
             <g:center>
-               <f:ImageButton ui:field="replaceFindButton" width="90px" text="{editorConst.findTextReplaceFindButton}" 
-                  buttonId="ideFindReplaceTextFormReplaceFindButton" stylePrimaryName="{style.buttonSpacing}"></f:ImageButton>
+               <f:Label ui:field="findResultLabel" iD="ideFindReplaceTextFormFindResult" height="18px"></f:Label>
             </g:center>
          </g:DockLayoutPanel>
-      </g:layer>
-      <g:layer top="160px" height="30px">
-         <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-            <g:west size="90">
-               <f:ImageButton ui:field="replaceButton" width="90px" text="{editorConst.findTextReplaceButton}" 
-                  buttonId="ideFindReplaceTextFormReplaceButton"></f:ImageButton>
-            </g:west>
-            <g:center>
-               <f:ImageButton ui:field="replaceAllButton" width="90px" text="{editorConst.findTextReplaceAllButton}" 
-                  buttonId="ideFindReplaceTextFormReplaceAllButton" stylePrimaryName="{style.buttonSpacing}"></f:ImageButton>
-            </g:center>
-         </g:DockLayoutPanel>
-      </g:layer-->
-      <g:layer top="200px" height="30px">
-         <g:FlowPanel width="auto">
-            <f:Label ui:field="findResultLabel" iD="ideFindReplaceTextFormFindResult" height="18px"></f:Label>
-         </g:FlowPanel>
       </g:layer>
 
    </g:LayoutPanel>
