@@ -30,7 +30,7 @@
                   </td>
 
                   <td style="width:210px;">
-                     <c:TextInput ui:field="fileNameField"></c:TextInput>
+                     <c:TextInput ui:field="fileNameField" name="ideCreateFileFromTemplateFormNameField"></c:TextInput>
                   </td>
 
                   <td>
