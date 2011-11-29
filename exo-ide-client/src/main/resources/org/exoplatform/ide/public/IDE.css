@@ -43,12 +43,14 @@ Add shadow to dialog boxes and menus
 	box-shadow: 7px 7px 10px 0 #C8C8C8 !important;
 }
 
+/*
 .imageButtonPanel
 {
 	-moz-box-shadow: 0px 0px 2px 0 #C8C8C8 !important;
 	-webkit-box-shadow: 0px 0px 2px 0 #C8C8C8 !important;
 	box-shadow: 2px 2px 2px 0 #DDDDDD !important;
 }
+*/
 
 .DevTool_contentEditorBorder {
 	border: 1px solid #A7ABB4;

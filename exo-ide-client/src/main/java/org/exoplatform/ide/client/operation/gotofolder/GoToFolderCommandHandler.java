@@ -57,7 +57,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
 
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(GoToFolderEvent.TYPE, this);
+//      IDE.addHandler(GoToFolderEvent.TYPE, this);
    }
 
    public void onVfsChanged(VfsChangedEvent event)

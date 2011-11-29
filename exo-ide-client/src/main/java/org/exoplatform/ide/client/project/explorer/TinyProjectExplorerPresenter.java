@@ -40,9 +40,13 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.Alert;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
@@ -77,6 +81,8 @@ import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
+import org.exoplatform.ide.client.operation.gotofolder.GoToFolderEvent;
+import org.exoplatform.ide.client.operation.gotofolder.GoToFolderHandler;
 import org.exoplatform.ide.client.project.CloseProjectEvent;
 import org.exoplatform.ide.client.project.CloseProjectHandler;
 import org.exoplatform.ide.client.project.OpenProjectEvent;
@@ -87,9 +93,11 @@ import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
@@ -116,7 +124,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
    ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, ProjectCreatedHandler,
-   CloseProjectHandler, AllFilesClosedHandler
+   CloseProjectHandler, AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler
 {
 
    public interface Display extends IsView
@@ -219,6 +227,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       IDE.addHandler(AllFilesClosedEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
+      IDE.addHandler(GoToFolderEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    private void ensureProjectExplorerDisplayCreated()
@@ -856,5 +866,114 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       IDE.fireEvent(projectClosedEvent);
    }
+
+   @Override
+   public void onGoToFolder(GoToFolderEvent event)
+   {
+//      if (display == null || openedProject == null || activeFile == null) {
+//         return;
+//      }
+//      
+//      if (!activeFile.getPath().startsWith(openedProject.getPath())) {
+//         return;
+//      }
+//      
+//      String expandPath = activeFile.getPath().substring(openedProject.getPath().length());      
+//      itemsToBeOpened.clear();
+//      itemsToBeOpened.add(openedProject.getPath());
+//
+//      String []parts = expandPath.split("/");
+//      String work = openedProject.getPath();
+//      
+//      for (int i = 0; i < parts.length; i++) {
+//         String part = parts[i];
+//         if ("".equals(part)) {
+//            continue;
+//         }
+//         
+//         work += "/" + part;
+//         itemsToBeOpened.add(work);
+//      }
+//      
+//      goToFile();
+   }
+
+   private FileModel activeFile;
+
+   private List<String> itemsToBeOpened = new ArrayList<String>();
+
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
+   }
+
+//   private void goToFile() {
+//      System.out.println("searching for items below >");
+//      for (String i : itemsToBeOpened) {
+//         System.out.println("i [" + i + "]");
+//      }
+//      
+//      if (itemsToBeOpened.size() == 0) {
+//         System.out.println("items to be opened : size > " + itemsToBeOpened.size());
+//         return;
+//      }
+//      
+//      String path = itemsToBeOpened.get(0);
+//      
+//      try {
+//         VirtualFileSystem.getInstance().getItemByPath(path, new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+//            {
+//               @Override
+//               protected void onSuccess(ItemWrapper result)
+//               {
+//                  if (result.getItem() instanceof ProjectModel) {
+//                     Alert.alert("PROJECT >");
+//                     expandItem((ProjectModel)result.getItem());
+//                  } else if (result.getItem() instanceof FolderModel) {
+//                     Alert.alert("FOLDER >");
+//                     expandItem((FolderModel)result.getItem());
+//                  } else if (result.getItem() instanceof FileModel) {
+//                     Alert.alert("FILE >");
+//                  }
+//               }
+//
+//               @Override
+//               protected void onFailure(Throwable exception)
+//               {
+//                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+//               }
+//            });
+//         
+//      } catch (Exception e) {
+//         e.printStackTrace();
+//         IDE.fireEvent(new ExceptionThrownEvent(e));
+//      }
+//   }
+   
+//   private void expandItem(final Folder folder) {
+//      try {
+//         VirtualFileSystem.getInstance().getChildren(folder,
+//            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+//            {
+//               @Override
+//               protected void onSuccess(List<Item> result)
+//               {
+//                  Alert.alert("CHILDREN RECEIVED FOR > " + folder.getPath());
+//               }
+//
+//               @Override
+//               protected void onFailure(Throwable e)
+//               {
+//                  e.printStackTrace();
+//                  IDE.fireEvent(new ExceptionThrownEvent(e));
+//               }
+//            });
+//         
+//      } catch (Exception e) {
+//         e.printStackTrace();
+//         IDE.fireEvent(new ExceptionThrownEvent(e));
+//      }
+//   }
 
 }

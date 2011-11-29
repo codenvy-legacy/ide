@@ -120,18 +120,21 @@ public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingVie
          lockPanel.getElement().getStyle().setOpacity(0.5);
          add(lockPanel);
          lockPanels.put(view.getId(), lockPanel);
-         //         resizeLockPanels();
       }
+      
       if (windows.size() == 0)
       {
          RootLayoutPanel.get().add(this);
          RootLayoutPanel.get().setWidgetLeftWidth(this, 0, Unit.PX, 100, Unit.PCT);
       }
 
-      Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
-      
+      Window window = view.canResize()
+         ? new ResizeableWindow(view.getTitle()) 
+         : new Window(view.getTitle());
+
       window.getElement().setAttribute("id", view.getId() + "-window");
       //window.getElement().getStyle().setProperty("zIndex", "auto");
+      window.setIcon(view.getIcon());
 
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());

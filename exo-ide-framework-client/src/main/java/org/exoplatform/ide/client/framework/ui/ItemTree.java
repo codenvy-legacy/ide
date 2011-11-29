@@ -264,6 +264,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
       ItemList<Item> children =
          (value instanceof ProjectModel) ? ((ProjectModel)value).getChildren() : ((FolderModel)value).getChildren();
+         
       if (tree.getItemCount() == 0)
       {
          TreeItem addItem = createTreeNode(value);
