@@ -23,12 +23,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Response;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.net.URLEncoder;
 
 /**
  * Create file from template.
@@ -39,6 +41,8 @@ import org.junit.Test;
  */
 public class CreateFileFromTemplateTest extends BaseTest
 {
+   private final static String PROJECT = CreateFileFromTemplateTest.class.getSimpleName();
+   
    private static final String GROOVY_REST_SERVICE = "Groovy REST Service";
    
    private static final String EMPTY_XML = "Empty XML";
@@ -61,14 +65,12 @@ public class CreateFileFromTemplateTest extends BaseTest
    
    private static final String NETVIBES_WIDGET = "Netvibes Widget";
    
-   private static final String FOLDER = CreateFileFromTemplateTest.class.getSimpleName();
-   
    @BeforeClass
    public static void setUp() throws Exception
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (Exception e)
       {
@@ -81,7 +83,7 @@ public class CreateFileFromTemplateTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT + "/");
       }
       catch (Exception e)
       {
@@ -89,19 +91,21 @@ public class CreateFileFromTemplateTest extends BaseTest
       }
    }
    
-   //IDE-76:Create File from Template
    @Test
    public void testCreateFileFromTemplate() throws Exception
    {
       // -------- 1 ----------
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       
-      // -------- 2-4 ----------
+      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
+      
+      //-------- 2 ----------
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
       
-      // -------- 5 ----------
-      //Repeat steps 2-4 with items "Empty XML",  "Empty HTML", "Empty TEXT", "Google Gadget" item of left panel.
+      // -------- 3 ----------
+      //Repeat step 2 with items "Empty XML",  "Empty HTML", "Empty TEXT", "Google Gadget" item of left panel.
       testTemplate(EMPTY_XML, XML_FILE_NAME);
       testTemplate(EMPTY_HTML, HTML_FILE_NAME);
       testTemplate(GOOGLE_GADGET, GOOGLE_GADGET_FILE_NAME);
@@ -116,28 +120,29 @@ public class CreateFileFromTemplateTest extends BaseTest
    @Test
    public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
    {
-      refresh();
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
+      selenium.refresh();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      
       /*
        * 1. Open two html files. 
        * They will have names: Untitled file.html, Untitled file 1.html
        */
+      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
+      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
+      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(1));
+      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitTabPresent(1);
-
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + ".html *", IDE.EDITOR.getTabTitle(0));
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html *", IDE.EDITOR.getTabTitle(1));
-
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file 1.html");
+      assertEquals("Untitled file 1.html *", IDE.EDITOR.getTabTitle(2));
+      
       /*
        * 2. Open "Create file from template" form.
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
+      assertTrue(IDE.TEMPLATES.isOpened());
 
       /*
        * 3. Select "Empty HTML" template and click "Create" button
@@ -145,20 +150,19 @@ public class CreateFileFromTemplateTest extends BaseTest
       IDE.TEMPLATES.selectTemplate(EMPTY_HTML);
       IDE.TEMPLATES.clickCreateButton();
       IDE.TEMPLATES.waitClosed();
-      IDE.EDITOR.waitTabPresent(2);
+      IDE.EDITOR.waitTabPresent(3);
 
       /*
        * Check, new file opened with name "Untitled file 2.html"
        */
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 2.html *", IDE.EDITOR.getTabTitle(2));
+      assertEquals("Untitled file 2.html *", IDE.EDITOR.getTabTitle(3));
 
       /*
        * 4. Go to file in second tab "Untitled file 1.html" and save file
        */
-      IDE.EDITOR.selectTab(1);
-      IDE.NAVIGATION.saveFileAs(null);
-
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html", IDE.EDITOR.getTabTitle(1));
+      IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.saveAs(2, "Untitled file 1.html");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/Untitled file 1.html");
 
       /*
        * 5. Create new Netvibes widget from template:
@@ -166,19 +170,19 @@ public class CreateFileFromTemplateTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
       IDE.TEMPLATES.selectTemplate(NETVIBES_WIDGET);
-      IDE.TEMPLATES.waitClosed();
       IDE.TEMPLATES.clickCreateButton();
-      IDE.EDITOR.waitTabPresent(3);
+      IDE.TEMPLATES.waitClosed();
+      IDE.EDITOR.waitTabPresent(4);
 
       /*
        * Check, new file opened with name "Untitled file 3.html"
        */
-      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 3.html *", IDE.EDITOR.getTabTitle(3));
+      assertEquals("Untitled file 3.html *", IDE.EDITOR.getTabTitle(4));
 
       /*
        * Close saved file
        */
-      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.closeFile(2);
    }
    
 //   //TODO fix problem in issue GWTX-100
@@ -250,8 +254,6 @@ public class CreateFileFromTemplateTest extends BaseTest
    
    private void testTemplate(String templateName, String fileName) throws Exception
    {
-      // ---------2--------
-      //Click on "New->From Template" button.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
       assertTrue(IDE.TEMPLATES.isOpened());
@@ -262,20 +264,21 @@ public class CreateFileFromTemplateTest extends BaseTest
       IDE.TEMPLATES.setFileName(fileName);
       IDE.TEMPLATES.clickCreateButton();
       IDE.TEMPLATES.waitClosed();
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.waitTabPresent(1);
       //new file with appropriate titles and highlighting should be opened in the Content Panel
-      assertEquals(fileName + " *", IDE.EDITOR.getTabTitle(0));
+      assertEquals(fileName + " *", IDE.EDITOR.getTabTitle(1));
       // --------4------------
       //Click on "File->Save File As" top menu command and save file "Test Groovy File.groovy".
-      saveAsByTopMenu(fileName);
+      IDE.EDITOR.saveAs(1, fileName);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + fileName);
       //new file with appropriate name should be appeared in the root folder of  
       //"Workspace" panel in the "Gadget " window and in the root folder of  "Server" window.
-      assertEquals(fileName, IDE.EDITOR.getTabTitle(0));
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER + "/" + fileName);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(fileName);
 
       //check file created on server
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + fileName).getStatusCode());
+      final String fileUrl = WS_URL + PROJECT + "/" + URLEncoder.encode(fileName, "UTF-8");
+      Response response = VirtualFileSystemUtils.get(fileUrl);
+      assertEquals(200, response.getStatusCode());
    }
    
 }

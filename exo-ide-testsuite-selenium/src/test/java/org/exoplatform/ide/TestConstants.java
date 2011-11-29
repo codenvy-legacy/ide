@@ -40,7 +40,7 @@ public interface TestConstants
    
    int PAGE_LOAD_PERIOD = 2000 * multiple;
 
-   int EDITOR_OPEN_PERIOD = 2000 * multiple;
+   int EDITOR_OPEN_PERIOD = 20 * multiple;
    
    int CODEMIRROR_PARSING_PERIOD = 1000 * multiple;
 
