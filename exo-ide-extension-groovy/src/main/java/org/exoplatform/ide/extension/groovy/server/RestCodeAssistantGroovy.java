@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.exoplatform.ide.codeassistant.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where;
-import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -35,9 +34,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Service provide Autocomplete of source code is also known as code completion feature. 
@@ -81,39 +78,6 @@ public class RestCodeAssistantGroovy
       return codeAssistant.getClassByFQN(fqn, projectId, vfsId);
    }
 
-   /**
-    * Returns the Class object associated with the class or interface with the given string name.
-    * 
-    * @param fqn the Full Qualified Name
-    * @return {@link TypeInfo} 
-    * @throws ClassNotFoundException
-    */
-   /**
-    * Returns set of FQNs matched to Class name (means FQN end on {className})
-    * Example :
-    * if className = "String"
-    * set must content
-    * {
-    *  java.lang.String
-    *  java.lang.StringBuilder
-    *  java.lang.StringBuffer
-    *  java.lang.StringIndexOutOfBoundsException
-    *  java.util.StringTokenizer
-    *  ....
-    * }
-    * @param className the string for matching FQNs 
-    * @return
-    * @throws VirtualFileSystemException 
-    * */
-   @GET
-   @Path("/find")
-   @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findFQNsByClassName(@Context UriInfo uriInfo, @QueryParam("class") String className,
-      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
-      VirtualFileSystemException
-   {
-      return codeAssistant.findFQNsByClassName(className, projectId, vfsId);
-   }
 
    /**
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)
@@ -142,8 +106,10 @@ public class RestCodeAssistantGroovy
    public List<ShortTypeInfo> findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where,
       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
-      return codeAssistant.findFQNsByPrefix(prefix, Where.valueOf(where.toUpperCase()), prefix, vfsId);
-
+      if (where.equalsIgnoreCase("fqn"))
+         return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
+      return codeAssistant.getTypesByFqnPrefix(prefix, prefix, vfsId);
+      
    }
 
    /**
@@ -161,7 +127,7 @@ public class RestCodeAssistantGroovy
    public List<ShortTypeInfo> findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
-      return codeAssistant.findByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
+      return codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
 
    }
 
@@ -172,6 +138,6 @@ public class RestCodeAssistantGroovy
       @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
       return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
-         + codeAssistant.getClassDoc(fqn, projectId, vfsId) + "</body></html>";
+         + codeAssistant.getJavaDoc(fqn, projectId, vfsId) + "</body></html>";
    }
 }

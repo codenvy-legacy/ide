@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.exoplatform.ide.codeassistant.api.CodeAssistant;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where;
-import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistant;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.jvm.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.util.List;
@@ -45,48 +44,7 @@ public class GroovyCodeAssistant extends CodeAssistant
       super(storage);
    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findClassByFQN(java.lang.String, java.lang.String, java.lang.String)
-    */
-   @Override
-   protected TypeInfo findClassByFQN(String fqn, String projectId, String vfsId) throws VirtualFileSystemException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByClassNameInProject(java.lang.String, java.lang.String, java.lang.String)
-    */
-   @Override
-   protected List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String projectId, String vfsId)
-      throws CodeAssistantException, VirtualFileSystemException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefixInProject(java.lang.String, org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where, java.lang.String, java.lang.String)
-    */
-   @Override
-   protected List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, Where where, String projectId, String vfsId)
-      throws CodeAssistantException, VirtualFileSystemException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findByTypeInProject(org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType, java.lang.String, java.lang.String, java.lang.String)
-    */
-   @Override
-   protected List<ShortTypeInfo> findByTypeInProject(JavaType type, String prefix, String projectId, String vfsId)
-      throws CodeAssistantException, VirtualFileSystemException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
 
    /**
     * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getJavaDocFromProject(java.lang.String)
@@ -102,11 +60,39 @@ public class GroovyCodeAssistant extends CodeAssistant
    /**
     * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findClassesInPackage(java.lang.String, java.lang.String, java.lang.String)
     */
+
    @Override
-   public List<ShortTypeInfo> findClassesInPackage(String fileId, String projectId, String vfsId)
+   protected TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
       throws VirtualFileSystemException, CodeAssistantException
    {
-      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   protected List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   @Override
+   protected List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   @Override
+   protected List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   @Override
+   public List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException
+   {
       return null;
    }
 
