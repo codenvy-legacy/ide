@@ -75,7 +75,6 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
          if(object.get(MIME_TYPE).isString() != null)
           mimeType = object.get(MIME_TYPE).isString().stringValue();
 
-
          if (type == ItemType.FOLDER)
          {
             if (Project.PROJECT_MIME_TYPE.equals(mimeType))
@@ -99,6 +98,7 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
       }
       catch (Exception e)
       {
+         e.printStackTrace();
          throw new UnmarshallerException("Can't parse item.");
       }
    }

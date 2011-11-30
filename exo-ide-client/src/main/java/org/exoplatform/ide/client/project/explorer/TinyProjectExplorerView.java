@@ -65,19 +65,19 @@ public class TinyProjectExplorerView extends ViewImpl implements
    interface TinyProjectExplorerViewUiBinder extends UiBinder<Widget, TinyProjectExplorerView>
    {
    }
-   
+
    @UiField
    ItemTree treeGrid;
-   
+
    @UiField
    HTMLPanel projectNotOpenedPanel;
-   
+
    private static final String TITLE = "Project Explorer";
 
    public TinyProjectExplorerView()
    {
       super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));      
+      add(uiBinder.createAndBindUi(this));
    }
 
    @Override
@@ -93,9 +93,9 @@ public class TinyProjectExplorerView extends ViewImpl implements
    }
 
    @Override
-   public void selectItem(String path)
+   public boolean selectItem(String path)
    {
-      treeGrid.selectItem(path);
+      return treeGrid.selectItem(path);
    }
 
    @Override
@@ -133,6 +133,12 @@ public class TinyProjectExplorerView extends ViewImpl implements
    {
       treeGrid.setVisible(visible);
       projectNotOpenedPanel.setVisible(!visible);
+   }
+
+   @Override
+   public void setUpdateTreeValue(boolean updateTreeValue)
+   {
+      treeGrid.setUpdateValue(updateTreeValue);
    }
 
 }

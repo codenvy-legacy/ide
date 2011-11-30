@@ -40,13 +40,11 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.Alert;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
@@ -136,6 +134,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
        * @return {@link TreeGridItem}
        */
       TreeGridItem<Item> getBrowserTree();
+      
+      void setUpdateTreeValue(boolean updateTreeValue);
 
       /**
        * Get selected items in the tree.
@@ -148,8 +148,9 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
        * Select item in browser tree by path.
        * 
        * @param itemId item's path
+       * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
        */
-      void selectItem(String itemId);
+      boolean selectItem(String itemId);
 
       /**
        * Deselect item in browser tree by path.
@@ -367,6 +368,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       foldersToRefresh.clear();
       foldersToRefresh.add(openedFolder);
+      display.setUpdateTreeValue(false);
       refreshNextFolder();
    }
 
@@ -421,6 +423,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          }
       }
 
+      display.setUpdateTreeValue(false);
       refreshNextFolder();
    }
 
@@ -428,6 +431,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    {
       if (foldersToRefresh.size() == 0)
       {
+         if (itemToSelect != null)
+         {
+            display.selectItem(itemToSelect);
+            itemToSelect = null;
+         }
+         
          return;
       }
 
@@ -440,6 +449,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                @Override
                protected void onFailure(Throwable exception)
                {
+                  exception.printStackTrace();
+                  
                   itemToSelect = null;
                   foldersToRefresh.clear();
                   exception.printStackTrace();
@@ -450,34 +461,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  if (folder instanceof FolderModel)
-                  {
-                     ((FolderModel)folder).getChildren().getItems().clear();
-                     ((FolderModel)folder).getChildren().getItems().addAll(result);
-                  }
-                  else if (folder instanceof ProjectModel)
-                  {
-                     ((ProjectModel)folder).getChildren().getItems().clear();
-                     ((ProjectModel)folder).getChildren().getItems().addAll(result);
-                  }
-
-                  for (Item i : result)
-                  {
-                     if (i instanceof ItemContext)
-                     {
-                        ((ItemContext)i).setParent(new FolderModel(folder));
-                     }
-
-                     if (folder instanceof ProjectModel)
-                     {
-                        ((ItemContext)i).setProject((ProjectModel)folder);
-                     }
-                     else if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
-                     {
-                        ((ItemContext)i).setProject(((ItemContext)folder).getProject());
-                     }
-                  }
-                  folderContentReceived(folder);
+                  folderContentReceived(folder, result);
                }
             });
       }
@@ -487,31 +471,48 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
    }
 
-   private void folderContentReceived(Folder folder)
+   private void folderContentReceived(Folder folder, List<Item> result)
    {
+      if (folder instanceof FolderModel)
+      {
+         ((FolderModel)folder).getChildren().getItems().clear();
+         ((FolderModel)folder).getChildren().getItems().addAll(result);
+      }
+      else if (folder instanceof ProjectModel)
+      {
+         ((ProjectModel)folder).getChildren().getItems().clear();
+         ((ProjectModel)folder).getChildren().getItems().addAll(result);
+      }
+
+      for (Item i : result)
+      {
+         if (i instanceof ItemContext)
+         {
+            ((ItemContext)i).setParent(new FolderModel(folder));
+         }
+
+         if (folder instanceof ProjectModel)
+         {
+            ((ItemContext)i).setProject((ProjectModel)folder);
+         }
+         else if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
+         {
+            ((ItemContext)i).setProject(((ItemContext)folder).getProject());
+         }
+      }      
+      
       IDE.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
+      
       //TODO if will be some value - display system items or not, then add check here:
-      List<Item> children =
-         (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
-            .getChildren().getItems();
-      removeSystemItemsFromView(children);
+      List<Item> children = (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder).getChildren().getItems();
+      removeSystemItems(children);
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);
-
       display.asView().setViewVisible();
 
-      if (itemToSelect != null)
-      {
-         display.selectItem(itemToSelect);
-         itemToSelect = null;
-      }
-
-      if (foldersToRefresh.size() > 0)
-      {
-         refreshNextFolder();
-      }
+      refreshNextFolder();
    }
 
    /**
@@ -521,7 +522,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
     * 
     * @param items
     */
-   private void removeSystemItemsFromView(List<Item> items)
+   private void removeSystemItems(List<Item> items)
    {
       List<Item> itemsToRemove = new ArrayList<Item>();
       for (Item item : items)
@@ -839,6 +840,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.fireEvent(new CloseAllFilesEvent());
    }
 
+   // TODO think how we can remove this variable.
    private boolean needCloseProject = false;
 
    @Override
@@ -866,114 +868,100 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       IDE.fireEvent(projectClosedEvent);
    }
-
-   @Override
-   public void onGoToFolder(GoToFolderEvent event)
-   {
-//      if (display == null || openedProject == null || activeFile == null) {
-//         return;
-//      }
-//      
-//      if (!activeFile.getPath().startsWith(openedProject.getPath())) {
-//         return;
-//      }
-//      
-//      String expandPath = activeFile.getPath().substring(openedProject.getPath().length());      
-//      itemsToBeOpened.clear();
-//      itemsToBeOpened.add(openedProject.getPath());
-//
-//      String []parts = expandPath.split("/");
-//      String work = openedProject.getPath();
-//      
-//      for (int i = 0; i < parts.length; i++) {
-//         String part = parts[i];
-//         if ("".equals(part)) {
-//            continue;
-//         }
-//         
-//         work += "/" + part;
-//         itemsToBeOpened.add(work);
-//      }
-//      
-//      goToFile();
-   }
-
+   
    private FileModel activeFile;
-
-   private List<String> itemsToBeOpened = new ArrayList<String>();
 
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+   }   
+
+   @Override
+   public void onGoToFolder(GoToFolderEvent event)
+   {
+      if (display == null || openedProject == null || activeFile == null) {
+         return;
+      }
+      
+      if (!activeFile.getPath().startsWith(openedProject.getPath())) {
+         return;
+      }
+      
+      if (display.selectItem(activeFile.getId())) {
+         return;
+      }
+      
+      String expandPath = activeFile.getPath().substring(openedProject.getPath().length());      
+      itemsToBeOpened.clear();
+      itemsToBeOpened.add(openedProject.getPath());
+
+      String []parts = expandPath.split("/");
+      String work = openedProject.getPath();
+      
+      for (int i = 0; i < parts.length; i++) {
+         String part = parts[i];
+         if ("".equals(part)) {
+            continue;
+         }
+         
+         work += "/" + part;
+         itemsToBeOpened.add(work);
+      }
+      
+      foldersToRefresh.clear();
+      cyclicallyCheckItemsToBeRefreshed();
    }
 
-//   private void goToFile() {
-//      System.out.println("searching for items below >");
-//      for (String i : itemsToBeOpened) {
-//         System.out.println("i [" + i + "]");
-//      }
-//      
-//      if (itemsToBeOpened.size() == 0) {
-//         System.out.println("items to be opened : size > " + itemsToBeOpened.size());
-//         return;
-//      }
-//      
-//      String path = itemsToBeOpened.get(0);
-//      
-//      try {
-//         VirtualFileSystem.getInstance().getItemByPath(path, new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-//            {
-//               @Override
-//               protected void onSuccess(ItemWrapper result)
-//               {
-//                  if (result.getItem() instanceof ProjectModel) {
-//                     Alert.alert("PROJECT >");
-//                     expandItem((ProjectModel)result.getItem());
-//                  } else if (result.getItem() instanceof FolderModel) {
-//                     Alert.alert("FOLDER >");
-//                     expandItem((FolderModel)result.getItem());
-//                  } else if (result.getItem() instanceof FileModel) {
-//                     Alert.alert("FILE >");
-//                  }
-//               }
-//
-//               @Override
-//               protected void onFailure(Throwable exception)
-//               {
-//                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-//               }
-//            });
-//         
-//      } catch (Exception e) {
-//         e.printStackTrace();
-//         IDE.fireEvent(new ExceptionThrownEvent(e));
-//      }
-//   }
+
+   private List<String> itemsToBeOpened = new ArrayList<String>();
    
-//   private void expandItem(final Folder folder) {
-//      try {
-//         VirtualFileSystem.getInstance().getChildren(folder,
-//            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-//            {
-//               @Override
-//               protected void onSuccess(List<Item> result)
-//               {
-//                  Alert.alert("CHILDREN RECEIVED FOR > " + folder.getPath());
-//               }
-//
-//               @Override
-//               protected void onFailure(Throwable e)
-//               {
-//                  e.printStackTrace();
-//                  IDE.fireEvent(new ExceptionThrownEvent(e));
-//               }
-//            });
-//         
-//      } catch (Exception e) {
-//         e.printStackTrace();
-//         IDE.fireEvent(new ExceptionThrownEvent(e));
-//      }
-//   }
+   private void cyclicallyCheckItemsToBeRefreshed() {
+      if (itemsToBeOpened.size() == 0) {
+         if (foldersToRefresh.size() > 0 || itemToSelect != null) {
+            display.setUpdateTreeValue(true);
+            refreshNextFolder();
+         }
+         
+         return;
+      }
+      
+      String path = itemsToBeOpened.get(0);
+      try {
+         VirtualFileSystem.getInstance().getItemByPath(path, new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  itemsToBeOpened.remove(0);
+                  
+                  if (result.getItem() instanceof ProjectModel) {
+                     foldersToRefresh.add((ProjectModel)result.getItem());
+                  } else if (result.getItem() instanceof FolderModel) {
+                     foldersToRefresh.add((FolderModel)result.getItem());
+                  } else if (result.getItem() instanceof FileModel) {
+                     itemToSelect = result.getItem().getId();
+                  }
+                  
+                  cyclicallyCheckItemsToBeRefreshed();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  itemsToBeOpened.clear();
+                  foldersToRefresh.clear();
+                  itemToSelect = null;
+                  
+                  exception.printStackTrace();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+         
+      } catch (Exception e) {
+         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }      
+   }
 
 }

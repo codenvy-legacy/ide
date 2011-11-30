@@ -55,7 +55,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    private String id;
 
    private String prefixId;
-   
+
    private boolean expandProjects = true;
 
    public ItemTree()
@@ -111,25 +111,13 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
     */
    private TreeItem getNodeById(String id)
    {
-      //      FolderModel rootFolder = (FolderModel)tree.getItem(0).getUserObject();
-      //      String path = id.substring(rootFolder.getHref().length());
-      //
-      //      if (path.length() > 0 && path.charAt(0) == '/')
-      //      {
-      //         path = path.substring(1);
-      //      }
-      //
-      //      if ("".equals(path))
-      //      {
-      //         return tree.getItem(0);
-      //      }
-      //
-      //      String[] pathParts = path.split("/");
       TreeItem node = tree.getItem(0);
       if (((Item)node.getUserObject()).getId().equals(id))
       {
+         node.setState(true, false);
          return node;
       }
+      
       node = getChild(node, id);
       return node;
    }
@@ -156,17 +144,34 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          Item userObject = (Item)child.getUserObject();
          if (userObject.getId().equals(id))
          {
+            parent.setState(true, false);
             return child;
          }
+         
          if (userObject instanceof FolderModel || userObject instanceof ProjectModel)
          {
             TreeItem child2 = getChild(child, id);
-            if (child2 != null)
+            if (child2 != null) {
+               parent.setState(true, false);
+               child.setState(true, false);
                return child2;
+            }
          }
       }
 
       return null;
+   }
+
+   private boolean updateValue = false;
+
+   public void setUpdateValue(boolean updateValue)
+   {
+      this.updateValue = updateValue;
+   }
+
+   public boolean isUpdateValue()
+   {
+      return updateValue;
    }
 
    private void setItems(TreeItem parentNode, List<Item> children)
@@ -196,17 +201,61 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       parentNode.setState(true, false);
    }
 
+   private void updateItems(TreeItem parentNode, List<Item> children)
+   {
+      if (children.size() == 0)
+      {
+         parentNode.removeItems();
+         parentNode.setState(false);
+         return;
+      }
+      
+      // check for new items in new list children
+      int position = 0;
+      for (Item item : children) {
+         if (!hasChild(parentNode, item.getId())) {
+            TreeItem node = createTreeNode(item);
+            parentNode.insertItem(position, node);
+            position++;
+         }
+         
+      }
+      
+//      // check for items which are presents in tree and not presents in list of children
+
+      //to avoid send open event (thus extra refresh folder is not done)  
+      parentNode.setState(true, false);      
+
+   }
+   
+   private boolean hasChild(TreeItem parentNode, String childrenId) {
+      for (int i = 0; i < parentNode.getChildCount(); i++) {
+         TreeItem item = parentNode.getChild(i);
+         if (item.getUserObject() != null) {
+            Item object = (Item)item.getUserObject();
+            if (childrenId.equals(object.getId())) {
+               return true;
+            }
+         }
+      }
+      
+      return false;
+   }
+
    private TreeItem createTreeNode(Item item)
    {
       TreeItem node = new TreeItem(createItemWidget(getItemIcon(item), getTitle(item)));
       node.setUserObject(item);
-      
-      if (item instanceof FolderModel) {
+
+      if (item instanceof FolderModel)
+      {
          node.addItem("");
-      } else if (item instanceof ProjectModel && expandProjects) {
-         node.addItem("");         
       }
-      
+      else if (item instanceof ProjectModel && expandProjects)
+      {
+         node.addItem("");
+      }
+
       node.getElement().setId(prefixId + Utils.md5(item.getPath()));
       return node;
    }
@@ -255,31 +304,42 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    @Override
    public void doUpdateValue()
    {
+      /*
+       * If value == null - clear tree.
+       */
       if (value == null)
       {
          if (tree.getItemCount() > 0)
+         {
             tree.removeItems();
+         }
+
          return;
       }
 
-      ItemList<Item> children =
-         (value instanceof ProjectModel) ? ((ProjectModel)value).getChildren() : ((FolderModel)value).getChildren();
-         
+      /*
+       * Create root node if tree has not it. 
+       */
       if (tree.getItemCount() == 0)
       {
          TreeItem addItem = createTreeNode(value);
          tree.addItem(addItem);
-         if (children == null)
-            return;
       }
 
+      ItemList<Item> children =
+         (value instanceof ProjectModel) ? ((ProjectModel)value).getChildren() : ((FolderModel)value).getChildren();
+
+      /*
+       * Return if children are not defined.
+       */
       if (children == null)
       {
          return;
       }
 
-      //FolderModel rootFolder = (FolderModel)tree.getItem(0).getUserObject();
-      
+      /*
+       * Return is wants to set node, which is not children of root node.
+       */
       Folder rootFolder = (Folder)tree.getItem(0).getUserObject();
       String rootFolderHref = rootFolder.getPath();
       if (!value.getPath().startsWith(rootFolderHref))
@@ -290,7 +350,15 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       TreeItem parent = getNodeById(value.getId());
       try
       {
-         setItems(parent, children.getItems());
+         if (updateValue)
+         {
+            updateItems(parent, children.getItems());
+         }
+         else
+         {
+            setItems(parent, children.getItems());
+         }
+
          if (tree.getSelectedItem() != null)
          {
             moveHighlight(tree.getSelectedItem());
@@ -303,18 +371,23 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    }
 
    /**
-    * Select item by path
-    * @param path
+    * Select item by itemId
+    * 
+    * @param itemId
+    * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
     */
-   public void selectItem(String path)
+   public boolean selectItem(String itemId)
    {
-      TreeItem item = getNodeById(path);
+      TreeItem item = getNodeById(itemId);
       if (item != null)
       {
          tree.setSelectedItem(item, true);
+         return true;
       }
+      
+      return false;
    }
-
+   
    /**
     * Get all selected items
     * @return  List of selected items
