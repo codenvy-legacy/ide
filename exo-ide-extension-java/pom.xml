@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -33,53 +34,53 @@
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
-          <exclusions>
-           <exclusion>
-             <groupId>org.exoplatform.tool</groupId>
-             <artifactId>exo.tool.framework.junit</artifactId>
-           </exclusion>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
-          <exclusions>
-           <exclusion>
-             <groupId>org.exoplatform.tool</groupId>
-             <artifactId>exo.tool.framework.junit</artifactId>
-           </exclusion>
-           <exclusion>
-             <groupId>xstream</groupId>
-             <artifactId>xstream</artifactId>
-           </exclusion>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
-          <exclusions>
-           <exclusion>
-             <groupId>org.exoplatform.tool</groupId>
-             <artifactId>exo.tool.framework.junit</artifactId>
-           </exclusion>
-           <exclusion>
-             <groupId>xstream</groupId>
-             <artifactId>xstream</artifactId>
-           </exclusion>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.ext</artifactId>
-          <exclusions>
-           <exclusion>
-             <groupId>org.exoplatform.tool</groupId>
-             <artifactId>exo.tool.framework.junit</artifactId>
-           </exclusion>
-           <exclusion>
-             <groupId>org.exoplatform.ws</groupId>
-             <artifactId>exo.ws.rest.core</artifactId>
-           </exclusion>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
@@ -130,13 +131,13 @@
          <artifactId>exo-ide-framework-client</artifactId>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-test</artifactId>
          <scope>test</scope>
       </dependency>
-     <dependency>
+      <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
       </dependency>
@@ -148,6 +149,17 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-testframework</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.thoughtworks.qdox</groupId>
+         <artifactId>qdox</artifactId>
+         <version>1.12</version>
+      </dependency>
+      <dependency>
+         <groupId>com.carrotsearch</groupId>
+         <artifactId>junit-benchmarks</artifactId>
+         <version>0.3.0</version>
          <scope>test</scope>
       </dependency>
    </dependencies>

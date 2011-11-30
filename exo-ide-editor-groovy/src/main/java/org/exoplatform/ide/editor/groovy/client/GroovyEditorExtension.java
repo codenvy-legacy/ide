@@ -53,6 +53,8 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
 
    private JavaCodeAssistant groovyCodeAssistant;
 
+   private JavaTokenWidgetFactory factory;
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -82,9 +84,10 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
       else
          service = GroovyCodeAssistantService.get();
 
-      groovyCodeAssistant =
-         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
-            + "/ide/code-assistant/groovy/class-doc?fqn="), this);
+      factory =
+         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+            + "/ide/code-assistant/groovy/class-doc?fqn=");
+      groovyCodeAssistant = new GroovyCodeAssistant(service, factory, this);
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.INSTANCE
             .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
@@ -136,7 +139,11 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
-         groovyCodeAssistant.setactiveFileHref(event.getFile().getId());
+      {
+         String projectId = event.getFile().getProject().getId();
+         groovyCodeAssistant.setActiveProjectId(projectId);
+         factory.setProjectId(projectId);
+      }
    }
 
 }

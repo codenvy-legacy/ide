@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.ui;
 
-
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
@@ -47,9 +46,9 @@ public class JavaConstructorWidget extends JavaTokenWidgetBase
    /**
     * @param token
     */
-   public JavaConstructorWidget(Token token, String restContext)
+   public JavaConstructorWidget(Token token, String restContext, String projectId)
    {
-      super(token, restContext);
+      super(token, restContext, projectId);
 
       grid = new Grid(1, 3);
       grid.setStyleName(JavaClientBundle.INSTANCE.css().item());

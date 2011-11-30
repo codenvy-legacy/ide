@@ -39,7 +39,8 @@ public class JavaTokenWidgetFactory implements TokenWidgetFactory
 {
 
    private String restContext;
-   
+
+   private String projectId;
 
    /**
     * @param context
@@ -60,29 +61,45 @@ public class JavaTokenWidgetFactory implements TokenWidgetFactory
          case CLASS :
          case INTERFACE :
          case ANNOTATION :
-            return new JavaClassTokenWidget(token, restContext);
+            return new JavaClassTokenWidget(token, restContext, projectId);
 
          case CONSTRUCTOR :
-            return new JavaConstructorWidget(token, restContext);
+            return new JavaConstructorWidget(token, restContext, projectId);
 
          case METHOD :
-            return new JavaMethodWidget(token, restContext);
+            return new JavaMethodWidget(token, restContext, projectId);
 
          case FIELD :
          case PROPERTY :
-            return new JavaFieldWidget(token, restContext);
-            
+            return new JavaFieldWidget(token, restContext, projectId);
+
          case VARIABLE :
          case PARAMETER :
-            return new JavaVariableWidget(token, restContext);
+            return new JavaVariableWidget(token);
 
          case KEYWORD :
             return new JavaKeyWordWidget(token);
 
          default :
-            return new JavaClassTokenWidget(token, restContext);
+            return new JavaClassTokenWidget(token, restContext, projectId);
 
       }
+   }
+
+   /**
+    * @return the projectId
+    */
+   public String getProjectId()
+   {
+      return projectId;
+   }
+
+   /**
+    * @param projectId the projectId to set
+    */
+   public void setProjectId(String projectId)
+   {
+      this.projectId = projectId;
    }
 
 }

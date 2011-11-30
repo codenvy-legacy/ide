@@ -86,7 +86,7 @@ public class JavaGwtTestCodeAssistant extends Base
       Token currentToken = new TokenImpl("String", TokenType.VARIABLE);
       currentToken.setProperty(TokenProperties.FQN, new StringProperty("java.lang.String"));
       JavaCodeAssist javaCodeAssist = new JavaCodeAssist();
-      javaCodeAssist.setactiveFileHref("http://127.0.0.1:8888/rest/jcr/repository/dev-monit/1.txt");
+      javaCodeAssist.setActiveProjectId("http://127.0.0.1:8888/rest/jcr/repository/dev-monit/1.txt");
 //      javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, line.length() + 1, 0, new ArrayList<Token>(),
 //         MimeType.APPLICATION_GROOVY, currentToken);
    }
@@ -200,7 +200,7 @@ public class JavaGwtTestCodeAssistant extends Base
       }
 
       JavaCodeAssist javaCodeAssist = new JavaCodeAssist();
-      javaCodeAssist.setactiveFileHref("/rest/jcr/repository/dev-monit/1.txt");
+      javaCodeAssist.setActiveProjectId("/rest/jcr/repository/dev-monit/1.txt");
 //      javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, curPos, 0, new ArrayList<Token>(),
 //         MimeType.APPLICATION_GROOVY, null);
    }

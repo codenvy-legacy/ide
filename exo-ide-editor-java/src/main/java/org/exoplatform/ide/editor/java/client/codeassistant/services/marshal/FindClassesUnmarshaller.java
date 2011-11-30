@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services.marshal;
 
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-
-import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -31,10 +32,7 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.

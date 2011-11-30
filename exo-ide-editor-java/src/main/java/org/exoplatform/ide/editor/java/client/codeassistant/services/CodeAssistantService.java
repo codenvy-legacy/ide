@@ -18,21 +18,21 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.ClassDescriptionUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import com.google.gwt.http.client.RequestBuilder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This service for auto-complete feature.
@@ -47,8 +47,6 @@ import com.google.gwt.http.client.RequestBuilder;
 public abstract class CodeAssistantService
 {
 
-   protected String FIND_URL;
-
    protected String GET_CLASS_URL;
 
    protected String FIND_CLASS_BY_PREFIX;
@@ -59,44 +57,15 @@ public abstract class CodeAssistantService
 
    protected String restServiceContext;
 
-   protected CodeAssistantService(String restServiceContext, Loader loader, String findUrl,
-      String getClassUrl, String findClassByPrefix, String findType)
+   protected CodeAssistantService(String restServiceContext, Loader loader, String getClassUrl,
+      String findClassByPrefix, String findType)
    {
       this.loader = loader;
       this.restServiceContext = restServiceContext;
 
-      this.FIND_URL = findUrl;
       this.GET_CLASS_URL = getClassUrl;
       this.FIND_CLASS_BY_PREFIX = findClassByPrefix;
       this.FIND_TYPE = findType;
-   }
-
-   /**
-    * Get Classes FQN by name.
-    *   
-    * @param className
-    * @param fileHref for who autocompletion called (Need for find classpath)
-    * @param callback - the callback which client has to implement
-    */
-   public void findClass(String className, String fileHref, AsyncRequestCallback<List<Token>> callback)
-   {
-      String url = restServiceContext + FIND_URL + className;
-
-      List<Token> tokens = new ArrayList<Token>();
-      callback.setResult(tokens);
-
-      FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
-
-      callback.setEventBus(IDE.eventBus());
-      callback.setPayload(unmarshaller);
-      if (fileHref == null)
-      {
-         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
-      }
-      else
-      {
-         AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
-      }
    }
 
    /**
@@ -106,9 +75,11 @@ public abstract class CodeAssistantService
     * @param fileHref for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public void getClassDescription(String fqn, String fileHref, AsyncRequestCallback<JavaClass> callback)
+   public void getClassDescription(String fqn, String projectId, AsyncRequestCallback<JavaClass> callback)
    {
-      String url = restServiceContext + GET_CLASS_URL + fqn;
+      String url =
+         restServiceContext + GET_CLASS_URL + fqn + "&projectid=" + projectId + "&vfsid="
+            + VirtualFileSystem.getInstance().getInfo().getId();
 
       JavaClass classInfo = new JavaClass();
       callback.setResult(classInfo);
@@ -117,18 +88,20 @@ public abstract class CodeAssistantService
       callback.setEventBus(IDE.eventBus());
       callback.setPayload(unmarshaller);
       callback.setSuccessCodes(status);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
    /**
     * Find classes by prefix
     * @param prefix the first letters of class name
-    * @param fileHref for who autocompletion called (Need for find classpath)
+    * @param projectId for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public void findClassesByPrefix(String prefix, String fileHref, AsyncRequestCallback<List<Token>> callback)
+   public void findClassesByPrefix(String prefix, String projectId, AsyncRequestCallback<List<Token>> callback)
    {
-      String url = restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className";
+      String url =
+         restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId + "&vfsid="
+            + VirtualFileSystem.getInstance().getInfo().getId();
 
       List<Token> tokens = new ArrayList<Token>();
       callback.setResult(tokens);
@@ -136,14 +109,7 @@ public abstract class CodeAssistantService
 
       callback.setEventBus(IDE.eventBus());
       callback.setPayload(unmarshaller);
-      if (fileHref == null)
-      {
-         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
-      }
-      else
-      {
-         AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileHref).send(callback);
-      }
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
    /**
@@ -153,13 +119,14 @@ public abstract class CodeAssistantService
     * @param prefix the prefix with type name starts (can be null)
     * @param callback - the callback which client has to implement
     */
-   public void findType(Types type, String prefix, AsyncRequestCallback<List<Token>> callback)
+   public void findType(Types type, String prefix, String projectId, AsyncRequestCallback<List<Token>> callback)
    {
       String url = restServiceContext + FIND_TYPE + type.toString();
       if (prefix != null && !prefix.isEmpty())
       {
          url += "?prefix=" + prefix;
       }
+      url += url + "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
       List<Token> tokens = new ArrayList<Token>();
       callback.setResult(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);

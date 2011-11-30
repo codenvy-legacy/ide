@@ -44,9 +44,9 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
     * @param token
     * @param restContext 
     */
-   public JavaMethodWidget(Token token, String restContext)
+   public JavaMethodWidget(Token token, String restContext, String projectId)
    {
-      super(token, restContext);
+      super(token, restContext, projectId);
       grid = new Grid(1, 3);
       grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
       //      grid.setWidth("100%");
@@ -55,12 +55,13 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      String name = token.getName() + token.getProperty(TokenProperties.PARAMETER_TYPES).isStringProperty().stringValue();
-      if(token.hasProperty(TokenProperties.RETURN_TYPE))
-       name += ":" + token.getProperty(TokenProperties.RETURN_TYPE).isStringProperty().stringValue();
+      String name =
+         token.getName() + token.getProperty(TokenProperties.PARAMETER_TYPES).isStringProperty().stringValue();
+      if (token.hasProperty(TokenProperties.RETURN_TYPE))
+         name += ":" + token.getProperty(TokenProperties.RETURN_TYPE).isStringProperty().stringValue();
       else
          name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
-      
+
       Label nameLabel = new Label(name, false);
       nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
       grid.setWidget(0, 1, nameLabel);
@@ -82,7 +83,7 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
 
    private Image getImage()
    {
-     
+
       if (ModifierHelper.isPrivate(modifieres))
       {
          return new Image(JavaClientBundle.INSTANCE.privateMethod());
@@ -99,7 +100,7 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
       {
          return new Image(JavaClientBundle.INSTANCE.defaultMethod());
       }
-     
+
    }
 
    /**

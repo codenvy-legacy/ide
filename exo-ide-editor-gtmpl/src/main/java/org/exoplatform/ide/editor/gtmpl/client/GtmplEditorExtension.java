@@ -53,6 +53,8 @@ public class GtmplEditorExtension extends Extension implements InitializeService
 
    private GroovyTemplateCodeAssistant templateCodeAssistant;
 
+   private JavaTokenWidgetFactory factory;
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -79,9 +81,10 @@ public class GtmplEditorExtension extends Extension implements InitializeService
       else
          service = GroovyCodeAssistantService.get();
 
-      templateCodeAssistant =
-         new GroovyTemplateCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration()
-            .getContext() + "/ide/code-assistant/groovy/class-doc?fqn="), this);
+      factory =
+         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+            + "/ide/code-assistant/groovy/class-doc?fqn=");
+      templateCodeAssistant = new GroovyTemplateCodeAssistant(service, factory, this);
 
       IDE.getInstance()
          .addEditor(
@@ -137,7 +140,11 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
-         templateCodeAssistant.setactiveFileHref(event.getFile().getId());
+      {
+         String projectId = event.getFile().getProject().getId();
+         templateCodeAssistant.setActiveProjectId(projectId);
+         factory.setProjectId(projectId);
+      }
    }
 
 }

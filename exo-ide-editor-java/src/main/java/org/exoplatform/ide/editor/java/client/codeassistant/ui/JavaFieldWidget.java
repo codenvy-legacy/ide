@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
@@ -44,17 +43,17 @@ public class JavaFieldWidget extends JavaTokenWidgetBase
    /**
     * @param token
     */
-   public JavaFieldWidget(Token token, String restContext)
+   public JavaFieldWidget(Token token, String restContext, String projectId)
    {
-      super(token, restContext);
+      super(token, restContext, projectId);
       grid = new Grid(1, 3);
       grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
       Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
-      
+
       String name = token.getName();
-      if(token.hasProperty(TokenProperties.ELEMENT_TYPE))
+      if (token.hasProperty(TokenProperties.ELEMENT_TYPE))
       {
          name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
       }

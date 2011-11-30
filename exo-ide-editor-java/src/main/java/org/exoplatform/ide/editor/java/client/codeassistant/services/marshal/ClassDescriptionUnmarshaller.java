@@ -135,17 +135,19 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
          {
             JSONObject me = methodsArray.get(i).isObject();
             int modifier = (int)me.get(MODIFIERS).isNumber().doubleValue();
+            if (ModifierHelper.isPublic(modifier))
+            {
+               Token token = new TokenImpl(me.get(NAME).isString().stringValue(), TokenType.METHOD);
+               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(me.get(DECLARING_CLASS).isString()
+                  .stringValue()));
+               token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(me.get(RETURN_TYPE).isString()
+                  .stringValue()));
+               token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(me.get(PARAMETER_TYPES).isString()
+                  .stringValue()));
 
-            Token token = new TokenImpl(me.get(NAME).isString().stringValue(), TokenType.METHOD);
-            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(me.get(DECLARING_CLASS).isString()
-               .stringValue()));
-            token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(me.get(RETURN_TYPE).isString()
-               .stringValue()));
-            token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(me.get(PARAMETER_TYPES).isString()
-               .stringValue()));
-
-            methods.add(token);
+               methods.add(token);
+            }
          }
       }
 

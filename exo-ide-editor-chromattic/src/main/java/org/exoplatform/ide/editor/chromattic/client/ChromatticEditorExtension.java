@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.chromattic.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -43,8 +45,6 @@ import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErr
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
 
-import com.google.gwt.core.client.GWT;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
@@ -55,6 +55,8 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
 {
 
    private JavaCodeAssistant groovyCodeAssistant;
+
+   private JavaTokenWidgetFactory factory;
 
    private static final Images IMAGES = GWT.create(Images.class);
 
@@ -82,9 +84,10 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
          service = new GroovyCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
       else
          service = GroovyCodeAssistantService.get();
-      groovyCodeAssistant =
-         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
-            + "/ide/code-assistant/groovy/class-doc?fqn="), this);
+      factory =
+         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+            + "/ide/code-assistant/groovy/class-doc?fqn=");
+      groovyCodeAssistant = new GroovyCodeAssistant(service, factory, this);
 
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", IMAGES
@@ -127,7 +130,12 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      groovyCodeAssistant.setactiveFileHref(event.getFile().getId());
+      if (event.getFile() != null)
+      {
+         String projectId = event.getFile().getProject().getId();
+         groovyCodeAssistant.setActiveProjectId(projectId);
+         factory.setProjectId(projectId);
+      }
    }
 
 }

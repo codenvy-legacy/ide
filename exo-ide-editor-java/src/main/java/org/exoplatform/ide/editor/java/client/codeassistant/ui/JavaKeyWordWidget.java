@@ -45,7 +45,7 @@ public class JavaKeyWordWidget extends JavaTokenWidgetBase
     */
    public JavaKeyWordWidget(Token token)
    {
-      super(token, "");
+      super(token, "", "");
       grid = new Grid(1, 2);
       grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");

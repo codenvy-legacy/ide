@@ -28,6 +28,7 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.List;
 
@@ -45,14 +46,17 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
 
    protected String docContext;
 
+   protected String projectId;
+
    /**
     * @param token
     */
    @SuppressWarnings("unchecked")
-   public JavaTokenWidgetBase(Token token, String docContext)
+   public JavaTokenWidgetBase(Token token, String docContext, String projectId)
    {
       super(token);
       this.docContext = docContext;
+      this.projectId = projectId;
       if (token.hasProperty(TokenProperties.MODIFIERS))
       {
          TokenProperty mod = token.getProperty(TokenProperties.MODIFIERS);
@@ -128,7 +132,8 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
    public Widget getTokenDecription()
    {
       return new Frame(docContext + token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue()
-         + "." + getTokenValue());
+         + "." + getTokenValue() + "&projectid=" + projectId + "&vfsid="
+         + VirtualFileSystem.getInstance().getInfo().getId());
    }
 
 }

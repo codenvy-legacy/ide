@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.jcr.Node;
-import javax.jcr.ValueFactory;
-import javax.jcr.Workspace;
-
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.tools.DummySecurityContext;
@@ -43,7 +36,14 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.junit.Before;
+import org.junit.BeforeClass;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.jcr.Node;
+import javax.jcr.ValueFactory;
+import javax.jcr.Workspace;
 
 
 /**
@@ -59,40 +59,40 @@ public class Base
    
    public static final String REPO_NAME = "db1";
 
-   protected SessionImpl session;
+   protected static SessionImpl session;
 
-   protected RepositoryImpl repository;
+   protected static RepositoryImpl repository;
 
-   protected CredentialsImpl credentials;
+   protected static CredentialsImpl credentials;
 
-   protected Workspace workspace;
+   protected static Workspace workspace;
 
-   protected RepositoryService repositoryService;
+   protected static RepositoryService repositoryService;
 
-   protected Node root;
+   protected static Node root;
 
    protected PersistentDataManager dataManager;
 
-   protected ValueFactory valueFactory;
+   protected static ValueFactory valueFactory;
    
-   protected SessionProviderService sessionProviderService;
+   protected static SessionProviderService sessionProviderService;
 
-   protected StandaloneContainer container;
+   protected static StandaloneContainer container;
 
    public int maxBufferSize = 200 * 1024;
 
-   public ResourceBinder binder;
+   public static ResourceBinder binder;
 
-   public ResourceLauncher launcher;
+   public static ResourceLauncher launcher;
 
-   public int resourceNumber = 0;
+   public static int resourceNumber = 0;
    
-   protected DummySecurityContext adminSecurityContext;
+   protected static DummySecurityContext adminSecurityContext;
 
    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
    
-   @Before
-   public void setUp() throws Exception
+   @BeforeClass
+   public static void setUp() throws Exception
    {
       String containerConf = Base.class.getResource("/conf/standalone/test-configuration.xml").toString();
 

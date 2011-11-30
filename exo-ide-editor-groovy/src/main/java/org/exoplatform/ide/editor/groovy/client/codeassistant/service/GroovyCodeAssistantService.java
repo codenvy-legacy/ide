@@ -37,7 +37,7 @@ public class GroovyCodeAssistantService extends CodeAssistantService
     */
    public GroovyCodeAssistantService(String restServiceContext, Loader loader)
    {
-      super(restServiceContext, loader, "/ide/code-assistant/groovy/find?class=", // FIND_URL
+      super(restServiceContext, loader,
          "/ide/code-assistant/groovy/class-description?fqn=", //GET_CLASS_URL
          "/ide/code-assistant/groovy/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
          "/ide/code-assistant/groovy/find-by-type/" //FIND_TYPE

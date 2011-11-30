@@ -54,6 +54,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 
    private JavaCodeValidator javaCodeValidator;
 
+   private JavaTokenWidgetFactory factory;
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -64,11 +66,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Java Class",
-            "Java Class", "Create Java Class",
-            JavaClientBundle.INSTANCE.java(),
-            JavaClientBundle.INSTANCE.javaDisabled(),
-            MimeType.APPLICATION_JAVA));
+         new NewItemControl("File/New/New Java Class", "Java Class", "Create Java Class", JavaClientBundle.INSTANCE
+            .java(), JavaClientBundle.INSTANCE.javaDisabled(), MimeType.APPLICATION_JAVA));
 
       JavaClientBundle.INSTANCE.css().ensureInjected();
    }
@@ -85,9 +84,10 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       else
          service = JavaCodeAssistantService.get();
 
-      javaCodeAssistant =
-         new JavaCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
-            + "/ide/code-assistant/java/class-doc?fqn="), this);
+      factory =
+         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+            + "/ide/code-assistant/java/class-doc?fqn=");
+      javaCodeAssistant = new JavaCodeAssistant(service, factory, this);
 
       javaCodeValidator = new JavaCodeValidator(service, this);
 
@@ -134,9 +134,10 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    {
       if (event.getFile() != null && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
-         javaCodeAssistant.setactiveFileHref(event.getFile().getId());
-
-         javaCodeValidator.loadClassesFromProject(event.getFile().getId(), event.getFile().getProject().getId());
+         String projectId = event.getFile().getProject().getId();
+         javaCodeAssistant.setActiveProjectId(projectId);
+         factory.setProjectId(projectId);
+         javaCodeValidator.loadClassesFromProject(event.getFile().getId(), projectId);
       }
    }
 

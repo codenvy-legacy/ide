@@ -101,7 +101,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
    protected List<Token> keywords;
 
-   private String activeFileHref;
+   private String projectId;
 
    private CodeAssistantService service;
 
@@ -139,7 +139,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       this.editor = editor;
       try
       {
-         service.findClass(codeErrorList.get(0).getLineContent(), activeFileHref,
+         service.findClassesByPrefix(codeErrorList.get(0).getLineContent(), projectId,
             new AsyncRequestCallback<List<Token>>()
             {
 
@@ -187,7 +187,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
             return;
          }
 
-
          String subToken = lineContent.substring(0, editor.getCursorCol() - 1);
          afterToken = lineContent.substring(editor.getCursorCol() - 1);
 
@@ -230,7 +229,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                action = Action.ANNOTATION;
                beforeToken += "@";
                tokenToComplete = tokenToComplete.substring(1);
-               service.findType(Types.ANNOTATION, tokenToComplete, new AsyncRequestCallback<List<Token>>()
+               service.findType(Types.ANNOTATION, tokenToComplete, projectId, new AsyncRequestCallback<List<Token>>()
                {
 
                   @Override
@@ -248,7 +247,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                return;
             }
 
-            service.findClassesByPrefix(tokenToComplete, activeFileHref, new AsyncRequestCallback<List<Token>>()
+            service.findClassesByPrefix(tokenToComplete, projectId, new AsyncRequestCallback<List<Token>>()
             {
 
                @Override
@@ -301,7 +300,11 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       }
 
       curentFqn = currentToken.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
-
+      if (curentFqn == null)
+      {
+         openForm(new ArrayList<Token>(), factory, this);
+         return;
+      }
       getClassDescription();
    }
 
@@ -310,7 +313,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
     */
    protected void getClassDescription()
    {
-      service.getClassDescription(curentFqn, activeFileHref, new AsyncRequestCallback<JavaClass>()
+      service.getClassDescription(curentFqn, projectId, new AsyncRequestCallback<JavaClass>()
       {
 
          @Override
@@ -652,9 +655,9 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       return tokens;
    }
 
-   public void setactiveFileHref(String href)
+   public void setActiveProjectId(String projectId)
    {
-      activeFileHref = href;
+      this.projectId = projectId;
    }
 
 }

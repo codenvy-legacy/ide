@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.exoplatform.ide.codeassistant.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where;
-import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -91,34 +91,6 @@ public class RestCodeAssistantJava
    }
 
    /**
-    * Returns set of FQNs matched to Class name (means FQN end on {className})
-    * Example :
-    * if className = "String"
-    * set must content
-    * {
-    *  java.lang.String
-    *  java.lang.StringBuilder
-    *  java.lang.StringBuffer
-    *  java.lang.StringIndexOutOfBoundsException
-    *  java.util.StringTokenizer
-    *  ....
-    * }
-    * @param className the string for matching FQNs 
-    * @return
-    * @throws VirtualFileSystemException 
-    * @throws Exception 
-    * */
-   @GET
-   @Path("/find")
-   @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findFQNsByClassName(@Context UriInfo uriInfo, @QueryParam("class") String className,
-      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
-      VirtualFileSystemException
-   {
-      return codeAssistant.findFQNsByClassName(className, projectId, vfsId);
-   }
-
-   /**
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)
     * Example :
     * if prefix = "java.util.c"
@@ -146,7 +118,16 @@ public class RestCodeAssistantJava
       @QueryParam("where") String where, @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
-      return codeAssistant.findFQNsByPrefix(prefix, Where.valueOf(where.toUpperCase()), projectId, vfsId);
+      if(projectId == null)
+         throw new InvalidArgumentException("'projectid' parameter is null.");
+      
+      if ("className".equals(where))
+      {
+         return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
+      }
+
+      return codeAssistant.getTypesByFqnPrefix(prefix, projectId, vfsId);
+
    }
 
    /**
@@ -165,7 +146,9 @@ public class RestCodeAssistantJava
       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
-      return codeAssistant.findByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
+      if(projectId == null)
+         throw new InvalidArgumentException("'projectid' parameter is null.");
+      return codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
    }
 
    @GET
@@ -174,8 +157,10 @@ public class RestCodeAssistantJava
    public String getClassDoc(@QueryParam("fqn") String fqn, @QueryParam("projectid") String projectId,
       @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
+      if(projectId == null)
+         throw new InvalidArgumentException("'projectid' parameter is null.");
       return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
-         + codeAssistant.getClassDoc(fqn, projectId, vfsId) + "</body></html>";
+         + codeAssistant.getJavaDoc(fqn, projectId, vfsId) + "</body></html>";
    }
 
    /**
@@ -195,7 +180,9 @@ public class RestCodeAssistantJava
       @QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId) throws CodeAssistantException,
       VirtualFileSystemException
    {
-      return codeAssistant.findClassesInPackage(fileId, projectId, vfsId);
+      if(projectId == null)
+         throw new InvalidArgumentException("'projectid' parameter is null.");
+      return codeAssistant.getClassesFromProject(fileId, projectId, vfsId);
    }
 
 }

@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
  * Created by The eXo Platform SAS.
@@ -45,9 +46,9 @@ public class JavaClassTokenWidget extends JavaTokenWidgetBase
     * @param token
     * @param number
     */
-   public JavaClassTokenWidget(Token token, String restContext)
+   public JavaClassTokenWidget(Token token, String restContext, String projectId)
    {
-      super(token, restContext);
+      super(token, restContext, projectId);
       grid = new Grid(1, 3);
       grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
@@ -94,8 +95,8 @@ public class JavaClassTokenWidget extends JavaTokenWidgetBase
 
          case ANNOTATION :
             return new Image(JavaClientBundle.INSTANCE.annotationItem());
-            
-         case ENUM: 
+
+         case ENUM :
             return new Image(JavaClientBundle.INSTANCE.enumItem());
 
          case CLASS :
@@ -121,7 +122,8 @@ public class JavaClassTokenWidget extends JavaTokenWidgetBase
    @Override
    public Widget getTokenDecription()
    {
-      return new Frame(docContext + "/ide/code-assistant/groovy/class-doc?fqn=" + token.getProperty(TokenProperties.FQN));
+      return new Frame(docContext + token.getProperty(TokenProperties.FQN).isStringProperty().stringValue()
+         + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId());
    }
 
 }

@@ -53,6 +53,8 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
 
    private JspCodeAssistant jspCodeAssistant;
 
+   private JavaTokenWidgetFactory factory;
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -63,9 +65,8 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New JSP File", "JSP", "Create JSP",
-            JSPClientBundle.INSTANCE.jspFile(), JSPClientBundle.INSTANCE.jspFileDisabled(),
-            MimeType.APPLICATION_JSP));
+         new NewItemControl("File/New/New JSP File", "JSP", "Create JSP", JSPClientBundle.INSTANCE.jspFile(),
+            JSPClientBundle.INSTANCE.jspFileDisabled(), MimeType.APPLICATION_JSP));
    }
 
    /**
@@ -76,15 +77,14 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
    {
       CodeAssistantService service;
       if (JavaCodeAssistantService.get() == null)
-         service =
-            new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(),
-               event.getLoader());
+         service = new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
       else
          service = JavaCodeAssistantService.get();
 
-      jspCodeAssistant =
-         new JspCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
-            + "/ide/code-assistant/java/class-doc?fqn="), this);
+      factory =
+         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+            + "/ide/code-assistant/java/class-doc?fqn=");
+      jspCodeAssistant = new JspCodeAssistant(service, factory, this);
 
       IDE.getInstance()
          .addEditor(
@@ -94,19 +94,16 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
                "jsp",
                Images.INSTANCE.jsp(),
                true,
-               new CodeMirrorConfiguration().
-                  setGenericParsers("['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']").
-                  setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
-                     + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
-                     + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
-                  setParser(new JspParser()).
-                  setCanBeOutlined(true).
-                  setAutocompleteHelper(new JspAutocompleteHelper()).
-                  setCodeAssistant(jspCodeAssistant).
-                  setCodeValidator(new JspCodeValidator()).
-                  setCanHaveSeveralMimeTypes(true)
-            )
-         );
+               new CodeMirrorConfiguration()
+                  .setGenericParsers(
+                     "['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']")
+                  .setGenericStyles(
+                     "['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
+                        + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
+                        + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setParser(new JspParser())
+                  .setCanBeOutlined(true).setAutocompleteHelper(new JspAutocompleteHelper())
+                  .setCodeAssistant(jspCodeAssistant).setCodeValidator(new JspCodeValidator())
+                  .setCanHaveSeveralMimeTypes(true)));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JSP, new HtmlOutlineItemCreator());
    }
@@ -142,7 +139,11 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
-         jspCodeAssistant.setactiveFileHref(event.getFile().getId());
+      {
+         String projectId = event.getFile().getProject().getId();
+         jspCodeAssistant.setActiveProjectId(projectId);
+         factory.setProjectId(projectId);
+      }
    }
 
 }

@@ -40,24 +40,25 @@ public class JavaVariableWidget extends JavaTokenWidgetBase
 {
 
    private Grid grid;
-   
+
    /**
     * @param token
     * @param restContext
     */
-   public JavaVariableWidget(Token token, String restContext)
+   public JavaVariableWidget(Token token)
    {
-      super(token, restContext);
+      super(token, "", "");
       grid = new Grid(1, 2);
       grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
       Image i = new Image(JavaClientBundle.INSTANCE.variable());
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      String name = token.getName() + ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+      String name =
+         token.getName() + ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
       Label nameLabel = new Label(name, false);
       grid.setWidget(0, 1, nameLabel);
-      
+
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
@@ -75,14 +76,14 @@ public class JavaVariableWidget extends JavaTokenWidgetBase
    {
       return token.getName();
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.java.client.codeassistant.ui.JavaTokenWidgetBase.module.groovy.codeassistant.ui.GroovyTokenWidgetBase#getTokenDecription()
     */
    @Override
    public Widget getTokenDecription()
    {
-      if(token.hasProperty(TokenProperties.FULL_TEXT))
+      if (token.hasProperty(TokenProperties.FULL_TEXT))
       {
          Widget w = new SimplePanel();
          w.getElement().setInnerHTML(token.getProperty(TokenProperties.FULL_TEXT).isStringProperty().stringValue());

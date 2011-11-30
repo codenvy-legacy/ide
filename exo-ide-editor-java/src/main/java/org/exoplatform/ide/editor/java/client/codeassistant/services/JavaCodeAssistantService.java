@@ -49,7 +49,7 @@ public class JavaCodeAssistantService extends CodeAssistantService
    
    public JavaCodeAssistantService(String restServiceContext, Loader loader)
    {
-      super(restServiceContext, loader, "/ide/code-assistant/java/find?class=", // FIND_URL
+      super(restServiceContext, loader,
          "/ide/code-assistant/java/class-description?fqn=", //GET_CLASS_URL
          "/ide/code-assistant/java/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
          "/ide/code-assistant/java/find-by-type/"

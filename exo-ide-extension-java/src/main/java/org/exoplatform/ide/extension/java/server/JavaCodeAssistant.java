@@ -18,13 +18,16 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.exoplatform.ide.codeassistant.api.CodeAssistant;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where;
-import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import com.thoughtworks.qdox.model.JavaClass;
+
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.jvm.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderVfs;
+import org.exoplatform.ide.extension.java.server.parser.Util;
+import org.exoplatform.ide.extension.java.server.parser.VfsClassLibrary;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -33,6 +36,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -46,7 +50,7 @@ import java.util.List;
  * @version ${Id}:  Nov 22, 2011 4:53:15 PM evgen $
  *
  */
-public class JavaCodeAssistant extends CodeAssistant
+public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.CodeAssistant
 {
 
    /**
@@ -66,46 +70,39 @@ public class JavaCodeAssistant extends CodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findClassByFQN(java.lang.String, java.lang.String, java.lang.String)
+    * @param projectId
+    * @param vfsId
+    * @return
+    * @throws VirtualFileSystemException
+    * @throws ItemNotFoundException
+    * @throws PermissionDeniedException
+    * @throws CodeAssistantException
     */
-   @Override
-   protected TypeInfo findClassByFQN(String fqn, String projectId, String vfsId)
+   private JavaDocBuilderVfs parseProject(String projectId, String vfsId) throws VirtualFileSystemException,
+      ItemNotFoundException, PermissionDeniedException, CodeAssistantException
    {
-      // TODO Auto-generated method stub
-      return null;
-   }
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByClassNameInProject(java.lang.String, java.lang.String, java.lang.String)
-    */
-   @Override
-   protected List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String projectId, String vfsId)
-      throws CodeAssistantException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+      Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+      Project project = null;
+      if (item instanceof Project)
+         project = (Project)item;
+      else
+         throw new CodeAssistantException(400, "'projectId' is not project Id");
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefixInProject(java.lang.String, org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where, java.lang.String, java.lang.String)
-    */
-   @Override
-   protected List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, Where where, String projectId, String vfsId)
-      throws CodeAssistantException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+      String sourcePath = null;
+      if (project.hasProperty("sourceFolder"))
+         sourcePath = (String)project.getPropertyValue("sourceFolder");
+      else
+         sourcePath = DEFAULT_SOURCE_FOLDER;
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findByTypeInProject(org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType, java.lang.String, java.lang.String, java.lang.String)
-    */
-   @Override
-   protected List<ShortTypeInfo> findByTypeInProject(JavaType type, String prefix, String projectId, String vfsId)
-      throws CodeAssistantException
-   {
-      // TODO Auto-generated method stub
-      return null;
+      Item sourceFolder = vfs.getItemByPath(project.getPath() + "/" + sourcePath, null, PropertyFilter.NONE_FILTER);
+      if (sourceFolder.getItemType() != ItemType.FOLDER)
+         throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
+
+      JavaDocBuilderVfs builder = new JavaDocBuilderVfs(vfs, new VfsClassLibrary(vfs));
+      builder.addSourceTree((Folder)sourceFolder);
+      return builder;
    }
 
    /**
@@ -114,38 +111,8 @@ public class JavaCodeAssistant extends CodeAssistant
    @Override
    protected String getJavaDocFromProject(String fqn, String projectId, String vfsId) throws CodeAssistantException
    {
+      //TODO
       throw new CodeAssistantException(404, "Not found");
-   }
-
-   /**
-    * @throws VirtualFileSystemException 
-    * @throws PermissionDeniedException 
-    * @throws ItemNotFoundException 
-    * @throws CodeAssistantException 
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findClassesInPackage(java.lang.String, java.lang.String, java.lang.String)
-    */
-   @Override
-   public List<ShortTypeInfo> findClassesInPackage(String fileId, String projectId, String vfsId)
-      throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException, CodeAssistantException
-   {
-      List<ShortTypeInfo> classNames = null;
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      Item item = vfs.getItem(fileId, PropertyFilter.ALL_FILTER);
-      if (item.getItemType() != ItemType.FILE)
-         throw new InvalidArgumentException("Unable find Classes. Item " + item.getName() + " is not a file. ");
-
-      Item p = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-
-      Project project = null;
-      if (p instanceof Project)
-         project = (Project)p;
-      else
-         throw new InvalidArgumentException("Unable find Classes. Item " + p.getName() + " is not a project. ");
-
-      classNames = findClassesInPackage((File)item, project, vfs);
-
-      return classNames;
-
    }
 
    /**
@@ -190,7 +157,6 @@ public class JavaCodeAssistant extends CodeAssistant
     * @return
     * @throws CodeAssistantException
     * @throws VirtualFileSystemException  
-    * TODO move this method to Java project code assistant
     */
    private List<ShortTypeInfo> findClassesInPackage(File file, Project project, VirtualFileSystem vfs)
       throws CodeAssistantException, VirtualFileSystemException
@@ -208,6 +174,102 @@ public class JavaCodeAssistant extends CodeAssistant
          }
       }
       return classes;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassByFqnFromProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException
+   {
+      JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
+
+      JavaClass clazz = builder.getClassByName(fqn);
+
+      if (clazz == null)
+         return null;
+
+      return Util.convert(clazz);
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypesByNamePrefixFromProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
+      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+      for (JavaClass clazz : builder.getClasses())
+      {
+         if (clazz.getName().startsWith(className))
+            types.add(Util.toShortTypeInfo(clazz));
+      }
+      return types;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypesByFqnPrefixInProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
+      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+      for (JavaClass clazz : builder.getClasses())
+      {
+         if (clazz.getFullyQualifiedName().startsWith(prefix))
+            types.add(Util.toShortTypeInfo(clazz));
+      }
+      return types;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getByTypeFromProject(org.exoplatform.ide.codeassistant.jvm.JavaType, java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
+      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+      for (JavaClass clazz : builder.getClasses())
+      {
+         if (type == Util.getType(clazz))
+         {
+            types.add(Util.toShortTypeInfo(clazz));
+         }
+      }
+      return types;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassesFromProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   public List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException
+   {
+      List<ShortTypeInfo> classNames = null;
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      Item item = vfs.getItem(fileId, PropertyFilter.ALL_FILTER);
+      if (item.getItemType() != ItemType.FILE)
+         throw new InvalidArgumentException("Unable find Classes. Item " + item.getName() + " is not a file. ");
+
+      Item p = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+
+      Project project = null;
+      if (p instanceof Project)
+         project = (Project)p;
+      else
+         throw new InvalidArgumentException("Unable find Classes. Item " + p.getName() + " is not a project. ");
+
+      classNames = findClassesInPackage((File)item, project, vfs);
+
+      return classNames;
    }
 
 }
