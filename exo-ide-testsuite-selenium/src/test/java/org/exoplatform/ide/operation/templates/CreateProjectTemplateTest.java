@@ -22,6 +22,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.core.project.CreateProjectTemplate;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -41,6 +42,7 @@ public class CreateProjectTemplateTest extends BaseTest
 
    private String gadgetFileName = "SampleGadget.xml";
 
+   @Ignore
    @Test
    public void testCreateProjectTemplate() throws Exception
    {
@@ -155,6 +157,7 @@ public class CreateProjectTemplateTest extends BaseTest
       IDE.PROJECT.TEMPLATE.clickCancelButton();
    }
 
+   @Ignore
    @Test
    public void testEnablingDisablingButtons() throws Exception
    {
