@@ -34,32 +34,31 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class AskDialog extends AbstractTestModule
 {
 
-   private interface Locators
-   {
-      String VIEW_ID = "exoAskDialog";
+   private static final String VIEW_ID = "exoAskDialog";
 
-      String ASK_TITLE_SELECTOR = "div#" + VIEW_ID + " div.Caption>span";
+   private static final String ASK_TITLE_SELECTOR = "div#" + VIEW_ID + " div.Caption>span";
 
-      String QUESTION_SELECTOR = "div#" + VIEW_ID + " div.gwt-Label";
+   private static final String QUESTION_SELECTOR = "div#" + VIEW_ID + " div.gwt-Label";
 
-      String YES_BUTTON_ID = "YesButton";
+   private static final String YES_BUTTON_ID = "YesButton";
 
-      String NO_BUTTON_ID = "NoButton";
-   }
+   private static final String NO_BUTTON_ID = "NoButton";
 
-   @FindBy(id = Locators.VIEW_ID)
+   private static final String VIEW_LOCATOR = "//div[@view-id='ideAskModalView']";
+
+   @FindBy(xpath = VIEW_LOCATOR)
    private WebElement view;
 
-   @FindBy(css = Locators.ASK_TITLE_SELECTOR)
+   @FindBy(css = ASK_TITLE_SELECTOR)
    private WebElement askTitle;
 
-   @FindBy(css = Locators.QUESTION_SELECTOR)
+   @FindBy(css = QUESTION_SELECTOR)
    private WebElement question;
 
-   @FindBy(id = Locators.YES_BUTTON_ID)
+   @FindBy(id = YES_BUTTON_ID)
    private WebElement yesButton;
 
-   @FindBy(id = Locators.NO_BUTTON_ID)
+   @FindBy(id = NO_BUTTON_ID)
    private WebElement noButton;
 
    /**
@@ -87,21 +86,21 @@ public class AskDialog extends AbstractTestModule
    public void waitClosed() throws Exception
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
          {
-            try
+            @Override
+            public Boolean apply(WebDriver input)
             {
-               input.findElement(By.id(Locators.VIEW_ID));
-               return false;
+               try
+               {
+                  input.findElement(By.xpath(VIEW_LOCATOR));
+                  return false;
+               }
+               catch (NoSuchElementException e)
+               {
+                  return true;
+               }
             }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
-         }
-      });
+         });
    }
 
    /**
