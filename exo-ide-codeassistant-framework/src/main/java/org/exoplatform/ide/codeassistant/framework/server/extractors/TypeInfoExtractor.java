@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.extractors;
 
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
-import org.exoplatform.ide.codeassistant.api.FieldInfo;
-import org.exoplatform.ide.codeassistant.api.MethodInfo;
-import org.exoplatform.ide.codeassistant.api.RoutineInfo;
-import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -39,6 +38,10 @@ import java.lang.reflect.Method;
 */
 public class TypeInfoExtractor
 {
+   
+   public enum JavaType {
+      CLASS, INTERFACE, ANNOTATION, ENUM
+   }
    /**
     * @param clazz
     * @return

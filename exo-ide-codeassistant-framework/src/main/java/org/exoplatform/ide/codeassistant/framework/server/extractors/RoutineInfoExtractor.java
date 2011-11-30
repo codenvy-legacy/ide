@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.extractors;
 
-import org.exoplatform.ide.codeassistant.api.MethodInfo;
-import org.exoplatform.ide.codeassistant.api.RoutineInfo;
+import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

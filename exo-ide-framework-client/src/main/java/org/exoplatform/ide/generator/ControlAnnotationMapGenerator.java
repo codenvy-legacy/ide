@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
  */
 public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
 {
-   public static final String className = org.exoplatform.gwtframework.ui.client.command.Control.class
+   public static final String CLASS_NAME = org.exoplatform.gwtframework.ui.client.command.Control.class
       .getName();
 
    /**
@@ -46,7 +46,7 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
       writer.println();
       writer.write("{");
       writer.println();
-      JClassType[] subTypes = getSubTypes(className, context);
+      JClassType[] subTypes = getSubTypes(CLASS_NAME, context);
       if (subTypes != null)
       {
          writer.write("List<String> values;");

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.framework.settings.event;
 
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 
 import com.google.gwt.event.shared.GwtEvent;

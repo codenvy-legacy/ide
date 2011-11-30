@@ -39,7 +39,7 @@ import javax.jcr.version.VersionException;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.ClassNamesExtractor;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry;

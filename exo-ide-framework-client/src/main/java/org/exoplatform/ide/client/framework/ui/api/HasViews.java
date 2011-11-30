@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
  * Created by The eXo Platform SAS .

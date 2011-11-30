@@ -89,7 +89,7 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
    */
   protected String getParametersList(TokenBeenImpl token)
   {
-     String parametersDescription = "(";
+     StringBuffer parametersDescription = new StringBuffer("(");
 
      if (token.getParameters() != null && token.getParameters().size() > 0)
      {
@@ -101,14 +101,14 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
            TokenBeenImpl parameter = parameters.get(i);
            if (i > 0)
            {
-              parametersDescription += ", ";
+              parametersDescription.append(", ");
            }
            
-           parametersDescription += "<span class='item-parameter'>" + StringEscapeUtils.htmlEncode(parameter.getElementType()) + "</span>";
+           parametersDescription.append("<span class='item-parameter'>").append(StringEscapeUtils.htmlEncode(parameter.getElementType())).append("</span>");
         }
      }
-
-     return parametersDescription + ")";
+     parametersDescription.append(")");
+     return parametersDescription.toString();
   }
   
   /**
@@ -202,15 +202,14 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
   {
      if (token.getAnnotations() != null && token.getAnnotations().size() > 0)
      {
-        String title = "";
+        StringBuffer title = new StringBuffer();
 
         for (TokenBeenImpl annotation : token.getAnnotations())
         {
-           title += annotation.getName() + "; ";
+           title.append(annotation.getName()).append("; ");
         }
-
         // replace all '"' on HTML Entity "&#34;"
-        return StringEscapeUtils.htmlEncode(title);
+        return StringEscapeUtils.htmlEncode(title.toString());
      }
 
      return "";

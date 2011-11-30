@@ -16,10 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.api;
+package org.exoplatform.ide.codeassistant.jvm;
 
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
@@ -59,11 +57,11 @@ public abstract class CodeAssistant
    public TypeInfo getClassByFQN(String fqn, String projectId, String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
-      TypeInfo clazz = storage.getClassByFQN(fqn);
+      TypeInfo clazz = storage.getTypeByFqn(fqn);
       if (clazz != null)
          return clazz;
       else
-         return findClassByFQN(fqn, projectId, vfsId);
+         return getClassByFqnFromProject(fqn, projectId, vfsId);
    }
 
    /**
@@ -74,8 +72,8 @@ public abstract class CodeAssistant
     * @param vfsId Id of VirtualFileSystem
     * @return {@link TypeInfo} of null if JavaType not found.
     */
-   protected abstract TypeInfo findClassByFQN(String fqn, String projectId, String vfsId)
-      throws VirtualFileSystemException;
+   protected abstract TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException;
 
    /**
     * Returns the Class object associated with the class or interface with the given string name.
@@ -86,15 +84,15 @@ public abstract class CodeAssistant
     * @throws CodeAssistantException
     * @throws VirtualFileSystemException 
     */
-   public List<ShortTypeInfo> findFQNsByClassName(String className, String projectId, String vfsId)
+   public List<ShortTypeInfo> getTypesByNamePrefix(String className, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
-      List<ShortTypeInfo> list = storage.findFQNsByClassName(className);
+      List<ShortTypeInfo> list = storage.getTypesByNamePrefix(className);
       if (list != null)
          result.addAll(list);
 
-      list = findFQNsByClassNameInProject(className, projectId, vfsId);
+      list = getTypesByNamePrefixFromProject(className, projectId, vfsId);
       if (list != null)
          result.addAll(list);
       return result;
@@ -108,7 +106,7 @@ public abstract class CodeAssistant
     * @return list of {@link ShortTypeInfo}
     * @throws CodeAssistantException
     */
-   protected abstract List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String projectId, String vfsId)
+   protected abstract List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException;
 
    /**
@@ -137,15 +135,15 @@ public abstract class CodeAssistant
     * @return
     * @throws CodeAssistantException
     */
-   public List<ShortTypeInfo> findFQNsByPrefix(String prefix, Where where, String projectId, String vfsId)
+   public List<ShortTypeInfo> getTypesByFqnPrefix(String prefix, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
-      List<ShortTypeInfo> list = storage.findFQNsByPrefix(prefix, where);
+      List<ShortTypeInfo> list = storage.getTypesByFqnPrefix(prefix);
       if (list != null)
          result.addAll(list);
 
-      list = findFQNsByPrefixInProject(prefix, where, projectId, vfsId);
+      list = getTypesByFqnPrefixInProject(prefix, projectId, vfsId);
       if (list != null)
          result.addAll(list);
       return result;
@@ -160,8 +158,8 @@ public abstract class CodeAssistant
     * @return
     * @throws CodeAssistantException
     */
-   protected abstract List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, Where where, String projectId,
-      String vfsId) throws CodeAssistantException, VirtualFileSystemException;
+   protected abstract List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException;
 
    /**
     * Find all classes or annotations or interfaces
@@ -171,17 +169,34 @@ public abstract class CodeAssistant
     * @return Returns list of FQNs matched to class type
     * @throws CodeAssistantException
     */
-   public List<ShortTypeInfo> findByType(JavaType type, String prefix, String projectId, String vfsId)
+   public List<ShortTypeInfo> getByType(JavaType type, String prefix, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
-      List<ShortTypeInfo> list = storage.findByType(type, prefix);
-      if (list != null)
-         result.addAll(list);
-
-      list = findByTypeInProject(type, prefix, projectId, vfsId);
-      if (list != null)
-         result.addAll(list);
+      switch (type)
+      {
+         case INTERFACE :
+            List<ShortTypeInfo> intefaces = storage.getIntefaces(prefix);
+            if (intefaces != null)
+               result.addAll(intefaces);
+            break;
+         case ANNOTATION :
+            List<ShortTypeInfo> annotations = storage.getAnnotations(prefix);
+            if (annotations != null)
+               result.addAll(annotations);
+            break;
+         case CLASS :
+         case ENUM :
+            List<ShortTypeInfo> classes = storage.getClasses(prefix);
+            if (classes != null)
+               result.addAll(classes);
+            break;
+         default :
+            break;
+      }
+      List<ShortTypeInfo> tmp = getByTypeFromProject(type, prefix, projectId, vfsId);
+      if (tmp != null)
+         result.addAll(tmp);
       return result;
    }
 
@@ -195,7 +210,7 @@ public abstract class CodeAssistant
     * @return Returns list of FQNs matched to class type
     * @throws CodeAssistantException
     */
-   protected abstract List<ShortTypeInfo> findByTypeInProject(JavaType type, String prefix, String projectId,
+   protected abstract List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId,
       String vfsId) throws CodeAssistantException, VirtualFileSystemException;
 
    /**
@@ -204,12 +219,12 @@ public abstract class CodeAssistant
     * @return string JavaDoc
     * @throws CodeAssistantException
     */
-   public String getClassDoc(String fqn, String projectId, String vfsId) throws CodeAssistantException,
+   public String getJavaDoc(String fqn, String projectId, String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
       try
       {
-         return storage.getClassDoc(fqn);
+         return storage.getJavaDoc(fqn);
       }
       catch (CodeAssistantException e)
       {
@@ -236,6 +251,6 @@ public abstract class CodeAssistant
     * @throws VirtualFileSystemException
     * @throws CodeAssistantException
     */
-   public abstract List<ShortTypeInfo> findClassesInPackage(String fileId, String projectId, String vfsId)
+   public abstract List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
       throws VirtualFileSystemException, CodeAssistantException;
 }

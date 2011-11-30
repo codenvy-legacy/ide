@@ -77,7 +77,7 @@ public class ApplicationSettings
          return 0;
       }
 
-      return new Integer((String)values.get(key));
+      return Integer.valueOf((String)values.get(key));
    }
 
    public Boolean getValueAsBoolean(String key)

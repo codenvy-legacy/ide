@@ -17,9 +17,21 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.codeassistant.api;
+package org.exoplatform.ide.codeassistant.jvm;
 
 /**
+ * Represent information about class field. 
+ * Can be transform to JSON.
+ * Example of JSON:
+ * <code>
+ * {
+ * "declaringClass": "java.lang.String",
+ * "name": "CASE_INSENSITIVE_ORDER",
+ * "modifiers": 25,
+ * "type": "Comparator"
+ * }
+ * </code> 
+ * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
@@ -27,8 +39,15 @@ package org.exoplatform.ide.codeassistant.api;
 public class FieldInfo extends Member
 {
    
+   /**
+    * Short Class Name 
+    * <code>Comparator</code> 
+    */
    private String type;
    
+   /**
+    * Full Qualified Class Name where field declared 
+    */
    private String declaringClass; 
 
    public FieldInfo(String type, Integer modifiers, String name, String declaringClass)

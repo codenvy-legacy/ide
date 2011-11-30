@@ -22,10 +22,10 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage;
 import org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
@@ -73,7 +73,7 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
     * @see org.exoplatform.ide.codeassistant.api.CodeAssistantStorage#getClassByFQN(java.lang.String)
     */
    @Override
-   public TypeInfo getClassByFQN(String fqn) throws CodeAssistantException
+   public TypeInfo getTypeByFqn(String fqn) throws CodeAssistantException
    {
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:fqn='" + fqn + "'";
       VirtualFileSystem vfs = getVfs(wsClassStorage);
@@ -120,7 +120,7 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
     * @see org.exoplatform.ide.codeassistant.api.CodeAssistantStorage#findFQNsByClassName(java.lang.String)
     */
    @Override
-   public List<ShortTypeInfo> findFQNsByClassName(String className) throws CodeAssistantException
+   public List<ShortTypeInfo> getTypesByNamePrefix(String className) throws CodeAssistantException
    {
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:className='" + className + "'";
@@ -178,35 +178,7 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
       return info;
    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistantStorage#findFQNsByPrefix(java.lang.String, org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.Where)
-    */
-   @Override
-   public List<ShortTypeInfo> findFQNsByPrefix(String prefix, Where where) throws CodeAssistantException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistantStorage#findByType(org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType, java.lang.String)
-    */
-   @Override
-   public List<ShortTypeInfo> findByType(JavaType type, String prefix) throws CodeAssistantException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistantStorage#getClassDoc(java.lang.String)
-    */
-   @Override
-   public String getClassDoc(String fqn) throws CodeAssistantException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+  
 
    private VirtualFileSystem getVfs(String id) throws CodeAssistantException
    {
@@ -218,6 +190,36 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
       {
          throw new CodeAssistantException(500, e.getMessage());
       }
+   }
+
+   @Override
+   public List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix) throws CodeAssistantException
+   {
+      return null;
+   }
+
+   @Override
+   public List<ShortTypeInfo> getAnnotations(String prefix) throws CodeAssistantException
+   {
+      return null;
+   }
+
+   @Override
+   public List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException
+   {
+      return null;
+   }
+
+   @Override
+   public List<ShortTypeInfo> getClasses(String prefix) throws CodeAssistantException
+   {
+      return null;
+   }
+
+   @Override
+   public String getJavaDoc(String fqn) throws CodeAssistantException
+   {
+      return null;
    }
 
 }

@@ -25,10 +25,10 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.ide.codeassistant.api.FieldInfo;
-import org.exoplatform.ide.codeassistant.api.MethodInfo;
-import org.exoplatform.ide.codeassistant.api.TypeInfo;
-import org.exoplatform.ide.codeassistant.api.CodeAssistantStorage.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 
 /**

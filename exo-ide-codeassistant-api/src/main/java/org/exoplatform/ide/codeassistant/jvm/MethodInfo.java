@@ -16,9 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.api;
+package org.exoplatform.ide.codeassistant.jvm;
 
 /**
+ * Represent information about class method. 
+ * Can be transform to JSON.
+ * <code>
+ *  {
+ *     "generic": "public boolean java.lang.String.equals(java.lang.Object)",
+ *     "genericExceptionTypes": [],
+ *     "declaringClass": "java.lang.String",
+ *     "name": "equals",
+ *     "genericParameterTypes": "(java.lang.Object)",
+ *     "modifiers": 1,
+ *     "returnType": "boolean",
+ *     "parameterTypes": "(Object)",
+ *     "genericReturnType": "boolean"
+ *   }
+ * </code>
+ * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
@@ -26,8 +42,16 @@ package org.exoplatform.ide.codeassistant.api;
 public class MethodInfo extends RoutineInfo
 {
 
+   /**
+    * Full Qualified Class Name that method return
+    * <code>java.lang.String</code>
+    */
    private String genericReturnType;
    
+   /**
+    * Short Class Name that method return 
+    * <code>String</code>
+    */
    private String returnType;
 
    public MethodInfo()

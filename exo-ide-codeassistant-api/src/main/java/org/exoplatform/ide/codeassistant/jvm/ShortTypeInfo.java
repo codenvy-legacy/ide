@@ -16,21 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.api;
-
+package org.exoplatform.ide.codeassistant.jvm;
 
 /**
+ * Short information about class or interface.
+ * Contain fqn, short name, modifiers 
+ * Example :
+ *  {
+ *   "name": "String",
+ *   "qualifiedName": "java.lang.String",
+ *   "modifiers": 0,
+ *   "type": "CLASS"
+ * } 
+ * 
+ * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
 public class ShortTypeInfo extends Member
 {
-   
+
+   /**
+    *  Full Qualified Class Name
+    */
    private String qualifiedName;
-   
+
+   /**
+    * Means this is CLASS, INTERFACE or ANNOTATION  
+    */
    private String type;
-   
+
    public ShortTypeInfo()
    {
    }
@@ -41,31 +57,25 @@ public class ShortTypeInfo extends Member
       this.qualifiedName = qualifiedName;
       this.type = type;
    }
-   
+
    public void setQualifiedName(String qualifiedName)
    {
       this.qualifiedName = qualifiedName;
    }
-   
+
    public String getQualifiedName()
    {
       return qualifiedName;
    }
-   
+
    public String getType()
    {
       return type;
    }
-   
+
    public void setType(String type)
    {
       this.type = type;
    }
-   
-   
-   
-   
-   
-   
 
 }

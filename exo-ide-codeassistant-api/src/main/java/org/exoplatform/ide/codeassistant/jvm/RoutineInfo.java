@@ -16,8 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.api;
-
+package org.exoplatform.ide.codeassistant.jvm;
 
 /**
  * Created by The eXo Platform SAS.
@@ -26,14 +25,35 @@ package org.exoplatform.ide.codeassistant.api;
 */
 public class RoutineInfo extends Member
 {
+   /**
+    * Array FQN of exceptions throws by method 
+    */
    private String[] genericExceptionTypes;
 
+   /**
+    * Full Qualified Class Name of parameter
+    * <code>(java.lang.Object)</code>
+    * (not use for now)
+    */
    private String genericParameterTypes;
-   
+
+   /**
+    * Short Class name of Parameter
+    * <code>(Object)</code> 
+    */
    private String parameterTypes;
 
+   /**
+    * Method declaration like:
+    * <code>public boolean java.lang.String.equals(java.lang.Object)</code>
+    */
    private String generic;
 
+   /**
+    * Full Qualified Class Name where method declared 
+    * Example: 
+    * method equals() declared in java.lang.String
+    */
    private String declaringClass;
 
    public RoutineInfo()
@@ -41,7 +61,7 @@ public class RoutineInfo extends Member
    }
 
    public RoutineInfo(Integer modifiers, String name, String[] genericExceptionTypes, String genericParameterTypes,
-String parameterTypes, String generic, String declaringClass)
+      String parameterTypes, String generic, String declaringClass)
    {
       super(modifiers, name);
       this.genericExceptionTypes = genericExceptionTypes;
@@ -50,7 +70,6 @@ String parameterTypes, String generic, String declaringClass)
       this.generic = generic;
       this.declaringClass = declaringClass;
    }
-
 
    public String getGenericParameterTypes()
    {
@@ -91,12 +110,12 @@ String parameterTypes, String generic, String declaringClass)
    {
       this.genericExceptionTypes = genericExceptionTypes;
    }
-   
+
    public String getParameterTypes()
    {
       return parameterTypes;
    }
-   
+
    public void setParameterTypes(String parameterTypes)
    {
       this.parameterTypes = parameterTypes;
