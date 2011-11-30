@@ -103,7 +103,7 @@ public class IDE
 
    public AskForValueDialog ASK_FOR_VALUE_DIALOG;
 
-   public InformationDialog INFORMATION_DIALOG = new InformationDialog();
+   public InformationDialog INFORMATION_DIALOG;
 
    public Statusbar STATUSBAR;
 
@@ -186,6 +186,7 @@ public class IDE
       TEMPLATES = PageFactory.initElements(driver, Templates.class);
       WARNING_DIALOG = PageFactory.initElements(driver, WarningDialog.class);
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
+      INFORMATION_DIALOG = PageFactory.initElements(driver, InformationDialog.class);
    }
 
    public Selenium getSelenium()

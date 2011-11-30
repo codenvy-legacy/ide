@@ -35,22 +35,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class InformationDialog extends AbstractTestModule
 {
-   private interface Locators
-   {
-      String VIEW_ID = "exoInfoDialog";
+   private static final String VIEW_ID = "ideInformationModalView";
+   
+   private static final String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
-      String OK_BUTTON_ID = "OkButton";
+   private static final String OK_BUTTON_ID = "OkButton";
 
-      String MESSAGE_SELECTOR = "div#" + VIEW_ID + " div.gwt-Label";
-   }
+   private static final String MESSAGE_SELECTOR = "div[view-id=" + VIEW_ID + "] div.gwt-Label";
 
-   @FindBy(id = Locators.VIEW_ID)
+   @FindBy(xpath = VIEW_LOCATOR)
    private WebElement view;
 
-   @FindBy(id = Locators.OK_BUTTON_ID)
+   @FindBy(id = OK_BUTTON_ID)
    private WebElement okButton;
 
-   @FindBy(css = Locators.MESSAGE_SELECTOR)
+   @FindBy(css = MESSAGE_SELECTOR)
    private WebElement message;
 
    /**
@@ -76,7 +75,7 @@ public class InformationDialog extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -99,7 +98,7 @@ public class InformationDialog extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return view != null && view.isDisplayed() && message.equals(getMessage());
+            return view != null && view.isDisplayed() && message.equals(getMessage().trim());
          }
       });
    }
@@ -118,7 +117,7 @@ public class InformationDialog extends AbstractTestModule
          {
             try
             {
-               input.findElement(By.id(Locators.VIEW_ID));
+               input.findElement(By.id(VIEW_ID));
                return false;
             }
             catch (NoSuchElementException e)

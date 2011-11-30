@@ -25,13 +25,14 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -42,19 +43,22 @@ import java.io.IOException;
  */
 public class SaveFileAsTemplateTest extends BaseTest
 {
+   private final static String PROJECT = SaveFileAsTemplateTest.class.getSimpleName();
+   
    private static final String FILE_NAME = "RestServiceTemplate.groovy";
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    private static final String REST_SERVICE_TEMPLATE_NAME = "test REST template";
    
    private static final String REST_SERVICE_TEMPLATE_DESCRIPTION = "test REST Service template description";
    
-   private static final String REST_SERVICE_FILE_NAME = "TestRestServiceFile";
+   private static final String REST_SERVICE_FILE_NAME = "abc";
    
    private static final String TEXT = "// test groovy file template";
    
-   private static final String FOLDER_NAME = SaveFileAsTemplateTest.class.getSimpleName();
+   /**
+    * File, where users templates are stored.
+    */
+   public static final String FILE_TEMPLATES_STORE = ENTRY_POINT_URL + WS_NAME_2 + "/ide-home/templates/fileTemplates";
    
    @BeforeClass
    public static void setUp()
@@ -62,8 +66,9 @@ public class SaveFileAsTemplateTest extends BaseTest
       String filePath ="src/test/resources/org/exoplatform/ide/operation/templates/RestServiceTemplate.groovy";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
       catch (IOException e)
       {
@@ -76,7 +81,8 @@ public class SaveFileAsTemplateTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(FILE_TEMPLATES_STORE);
       }
       catch (IOException e)
       {
@@ -84,26 +90,24 @@ public class SaveFileAsTemplateTest extends BaseTest
       }
    }
 
-   //IDE-62:Save File as Template
    @Test
    public void testSaveFileAsTemplate() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      
       //-------- 1 ----------
       //open file with text
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
       
       //--------- 2 --------
       //Click on "File->Save As Template" top menu item, 
       //set "Name" field on "test REST template", 
       //"Description" field on "test REST Service template description", and then click on "Save" button.
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE));
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
       IDE.SAVE_AS_TEMPLATE.waitOpened();
       // check "Save file as template" dialog window
@@ -137,24 +141,20 @@ public class SaveFileAsTemplateTest extends BaseTest
       // check "Create file" dialog window
       assertTrue(IDE.TEMPLATES.isOpened());
       IDE.TEMPLATES.selectTemplate(REST_SERVICE_TEMPLATE_NAME);
+      IDE.TEMPLATES.waitForNameFieldEnabled();
       
       //------------ 4 ----------
       //Change "File Name.groovy" field text on "Test Groovy File.groovy" name, click on "Create" button.
       IDE.TEMPLATES.setFileName(REST_SERVICE_FILE_NAME);
       //click Create button
       IDE.TEMPLATES.clickCreateButton();
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.TEMPLATES.waitClosed();
+      IDE.EDITOR.waitTabPresent(2);
       //there should be new tab with title "Test Groovy File.groovy", 
       //first line "// test groovy file template" in content and with "Groovy" 
       //highlighting opened in the Content Panel.
-      assertEquals(REST_SERVICE_FILE_NAME + " *",IDE.EDITOR.getTabTitle(1));
+      assertEquals(REST_SERVICE_FILE_NAME + " *", IDE.EDITOR.getTabTitle(2));
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(TEXT));
-      
-      //------------ 5 ----------
-      //Close files "Test File.groovy" and "Test Groovy File.groovy".
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
-     IDE.EDITOR.closeTabIgnoringChanges(1);     
-     IDE.EDITOR.closeFile(0);
    }
    
 }

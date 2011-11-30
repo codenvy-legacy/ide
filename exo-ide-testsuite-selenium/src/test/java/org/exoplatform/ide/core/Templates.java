@@ -87,7 +87,8 @@ public class Templates extends AbstractTestModule
          {
             try
             {
-               return (view != null && view.isDisplayed() && templateGrid != null && templateGrid.isDisplayed());
+               return (view != null && view.isDisplayed() && templateGrid != null && templateGrid.isDisplayed()
+                  && nameField != null && nameField.isDisplayed());
             }
             catch (NoSuchElementException e)
             {
@@ -278,5 +279,17 @@ public class Templates extends AbstractTestModule
             return !isTemplatePresent(templateName);
          }
       });
+   }
+   
+   public void waitForNameFieldEnabled() throws Exception
+   {
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+         {
+            @Override
+            public Boolean apply(WebDriver driver)
+            {
+               return nameField != null && nameField.isDisplayed() && nameField.isEnabled();
+            }
+         });
    }
 }
