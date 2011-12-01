@@ -136,8 +136,6 @@ public class RestCodeAssistantGroovy
       @QueryParam("vfsid") String vfsId, @QueryParam("isclass") @DefaultValue("true") boolean isClass)
       throws CodeAssistantException, VirtualFileSystemException
    {
-      if (projectId == null)
-         throw new InvalidArgumentException("'projectid' parameter is null.");
       if (isClass)
          return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
             + codeAssistant.getClassJavaDoc(fqn, projectId, vfsId) + "</body></html>";

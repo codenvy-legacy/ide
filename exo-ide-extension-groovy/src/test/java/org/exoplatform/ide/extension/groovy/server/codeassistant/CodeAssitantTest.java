@@ -222,7 +222,7 @@ public class CodeAssitantTest extends Base
    {
       Assert.assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/java.math.BigDecimal/jcr:content"));
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/class-doc?fqn=" + BigDecimal.class.getCanonicalName(), "",
+         launcher.service("GET", "/ide/code-assistant/groovy/class-doc?isclass=true&fqn=" + BigDecimal.class.getCanonicalName(), "",
             null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       Assert.assertNotNull(cres.getEntity());
@@ -237,7 +237,7 @@ public class CodeAssitantTest extends Base
       Assert.assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/methods-doc"));
       String method = BigDecimal.class.getCanonicalName() + ".add(BigDecimal)";
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/class-doc?fqn=" + method, "", null, null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/class-doc?isclass=false&fqn=" + method, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       Assert.assertNotNull(cres.getEntity());
    }
