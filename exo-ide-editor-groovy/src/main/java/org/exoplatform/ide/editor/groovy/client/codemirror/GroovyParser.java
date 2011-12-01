@@ -326,8 +326,21 @@ public class GroovyParser extends CodeMirrorParserImpl
       {
          if (! isWhitespace(nodeType))
          {
-            wereMethodBrackets = false;
-         }         
+            // filter ") throws java.lang.IllegalAccessException" in code like "public Hello() throws java.lang.IllegalAccessException \n { ..."
+            if (wereMethodBrackets   //  
+                  && (isJavaKeyword(nodeType) && nodeContent.equals("throws")        // filter "throws" keyword
+                     || isJavaKeyword(lastNodeType) && isGroovyVariable(nodeType)     // filter "throws IllegalAccessException" keyword
+                     || isGroovyVariable(lastNodeType) && isPoint(nodeType, nodeContent) // filter "java." keyword
+                     || isPoint(lastNodeType, lastNodeContent) && isGroovyVariable(nodeType)     // filter ".lang" keyword
+                  )
+               )
+            {
+            }
+            else
+            {
+               wereMethodBrackets = false;
+            }
+         }       
          
          // recognize types like this "java.lang.String a" 
          if (isPoint(nodeType, nodeContent)

@@ -337,7 +337,20 @@ public class JavaParser extends CodeMirrorParserImpl
       {
          if (! isWhitespace(nodeType))
          {
-            wereMethodBrackets = false;
+            // filter ") throws java.lang.IllegalAccessException" in code like "public Hello() throws java.lang.IllegalAccessException \n { ..."
+            if (wereMethodBrackets   //  
+                  && (isJavaKeyword(nodeType) && nodeContent.equals("throws")        // filter "throws" keyword
+                     || isJavaKeyword(lastNodeType) && isJavaVariable(nodeType)     // filter "throws IllegalAccessException" keyword
+                     || isJavaVariable(lastNodeType) && isPoint(nodeType, nodeContent) // filter "java." keyword
+                     || isPoint(lastNodeType, lastNodeContent) && isJavaVariable(nodeType)     // filter ".lang" keyword
+                  )
+               )
+            {
+            }
+            else
+            {
+               wereMethodBrackets = false;
+            }
          }
          
          // recognize types like this "java.lang.String a" 
