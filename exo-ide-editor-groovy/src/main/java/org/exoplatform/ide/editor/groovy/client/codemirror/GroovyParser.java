@@ -516,6 +516,28 @@ public class GroovyParser extends CodeMirrorParserImpl
                   // set collected earlier annotations in case of '@Mandatory @MappedBy("product") Product a, b ...'
                   setPossibleAnnotations(currentToken.getLastSubToken());
                }
+               
+               // recognize constructor with at least one modifier and with name the same as of container-class name, e.g. CartController in code like "class Controller { public CartController"
+               else if (!inMethodBrackets
+                           && modifiers.size() > 0
+                           && TokenType.CLASS.equals(currentToken.getType())
+                           && currentToken.getName().equals(nodeContent)
+                       )
+               {
+                  currentToken.addSubToken(new TokenBeenImpl(
+                     nodeContent, 
+                     TokenType.PROPERTY, 
+                     lineNumber,
+                     MimeType.APPLICATION_GROOVY, 
+                     currentToken.getName(),
+                     modifiers
+                  ));
+                  
+                  // set collected earlier annotations in case of '@Mandatory @MappedBy("product") public Product'
+                  setPossibleAnnotations(currentToken.getLastSubToken());
+
+                  lastJavaType = currentJavaType = "";
+               }
             }
          }
       }   

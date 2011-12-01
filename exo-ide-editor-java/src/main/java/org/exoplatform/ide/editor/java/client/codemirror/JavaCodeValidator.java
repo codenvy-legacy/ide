@@ -182,14 +182,17 @@ public class JavaCodeValidator extends CodeValidator
       
       // validate token
       String javaType = currentToken.getElementType();
-      if (javaType != null && !javaType.isEmpty())
+      if (javaType != null 
+            && !javaType.isEmpty()
+            && !currentToken.getName().equals(javaType)  // filter constructors
+         )
       {
          javaType = getTypeWithoutParameter(javaType);
          
          String foundFqn;
          
          String fqn;
-         
+                  
          // filter FQN type for full java types like "javax.ws.rs.GET", and "data.ProductItem", but parse type like "ResourceBundle.Control"
          if (javaType.contains(".")
                 && (javaType.split("[.]").length > 2
