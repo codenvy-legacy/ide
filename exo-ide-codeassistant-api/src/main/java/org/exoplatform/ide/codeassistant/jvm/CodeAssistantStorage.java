@@ -114,5 +114,14 @@ public interface CodeAssistantStorage
     * @return string Java doc  
     * @throws CodeAssistantException if Java doc not found
     */
-   String getJavaDoc(String fqn) throws CodeAssistantException;
+   String getClassJavaDoc(String fqn) throws CodeAssistantException;
+   
+   
+   /**
+    * Find JavaDoc for Java Class member FQN
+    * @param fqn of type
+    * @return string Java doc  
+    * @throws CodeAssistantException if Java doc not found
+    */
+   String getMemberJavaDoc(String fqn) throws CodeAssistantException;
 }

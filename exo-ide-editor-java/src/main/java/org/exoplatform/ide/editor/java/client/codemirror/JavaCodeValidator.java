@@ -270,7 +270,7 @@ public class JavaCodeValidator extends CodeValidator
          
          if (javaType.equals(token.getName()))
          {
-            return token.getProperty(TokenProperties.FQN).toString();
+            return token.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
          }
       }
       

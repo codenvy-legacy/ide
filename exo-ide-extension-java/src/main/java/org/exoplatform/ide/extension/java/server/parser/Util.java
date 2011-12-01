@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
+import com.thoughtworks.qdox.model.DocletTag;
+
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -151,7 +153,7 @@ public class Util
     * @param parameterTypes
     * @return
     */
-   private static String toParameters(Type[] parameterTypes)
+   public static String toParameters(Type[] parameterTypes)
    {
       int iMax = parameterTypes.length - 1;
       if (iMax == -1)
@@ -167,16 +169,6 @@ public class Util
             return b.append(')').toString();
          b.append(", ");
       }
-   }
-
-   /**
-    * @param parameterTypes
-    * @return
-    */
-   private static String toGenericParameters(Type[] parameterTypes)
-   {
-      // TODO Auto-generated method stub
-      return null;
    }
 
    /**
@@ -243,5 +235,21 @@ public class Util
       info.setQualifiedName(clazz.getFullyQualifiedName());
       info.setType(getType(clazz).name());
       return info;
+   }
+
+   /**
+    * @param tags
+    * @return
+    */
+   public static String tagsToString(DocletTag[] tags)
+   {
+      if (tags == null)
+         return "";
+      StringBuilder b = new StringBuilder();
+      for (DocletTag t : tags)
+      {
+         b.append("<p>").append("<b>").append(t.getName()).append("</b>").append("<br/>").append(t.getValue()).append("</p>");
+      }
+      return b.toString();
    }
 }

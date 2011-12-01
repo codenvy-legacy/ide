@@ -32,6 +32,7 @@ import org.exoplatform.services.log.Log;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -118,9 +119,9 @@ public class RestCodeAssistantJava
       @QueryParam("where") String where, @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
-      if(projectId == null)
+      if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
-      
+
       if ("className".equals(where))
       {
          return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
@@ -146,7 +147,7 @@ public class RestCodeAssistantJava
       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
-      if(projectId == null)
+      if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
       return codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
    }
@@ -155,12 +156,18 @@ public class RestCodeAssistantJava
    @Path("/class-doc")
    @Produces(MediaType.TEXT_HTML)
    public String getClassDoc(@QueryParam("fqn") String fqn, @QueryParam("projectid") String projectId,
-      @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
+      @QueryParam("vfsid") String vfsId, @QueryParam("isclass") @DefaultValue("true") boolean isClass)
+      throws CodeAssistantException, VirtualFileSystemException
    {
-      if(projectId == null)
+
+      if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
-      return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
-         + codeAssistant.getJavaDoc(fqn, projectId, vfsId) + "</body></html>";
+      if (isClass)
+         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
+            + codeAssistant.getClassJavaDoc(fqn, projectId, vfsId) + "</body></html>";
+      else
+         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
+            + codeAssistant.getMemberJavaDoc(fqn, projectId, vfsId) + "</body></html>";
    }
 
    /**
@@ -180,7 +187,7 @@ public class RestCodeAssistantJava
       @QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId) throws CodeAssistantException,
       VirtualFileSystemException
    {
-      if(projectId == null)
+      if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
       return codeAssistant.getClassesFromProject(fileId, projectId, vfsId);
    }

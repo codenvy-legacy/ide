@@ -123,7 +123,7 @@ public class JavaClassTokenWidget extends JavaTokenWidgetBase
    public Widget getTokenDecription()
    {
       return new Frame(docContext + token.getProperty(TokenProperties.FQN).isStringProperty().stringValue()
-         + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId());
+         + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true");
    }
 
 }

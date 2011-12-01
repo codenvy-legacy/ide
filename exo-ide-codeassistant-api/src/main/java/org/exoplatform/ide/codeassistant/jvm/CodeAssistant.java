@@ -106,8 +106,8 @@ public abstract class CodeAssistant
     * @return list of {@link ShortTypeInfo}
     * @throws CodeAssistantException
     */
-   protected abstract List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId, String vfsId)
-      throws CodeAssistantException, VirtualFileSystemException;
+   protected abstract List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId,
+      String vfsId) throws CodeAssistantException, VirtualFileSystemException;
 
    /**
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)<br>
@@ -219,17 +219,37 @@ public abstract class CodeAssistant
     * @return string JavaDoc
     * @throws CodeAssistantException
     */
-   public String getJavaDoc(String fqn, String projectId, String vfsId) throws CodeAssistantException,
+   public String getClassJavaDoc(String fqn, String projectId, String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
       try
       {
-         return storage.getJavaDoc(fqn);
+         return storage.getClassJavaDoc(fqn);
       }
       catch (CodeAssistantException e)
       {
          //java doc not found, try search in project
-         return getJavaDocFromProject(fqn, projectId, vfsId);
+         return getClassJavaDocFromProject(fqn, projectId, vfsId);
+      }
+   }
+
+   /**
+    * Find JavaDoc for Java Class member FQN
+    * @param fqn of type
+    * @return string JavaDoc
+    * @throws CodeAssistantException
+    */
+   public String getMemberJavaDoc(String fqn, String projectId, String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
+   {
+      try
+      {
+         return storage.getMemberJavaDoc(fqn);
+      }
+      catch (CodeAssistantException e)
+      {
+         //java doc not found, try search in project
+         return getMemberJavaDocFromProject(fqn, projectId, vfsId);
       }
    }
 
@@ -239,7 +259,16 @@ public abstract class CodeAssistant
     * @return string JavaDoc
     * @throws CodeAssistantException if Java doc not found.
     */
-   protected abstract String getJavaDocFromProject(String fqn, String projectId, String vfsId)
+   protected abstract String getClassJavaDocFromProject(String fqn, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException;
+
+   /**
+    * Find JavaDoc for Java Class member FQN
+    * @param fqn of type
+    * @return string JavaDoc
+    * @throws CodeAssistantException if Java doc not found.
+    */
+   protected abstract String getMemberJavaDocFromProject(String fqn, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException;
 
    /**

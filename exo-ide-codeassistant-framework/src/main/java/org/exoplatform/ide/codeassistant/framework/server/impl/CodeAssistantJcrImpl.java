@@ -275,7 +275,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
     * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getClassDoc(java.lang.String)
     */
    @Override
-   public String getJavaDoc(String fqn) throws CodeAssistantException
+   public String getClassJavaDoc(String fqn) throws CodeAssistantException
    {
       String sql = "SELECT * FROM exoide:javaDoc WHERE exoide:fqn='" + fqn + "'";
       try
@@ -311,5 +311,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getMemberJavaDoc(java.lang.String)
+    */
+   @Override
+   public String getMemberJavaDoc(String fqn) throws CodeAssistantException
+   {
+      return getClassJavaDoc(fqn);
    }
 }

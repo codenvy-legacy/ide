@@ -50,7 +50,7 @@ public class GroovyCodeAssistant extends CodeAssistant
     * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getJavaDocFromProject(java.lang.String)
     */
    @Override
-   protected String getJavaDocFromProject(String fqn, String projectId, String vfsId) throws CodeAssistantException,
+   protected String getClassJavaDocFromProject(String fqn, String projectId, String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
       //TODO
@@ -94,6 +94,19 @@ public class GroovyCodeAssistant extends CodeAssistant
       throws VirtualFileSystemException, CodeAssistantException
    {
       return null;
+   }
+
+
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getMemberJavaDocFromProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected String getMemberJavaDocFromProject(String fqn, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      //TODO
+      throw new CodeAssistantException(404, "Not found");
    }
 
    //   /**

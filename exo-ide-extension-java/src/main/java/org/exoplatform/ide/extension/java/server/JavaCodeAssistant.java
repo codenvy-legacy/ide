@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import com.thoughtworks.qdox.model.JavaField;
+
+import com.thoughtworks.qdox.model.JavaMethod;
+
 import com.thoughtworks.qdox.model.JavaClass;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
@@ -109,10 +113,14 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
     * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getJavaDocFromProject(java.lang.String)
     */
    @Override
-   protected String getJavaDocFromProject(String fqn, String projectId, String vfsId) throws CodeAssistantException
+   protected String getClassJavaDocFromProject(String fqn, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
    {
-      //TODO
-      throw new CodeAssistantException(404, "Not found");
+      JavaDocBuilderVfs project = parseProject(projectId, vfsId);
+      JavaClass clazz = project.getClassByName(fqn);
+      if (clazz == null)
+         throw new CodeAssistantException(404, "Not found");
+      return clazz.getComment() + Util.tagsToString(clazz.getTags());
    }
 
    /**
@@ -272,4 +280,43 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       return classNames;
    }
 
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getMemberJavaDocFromProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected String getMemberJavaDocFromProject(String fqn, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      JavaDocBuilderVfs project = parseProject(projectId, vfsId);
+      String classFqn = fqn.substring(0, fqn.lastIndexOf('.'));
+      String memberFqn = fqn.substring(fqn.lastIndexOf('.') + 1);
+      JavaClass clazz = project.getClassByName(classFqn);
+      if (clazz == null)
+         throw new CodeAssistantException(404, "Not found");
+
+      //member is method
+      if (memberFqn.contains("("))
+      {
+         for (JavaMethod method : clazz.getMethods())
+         {
+            if ((method.getName() + Util.toParameters(method.getParameterTypes(true))).equals(memberFqn))
+            {
+               return method.getComment() + Util.tagsToString(method.getTags());
+            }
+         }
+      }
+      //member is field
+      else
+      {
+         for (JavaField field : clazz.getFields())
+         {
+            if (field.getName().equals(memberFqn))
+            {
+               return field.getComment() + Util.tagsToString(field.getTags());
+            }
+         }
+      }
+
+      throw new CodeAssistantException(404, "Not found");
+   }
 }

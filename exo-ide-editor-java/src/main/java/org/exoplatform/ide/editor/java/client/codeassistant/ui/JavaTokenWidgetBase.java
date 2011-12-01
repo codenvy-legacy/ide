@@ -133,7 +133,7 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
    {
       return new Frame(docContext + token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue()
          + "." + getTokenValue() + "&projectid=" + projectId + "&vfsid="
-         + VirtualFileSystem.getInstance().getInfo().getId());
+         + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=false");
    }
 
 }

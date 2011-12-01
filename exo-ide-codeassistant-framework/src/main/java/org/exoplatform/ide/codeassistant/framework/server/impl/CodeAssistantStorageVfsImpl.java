@@ -178,8 +178,6 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
       return info;
    }
 
-  
-
    private VirtualFileSystem getVfs(String id) throws CodeAssistantException
    {
       try
@@ -217,8 +215,18 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
    }
 
    @Override
-   public String getJavaDoc(String fqn) throws CodeAssistantException
+   public String getClassJavaDoc(String fqn) throws CodeAssistantException
    {
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getMemberJavaDoc(java.lang.String)
+    */
+   @Override
+   public String getMemberJavaDoc(String fqn) throws CodeAssistantException
+   {
+      // TODO Auto-generated method stub
       return null;
    }
 
