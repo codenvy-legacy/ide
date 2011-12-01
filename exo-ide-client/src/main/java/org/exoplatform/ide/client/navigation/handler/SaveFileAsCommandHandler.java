@@ -44,6 +44,8 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -98,7 +100,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    public SaveFileAsCommandHandler()
    {
       IDE.getInstance().addControl(new SaveFileAsCommand(), Docking.TOOLBAR);
-      
+
       IDE.addHandler(SaveFileAsEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -126,7 +128,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       eventFiredOnNoButtonPressed = event.getEventFiredOnNo();
 
       fileToSave = file;
-      
+
       sourceId = file.getId();
 
       askForNewFileName(event.getDialogType());
@@ -187,9 +189,11 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
 
    private void saveFileAs(FileModel file, String name)
    {
-      final Folder folderToSave = (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent() : (Folder)selectedItems.get(0);
+      final Folder folderToSave =
+         (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent()
+            : (Folder)selectedItems.get(0);
       FileModel newFile = new FileModel(name, file.getMimeType(), file.getContent(), new FolderModel(folderToSave));
-
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       if (file.isPersisted())
       {
          newFile.getProperties().addAll(file.getProperties());
@@ -203,6 +207,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
                @Override
                protected void onSuccess(FileModel result)
                {
+                  result.setProject(project);
                   IDE.fireEvent(new FileSavedEvent(result, sourceId));
                   IDE.fireEvent(new RefreshBrowserEvent(folderToSave));
                }
@@ -251,7 +256,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    //      });
    //   }
 
-     //   private void getProperties(Item item)
+   //   private void getProperties(Item item)
    //   {
    //      VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
    //      {

@@ -45,6 +45,7 @@ import org.exoplatform.ide.client.navigation.event.CreateNewFileHandler;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -98,6 +99,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
          }
       }
       FolderModel parent = new FolderModel();
+      ProjectModel project = null;
       if (selectedItems != null && selectedItems.size() != 0)
       {
          Item item = selectedItems.get(0);
@@ -114,12 +116,18 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
          {
             parent = new FolderModel((Project)item);
          }
+         
+         if (item instanceof ItemContext)
+         {
+            project = ((ItemContext)item).getProject();
+         }
       }
 
       FileModel newFile = new FileModel(fileName, event.getMimeType(), content, parent);
       newFile.setContentChanged(true);
       newFile.setId(fileName);
-
+      newFile.setProject(project);
+      
       Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
       if (defaultEditors == null)
       {
