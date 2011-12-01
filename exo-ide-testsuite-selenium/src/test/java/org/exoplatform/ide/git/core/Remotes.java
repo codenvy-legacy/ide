@@ -63,7 +63,7 @@ public class Remotes extends AbstractTestModule
 
       String REMOTE_REPOSITORY_LOCATOR = "//table[@id=\"" + REMOTE_GRID_ID + "\"]//tr[contains(., \"%s\")]//div";
 
-      String REMOTE_ROW_SELECTOR = "table#" + REMOTE_GRID_ID + ">tbody:nth(0) tr";
+      String REMOTE_ROW_SELECTOR = "table#" + REMOTE_GRID_ID + ">tbody:first-of-type tr";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)

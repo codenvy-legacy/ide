@@ -188,7 +188,7 @@ public class Commit extends AbstractTestModule
     */
    public void typeToMessageField(String message) throws InterruptedException
    {
-      IDE().INPUT.typeToElement(messageField, message);
+      IDE().INPUT.typeToElement(messageField, message, true);
    }
 
    /**

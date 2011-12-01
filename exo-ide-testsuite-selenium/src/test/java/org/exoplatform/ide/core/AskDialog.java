@@ -34,31 +34,34 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class AskDialog extends AbstractTestModule
 {
 
-   private static final String VIEW_ID = "exoAskDialog";
+   private interface Locators
+   {
+      String VIEW_ID = "ideAskModalView";
+      
+      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
-   private static final String ASK_TITLE_SELECTOR = "div#" + VIEW_ID + " div.Caption>span";
+      String ASK_TITLE_SELECTOR = "div[view-id=" + VIEW_ID + "] div.Caption>span";
 
-   private static final String QUESTION_SELECTOR = "div#" + VIEW_ID + " div.gwt-Label";
+      String QUESTION_SELECTOR = "div[view-id=" + VIEW_ID + "] div.gwt-Label";
 
-   private static final String YES_BUTTON_ID = "YesButton";
+      String YES_BUTTON_ID = "YesButton";
 
-   private static final String NO_BUTTON_ID = "NoButton";
+      String NO_BUTTON_ID = "NoButton";
+   }
 
-   private static final String VIEW_LOCATOR = "//div[@view-id='ideAskModalView']";
-
-   @FindBy(xpath = VIEW_LOCATOR)
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement view;
 
-   @FindBy(css = ASK_TITLE_SELECTOR)
+   @FindBy(css = Locators.ASK_TITLE_SELECTOR)
    private WebElement askTitle;
 
-   @FindBy(css = QUESTION_SELECTOR)
+   @FindBy(css = Locators.QUESTION_SELECTOR)
    private WebElement question;
 
-   @FindBy(id = YES_BUTTON_ID)
+   @FindBy(id = Locators.YES_BUTTON_ID)
    private WebElement yesButton;
 
-   @FindBy(id = NO_BUTTON_ID)
+   @FindBy(id = Locators.NO_BUTTON_ID)
    private WebElement noButton;
 
    /**
@@ -86,21 +89,21 @@ public class AskDialog extends AbstractTestModule
    public void waitClosed() throws Exception
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
          {
-            @Override
-            public Boolean apply(WebDriver input)
+            try
             {
-               try
-               {
-                  input.findElement(By.xpath(VIEW_LOCATOR));
-                  return false;
-               }
-               catch (NoSuchElementException e)
-               {
-                  return true;
-               }
+               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               return false;
             }
-         });
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -145,7 +148,9 @@ public class AskDialog extends AbstractTestModule
     */
    public String getQuestion()
    {
-      return question.getText();
+      String text = question.getText().trim();
+      text = (text.endsWith("\n")) ? text.substring(0, text.length() - 2) : text;
+      return text;
    }
 
    /**

@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide.git;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.git.core.GIT;
 import org.exoplatform.ide.git.core.Merge;
 import org.junit.After;
 import org.junit.Before;
@@ -36,11 +38,9 @@ import org.junit.Test;
  */
 public class MergeTest extends BaseTest
 {
-   private static final String TEST_FOLDER = MergeTest.class.getSimpleName();
+   private static final String PROJECT = MergeTest.class.getSimpleName();
 
    private static final String TEST_FILE = "File.html";
-
-   private static final String REPOSITORY = "repository";
 
    private static final String TEST_FILE2 = "branch1.xml";
 
@@ -59,7 +59,7 @@ public class MergeTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.upoadZipFolder("src/test/resources/org/exoplatform/ide/git/merge-test.zip", WS_URL);
+         VirtualFileSystemUtils.importZipProject(PROJECT, "src/test/resources/org/exoplatform/ide/git/merge-test.zip");
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -73,7 +73,8 @@ public class MergeTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -87,30 +88,15 @@ public class MergeTest extends BaseTest
    @Test
    public void testMergeCommand() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      waitForLoaderDissapeared();
 
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectRootItem();
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.MERGE, false);
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Check Merge is available:
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.MERGE, true);
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
-
-      //Not Git repository:
-      IDE.WARNING_DIALOG.waitOpened();
-      String message = IDE.WARNING_DIALOG.getWarningMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.MERGE));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
       IDE.GIT.MERGE.waitOpened();
 
@@ -121,13 +107,13 @@ public class MergeTest extends BaseTest
    @Test
    public void testMergeView() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      waitForLoaderDissapeared();
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
       IDE.GIT.MERGE.waitOpened();
@@ -146,11 +132,11 @@ public class MergeTest extends BaseTest
 
       //Select branch:
       IDE.GIT.MERGE.selectReference(BRANCH1);
-      Assert.assertTrue(IDE.GIT.MERGE.isMergeButtonEnabled());
+      assertTrue(IDE.GIT.MERGE.isMergeButtonEnabled());
 
       //Select not the branch:
       IDE.GIT.MERGE.selectReference(LOCAL_BRANCHES);
-      Assert.assertFalse(IDE.GIT.MERGE.isMergeButtonEnabled());
+      assertFalse(IDE.GIT.MERGE.isMergeButtonEnabled());
 
       IDE.GIT.MERGE.clickCancelButton();
       IDE.GIT.MERGE.waitClosed();
@@ -159,13 +145,12 @@ public class MergeTest extends BaseTest
    @Test
    public void testMerge() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
       IDE.GIT.MERGE.waitOpened();
@@ -180,44 +165,48 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.clickMergeButton();
       IDE.GIT.MERGE.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.contains(Merge.Messages.FAST_FORWARD));
-      Assert.assertTrue(message.contains(Merge.Messages.MERGED_COMMITS));
-      Assert.assertTrue(message.contains(Merge.Messages.NEW_HEAD_COMMIT));
+      assertTrue(message.contains(Merge.Messages.FAST_FORWARD));
+      assertTrue(message.contains(Merge.Messages.MERGED_COMMITS));
+      assertTrue(message.contains(Merge.Messages.NEW_HEAD_COMMIT));
 
       //Check file appeared:
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      Thread.sleep(2000);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + TEST_FILE2);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + TEST_FILE);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + TEST_FILE2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE2);
+      IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + TEST_FILE);
+      IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + TEST_FILE2);
    }
 
    @Test
-   public void testMergeConfilct() throws Exception
+   public void testMergeConflict() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-
-      //Change file:
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(
-         WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + TEST_FILE, false);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, "some");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       waitForLoaderDissapeared();
-      IDE.EDITOR.closeFile(0);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
+
+      //Modify file:
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FILE);
+      IDE.EDITOR.typeTextIntoEditor(0, "some");
+      IDE.EDITOR.waitFileContentModificationMark(TEST_FILE);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(TEST_FILE);
+      IDE.EDITOR.closeFile(TEST_FILE);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE);
+
       IDE.GIT.ADD.addToIndex();
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       IDE.GIT.COMMIT.commit("change");
+      IDE.OUTPUT.waitForMessageShow(2, 10);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
       IDE.GIT.MERGE.waitOpened();
@@ -232,22 +221,22 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.clickMergeButton();
       IDE.GIT.MERGE.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(3);
+      IDE.OUTPUT.waitForMessageShow(3, 10);
       String message = IDE.OUTPUT.getOutputMessage(3);
-      Assert.assertTrue(message.contains(Merge.Messages.CONFLICTING));
-      Assert.assertTrue(message.contains(String.format(Merge.Messages.CONFLICTS, "- " + TEST_FILE)));
+      assertTrue(message.contains(Merge.Messages.CONFLICTING));
+      assertTrue(message.contains(String.format(Merge.Messages.CONFLICTS, "- " + TEST_FILE)));
    }
 
    @Test
    public void testMergeUptoDate() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      waitForLoaderDissapeared();
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
       IDE.GIT.MERGE.waitOpened();
@@ -262,7 +251,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.clickMergeButton();
       IDE.GIT.MERGE.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertTrue(message.contains(Merge.Messages.UP_TO_DATE));
    }

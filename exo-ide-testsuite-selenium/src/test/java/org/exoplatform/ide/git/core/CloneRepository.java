@@ -174,7 +174,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public String getWorkDirectoryValue()
    {
-      return workdirField.getText();
+      return IDE().INPUT.getValue(workdirField);
    }
 
    /**
@@ -184,7 +184,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public String getRemoteUriFieldValue()
    {
-      return remoteUriField.getText();
+      return IDE().INPUT.getValue(remoteUriField);
    }
 
    /**
@@ -194,7 +194,7 @@ public class CloneRepository extends AbstractTestModule
     */
    public String getRemoteNameFieldValue()
    {
-      return remoteNameField.getText();
+      return IDE().INPUT.getValue(remoteNameField);
    }
 
    /**

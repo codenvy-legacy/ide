@@ -49,7 +49,7 @@ public class RemoveFiles extends AbstractTestModule
       String ITEM_CHECKBOX_LOCATOR = "//table[@id=\"" + INDEX_FILES_GRID_ID
          + "\"]//tr[contains(., \"%s\")]//input[@type=\"checkbox\"]";
 
-      String FILE_ROW_SELECTOR = "table#" + INDEX_FILES_GRID_ID + ">tbody:nth(0) tr";
+      String FILE_ROW_SELECTOR = "table#" + INDEX_FILES_GRID_ID + ">tbody:first-of-type tr";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)

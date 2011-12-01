@@ -69,7 +69,7 @@ public class AddTest extends BaseTest
    {
       try
       {
-       //  VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -81,13 +81,14 @@ public class AddTest extends BaseTest
     * Test command is not available for adding to index in not Git repository.
     * @throws Exception 
     */
-   //@Test
+   @Test
    public void testAddCommand() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
+      waitForLoaderDissapeared();
+      
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Check Add to index is available:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.ADD));
@@ -107,12 +108,12 @@ public class AddTest extends BaseTest
    public void testAddFile() throws Exception
    {
       driver.navigate().refresh();
-      
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      
+
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
@@ -138,12 +139,12 @@ public class AddTest extends BaseTest
       IDE.GIT.ADD.waitClosed();
 
       //Check successfully added:
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 6);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessage(1));
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(2);
+      IDE.OUTPUT.waitForMessageShow(2, 6);
       String statusMessage = IDE.OUTPUT.getOutputMessage(2);
       //Get list of files in index:
       List<String> addedFiles = IDE.GIT.STATUS.getNotCommited(statusMessage);
@@ -157,10 +158,11 @@ public class AddTest extends BaseTest
     * 
     * @throws Exception
     */
-  // @Test
+   @Test
    public void testAddFolder() throws Exception
    {
       driver.navigate().refresh();
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -185,7 +187,7 @@ public class AddTest extends BaseTest
       IDE.GIT.ADD.waitClosed();
 
       //Check successfully added:
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 6);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessage(1));
    }
 
@@ -194,14 +196,14 @@ public class AddTest extends BaseTest
     * 
     * @throws Exception
     */
- //  @Test
+   @Test
    public void testAllChanges() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      
+
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
@@ -228,12 +230,12 @@ public class AddTest extends BaseTest
       IDE.GIT.ADD.waitClosed();
 
       //Check successfully added:
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 6);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessage(1));
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(2);
+      IDE.OUTPUT.waitForMessageShow(2, 6);
       String statusMessage = IDE.OUTPUT.getOutputMessage(2);
       //Get list of files in index:
       List<String> addedFiles = IDE.GIT.STATUS.getNotCommited(statusMessage);
@@ -246,14 +248,14 @@ public class AddTest extends BaseTest
     * 
     * @throws Exception
     */
- //  @Test
+   @Test
    public void testAddOnlyUpdate() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      
+
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
@@ -283,12 +285,12 @@ public class AddTest extends BaseTest
       IDE.GIT.ADD.waitClosed();
 
       //Check successfully added:
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 6);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, IDE.OUTPUT.getOutputMessage(1));
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(2);
+      IDE.OUTPUT.waitForMessageShow(2, 6);
       String statusMessage = IDE.OUTPUT.getOutputMessage(2);
 
       //Get list of untracked files:

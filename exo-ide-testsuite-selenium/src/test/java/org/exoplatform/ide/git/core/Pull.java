@@ -93,6 +93,18 @@ public class Pull extends AbstractTestModule
       });
    }
 
+   public void waitPullButtonEnabled() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return isPullButtonEnabled();
+         }
+      });
+   }
+
    /**
     * Waits for Pull view to be closed.
     * 
@@ -174,7 +186,7 @@ public class Pull extends AbstractTestModule
     */
    public String getRemoteRepositoryValue()
    {
-      return remoteField.getText();
+      return IDE().INPUT.getDisplayValue(remoteField);
    }
 
    /**
@@ -184,7 +196,7 @@ public class Pull extends AbstractTestModule
     */
    public String getRemoteBranchValue()
    {
-      return remoteBranchesField.getText();
+      return IDE().INPUT.getValue(remoteBranchesField);
    }
 
    /**
@@ -209,6 +221,16 @@ public class Pull extends AbstractTestModule
       IDE().INPUT.setComboboxValue(localBranchesField, text);
    }
 
+   public void clearLocalBranchValue() throws InterruptedException
+   {
+      IDE().INPUT.clearComboboxValue(localBranchesField);
+   }
+
+   public void clearRemoteBranchValue() throws InterruptedException
+   {
+      IDE().INPUT.clearComboboxValue(remoteBranchesField);
+   }
+
    /**
     * Get displayed value of local branch field.
     * 
@@ -216,6 +238,6 @@ public class Pull extends AbstractTestModule
     */
    public String getLocalBranchValue()
    {
-      return localBranchesField.getText();
+      return IDE().INPUT.getValue(localBranchesField);
    }
 }

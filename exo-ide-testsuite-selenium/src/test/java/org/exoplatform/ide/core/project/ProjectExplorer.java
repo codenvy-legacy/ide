@@ -27,7 +27,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -46,19 +45,18 @@ public class ProjectExplorer extends AbstractTestModule
 
       String TREE_GRID_ID = "ideProjectExplorerItemTreeGrid";
 
-      String ROOT_ITEM_LOCATOR = "xpath=(//div[@id='" + TREE_GRID_ID
-         + "']//div[@class='ide-Tree-label'])[position()=1]";
+      String ROOT_ITEM_SELECTOR = "div#" + TREE_GRID_ID + " div.ide-Tree-label:first-of-type";
 
       String OPEN_CLOSE_BUTTON_LOCATOR = "//div[@id='%s']/table/tbody/tr/td[1]/img";
    }
 
-   @FindBy(how = How.XPATH, using = Locators.VIEW_LOCATOR)
+   @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement view;
 
    @FindBy(id = Locators.TREE_GRID_ID)
    private WebElement treeGrid;
 
-   @FindBy(how = How.XPATH, using = Locators.ROOT_ITEM_LOCATOR)
+   @FindBy(css = Locators.ROOT_ITEM_SELECTOR)
    private WebElement rootItem;
 
    /**
@@ -254,7 +252,7 @@ public class ProjectExplorer extends AbstractTestModule
     */
    public String getCurrentProject()
    {
-      if (treeGrid == null || !treeGrid.isDisplayed() || rootItem != null || !rootItem.isDisplayed())
+      if (treeGrid == null || !treeGrid.isDisplayed() || rootItem == null || !rootItem.isDisplayed())
       {
          return null;
       }

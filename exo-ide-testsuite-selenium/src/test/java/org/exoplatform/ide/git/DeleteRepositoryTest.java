@@ -18,17 +18,21 @@
  */
 package org.exoplatform.ide.git;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -38,21 +42,14 @@ import org.junit.Test;
 public class DeleteRepositoryTest extends BaseTest
 {
 
-   private static final String TEST_FOLDER = DeleteRepositoryTest.class.getSimpleName();
+   private static final String PROJECT = DeleteRepositoryTest.class.getSimpleName();
 
-   private static final String TEST_FOLDER2 = DeleteRepositoryTest.class.getSimpleName() + "2";
-
-   private final static String URL = WS_URL + TEST_FOLDER;
-
-   private final static String URL2 = WS_URL + TEST_FOLDER2;
-
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void before()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.mkcol(URL2);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (Exception e)
       {
@@ -60,13 +57,12 @@ public class DeleteRepositoryTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void after()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
-         VirtualFileSystemUtils.delete(URL2);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -77,15 +73,18 @@ public class DeleteRepositoryTest extends BaseTest
    @Test
    public void deleteRepositoryTest() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(URL + "/");
+      driver.navigate().refresh();
+
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitOpened();
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
       IDE.GIT.INIT_REPOSITORY.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.DELETE);
 
@@ -94,24 +93,50 @@ public class DeleteRepositoryTest extends BaseTest
       IDE.ASK_DIALOG.clickYes();
       IDE.ASK_DIALOG.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(2);
+      IDE.OUTPUT.waitForMessageShow(2, 10);
       String message = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(message.endsWith(GIT.Messages.DELETE_SUCCESS));
 
-      selenium().open(URL);
-      selenium().waitForPageToLoad("" + 5000);
-      assertFalse(selenium().isElementPresent("link=.git"));
-      selenium().goBack();
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().to(WS_URL + PROJECT);
+
+      new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return driver.findElement(By.partialLinkText(".project")) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+      try
+      {
+         assertTrue(driver.findElement(By.partialLinkText(".git")) == null);
+      }
+      catch (NoSuchElementException e)
+      {
+      }
+      driver.navigate().back();
+      IDE.PROJECT.EXPLORER.waitOpened();
    }
 
    @Test
    public void deleteRepositoryFromNonGitFolder() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(URL2 + "/");
+      driver.navigate().refresh();
+
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.DELETE);
       IDE.WARNING_DIALOG.waitOpened();
-      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains("Not a git repository (or any of the parent directories)."));
+      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(
+         "Not a git repository (or any of the parent directories)."));
    }
 }

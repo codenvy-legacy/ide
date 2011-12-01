@@ -18,16 +18,23 @@
  */
 package org.exoplatform.ide.git;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
 import org.exoplatform.ide.git.core.InitRepository;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -36,23 +43,17 @@ import org.junit.Test;
  */
 public class InitRepositoryTest extends BaseTest
 {
-   private static final String TEST_FOLDER = InitRepositoryTest.class.getSimpleName();
-
-   private static final String INIT_FOLDER = "forInit";
-
-   private static final String REPOSITORY = "repository";
+   private static final String PROJECT = InitRepositoryTest.class.getSimpleName();
 
    private static final String TEST_FILE = "TestFile.html";
 
-   private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/init-test.zip";
-
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void before()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL + TEST_FOLDER + "/");
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -60,12 +61,13 @@ public class InitRepositoryTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void after()
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -82,46 +84,25 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepositoryView() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitOpened();
-      Assert.assertTrue(IDE.GIT.INIT_REPOSITORY.isOpened());
-      Assert.assertTrue(IDE.GIT.INIT_REPOSITORY.isInitButtonEnabled());
-      Assert.assertTrue(IDE.GIT.INIT_REPOSITORY.isCancelButtonEnabled());
-      Assert.assertFalse(IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue().isEmpty());
+      assertTrue(IDE.GIT.INIT_REPOSITORY.isOpened());
+      assertTrue(IDE.GIT.INIT_REPOSITORY.isInitButtonEnabled());
+      assertTrue(IDE.GIT.INIT_REPOSITORY.isCancelButtonEnabled());
+      assertEquals("/" + PROJECT, IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue());
 
       //Check element's titles:
-      Assert.assertEquals(InitRepository.Titles.INIT_BUTTON, IDE.GIT.INIT_REPOSITORY.getInitButtonTitle());
-      Assert.assertEquals(InitRepository.Titles.CANCEL_BUTTON, IDE.GIT.INIT_REPOSITORY.getCancelButtonTitle());
+      assertEquals(InitRepository.Titles.INIT_BUTTON, IDE.GIT.INIT_REPOSITORY.getInitButtonTitle());
+      assertEquals(InitRepository.Titles.CANCEL_BUTTON, IDE.GIT.INIT_REPOSITORY.getCancelButtonTitle());
 
       IDE.GIT.INIT_REPOSITORY.clickCancelButton();
       IDE.GIT.INIT_REPOSITORY.waitClosed();
-   }
-
-   /**
-    * Tests the Init repository command for workspace. 
-    * Must be not allowed.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testInitRepositoryInWorkspace() throws Exception
-   {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT, true);
-
-      IDE.WORKSPACE.selectRootItem();
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT, false);
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT, true);
    }
 
    /**
@@ -133,20 +114,31 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepositoryWithSelectedFile() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT, true);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
+      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE);
 
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT, false);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FILE);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT));
 
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT, true);
+      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
+      IDE.GIT.INIT_REPOSITORY.waitOpened();
+      assertTrue(IDE.GIT.INIT_REPOSITORY.isOpened());
+      assertTrue(IDE.GIT.INIT_REPOSITORY.isInitButtonEnabled());
+      assertTrue(IDE.GIT.INIT_REPOSITORY.isCancelButtonEnabled());
+      assertFalse(IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue().isEmpty());
+
+      IDE.GIT.INIT_REPOSITORY.clickCancelButton();
+      IDE.GIT.INIT_REPOSITORY.waitClosed();
    }
 
    /**
@@ -157,30 +149,44 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepository() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitOpened();
-      Assert
-         .assertTrue(IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue().endsWith(TEST_FOLDER + "/" + INIT_FOLDER + "/"));
+      assertTrue(IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue().endsWith(PROJECT));
 
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
       IDE.GIT.INIT_REPOSITORY.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
+      assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
-      selenium().open(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER);
-      selenium().waitForPageToLoad("" + 5000);
-      Assert.assertTrue(selenium().isElementPresent("link=.git"));
-      selenium().goBack();
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().to(WS_URL + PROJECT);
+
+      new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return driver.findElement(By.partialLinkText(".git")) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+
+      driver.navigate().back();
+      IDE.PROJECT.EXPLORER.waitOpened();
    }
 
    /**
@@ -191,19 +197,23 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepositoryIfExists() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
+      IDE.GIT.INIT_REPOSITORY.initRepository();
 
-      IDE.INFORMATION_DIALOG.waitOpened();
-      Assert.assertEquals(GIT.Messages.GIT_REPO_EXISTS, IDE.INFORMATION_DIALOG.getMessage());
+      IDE.OUTPUT.waitForMessageShow(1, 10);
+      String message = IDE.OUTPUT.getOutputMessage(1);
+      assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
-      IDE.INFORMATION_DIALOG.clickOk();
-      IDE.INFORMATION_DIALOG.waitClosed();
+      IDE.GIT.INIT_REPOSITORY.initRepository();
+      IDE.OUTPUT.waitForMessageShow(2, 10);
+      message = IDE.OUTPUT.getOutputMessage(2);
+      assertTrue(message.startsWith(GIT.Messages.REPOSITORY_EXISTS));
+      assertTrue(message.contains(PROJECT));
    }
 }

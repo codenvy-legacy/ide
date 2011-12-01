@@ -78,7 +78,7 @@ public class ShowHistory extends AbstractTestModule
 
       String BUTTON_SELECTED = "exoIconButtonPanelSelected";
 
-      String REVISION_ROW_SELECTOR = "table#" + REVISION_GRID_ID + ">tbody:nth(0) tr";
+      String REVISION_ROW_SELECTOR = "table#" + REVISION_GRID_ID + ">tbody:first-of-type tr";
 
       String CONTENT_FRAME_LOCATOR = Locators.VIEW_LOCATOR + "//frame";
    }

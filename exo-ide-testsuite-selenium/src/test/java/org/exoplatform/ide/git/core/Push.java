@@ -174,7 +174,7 @@ public class Push extends AbstractTestModule
     */
    public String getRemoteRepositoryValue()
    {
-      return remoteField.getText();
+      return IDE().INPUT.getValue(remoteField);
    }
 
    /**
@@ -184,7 +184,7 @@ public class Push extends AbstractTestModule
     */
    public String getRemoteBranchValue()
    {
-      return remoteBranchesField.getText();
+      return IDE().INPUT.getValue(remoteBranchesField);
    }
 
    /**
@@ -205,6 +205,6 @@ public class Push extends AbstractTestModule
     */
    public String getLocalBranchValue()
    {
-      return localBranchesField.getText();
+      return IDE().INPUT.getValue(localBranchesField);
    }
 }

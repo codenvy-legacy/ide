@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.git;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.BaseTest;
@@ -36,7 +40,7 @@ import org.junit.Test;
  */
 public class PullTest extends BaseTest
 {
-   private static final String TEST_FOLDER = PullTest.class.getSimpleName();
+   private static final String PROJECT = PullTest.class.getSimpleName();
 
    private static final String FOLDER1 = "folder1";
 
@@ -44,23 +48,21 @@ public class PullTest extends BaseTest
 
    private static final String FILE2 = "file2.txt";
 
-   private static final String NOT_GIT = "NotGit";
-
-   private static final String REPOSITORY = "repository";
-
    private static final String REMOTE = "remote";
 
    private static final String BRANCH = "master";
 
-   private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/pull-test.zip";
+   private static final String REMOTE_ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/pull-test.zip";
+
+   private static final String EMPTY_ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/empty-repository.zip";
 
    @Before
    public void beforeTest()
    {
       try
       {
-         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL);
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER + "/" + NOT_GIT);
+         VirtualFileSystemUtils.importZipProject(REMOTE, REMOTE_ZIP_PATH);
+         VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
       }
       catch (Exception e)
       {
@@ -73,7 +75,8 @@ public class PullTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + REMOTE);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -86,34 +89,17 @@ public class PullTest extends BaseTest
     * Test command is not available for pull in not Git repository.
     * @throws Exception 
     */
-   @Test
+   //@Test
    public void testPullCommand() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForRootItem();
-
-      //Not Git repository:
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + NOT_GIT + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + NOT_GIT + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
-
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
-      IDE.WARNING_DIALOG.waitOpened();
-      String message = IDE.WARNING_DIALOG.getWarningMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
-
-      //Init repository:
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      waitForLoaderDissapeared();
 
       //Check Pull command is available:
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
 
       //Get error message - no remote repositories:
@@ -129,38 +115,36 @@ public class PullTest extends BaseTest
     * 
     * @throws Exception
     */
-   @Test
+   //@Test
    public void testPullView() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      waitForLoaderDissapeared();
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-         + "/" + REMOTE);
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
+         + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
       IDE.GIT.PULL.waitOpened();
 
-      Assert.assertEquals(BRANCH, IDE.GIT.PULL.getLocalBranchValue());
-      Assert.assertEquals(BRANCH, IDE.GIT.PULL.getRemoteBranchValue());
-      Assert.assertEquals("origin", IDE.GIT.PULL.getRemoteRepositoryValue());
+      assertEquals(BRANCH, IDE.GIT.PULL.getLocalBranchValue());
+      assertEquals(BRANCH, IDE.GIT.PULL.getRemoteBranchValue());
+      assertEquals("origin", IDE.GIT.PULL.getRemoteRepositoryValue());
 
-      Assert.assertTrue(IDE.GIT.PULL.isPullButtonEnabled());
-      Assert.assertTrue(IDE.GIT.PULL.isCancelButtonEnabled());
+      assertTrue(IDE.GIT.PULL.isPullButtonEnabled());
+      assertTrue(IDE.GIT.PULL.isCancelButtonEnabled());
 
       //Test Pull button enabled state:
-      IDE.GIT.PULL.typeToLocalBranch("");
-      Assert.assertTrue(IDE.GIT.PULL.isPullButtonEnabled());
+      IDE.GIT.PULL.clearLocalBranchValue();
+      assertTrue(IDE.GIT.PULL.isPullButtonEnabled());
 
-      IDE.GIT.PULL.typeToRemoteBranch("");
-      Assert.assertFalse(IDE.GIT.PULL.isPullButtonEnabled());
+      IDE.GIT.PULL.clearRemoteBranchValue();
+      assertFalse(IDE.GIT.PULL.isPullButtonEnabled());
       IDE.GIT.PULL.typeToRemoteBranch(BRANCH);
-      Assert.assertTrue(IDE.GIT.PULL.isPullButtonEnabled());
+      assertTrue(IDE.GIT.PULL.isPullButtonEnabled());
 
       IDE.GIT.PULL.clickCancelButton();
       IDE.GIT.PULL.waitClosed();
@@ -174,21 +158,16 @@ public class PullTest extends BaseTest
    @Test
    public void testPullFromRemote() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       waitForLoaderDissapeared();
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FOLDER1);
 
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER1));
 
-      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-         + "/" + REMOTE);
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
+         + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
       IDE.GIT.PULL.waitOpened();
@@ -196,30 +175,31 @@ public class PullTest extends BaseTest
       //Pull from remote:
       IDE.GIT.PULL.typeToRemoteBranch(BRANCH);
       IDE.GIT.PULL.typeToLocalBranch(BRANCH);
-
+      
+      IDE.GIT.PULL.waitPullButtonEnabled();
       IDE.GIT.PULL.clickPullButton();
       IDE.GIT.PULL.waitClosed();
 
       //Check pulled message:
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertEquals(String.format(GIT.Messages.PULL_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/"
-         + TEST_FOLDER + "/" + REMOTE), message);
+      assertEquals(
+         String.format(GIT.Messages.PULL_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/" + REMOTE),
+         message);
 
       //Check file in browser tree
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Sleep is necessary for file to appear on file system:
-      Thread.sleep(3000);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       waitForLoaderDissapeared();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FOLDER1 + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FOLDER1 + "/");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FOLDER1 + "/" + FILE1);
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1 + "/" + FILE1);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FILE2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE2);
    }
 }

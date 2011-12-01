@@ -237,7 +237,7 @@ public class Upload extends AbstractTestModule
     */
    public String getMimeTypeValue()
    {
-      return mimeTypeField.getText();
+      return IDE().INPUT.getValue(mimeTypeField);
    }
 
    /**
@@ -247,7 +247,7 @@ public class Upload extends AbstractTestModule
     */
    public String getFilePathValue()
    {
-      return fileNameField.getText();
+      return IDE().INPUT.getValue(fileNameField);
    }
 
    /**

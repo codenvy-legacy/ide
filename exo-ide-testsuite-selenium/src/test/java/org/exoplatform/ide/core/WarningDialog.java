@@ -43,11 +43,13 @@ public class WarningDialog extends AbstractTestModule
 {
    interface Locators
    {
-      String WARNING_DIALOG_ID = "exoWarningDialog";
+      String WARNING_DIALOG_ID = "ideWarningModalView";
+
+      String WARNING_DIALOG_LOCATOR = "//div[@view-id='" + WARNING_DIALOG_ID + "']";
 
       String OK_BUTTON_ID = "OkButton";
 
-      String MESSAGE_SELECTOR = "div#" + WARNING_DIALOG_ID + " div.gwt-Label";
+      String MESSAGE_SELECTOR = "div[view-id=" + WARNING_DIALOG_ID + "] div.gwt-Label";
    }
 
    @FindBy(id = Locators.OK_BUTTON_ID)
@@ -70,7 +72,7 @@ public class WarningDialog extends AbstractTestModule
          {
             try
             {
-               WebElement view = input.findElement(By.id(Locators.WARNING_DIALOG_ID));
+               WebElement view = input.findElement(By.xpath(Locators.WARNING_DIALOG_LOCATOR));
                return (view != null && view.isDisplayed());
             }
             catch (NoSuchElementException e)

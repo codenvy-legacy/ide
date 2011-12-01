@@ -54,7 +54,7 @@ public class InitRepository extends AbstractTestModule
    {
       String VIEW_TITLE = "Initialize local repository";
 
-      String INIT_BUTTON = "Init";
+      String INIT_BUTTON = "Ok";
 
       String CANCEL_BUTTON = "Cancel";
 
@@ -190,7 +190,7 @@ public class InitRepository extends AbstractTestModule
     */
    public String getWorkDirectoryValue()
    {
-      return workdirField.getText();
+      return IDE().INPUT.getValue(workdirField);
    }
 
    /**

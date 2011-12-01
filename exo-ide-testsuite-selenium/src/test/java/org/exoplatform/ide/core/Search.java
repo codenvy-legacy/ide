@@ -169,7 +169,7 @@ public class Search extends AbstractTestModule
     */
    public String getPathValue()
    {
-      return pathField.getText();
+      return IDE().INPUT.getValue(pathField);
    }
 
    /**
@@ -179,7 +179,7 @@ public class Search extends AbstractTestModule
     */
    public String getContainingTextValue()
    {
-      return containingTextField.getText();
+      return IDE().INPUT.getValue(containingTextField);
    }
 
    /**
@@ -189,7 +189,7 @@ public class Search extends AbstractTestModule
     */
    public String getMimeTypeValue()
    {
-      return mimeTypeField.getText();
+      return IDE().INPUT.getValue(mimeTypeField);
    }
 
    /**

@@ -51,11 +51,21 @@ public class Branches extends AbstractTestModule
 
       String BRANCHES_GRID_ID = "ideBranchGrid";
 
-      String BRANCH_LOCATOR = "//table[@id=\"" + BRANCHES_GRID_ID + "\"]//div[contains(., \"%s\")]";
+      String BRANCH_LOCATOR = "//table[@id=\"" + BRANCHES_GRID_ID + "\"]//div[contains(., '%s')]";
 
       String BRANCH_CHECKED_LOCATOR = "//table[@id=\"" + BRANCHES_GRID_ID + "\"]//div[contains(., \"%s\")]/img";
 
-      String BRANCH_ROW_SELECTOR = "table#" + BRANCHES_GRID_ID + ">tbody:nth(0) tr";
+      String BRANCH_ROW_SELECTOR = "table#" + BRANCHES_GRID_ID + ">tbody:first-of-type tr";
+
+      String NEW_BRANCH_VIEW_ID = "exoAskForValueModalView";
+
+      String NEW_BRANCH_VIEW_LOCATOR = "//div[@view-id='" + NEW_BRANCH_VIEW_ID + "']";
+
+      String NEW_BRANCH_FIELD_ID = "valueField";
+
+      String OK_BUTTON_ID = "OkButton";
+
+      String CANCEL_BUTTON_ID = "CancelButton";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -73,8 +83,20 @@ public class Branches extends AbstractTestModule
    @FindBy(id = Locators.CLOSE_BUTTON_ID)
    private WebElement closeButton;
 
+   @FindBy(id = Locators.OK_BUTTON_ID)
+   private WebElement okButton;
+
+   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   private WebElement cancelButton;
+
+   @FindBy(name = Locators.NEW_BRANCH_FIELD_ID)
+   private WebElement branchNameField;
+
    @FindBy(id = Locators.BRANCHES_GRID_ID)
    private WebElement branchesGrid;
+
+   @FindBy(xpath = Locators.NEW_BRANCH_VIEW_LOCATOR)
+   private WebElement newBranchView;
 
    /**
    * Waits for Branches view to be opened.
@@ -135,6 +157,18 @@ public class Branches extends AbstractTestModule
       return (view != null && view.isDisplayed() && checkoutButton != null && checkoutButton.isDisplayed()
          && createButton != null && createButton.isDisplayed() && closeButton != null && closeButton.isDisplayed()
          && deleteButton != null && deleteButton.isDisplayed() && branchesGrid != null && branchesGrid.isDisplayed());
+   }
+
+   /**
+    * Returns the opened state of new branch view.
+    * 
+    * @return {@link Boolean} opened state of new branch view
+    */
+   public boolean isNewBranchViewOpened()
+   {
+      return (newBranchView != null && newBranchView.isDisplayed() && okButton != null && okButton.isDisplayed()
+         && cancelButton != null && cancelButton.isDisplayed() && branchNameField != null && branchNameField
+         .isDisplayed());
    }
 
    /**
@@ -275,7 +309,21 @@ public class Branches extends AbstractTestModule
    */
    public void waitNewBranchViewOpened() throws Exception
    {
-      IDE().ASK_FOR_VALUE_DIALOG.waitOpened();
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isNewBranchViewOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -285,7 +333,22 @@ public class Branches extends AbstractTestModule
     */
    public void waitNewBranchViewClosed() throws Exception
    {
-      IDE().ASK_FOR_VALUE_DIALOG.waitClosed();
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.NEW_BRANCH_VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
@@ -294,7 +357,7 @@ public class Branches extends AbstractTestModule
     */
    public void clickNewBranchOkButton() throws Exception
    {
-      IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
+      okButton.click();
    }
 
    /**
@@ -303,7 +366,7 @@ public class Branches extends AbstractTestModule
     */
    public void clickNewBranchCancelButton() throws Exception
    {
-      IDE().ASK_FOR_VALUE_DIALOG.clickCancelButton();
+      cancelButton.click();
    }
 
    /**
@@ -314,7 +377,7 @@ public class Branches extends AbstractTestModule
     */
    public void setNewBranchName(String newBranch) throws Exception
    {
-      IDE().ASK_FOR_VALUE_DIALOG.setValue(newBranch);
+      IDE().INPUT.typeToElement(branchNameField, newBranch, true);
    }
 
    /**

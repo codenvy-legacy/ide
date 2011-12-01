@@ -78,9 +78,13 @@ public class Input extends AbstractTestModule
     */
    public void setComboboxValue(WebElement element, String value) throws InterruptedException
    {
-      typeToElement(element, value, true);
-      typeToElement(element, Keys.ENTER.toString());
+      typeToElement(element, value + "\n", true);
       waitSuggestBoxHide();
+   }
+
+   public void clearComboboxValue(WebElement element) throws InterruptedException
+   {
+      element.clear();
    }
 
    private void waitSuggestBoxHide()
@@ -148,5 +152,27 @@ public class Input extends AbstractTestModule
       {
          //TODO think how to close
       }
+   }
+
+   /**
+    * Returns display value of select item.
+    * 
+    * @param input select item
+    * @return {@link String} display value of the select item
+    */
+   public String getDisplayValue(WebElement input)
+   {
+      return input.getText();
+   }
+
+   /**
+    * Get value of the input.
+    * 
+    * @param input input element (select, combobox)
+    * @return {@link String} input's value
+    */
+   public String getValue(WebElement input)
+   {
+      return input.getAttribute("value");
    }
 }

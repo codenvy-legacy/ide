@@ -56,7 +56,7 @@ public class ResetToCommit extends AbstractTestModule
 
       String HARD_MODE_LOCATOR = VIEW_LOCATOR + "//label[contains(text(), \"hard\")]";
 
-      String REVISION_ROW_SELECTOR = "table#" + REVISION_GRID_ID + ">tbody:nth(0) tr";
+      String REVISION_ROW_SELECTOR = "table#" + REVISION_GRID_ID + ">tbody:first-of-type tr";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)

@@ -128,7 +128,7 @@ public class Rename extends AbstractTestModule
     */
    public String getNewName()
    {
-      return (newNameField != null) ? newNameField.getText() : null;
+      return IDE().INPUT.getValue(newNameField);
    }
 
    /**
@@ -149,7 +149,7 @@ public class Rename extends AbstractTestModule
     */
    public String getMimeType()
    {
-      return (mimeTypeField != null) ? mimeTypeField.getText() : null;
+      return IDE().INPUT.getValue(mimeTypeField);
    }
 
    /**

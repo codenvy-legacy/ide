@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.git;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.BaseTest;
@@ -38,7 +41,7 @@ import java.util.List;
  */
 public class CommitTest extends BaseTest
 {
-   private static final String TEST_FOLDER = CommitTest.class.getSimpleName();
+   private static final String PROJECT = CommitTest.class.getSimpleName();
 
    private static final String TEST_FILE1 = "TestFile1";
 
@@ -47,14 +50,7 @@ public class CommitTest extends BaseTest
    @BeforeClass
    public static void setUp() throws Exception
    {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      VirtualFileSystemUtils.createDefaultProject(PROJECT);
    }
 
    @AfterClass
@@ -62,7 +58,7 @@ public class CommitTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -77,30 +73,36 @@ public class CommitTest extends BaseTest
    @Test
    public void testCommitCommand() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectRootItem();
+      driver.navigate().refresh();
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT, false);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      if (!PROJECT.equals(IDE.PROJECT.EXPLORER.getCurrentProject()))
+      {
+         IDE.PROJECT.OPEN.openProject(PROJECT);
+      }
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //Not Git repository:
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT, true);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT));
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
-      IDE.WARNING_DIALOG.waitOpened();
-      String message = IDE.WARNING_DIALOG.getWarningMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
+      IDE.GIT.COMMIT.waitOpened();
+      IDE.GIT.COMMIT.typeToMessageField("123");
+      IDE.GIT.COMMIT.clickCommitButton();
+      IDE.GIT.COMMIT.waitClosed();
+      IDE.OUTPUT.waitForMessageShow(1, 10);
+      String message = IDE.OUTPUT.getOutputMessage(1);
+      assertTrue(message.startsWith("[ERROR]"));
 
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
+      IDE.OUTPUT.waitForMessageShow(2, 10);
+      message = IDE.OUTPUT.getOutputMessage(2);
+      assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
       //Check commit is available:
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
       IDE.GIT.COMMIT.waitOpened();
 
@@ -115,24 +117,29 @@ public class CommitTest extends BaseTest
    @Test
    public void testCommitView() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      waitForLoaderDissapeared();
+      if (!PROJECT.equals(IDE.PROJECT.EXPLORER.getCurrentProject()))
+      {
+         IDE.PROJECT.OPEN.openProject(PROJECT);
+      }
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //Open Commit view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
       IDE.GIT.COMMIT.waitOpened();
-      Assert.assertTrue(IDE.GIT.COMMIT.isOpened());
-      Assert.assertFalse(IDE.GIT.COMMIT.isAddFieldChecked());
-      Assert.assertFalse(IDE.GIT.COMMIT.isCommitButtonEnabled());
-      Assert.assertTrue(IDE.GIT.COMMIT.isCancelButtonEnabled());
+      assertTrue(IDE.GIT.COMMIT.isOpened());
+      assertFalse(IDE.GIT.COMMIT.isAddFieldChecked());
+      assertFalse(IDE.GIT.COMMIT.isCommitButtonEnabled());
+      assertTrue(IDE.GIT.COMMIT.isCancelButtonEnabled());
 
       //Test Commit button state:
       IDE.GIT.COMMIT.typeToMessageField("test");
-      Assert.assertTrue(IDE.GIT.COMMIT.isCommitButtonEnabled());
+      assertTrue(IDE.GIT.COMMIT.isCommitButtonEnabled());
       IDE.GIT.COMMIT.typeToMessageField("");
-      Assert.assertFalse(IDE.GIT.COMMIT.isCommitButtonEnabled());
+      assertFalse(IDE.GIT.COMMIT.isCommitButtonEnabled());
 
       IDE.GIT.COMMIT.clickCancelButton();
       IDE.GIT.COMMIT.waitClosed();
@@ -146,20 +153,26 @@ public class CommitTest extends BaseTest
    @Test
    public void testCommitNewFiles() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      waitForLoaderDissapeared();
+      if (!PROJECT.equals(IDE.PROJECT.EXPLORER.getCurrentProject()))
+      {
+         IDE.PROJECT.OPEN.openProject(PROJECT);
+      }
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       createFiles();
 
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Check status before commit:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
+      IDE.OUTPUT.waitForMessageShow(2, 5);
       message = IDE.OUTPUT.getOutputMessage(2);
       List<String> notCommited = IDE.GIT.STATUS.getNotCommited(message);
       Assert.assertEquals(2, notCommited.size());
@@ -174,13 +187,13 @@ public class CommitTest extends BaseTest
       IDE.GIT.COMMIT.clickCommitButton();
       IDE.GIT.COMMIT.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(3);
+      IDE.OUTPUT.waitForMessageShow(3, 5);
       message = IDE.OUTPUT.getOutputMessage(3);
       Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
 
       //Check status after commit:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(4);
+      IDE.OUTPUT.waitForMessageShow(4, 5);
       message = IDE.OUTPUT.getOutputMessage(4);
       Assert.assertTrue(message.contains(Status.Messages.NOTHING_TO_COMMIT));
    }
@@ -190,26 +203,30 @@ public class CommitTest extends BaseTest
     * 
     * @throws Exception 
     */
-   @Test
+   //@Test
    public void testCommitWithoutAdd() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE1);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEST_FILE1, false);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      if (!PROJECT.equals(IDE.PROJECT.EXPLORER.getCurrentProject()))
+      {
+         IDE.PROJECT.OPEN.openProject(PROJECT);
+      }
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FILE1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FILE1);
       IDE.EDITOR.typeTextIntoEditor(0, "Some chages");
+      IDE.EDITOR.waitFileContentModificationMark(TEST_FILE1);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
-      waitForLoaderDissapeared();
-      IDE.EDITOR.closeFile(0);
-      
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.EDITOR.waitNoContentModificationMark(TEST_FILE1);
+      IDE.EDITOR.closeFile(1);
+
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Check status before commit:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 5);
       String message = IDE.OUTPUT.getOutputMessage(1);
       List<String> notUpdated = IDE.GIT.STATUS.getNotUdated(message);
       Assert.assertEquals(1, notUpdated.size());
@@ -226,13 +243,13 @@ public class CommitTest extends BaseTest
       IDE.GIT.COMMIT.clickCommitButton();
       IDE.GIT.COMMIT.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(2);
+      IDE.OUTPUT.waitForMessageShow(2, 10);
       message = IDE.OUTPUT.getOutputMessage(2);
       Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
 
       //Check status after commit:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(3);
+      IDE.OUTPUT.waitForMessageShow(3, 5);
       message = IDE.OUTPUT.getOutputMessage(3);
       Assert.assertTrue(message.contains(Status.Messages.NOTHING_TO_COMMIT));
    }
@@ -244,15 +261,17 @@ public class CommitTest extends BaseTest
    private void createFiles() throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE1);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE1);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE1);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE2);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE2);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE2);
+      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE2);
    }
 }

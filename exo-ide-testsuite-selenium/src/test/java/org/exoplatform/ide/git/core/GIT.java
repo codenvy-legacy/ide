@@ -65,6 +65,8 @@ public class GIT
       String PUSH_SUCCESS = "[INFO] Successfully pushed to remote repository %s";
 
       String PULL_SUCCESS = "[INFO] Successfully pulled from remote repository %s";
+      
+      String REPOSITORY_EXISTS = "[ERROR] Repository already exists:";
    }
 
    public interface DialogTitles

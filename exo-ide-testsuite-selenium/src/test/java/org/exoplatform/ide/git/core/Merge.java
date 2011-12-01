@@ -47,7 +47,7 @@ public class Merge extends AbstractTestModule
 
       String REF_TREE_ID = "MergeViewRefTree";
 
-      String REFERENCE_LOCATOR = "//div[@id='" + REF_TREE_ID + "']//div[contains(. , '%s')]";
+      String REFERENCE_LOCATOR = "//div[@id='" + REF_TREE_ID + "']//div[text()='%s']";
    }
 
    public interface Messages
