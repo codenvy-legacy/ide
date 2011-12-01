@@ -50,7 +50,7 @@ public class JavaDocTest extends JavaDocBase
          .contains("org.exoplatform.gwtframework.ui.client.component.autocomlete.AutocompleteTokenSelectedHandler"));
    }
 
-   @Test
+   @Test(expected = CodeAssistantException.class)
    public void methodWithNoJavaDocTest() throws CodeAssistantException, VirtualFileSystemException
    {
       String javaDoc =

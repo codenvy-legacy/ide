@@ -324,11 +324,12 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    /**
     * @param entity
     * @return
+    * @throws CodeAssistantException 
     */
-   private String getJavaDoc(AbstractJavaEntity entity)
+   private String getJavaDoc(AbstractJavaEntity entity) throws CodeAssistantException
    {
       if (entity.getComment() == null && entity.getTags().length == 0)
-         return "";
+         throw new CodeAssistantException(404, "Not found");
 
       return (entity.getComment() == null ? "" : entity.getComment()) + Util.tagsToString(entity.getTags());
    }
