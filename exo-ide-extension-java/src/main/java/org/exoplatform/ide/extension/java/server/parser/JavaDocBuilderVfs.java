@@ -28,6 +28,8 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -46,6 +48,9 @@ public class JavaDocBuilderVfs extends JavaDocBuilder
    private static final long serialVersionUID = 2801488236934185900L;
 
    private VirtualFileSystem vfs;
+
+   /** Logger. */
+   private static final Log LOG = ExoLogger.getLogger(JavaDocBuilderVfs.class);
 
    /**
     * @param vfs
@@ -85,13 +90,27 @@ public class JavaDocBuilderVfs extends JavaDocBuilder
       {
          try
          {
-            addSource(new InputStreamReader(vfs.getContent(i.getId()).getStream()));
+            addSource(new InputStreamReader(vfs.getContent(i.getId()).getStream()), i.getId());
          }
          catch (VirtualFileSystemException e)
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            if (LOG.isDebugEnabled())
+               LOG.debug(e);
          }
       }
+   }
+
+   /**
+    * @see com.thoughtworks.qdox.JavaDocBuilder#getClassByName(java.lang.String)
+    */
+   @Override
+   public JavaClass getClassByName(String name)
+   {
+      for (JavaClass clazz : getClasses())
+      {
+         if (clazz.getFullyQualifiedName().equals(name))
+            return clazz;
+      }
+      return null;
    }
 }

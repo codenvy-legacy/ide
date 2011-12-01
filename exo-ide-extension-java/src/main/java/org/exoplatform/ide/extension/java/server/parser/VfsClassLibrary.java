@@ -28,6 +28,8 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -44,6 +46,9 @@ public class VfsClassLibrary extends ClassLibrary
    private VirtualFileSystem vfs;
 
    private List<Folder> sourceFolders = new ArrayList<Folder>();
+
+   /** Logger. */
+   private static final Log LOG = ExoLogger.getLogger(VfsClassLibrary.class);
 
    /**
     * @param vfs
@@ -69,28 +74,32 @@ public class VfsClassLibrary extends ClassLibrary
       String path = mainClassName.replace('.', '/') + ".java";
       for (Folder f : sourceFolders)
       {
-         
+
          try
          {
-           Item i = vfs.getItemByPath(f + "/" + path, null, PropertyFilter.NONE_FILTER);
-           if(i instanceof File)
-           {
-              return vfs.getContent(i.getId()).getStream();
-           }
+            Item i = vfs.getItemByPath(f + "/" + path, null, PropertyFilter.NONE_FILTER);
+            if (i instanceof File)
+            {
+               return vfs.getContent(i.getId()).getStream();
+            }
          }
          catch (ItemNotFoundException e)
          {
+            if (LOG.isDebugEnabled())
+               LOG.debug(e);
             continue;
          }
          catch (PermissionDeniedException e)
          {
-            e.printStackTrace();
+            if (LOG.isWarnEnabled())
+               LOG.warn(e);
          }
          catch (VirtualFileSystemException e)
          {
-            e.printStackTrace();
+            if (LOG.isWarnEnabled())
+               LOG.warn(e);
          }
-         
+
       }
       return null;
    }

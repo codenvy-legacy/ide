@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import com.thoughtworks.qdox.model.JavaField;
-
-import com.thoughtworks.qdox.model.JavaMethod;
-
+import com.thoughtworks.qdox.model.AbstractJavaEntity;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderErrorHandler;
 import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderVfs;
 import org.exoplatform.ide.extension.java.server.parser.Util;
 import org.exoplatform.ide.extension.java.server.parser.VfsClassLibrary;
@@ -105,6 +105,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
 
       JavaDocBuilderVfs builder = new JavaDocBuilderVfs(vfs, new VfsClassLibrary(vfs));
+      builder.setErrorHandler(new JavaDocBuilderErrorHandler());
       builder.addSourceTree((Folder)sourceFolder);
       return builder;
    }
@@ -120,7 +121,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       JavaClass clazz = project.getClassByName(fqn);
       if (clazz == null)
          throw new CodeAssistantException(404, "Not found");
-      return clazz.getComment() + Util.tagsToString(clazz.getTags());
+      return getJavaDoc(clazz);
    }
 
    /**
@@ -301,7 +302,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          {
             if ((method.getName() + Util.toParameters(method.getParameterTypes(true))).equals(memberFqn))
             {
-               return method.getComment() + Util.tagsToString(method.getTags());
+               return getJavaDoc(method);
             }
          }
       }
@@ -312,11 +313,23 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          {
             if (field.getName().equals(memberFqn))
             {
-               return field.getComment() + Util.tagsToString(field.getTags());
+               return getJavaDoc(field);
             }
          }
       }
 
       throw new CodeAssistantException(404, "Not found");
+   }
+
+   /**
+    * @param entity
+    * @return
+    */
+   private String getJavaDoc(AbstractJavaEntity entity)
+   {
+      if (entity.getComment() == null && entity.getTags().length == 0)
+         return "";
+
+      return (entity.getComment() == null ? "" : entity.getComment()) + Util.tagsToString(entity.getTags());
    }
 }
