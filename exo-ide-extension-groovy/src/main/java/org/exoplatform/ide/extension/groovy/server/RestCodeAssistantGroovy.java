@@ -22,13 +22,13 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -54,9 +54,6 @@ public class RestCodeAssistantGroovy
    @Inject
    private GroovyCodeAssistant codeAssistant;
 
-   /** Logger. */
-   private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantGroovy.class);
-
    public RestCodeAssistantGroovy()
    {
    }
@@ -77,7 +74,6 @@ public class RestCodeAssistantGroovy
    {
       return codeAssistant.getClassByFQN(fqn, projectId, vfsId);
    }
-
 
    /**
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)
@@ -104,12 +100,13 @@ public class RestCodeAssistantGroovy
    @Path("/find-by-prefix/{prefix}")
    @Produces(MediaType.APPLICATION_JSON)
    public List<ShortTypeInfo> findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where,
-      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
+      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
    {
       if (where.equalsIgnoreCase("fqn"))
          return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
       return codeAssistant.getTypesByFqnPrefix(prefix, prefix, vfsId);
-      
+
    }
 
    /**
@@ -125,7 +122,8 @@ public class RestCodeAssistantGroovy
    @Path("/find-by-type/{type}")
    @Produces(MediaType.APPLICATION_JSON)
    public List<ShortTypeInfo> findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
-      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
+      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
    {
       return codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
 
@@ -135,9 +133,16 @@ public class RestCodeAssistantGroovy
    @Path("/class-doc")
    @Produces(MediaType.TEXT_HTML)
    public String getClassDoc(@QueryParam("fqn") String fqn, @QueryParam("projectid") String projectId,
-      @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
+      @QueryParam("vfsid") String vfsId, @QueryParam("isclass") @DefaultValue("true") boolean isClass)
+      throws CodeAssistantException, VirtualFileSystemException
    {
-      return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
-         + codeAssistant.getJavaDoc(fqn, projectId, vfsId) + "</body></html>";
+      if (projectId == null)
+         throw new InvalidArgumentException("'projectid' parameter is null.");
+      if (isClass)
+         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
+            + codeAssistant.getClassJavaDoc(fqn, projectId, vfsId) + "</body></html>";
+      else
+         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
+            + codeAssistant.getMemberJavaDoc(fqn, projectId, vfsId) + "</body></html>";
    }
 }
