@@ -483,22 +483,35 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       if (this.showLineNumbers)
       {
          cursorOffsetX += this.lineNumberFieldWidth;
-      }
-
-      List<? extends Token> tokenList = getTokenList();
+      } 
       
-      Token tokenBeforeCursor = getTokenBeforeCursor(tokenList, currentNode, cursorRow, cursorCol);
+      if (needUpdateTokenList)
+      {
+         needUpdateTokenList = false;
+         this.tokenList =  (List<TokenBeenImpl>) getTokenList();
+         
+         // to update token's FQNs
+         if (configuration.canBeValidated())
+         {
+            needValidateCode = false;
+            validateCode(this.tokenList);
+         }
+      }
+      
+      Token tokenBeforeCursor = getTokenBeforeCursor(this.tokenList, currentNode, cursorRow, cursorCol);
 
+      List<? extends Token> selectedTokenList = this.tokenList;
+      
       // read mimeType
       String currentLineMimeType = getCurrentLineMimeType();
       if (configuration.canHaveSeveralMimeTypes() && !genericMimeType.equals(currentLineMimeType))
       {
-         tokenList =
-            CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(),
+         selectedTokenList =
+            (List<TokenBeenImpl>) CodeValidator.extractCode((List<TokenBeenImpl>)this.tokenList, new LinkedList<TokenBeenImpl>(),
                currentLineMimeType);
       }
 
-      codeAssistant.autocompleteCalled(this, cursorOffsetX, cursorOffsetY, (List<Token>)tokenList, currentLineMimeType,
+      codeAssistant.autocompleteCalled(this, cursorOffsetX, cursorOffsetY, (List<Token>)selectedTokenList, currentLineMimeType,
          tokenBeforeCursor);
    }
 
@@ -542,7 +555,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       if (configuration.canHaveSeveralMimeTypes())
       {
-         String mimeType = CodeMirrorParserImpl.getLineMimeType(cursorPositionRow, (List<TokenBeenImpl>)getTokenList());
+         if (needUpdateTokenList)
+         {
+            needUpdateTokenList = false;
+            this.tokenList = (List<TokenBeenImpl>)getTokenList();
+         }
+         
+         String mimeType = CodeMirrorParserImpl.getLineMimeType(cursorPositionRow, this.tokenList);
 
          if (mimeType != null)
          {
@@ -565,11 +584,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       if (configuration.canBeAutocompleted())
       {
-         if (configuration.canBeValidated())
-         {
-            validateCode(tokenList); // to update token's FQNs
-         }
-
          if (configuration.getAutocompleteHelper() != null)
          {
             return configuration.getAutocompleteHelper().getTokenBeforeCursor(node, lineNumber, cursorPosition,
@@ -627,12 +641,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    
    private void validateCode(List<? extends Token> tokenList)
    {
-      if (needUpdateTokenList && showLineNumbers)
+      if (showLineNumbers)
       {
          needValidateCode = false;
          
          // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList         
-         if (this.tokenList == null || this.tokenList.isEmpty())
+         if (tokenList == null || tokenList.isEmpty())
          {
             // clear code error marks
             for (CodeLine lastCodeError : codeErrorList)
@@ -642,7 +656,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
             return;
          }
 
-         List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(this.tokenList);
+         List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(tokenList);
 
          udpateErrorMarks(newCodeErrorList);
       }   
@@ -1116,13 +1130,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    @Override
    public List<? extends Token> getTokenList()
    {
-      if (needUpdateTokenList)
-      {
-         needUpdateTokenList = false;
-         this.tokenList = (List<TokenBeenImpl>)configuration.getParser().getTokenList(this.editorId, editorObject, eventBus);         
-      }
-
-      return this.tokenList;
+      return (List<TokenBeenImpl>)configuration.getParser().getTokenList(this.editorId, this.editorObject, this.eventBus);         
    }
    
    /**
@@ -1133,11 +1141,11 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       if (needUpdateTokenList)
       {
-         configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
+         configuration.getParser().getTokenListInBackground(this.editorId, this.editorObject, this.eventBus);
       }
       else
       {
-         eventBus.fireEvent(new EditorTokenListPreparedEvent(this.editorId, tokenList));
+         eventBus.fireEvent(new EditorTokenListPreparedEvent(this.editorId, this.tokenList));
       }
    }
 
@@ -1209,7 +1217,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       if (configuration.canBeValidated())
       {
-         CodeLine importStatement = configuration.getCodeValidator().getImportStatement(getTokenList(), fqn);
+         if (needUpdateTokenList)
+         {
+            needUpdateTokenList = false;
+            this.tokenList = (List<TokenBeenImpl>)getTokenList();
+         }
+         
+         CodeLine importStatement = configuration.getCodeValidator().getImportStatement(this.tokenList, fqn);
          if (importStatement != null)
          {
             insertIntoLine(importStatement.getLineContent(), importStatement.getLineNumber());
@@ -1276,22 +1290,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       if (needValidateCode)
       {
-         needValidateCode = false;
-         
-         // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList         
-         if (this.tokenList == null || this.tokenList.isEmpty())
-         {
-            // clear code error marks
-            for (CodeLine lastCodeError : codeErrorList)
-            {
-               clearErrorMark(lastCodeError.getLineNumber());
-            }
-            return;
-         }
-
-         List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(this.tokenList);
-
-         udpateErrorMarks(newCodeErrorList);
+         validateCode(this.tokenList);
       }
    }
  
