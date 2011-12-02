@@ -22,7 +22,7 @@
       <c:layer top="0px" bottom="40px">
          <c:Border>
             <c:layer>
-				<p:ProjectsListGrid ui:field="projectsListGrid" width="100%"></p:ProjectsListGrid>
+				<p:ProjectsListGrid ui:field="projectsListGrid" width="100%" listGridId="ideProjectsListGrid"></p:ProjectsListGrid>
             </c:layer>
          </c:Border>
       </c:layer>

@@ -98,6 +98,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
             index++;
          }
       }
+      
       FolderModel parent = new FolderModel();
       ProjectModel project = null;
       if (selectedItems != null && selectedItems.size() != 0)

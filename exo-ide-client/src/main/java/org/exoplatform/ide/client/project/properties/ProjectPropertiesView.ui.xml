@@ -1,0 +1,92 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	xmlns:p="urn:import:org.exoplatform.ide.client.project.properties"
+	>
+
+	<ui:style>
+
+		.vertButPanel
+		{
+			width:110px;
+		}
+		
+		.vertBut
+		{
+			margin:10px;
+		}
+
+		.vertButFirst
+		{
+			margin-top:0px;
+		}
+
+
+		.butPanel
+		{
+			margin: 5px auto;
+			height:40px;
+			text-align: center;
+			width:100%;
+			min-width:445px;
+			display: inline;
+		}
+		
+		.butLeft
+		{
+			display: inline-block;
+		}
+		
+		.butRight
+		{
+			display: inline-block;
+			margin-left: 10px;
+		}
+		
+		.hr
+		{
+			background:#CCCCCC;
+			height:2px;
+			width:100%;
+ 			margin: auto 0;			
+		}
+		
+	</ui:style>
+
+	<c:Border margin="10" borderColor="transparent">
+		<c:layer top="0px" bottom="55px" left="0px" right="110px">
+			<c:Border>
+				<c:layer>
+					<p:PropertiesListGrid ui:field="propertiesListGrid"
+						width="100%" listGridId="ideProjectPropertiesListGrid"></p:PropertiesListGrid>
+				</c:layer>
+			</c:Border>
+		</c:layer>
+		
+		<c:layer top="0px" bottom="45px" right="0px" width="110px">
+			<g:FlowPanel addStyleNames="{style.vertButPanel}">
+				<c:ImageButton text="Add" imageName="add" ui:field="addButton"
+					buttonId="ideProjectPropertiesAddButton" addStyleNames="{style.vertBut}, {style.vertButFirst}"></c:ImageButton>
+				<c:ImageButton text="Edit" imageName="edit" ui:field="editButton"
+					buttonId="ideProjectPropertiesEditButton" addStyleNames="{style.vertBut}"></c:ImageButton>
+				<c:ImageButton text="Delete" imageName="delete" ui:field="deleteButton"
+					buttonId="ideProjectPropertiesDeleteButton" addStyleNames="{style.vertBut}"></c:ImageButton>
+			</g:FlowPanel>
+		</c:layer>
+		
+		<c:layer height="10px" bottom="40px">
+			<g:FlowPanel addStyleNames="{style.hr}"></g:FlowPanel>
+		</c:layer>
+		
+		<c:layer height="35px" bottom="0px">
+			<g:FlowPanel styleName="{style.butPanel}">
+				<c:ImageButton text="Ok" imageName="ok" ui:field="okButton" buttonId="ideProjectPropertiesOkButton" addStyleNames="{style.butLeft}"></c:ImageButton>
+				<c:ImageButton text="Cancel" imageName="cancel" ui:field="cancelButton" buttonId="ideProjectPropertiesCancelButton" addStyleNames="{style.butRight}"></c:ImageButton>
+			</g:FlowPanel>
+		</c:layer>
+	</c:Border>
+
+</ui:UiBinder>
+ 

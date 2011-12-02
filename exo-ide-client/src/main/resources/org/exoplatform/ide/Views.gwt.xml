@@ -199,4 +199,12 @@
       <when-type-is class="org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.client.project.properties.ProjectPropertiesView">
+      <when-type-is class="org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.project.properties.EditPropertyView">
+      <when-type-is class="org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display" />
+   </replace-with>
+
 </module>

@@ -39,12 +39,8 @@ import com.google.gwt.user.cellview.client.Column;
 public class ProjectsListGrid extends ListGrid<ProjectModel>
 {
 
-   public static final String ID = "ideProjectsListGrid";
-
    public ProjectsListGrid()
    {
-      setID(ID);
-      
       Column<ProjectModel, ImageResource> iconColumn = new Column<ProjectModel, ImageResource>(new ImageResourceCell())
       {
          @Override

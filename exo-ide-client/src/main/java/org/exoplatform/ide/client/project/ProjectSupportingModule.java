@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
+import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
@@ -68,6 +69,8 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       new TinyProjectExplorerPresenter();
 
       new CreateProjectPresenter();
+      
+      new ProjectPropertiesPresenter();
       
       IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
 

@@ -1,0 +1,87 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	>
+	
+	<ui:style>
+
+		.contentPanel
+		{
+			display: inline;
+			text-align: center;
+		}
+		
+		.label
+		{
+			width:50px;
+			height:30px;
+			line-height: 30px;
+			text-align: right;
+			display: inline-block;
+		}
+		
+		.edit
+		{
+			width:270px;
+			height:23px;
+			display: inline-block;
+			margin-left:5px;
+		}
+		
+		.delimiter
+		{
+			height:5px;
+		}		
+		
+		.butPanel
+		{
+			display: block;
+			height:30px;
+			margin-top:20px;
+		}
+		
+		.butPanelInner
+		{
+			position: relative;
+			width:220px;
+			margin-left:auto;
+			margin-right:auto;
+		}
+		
+		.butLeft
+		{
+			display: inline-block;
+		}
+		
+		.butRight
+		{
+			display: inline-block;
+			margin-left:10px;
+		}
+	
+	</ui:style>
+	
+	<c:Border margin="15" borderColor="transparent">
+		<c:layer>
+			<g:FlowPanel addStyleNames="{style.contentPanel}">
+				<c:Label text="Name:" addStyleNames="{style.label}"></c:Label>
+				<g:TextBox ui:field="nameField" addStyleNames="{style.edit}"></g:TextBox>
+				<g:FlowPanel styleName="{style.delimiter}"></g:FlowPanel>
+				<c:Label text="Value:" addStyleNames="{style.label}"></c:Label>
+				<g:TextBox ui:field="valueField" addStyleNames="{style.edit}"></g:TextBox>
+				<g:FlowPanel styleName="{style.delimiter}"></g:FlowPanel>
+				
+				<g:FlowPanel addStyleNames="{style.butPanel}">
+					<g:FlowPanel addStyleNames="{style.butPanelInner}">
+						<c:ImageButton ui:field="okButton" text="Ok" imageName="ok" addStyleNames="{style.butLeft}"></c:ImageButton>
+						<c:ImageButton ui:field="cancelButton" text="Cancel" imageName="cancel" addStyleNames="{style.butRight}"></c:ImageButton>
+					</g:FlowPanel>
+				</g:FlowPanel>
+				
+			</g:FlowPanel>
+		</c:layer>
+	</c:Border>	
+	
+</ui:UiBinder> 
