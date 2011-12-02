@@ -25,7 +25,6 @@ import org.exoplatform.services.security.UsernameCredential;
 import org.exoplatform.services.security.j2ee.TomcatLoginModule;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
