@@ -171,8 +171,12 @@ public class XmlParser extends CodeMirrorParserImpl
       if (currentToken != null) 
       {
          currentToken.setLastLineNumber(lineNumber);
-         currentToken = currentToken.getParentToken();
       } 
+      
+      if (currentToken.getParentToken() != null)
+      {
+        return currentToken.getParentToken();         
+      }
       
       return currentToken;
    }     

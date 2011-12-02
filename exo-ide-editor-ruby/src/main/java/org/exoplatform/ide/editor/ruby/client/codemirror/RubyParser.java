@@ -358,7 +358,13 @@ public class RubyParser extends CodeMirrorParserImpl
       currentToken.setLastLineNumber(lineNumber);
       enclosers.pop();
       nodeStack.clear();
-      return currentToken.getParentToken();
+      
+      if (currentToken.getParentToken() != null)
+      {
+         return currentToken.getParentToken();         
+      }
+      
+      return currentToken;
    }
 
    /**

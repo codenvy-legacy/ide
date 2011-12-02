@@ -1264,7 +1264,13 @@ public class PhpParser extends CodeMirrorParserImpl
       clearVariables(currentToken.getType());
       currentToken.setLastLineNumber(lineNumber);
       mainNodeStack.clear();
-      return currentToken.getParentToken();
+      
+      if (currentToken.getParentToken() != null)
+      {
+         return currentToken.getParentToken();         
+      }
+      
+      return currentToken;
    }
    
    /**
