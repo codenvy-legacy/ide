@@ -26,6 +26,7 @@ import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPathEntry;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**

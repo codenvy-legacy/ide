@@ -29,12 +29,9 @@ import javax.ws.rs.core.Application;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
 public class GroovyScriptServiceApplication extends Application
 {
-
    private final Set<Object> objects = new HashSet<Object>();
-
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
    public GroovyScriptServiceApplication()
@@ -52,5 +49,4 @@ public class GroovyScriptServiceApplication extends Application
    {
       return objects;
    }
-
 }

@@ -33,6 +33,8 @@ import java.net.URLConnection;
  */
 public class JcrGroovyResourceLoader extends DefaultGroovyResourceLoader
 {
+   // TODO : need to have configurable ??
+   private static final String[] IDE_SOURCE_FILE_EXTENSIONS = new String[]{".groovy", ".cmtc", ".grs"};
    private static final Log LOG = ExoLogger.getLogger(JcrGroovyResourceLoader.class);
 
    private static URL[] normalizeJcrURL(URL[] src) throws MalformedURLException
@@ -81,14 +83,15 @@ public class JcrGroovyResourceLoader extends DefaultGroovyResourceLoader
          LOG.debug("Process file: " + filename);
       return super.getResource(filename);
    }
-   
+
    /**
     * @see org.exoplatform.services.rest.ext.groovy.DefaultGroovyResourceLoader#createURL(java.net.URL,java.lang.String)
     */
+   @Override
    protected URL createURL(URL root, String filename) throws MalformedURLException
    {
-      return ("jcr".equals(root.getProtocol())) ? new URL(root, "#" + root.getRef() + filename)
-      : new URL(root, filename);
+      return ("jcr".equals(root.getProtocol())) ? new URL(root, "#" + root.getRef() + filename) : new URL(root,
+         filename);
    }
 
    /**
@@ -120,5 +123,11 @@ public class JcrGroovyResourceLoader extends DefaultGroovyResourceLoader
          if (connection != null && resource != null && "jcr".equals(resource.getProtocol()))
             ((JcrURLConnection)connection).disconnect();
       }
+   }
+
+   @Override
+   protected String[] getSourceFileExtensions()
+   {
+      return IDE_SOURCE_FILE_EXTENSIONS;
    }
 }

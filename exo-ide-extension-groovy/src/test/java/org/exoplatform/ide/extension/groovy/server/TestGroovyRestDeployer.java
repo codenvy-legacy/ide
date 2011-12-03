@@ -23,7 +23,7 @@ import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.tools.DummySecurityContext;
 import org.everrest.test.mock.MockPrincipal;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -31,10 +31,9 @@ import org.exoplatform.services.jcr.impl.core.NodeImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -53,11 +52,11 @@ import javax.ws.rs.core.SecurityContext;
 public class TestGroovyRestDeployer extends Base
 {
 
-   private Node testGroovyDeploy;
+   private Node testRoot;
 
    private Node testGroovyDeployAutoload;
 
-   private NodeImpl scriptFile;
+   private Node scriptFile;
 
    private Node scriptFileAutoload;
 
@@ -74,8 +73,8 @@ public class TestGroovyRestDeployer extends Base
    {
       super.setUp();
       resourceNumber = binder.getSize();
-      testGroovyDeploy = root.addNode("testRoot", "nt:unstructured");
-      scriptFile = (NodeImpl)testGroovyDeploy.addNode("script", "nt:file");
+      testRoot = root.addNode("testRoot", "nt:unstructured");
+      scriptFile = (NodeImpl)testRoot.addNode("script", "nt:file");
       script = scriptFile.addNode("jcr:content", "exo:groovyResourceContainer");
       script.setProperty("exo:autoload", false);
       script.setProperty("jcr:mimeType", "script/groovy");
@@ -95,7 +94,21 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
-   @Ignore
+   public void deploy() throws IOException, Exception
+   {
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      EnvironmentContext ctx = new EnvironmentContext();
+      ctx.put(SecurityContext.class, adminSecurityContext);
+      String path = "/ide/groovy/deploy" // 
+         + "?vfsid=ws" //
+         + "&id=" + ((ExtendedNode)scriptFile).getIdentifier() //
+         + "&projectid=" + ((ExtendedNode)testRoot).getIdentifier();
+      ContainerResponse cres = launcher.service("POST", path, "", headers, null, null, ctx);
+      Assert.assertEquals(204, cres.getStatus());
+      Assert.assertEquals(resourceNumber + 1, binder.getSize());
+   }
+
+   @Test
    public void undeploy() throws Exception
    {
       Assert.assertEquals(resourceNumber, binder.getSize());
@@ -104,97 +117,91 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/groovy/undeploy?vfsid=ws&id=" + scriptFile.getIdentifier(), "", headers, null, null, ctx);
-      System.out.println("TestGroovyRestDeployer.undeploy()" + cres.getEntity());
+      String path = "/ide/groovy/undeploy" //
+         + "?vfsid=ws" //
+         + "&id=" + ((ExtendedNode)scriptAutolad).getIdentifier();
+      ContainerResponse cres = launcher.service("POST", path, "", headers, null, null, ctx);
+      System.out.println("TestGroovyRestDeployer.undeploy() " + cres.getEntity());
       Assert.assertEquals(204, cres.getStatus());
       Assert.assertEquals(resourceNumber, binder.getSize());
    }
 
    @Test
-   @Ignore
    public void undeployNotAdmin() throws Exception
    {
       Assert.assertEquals(resourceNumber, binder.getSize());
       putAutoladedService();
       Assert.assertEquals(resourceNumber + 1, binder.getSize());
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot2/scriptFileAutoload");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/groovy/undeploy", "", headers, null, null, ctx);
+      String path = "/ide/groovy/undeploy" //
+         + "?vfsid=ws" //
+         + "&id=" + ((ExtendedNode)scriptAutolad).getIdentifier();
+      ContainerResponse cres = launcher.service("POST", path, "", headers, null, null, ctx);
       Assert.assertEquals(403, cres.getStatus());
       Assert.assertEquals(resourceNumber + 1, binder.getSize());
    }
 
    @Test
-   @Ignore
-   public void deploy() throws IOException, Exception
-   {
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy?vfsid=ws&id=" + scriptFile.getUUID(), "", headers, null, null, ctx);
-      Assert.assertEquals(204, cres.getStatus());
-      Assert.assertEquals(resourceNumber + 1, binder.getSize());
-   }
-
-   @Test
-   @Ignore
    public void deployWithOtherUserAccess() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy", "", headers, null, null, ctx);
-      Assert.assertEquals(204, cres.getStatus());
-      Assert.assertEquals(resourceNumber + 1, binder.getSize());
+      ctx.put(SecurityContext.class, devSecurityContext);
+      String path = "/ide/groovy/deploy" // 
+         + "?vfsid=ws" //
+         + "&id=" + ((ExtendedNode)scriptFile).getIdentifier() //
+         + "&projectid=" + ((ExtendedNode)testRoot).getIdentifier();
+      ContainerResponse cres = launcher.service("POST", path, "", headers, null, null, ctx);
+      Assert.assertEquals(403, cres.getStatus());
+      Assert.assertEquals(resourceNumber, binder.getSize());
    }
 
    @Test
-   @Ignore
    public void deployNotAdmin() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       Set<String> roles = new HashSet<String>();
       roles.add("developers");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy", "", headers, null, null, ctx);
+      String path = "/ide/groovy/deploy" // 
+         + "?vfsid=ws" //
+         + "&id=" + ((ExtendedNode)scriptFile).getIdentifier() //
+         + "&projectid=" + ((ExtendedNode)testRoot).getIdentifier();
+      ContainerResponse cres = launcher.service("POST", path, "", headers, null, null, ctx);
       Assert.assertEquals(403, cres.getStatus());
       Assert.assertEquals(resourceNumber, binder.getSize());
 
    }
 
    @Test
-   @Ignore
    public void deploySandbox() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
+      String path = "/ide/groovy/deploy-sandbox" // 
+         + "?vfsid=ws" //
+         + "&id=" + ((ExtendedNode)scriptFile).getIdentifier() //
+         + "&projectid=" + ((ExtendedNode)testRoot).getIdentifier();
+      ContainerResponse cres = launcher.service("POST", path, "", headers, null, null, ctx);
       Assert.assertEquals(204, cres.getStatus());
       Assert.assertEquals(resourceNumber + 1, binder.getSize());
    }
 
    @Test
-   @Ignore
-   //TODO: how to add org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter in eXo env
    public void deploySandboxAndUserAccess() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
+      String path = "/ide/groovy/deploy-sandbox" // 
+         + "?vfsid=ws" //
+         + "&id=" + ((ExtendedNode)scriptFile).getIdentifier() //
+         + "&projectid=" + ((ExtendedNode)testRoot).getIdentifier();
+      ContainerResponse cres = launcher.service("POST", path, "", headers, null, null, ctx);
       Assert.assertEquals(204, cres.getStatus());
       Assert.assertEquals(resourceNumber + 1, binder.getSize());
       cres = launcher.service("GET", "/test-groovy/groovy1/developers", "", headers, null, null, ctx);
@@ -207,22 +214,23 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
-   @Ignore
    public void deploySandboxNotDev() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("Content-type", "script/groovy");
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
+      String path = "/ide/groovy/deploy-sandbox" // 
+         + "?vfsid=ws" //
+         + "&id=" + ((ExtendedNode)scriptFile).getIdentifier() //
+         + "&projectid=" + ((ExtendedNode)testRoot).getIdentifier();
+      ContainerResponse cres = launcher.service("POST", path, "", headers, null, null, ctx);
       Assert.assertEquals(403, cres.getStatus());
       Assert.assertEquals(resourceNumber, binder.getSize());
    }
 
    private void putAutoladedService() throws Exception
    {
-      testGroovyDeployAutoload = root.addNode("testRoot2", "nt:unstructured");
+      testGroovyDeployAutoload = root.addNode("testRootAutoload", "nt:unstructured");
       scriptFileAutoload = testGroovyDeployAutoload.addNode("scriptFileAutoload", "nt:file");
       scriptAutolad = scriptFileAutoload.addNode("jcr:content", "exo:groovyResourceContainer");
       scriptAutolad.setProperty("exo:autoload", true);
@@ -241,5 +249,4 @@ public class TestGroovyRestDeployer extends Base
       binder.removeResource("test-groovy");
       super.tearDown();
    }
-
 }

@@ -27,6 +27,7 @@ import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
 import org.exoplatform.ide.extension.groovy.server.Base;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -81,14 +82,14 @@ public class CodeAssitantTest extends Base
    public void setUp() throws Exception
    {
       super.setUp();
-      decMethods =
-         ClassLoader.getSystemClassLoader().loadClass(Address.class.getCanonicalName()).getDeclaredMethods().length;
-      methods = ClassLoader.getSystemClassLoader().loadClass(Address.class.getCanonicalName()).getMethods().length;
-      putClass(ClassLoader.getSystemClassLoader(), session, Address.class.getCanonicalName());
-      putClass(ClassLoader.getSystemClassLoader(), session, A.class.getCanonicalName());
-      putClass(ClassLoader.getSystemClassLoader(), session, Integer.class.getCanonicalName());
-      putClass(ClassLoader.getSystemClassLoader(), session, C.class.getCanonicalName());
-      putClass(ClassLoader.getSystemClassLoader(), session, Foo.class.getCanonicalName());
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      decMethods = classLoader.loadClass(Address.class.getCanonicalName()).getDeclaredMethods().length;
+      methods = classLoader.loadClass(Address.class.getCanonicalName()).getMethods().length;
+      putClass(classLoader, session, Address.class.getCanonicalName());
+      putClass(classLoader, session, A.class.getCanonicalName());
+      putClass(classLoader, session, Integer.class.getCanonicalName());
+      putClass(classLoader, session, C.class.getCanonicalName());
+      putClass(classLoader, session, Foo.class.getCanonicalName());
       createProject(session);
    }
 
@@ -127,7 +128,6 @@ public class CodeAssitantTest extends Base
             + "error", "", null, null, null, null);
       Assert.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), cres.getStatus());
    }
-
 
    @Test
    @SuppressWarnings("unchecked")
@@ -221,14 +221,15 @@ public class CodeAssitantTest extends Base
    public void classDoc() throws Exception
    {
       Assert.assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/java.math.BigDecimal/jcr:content"));
-      ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/class-doc?isclass=true&fqn=" + BigDecimal.class.getCanonicalName(), "",
-            null, null, null, null);
+      session.getRootNode().getNode("project");
+      String path = "/ide/code-assistant/groovy/class-doc" //
+         + "?fqn=" + BigDecimal.class.getCanonicalName() //
+         + "&projectid=" + ((ExtendedNode)session.getRootNode().getNode("project")).getIdentifier();
+      ContainerResponse cres = launcher.service("GET", path, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       Assert.assertNotNull(cres.getEntity());
       String doc = (String)cres.getEntity();
       Assert.assertTrue(doc.contains("Immutable, arbitrary-precision signed decimal numbers"));
-
    }
 
    @Test
@@ -236,8 +237,10 @@ public class CodeAssitantTest extends Base
    {
       Assert.assertTrue(root.hasNode("dev-doc/java/java.math/java.math.BigDecimal/methods-doc"));
       String method = BigDecimal.class.getCanonicalName() + ".add(BigDecimal)";
-      ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/class-doc?isclass=false&fqn=" + method, "", null, null, null, null);
+      String path = "/ide/code-assistant/groovy/class-doc" //
+         + "?fqn=" + method //
+         + "&projectid=" + ((ExtendedNode)session.getRootNode().getNode("project")).getIdentifier();
+      ContainerResponse cres = launcher.service("GET", path, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       Assert.assertNotNull(cres.getEntity());
    }

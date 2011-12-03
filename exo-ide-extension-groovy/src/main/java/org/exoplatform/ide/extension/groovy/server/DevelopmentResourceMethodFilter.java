@@ -39,7 +39,6 @@ import javax.ws.rs.core.SecurityContext;
 @Filter
 public class DevelopmentResourceMethodFilter implements MethodInvokerFilter
 {
-
    /**
     * {@inheritDoc}
     */
@@ -60,5 +59,4 @@ public class DevelopmentResourceMethodFilter implements MethodInvokerFilter
          }
       }
    }
-
 }
