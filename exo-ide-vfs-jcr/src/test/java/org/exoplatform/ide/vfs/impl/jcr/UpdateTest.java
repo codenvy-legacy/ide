@@ -91,6 +91,40 @@ public class UpdateTest extends JcrFileSystemTest
       assertEquals(true, file.getProperty("MyProperty").getBoolean());
    }
 
+   public void testUpdatePropertiesFile4() throws Exception
+   {
+      Node file = testRoot.addNode("testUpdatePropertiesFile4", "exo:extFile");
+      Node contentNode = file.addNode("jcr:content", "exo:extResource");
+      contentNode.setProperty("jcr:mimeType", "text/plain");
+      contentNode.setProperty("jcr:encoding", "utf8");
+      contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
+      contentNode.setProperty("jcr:data", "");
+
+      contentNode.setProperty("a", "to be or not to be");
+      contentNode.setProperty("b", "hello world");
+      contentNode.setProperty("d", "test");
+      session.save();
+
+      String properties = "[{\"name\":\"a\", \"value\":[\"TEST\"]}," //
+         + "{\"name\":\"b\", \"value\":[\"TEST\"]}," //
+         + "{\"name\":\"c\", \"value\":[\"TEST\"]}," //
+         + "{\"name\":\"d\", \"value\":[\"TEST\"]}," //
+         + "{\"name\":\"e\", \"value\":[\"TEST\"]}]";
+      doUpdate(((ExtendedNode)file).getIdentifier(), properties);
+
+      // Property 'a' determined for node type 'exo:extResource' and was set previously.
+      assertEquals("TEST", contentNode.getProperty("a").getString());
+      // Property 'b' determined for node type 'exo:extResource' and was set previously.
+      assertEquals("TEST", contentNode.getProperty("b").getString());
+      // Property 'c' determined for node type 'exo:extResource' but was not set previously.
+      assertEquals("TEST", contentNode.getProperty("c").getString());
+      // Property 'd' determined for node type 'exo:extResource' and was set previously.
+      assertEquals("TEST", contentNode.getProperty("d").getString());
+      // Property 'e' not determined for any node types. Must be updated in exo:extFile
+      // since it supports '*' property.
+      assertEquals("TEST", file.getProperty("e").getString());
+   }
+
    public void testUpdatePropertiesAndChangeFolderType() throws Exception
    {
       String properties = "[{\"name\":\"vfs:mimeType\", \"value\":[\"text/vnd.ideproject+directory\"]}]";

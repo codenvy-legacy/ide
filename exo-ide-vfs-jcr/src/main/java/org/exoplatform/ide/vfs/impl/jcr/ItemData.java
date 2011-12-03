@@ -98,7 +98,8 @@ abstract class ItemData
    /** Set of known JCR properties that should be skipped. */
    static final Set<String> SKIPPED_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:primaryType", "jcr:created",
       "jcr:uuid", "jcr:baseVersion", "jcr:isCheckedOut", "jcr:predecessors", "jcr:versionHistory", "jcr:mixinTypes",
-      "jcr:frozenMixinTypes", "jcr:frozenPrimaryType", "jcr:frozenUuid", "exo:permissions", "exo:owner"));
+      "jcr:frozenMixinTypes", "jcr:frozenPrimaryType", "jcr:frozenUuid", "jcr:encoding", "jcr:mimeType", "jcr:data",
+      "jcr:lastModified", "exo:permissions", "exo:owner"));
 
    Node node;
    final ItemType type;
@@ -418,7 +419,7 @@ abstract class ItemData
     * @throws PermissionDeniedException if properties can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   final void updateProperties(List<ConvertibleProperty> properties, String[] addMixinTypes, String[] removeMixinTypes,
+   void updateProperties(List<ConvertibleProperty> properties, String[] addMixinTypes, String[] removeMixinTypes,
       String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -480,14 +481,13 @@ abstract class ItemData
    void updateProperty(Node theNode, ConvertibleProperty property) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      String name = property.getName();
       String[] value = property.valueToArray(String[].class);
 
       try
       {
          if (value == null || value.length == 0)
          {
-            theNode.setProperty(name, (Value)null);
+            theNode.setProperty(property.getName(), (Value)null);
          }
          else
          {
@@ -500,41 +500,36 @@ abstract class ItemData
             {
                try
                {
-                  theNode.setProperty(name, jcrValue);
+                  theNode.setProperty(property.getName(), jcrValue);
                }
                catch (ValueFormatException e)
                {
-                  theNode.setProperty(name, jcrValue[0]);
+                  theNode.setProperty(property.getName(), jcrValue[0]);
                }
             }
             else
             {
-               theNode.setProperty(name, jcrValue[0]);
+               theNode.setProperty(property.getName(), jcrValue[0]);
             }
          }
       }
       catch (ValueFormatException e)
       {
-         throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
+         throw new ConstraintException("Unable update property " + property.getName()
+            + ". Specified value is not allowed. ");
       }
       catch (javax.jcr.nodetype.ConstraintViolationException e)
       {
-         throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
+         throw new ConstraintException("Unable update property " + property.getName()
+            + ". Specified value is not allowed. ");
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable to update property " + name + ". Item is locked. ");
+         throw new LockException("Unable to update property " + property.getName() + ". Item is locked. ");
       }
       catch (RepositoryException e)
       {
-         String message = e.getMessage();
-         // TODO : Incorrect type of exception from JCR layer, EXOJCR-1589.
-         // Remove this workaround after fixing the bug in JCR.
-         if (("Property definition '[]" + name + "' is not found.").equals(message))
-         {
-            throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
-         }
-         throw new VirtualFileSystemException("Unable update property " + name + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable update property " + property.getName() + ". " + e.getMessage(), e);
       }
       catch (IOException e)
       {

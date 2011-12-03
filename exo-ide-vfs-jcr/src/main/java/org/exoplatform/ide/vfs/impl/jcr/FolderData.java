@@ -390,10 +390,6 @@ public class FolderData extends ItemData
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#updateProperty(javax.jcr.Node,
-    *      org.exoplatform.ide.vfs.server.ConvertibleProperty)
-    */
    @Override
    final void updateProperty(Node theNode, ConvertibleProperty property) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException

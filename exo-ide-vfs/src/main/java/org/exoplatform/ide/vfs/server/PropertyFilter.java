@@ -34,13 +34,13 @@ public class PropertyFilter
    /** Property filter for all properties. */
    public static final String ALL = "*";
 
-   /** Property filter for all properties. */
+   /** Property filter for skip all properties. */
    public static final String NONE = "none";
 
    /** Property filter for all properties. */
    public static final PropertyFilter ALL_FILTER;
 
-   /** Property filter for all properties. */
+   /** Property filter for skip all properties. */
    public static final PropertyFilter NONE_FILTER;
 
    static
@@ -57,7 +57,7 @@ public class PropertyFilter
     * @param filterString the string that contains either '*' or comma-separated
     *           list of properties names. An arbitrary number of space allowed
     *           before and after each comma. If filterString is 'none' it minds
-    *           all properties should be regicted by filter.
+    *           all properties should be rejected by filter.
     * @throws InvalidArgumentException if <code>filterString</code> is invalid
     */
    public static PropertyFilter valueOf(String filterString) throws InvalidArgumentException

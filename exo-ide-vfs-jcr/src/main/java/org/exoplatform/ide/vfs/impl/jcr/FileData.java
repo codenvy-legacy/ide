@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -27,9 +29,13 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemExistsException;
@@ -40,6 +46,8 @@ import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NodeType;
+import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.ws.rs.core.MediaType;
@@ -518,5 +526,156 @@ class FileData extends ItemData
       {
          throw new VirtualFileSystemException("Unable update content of file " + getName() + ". " + e.getMessage(), e);
       }
+   }
+
+   @SuppressWarnings("rawtypes")
+   @Override
+   final List<Property> getProperties(Node theNode, PropertyFilter filter) throws PermissionDeniedException,
+      VirtualFileSystemException
+   {
+      try
+      {
+         List<Property> properties = super.getProperties(theNode, filter);
+         // Get properties from jcr:content node. In fact always skip 'known' properties
+         // for node type 'nt:resource' such as: 'jcr:encoding', 'jcr:mimeType', 'jcr:data',
+         // 'jcr:lastModified'. But if type of jcr:content node is extension of 'nt:resource'
+         // it may contains other properties so need retrieve them.
+         properties.addAll(super.getProperties(theNode.getNode("jcr:content"), filter));
+         return properties;
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+      }
+   }
+
+   @Override
+   final void updateProperties(List<ConvertibleProperty> properties, String[] addMixinTypes, String[] removeMixinTypes,
+      String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
+      VirtualFileSystemException
+   {
+      if (properties == null || properties.size() == 0)
+      {
+         return;
+      }
+
+      try
+      {
+         Session session = node.getSession();
+         if (lockToken != null)
+         {
+            session.addLockToken(lockToken);
+         }
+
+         if (removeMixinTypes != null && removeMixinTypes.length > 0)
+         {
+            for (int i = 0; i < removeMixinTypes.length; i++)
+            {
+               node.removeMixin(removeMixinTypes[i]);
+            }
+         }
+
+         if (addMixinTypes != null)
+         {
+            for (int i = 0; i < addMixinTypes.length; i++)
+            {
+               if (node.canAddMixin(addMixinTypes[i]))
+               {
+                  node.addMixin(addMixinTypes[i]);
+               }
+            }
+         }
+         Map<String, PropertyDefinition> ntFilePropertyDefinitions = null;
+         Map<String, PropertyDefinition> ntResourcePropertyDefinitions = null;
+         Node contentNode = node.getNode("jcr:content");
+         for (ConvertibleProperty property : properties)
+         {
+            // Since properties from nt:file and nt:resource are merged
+            // in method getProperties(Node, PropertyFilter) here we need to determine
+            // which node should be updated.
+            String propertyName = property.getName();
+            if (node.hasProperty(propertyName))
+            {
+               // If nt:file node already contains property simple try to update it.
+               updateProperty(node, property);
+            }
+            else if (contentNode.hasProperty(propertyName))
+            {
+               // If nt:resource (jcr:content) node already contains property simple try to update it.
+               updateProperty(contentNode, property);
+            }
+            else
+            {
+               if (ntFilePropertyDefinitions == null)
+               {
+                  // Read property definitions for nt:file or its extension.
+                  ntFilePropertyDefinitions = buildPropertyDefinitionsMap(node);
+               }
+               if (ntFilePropertyDefinitions.get(propertyName) != null)
+               {
+                  // If property definition found in nt:file then update nt:file.
+                  updateProperty(node, property);
+                  continue;
+               }
+               if (ntResourcePropertyDefinitions == null)
+               {
+                  // Read property definitions for nt:resource (jcr:content) or its extension.
+                  ntResourcePropertyDefinitions = buildPropertyDefinitionsMap(contentNode);
+               }
+               if (ntResourcePropertyDefinitions.get(propertyName) != null)
+               {
+                  // If property definition found in nt:resource (jcr:content) then update jcr:content.
+                  updateProperty(contentNode, property);
+                  continue;
+               }
+               try
+               {
+                  // If definition not found then try to update nt:file first.
+                  // Node type may contain '*' property definition. 
+                  updateProperty(node, property);
+               }
+               catch (ConstraintException e)
+               {
+                  // If property is not acceptable for nt:file try to update nt:resource. 
+                  updateProperty(contentNode, property);
+               }
+            }
+         }
+         session.save();
+      }
+      catch (javax.jcr.lock.LockException e)
+      {
+         throw new LockException("Unable to update properties of item " + getName() + ". Item is locked. ");
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable to update properties of item " + getName()
+            + ". Operation not permitted. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable update properties of item " + getName() + ". " + e.getMessage(),
+            e);
+      }
+   }
+
+   private Map<String, PropertyDefinition> buildPropertyDefinitionsMap(Node theNode) throws RepositoryException
+   {
+      Map<String, PropertyDefinition> map = new HashMap<String, PropertyDefinition>();
+      PropertyDefinition[] ppropertyDefinitions = theNode.getPrimaryNodeType().getPropertyDefinitions();
+      for (int i = 0; i < ppropertyDefinitions.length; i++)
+      {
+         map.put(ppropertyDefinitions[i].getName(), ppropertyDefinitions[i]);
+      }
+      NodeType[] mixinNodeTypes = theNode.getMixinNodeTypes();
+      for (int i = 0; i < mixinNodeTypes.length; i++)
+      {
+         PropertyDefinition[] mpropertyDefinitions = mixinNodeTypes[i].getPropertyDefinitions();
+         for (int j = 0; j < mpropertyDefinitions.length; j++)
+         {
+            map.put(mpropertyDefinitions[j].getName(), mpropertyDefinitions[j]);
+         }
+      }
+      return map;
    }
 }
