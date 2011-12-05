@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.asmtest;
+package org.exoplatform.ide.codeassistant.asm;
 
 import org.objectweb.asm.ClassReader;
 
@@ -41,6 +41,17 @@ class ByteCodeFilenameFilter implements FilenameFilter
 
 }
 
+/**
+ * <p>
+ * This class parses classes. It's can parse simple class-file, jar-file and
+ * directory with class-files and jar-files. There are a lot of methods to parse
+ * classes like {@link ClassParser#parseDir(File)}. When parse method was
+ * invoked all classes which found was added to private list
+ * {@link ClassParser#classes}. You may get list of all classes which parsed by
+ * method {@link ClassParser#getClasses()}. If you need to clear all classes
+ * from private list, you may use method {@link ClassParser#clear()};
+ * </p>
+ */
 public class ClassParser
 {
 
@@ -64,15 +75,32 @@ public class ClassParser
       parse(new FileInputStream(classFile));
    }
 
+   /**
+    * <p>
+    * Method parses all bin files in directory {@code dir}. You may skip some
+    * files from directory by {@code filter}. Parsed files may have two type of
+    * extensions: {@code .class} and {@code .jar}.
+    * </p>
+    * <ul>
+    * <li>If File has extension {@code .class} then file will be parsed as
+    * class-file.</li>
+    * <li>If File has extension {@code .jar} then file will be parsed as
+    * jar-archive.</li>
+    * </ul>
+    * 
+    * @param dir
+    * @param filter
+    * @throws IOException
+    */
    public void parseDir(File dir, FilenameFilter filter) throws IOException
    {
       for (File current : dir.listFiles(filter))
       {
-         if (current.getName().endsWith("class"))
+         if (current.getName().endsWith(".class"))
          {
             parseClassFile(current);
          }
-         else if (current.getName().endsWith("jar"))
+         else if (current.getName().endsWith(".jar"))
          {
             parseJarFile(current);
          }
@@ -102,6 +130,7 @@ public class ClassParser
          {
             parse(zip);
          }
+         entry = zip.getNextEntry();
       }
    }
 

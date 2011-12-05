@@ -16,14 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.asmtest;
+package org.exoplatform.ide.codeassistant.asm;
 
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
+/**
+ * <p>
+ * This class is asm class visitor. It's use {@link TypeInfoBuilder} class for
+ * storing class data. When {@link TypeInfoClassVisitor} visit class definition,
+ * it's create {@link TypeInfoBuilder} object. When {@link TypeInfoClassVisitor}
+ * visit field, method or constructor definition, it's add it to private
+ * {@link TypeInfoBuilder}, and {@link TypeInfoBuilder} transform data from asm
+ * format to {@link TypeInfo}.
+ * </p>
+ */
 public class TypeInfoClassVisitor implements ClassVisitor
 {
 
@@ -80,6 +91,9 @@ public class TypeInfoClassVisitor implements ClassVisitor
       {
          builder.addConstructor(access, exceptions, desc);
       }
+      /*
+       * "<clinit>" is static class initialization area, so ignore it
+       */
       else if (!name.equals("<clinit>"))
       {
          builder.addMethod(access, name, exceptions, desc);

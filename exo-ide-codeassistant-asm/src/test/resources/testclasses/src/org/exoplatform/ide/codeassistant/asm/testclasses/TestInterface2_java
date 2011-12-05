@@ -16,14 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.test;
+package org.exoplatform.ide.codeassistant.asm.testclasses;
 
-public @interface TestAnnotation {
+public interface TestInterface2
+{
 
-   int a();
+   int method3(double a, int b, char c, float[][][] d, String[] e);
 
-   double b();
-
-   String c();
+   void method4(String a, Boolean b, boolean c, int[][][][][] d);
 
 }

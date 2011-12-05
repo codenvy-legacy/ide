@@ -16,37 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.test;
+package org.exoplatform.ide.codeassistant.asm.testclasses;
 
-public class TestClass extends TestSuper implements TestInterface, TestInterface2
+import java.io.IOException;
+
+public abstract class TestSuper
 {
 
-   @Override
-   public int method3(double a, int b, char c, float[][][] d, String[] e)
-   {
-      return 0;
-   }
+   protected int a;
 
-   @Override
-   public void method4(String a, Boolean b, boolean c, int[][][][][] d)
+   protected abstract void method0(int a);
+
+   public void method()
    {
    }
 
-   @Override
-   public int method1()
+   public void method(int i) throws RuntimeException, IOException
    {
-      return 0;
    }
 
-   @Override
-   public int method2(int a)
+   public void method(double f) throws Exception
    {
-      return 0;
    }
 
-   @Override
-   protected void method0(int a)
+   public String toString()
    {
+      return null;
    }
 
 }

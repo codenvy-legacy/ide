@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.asmtest;
+package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
@@ -28,8 +28,40 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>
+ * This class used for building {@link TypeInfo} objects using data from
+ * <b>asm</b> library. When {@link TypeInfoClassVisitor} visits methods,
+ * constructors and fields, it's add they in builder using methods
+ * {@link #addField(int, String, String)},
+ * {@link #addMethod(int, String, String[], String),
+ * {@link #addConstructor(int, String, String[], String)}.<br>
+ * NOTE: This methods are private for this package and shouldn't be invoked by
+ * user code.
+ * </p>
+ * <p>
+ * Instance of {@link TypeInfoBuilder} creates by {@link TypeInfoClassVisitor}
+ * when it visits class definition. You can get {@link TypeInfoBuilder} objects
+ * by method {@link ClassParser#getClasses()}. You may be sure that when you get
+ * {@link TypeInfoBuilder} object, all fields, methods and constructors was
+ * added.
+ * </p>
+ */
 public class TypeInfoBuilder
 {
+
+   /**
+    * There are constants for <b>modifier</b> flag.<br>
+    * There are no (yet) <b>public</b> constants for this flags in {@list
+    * Modifier}, because <b>they have different meanings for fields and
+    * methods</b>. More details, see in {@link Modifier} source;
+    * 
+    */
+   public static final int MODIFIER_SYNTHETIC = 0x00001000;
+
+   public static final int MODIFIER_ANNOTATION = 0x00002000;
+
+   public static final int MODIFIER_ENUM = 0x00004000;
 
    private final String qualifiedName;
 
@@ -65,11 +97,11 @@ public class TypeInfoBuilder
       }
 
       this.modifiers = access;
-      if ((modifiers & 0x00004000) != 0)
+      if ((modifiers & MODIFIER_ENUM) != 0)
       {
          type = "ENUM";
       }
-      else if ((modifiers & 0x00002000) != 0)
+      else if ((modifiers & MODIFIER_ANNOTATION) != 0)
       {
          type = "ANNOTATION";
       }
@@ -101,13 +133,24 @@ public class TypeInfoBuilder
       typeInfo.setFields(fields.toArray(new FieldInfo[0]));
       typeInfo.setMethods(methods.toArray(new MethodInfo[0]));
       typeInfo.setConstructors(constructors.toArray(new RoutineInfo[0]));
+
+      /*
+      There are no way to fill declared fields, methods and constructors, because there are no class hierarchy,
+      each class parses separately.
+      */
       typeInfo.setDeclaredFields(null);
       typeInfo.setDeclaredMethods(null);
       typeInfo.setDeclaredConstructors(null);
+
       typeInfo.setInterfaces(interfaces);
       typeInfo.setSuperClass(superName);
       typeInfo.setType(type);
       return typeInfo;
+   }
+
+   public String getName()
+   {
+      return qualifiedName;
    }
 
    void addField(int access, String name, String desc)
@@ -178,7 +221,14 @@ public class TypeInfoBuilder
             exceptions[i] = exceptions[i].replace('/', '.');
          }
       }
-      routineInfo.setGenericExceptionTypes(exceptions);
+      if (exceptions == null)
+      {
+         routineInfo.setGenericExceptionTypes(new String[0]);
+      }
+      else
+      {
+         routineInfo.setGenericExceptionTypes(exceptions);
+      }
 
       String[] variables = splitMethodDesc(desc);
       StringBuilder genericParameterTypesBuilder = new StringBuilder();
@@ -219,6 +269,19 @@ public class TypeInfoBuilder
       return transformTypeFormat(type.substring(index), index);
    }
 
+   /**
+    * Method transforms variable types without arrays<br>
+    * from: Ljava/io/ObjectStreamField;<br>
+    * to: java.io.ObjectStreamField<br>
+    * 
+    * Mainly, this method will be used only from
+    * {@link #transformTypeFormat(String)} method.<br>
+    * 
+    * @param type
+    * @param arrayLevel
+    *           level of arrays which will add after type
+    * @return
+    */
    private String transformTypeFormat(String type, int arrayLevel)
    {
       StringBuilder transformedTypeBuilder = new StringBuilder();
@@ -277,6 +340,16 @@ public class TypeInfoBuilder
       return name.substring(name.lastIndexOf('.') + 1);
    }
 
+   /**
+    * Method get method description and return genericParameterTypes. Return
+    * type ignored<br>
+    * For example:<br>
+    * input: (I,[D,Ljava.lang.String)V output: ["int", "double[]",
+    * "java.lang.String"]
+    * 
+    * @param desc
+    * @return
+    */
    private String[] splitMethodDesc(String desc)
    {
       desc = desc.substring(0, desc.lastIndexOf(')'));
@@ -326,6 +399,11 @@ public class TypeInfoBuilder
       builder.append(typeInfo.getType().toLowerCase());
       builder.append(" ");
       builder.append(typeInfo.getName());
+      if (!typeInfo.getSuperClass().equals("java.lang.Object"))
+      {
+         builder.append(" extends ");
+         builder.append(typeInfo.getSuperClass());
+      }
       builder.append(" {\n");
 
       if (typeInfo.getFields().length > 0)
@@ -353,6 +431,20 @@ public class TypeInfoBuilder
          {
             builder.append("   ");
             builder.append(constructor.getGeneric());
+            if (constructor.getGenericExceptionTypes().length > 0)
+            {
+               builder.append(" throws ");
+               boolean z = false;
+               for (String exception : constructor.getGenericExceptionTypes())
+               {
+                  if (z)
+                  {
+                     builder.append(", ");
+                  }
+                  builder.append(exception);
+                  z = true;
+               }
+            }
             builder.append(";\n");
          }
          builder.append("\n");
@@ -362,6 +454,20 @@ public class TypeInfoBuilder
       {
          builder.append("   ");
          builder.append(method.getGeneric());
+         if (method.getGenericExceptionTypes().length > 0)
+         {
+            builder.append(" throws ");
+            boolean z = false;
+            for (String exception : method.getGenericExceptionTypes())
+            {
+               if (z)
+               {
+                  builder.append(", ");
+               }
+               builder.append(exception);
+               z = true;
+            }
+         }
          builder.append(";\n");
       }
 
