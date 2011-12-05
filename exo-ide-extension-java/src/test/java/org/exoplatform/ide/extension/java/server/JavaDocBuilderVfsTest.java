@@ -76,7 +76,7 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
 
       MethodInfo[] methods = clazz.getMethods();
       Assert.assertNotNull(methods);
-      Assert.assertEquals(6, methods.length);
+      Assert.assertEquals(5, methods.length);
       MethodInfo methodInfo = methods[0];
       Assert.assertNotNull(methodInfo.getName());
       Assert.assertNotNull(methodInfo.getModifiers());

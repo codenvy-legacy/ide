@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
+import com.ibm.icu.util.VTimeZone;
+
 import com.thoughtworks.qdox.model.DocletTag;
 
 import com.thoughtworks.qdox.model.JavaClass;
@@ -78,7 +80,7 @@ public class Util
       JavaMethod[] methods = clazz.getMethods(true);
       type.setConstructors(toConstructors(methods));
       // clazz.getMethods(true) return all methods, without private
-      type.setMethods(toMethods(clazz.getMethods()));
+      type.setMethods(toMethods(methods));
       return type;
    }
 

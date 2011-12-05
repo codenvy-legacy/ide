@@ -102,7 +102,7 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
             + "&vfsid=ws", "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
-      assertEquals(20, types.size());
+      assertEquals(21, types.size());
    }
 
    @Test
