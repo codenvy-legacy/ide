@@ -60,11 +60,11 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.security.Principal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -75,9 +75,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 
 /**
@@ -99,9 +97,6 @@ public class GitService
 
    @QueryParam("projectid")
    private String projectId;
-
-   @Context
-   private SecurityContext sctx;
 
    private static class InfoPageWrapper implements StreamingOutput
    {
@@ -415,7 +410,7 @@ public class GitService
 
    @Path("remote-delete/{name}")
    @POST
-   public void remoteDelete(@PathParam("name") String name, @Context SecurityContext sctx) throws GitException,
+   public void remoteDelete(@PathParam("name") String name) throws GitException,
       LocalPathResolveException, VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
@@ -589,14 +584,14 @@ public class GitService
    protected GitConnection getGitConnection() throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
-      GitUser user = null;
-      Principal principal = sctx.getUserPrincipal();
-      if (principal != null)
-         user = new GitUser(principal.getName());
+      GitUser gituser = null;
+      ConversationState user = ConversationState.getCurrent();
+      if (user != null)
+         gituser = new GitUser(user.getIdentity().getUserId());
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException(
             "Can't resolve path on the Local File System : Virtual file system not initialized");
-      return GitConnectionFactory.getInstance().getConnection(localPathResolver.resolve(vfs, projectId), user);
+      return GitConnectionFactory.getInstance().getConnection(localPathResolver.resolve(vfs, projectId), gituser);
    }
 }
