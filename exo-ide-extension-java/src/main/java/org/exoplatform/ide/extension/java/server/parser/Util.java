@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
-import com.ibm.icu.util.VTimeZone;
-
 import com.thoughtworks.qdox.model.DocletTag;
-
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -250,7 +247,8 @@ public class Util
       StringBuilder b = new StringBuilder();
       for (DocletTag t : tags)
       {
-         b.append("<p>").append("<b>").append(t.getName()).append("</b>").append("<br/>").append(t.getValue()).append("</p>");
+         b.append("<p>").append("<b>").append(t.getName()).append("</b>").append("<br/>").append(t.getValue())
+            .append("</p>");
       }
       return b.toString();
    }
