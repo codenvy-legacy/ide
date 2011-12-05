@@ -32,16 +32,18 @@ import javax.jcr.RepositoryException;
 import javax.ws.rs.core.UriInfo;
 
 /**
+ * Implementation for IDE lab service.
+ * Add userid to item path
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class GitUrlResolverJcrImpl implements GitUrlResolver
+public class GitUrlResolverJcrImplLab implements GitUrlResolver
 {
 
    private RepositoryService repositoryService;
 
-   public GitUrlResolverJcrImpl(RepositoryService repositoryService)
+   public GitUrlResolverJcrImplLab(RepositoryService repositoryService)
    {
       this.repositoryService = repositoryService;
    }
@@ -87,6 +89,7 @@ public class GitUrlResolverJcrImpl implements GitUrlResolver
                .append(repositoryName)
                .append("/")
                .append(vfsId)
+               .append(((JcrFileSystem)vfs).getJcrPath(ConversationState.getCurrent().getIdentity().getUserId(), "/"))
                .append(item.getPath());
 
          return result.toString();

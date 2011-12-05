@@ -31,16 +31,18 @@ import org.exoplatform.services.security.ConversationState;
 import javax.jcr.RepositoryException;
 
 /**
+ * Implementation for IDE lab service.
+ * Add userid to item path
  * Created by The eXo Platform SAS.
  * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class LocalPathResolverJcrImpl implements LocalPathResolver
+public class LocalPathResolverJcrImplLab implements LocalPathResolver
 {
    private final RepositoryService repositoryService;
 
-   public LocalPathResolverJcrImpl(RepositoryService repositoryService)
+   public LocalPathResolverJcrImplLab(RepositoryService repositoryService)
    {
       this.repositoryService = repositoryService;
    }
@@ -92,6 +94,7 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
          + repositoryName //
          + "/" //
          + vfsId //
+         + ((JcrFileSystem)vfs).getJcrPath(ConversationState.getCurrent().getIdentity().getUserId(), "/") //
          + item.getPath();
    }
 }
