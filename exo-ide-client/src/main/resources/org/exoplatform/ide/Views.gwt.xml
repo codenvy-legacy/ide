@@ -91,10 +91,6 @@
       <when-type-is class="org.exoplatform.ide.client.output.OutputPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
-      <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
-   </replace-with>
-
    <replace-with class="org.exoplatform.ide.client.toolbar.CustomizeToolbarView">
       <when-type-is class="org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display" />
    </replace-with>
@@ -205,6 +201,10 @@
 
    <replace-with class="org.exoplatform.ide.client.project.properties.EditPropertyView">
       <when-type-is class="org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
+      <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
    </replace-with>
 
 </module>

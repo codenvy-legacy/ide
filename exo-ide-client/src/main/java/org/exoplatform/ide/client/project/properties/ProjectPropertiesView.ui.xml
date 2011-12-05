@@ -30,7 +30,7 @@
 			height:40px;
 			text-align: center;
 			width:100%;
-			min-width:445px;
+			min-width:190px;
 			display: inline;
 		}
 		

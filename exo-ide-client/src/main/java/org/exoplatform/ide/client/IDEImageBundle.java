@@ -120,6 +120,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/public/images/filetype/default.png")
    ImageResource defaultFile();
 
+   @Source("bundled-images/edit.png")
+   ImageResource edit();
+   
+   @Source("bundled-images/edit-disabled.png")
+   ImageResource editDisabled();
+   
    /*
     * BROWSER
     */

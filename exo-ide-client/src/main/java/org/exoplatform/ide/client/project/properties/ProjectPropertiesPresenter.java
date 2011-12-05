@@ -19,16 +19,17 @@
 
 package org.exoplatform.ide.client.project.properties;
 
-import com.google.gwt.event.logical.shared.SelectionEvent;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -41,8 +42,15 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -60,16 +68,16 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
    {
 
       ListGridItem<Property> getPropertiesListGrid();
-      
+
       HasClickHandlers getAddButton();
-      
+
       HasClickHandlers getEditButton();
-      
+
       void setEditButtonEnabled(boolean enabled);
-      
+
       HasClickHandlers getDeleteButton();
-      
-      void setDeleteButtonEnabled(boolean enabled);      
+
+      void setDeleteButtonEnabled(boolean enabled);
 
       HasClickHandlers getOkButton();
 
@@ -80,11 +88,11 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
    }
 
    private Display display;
-   
+
    private ProjectModel currentProject;
-   
+
    private Property selectedProperty;
-   
+
    private EditPropertyPresenter editPropertyPresenter = new EditPropertyPresenter();
 
    public ProjectPropertiesPresenter()
@@ -105,10 +113,55 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
          return;
       }
 
+      loadProperties();
+   }
+
+   private void loadProperties()
+   {
+      try
+      {
+         String projectId = currentProject.getId();
+
+         VirtualFileSystem.getInstance().getItemById(projectId,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  if (!(result.getItem() instanceof ProjectModel))
+                  {
+                     Dialogs.getInstance().showError("Item " + result.getItem().getPath() + " is not a project.");
+                     return;
+                  }
+
+                  currentProject.getProperties().clear();
+                  currentProject.getProperties().addAll(result.getItem().getProperties());
+
+                  createDisplay();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void createDisplay()
+   {
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
-      display.getPropertiesListGrid().setValue(currentProject.getProperties());
+      refreshProperties();
    }
 
    @SuppressWarnings("unchecked")
@@ -123,7 +176,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(display.asView().getId());
+            saveAndClose();
          }
       });
 
@@ -144,15 +197,16 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             editSelectedProperty();
          }
       });
-      
-      display.getPropertiesListGrid().addSelectionHandler(new SelectionHandler() {
+
+      display.getPropertiesListGrid().addSelectionHandler(new SelectionHandler()
+      {
          @Override
          public void onSelection(SelectionEvent event)
          {
             onPropertySelected((Property)event.getSelectedItem());
          }
       });
-      
+
       display.getAddButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -161,7 +215,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             createProperty();
          }
       });
-      
+
       display.getEditButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -170,7 +224,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             editSelectedProperty();
          }
       });
-      
+
       display.getDeleteButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -179,29 +233,70 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             deleteSelectedProperty();
          }
       });
-      
    }
-   
-   private void editSelectedProperty() {
-      editPropertyPresenter.editProperty(selectedProperty);      
-   }
-   
-   private void createProperty() {
-      editPropertyPresenter.createProperty();
-   }
-   
-   private void deleteSelectedProperty() {
-      Dialogs.getInstance().ask("IDE", "Delete <b>" + selectedProperty.getName() + "</b>?", new BooleanValueReceivedHandler()
+
+   private void refreshProperties()
+   {
+      List<Property> propertyList = new ArrayList<Property>();
+      for (Property property : currentProject.getProperties())
       {
-         @Override
-         public void booleanValueReceived(Boolean value)
+         if (property.getValue() == null || property.getValue().isEmpty())
          {
-            
+            continue;
          }
-      });
+
+         propertyList.add(property);
+      }
+
+      display.getPropertiesListGrid().setValue(propertyList);
+      display.getPropertiesListGrid().selectItem(selectedProperty);
    }
-   
-   private void onPropertySelected(Property property) {
+
+   private void editSelectedProperty()
+   {
+      editPropertyPresenter.editProperty(selectedProperty, currentProject.getProperties(), propertyEditCompleteHandler);
+   }
+
+   private void createProperty()
+   {
+      editPropertyPresenter.createProperty(currentProject.getProperties(), propertyEditCompleteHandler);
+   }
+
+   private EditCompleteHandler propertyEditCompleteHandler = new EditCompleteHandler()
+   {
+      @Override
+      public void onEditComplete()
+      {
+         display.setOkButtonEnabled(true);
+         refreshProperties();
+      }
+   };
+
+   private void deleteSelectedProperty()
+   {
+      Dialogs.getInstance().ask("IDE", "Delete property <b>" + selectedProperty.getName() + "</b>?",
+         new BooleanValueReceivedHandler()
+         {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void booleanValueReceived(Boolean value)
+            {
+               if (value != null && value.booleanValue())
+               {
+                  selectedProperty.setValue(null);
+                  selectedProperty = null;
+
+                  display.setEditButtonEnabled(false);
+                  display.setDeleteButtonEnabled(false);
+                  display.setOkButtonEnabled(true);
+                  refreshProperties();
+               }
+            }
+         });
+   }
+
+   private void onPropertySelected(Property property)
+   {
       selectedProperty = property;
       display.setEditButtonEnabled(true);
       display.setDeleteButtonEnabled(true);
@@ -225,8 +320,37 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
       if (event.getView() instanceof Display)
       {
          display = null;
+         selectedProperty = null;
       }
    }
 
+   private void saveAndClose()
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(currentProject, null, new AsyncRequestCallback<Object>()
+         {
+            @Override
+            protected void onSuccess(Object result)
+            {
+               IDE.getInstance().closeView(display.asView().getId());
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               exception.printStackTrace();
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+
+   }
 
 }
