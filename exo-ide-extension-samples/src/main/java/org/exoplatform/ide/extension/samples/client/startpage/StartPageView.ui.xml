@@ -20,11 +20,15 @@
 
       .text-block {
       text-align: justify;
-      padding-left:
-      20px;
+      padding-left: 20px;
+      padding-right: 20px;
       }
 
       .hPanel {
+      margin: 20px;
+      }
+      
+      .textPanel {
       padding: 20px 20px 0 20px;
       }
    </ui:style>
@@ -35,48 +39,56 @@
             <f:layer>
                <g:FlowPanel>
                     <!-- About IDE -->
-                  <g:HorizontalPanel verticalAlignment="middle" stylePrimaryName="{style.hPanel}" height="auto" width="100%">
+                  <g:HorizontalPanel verticalAlignment="middle" stylePrimaryName="{style.textPanel}" height="auto" width="100%">
                      <g:Image resource="{resource.ideLogo}" width="160px"></g:Image>
                      <g:Label text="{locale.aboutIde}" styleName="{style.text-block}"></g:Label>
                   </g:HorizontalPanel>
 
-                  <g:HorizontalPanel verticalAlignment="middle" stylePrimaryName="{style.hPanel}" height="auto" width="100%">
-                     <!-- Tutorial link -->
-                     <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                        <g:Image ui:field="docImage" resource="{resource.welcomeTutorial}"></g:Image>
-                        <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
-                           <g:Anchor ui:field="docLink" text="{locale.tutorialTitle}" target="_blank"
-                              href="https://wiki-int.exoplatform.org/display/exoproducts/eXo+IDE+User+Manual"></g:Anchor>
-                           <g:Label text="{locale.tutorialText}"></g:Label>
-                        </g:VerticalPanel>
-                     </g:HorizontalPanel>
+                  <g:DockLayoutPanel unit="PCT" height="70px" width="100%" stylePrimaryName="{style.hPanel}">
+                     <g:west size="50">
+                        <!-- Tutorial link -->
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image ui:field="docImage" resource="{resource.welcomeTutorial}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Anchor ui:field="docLink" text="{locale.tutorialTitle}" target="_blank"
+                                 href="https://wiki-int.exoplatform.org/display/exoproducts/eXo+IDE+User+Manual"></g:Anchor>
+                              <g:Label text="{locale.tutorialText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+                     </g:west>
+                     <g:center>
                         <!-- Samples link -->
-                     <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                        <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}"></g:Image>
-                        <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
-                           <g:Button ui:field="samplesLink" text="{locale.sampleTitle}" styleName="{style.button-link}"></g:Button>
-                           <g:Label text="{locale.sampleText}"></g:Label>
-                        </g:VerticalPanel>
-                     </g:HorizontalPanel>
-                  </g:HorizontalPanel>
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Button ui:field="samplesLink" text="{locale.sampleTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.sampleText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+                     </g:center>
+                  </g:DockLayoutPanel>
 
-                  <g:HorizontalPanel verticalAlignment="middle" stylePrimaryName="{style.hPanel}" height="auto" width="100%">
-                     <!-- Projects link -->
-                     <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                        <g:Image resource="{resource.welcomeProject}"></g:Image>
-                        <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
-                           <g:Button ui:field="projectLink" text="{locale.projectTitle}" styleName="{style.button-link}"></g:Button>
-                           <g:Label text="{locale.projectText}"></g:Label>
-                        </g:VerticalPanel>
-                     </g:HorizontalPanel>
-                     <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                        <g:Image ui:field="convertImage" resource="{resource.convertToProject}"></g:Image>
-                        <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
-                           <g:Button ui:field="convertLink" text="{locale.convertTitle}" styleName="{style.button-link}"></g:Button>
-                           <g:Label text="{locale.convertText}"></g:Label>
-                        </g:VerticalPanel>
-                     </g:HorizontalPanel>
-                  </g:HorizontalPanel>
+                  <g:DockLayoutPanel unit="PCT" height="70px" width="100%" stylePrimaryName="{style.hPanel}">
+                     <g:west size="50">
+                        <!-- Projects link -->
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image resource="{resource.welcomeProject}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Button ui:field="projectLink" text="{locale.projectTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.projectText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+                     </g:west>
+                     <g:center>
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image ui:field="convertImage" resource="{resource.convertToProject}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Button ui:field="convertLink" text="{locale.convertTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.convertText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+                     </g:center>
+                  </g:DockLayoutPanel>
 
                </g:FlowPanel>
             </f:layer>
