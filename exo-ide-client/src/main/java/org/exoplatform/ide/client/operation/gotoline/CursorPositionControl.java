@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.gotoline;
 
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.component.TextButton.TextAlignment;
@@ -41,7 +42,12 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 public class CursorPositionControl extends StatusTextControl implements IDEControl, EditorCursorActivityHandler,
    EditorActiveFileChangedHandler
 {
+
    public static final String ID = "__editor_cursor_position";
+
+   private FileModel file;
+
+   private Editor editor;
 
    /**
     * 
@@ -55,8 +61,6 @@ public class CursorPositionControl extends StatusTextControl implements IDEContr
       setText("&nbsp;");
       setTextAlignment(TextAlignment.CENTER);
       setEvent(new GoToLineEvent());
-      IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**
@@ -65,7 +69,9 @@ public class CursorPositionControl extends StatusTextControl implements IDEContr
    @Override
    public void initialize()
    {
-      setVisible(true);
+      IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
       setEnabled(true);
    }
 
@@ -75,7 +81,14 @@ public class CursorPositionControl extends StatusTextControl implements IDEContr
     */
    private void setCursorPosition(int row, int column)
    {
-      setText("<nobr>" + row + " : " + column + "</nobr>");
+      if (row > 0 && column > 0)
+      {
+         setText("<nobr>" + row + " : " + column + "</nobr>");
+      }
+      else
+      {
+         setText("");
+      }
    }
 
    /**
@@ -84,65 +97,11 @@ public class CursorPositionControl extends StatusTextControl implements IDEContr
    @Override
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-      if (event.getRow() > 0 && event.getColumn() > 0)
-      {
-         setEvent(new GoToLineEvent());
-         setCursorPosition(event.getRow(), event.getColumn());
+      if (editor == null || !editor.getEditorId().equals(event.getEditorId())) {
+         return;
       }
-      else
-      {
-         setEvent(null);
-         setText("&nbsp;");
-      }
-   }
-
-   private FileModel file;
-
-   private Editor editor;
-
-   private Timer updateCursorPositionTimer = new Timer()
-   {
-
-      @Override
-      public void run()
-      {
-         updateCursorPosition();
-      }
-
-   };
-
-   /**
-    * 
-    */
-   private void updateCursorPosition()
-   {
-      try
-      {
-         if (file == null || editor == null)
-         {
-            setText("&nbsp;");
-            setEvent(null);
-            setVisible(false);
-            return;
-         }
-
-         if (editor.getCursorRow() > 0 && editor.getCursorCol() > 0)
-         {
-            setEvent(new GoToLineEvent());
-            setCursorPosition(editor.getCursorRow(), editor.getCursorCol());
-         }
-         else
-         {
-            setEvent(null);
-            setText("&nbsp;");
-         }
-
-         setVisible(true);
-      }
-      catch (Throwable e)
-      {
-         e.printStackTrace();
-      }
+      
+      setCursorPosition(event.getRow(), event.getColumn());
    }
 
    /**
@@ -152,10 +111,32 @@ public class CursorPositionControl extends StatusTextControl implements IDEContr
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       file = event.getFile();
-      editor = event.getEditor();
-
-      updateCursorPositionTimer.cancel();
-      updateCursorPositionTimer.schedule(500);
+      editor = event.getEditor();      
+      Scheduler.get().scheduleDeferred(updateCursorPositionCommand);
    }
+
+   ScheduledCommand updateCursorPositionCommand = new ScheduledCommand()
+   {
+      @Override
+      public void execute()
+      {
+         try
+         {
+            if (file == null || editor == null)
+            {
+               setText("");
+               setVisible(false);
+               return;
+            }
+
+            setVisible(true);
+            setCursorPosition(editor.getCursorRow(), editor.getCursorCol());
+         }
+         catch (Throwable e)
+         {
+            e.printStackTrace();
+         }
+      }
+   };
 
 }

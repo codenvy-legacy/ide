@@ -73,10 +73,11 @@ public class NavigationModule implements InitializeServicesHandler
    
    public NavigationModule()
    {
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      
       IDE.getInstance().addControl(new NewItemPopupToolbarControl(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new NewItemMenuGroup());
 
-//      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
       IDE.getInstance().addControl(new CreateFileFromTemplateControl());
       IDE.getInstance().addControl(new CreateProjectFromTemplateControl());
 
@@ -89,10 +90,6 @@ public class NavigationModule implements InitializeServicesHandler
             IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(),
             Images.FileTypes.TXT,
             MimeType.TEXT_PLAIN, true));
-
-      /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
-               "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
-
       
       //TODO: need rework according with VFS       
 //      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
@@ -104,7 +101,6 @@ public class NavigationModule implements InitializeServicesHandler
 //    new RestoreToVersionCommandHandler();
 //    new VersionsListPresenter();
       
-
       new UploadFilePresenter();
       new UploadZipPresenter();
       
@@ -128,12 +124,11 @@ public class NavigationModule implements InitializeServicesHandler
       new RenameFilePresenter();
       new RenameFolderPresenter();
 
-      //eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), DockTarget.TOOLBAR));
       new DeleteItemsPresenter();
 
       new SearchFilesPresenter();
-      new SearchResultsPresenter();
       
+      new SearchResultsPresenter();
       
       IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR);
 
@@ -142,9 +137,6 @@ public class NavigationModule implements InitializeServicesHandler
       new GetItemURLPresenter();
 
       IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR);
-      //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
-
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       new CreateFileCommandHandler();
       new CreateFileFromTemplatePresenter();

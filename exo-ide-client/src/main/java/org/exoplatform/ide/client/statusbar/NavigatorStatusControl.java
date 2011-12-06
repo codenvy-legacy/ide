@@ -124,7 +124,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    private VirtualFileSystemInfo vfsInfo;
 
    private ProjectModel currentOpenedProject;
-   
+
    private View currentActiveView;
 
    private List<String> openedViews = new ArrayList<String>();
@@ -135,10 +135,10 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    public NavigatorStatusControl()
    {
       super(ID);
-      setVisible(true);
-      setEnabled(true);
-      setText("&nbsp;");
-      setSize(0);
+//      setVisible(true);
+//      setEnabled(true);
+//      setText("&nbsp;");
+//      setSize(0);
    }
 
    /**
@@ -156,6 +156,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       
+      setEnabled(true);
    }
 
    /**
@@ -232,12 +233,6 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      if (currentOpenedProject == null)
-      {
-         currentOpenedProject = event.getProject();
-         return;
-      }
-
       currentOpenedProject = event.getProject();
    }
 
@@ -258,8 +253,8 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (openedViews.contains( event.getView().getId() )) {
-         openedViews.remove( event.getView().getId() );
+      if (openedViews.contains(event.getView().getId())) {
+         openedViews.remove(event.getView().getId());
       }
    }
 

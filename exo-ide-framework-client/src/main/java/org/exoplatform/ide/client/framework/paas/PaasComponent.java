@@ -28,9 +28,11 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  */
 public interface PaasComponent
 {
+   
    void getView(String projectName, PaasCallback paasCallback);
    
    void validate();
    
    void deploy(ProjectModel project);
+   
 }
