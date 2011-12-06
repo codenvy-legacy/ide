@@ -55,7 +55,7 @@ public class CreateProjectFromTemplateControl extends SimpleControl implements I
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.createFromTemplate(), IDEImageBundle.INSTANCE.createFromTemplateDisabled());
+      setImages(IDEImageBundle.INSTANCE.newProject(), IDEImageBundle.INSTANCE.newProjectDisabled());
       setEvent(new CreateProjectFromTemplateEvent());
    }
 
