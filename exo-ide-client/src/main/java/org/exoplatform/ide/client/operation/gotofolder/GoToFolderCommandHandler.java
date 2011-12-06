@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.GoToFolderEvent;
+import org.exoplatform.ide.client.framework.navigation.event.GoToFolderHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;

@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.GoToFolderEvent;
 
 /**
  * Created by The eXo Platform SAS .
