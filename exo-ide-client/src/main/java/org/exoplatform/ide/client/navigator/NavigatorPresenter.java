@@ -254,6 +254,8 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
 
    private void openRootFolder()
    {
+      System.out.println("opening root folder > " + rootFolder.getPath());
+      
       IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
       display.getBrowserTree().setValue(rootFolder);
 

@@ -30,6 +30,10 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.service.GroovyCodeAssistantService;
@@ -41,6 +45,7 @@ import org.exoplatform.ide.editor.html.client.codemirror.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -48,12 +53,14 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssista
  *
  */
 public class GtmplEditorExtension extends Extension implements InitializeServicesHandler,
-   JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler
+   JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private GroovyTemplateCodeAssistant templateCodeAssistant;
 
    private JavaTokenWidgetFactory factory;
+
+   private ProjectModel currentProject;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -63,6 +70,8 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Template", "Template", "Create Template", Images.GROOVY_TEMPLATE,
@@ -141,10 +150,25 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    {
       if (event.getFile() != null)
       {
-         String projectId = event.getFile().getProject().getId();
-         templateCodeAssistant.setActiveProjectId(projectId);
-         factory.setProjectId(projectId);
+         ProjectModel project = event.getFile().getProject() != null ? event.getFile().getProject() : currentProject;
+         if (project != null)
+         {
+            templateCodeAssistant.setActiveProjectId(project.getId());
+            factory.setProjectId(project.getId());
+         }
       }
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      currentProject = event.getProject();
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      currentProject = null;
    }
 
 }

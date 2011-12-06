@@ -106,11 +106,30 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
          
          return path;
       }
-
-      public StatusMessage()
+      
+      /**
+       * @param originalStatusMessage
+       * @param icon
+       * @return
+       */
+      private String tuneMessage(String originalStatusMessage, String iconHTML)
       {
-         html = "&nbsp;";
-      }
+         String table =
+            "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height:20px; border-collapse: collapse;\">"
+               + "<tr>"
+               + "<td style=\"width:3px; \"><img src=\""
+               + Images.BLANK
+               + "\" style=\"width:1px; height:1px;\"></td>"
+               + "<td style=\"width:16px; height:20px; vertical-align:middle; \">"
+               + "<div style=\"width:16px; height:16px; margin-top:2px;\">" + iconHTML + "</div>"
+               + "</td>"
+               + "<td style=\"width:3px;\"><img src=\""
+               + Images.BLANK
+               + "\" style=\"width:1px; height:1px;\"></td>"
+               + "<td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; line-height:20px; \"><nobr>"
+               + "&nbsp;" + originalStatusMessage + "</nobr></td>" + "</tr>" + "</table>";
+         return table;
+      }      
 
       public String getHtml()
       {
@@ -135,10 +154,6 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    public NavigatorStatusControl()
    {
       super(ID);
-//      setVisible(true);
-//      setEnabled(true);
-//      setText("&nbsp;");
-//      setSize(0);
    }
 
    /**
@@ -158,63 +173,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       
       setEnabled(true);
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (!openedViews.contains(event.getView().getId())) {
-         return;
-      }
-      
-      if (vfsInfo == null || currentActiveView == null || event.getSelectedItems().size() == 0)
-      {
-         setText(new StatusMessage().getHtml());
-         return;
-      }
-      
-      Item item = event.getSelectedItems().get(0);
-      if (currentActiveView instanceof TinyProjectExplorerPresenter.Display)
-      {
-         setText(new StatusMessage(currentOpenedProject, item).getHtml());
-         return;
-      }
-
-      if (currentActiveView instanceof NavigatorPresenter.Display)
-      {
-         setText(new StatusMessage(vfsInfo.getRoot(), item).getHtml());
-         return;
-      }
-
-      setText(new StatusMessage().getHtml());
-   }
-
-   /**
-    * @param originalStatusMessage
-    * @param icon
-    * @return
-    */
-   private String tuneMessage(String originalStatusMessage, String iconHTML)
-   {
-      String table =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height:20px; border-collapse: collapse;\">"
-            + "<tr>"
-            + "<td style=\"width:3px; \"><img src=\""
-            + Images.BLANK
-            + "\" style=\"width:1px; height:1px;\"></td>"
-            + "<td style=\"width:16px; height:20px; vertical-align:middle; \">"
-            + "<div style=\"width:16px; height:16px; margin-top:2px;\">" + iconHTML + "</div>"
-            + "</td>"
-            + "<td style=\"width:3px;\"><img src=\""
-            + Images.BLANK
-            + "\" style=\"width:1px; height:1px;\"></td>"
-            + "<td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; line-height:20px; \"><nobr>"
-            + "&nbsp;" + originalStatusMessage + "</nobr></td>" + "</tr>" + "</table>";
-      return table;
-   }
-
+   
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
@@ -234,6 +193,38 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       currentOpenedProject = event.getProject();
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (!openedViews.contains(event.getView().getId())) {
+         return;
+      }
+      
+      if (vfsInfo == null || currentActiveView == null || event.getSelectedItems().size() == 0)
+      {
+         setText("");
+         setVisible(false);
+         return;
+      }
+
+      if (event.getView() instanceof TinyProjectExplorerPresenter.Display) {
+         setText(new StatusMessage(currentOpenedProject, event.getSelectedItems().get(0)).getHtml());
+         setVisible(true);
+         return;
+      }
+      
+      if (event.getView() instanceof NavigatorPresenter.Display) {
+         setText(new StatusMessage(vfsInfo.getRoot(), event.getSelectedItems().get(0)).getHtml());
+         setVisible(true);
+         return;
+      }
+      
+      setVisible(false);      
    }
 
    @Override

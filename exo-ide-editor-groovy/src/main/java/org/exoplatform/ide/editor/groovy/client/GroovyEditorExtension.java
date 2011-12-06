@@ -30,6 +30,10 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.GroovyCodeAssistant;
@@ -41,6 +45,7 @@ import org.exoplatform.ide.editor.groovy.client.codemirror.GroovyParser;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -48,12 +53,14 @@ import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFacto
  *
  */
 public class GroovyEditorExtension extends Extension implements InitializeServicesHandler,
-   JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler
+   JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private JavaCodeAssistant groovyCodeAssistant;
 
    private JavaTokenWidgetFactory factory;
+
+   private ProjectModel currentProject;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -63,6 +70,8 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service", Images.REST_SERVICE,
@@ -140,10 +149,25 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    {
       if (event.getFile() != null)
       {
-         String projectId = event.getFile().getProject().getId();
-         groovyCodeAssistant.setActiveProjectId(projectId);
-         factory.setProjectId(projectId);
+         ProjectModel project = event.getFile().getProject() != null ? event.getFile().getProject() : currentProject;
+         if (project != null)
+         {
+            groovyCodeAssistant.setActiveProjectId(project.getId());
+            factory.setProjectId(project.getId());
+         }
       }
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      currentProject = event.getProject();
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      currentProject = null;
    }
 
 }
