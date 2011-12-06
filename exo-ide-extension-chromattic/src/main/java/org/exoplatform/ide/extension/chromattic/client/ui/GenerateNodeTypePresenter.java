@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
@@ -46,7 +47,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, EditorActiveFileChangedHandler
 {
-   
+
    interface Display extends IsView
    {
       /**
@@ -122,7 +123,7 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
       });
 
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
@@ -155,8 +156,8 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
       if (activeFile == null)
          return;
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getId(), nodeTypeFormat,
-         new AsyncRequestCallback<GenerateNodeTypeResult>()
+      ChrommaticService.getInstance().generateNodeType(activeFile, VirtualFileSystem.getInstance().getInfo().getId(),
+         nodeTypeFormat, new AsyncRequestCallback<GenerateNodeTypeResult>()
          {
             @Override
             protected void onSuccess(GenerateNodeTypeResult result)

@@ -47,6 +47,7 @@ import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.groovy.client.GroovyExtension;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
@@ -134,8 +135,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
 
    static
    {
-      projectTypes.add("Chromattic");
-      projectTypes.add("REST Groovy");
+      projectTypes.add(ProjectResolver.EXO_APP);
    }
 
    /**

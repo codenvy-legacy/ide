@@ -36,6 +36,7 @@ import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
@@ -53,7 +54,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorActiveFileChangedHandler
 {
-   
+
    interface Display extends IsView
    {
       /**
@@ -98,7 +99,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
        * @param values
        */
       void setBehaviorIfExistValues(LinkedHashMap<String, String> values);
-      
+
    }
 
    /**
@@ -116,12 +117,12 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       IDE.addHandler(DeployNodeTypeEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
    }
-   
+
    /**
     * Bind view with presenter.
     */
@@ -162,7 +163,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       {
          display = GWT.create(Display.class);
          bindDisplay();
-         
+
          display.setNodeTypeFormatValues(EnumNodeTypeFormat.getValues());
          LinkedHashMap<String, String> alreadyExistsBehaviourValues = new LinkedHashMap<String, String>();
          for (EnumAlreadyExistsBehaviour value : EnumAlreadyExistsBehaviour.values())
@@ -189,19 +190,19 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       ChrommaticService.getInstance().createNodeType(generatedNodeType, nodeTypeFormat, alreadyExistsBehaviour,
          new AsyncRequestCallback<String>()
          {
-            
+
             @Override
             protected void onSuccess(String result)
             {
                closeView();
-               Dialogs.getInstance().showInfo("Node type successfully deployed.");               
+               Dialogs.getInstance().showInfo("Node type successfully deployed.");
             }
-            
+
             @Override
             protected void onFailure(Throwable exception)
             {
                closeView();
-               Dialogs.getInstance().showError(getErrorMessage(exception));               
+               Dialogs.getInstance().showError(getErrorMessage(exception));
             }
          });
    }
@@ -214,8 +215,8 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       if (activeFile == null)
          return;
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getId(), nodeTypeFormat,
-         new AsyncRequestCallback<GenerateNodeTypeResult>()
+      ChrommaticService.getInstance().generateNodeType(activeFile, VirtualFileSystem.getInstance().getInfo().getId(),
+         nodeTypeFormat, new AsyncRequestCallback<GenerateNodeTypeResult>()
          {
             @Override
             protected void onSuccess(GenerateNodeTypeResult result)

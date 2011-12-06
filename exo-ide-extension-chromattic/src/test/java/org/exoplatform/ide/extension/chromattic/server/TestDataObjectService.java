@@ -42,6 +42,8 @@ public class TestDataObjectService extends BaseTest
    
    private static final String WEBDAV_CONTEXT = "/jcr/";
    
+   private String id;
+   
    /** . */
    private static final String dataObjectGroovy =
        "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n" +
@@ -77,16 +79,16 @@ public class TestDataObjectService extends BaseTest
       test1.setProperty("jcr:mimeType", "script/groovy");
       test1.setProperty("jcr:lastModified", Calendar.getInstance());
       test1.setProperty("jcr:data", dataObjectGroovy);
+      id=test1.getUUID();
       session.save();      
    }
    
    @Test
    @Ignore
    public void testNodeTypeGenration() throws Exception {
-      String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =
          launcher.service("POST",
-            "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=EXO", "", null, null,
+            "/ide/chromattic/generate-nodetype-definition?vfsid=ws&id=" + id + "&nodeTypeFormat=EXO", "", null, null,
             null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       String s = (String)cres.getEntity();

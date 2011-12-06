@@ -56,6 +56,10 @@
    </component>
 
    <component>
+     <type>org.exoplatform.ide.groovy.JcrGroovyCompiler</type>
+   </component>
+
+   <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
          <value-param>
@@ -258,9 +262,6 @@
          <object-param>
             <name>dev-monit</name>
             <object type="org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemConfiguration">
-               <field name="path">
-                  <string>/${userId}</string>
-               </field>
                <field name="workspace">
                   <string>dev-monit</string>
                </field>
@@ -274,12 +275,12 @@
 
    <component>
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImplLab</type>
    </component>
 
    <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImplLab</type>
    </component>
 
    <component>

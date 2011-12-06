@@ -21,17 +21,26 @@ package org.exoplatform.ide.extension.chromattic.server;
 import org.chromattic.dataobject.CompilationSource;
 import org.chromattic.dataobject.DataObjectService;
 import org.chromattic.dataobject.NodeTypeFormat;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.groovy.SourceFile;
 import org.everrest.groovy.SourceFolder;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.groovy.JcrGroovyCompiler;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.resource.NodeRepresentationService;
 import org.exoplatform.services.jcr.ext.resource.UnifiedNodeReference;
 import org.exoplatform.services.jcr.impl.core.nodetype.NodeTypeManagerImpl;
@@ -48,8 +57,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 
 @Path("/ide/chromattic/")
 public class RestDataObjectService
@@ -63,17 +70,19 @@ public class RestDataObjectService
 
    private RepositoryService repositoryService;
 
-   private ThreadLocalSessionProviderService sessionProviderService;
+   public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
    private JcrGroovyCompiler compiler;
 
+   private VirtualFileSystemRegistry vfsRegistry;
+
    public RestDataObjectService(DataObjectService dataObjectService, RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService, NodeRepresentationService nodeRepresentationService,
-      JcrGroovyCompiler compiler)
+      NodeRepresentationService nodeRepresentationService, JcrGroovyCompiler compiler,
+      VirtualFileSystemRegistry vfsRegistry)
    {
       this.repositoryService = repositoryService;
-      this.sessionProviderService = sessionProviderService;
       this.compiler = compiler;
+      this.vfsRegistry = vfsRegistry;
    }
 
    /**
@@ -85,44 +94,56 @@ public class RestDataObjectService
     * @throws IOException
     * @throws URISyntaxException
     * @throws RepositoryException 
+    * @throws VirtualFileSystemException 
+    * @throws JsonException 
+    * @throws RepositoryConfigurationException 
+    * @throws PermissionDeniedException 
+    * @throws ItemNotFoundException 
     */
    @POST
    @Path("/generate-nodetype-definition")
-   public String getNodeTypeDefinition(@Context UriInfo uriInfo, @QueryParam("do-location") String location,
-      @QueryParam("nodeTypeFormat") NodeTypeFormat format) throws IOException,
-      URISyntaxException, RepositoryException
+   public String getNodeTypeDefinition(@QueryParam("id") String id, @QueryParam("vfsid") String vfsid,
+      @QueryParam("projectid") String projectid, @QueryParam("nodeTypeFormat") NodeTypeFormat format)
+      throws IOException, URISyntaxException, RepositoryException, VirtualFileSystemException, JsonException,
+      RepositoryConfigurationException
    {
-      if (location == null)
-         throw new IllegalArgumentException("You must specify location of the source script.");
-      
-      location = location.startsWith("/") ? location.substring(1) : location;
-      
-      //TODO
-      String repository = repositoryService.getCurrentRepository().getConfiguration().getName();
-      String workspace = RepositoryDiscoveryService.getEntryPoint();
 
+      if (id == null)
+         throw new IllegalArgumentException("You must specify item ID.");
+      //TODO
+      String repository = getCurrentRepository();
       CompilationSource compilationSource = null;
       SourceFolder[] sources = null;
-      DependentResources dependencyResources =
-         GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
-      if (dependencyResources != null && dependencyResources.getFolderSources().size() > 0)
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      String path = vfs.getItem(id, PropertyFilter.NONE_FILTER).getPath();
+
+      if (projectid != null)
       {
-         //TODO only first one dir is taken at the moment
-         String dependencySource = dependencyResources.getFolderSources().get(0);
-         UnifiedNodeReference sourceReference = new UnifiedNodeReference(dependencySource);
-         compilationSource =
-            new CompilationSource(sourceReference.getRepository(), sourceReference.getWorkspace(),
-               sourceReference.getPath());
-         String dep = dependencyResources.getFolderSources().get(0);
-         sources = new SourceFolder[]{new SourceFolder((new UnifiedNodeReference(dep)).getURL())};
+         DependentResources dependentResources = getDependentResources(projectid, vfs);
+
+         if (dependentResources != null && dependentResources.getFolderSources().size() > 0)
+         {
+            //TODO only first one dir is taken at the moment
+            String dependencySource = dependentResources.getFolderSources().get(0);
+            UnifiedNodeReference sourceReference = new UnifiedNodeReference(dependencySource);
+            compilationSource =
+               new CompilationSource(sourceReference.getRepository(), sourceReference.getWorkspace(),
+                  sourceReference.getPath());
+            String dep = dependentResources.getFolderSources().get(0);
+            sources = new SourceFolder[]{new SourceFolder((new UnifiedNodeReference(dep)).getURL())};
+         }
+         else
+         {
+            compilationSource = new CompilationSource(repository, vfsid, path);
+         }
       }
       else
       {
-         compilationSource = new CompilationSource(repository, workspace, location);
+         compilationSource = new CompilationSource(repository, vfsid, path);
       }
 
       SourceFile[] sourceFile =
-         new SourceFile[]{new SourceFile((new UnifiedNodeReference(repository, workspace, location)).getURL())};
+         new SourceFile[]{new SourceFile((new UnifiedNodeReference(repository, vfsid, path)).getURL())};
 
       List<String> nodeReferences = new ArrayList<String>();
       URL[] urls = compiler.getDependencies(sources, sourceFile);
@@ -159,28 +180,28 @@ public class RestDataObjectService
 
    }
 
-   /**
-    * @param baseUri base URI
-    * @param location location of groovy script
-    * @return array of {@link String}, which elements contain repository name,
-    *         workspace name and path the path to JCR node that contains groovy
-    *         script to be deployed
-    */
-   private String[] parseJcrLocation(String baseUri, String location)
+   private DependentResources getDependentResources(String projectid, VirtualFileSystem vfs)
+      throws VirtualFileSystemException, JsonException, RepositoryException, RepositoryConfigurationException
    {
-      baseUri += WEBDAV_CONTEXT;
-      if (!location.startsWith(baseUri))
+      Folder project = (Folder)vfs.getItem(projectid, PropertyFilter.NONE_FILTER);
+      try
+      {
+         JsonParser jsonParser = new JsonParser();
+         jsonParser.parse(vfs.getContent(project.createPath(GROOVY_CLASSPATH), null).getStream());
+         JsonValue jsonValue = jsonParser.getJsonObject();
+         GroovyClassPath classPath = ObjectBuilder.createObject(GroovyClassPath.class, jsonValue);
+         return new DependentResources(getCurrentRepository(), classPath);
+      }
+      catch (ItemNotFoundException e)
       {
          return null;
       }
+   }
 
-      String[] elements = new String[3];
-      location = location.substring(baseUri.length());
-      elements[0] = location.substring(0, location.indexOf('/'));
-      location = location.substring(location.indexOf('/') + 1);
-      elements[1] = location.substring(0, location.indexOf('/'));
-      elements[2] = location.substring(location.indexOf('/') + 1);
-      return elements;
+   // Temporary method. Remove after refactoring of GroovyScript2RestLoader.
+   private String getCurrentRepository() throws RepositoryException, RepositoryConfigurationException
+   {
+      return getRepository().getConfiguration().getName();
    }
 
    private ManageableRepository getRepository() throws RepositoryException, RepositoryConfigurationException

@@ -37,17 +37,40 @@ public class ProjectResolver
 
    private static Map<String, ImageResource> types = new HashMap<String, ImageResource>();
 
-   private static final String DEFAULT_TYPE = "Default";
+   /**
+    * Ruby on Rails
+    */
+   public static final String RAILS = "Rails";
+
+   /**
+    * Java Spring Framework
+    */
+   public static final String SPRING = "Spring";
+
+   /**
+    * eXo Development Framework : Chromattic, Groovy REST 
+    */
+   public static final String EXO_APP = "eXo App";
+
+   /**
+    * Static Web Project: HTML, JS, CSS 
+    */
+   public static final String STATIC_WEB = "Static Web";
+
+   /**
+    * Servlet and JSP API  based project
+    */
+   public static final String SERVLET_JSP = "Servlet/JSP";
 
    static
    {
       if (IconImageBundle.INSTANCE != null)
       {
-         types.put("Rails", IconImageBundle.INSTANCE.rubyProject());
-         types.put("Spring", IconImageBundle.INSTANCE.springProject());
-         types.put("eXo App", IconImageBundle.INSTANCE.defaultProject());
-         types.put("Static Web", IconImageBundle.INSTANCE.defaultProject());
-         types.put("Servlet/JSP", IconImageBundle.INSTANCE.javaProject());
+         types.put(RAILS, IconImageBundle.INSTANCE.rubyProject());
+         types.put(SPRING, IconImageBundle.INSTANCE.springProject());
+         types.put(EXO_APP, IconImageBundle.INSTANCE.defaultProject());
+         types.put(STATIC_WEB, IconImageBundle.INSTANCE.defaultProject());
+         types.put(SERVLET_JSP, IconImageBundle.INSTANCE.javaProject());
       }
    }
 
@@ -63,6 +86,6 @@ public class ProjectResolver
          return types.get(type);
       }
       else
-         return types.get(DEFAULT_TYPE);
+         return types.get(EXO_APP);
    }
 }

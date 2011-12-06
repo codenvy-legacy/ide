@@ -22,7 +22,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
-import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Service is used to do actions with chromattic application and data objects.
@@ -61,7 +61,7 @@ public abstract class ChrommaticService
     * @param nodeTypeFormat node type format
     * @param callback - callback to handler result from server
     */
-   public abstract void generateNodeType(String location, EnumNodeTypeFormat nodeTypeFormat, AsyncRequestCallback<GenerateNodeTypeResult> callback);
+   public abstract void generateNodeType(FileModel file, String vfsid, EnumNodeTypeFormat nodeTypeFormat, AsyncRequestCallback<GenerateNodeTypeResult> callback);
    
    /**
     * Create (deploy) new node type.

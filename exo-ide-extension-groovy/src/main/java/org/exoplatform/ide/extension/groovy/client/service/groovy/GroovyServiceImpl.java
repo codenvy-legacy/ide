@@ -107,7 +107,7 @@ public class GroovyServiceImpl extends GroovyService
       callback.setResult(itemId);
       callback.setEventBus(eventBus);
       deployUrl += "?id=" + itemId + "&vfsid=" + vfsid + "&projectid=" + projectid;
-      AsyncRequest.build(RequestBuilder.POST, deployUrl, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, deployUrl, loader).header(HTTPHeader.CONTENTTYPE, "application/x-www-form-urlencoded").send(callback);
    }
 
    /**
@@ -143,7 +143,7 @@ public class GroovyServiceImpl extends GroovyService
       callback.setResult(itemId);
       callback.setEventBus(eventBus);
       undeployUrl += "?id=" + itemId + "&vfsid=" + vfsid + "&projectid=" + projectid;
-      AsyncRequest.build(RequestBuilder.POST, undeployUrl, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, undeployUrl, loader).header(HTTPHeader.CONTENTTYPE, "application/x-www-form-urlencoded").send(callback);
    }
 
    /**
