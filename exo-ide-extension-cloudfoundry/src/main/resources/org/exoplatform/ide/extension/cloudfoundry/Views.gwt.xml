@@ -20,6 +20,9 @@
 -->
 <module>
    <inherits name='com.google.gwt.user.User' />
+   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display" />
+   </replace-with>
    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginView">
       <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter.Display" />
    </replace-with>

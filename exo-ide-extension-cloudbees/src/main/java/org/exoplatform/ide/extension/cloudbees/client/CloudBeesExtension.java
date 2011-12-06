@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.cloudbees.client.control.DeleteApplicationC
 import org.exoplatform.ide.extension.cloudbees.client.control.InitializeApplicationControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.UpdateApplicationControl;
 import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationPresenter;
+import org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter;
@@ -79,6 +80,8 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new DeleteApplicationPresenter();
       new ApplicationListPresenter();
       new UpdateApplicationPresenter();
+      
+      new DeployApplicationPresenter();
    }
 
 }

@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.openshift.client.controls.ShowUserInfoContr
 import org.exoplatform.ide.extension.openshift.client.controls.UpdatePublicKeyControl;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationCommandHandler;
+import org.exoplatform.ide.extension.openshift.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter;
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommandHandler;
@@ -85,6 +86,8 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new PreviewApplicationPresenter();
       new UserInfoPresenter();
       new UpdatePublicKeyCommandHandler();
+      
+      new DeployApplicationPresenter();
    }
 
    /**

@@ -69,12 +69,12 @@ public abstract class TemplateService
     * Create new project
     * @param parentId id of the parent folder
     * @param name name of the project
-    * @param projectTemplate template of the project
+    * @param templateName name of template
     * @param callback
     * @throws RequestException 
     */
    public abstract void createProjectFromTemplate(String vfsId, String parentId, String name,
-      ProjectTemplate projectTemplate,
+      String templateName,
       org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback) throws RequestException;
 
    /*

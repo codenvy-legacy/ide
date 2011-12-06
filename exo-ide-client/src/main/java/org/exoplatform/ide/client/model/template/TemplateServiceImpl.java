@@ -411,13 +411,14 @@ public class TemplateServiceImpl extends TemplateService
     * @see org.exoplatform.ide.client.model.template.TemplateService#createProjectFromTemplate(java.lang.String, java.lang.String, org.exoplatform.ide.client.model.template.ProjectTemplate, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void createProjectFromTemplate(String vfsId, String parentId, String name, ProjectTemplate projectTemplate,
+   public void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
       org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback) throws RequestException
    {
       String url = restContext + "/ide/templates/project/create";
       url +=
-         "?vfsid=" + vfsId + "&name=" + name + "&parentId=" + parentId + "&templateName=" + projectTemplate.getName();
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+         "?vfsid=" + vfsId + "&name=" + name + "&parentId=" + parentId + "&templateName=" + templateName;
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url)
+      .send(callback);
    }
 
 }

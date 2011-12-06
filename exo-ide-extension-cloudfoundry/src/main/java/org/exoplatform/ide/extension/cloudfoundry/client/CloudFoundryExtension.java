@@ -22,6 +22,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationInfoControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsControl;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateInstances
 import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateMemoryControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
@@ -100,7 +102,8 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       IDE.getInstance().addControl(new UpdateInstancesControl());
       IDE.getInstance().addControl(new SwitchAccountControl());
       IDE.getInstance().addControl(new ApplicationsControl());
-
+      
+      new DeployApplicationPresenter();
       new CreateApplicationPresenter();
       new LoginPresenter();
       new StartApplicationPresenter();

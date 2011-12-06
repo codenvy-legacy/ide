@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
+import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
@@ -63,6 +64,7 @@ import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,6 +76,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
 
    private ControlsRegistration controlsRegistration;
+   
+   private List<Paas> paasRegistration;
 
    private IDEPresenter presenter;
    
@@ -133,6 +137,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       controlsRegistration = new ControlsRegistration();
       controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
       controlsRegistration.addControlsFormatter(new NewItemControlsFormatter());
+      
+      paasRegistration = new ArrayList<Paas>();
 
 
       IDEForm ideForm = new IDEForm();
@@ -275,6 +281,24 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public void addControlsFormatter(ControlsFormatter controlsFormatter)
    {
       controlsRegistration.addControlsFormatter(controlsFormatter);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#getPaases()
+    */
+   @Override
+   public List<Paas> getPaases()
+   {
+      return paasRegistration;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#addPaas(org.exoplatform.ide.client.framework.paas.Paas)
+    */
+   @Override
+   public void addPaas(Paas paas)
+   {
+      paasRegistration.add(paas);
    }
 
 }

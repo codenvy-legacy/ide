@@ -43,11 +43,9 @@ public class ProjectResolver
    {
       if (IconImageBundle.INSTANCE != null)
       {
-         types.put(DEFAULT_TYPE, IconImageBundle.INSTANCE.defaultProject());
          types.put("Rails", IconImageBundle.INSTANCE.rubyProject());
          types.put("Spring", IconImageBundle.INSTANCE.springProject());
-         types.put("Java Web", IconImageBundle.INSTANCE.javaProject());
-         types.put("eXo App", IconImageBundle.INSTANCE.groovyProject());
+         types.put("eXo App", IconImageBundle.INSTANCE.defaultProject());
          types.put("Static Web", IconImageBundle.INSTANCE.defaultProject());
          types.put("Servlet/JSP", IconImageBundle.INSTANCE.javaProject());
       }

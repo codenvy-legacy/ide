@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
@@ -226,7 +227,15 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       {
          public void onClick(ClickEvent event)
          {
-            doCreateProjectFromTemplate();
+            String name = display.getNameField().getValue();
+            if (name == null || name.isEmpty())
+            {
+               name = display.getSelectedTemplates().get(0).getName();
+            }
+            String type = display.getSelectedTemplates().get(0).getType();
+            IDE.eventBus().fireEvent(new DeployProjectToPaasEvent(name, type, display.getSelectedTemplates().get(0).getName()));
+            IDE.getInstance().closeView(display.asView().getId());
+//            doCreateProjectFromTemplate();
          }
       });
 
@@ -237,7 +246,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       {
          public void onDoubleClick(DoubleClickEvent event)
          {
-            doCreateProjectFromTemplate();
+//            doCreateProjectFromTemplate();
          }
       });
 
@@ -261,18 +270,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          {
             selectedTemplates = display.getSelectedTemplates();
             templatesSelected();
-         }
-      });
-
-      /*
-       * Delete action on delete button
-       */
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-
-         public void onClick(ClickEvent event)
-         {
-            deleteTemplate();
          }
       });
 
@@ -410,7 +407,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
             String parentId = vfsInfo.getRoot().getId();
             
             loader.show();
-            TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName, selectedTemplate, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
+            TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName, selectedTemplate.getName(), new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
             {
                @Override
                protected void onSuccess(ProjectModel result)
@@ -652,6 +649,11 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
+   }
+   
+   private void getPaases()
+   {
+      IDE.getInstance().getPaases();
    }
 
 }

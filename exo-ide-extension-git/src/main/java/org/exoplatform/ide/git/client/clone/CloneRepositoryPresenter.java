@@ -152,16 +152,16 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    @Override
    public void onCloneRepository(CloneRepositoryEvent event)
    {
-     if (makeSelectionCheck())
-     {
-        Display d = GWT.create(Display.class);
-        IDE.getInstance().openView(d.asView());
-        bindDisplay(d);
-        display.focusInRemoteUrlField();
-        display.getWorkDirValue().setValue(((ItemContext)selectedItems.get(0)).getProject().getPath(), true);
-        display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
-        display.enableCloneButton(false);
-     }
+      if (makeSelectionCheck())
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView(d.asView());
+         bindDisplay(d);
+         display.focusInRemoteUrlField();
+         display.getWorkDirValue().setValue(((ItemContext)selectedItems.get(0)).getProject().getPath(), true);
+         display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
+         display.enableCloneButton(false);
+      }
    }
 
    /**
@@ -172,37 +172,38 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       String remoteUri = display.getRemoteUriValue().getValue();
       String remoteName = display.getRemoteNameValue().getValue();
-      
+
       try
       {
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, remoteName, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
-         {
-            
-            @Override
-            protected void onSuccess(String result)
+         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, remoteName,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
             {
-               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-               
-            }
-            
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                        (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                           : GitExtension.MESSAGES.cloneFailed();
-                        IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));               
-            }
-         });
+
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                        : GitExtension.MESSAGES.cloneFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
          String errorMessage =
-                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                     : GitExtension.MESSAGES.cloneFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
+               .cloneFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
       IDE.getInstance().closeView(display.asView().getId());
    }

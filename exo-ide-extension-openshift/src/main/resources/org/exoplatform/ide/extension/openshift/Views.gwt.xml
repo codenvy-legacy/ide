@@ -23,20 +23,24 @@
    <replace-with class="org.exoplatform.ide.extension.openshift.client.login.LoginView">
       <when-type-is class="org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.openshift.client.domain.CreateDomainView">
       <when-type-is class="org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.openshift.client.create.CreateApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoView">
       <when-type-is class="org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter.Display" />
    </replace-with>
-   
-      <replace-with class="org.exoplatform.ide.extension.openshift.client.user.UserInfoView">
+
+   <replace-with class="org.exoplatform.ide.extension.openshift.client.user.UserInfoView">
       <when-type-is class="org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.openshift.client.deploy.DeployApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.openshift.client.deploy.DeployApplicationPresenter.Display" />
    </replace-with>
 </module>

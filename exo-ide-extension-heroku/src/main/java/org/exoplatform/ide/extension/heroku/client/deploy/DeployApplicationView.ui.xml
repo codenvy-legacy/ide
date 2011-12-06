@@ -1,0 +1,47 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+
+   <ui:with field='resource' type='org.exoplatform.ide.extension.heroku.client.HerokuClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .formLine {
+      margin-top: 8px;
+      }
+
+      .cancelBbutton {
+      position: absolute;
+      right: 200px;
+      }
+
+      .innerBox {
+      display: block;
+      margin: 0 8px;
+      }
+   </ui:style>
+   <f:Border margin="15" borderColor="transparent">
+      <f:layer>
+         <g:FlowPanel ui:field="herokuPanel" stylePrimaryName="{style.innerBox}">
+            <g:DockLayoutPanel width="100%" unit="PX" height="34px" stylePrimaryName="{style.formLine}">
+               <g:west size="120">
+                  <g:Label text="Application Name (optional):" height="18px"></g:Label>
+               </g:west>
+               <g:center>
+                  <f:TextInput ui:field="nameField" width="100%" height="22px"></f:TextInput>
+               </g:center>
+            </g:DockLayoutPanel>
+            <g:DockLayoutPanel width="100%" unit="PX" height="34px" stylePrimaryName="{style.formLine}">
+               <g:west size="120">
+                  <g:Label text="Remote Name (optional):" height="18px"></g:Label>
+               </g:west>
+               <g:center>
+                  <f:TextInput ui:field="remoteNameField" width="100%" height="22px"></f:TextInput>
+               </g:center>
+            </g:DockLayoutPanel>
+         </g:FlowPanel>
+      </f:layer>
+
+   </f:Border>
+</ui:UiBinder> 

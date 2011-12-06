@@ -56,8 +56,8 @@ public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
                {
                   if (item.getNodeName() == null)
                   {
-                     return "<span title=\"" + item.getType() + "\"><font color=\"#FF0000\"><nobr>"
-                        + item.getType() + "</nobr></font></span>";
+                     return "<span title=\"" + item.getType() + "\"><nobr>"
+                        + item.getType() + "</nobr></span>";
                   }
                   else
                   {
@@ -72,6 +72,6 @@ public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
       
       entryTypeColumn.setCellStyleNames("default-cursor");
       getCellTable().addColumn(entryTypeColumn, "Type");
-      getCellTable().setColumnWidth(entryTypeColumn, 50, Unit.PX);
+      getCellTable().setColumnWidth(entryTypeColumn, 60, Unit.PX);
    }
 }

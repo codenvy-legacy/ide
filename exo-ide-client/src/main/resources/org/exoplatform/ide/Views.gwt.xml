@@ -79,8 +79,12 @@
       <when-type-is class="org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplateForm">
+   <replace-with class="org.exoplatform.ide.client.project.fromtemplate.CreateProjectView">
       <when-type-is class="org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasView">
+      <when-type-is class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">

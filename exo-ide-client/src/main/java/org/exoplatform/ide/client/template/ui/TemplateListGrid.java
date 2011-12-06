@@ -122,8 +122,8 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
                {
                   if (item.isDefault())
                   {
-                     return "<span title=\"" + item.getName() + "\"><font color=\"#FF0000\">" + item.getName()
-                        + "</font></span>";
+                     return "<span title=\"" + item.getName() + "\">" + item.getName()
+                        + "</span>";
                   }
                   else
                   {
@@ -157,8 +157,8 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
                {
                   if (item.getNodeName() == null)
                   {
-                     return "<span title=\"" + item.getDescription() + "\"><font color=\"#FF0000\">"
-                        + item.getDescription() + "</font></span>";
+                     return "<span title=\"" + item.getDescription() + "\">"
+                        + item.getDescription() + "</span>";
                   }
                   else
                   {

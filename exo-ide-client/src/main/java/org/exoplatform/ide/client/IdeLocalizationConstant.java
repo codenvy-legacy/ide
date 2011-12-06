@@ -79,6 +79,14 @@ public interface IdeLocalizationConstant extends Constants
    @DefaultStringValue("No")
    @Key("noButton")
    String noButton();
+   
+   @DefaultStringValue("Back")
+   @Key("backButton")
+   String backButton();
+   
+   @DefaultStringValue("Finish")
+   @Key("finishButton")
+   String finishButton();
 
    /* Create Folder */
    @DefaultStringValue("Create Folder")

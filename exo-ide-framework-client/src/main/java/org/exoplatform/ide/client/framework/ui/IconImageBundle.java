@@ -39,7 +39,7 @@ public interface IconImageBundle  extends ClientBundle
    @Source("org/exoplatform/ide/public/images/filetype/folder_closed.png")
    ImageResource folder();
    
-   @Source("org/exoplatform/ide/public/images/filetype/project.gif")
+   @Source("org/exoplatform/ide/client/bundled-images/projects/java-project.png")
    ImageResource javaProject();
    
    @Source("org/exoplatform/ide/client/bundled-images/projects/ror.png")

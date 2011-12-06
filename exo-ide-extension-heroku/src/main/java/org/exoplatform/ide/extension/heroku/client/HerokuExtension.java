@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.heroku.client.control.ShowLogsControl;
 import org.exoplatform.ide.extension.heroku.client.control.SwitchAccountControl;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationCommandHandler;
+import org.exoplatform.ide.extension.heroku.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
@@ -97,7 +98,9 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new KeysPresenter();
       new RakeCommandPresenter();
       new ChangeStackPresenter();
-      new LogsPresenter(); 
+      new LogsPresenter();
+      
+      new DeployApplicationPresenter();
    }
 
 }

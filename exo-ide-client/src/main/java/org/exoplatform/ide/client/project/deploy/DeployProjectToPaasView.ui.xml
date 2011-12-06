@@ -1,0 +1,137 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:e="urn:import:org.exoplatform.ide.extension.samples.client.github.deploy">
+
+   <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .selectAndInputWrapperBox {
+      position: absolute;
+      right: 1px;
+      left: 100px;
+      }
+
+      .formLine {
+      margin-top: 8px;
+      }
+
+      .cancelBbutton {
+      position: absolute;
+      right: 200px;
+      }
+      .buttonsBox {
+      display: block;
+      margin: 0 8px;
+      }
+
+      .rightButton {
+      position: absolute;
+      right: 0;
+      }
+
+      .formLine {
+      margin-top:
+      8px;
+      }
+
+      .topBox {
+      background-color: #eef6ff;
+      vertical-align: middle;
+      border-bottom: 1px solid #A6ABAF;
+      width: 100%;
+      height: 60px;
+      }
+
+      .labelValue {
+      font-weight: bold;
+      }
+
+      .labelSubtitle {
+      font-weight: bold;
+      font-align: center;
+      }
+
+      .middle {
+      position: absolute;
+      right: 100px;
+      }
+
+      .labelTitle {
+      font-size: medium;
+      font-weight: bold;
+      vertical-align: middle;
+      padding-left: 10px;
+      padding-top: 10px;
+      }
+
+      .labelDescription {
+      font-style: italic;
+      vertical-align: middle;
+      padding-left: 10px;
+      padding-top: 5px;
+      }
+
+      .innerBox {
+      display: block;
+      margin: 0 8px;
+      }
+
+      .leftFloat {
+      float: left;
+      }
+
+      .right {
+      position: absolute;
+      right: 0;
+      }
+
+      .middle {
+      position: absolute;
+      right: 100px;
+      }
+   </ui:style>
+   <g:LayoutPanel>
+      <g:layer>
+         <g:FlowPanel stylePrimaryName="{style.topBox}">
+            <g:Label text="Deploy to PaaS" styleName="{style.labelTitle}"></g:Label>
+            <g:Label text="Select PaaS where to deploy your project" styleName="{style.labelDescription}"></g:Label>
+         </g:FlowPanel>
+      </g:layer>
+
+      <!-- panel to select source of project -->
+      <g:layer top="80px" height="30px">
+         <g:FlowPanel width="auto" styleName="{style.innerBox}">
+            <g:Label text="Deploy to" width="90px" styleName="{style.leftFloat}"></g:Label>
+            <g:FlowPanel width="10px" styleName="{style.leftFloat}"></g:FlowPanel>
+            <g:SimplePanel styleName="{style.selectAndInputWrapperBox}">
+               <f:SelectItem ui:field="selectPaasField" width="100%" height="22px"></f:SelectItem>
+            </g:SimplePanel>
+         </g:FlowPanel>
+      </g:layer>
+
+      <g:layer top="110px" height="150px">
+         <!-- Panel to show selected PaaS -->
+         <g:FlowPanel ui:field="paasPanel">
+
+         </g:FlowPanel>
+      </g:layer>
+      
+      <!-- Buttons -->
+      <g:layer height="33px" bottom="0">
+         <g:FlowPanel width="auto" styleName="{style.innerBox}">
+            <f:ImageButton ui:field="cancelButton" styleName="{style.cancelBbutton}" width="90px" text="{locale.cancelButton}"
+               imageName="cancel" buttonId="ideLoadDeploymentCancelButtonId"></f:ImageButton>
+
+            <g:FlowPanel width="10px" height="22px" styleName="{style.leftFloat}"></g:FlowPanel>
+
+            <f:ImageButton ui:field="backButton" width="90px" styleName="{style.middle}" text="{locale.backButton}" imageResource="{resource.back}"
+               disabledImageResource="{resource.backDisabled}" buttonId="ideWizardDeploymentBackButtonId"></f:ImageButton>
+
+            <f:ImageButton ui:field="finishButton" width="90px" styleName="{style.right}" text="{locale.finishButton}" imageResource="{resource.ok}"
+               disabledImageResource="{resource.okDisabled}" buttonId="ideWizardDeploymentNextButtonId"></f:ImageButton>
+
+         </g:FlowPanel>
+      </g:layer>
+   </g:LayoutPanel>
+</ui:UiBinder> 
