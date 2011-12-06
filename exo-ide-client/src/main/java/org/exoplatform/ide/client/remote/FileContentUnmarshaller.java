@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.remote.service;
+package org.exoplatform.ide.client.remote;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -32,7 +32,7 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class RemoteFileContentUnmarshaller implements Unmarshallable
+public class FileContentUnmarshaller implements Unmarshallable
 {
 
    /**
@@ -45,7 +45,7 @@ public class RemoteFileContentUnmarshaller implements Unmarshallable
     * 
     * @param file
     */
-   public RemoteFileContentUnmarshaller(FileModel file)
+   public FileContentUnmarshaller(FileModel file)
    {
       this.file = file;
    }

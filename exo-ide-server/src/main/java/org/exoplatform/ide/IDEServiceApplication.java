@@ -21,8 +21,6 @@ package org.exoplatform.ide;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
-import org.exoplatform.ide.remote.RemoteFileService;
-import org.exoplatform.ide.remote.RemoteFileServiceExceptionMapper;
 import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
@@ -64,11 +62,7 @@ public class IDEServiceApplication extends Application
       objects.add(new IDEConfigurationService(repositoryService, entryPoint, discoverable, workspace, config));
       objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry));
 
-      classes.add(LoopbackContentService.class);
-      
-      objects.add(new RemoteFileServiceExceptionMapper());
-      
-      classes.add(RemoteFileService.class);      
+      classes.add(LoopbackContentService.class);      
       classes.add(RequestContextResolver.class);
       classes.add(RestConversationState.class);
    }

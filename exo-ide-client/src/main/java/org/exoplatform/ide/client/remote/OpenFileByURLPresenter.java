@@ -19,11 +19,22 @@
 
 package org.exoplatform.ide.client.remote;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -36,20 +47,12 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.remote.service.RemoteFileService;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for opening file by URL.
@@ -60,8 +63,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
  * @version $
  */
 
-public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedHandler, InitializeServicesHandler,
-   ItemsSelectedHandler
+public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedHandler,
+   ItemsSelectedHandler, InitializeServicesHandler
 {
 
    public interface Display extends IsView
@@ -106,6 +109,8 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
     * Selected items in Workspace view.
     */
    private List<Item> selectedItems = new ArrayList<Item>();
+   
+   private Loader loader;
 
    /**
     * Creates new instance of this presenter.
@@ -118,19 +123,16 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
 
       IDE.addHandler(OpenFileByURLEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new RemoteFileService(event.getLoader());
-   }
-
+      loader = event.getLoader();
+   }   
+   
    /**
     * @see org.exoplatform.ide.client.remote.OpenFileByURLHandler#onOpenFileByURL(org.exoplatform.ide.client.remote.OpenFileByURLEvent)
     */
@@ -234,37 +236,39 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
 
       fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
 
-      FileModel file = new FileModel();
+      final FileModel file = new FileModel();
       file.setName(fileName);
       file.setId(fileName);
-
-      RemoteFileService.getInstance().getRemoteFileContent(file, url, new AsyncRequestCallback<FileModel>()
+      
+      
+      AsyncRequestCallback<FileModel> callback = new AsyncRequestCallback<FileModel>()
       {
          @Override
          protected void onSuccess(FileModel result)
          {
             openFileInEditor(result);
          }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
-            {
-               ServerException se = (ServerException)exception;
-               String msg =
-                  se.isErrorMessageProvided() ? se.getLocalizedMessage() : "Status:&nbsp;" + se.getHTTPStatus()
-                     + "&nbsp;" + se.getStatusText();
-               String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByURLErrorMessage(msg);
-               Dialogs.getInstance().showError(message);
-            }
-            else
-            {
-               super.onFailure(exception);
-            }
-         }
-      });
-
+         
+       @Override
+       protected void onFailure(Throwable exception)
+       {
+          if (exception instanceof ServerException)
+          {
+             String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByURLErrorMessage(file.getName());
+             Dialogs.getInstance().showError(message);
+          }
+          else
+          {
+             super.onFailure(exception);
+          }
+       }
+      };
+      
+      callback.setResult(file);
+      
+      Unmarshallable unmarshaller = new FileContentUnmarshaller(file);
+      callback.setPayload(unmarshaller);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
    /**
