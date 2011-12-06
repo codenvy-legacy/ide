@@ -108,7 +108,9 @@ public class Util
             i.setGenericExceptionTypes(toArray(m.getExceptions()));
             i.setGeneric(m.getDeclarationSignature(true));
             i.setModifiers(modifiersToInteger(m.getModifiers()));
-            i.setParameterTypes(toParameters(m.getParameterTypes(true)));
+            Type[] parameterTypes = m.getParameterTypes(true);
+            i.setParameterTypes(toParameters(parameterTypes));
+            i.setGenericParameterTypes(toGenericParametersTypes(parameterTypes));
             i.setName(m.getName());
             i.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
             String returnType = m.getReturnType().getFullyQualifiedName();
@@ -137,15 +139,38 @@ public class Util
             i.setGenericExceptionTypes(toArray(m.getExceptions()));
             i.setGeneric(m.getDeclarationSignature(true));
             i.setModifiers(modifiersToInteger(m.getModifiers()));
-            i.setParameterTypes(toParameters(m.getParameterTypes(true)));
+            Type[] parameterTypes = m.getParameterTypes(true);
+            i.setParameterTypes(toParameters(parameterTypes));
             i.setName(m.getName());
             i.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
+            i.setGenericParameterTypes(toGenericParametersTypes(parameterTypes));
             con.add(i);
          }
       }
 
       RoutineInfo[] info = new RoutineInfo[con.size()];
       return con.toArray(info);
+   }
+
+   /**
+    * @param parameterTypes
+    * @return
+    */
+   private static String toGenericParametersTypes(Type[] parameterTypes)
+   {
+      int iMax = parameterTypes.length - 1;
+      if (iMax == -1)
+         return "()";
+
+      StringBuilder b = new StringBuilder();
+      b.append('(');
+      for (int i = 0;; i++)
+      {
+         b.append(parameterTypes[i].getJavaClass().getFullyQualifiedName());
+         if (i == iMax)
+            return b.append(')').toString();
+         b.append(", ");
+      }
    }
 
    /**
@@ -162,7 +187,7 @@ public class Util
       b.append('(');
       for (int i = 0;; i++)
       {
-         String fqn = parameterTypes[i].getJavaClass().getName();
+         String fqn = parameterTypes[i].getJavaClass().getFullyQualifiedName();
          b.append(fqn.substring(fqn.lastIndexOf('.') + 1));
          if (i == iMax)
             return b.append(')').toString();

@@ -105,6 +105,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
 
       JavaDocBuilderVfs builder = new JavaDocBuilderVfs(vfs, new VfsClassLibrary(vfs));
+      builder.getClassLibrary().addClassLoader(ClassLoader.getSystemClassLoader());
       builder.setErrorHandler(new JavaDocBuilderErrorHandler());
       builder.addSourceTree((Folder)sourceFolder);
       return builder;
@@ -245,11 +246,24 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-      for (JavaClass clazz : builder.getClasses())
+      if (prefix == null || prefix.isEmpty())
       {
-         if (type == Util.getType(clazz))
+         for (JavaClass clazz : builder.getClasses())
          {
-            types.add(Util.toShortTypeInfo(clazz));
+            if (type == Util.getType(clazz))
+            {
+               types.add(Util.toShortTypeInfo(clazz));
+            }
+         }
+      }
+      else
+      {
+         for (JavaClass clazz : builder.getClasses())
+         {
+            if (type == Util.getType(clazz) && clazz.getName().startsWith(prefix))
+            {
+               types.add(Util.toShortTypeInfo(clazz));
+            }
          }
       }
       return types;

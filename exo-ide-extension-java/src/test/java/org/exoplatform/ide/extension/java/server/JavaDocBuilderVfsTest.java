@@ -44,11 +44,12 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
             VFS_ID);
       Assert.assertEquals("AutoCompletionManager", clazz.getName());
       Assert.assertEquals(1, clazz.getModifiers().intValue());
-      Assert.assertEquals(1, clazz.getConstructors().length);
+      Assert.assertEquals(2, clazz.getConstructors().length);
       RoutineInfo info = clazz.getConstructors()[0];
       Assert.assertEquals("AutoCompletionManager", info.getName());
       Assert.assertEquals("(HandlerManager)", info.getParameterTypes());
       Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", info.getDeclaringClass());
+      Assert.assertEquals("(com.google.gwt.event.shared.HandlerManager)", info.getGenericParameterTypes());
    }
 
    @Test
@@ -76,12 +77,13 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
 
       MethodInfo[] methods = clazz.getMethods();
       Assert.assertNotNull(methods);
-      Assert.assertEquals(5, methods.length);
+      Assert.assertEquals(16, methods.length);
       MethodInfo methodInfo = methods[0];
       Assert.assertNotNull(methodInfo.getName());
       Assert.assertNotNull(methodInfo.getModifiers());
       Assert.assertNotNull(methodInfo.getParameterTypes());
       Assert.assertNotNull(methodInfo.getReturnType());
       Assert.assertNotNull(methodInfo.getDeclaringClass());
+      Assert.assertNotNull(methodInfo.getGenericParameterTypes());
    }
 }
