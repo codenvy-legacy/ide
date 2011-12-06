@@ -144,7 +144,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), node.getProperty(
+            types.add(new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), node.getProperty(
                "exoide:fqn").getString(), node.getProperty("exoide:type").getString()));
          }
 
@@ -186,7 +186,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), node.getProperty(
+            types.add(new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), node.getProperty(
                "exoide:fqn").getString(), node.getProperty("exoide:type").getString()));
          }
 
@@ -232,7 +232,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo((int)0L, node.getProperty("exoide:className").getString(), node.getProperty(
+            types.add(new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), node.getProperty(
                "exoide:fqn").getString(), node.getProperty("exoide:type").getString()));
          }
          return types;
