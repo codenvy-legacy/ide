@@ -600,7 +600,7 @@
                      <port>${gwt.port}</port>
                      -->
                      <bindAddress>0.0.0.0</bindAddress>
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
                   </configuration>
                </plugin>
 

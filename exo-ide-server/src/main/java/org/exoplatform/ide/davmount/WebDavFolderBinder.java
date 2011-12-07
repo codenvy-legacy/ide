@@ -82,10 +82,10 @@ public class WebDavFolderBinder
       this.davFsMounter = new DavFSMounter();
       this.workspaceName = workspaceName;
       this.baseUri = baseUri;
-      this.gitRepoDir = System.getProperty("org.exoplatform.ide.git.repo-dir");
+      this.gitRepoDir = System.getProperty("org.exoplatform.ide.server.fs-root-path");
       if (gitRepoDir == null || gitRepoDir.length() == 0)
       {
-         throw new ConfigurationException("System variable org.exoplatform.ide.git.repo-dir not found");
+         throw new ConfigurationException("System variable org.exoplatform.ide.server.fs-root-path not found");
       }
       LOG.debug("Gir repository dir {} . Workspace name {}", this.gitRepoDir, this.workspaceName);
    }

@@ -306,7 +306,7 @@
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
                      <bindAddress>0.0.0.0</bindAddress>
-                     <extraJvmArgs>-Dorg.exoplatform.ide.server.fs-root-path=git</extraJvmArgs>
+                     <extraJvmArgs>-Dorg.exoplatform.ide.server.fs-root-path=target/git</extraJvmArgs>
                   </configuration>
                </plugin>
             </plugins>

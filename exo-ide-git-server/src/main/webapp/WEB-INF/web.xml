@@ -9,7 +9,7 @@
       <servlet-class>org.eclipse.jgit.http.server.GitServlet</servlet-class>
       <init-param>
          <param-name>base-path</param-name>
-         <param-value>${org.exoplatform.ide.git.repo-dir}/</param-value>
+         <param-value>${org.exoplatform.ide.server.fs-root-path}/</param-value>
       </init-param>
       <init-param>
          <param-name>export-all</param-name>

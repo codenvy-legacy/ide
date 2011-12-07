@@ -57,13 +57,13 @@ public class GitUrlResolverJcrImplLab implements GitUrlResolver
             throw new GitUrlResolveException("Can't resolve Git Url : Virtual file system not initialized");
          if (id == null || id.length() == 0)
             throw new GitUrlResolveException("Can't resolve Git Url. Item path may not be null or empty");
-         String fsRootPath = System.getProperty("org.exoplatform.ide.server.fs-root-path");
-         if (fsRootPath == null)
-            throw new GitUrlResolveException("Can't resolve Git Url. Root path may not be null.");
+         String gitServer = System.getProperty("org.exoplatform.ide.git.server");
+         if (gitServer == null)
+            throw new GitUrlResolveException("Can't resolve Git Url. Git server path may not be null.");
          ManageableRepository repository = repositoryService.getCurrentRepository();
          String repositoryName = repository.getConfiguration().getName();
-         if (!fsRootPath.endsWith("/"))
-            fsRootPath += "/"; // unix like path only!
+         if (!gitServer.endsWith("/"))
+            gitServer += "/"; 
          Item item = null;
          String vfsId = null;
          try
@@ -85,7 +85,7 @@ public class GitUrlResolverJcrImplLab implements GitUrlResolver
             result.append(':').append(port);
          }
          result.append("/")
-               .append(fsRootPath)
+               .append(gitServer)
                .append(repositoryName)
                .append("/")
                .append(vfsId)
