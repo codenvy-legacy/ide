@@ -275,12 +275,12 @@
 
    <component>
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImplLab</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
    </component>
 
    <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImplLab</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
    </component>
 
    <component>
@@ -315,13 +315,13 @@
       </init-params>
    </component>
 
-   <external-component-plugins>
+   <!-- external-component-plugins>
       <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
       <component-plugin>
          <name>ide.add.membership</name>
          <set-method>addListenerPlugin</set-method>
          <type>org.exoplatform.ide.user.AddUserListener</type>
       </component-plugin>
-   </external-component-plugins>
+   </external-component-plugins-->
 
 </configuration>
