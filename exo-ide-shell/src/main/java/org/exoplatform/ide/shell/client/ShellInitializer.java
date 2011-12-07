@@ -70,6 +70,7 @@ public class ShellInitializer
                protected void onSuccess(ShellConfiguration result)
                {
                   CloudShell.getCommands().add(new HelpCommand());
+                  CloudShell.getCommands().add(new ClearCommand());
                   Environment.get().saveValue(EnvironmentVariables.USER_NAME, result.getUserInfo().getName());
                   if (result.getEntryPoint() != null)
                   {
@@ -132,7 +133,6 @@ public class ShellInitializer
       CloudShell.getCommands().add(new PwdCommand());
       CloudShell.getCommands().add(new CdCommand());
       CloudShell.getCommands().add(new RmCommand());
-      CloudShell.getCommands().add(new ClearCommand());
       CloudShell.getCommands().add(new CatCommand());
    }
 
