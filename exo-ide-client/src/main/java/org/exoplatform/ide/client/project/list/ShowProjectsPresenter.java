@@ -208,11 +208,6 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    {
       HashMap<String, String> query = new HashMap<String, String>();
 
-      //String path = (!"root".equals(userName)) ? "/" + userName : "";
-      String path = vfsInfo.getRoot().getPath();
-      System.out.println("PATH > [" + path + "]");
-      
-      query.put("path", path);
       query.put("nodeType", "vfs:project");
 
       try
