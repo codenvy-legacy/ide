@@ -16,12 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.remote;
 
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.project;
+
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Handler for {@link OpenFileByURLEvent}
  * 
  * Created by The eXo Platform SAS .
  * 
@@ -29,14 +31,33 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface OpenFileByURLHandler extends EventHandler
+public class OpenProjectEvent extends GwtEvent<OpenProjectHandler>
 {
 
-   /**
-    * Perform actions, when user tries to open file by URL.
-    * 
-    * @param event
-    */
-   void onOpenFileByURL(OpenFileByURLEvent event);
+   public static final GwtEvent.Type<OpenProjectHandler> TYPE = new GwtEvent.Type<OpenProjectHandler>();
+
+   private ProjectModel project;
+
+   public OpenProjectEvent(ProjectModel project)
+   {
+      this.project = project;
+   }
+
+   public ProjectModel getProject()
+   {
+      return project;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<OpenProjectHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(OpenProjectHandler handler)
+   {
+      handler.onOpenProject(this);
+   }
 
 }

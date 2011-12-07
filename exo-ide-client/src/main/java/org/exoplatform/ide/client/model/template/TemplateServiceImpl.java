@@ -39,7 +39,7 @@ import org.exoplatform.ide.client.model.template.marshal.ProjectTemplateListUnma
 import org.exoplatform.ide.client.model.template.marshal.ProjectTemplateMarshaller;
 import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
-import org.exoplatform.ide.client.samples.netvibes.NetvibesSamples;
+import org.exoplatform.ide.client.samples.NetvibesSamples;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;

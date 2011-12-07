@@ -127,8 +127,8 @@
       <when-type-is class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.client.remote.OpenFileByURLView">
-      <when-type-is class="org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLView">
+      <when-type-is class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">

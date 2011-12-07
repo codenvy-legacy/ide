@@ -17,11 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.project;
+package org.exoplatform.ide.client.framework.project;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * 
@@ -31,33 +29,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class OpenProjectEvent extends GwtEvent<OpenProjectHandler>
+public interface OpenProjectHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<OpenProjectHandler> TYPE = new GwtEvent.Type<OpenProjectHandler>();
-
-   private ProjectModel project;
-
-   public OpenProjectEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
-
-   public ProjectModel getProject()
-   {
-      return project;
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   @Override
-   protected void dispatch(OpenProjectHandler handler)
-   {
-      handler.onOpenProject(this);
-   }
-
+   void onOpenProject(OpenProjectEvent event);
+   
 }

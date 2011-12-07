@@ -16,22 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.exoplatform.ide.client.samples;
 
-package org.exoplatform.ide.client.project;
-
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 
 /**
- * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
-
-public interface CloseProjectHandler extends EventHandler
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+public interface NetvibesSamples extends ClientBundle
 {
    
-   void onCloseProject(CloseProjectEvent event);
+   NetvibesSamples INSTANCE = GWT.create(NetvibesSamples.class);
+   
+   @Source("netvibes/SampleBlogPostWidget.html")
+   TextResource getSampleBlogPostWidgetSource();
+   
+   @Source("netvibes/SampleChartWidget.html")
+   TextResource getSampleChartWidgetSource();
+   
+   @Source("netvibes/SampleFlashWidget.html")
+   TextResource getSampleFlashWidgetSource();
+   
+   @Source("netvibes/SampleTabbedWidget.html")
+   TextResource getSampleTabbedWidgetSource();
 
 }

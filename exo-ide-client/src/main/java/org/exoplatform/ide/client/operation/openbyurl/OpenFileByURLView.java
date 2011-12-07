@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.remote;
+package org.exoplatform.ide.client.operation.openbyurl;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class OpenFileByURLView extends ViewImpl implements org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display
+public class OpenFileByURLView extends ViewImpl implements org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display
 {
    
    /**
