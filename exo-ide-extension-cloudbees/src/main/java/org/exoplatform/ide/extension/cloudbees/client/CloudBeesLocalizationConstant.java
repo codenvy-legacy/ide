@@ -39,6 +39,9 @@ public interface CloudBeesLocalizationConstant extends Messages
    @Key("button.ok")
    String okButton();
    
+   @Key("button.close")
+   String closeButton();
+   
    /*
     * Controls.
     */
@@ -210,4 +213,27 @@ public interface CloudBeesLocalizationConstant extends Messages
    @Key("appList.grid.delete")
    String appListDelete();
    
+   /*
+    * Manage Project View
+    */
+   @Key("manageProject.title")
+   String manageProjectTitle();
+   
+   @Key("manageProject.update")
+   String manageProjectUpdateButton();
+   
+   @Key("manageProject.delete")
+   String manageProjectDeleteButton();
+   
+   @Key("manageProject.application.url")
+   String manageProjectApplicationUrl();
+   
+   @Key("manageProject.application.status")
+   String manageProjectApplicationStatus();
+   
+   @Key("manageProject.application.instances")
+   String manageProjectApplicationInstances();
+   
+   @Key("manageProject.application.actions")
+   String manageProjectApplicationActions();
 }

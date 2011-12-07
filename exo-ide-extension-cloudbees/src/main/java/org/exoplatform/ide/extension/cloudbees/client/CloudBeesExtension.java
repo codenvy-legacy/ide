@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresen
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationPresenter;
 
 import com.google.gwt.core.client.GWT;
@@ -80,7 +81,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new DeleteApplicationPresenter();
       new ApplicationListPresenter();
       new UpdateApplicationPresenter();
-      
+      new CloudBeesProjectPresenter();
       new DeployApplicationPresenter();
    }
 

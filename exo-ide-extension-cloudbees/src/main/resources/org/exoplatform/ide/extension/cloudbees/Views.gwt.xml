@@ -23,20 +23,24 @@
    <replace-with class="org.exoplatform.ide.extension.cloudbees.client.login.LoginView">
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoView">
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.cloudbees.client.list.ui.ApplicationListView">
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter.Display" />
    </replace-with>
-   
+         
    <replace-with class="org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display" />
    </replace-with>
 </module>
