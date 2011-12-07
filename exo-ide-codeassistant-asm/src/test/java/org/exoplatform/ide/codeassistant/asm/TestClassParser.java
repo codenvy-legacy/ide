@@ -44,16 +44,17 @@ public class TestClassParser
       assertLoadedClasses(JarParser.parse(new File("target/test-classes/testclasses/test_jar")));
    }
 
-   private void assertLoadedClasses(List<TypeInfoBuilder> classes)
+   private void assertLoadedClasses(List<TypeInfo> classes)
    {
 
       Assert.assertEquals(6, classes.size());
       Set<String> visitedClasses = new HashSet<String>();
-      for (TypeInfoBuilder current : classes)
+      for (TypeInfo current : classes)
       {
-         if (current.getName().equals(PACKAGE + ".TestAnnotation"))
+         if (current.getName().equals("TestAnnotation"))
          {
-            ShortTypeInfo shortTypeInfo = current.buildShortTypeInfo();
+            //ShortTypeInfo shortTypeInfo = current.buildShortTypeInfo();
+            ShortTypeInfo shortTypeInfo = current;
             Assert.assertEquals("TestAnnotation", shortTypeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestAnnotation", shortTypeInfo.getQualifiedName());
             Assert.assertEquals("ANNOTATION", shortTypeInfo.getType());
@@ -61,7 +62,7 @@ public class TestClassParser
                Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE
                   | TypeInfoBuilder.MODIFIER_ANNOTATION), shortTypeInfo.getModifiers());
 
-            TypeInfo typeInfo = current.buildTypeInfo();
+            TypeInfo typeInfo = current;
             Assert.assertEquals("TestAnnotation", typeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestAnnotation", typeInfo.getQualifiedName());
             Assert.assertEquals("ANNOTATION", typeInfo.getType());
@@ -117,15 +118,15 @@ public class TestClassParser
             visitedClasses.add(typeInfo.getQualifiedName());
 
          }
-         else if (current.getName().equals(PACKAGE + ".TestClass"))
+         else if (current.getName().equals("TestClass"))
          {
-            ShortTypeInfo shortTypeInfo = current.buildShortTypeInfo();
+            ShortTypeInfo shortTypeInfo = current;
             Assert.assertEquals("TestClass", shortTypeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestClass", shortTypeInfo.getQualifiedName());
             Assert.assertEquals("CLASS", shortTypeInfo.getType());
             Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), shortTypeInfo.getModifiers());
 
-            TypeInfo typeInfo = current.buildTypeInfo();
+            TypeInfo typeInfo = current;
             Assert.assertEquals("TestClass", typeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestClass", typeInfo.getQualifiedName());
             Assert.assertEquals("CLASS", typeInfo.getType());
@@ -255,9 +256,9 @@ public class TestClassParser
             visitedClasses.add(typeInfo.getQualifiedName());
 
          }
-         else if (current.getName().equals(PACKAGE + ".TestEnum"))
+         else if (current.getName().equals("TestEnum"))
          {
-            ShortTypeInfo shortTypeInfo = current.buildShortTypeInfo();
+            ShortTypeInfo shortTypeInfo = current;
             Assert.assertEquals("TestEnum", shortTypeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestEnum", shortTypeInfo.getQualifiedName());
             Assert.assertEquals("ENUM", shortTypeInfo.getType());
@@ -265,7 +266,7 @@ public class TestClassParser
             Assert.assertEquals(Integer.valueOf(Modifier.SYNCHRONIZED | Modifier.FINAL | TypeInfoBuilder.MODIFIER_ENUM
                | Modifier.PUBLIC), shortTypeInfo.getModifiers());
 
-            TypeInfo typeInfo = current.buildTypeInfo();
+            TypeInfo typeInfo = current;
             Assert.assertEquals("TestEnum", typeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestEnum", typeInfo.getQualifiedName());
             Assert.assertEquals("ENUM", typeInfo.getType());
@@ -374,16 +375,16 @@ public class TestClassParser
             }
             visitedClasses.add(typeInfo.getQualifiedName());
          }
-         else if (current.getName().equals(PACKAGE + ".TestInterface2"))
+         else if (current.getName().equals("TestInterface2"))
          {
-            ShortTypeInfo shortTypeInfo = current.buildShortTypeInfo();
+            ShortTypeInfo shortTypeInfo = current;
             Assert.assertEquals("TestInterface2", shortTypeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestInterface2", shortTypeInfo.getQualifiedName());
             Assert.assertEquals("INTERFACE", shortTypeInfo.getType());
             Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
                shortTypeInfo.getModifiers());
 
-            TypeInfo typeInfo = current.buildTypeInfo();
+            TypeInfo typeInfo = current;
             Assert.assertEquals("TestInterface2", typeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestInterface2", typeInfo.getQualifiedName());
             Assert.assertEquals("INTERFACE", typeInfo.getType());
@@ -436,16 +437,16 @@ public class TestClassParser
             visitedClasses.add(typeInfo.getQualifiedName());
 
          }
-         else if (current.getName().equals(PACKAGE + ".TestInterface"))
+         else if (current.getName().equals("TestInterface"))
          {
-            ShortTypeInfo shortTypeInfo = current.buildShortTypeInfo();
+            ShortTypeInfo shortTypeInfo = current;
             Assert.assertEquals("TestInterface", shortTypeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestInterface", shortTypeInfo.getQualifiedName());
             Assert.assertEquals("INTERFACE", shortTypeInfo.getType());
             Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
                shortTypeInfo.getModifiers());
 
-            TypeInfo typeInfo = current.buildTypeInfo();
+            TypeInfo typeInfo = current;
             Assert.assertEquals("TestInterface", typeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestInterface", typeInfo.getQualifiedName());
             Assert.assertEquals("INTERFACE", typeInfo.getType());
@@ -491,16 +492,16 @@ public class TestClassParser
             visitedClasses.add(typeInfo.getQualifiedName());
 
          }
-         else if (current.getName().equals(PACKAGE + ".TestSuper"))
+         else if (current.getName().equals("TestSuper"))
          {
-            ShortTypeInfo shortTypeInfo = current.buildShortTypeInfo();
+            ShortTypeInfo shortTypeInfo = current;
             Assert.assertEquals("TestSuper", shortTypeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestSuper", shortTypeInfo.getQualifiedName());
             Assert.assertEquals("CLASS", shortTypeInfo.getType());
             Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED),
                shortTypeInfo.getModifiers());
 
-            TypeInfo typeInfo = current.buildTypeInfo();
+            TypeInfo typeInfo = current;
             Assert.assertEquals("TestSuper", typeInfo.getName());
             Assert.assertEquals(PACKAGE + ".TestSuper", typeInfo.getQualifiedName());
             Assert.assertEquals("CLASS", typeInfo.getType());

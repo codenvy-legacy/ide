@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.objectweb.asm.ClassReader;
 
 import java.io.File;
@@ -38,12 +39,12 @@ import java.io.InputStream;
 public class ClassParser
 {
 
-   public static TypeInfoBuilder parse(InputStream classStream) throws IOException
+   public static TypeInfo parse(InputStream classStream) throws IOException
    {
       ClassReader cr = new ClassReader(classStream);
       TypeInfoClassVisitor typeInfoClassVisitor = new TypeInfoClassVisitor();
       cr.accept(typeInfoClassVisitor, ClassReader.SKIP_CODE);
-      return typeInfoClassVisitor.getBuilder();
+      return typeInfoClassVisitor.getBuilder().buildTypeInfo();
    }
 
 }

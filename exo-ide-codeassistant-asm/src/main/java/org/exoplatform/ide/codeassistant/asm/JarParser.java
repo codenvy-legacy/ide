@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,7 +32,7 @@ import java.util.zip.ZipInputStream;
 public class JarParser
 {
 
-   public static List<TypeInfoBuilder> parse(File jarFile) throws IOException
+   public static List<TypeInfo> parse(File jarFile) throws IOException
    {
       /*
        * There are no way to predict entries order in jar, so, manifest will be added
@@ -38,7 +40,7 @@ public class JarParser
        */
       Manifest manifest = null;
 
-      List<TypeInfoBuilder> classes = new ArrayList<TypeInfoBuilder>();
+      List<TypeInfo> classes = new ArrayList<TypeInfo>();
       ZipInputStream zip = new ZipInputStream(new FileInputStream(jarFile));
       try
       {
@@ -62,10 +64,13 @@ public class JarParser
          zip.close();
       }
 
+      /*
+       * Temporary disabled to provide List<TypeInfo> return type
       for (TypeInfoBuilder builder : classes)
       {
          builder.addManifest(manifest);
       }
+      */
       return classes;
    }
 

@@ -95,7 +95,14 @@ public class TypeInfoBuilder
    {
       this.qualifiedName = name.replace("/", ".");
       this.name = name.substring(name.lastIndexOf('/') + 1);
-      this.superName = superName.replace("/", ".");
+      if (superName != null)
+      {
+         this.superName = superName.replace("/", ".");
+      }
+      else
+      {
+         this.superName = null;
+      }
 
       this.interfaces = interfaces;
       if (interfaces != null)
