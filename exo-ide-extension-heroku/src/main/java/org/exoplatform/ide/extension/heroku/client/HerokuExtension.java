@@ -39,6 +39,7 @@ import org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter
 import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter;
+import org.exoplatform.ide.extension.heroku.client.project.HerokuProjectPresenter;
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
@@ -101,6 +102,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new LogsPresenter();
       
       new DeployApplicationPresenter();
+      new HerokuProjectPresenter();
    }
 
 }
