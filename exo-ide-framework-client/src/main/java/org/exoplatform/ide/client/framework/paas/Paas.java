@@ -20,6 +20,9 @@ package org.exoplatform.ide.client.framework.paas;
 
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Class, where paases store their data, when they are registred in IDE.
@@ -31,12 +34,19 @@ public class Paas
 {
    private String name;
    
+   /**
+    * Project types, that can be deployed to current PaaS.
+    */
+   private List<String> supportedProjectTypes = new ArrayList<String>();
+   
    private PaasComponent provider;
    
-   public Paas(String name, PaasComponent provider)
+   public Paas(String name, PaasComponent provider, List<String> supportedProjectTypes)
    {
       this.name = name;
       this.provider = provider;
+      if (supportedProjectTypes != null)
+         this.supportedProjectTypes = supportedProjectTypes;
    }
    
    /**
@@ -50,6 +60,17 @@ public class Paas
    public String getName()
    {
       return name;
+   }
+   
+   /**
+    * Return the list of project types, that can be deployed to current PaaS.
+    * <p/>
+    * If not project types are supported, than return empty list.
+    * @return the supportedProjectTypes
+    */
+   public List<String> getSupportedProjectTypes()
+   {
+      return supportedProjectTypes;
    }
    
    public void getView(String projectName, PaasCallback paasCallback)

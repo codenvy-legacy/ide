@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.PaasCallback;
 import org.exoplatform.ide.client.framework.paas.PaasComponent;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
@@ -45,6 +46,7 @@ import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +103,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      IDE.getInstance().addPaas(new Paas("CloudBees", this));
+      IDE.getInstance().addPaas(new Paas("CloudBees", this, Arrays.asList(ProjectResolver.SERVLET_JSP)));
    }
 
    public void bindDisplay()

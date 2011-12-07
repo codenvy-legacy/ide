@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.PaasCallback;
 import org.exoplatform.ide.client.framework.paas.PaasComponent;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
@@ -48,6 +49,7 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -87,7 +89,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      IDE.getInstance().addPaas(new Paas("OpenShift", this));
+      IDE.getInstance().addPaas(new Paas("OpenShift", this, Arrays.asList(ProjectResolver.RAILS)));
    }
 
    public void bindDisplay()

@@ -292,18 +292,17 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
 
    private List<String> getPaasValues()
    {
-      //allowed paases for the current project type
-      List<String> allowedPaases = projectPaasMap.get(projectType);
-      List<String> paasList = new ArrayList<String>();
+      List<String> paases = new ArrayList<String>();
       this.paasList = IDE.getInstance().getPaases();
       for (Paas paas : this.paasList)
       {
-         if (allowedPaases.contains(paas.getName()))
+         if (paas.getSupportedProjectTypes().contains(projectType))
          {
-            paasList.add(paas.getName());
+            paases.add(paas.getName());
          }
+         
       }
-      return paasList;
+      return paases;
    }
 
    private void closeView()
@@ -330,6 +329,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          if ("Java Web".equals(type))
          {
             paases.add("CloudBees");
+            paases.add("CloudFoundry");
          }
          else if ("Servlet/JSP".equals(type))
          {
@@ -337,10 +337,6 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
             paases.add("CloudFoundry");
          }
          else if ("Spring".equals(type))
-         {
-            paases.add("CloudFoundry");
-         }
-         else if ("Java Web".equals(type))
          {
             paases.add("CloudFoundry");
          }

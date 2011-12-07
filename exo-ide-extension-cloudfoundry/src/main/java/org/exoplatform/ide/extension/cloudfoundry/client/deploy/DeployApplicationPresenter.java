@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.paas.PaasComponent;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.PaasCallback;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -45,6 +46,7 @@ import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -99,7 +101,9 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      IDE.getInstance().addPaas(new Paas("CloudFoundry", this));
+      IDE.getInstance().addPaas(
+         new Paas("CloudFoundry", this, Arrays.asList(ProjectResolver.RAILS, ProjectResolver.SERVLET_JSP,
+            ProjectResolver.SPRING)));
    }
 
    public void bindDisplay()
