@@ -28,8 +28,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -216,7 +216,7 @@ public class CreateJavaClassView extends ViewImpl implements Display
     * @see org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter.Display#getInterfaceList()
     */
    @Override
-   public ListGridItem<ShortTypeInfo> getInterfaceList()
+   public ListGrid<ShortTypeInfo> getInterfaceList()
    {
       return interfaceList;
    }
@@ -273,6 +273,15 @@ public class CreateJavaClassView extends ViewImpl implements Display
    public void setDescriptionLabelText(String text)
    {
       descriptionLabel.setText(text);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter.Display#setRemoveInterfaceButtonEnabled(boolean)
+    */
+   @Override
+   public void setRemoveInterfaceButtonEnabled(boolean enabled)
+   {
+      removeInterfaces.setEnabled(enabled);
    }
 
 }

@@ -32,7 +32,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -115,7 +115,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
       HasClickHandlers getBrowseClassesButton();
 
-      ListGridItem<ShortTypeInfo> getInterfaceList();
+      ListGrid<ShortTypeInfo> getInterfaceList();
 
       HasClickHandlers getAddInterfaceButton();
 
@@ -128,6 +128,8 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       void setCreateButtonEnabled(boolean enabled);
 
       void setDescriptionLabelText(String text);
+
+      void setRemoveInterfaceButtonEnabled(boolean enabled);
    }
 
    /**
@@ -358,8 +360,24 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
                      value.add(type);
                      display.getInterfaceList().setValue(value);
+                     display.setRemoveInterfaceButtonEnabled(true);
                   }
                });
+         }
+      });
+
+      display.getRemoveInterfaceButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            List<ShortTypeInfo> selectedItems = display.getInterfaceList().getSelectedItems();
+            List<ShortTypeInfo> items = display.getInterfaceList().getValue();
+            items.removeAll(selectedItems);
+            display.getInterfaceList().setValue(items);
+            if (items.isEmpty())
+               display.setRemoveInterfaceButtonEnabled(false);
          }
       });
 
@@ -429,6 +447,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
       display.getSuperClassText().setValue(OBJECT_FQN);
       display.setCreateButtonEnabled(false);
+      display.setRemoveInterfaceButtonEnabled(false);
       validate();
    }
 
