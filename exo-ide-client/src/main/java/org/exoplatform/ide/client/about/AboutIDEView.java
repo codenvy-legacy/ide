@@ -93,8 +93,6 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
       centerLayout.add(createButtonLayout());
       add(centerLayout);
-
-      okButton.focus();
    }
 
    private HorizontalPanel createLogoLayout()

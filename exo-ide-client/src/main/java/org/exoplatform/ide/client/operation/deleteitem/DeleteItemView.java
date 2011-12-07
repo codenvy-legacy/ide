@@ -87,8 +87,6 @@ public class DeleteItemView extends ViewImpl implements
 
       mainLayout.add(infoLayout);
       mainLayout.add(createButtonsLayout());
-
-      deleteButton.focus();
    }
 
    private void createImage()

@@ -31,6 +31,8 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
@@ -47,6 +49,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +64,7 @@ import java.util.List;
  */
 
 public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHandler,
-   UserInfoReceivedHandler, ProjectOpenedHandler, AllFilesClosedHandler
+   ProjectOpenedHandler, AllFilesClosedHandler, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -83,16 +86,16 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
     * Instance of opened {@link Display}.
     */
    private Display display;
-
-   /**
-    * Current user name.
-    */
-   private String userName;
    
    /**
     * ID of current opened project.
     */
    private String currentOpenedProjectID;
+   
+   /**
+    * Virtual File System info.
+    */
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * Creates new instance of this presenter.
@@ -103,7 +106,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
 
       IDE.addHandler(ShowProjectsEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AllFilesClosedEvent.TYPE, this);
    }
@@ -116,7 +119,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    @Override
    public void onShowProjects(ShowProjectsEvent event)
    {
-      if (display != null)
+      if (display != null || vfsInfo == null)
       {
          return;
       }
@@ -205,16 +208,16 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    {
       HashMap<String, String> query = new HashMap<String, String>();
 
-      String path = (!"root".equals(userName)) ? "/" + userName : "";
+      //String path = (!"root".equals(userName)) ? "/" + userName : "";
+      String path = vfsInfo.getRoot().getPath();
+      System.out.println("PATH > [" + path + "]");
+      
       query.put("path", path);
       query.put("nodeType", "vfs:project");
 
       try
       {
-         VirtualFileSystem.getInstance().search(
-            query,
-            -1,
-            0,
+         VirtualFileSystem.getInstance().search(query, -1, 0,
             new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
@@ -293,17 +296,6 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    }
 
    /**
-    * Receives the current user name.
-    * 
-    * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent)
-    */
-   @Override
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
-   {
-      userName = event.getUserInfo().getName();
-   }
-
-   /**
     * Receives the name of the currently opened project.
     * 
     * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
@@ -317,6 +309,12 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       {
          IDE.getInstance().closeView(display.asView().getId());
       }
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
    }
 
 }

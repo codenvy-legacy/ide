@@ -107,7 +107,6 @@ public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client
     */
    public void removeFocusFromLineNumber()
    {
-      goButton.focus();
    }
 
    /**
