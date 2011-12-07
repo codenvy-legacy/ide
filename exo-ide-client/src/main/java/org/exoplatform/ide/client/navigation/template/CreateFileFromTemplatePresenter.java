@@ -18,24 +18,36 @@
  */
 package org.exoplatform.ide.client.navigation.template;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.editor.EditorFactory;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -52,22 +64,18 @@ import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
+import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter for form "Create file from template"
@@ -77,7 +85,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 
 public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHandler, ViewClosedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, TemplatesMigratedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, TemplatesMigratedHandler, ApplicationSettingsReceivedHandler
 {
 
    public interface Display extends IsView
@@ -184,6 +192,10 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    protected FileTemplate selectedTemplate;
 
    private boolean isTemplatesMigrated = false;
+   
+   private ApplicationSettings applicationSettings;
+   
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    public CreateFileFromTemplatePresenter()
    {
@@ -193,6 +205,116 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+   }
+   
+   private void bindDisplay(String title, String submitButtonTitle)
+   {
+      display.getFileNameField().addValueChangeHandler(fileNameFieldChangeHandler);
+
+      /*
+       * Add click handler for create button
+       */
+      display.getCreateButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            if (submitCallback != null)
+            {
+               FileTemplate fileTemplate =
+                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue());
+               closeView();
+               submitCallback.onSubmit(fileTemplate);
+               submitCallback = null;
+            }
+            else
+            {
+               doCreateFileFromTemplate();
+            }
+         }
+      });
+
+      /*
+       * If double click on template - than new template will be created.
+       */
+      display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
+      {
+         public void onDoubleClick(DoubleClickEvent event)
+         {
+            if (submitCallback != null)
+            {
+               FileTemplate fileTemplate =
+                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue(),
+                     display.getSelectedTemplate().getMimeType());
+               closeView();
+               submitCallback.onSubmit(fileTemplate);
+               submitCallback = null;
+            }
+            else
+            {
+               doCreateFileFromTemplate();
+            }
+         }
+      });
+
+      /*
+       * Close action on cancel button
+       */
+      display.getCancelButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+      });
+
+      /*
+       * If template selected - than copy template name to name field and enable create button
+       */
+      display.getTemplateListGrid().addSelectionHandler(new SelectionHandler<FileTemplate>()
+      {
+         public void onSelection(SelectionEvent<FileTemplate> event)
+         {
+            onTemplateSelected();
+         }
+      });
+
+      /*
+       * Delete action on delete button
+       */
+      display.getDeleteButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            deleteTemplate();
+         }
+      });
+
+      /*
+       * Initialize template list grid with template list
+       */
+      display.getTemplateListGrid().setValue(fileTemplates);
+
+      /*
+       * Disable buttons and name field, because no template is selected
+       */
+      display.setCreateButtonEnabled(false);
+      display.setDeleteButtonEnabled(false);
+      display.setFileNameFieldEnabled(false);
+
+      if (!fileTemplates.isEmpty())
+      {
+         display.selectTemplate(fileTemplates.get(0));
+      }
+
+      if (title != null)
+      {
+         display.asView().setTitle(title);
+      }
+      if (submitButtonTitle != null)
+      {
+         display.setSubmitButtonTitle(submitButtonTitle);
+      }
    }
 
    @Override
@@ -210,7 +332,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      List<Item> selectedItems = event.getSelectedItems();
+      selectedItems = event.getSelectedItems();
       if (selectedItems != null && !selectedItems.isEmpty())
       {
          Item item = selectedItems.get(0);
@@ -350,16 +472,42 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       String contentType = selectedTemplate.getMimeType();
 
       fileName = getDefaultNewFileName(baseFolder, fileName);
+      
+      ProjectModel project = null;
+      if (selectedItems != null && selectedItems.size() != 0)
+      {
+         Item item = selectedItems.get(0);
+
+         if (item instanceof ItemContext)
+         {
+            project = ((ItemContext)item).getProject();
+         }
+      }
 
       final FileModel newFile = new FileModel(fileName, contentType, selectedTemplate.getContent(), baseFolder);
-      //      newFile.setContentType(contentType);
-      //      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
-      //      newFile.setIcon(ImageUtil.getIcon(contentType));
-      //      newFile.setNewFile(true);
-      //      newFile.setContentChanged(true);
-      //      newFile.setContent(selectedTemplate.getContent());
-      IDE.fireEvent(new OpenFileEvent(newFile));
-
+      newFile.setContentChanged(true);
+      newFile.setId(fileName);
+      newFile.setProject(project);
+      
+      Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
+      if (defaultEditors == null)
+      {
+         defaultEditors = new LinkedHashMap<String, String>();
+      }
+      
+      try
+      {
+         String defaultEditorDescription = defaultEditors.get(contentType);
+         //         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
+         EditorProducer producer = EditorFactory.getEditorProducer(contentType, defaultEditorDescription);
+         IDE.fireEvent(new EditorOpenFileEvent(newFile, producer));
+      }
+      catch (EditorNotFoundException e)
+      {
+         Dialogs.getInstance().showError(
+            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.createFileCantFindEditorForType(contentType));
+      }
+      
       closeView();
    }
 
@@ -444,115 +592,6 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          }
       }
    };
-
-   public void bindDisplay(String title, String submitButtonTitle)
-   {
-      display.getFileNameField().addValueChangeHandler(fileNameFieldChangeHandler);
-
-      /*
-       * Add click handler for create button
-       */
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            if (submitCallback != null)
-            {
-               FileTemplate fileTemplate =
-                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue());
-               closeView();
-               submitCallback.onSubmit(fileTemplate);
-               submitCallback = null;
-            }
-            else
-            {
-               doCreateFileFromTemplate();
-            }
-         }
-      });
-
-      /*
-       * If double click on template - than new template will be created.
-       */
-      display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
-      {
-         public void onDoubleClick(DoubleClickEvent event)
-         {
-            if (submitCallback != null)
-            {
-               FileTemplate fileTemplate =
-                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue(),
-                     display.getSelectedTemplate().getMimeType());
-               closeView();
-               submitCallback.onSubmit(fileTemplate);
-               submitCallback = null;
-            }
-            else
-            {
-               doCreateFileFromTemplate();
-            }
-         }
-      });
-
-      /*
-       * Close action on cancel button
-       */
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      /*
-       * If template selected - than copy template name to name field and enable create button
-       */
-      display.getTemplateListGrid().addSelectionHandler(new SelectionHandler<FileTemplate>()
-      {
-         public void onSelection(SelectionEvent<FileTemplate> event)
-         {
-            onTemplateSelected();
-         }
-      });
-
-      /*
-       * Delete action on delete button
-       */
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            deleteTemplate();
-         }
-      });
-
-      /*
-       * Initialize template list grid with template list
-       */
-      display.getTemplateListGrid().setValue(fileTemplates);
-
-      /*
-       * Disable buttons and name field, because no template is selected
-       */
-      display.setCreateButtonEnabled(false);
-      display.setDeleteButtonEnabled(false);
-      display.setFileNameFieldEnabled(false);
-
-      if (!fileTemplates.isEmpty())
-      {
-         display.selectTemplate(fileTemplates.get(0));
-      }
-
-      if (title != null)
-      {
-         display.asView().setTitle(title);
-      }
-      if (submitButtonTitle != null)
-      {
-         display.setSubmitButtonTitle(submitButtonTitle);
-      }
-   }
 
    /**
     * Refresh List of the templates, after deleting
@@ -718,6 +757,15 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    public void onTemplatesMigrated(TemplatesMigratedEvent event)
    {
       isTemplatesMigrated = true;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
    }
 
 }
