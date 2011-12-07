@@ -28,69 +28,71 @@ package org.exoplatform.ide.editor.api.codeassitant;
 public interface TokenProperties
 {
 
-   public static String CLASS = "CLASS";
+   String CLASS = "CLASS";
 
-   public static String FQN = "FQN";
+   String FQN = "FQN";
 
-   public static String PACKAGE = "PACKAGE";
+   String PACKAGE = "PACKAGE";
 
-   public static String MODIFIERS = "MODIFIERS";
+   String MODIFIERS = "MODIFIERS";
 
-   public static String DECLARING_CLASS = "DECLARINGCLASS";
+   String DECLARING_CLASS = "DECLARINGCLASS";
 
-   public static String GENERIC_PARAMETER_TYPES = "GENERICPARAMETERTYPES";
+   String GENERIC_PARAMETER_TYPES = "GENERICPARAMETERTYPES";
 
-   public static String GENERIC_RETURN_TYPE = "GENERICRETURNTYPE";
+   String GENERIC_RETURN_TYPE = "GENERICRETURNTYPE";
 
-   public static String PARAMETER_TYPES = "PARAMETERTYPES";
+   String PARAMETER_TYPES = "PARAMETERTYPES";
 
-   public static String RETURN_TYPE = "RETURNTYPE";
+   String RETURN_TYPE = "RETURNTYPE";
    
    /**
     * Code, that will be inserted if token selected.
     * Used only for template tokens.
     */
-   public static String CODE = "CODE";
+   String CODE = "CODE";
    
    /**
     * Used for template tokens.
     * Short hint, that will be displayed near name in autocomplete form.
     * Can help user quickly to identify the purpose of template.
     */
-   public static String SHORT_HINT =  "SHORT-HINT";
+   String SHORT_HINT =  "SHORT-HINT";
    
    /**
     * Used for template tokens.
     * Full text of template, that will be inserted to code editor.
     * Also, can be shown in javadoc window.
     */
-   public static String FULL_TEXT =  "FULL-TEXT";
+   String FULL_TEXT =  "FULL-TEXT";
    
    
-   public static String LINE_NUMBER = "lineNumber";
+   String LINE_NUMBER = "lineNumber";
    
-   public static String MIME_TYPE = "mimeType";
+   String MIME_TYPE = "mimeType";
    
-   public static String SHORT_DESCRIPTION = "shortDescription";
+   String SHORT_DESCRIPTION = "shortDescription";
    
-   public static String FULL_DESCRIPTION = "fullDescription";
+   String FULL_DESCRIPTION = "fullDescription";
    
    /**
     * Used for sub token list property.
     * Contains {@link ArrayProperty} 
     */
-   public static String SUB_TOKEN_LIST = "subTokenList";
+   String SUB_TOKEN_LIST = "subTokenList";
    
-   public static String ELEMENT_TYPE = "elementType";
+   String ELEMENT_TYPE = "elementType";
    
-   public static String LAST_LINE_NUMBER = "lastLineNumber";
+   String LAST_LINE_NUMBER = "lastLineNumber";
    
-   public static String ANNOTATIONS = "annotations";
+   String ANNOTATIONS = "annotations";
    
-   public static String PARENT_TOKEN = "parentToken";
+   String PARENT_TOKEN = "parentToken";
 
-   public static String PARAMETERS = "parameters";
+   String PARAMETERS = "parameters";
    
-   public static String INITIALIZATION_STATEMENT = "initializationStatement"; 
+   String INITIALIZATION_STATEMENT = "initializationStatement";
+   
+   String GENERIC_EXCEPTIONTYPES = "genericExceptionTypes";
   
 }

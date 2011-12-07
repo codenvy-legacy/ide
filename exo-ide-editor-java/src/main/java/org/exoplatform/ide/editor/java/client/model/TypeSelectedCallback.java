@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,19 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.client.codeassistant.services;
+package org.exoplatform.ide.editor.java.client.model;
 
 /**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 15, 2010 5:05:08 PM evgen $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version ${Id}:  Dec 2, 2011 4:52:03 PM evgen $
  *
  */
-public enum Types {
-  CLASS, ANNOTATION, INTERFACE; 
-  
-  public String toString() {
-     return this.name().toLowerCase();
-  };
+public interface TypeSelectedCallback
+{
+   void typeSelected(ShortTypeInfo type);
 }

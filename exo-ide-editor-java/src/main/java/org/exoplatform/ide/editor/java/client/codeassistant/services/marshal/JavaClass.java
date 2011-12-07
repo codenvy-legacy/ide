@@ -32,12 +32,14 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
  */
 public class JavaClass
 {
- 
+
    private List<Token> methods = new ArrayList<Token>();
-   
+
    private List<Token> fields = new ArrayList<Token>();
-   
+
    private List<Token> constructors = new ArrayList<Token>();
+
+   private List<Token> abstractMethods = new ArrayList<Token>();
 
    /**
     * @return the {@link List} of public methods
@@ -62,7 +64,10 @@ public class JavaClass
    {
       return constructors;
    }
-   
-   
-   
+
+   public List<Token> getAbstractMethods()
+   {
+      return abstractMethods;
+   }
+
 }

@@ -38,8 +38,8 @@ import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
-import org.exoplatform.ide.editor.java.client.codeassistant.services.Types;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
+import org.exoplatform.ide.editor.java.client.model.Types;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -167,7 +167,6 @@ public class JavaGwtTestCodeAssistant extends Base
       delayTestFinish(3000);
       Token currentToken = new TokenImpl("String", TokenType.VARIABLE);
       currentToken.setProperty(TokenProperties.FQN, new StringProperty("java.lang.String"));
-      JavaCodeAssist javaCodeAssist = new JavaCodeAssist();
 //      javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, line.length() + 1, 0, new ArrayList<Token>(),
 //         MimeType.APPLICATION_GROOVY, currentToken);
    }

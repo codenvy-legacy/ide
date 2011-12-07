@@ -1,0 +1,52 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:t="urn:import:org.exoplatform.ide.client.framework.ui" xmlns:j="urn:import:org.exoplatform.ide.editor.java.client.ui">
+   <ui:with field='tex' type='org.exoplatform.ide.editor.java.client.JavaConstants'/>
+   <ui:style>
+      .buttons {
+      	display: block;
+      	margin-left: 10px;
+      	margin-right: 10px;
+      }
+      
+      .floatRight {
+      	float: right;
+      }
+      
+      .floatLeft {
+      	float: left;
+      }
+      
+      .types {
+      	border: 1px solid #DBDFE5;
+      	
+      }
+   </ui:style>
+   <f:Border borderColor="transparent" margin="5">
+      <f:layer top="0" height="48">
+         <g:LayoutPanel>
+            <g:layer top="0" height="22">
+               <g:Label text="{tex.searchTypeInputText}"></g:Label>
+            </g:layer>
+            <g:layer left="0" width="250" top="24" bottom="0">
+               <f:TextInput ui:field="typeNameText" width="100%"></f:TextInput>
+            </g:layer>
+            <g:layer right="0" width="90" top="24" bottom="0">
+               <f:ImageButton ui:field="searchButton" width="90" height="22" text="{tex.searchTypeButtonSearch}"></f:ImageButton>
+            </g:layer>
+         </g:LayoutPanel>
+      </f:layer>
+      <f:layer top="48" height="22">
+         <g:Label text="{tex.searchTypeResult}"></g:Label>
+      </f:layer>
+      <f:layer top="70" bottom="35">
+         <j:TypeList ui:field="typeList" width="100%"></j:TypeList>
+      </f:layer>
+      <f:layer height="22px" bottom="5">
+         <g:FlowPanel styleName="{style.buttons}">
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{tex.createJCButtonCancel}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+            <f:ImageButton ui:field="okButton" width="90" height="22" text="{tex.searchTypeButtonOk}" addStyleNames="{style.floatRight}"></f:ImageButton>
+         </g:FlowPanel>
+      </f:layer>
+   </f:Border>
+</ui:UiBinder> 

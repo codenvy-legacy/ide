@@ -26,6 +26,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
+import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.TypesUnmarshaller;
+import org.exoplatform.ide.editor.java.client.model.ShortTypeInfo;
+import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.ArrayList;
@@ -44,19 +47,17 @@ public class JavaCodeAssistantService extends CodeAssistantService
 {
 
    private static JavaCodeAssistantService instance;
-   
-	private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-in-package";
-   
+
+   private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-in-package";
+
    public JavaCodeAssistantService(String restServiceContext, Loader loader)
    {
-      super(restServiceContext, loader,
-         "/ide/code-assistant/java/class-description?fqn=", //GET_CLASS_URL
+      super(restServiceContext, loader, "/ide/code-assistant/java/class-description?fqn=", //GET_CLASS_URL
          "/ide/code-assistant/java/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
-         "/ide/code-assistant/java/find-by-type/"
-      );
+         "/ide/code-assistant/java/find-by-type/");
       instance = this;
    }
-   
+
    public static JavaCodeAssistantService get()
    {
       return instance;
@@ -73,16 +74,37 @@ public class JavaCodeAssistantService extends CodeAssistantService
       if (fileId != null)
       {
          String url = restServiceContext + FIND_BY_PROJECT;
-         url += "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="  + VirtualFileSystem.getInstance().getInfo().getId();
+         url +=
+            "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
+               + VirtualFileSystem.getInstance().getInfo().getId();
          List<Token> classes = new ArrayList<Token>();
          callback.setResult(classes);
-   
+
          FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
-   
+
          callback.setEventBus(IDE.eventBus());
          callback.setPayload(unmarshaller);
-            AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
       }
    }
-   
+
+   public void findTypeByPrefix(String prefix, Types type, String projectId,
+      AsyncRequestCallback<List<ShortTypeInfo>> callback)
+   {
+      String url = restServiceContext + FIND_TYPE + type.toString();
+      url += "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+      if (prefix != null && !prefix.isEmpty())
+      {
+         url += "&prefix=" + prefix;
+      }
+      
+
+      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+      TypesUnmarshaller unmarshaller = new TypesUnmarshaller(types);
+      callback.setResult(types);
+      callback.setEventBus(IDE.eventBus());
+      callback.setPayload(unmarshaller);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+
 }

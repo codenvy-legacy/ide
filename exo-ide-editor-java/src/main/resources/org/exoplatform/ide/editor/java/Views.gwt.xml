@@ -18,20 +18,14 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-
 <module>
-
-   <!-- Inherit the core Web Toolkit stuff.                        -->
    <inherits name='com.google.gwt.user.User' />
-   <inherits name="com.google.gwt.http.HTTP" />
-   <inherits name='com.google.gwt.user.Debug' />
-   <inherits name='com.google.gwt.json.JSON' />
-
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-
-   <inherits name='org.exoplatform.ide.editor.java.Views' />
-
-   <source path="client" />
-
-   <entry-point class="org.exoplatform.ide.editor.java.client.JavaEditorExtension" />
+   
+   <replace-with class="org.exoplatform.ide.editor.java.client.create.CreateJavaClassView">
+      <when-type-is class="org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter.Display" />
+   </replace-with>
+   
+    <replace-with class="org.exoplatform.ide.editor.java.client.create.TypeSearchView">
+      <when-type-is class="org.exoplatform.ide.editor.java.client.create.TypeSearchPresenter.Display" />
+   </replace-with>
 </module>

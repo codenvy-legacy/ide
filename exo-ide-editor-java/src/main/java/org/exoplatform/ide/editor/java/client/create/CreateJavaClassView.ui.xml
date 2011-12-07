@@ -1,0 +1,167 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:t="urn:import:org.exoplatform.ide.client.framework.ui" xmlns:j="urn:import:org.exoplatform.ide.editor.java.client.ui">
+   <ui:with field='tex' type='org.exoplatform.ide.editor.java.client.JavaConstants'/>
+   <ui:style>
+      .topBox {
+      	background-color: #eef6ff;
+      	vertical-align: middle;
+      	border-bottom: 1px solid #A6ABAF;
+      	width: 100%;
+      	height: 60px;
+      }
+      
+      .labelTitle {
+      	font-size: medium;
+      	font-weight: bold;
+      	vertical-align: middle;
+      	padding-left: 10px;
+      	padding-top: 10px;
+      }
+      
+      .labelDescription {
+      	font-style: italic;
+      	vertical-align: middle;
+      	padding-left: 10px;
+      	padding-top: 5px;
+      }
+      
+      .buttons {
+      	display: block;
+      	margin-left: 10px;
+      	margin-right: 10px;
+      }
+      
+      .floatRight {
+      	float: right;
+      }
+      
+      .floatLeft {
+      	float: left;
+      }
+      
+      .space {
+      	margin: 10px;
+      }
+      
+      .panelMargin {
+      	margin: 2px;
+      }
+      
+      .interfaces {
+      	border: 1px solid #DBDFE5;
+      }
+      
+      .blockElement {
+      	display: block;
+      }
+   </ui:style>
+   <f:Border borderColor="transparent">
+      <f:layer>
+         <g:FlowPanel stylePrimaryName="{style.topBox}">
+            <g:Label styleName="{style.labelTitle}" text="{tex.createJCLabelMain}"></g:Label>
+            <g:Label styleName="{style.labelDescription}" ui:field="descriptionLabel" text="{tex.createJCLabelDesciption}"></g:Label>
+         </g:FlowPanel>
+      </f:layer>
+      <f:layer top="65" bottom="50">
+         <g:DockLayoutPanel unit="PX">
+            <g:north size="28">
+               <g:LayoutPanel styleName="{style.panelMargin}">
+                  <g:layer left="3" width="120">
+                     <g:Label text="{tex.createJCLabelSource}"></g:Label>
+                  </g:layer>
+                  <g:layer left="120" right="110">
+                     <f:TextInput ui:field="sourceFolderText" width="100%" height="100%" readOnly="true"></f:TextInput>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:north>
+            <g:north size="28">
+               <g:LayoutPanel styleName="{style.panelMargin}">
+                  <g:layer left="3" width="120">
+                     <g:Label text="{tex.createJCLabelPackage}"></g:Label>
+                  </g:layer>
+                  <g:layer left="120" right="110">
+                     <f:TextInput ui:field="packageText" width="100%" height="100%"></f:TextInput>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:north>
+            <g:north size="28">
+               <g:LayoutPanel styleName="{style.panelMargin}">
+                  <g:layer left="3" width="120">
+                     <g:Label text="{tex.createJCLabelName}"></g:Label>
+                  </g:layer>
+                  <g:layer left="120" right="110">
+                     <f:TextInput ui:field="classNameText" width="100%" height="100%"></f:TextInput>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:north>
+            <g:north size="56">
+               <g:LayoutPanel styleName="{style.panelMargin}">
+                  <g:layer left="3" width="120">
+                     <g:Label text="{tex.createJCLabelModifiers}"></g:Label>
+                  </g:layer>
+                  <g:layer left="120" right="110">
+                     <g:FlowPanel>
+                        <g:RadioButton ui:field="publicRadio" checked="true" name="visibility" text="public"></g:RadioButton>
+                        <g:RadioButton ui:field="defaultRadio" name="visibility" text="default"></g:RadioButton>
+                        <g:CheckBox ui:field="abstaractCheck" text="abstract"></g:CheckBox>
+                        <g:CheckBox ui:field="finalCheck" text="final"></g:CheckBox>
+                     </g:FlowPanel>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:north>
+            <g:north size="28">
+               <g:LayoutPanel styleName="{style.panelMargin}">
+                  <g:layer left="3" width="120">
+                     <g:Label text="{tex.createJCLabelSuperclass}"></g:Label>
+                  </g:layer>
+                  <g:layer left="120" right="110">
+                     <f:TextInput ui:field="superclassText" width="100%" height="100%"></f:TextInput>
+                  </g:layer>
+                  <g:layer right="0" width="100">
+                     <f:ImageButton ui:field="browseClasses" text="{tex.createJCButtonBrowse}"></f:ImageButton>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:north>
+            <g:north size="98">
+               <g:LayoutPanel styleName="{style.panelMargin}">
+                  <g:layer left="3" width="120">
+                     <g:Label text="{tex.createJCLabelInterfaces}"></g:Label>
+                  </g:layer>
+                  <g:layer left="120" right="110">
+                     <j:TypeList ui:field="interfaceList" addStyleNames="{style.interfaces}" width="100%"></j:TypeList>
+                  </g:layer>
+                  <g:layer right="0" width="100">
+                     <f:ImageButton ui:field="addInterfaces" text="{tex.createJCButtonAdd}"></f:ImageButton>
+                  </g:layer>
+                  <g:layer right="0" width="100" top="40" height="22">
+                     <f:ImageButton ui:field="removeInterfaces" text="{tex.createJCButtonRemove}"></f:ImageButton>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:north>
+            <g:north size="68">
+               <g:LayoutPanel styleName="{style.panelMargin}">
+                  <g:layer left="3" width="300">
+                     <g:Label text="{tex.createJCLabelStubs}"></g:Label>
+                  </g:layer>
+                  <g:layer left="120" right="110" top="20" bottom="0">
+                     <g:FlowPanel>
+                        <g:CheckBox ui:field="constructorsCheck" text="{tex.createJCLabelConstructors}" width="100%"
+                           styleName="{style.blockElement}"></g:CheckBox>
+                        <g:CheckBox ui:field="methodsCheck" text="{tex.createJCLabelMethods}" width="100%" checked="true"></g:CheckBox>
+                     </g:FlowPanel>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:north>
+         </g:DockLayoutPanel>
+      </f:layer>
+
+      <f:layer height="22px" bottom="20">
+         <g:FlowPanel styleName="{style.buttons}">
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{tex.createJCButtonCancel}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+            <f:ImageButton ui:field="createButton" width="90" height="22" text="{tex.createJCButtonCreate}" addStyleNames="{style.floatRight}"></f:ImageButton>
+         </g:FlowPanel>
+      </f:layer>
+   </f:Border>
+
+</ui:UiBinder> 

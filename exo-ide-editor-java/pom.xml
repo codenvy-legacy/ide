@@ -6,7 +6,6 @@
       <artifactId>exo-ide-parent</artifactId>
       <version>1.2.0-M4-SNAPSHOT</version>
    </parent>
-   <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-java</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: Editor : Java</name>
@@ -30,9 +29,15 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
 
       <dependency>

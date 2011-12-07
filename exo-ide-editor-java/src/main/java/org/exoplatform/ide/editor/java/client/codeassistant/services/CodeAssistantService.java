@@ -29,6 +29,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.ClassDescriptionUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
+import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.ArrayList;
@@ -122,11 +123,11 @@ public abstract class CodeAssistantService
    public void findType(Types type, String prefix, String projectId, AsyncRequestCallback<List<Token>> callback)
    {
       String url = restServiceContext + FIND_TYPE + type.toString();
+      url += "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
       if (prefix != null && !prefix.isEmpty())
       {
-         url += "?prefix=" + prefix;
+         url += "&prefix=" + prefix;
       }
-      url += url + "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
       List<Token> tokens = new ArrayList<Token>();
       callback.setResult(tokens);
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);

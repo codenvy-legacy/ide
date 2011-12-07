@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -40,6 +42,7 @@ import org.exoplatform.ide.editor.java.client.codemirror.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaOutlineItemCreator;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaParser;
+import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -49,6 +52,8 @@ import org.exoplatform.ide.editor.java.client.codemirror.JavaParser;
 public class JavaEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler,
    EditorActiveFileChangedHandler
 {
+
+   public static final JavaConstants MESSAGES = GWT.create(JavaConstants.class);
 
    private JavaCodeAssistant javaCodeAssistant;
 
@@ -67,9 +72,11 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Java Class", "Java Class", "Create Java Class", JavaClientBundle.INSTANCE
-            .java(), JavaClientBundle.INSTANCE.javaDisabled(), MimeType.APPLICATION_JAVA));
+            .java(), JavaClientBundle.INSTANCE.javaDisabled(), new CreateJavaClassEvent()));
 
       JavaClientBundle.INSTANCE.css().ensureInjected();
+
+      new CreateJavaClassPresenter();
    }
 
    /**

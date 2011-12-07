@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
+import org.exoplatform.ide.editor.api.codeassitant.ObjectProperty;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
@@ -36,7 +37,10 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @see Unmarshallable
@@ -48,6 +52,9 @@ import java.util.List;
  */
 public class ClassDescriptionUnmarshaller implements Unmarshallable
 {
+
+   private static final String GENERIC_PARAMETER_TYPES = "genericParameterTypes";
+
    private static final String PARAMETER_TYPES = "parameterTypes";
 
    private static final String RETURN_TYPE = "returnType";
@@ -116,8 +123,47 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
       if (jObject.containsKey(METHODS))
       {
          classInfo.getPublicMethods().addAll(getPublicMethods(jObject.get(METHODS)));
+         classInfo.getAbstractMethods().addAll(getAbstractMethods(jObject.get(METHODS)));
       }
 
+   }
+
+   /**
+    * @param jsonValue
+    * @return
+    */
+   private Collection<? extends Token> getAbstractMethods(JSONValue jsonValue)
+   {
+      //TODO filter same methods
+      Map<String, Token> methods = new HashMap<String, Token>();
+      if (jsonValue.isArray() != null)
+      {
+         JSONArray methodsArray = jsonValue.isArray();
+         for (int i = 0; i < methodsArray.size(); i++)
+         {
+            JSONObject me = methodsArray.get(i).isObject();
+            int modifier = (int)me.get(MODIFIERS).isNumber().doubleValue();
+            if (ModifierHelper.isAbstract(modifier))
+            {
+               Token token = new TokenImpl(me.get(NAME).isString().stringValue(), TokenType.METHOD);
+               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(me.get(DECLARING_CLASS).isString()
+                  .stringValue()));
+               token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(me.get(RETURN_TYPE).isString()
+                  .stringValue()));
+               token.setProperty(TokenProperties.GENERIC_RETURN_TYPE, new StringProperty(me.get("genericReturnType")
+                  .isString().stringValue()));
+               token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(me.get(PARAMETER_TYPES).isString()
+                  .stringValue()));
+               token.setProperty(TokenProperties.GENERIC_PARAMETER_TYPES,
+                  new StringProperty(me.get(GENERIC_PARAMETER_TYPES).isString().stringValue()));
+               methods.put(me.get(NAME).isString().stringValue()
+                  + me.get(GENERIC_PARAMETER_TYPES).isString().stringValue(), token);
+            }
+         }
+      }
+
+      return methods.values();
    }
 
    /**
@@ -201,7 +247,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
          {
             JSONObject c = con.get(i).isObject();
             int modifier = (int)c.get(MODIFIERS).isNumber().doubleValue();
-            if (ModifierHelper.isPublic(modifier))
+            if (!ModifierHelper.isInterface(modifier))
             {
                String name = c.get(NAME).isString().stringValue();
                name = name.substring(name.lastIndexOf('.') + 1);
@@ -211,13 +257,31 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
                   .stringValue()));
                token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(c.get(PARAMETER_TYPES).isString()
                   .stringValue()));
+               token.setProperty(TokenProperties.GENERIC_PARAMETER_TYPES,
+                  new StringProperty(c.get(GENERIC_PARAMETER_TYPES).isString().stringValue()));
+               token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES,
+                  new ObjectProperty(getExeptionTypes(c.get("genericExceptionTypes").isArray())));
+
                constructors.add(token);
             }
-
          }
       }
 
       return constructors;
+   }
+
+   /**
+    * @param array
+    * @return
+    */
+   private String[] getExeptionTypes(JSONArray array)
+   {
+      String[] ex = new String[array.size()];
+      for (int i = 0; i < array.size(); i++)
+      {
+         ex[i] = array.get(i).isString().stringValue();
+      }
+      return ex;
    }
 
 }
