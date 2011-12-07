@@ -27,6 +27,7 @@ import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Manifest;
 
 /**
  * <p>
@@ -35,17 +36,19 @@ import java.util.List;
  * constructors and fields, it's add they in builder using methods
  * {@link #addField(int, String, String)},
  * {@link #addMethod(int, String, String[], String),
- * {@link #addConstructor(int, String, String[], String)}.<br>
- * NOTE: This methods are private for this package and shouldn't be invoked by
- * user code.
- * </p>
- * <p>
- * Instance of {@link TypeInfoBuilder} creates by {@link TypeInfoClassVisitor}
- * when it visits class definition. You can get {@link TypeInfoBuilder} objects
- * by method {@link ClassParser#getClasses()}. You may be sure that when you get
- * {@link TypeInfoBuilder} object, all fields, methods and constructors was
- * added.
- * </p>
+ * 
+ * @link #addConstructor(int, String, String[], String)}.<br>
+ *       NOTE: This methods are private for this package and shouldn't be
+ *       invoked by user code.
+ *       </p>
+ *       <p>
+ *       Instance of {@link TypeInfoBuilder} creates by
+ *       {@link TypeInfoClassVisitor} when it visits class definition. You can
+ *       get {@link TypeInfoBuilder} objects by method
+ *       {@link ClassParser#getClasses()}. You may be sure that when you get
+ *       {@link TypeInfoBuilder} object, all fields, methods and constructors
+ *       was added.
+ *       </p>
  */
 public class TypeInfoBuilder
 {
@@ -80,6 +83,13 @@ public class TypeInfoBuilder
    private final List<MethodInfo> methods;
 
    private final List<RoutineInfo> constructors;
+
+   /*
+    * manifest field is not final,
+    * because this info stores in MANIFEST.MF, but not in byte-code.
+    * So, ClassParser couldn't set this value.
+    */
+   private Manifest manifest;
 
    public TypeInfoBuilder(int access, String name, String superName, String[] interfaces)
    {
@@ -135,9 +145,9 @@ public class TypeInfoBuilder
       typeInfo.setConstructors(constructors.toArray(new RoutineInfo[0]));
 
       /*
-      There are no way to fill declared fields, methods and constructors, because there are no class hierarchy,
-      each class parses separately.
-      */
+       * There are no way to fill declared fields, methods and constructors, because there are no class hierarchy,
+       * each class parses separately.
+       */
       typeInfo.setDeclaredFields(null);
       typeInfo.setDeclaredMethods(null);
       typeInfo.setDeclaredConstructors(null);
@@ -249,6 +259,11 @@ public class TypeInfoBuilder
       parameterTypesBuilder.append(")");
       routineInfo.setGenericParameterTypes(genericParameterTypesBuilder.toString());
       routineInfo.setParameterTypes(parameterTypesBuilder.toString());
+   }
+
+   void addManifest(Manifest manifest)
+   {
+      this.manifest = manifest;
    }
 
    /**

@@ -24,7 +24,6 @@ import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -39,68 +38,16 @@ public class TestClassParser
 
    private static final String PACKAGE = "org.exoplatform.ide.codeassistant.asm.testclasses";
 
-   private static final File classDir = new File("target/test-classes/testclasses/classes");
-
-   public static void renameFiles(File dir)
-   {
-      for (File current : dir.listFiles())
-      {
-         if (current.isDirectory())
-         {
-            renameFiles(current);
-         }
-         else
-         {
-            if (current.getName().endsWith("_class"))
-            {
-               current.renameTo(new File(current.getParentFile(), current.getName().substring(0,
-                  current.getName().lastIndexOf('_'))
-                  + ".class"));
-            }
-            else if (current.getName().endsWith("_jar"))
-            {
-               current.renameTo(new File(current.getParentFile(), current.getName().substring(0,
-                  current.getName().lastIndexOf('_'))
-                  + ".jar"));
-            }
-         }
-      }
-   }
-
-   /**
-    * Rename all files from format: {@code TestClass_class} to
-    * {@code TestClass.class}. There are used {@code TestClass_class} format for
-    * resolving problems with version control systems.
-    */
-   @BeforeClass
-   public static void prepareTest()
-   {
-      renameFiles(classDir);
-   }
-
-   @Test
-   public void testClassParsing() throws IOException
-   {
-      ClassParser classParser = new ClassParser();
-      classParser.parseDir(classDir);
-
-      assertLoadedClasses(classParser);
-   }
-
    @Test
    public void testJarParsing() throws IOException
    {
-      ClassParser classParser = new ClassParser();
-      classParser.parseJarFile(new File("target/test-classes/testclasses/test_jar"));
-
-      assertLoadedClasses(classParser);
+      assertLoadedClasses(JarParser.parse(new File("target/test-classes/testclasses/test_jar")));
    }
 
-   private void assertLoadedClasses(ClassParser classParser)
+   private void assertLoadedClasses(List<TypeInfoBuilder> classes)
    {
 
-      Assert.assertEquals(6, classParser.getClasses().size());
-      List<TypeInfoBuilder> classes = classParser.getClasses();
+      Assert.assertEquals(6, classes.size());
       Set<String> visitedClasses = new HashSet<String>();
       for (TypeInfoBuilder current : classes)
       {

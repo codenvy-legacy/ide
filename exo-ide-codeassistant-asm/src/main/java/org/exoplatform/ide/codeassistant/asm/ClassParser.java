@@ -21,25 +21,8 @@ package org.exoplatform.ide.codeassistant.asm;
 import org.objectweb.asm.ClassReader;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-class ByteCodeFilenameFilter implements FilenameFilter
-{
-
-   @Override
-   public boolean accept(File dir, String name)
-   {
-      return name.endsWith(".jar") || name.endsWith(".class");
-   }
-
-}
 
 /**
  * <p>
@@ -55,93 +38,12 @@ class ByteCodeFilenameFilter implements FilenameFilter
 public class ClassParser
 {
 
-   private List<TypeInfoBuilder> classes;
-
-   public ClassParser()
-   {
-      this.classes = new LinkedList<TypeInfoBuilder>();
-   }
-
-   private void parse(InputStream classStream) throws IOException
+   public static TypeInfoBuilder parse(InputStream classStream) throws IOException
    {
       ClassReader cr = new ClassReader(classStream);
       TypeInfoClassVisitor typeInfoClassVisitor = new TypeInfoClassVisitor();
       cr.accept(typeInfoClassVisitor, ClassReader.SKIP_CODE);
-      classes.add(typeInfoClassVisitor.getBuilder());
-   }
-
-   public void parseClassFile(File classFile) throws IOException
-   {
-      parse(new FileInputStream(classFile));
-   }
-
-   /**
-    * <p>
-    * Method parses all bin files in directory {@code dir}. You may skip some
-    * files from directory by {@code filter}. Parsed files may have two type of
-    * extensions: {@code .class} and {@code .jar}.
-    * </p>
-    * <ul>
-    * <li>If File has extension {@code .class} then file will be parsed as
-    * class-file.</li>
-    * <li>If File has extension {@code .jar} then file will be parsed as
-    * jar-archive.</li>
-    * </ul>
-    * 
-    * @param dir
-    * @param filter
-    * @throws IOException
-    */
-   public void parseDir(File dir, FilenameFilter filter) throws IOException
-   {
-      for (File current : dir.listFiles(filter))
-      {
-         if (current.getName().endsWith(".class"))
-         {
-            parseClassFile(current);
-         }
-         else if (current.getName().endsWith(".jar"))
-         {
-            parseJarFile(current);
-         }
-      }
-      for (File current : dir.listFiles())
-      {
-         if (current.isDirectory())
-         {
-            parseDir(current, filter);
-         }
-      }
-   }
-
-   public void parseDir(File dir) throws IOException
-   {
-      parseDir(dir, new ByteCodeFilenameFilter());
-   }
-
-   public void parseJarFile(File jarFile) throws IOException
-   {
-      ZipInputStream zip = new ZipInputStream(new FileInputStream(jarFile));
-      ZipEntry entry = zip.getNextEntry();
-      while (entry != null)
-      {
-         String name = entry.getName();
-         if (name.endsWith(".class"))
-         {
-            parse(zip);
-         }
-         entry = zip.getNextEntry();
-      }
-   }
-
-   public void clear()
-   {
-      this.classes.clear();
-   }
-
-   public List<TypeInfoBuilder> getClasses()
-   {
-      return classes;
+      return typeInfoClassVisitor.getBuilder();
    }
 
 }

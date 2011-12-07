@@ -81,6 +81,7 @@ public class TypeInfoClassVisitor implements ClassVisitor
    public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
    {
       builder.addField(access, name, desc);
+      // no need detailed info about field, so return null
       return null;
    }
 
@@ -98,6 +99,7 @@ public class TypeInfoClassVisitor implements ClassVisitor
       {
          builder.addMethod(access, name, exceptions, desc);
       }
+      // no need detailed info about method, so return null
       return null;
    }
 
