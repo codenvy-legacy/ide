@@ -32,6 +32,8 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant;
@@ -50,7 +52,7 @@ import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
  *
  */
 public class JavaEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler,
-   EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler, ProjectOpenedHandler
 {
 
    public static final JavaConstants MESSAGES = GWT.create(JavaConstants.class);
@@ -61,6 +63,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 
    private JavaTokenWidgetFactory factory;
 
+   private String projectId;
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -69,6 +73,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Java Class", "Java Class", "Create Java Class", JavaClientBundle.INSTANCE
@@ -141,11 +146,19 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    {
       if (event.getFile() != null && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
-         String projectId = event.getFile().getProject().getId();
-         javaCodeAssistant.setActiveProjectId(projectId);
-         factory.setProjectId(projectId);
          javaCodeValidator.loadClassesFromProject(event.getFile().getId(), projectId);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      projectId = event.getProject().getId();
+      javaCodeAssistant.setActiveProjectId(projectId);
+      factory.setProjectId(projectId);
    }
 
 }

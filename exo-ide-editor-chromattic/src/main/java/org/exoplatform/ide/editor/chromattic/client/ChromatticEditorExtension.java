@@ -26,12 +26,12 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.GroovyCodeAssistant;
@@ -51,7 +51,7 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssista
  *
  */
 public class ChromatticEditorExtension extends Extension implements InitializeServicesHandler,
-   JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler
+   JavaCodeAssistantErrorHandler, ProjectOpenedHandler
 {
 
    private JavaCodeAssistant groovyCodeAssistant;
@@ -67,6 +67,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object", Images.CHROMATTIC,
@@ -110,7 +111,8 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
       {
          ServerException exception = (ServerException)exc;
          StringBuffer outputContent = new StringBuffer();
-         outputContent.append("Error (<i>").append(exception.getHTTPStatus()).append("</i>: <i>").append(exception.getStatusText()).append("</i>)");
+         outputContent.append("Error (<i>").append(exception.getHTTPStatus()).append("</i>: <i>")
+            .append(exception.getStatusText()).append("</i>)");
          if (!exception.getMessage().equals(""))
          {
             outputContent.append("<br />").append(exception.getMessage().replace("\n", "<br />")); // replace "end of line" symbols on "<br />"
@@ -125,17 +127,14 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
     */
    @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   public void onProjectOpened(ProjectOpenedEvent event)
    {
-      if (event.getFile() != null)
-      {
-         String projectId = event.getFile().getProject().getId();
-         groovyCodeAssistant.setActiveProjectId(projectId);
-         factory.setProjectId(projectId);
-      }
+      String projectId = event.getProject().getId();
+      groovyCodeAssistant.setActiveProjectId(projectId);
+      factory.setProjectId(projectId);
    }
 
 }
