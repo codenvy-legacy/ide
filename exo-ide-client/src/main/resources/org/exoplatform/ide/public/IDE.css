@@ -43,6 +43,21 @@ Add shadow to dialog boxes and menus
 	box-shadow: 7px 7px 10px 0 #C8C8C8 !important;
 }
 
+.imageButtonPanel:active
+{
+}
+
+.imageButtonTable
+{
+	position:relative;
+}
+
+.imageButtonTable:active
+{
+	left:1px;
+	top:1px;
+}
+
 /*
 .imageButtonPanel
 {
