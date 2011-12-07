@@ -39,7 +39,6 @@ import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
@@ -47,9 +46,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -75,8 +72,6 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       void hidePaas();
    }
    
-   private Map<String, List<String>> projectPaasMap;
-
    private Display display;
 
    private List<String> paases;
@@ -137,8 +132,6 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(DeployProjectToPaasEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      
-      initProjectPaasList();
    }
 
    private void bindDisplay()
@@ -319,35 +312,4 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       vfsInfo = event.getVfsInfo();
    }
    
-   private void initProjectPaasList()
-   {
-      projectPaasMap = new HashMap<String, List<String>>();
-      //TODO: move this code to ProjectResolver
-      for (String type : ProjectResolver.getProjectsTypes())
-      {
-         List<String> paases = new ArrayList<String>();
-         if ("Java Web".equals(type))
-         {
-            paases.add("CloudBees");
-            paases.add("CloudFoundry");
-         }
-         else if ("Servlet/JSP".equals(type))
-         {
-            paases.add("CloudBees");
-            paases.add("CloudFoundry");
-         }
-         else if ("Spring".equals(type))
-         {
-            paases.add("CloudFoundry");
-         }
-         if ("Rails".equals(type))
-         {
-            paases.add("CloudFoundry");
-            paases.add("Heroku");
-            paases.add("OpenShift");
-         }
-         projectPaasMap.put(type, paases);
-      }
-   }
-
 }
