@@ -92,6 +92,12 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("welcome.convert.text")
    String convertText();
    
+   @Key("welcome.import.title")
+   String importTitle();
+   
+   @Key("welcome.import.text")
+   String importText();
+   
    /*
     * SelectLocationView
     */
@@ -368,8 +374,17 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("control.importFromGithub.prompt")
    String importFromGithubControlPrompt();
    
+   @Key("control.loadSamples.id")
+   String loadSamplesControlId();
+   
+   @Key("control.loadSamples.title")
+   String loadSamplesControlTitle();
+   
+   @Key("control.loadSamples.prompt")
+   String loadSamplesControlPrompt();
+   
    /*
-    * ImportFromGitHub
+    * LoadSamplesView
     */
    @Key("import.load.dialog.title")
    String importLoadDialogTitle();
@@ -380,5 +395,22 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("import.load.text")
    String importLoadText();
    
+   /*
+    * ImportFromGitHub
+    */
+   @Key("import.github.dialog.title")
+   String importFromGithubDialogTitle();
+   
+   @Key("import.github.title")
+   String importFromGithubTitle();
+   
+   @Key("import.github.text")
+   String importFromGithubText();
+   
+   @Key("import.github.enterUrl")
+   String importFromGithubEnterUrl();
+   
+   @Key("import.github.selectProjectType")
+   String importFromGithubSelectProjectType();
 
 }

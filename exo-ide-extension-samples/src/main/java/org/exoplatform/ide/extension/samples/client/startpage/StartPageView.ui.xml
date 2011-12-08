@@ -20,14 +20,15 @@
 
       .text-block {
       text-align: justify;
-      padding-left: 20px;
+      padding-left:
+      20px;
       padding-right: 20px;
       }
 
       .hPanel {
       margin: 20px;
       }
-      
+
       .textPanel {
       padding: 20px 20px 0 20px;
       }
@@ -87,6 +88,22 @@
                               <g:Label text="{locale.convertText}"></g:Label>
                            </g:VerticalPanel>
                         </g:HorizontalPanel>
+                     </g:center>
+                  </g:DockLayoutPanel>
+
+                  <g:DockLayoutPanel unit="PCT" height="70px" width="100%" stylePrimaryName="{style.hPanel}">
+                     <g:west size="50">
+                        <!-- Projects link -->
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image resource="{resource.welcomeSamples}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Button ui:field="importLink" text="{locale.importTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.importText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+                     </g:west>
+                     <g:center>
+                        <g:FlowPanel></g:FlowPanel>
                      </g:center>
                   </g:DockLayoutPanel>
 

@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
+import org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent;
 
 import com.google.gwt.core.client.GWT;
@@ -49,6 +50,8 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
       HasClickHandlers getProjectLink();
       
       HasClickHandlers getConvertLink();
+      
+      HasClickHandlers getImportLink();
    }
    
    private Display display;
@@ -85,6 +88,16 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          public void onClick(ClickEvent event)
          {
             IDE.fireEvent(new ConvertToProjectEvent());
+         }
+      });
+      
+      display.getImportLink().addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new ShowImportFromGithubEvent());
          }
       });
    }

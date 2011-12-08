@@ -71,6 +71,9 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    @UiField
    Button projectLink;
    
+   @UiField
+   Button importLink;
+   
    FlowPanel flowPanel;
    
    public StartPageView()
@@ -104,6 +107,15 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    public HasClickHandlers getConvertLink()
    {
       return convertLink;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display#getImportLink()
+    */
+   @Override
+   public HasClickHandlers getImportLink()
+   {
+      return importLink;
    }
 
 }
