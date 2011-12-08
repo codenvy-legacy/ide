@@ -108,8 +108,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
       String deletion = (isName) ? deleteName : project.getPath();
 
       Dialogs.getInstance().ask(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
-        HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(deletion),
-         new BooleanValueReceivedHandler()
+         HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(deletion), new BooleanValueReceivedHandler()
          {
 
             @Override
@@ -127,17 +126,19 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     * Perform deleting the application on Heroku.
     *
     */
-   protected void doDelete(String projectId)
+   protected void doDelete(final String projectId)
    {
-      HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), projectId, new HerokuAsyncRequestCallback(IDE.eventBus(), this)
-      {
-         @Override
-         protected void onSuccess(List<Property> result)
+      HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), projectId,
+         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
          {
-            IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(),
-               Type.INFO));
-         }
-      });
+            @Override
+            protected void onSuccess(List<Property> result)
+            {
+               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(),
+                  Type.INFO));
+               IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
+            }
+         });
    }
 
    /**

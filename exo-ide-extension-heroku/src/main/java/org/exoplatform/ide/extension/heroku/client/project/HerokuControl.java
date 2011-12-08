@@ -28,6 +28,8 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 
 /**
+ * Control for user to manage project deployed on Heroku.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 2, 2011 2:17:30 PM anya $
  *
@@ -55,6 +57,7 @@ public class HerokuControl extends SimpleControl implements IDEControl, ProjectC
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(HerokuClientBundle.INSTANCE.heroku(), HerokuClientBundle.INSTANCE.herokuDisabled());
+      setEvent(new ManageHerokuProjectEvent());
    }
 
    /**

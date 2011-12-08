@@ -64,6 +64,15 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("helpButton")
    String helpButton();
 
+   @Key("deleteButton")
+   String deleteButton();
+
+   @Key("rakeButton")
+   String rakeButton();
+
+   @Key("logsButton")
+   String logsButton();
+
    //Controls:
    @DefaultMessage("Logged in Heroku successfully.")
    @Key("loginSuccess")
@@ -292,4 +301,29 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("logsView.getLogs.button")
    String logsViewGetLogsButton();
+
+   /*Manage project view*/
+   @Key("manage.project.view.title")
+   String manageProjectViewTitle();
+
+   @Key("manage.project.application")
+   String manageProjectApplication();
+
+   @Key("manage.project.application.url")
+   String manageProjectApplicationUrl();
+
+   @Key("manage.project.application.stack")
+   String manageProjectApplicationStack();
+
+   @Key("manage.project.application.actions")
+   String manageProjectApplicationActions();
+
+   @Key("manage.project.application.rename")
+   String manageProjectApplicationRename();
+
+   @Key("manage.project.application.edit.stack")
+   String manageProjectApplicationEditStack();
+
+   @Key("manage.project.application.properties")
+   String manageProjectApplicationProperties();
 }

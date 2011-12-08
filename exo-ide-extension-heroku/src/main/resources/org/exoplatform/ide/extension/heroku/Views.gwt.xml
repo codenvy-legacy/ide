@@ -51,4 +51,8 @@
    <replace-with class="org.exoplatform.ide.extension.heroku.client.deploy.DeployApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.heroku.client.deploy.DeployApplicationPresenter.Display" />
    </replace-with>
+   
+    <replace-with class="org.exoplatform.ide.extension.heroku.client.project.HerokuProjectView">
+      <when-type-is class="org.exoplatform.ide.extension.heroku.client.project.HerokuProjectPresenter.Display" />
+   </replace-with>
 </module>

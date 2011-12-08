@@ -1,0 +1,88 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
+
+   <ui:with field="locale" type="org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant"></ui:with>
+   <ui:with field='resource' type='org.exoplatform.ide.extension.heroku.client.HerokuClientBundle' />
+
+   <ui:style>
+      .close {
+      	margin-right: auto;
+      }
+      
+      .left {
+      	float: left;
+      }
+      
+      .space {
+      	margin-right: 5px;
+      }
+      
+      .right {
+      	float: right;
+      }
+      
+      .labelH {
+      	margin-right: 5px;
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	float: left;
+      	font-weight: bold;
+      }
+      
+      .link {
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	overflow-x: hidden;
+      	white-space: nowrap;
+      }
+      
+      .padding {
+      	padding: 15px;
+      }
+      
+      .actions {
+      	border-top: 1px solid #DBDFE5;
+      	padding-top: 5px;
+      }
+   </ui:style>
+   <c:Border margin="15" borderColor="transparent">
+      <c:layer top="0" bottom="40">
+         <c:Border>
+            <c:layer>
+               <g:FlowPanel styleName="{style.padding}">
+                  <g:FlowPanel width="100%" height="28px">
+                     <g:Label text="{locale.manageProjectApplication}" addStyleNames="{style.labelH}" width="20%"></g:Label>
+                     <c:TextInput ui:field="nameField" width="67%" height="22px" addStyleNames="{style.left} {style.space}"></c:TextInput>
+                     <c:ImageButton ui:field="renameButton" width="22" height="22px" text="" title="{locale.manageProjectApplicationRename}"
+                        styleName="{style.left} {style.space}" imageResource="{resource.editButton}" disabledImageResource="{resource.editButtonDisabled}"></c:ImageButton>
+                     <c:ImageButton ui:field="infoButton" width="22" height="22px" text="" title="{locale.manageProjectApplicationProperties}"
+                        styleName="{style.left}" imageResource="{resource.propertiesButton}" disabledImageResource="{resource.propertiesButtonDisabled}"></c:ImageButton>
+                  </g:FlowPanel>
+                  <g:FlowPanel width="100%" height="25px">
+                     <g:Label text="{locale.manageProjectApplicationUrl}" addStyleNames="{style.labelH}" width="20%"></g:Label>
+                     <g:Anchor ui:field="urlField" addStyleNames="{style.left} {style.link}" width="78%" target="_blank"></g:Anchor>
+                  </g:FlowPanel>
+                  <g:FlowPanel width="100%" height="30px">
+                     <g:Label text="{locale.manageProjectApplicationStack}" addStyleNames="{style.labelH}" width="20%"></g:Label>
+                     <c:TextInput ui:field="stackField" height="22px" addStyleNames="{style.left} {style.space}" width="73%"></c:TextInput>
+                     <c:ImageButton ui:field="editStackButton" width="22" height="22px" text=""
+                        title="{locale.manageProjectApplicationEditStack}" styleName="{style.left}" imageResource="{resource.editButton}"
+                        disabledImageResource="{resource.editButtonDisabled}"></c:ImageButton>
+                  </g:FlowPanel>
+                  <g:FlowPanel width="100%" height="28px" styleName="{style.actions}">
+                     <g:Label text="{locale.manageProjectApplicationActions}" addStyleNames="{style.labelH}" width="20%"></g:Label>
+                     <g:Button ui:field="logsButton" height="20px" width="70px" text="{locale.logsButton}" styleName="{style.left} {style.space}"></g:Button>
+                     <g:Button ui:field="rakeButton" height="20px" width="70px" text="{locale.rakeButton}" styleName="{style.left} {style.space}"></g:Button>
+                     <g:Button ui:field="deleteButton" height="20px" width="70px" text="{locale.deleteButton}" styleName="{style.left}"></g:Button>
+                  </g:FlowPanel>
+               </g:FlowPanel>
+            </c:layer>
+         </c:Border>
+      </c:layer>
+      <c:layer height="22px" bottom="0">
+         <g:FlowPanel>
+            <c:ImageButton ui:field="closeButton" imageName="cancel" width="90px" height="22px" text="{locale.closeButton}" styleName="{style.right}"></c:ImageButton>
+         </g:FlowPanel>
+      </c:layer>
+   </c:Border>
+</ui:UiBinder> 

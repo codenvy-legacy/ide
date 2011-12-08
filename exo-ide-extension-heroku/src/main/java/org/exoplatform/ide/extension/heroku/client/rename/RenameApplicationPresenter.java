@@ -243,7 +243,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    public void doRenameApplication()
    {
       final String newName = display.getRenameField().getValue();
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       HerokuClientService.getInstance().renameApplication(null, vfs.getId(), projectId, newName,
          new HerokuAsyncRequestCallback(IDE.eventBus(), this)
          {
@@ -253,6 +253,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
                IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
                   applicationName, newName), Type.INFO));
                IDE.getInstance().closeView(display.asView().getId());
+               IDE.fireEvent(new ApplicationRenamedEvent(projectId, result));
             }
          });
    }
