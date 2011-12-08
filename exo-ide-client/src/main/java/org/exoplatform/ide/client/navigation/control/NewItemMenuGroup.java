@@ -49,7 +49,6 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
-      setEnabled(true);
    }
 
    /**
@@ -59,6 +58,7 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      setEnabled(true);
    }
 
    /**
