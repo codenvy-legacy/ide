@@ -40,6 +40,8 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
+import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -73,6 +75,8 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
 
       void enableImportButton(boolean enabled);
    }
+   
+   private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
 
    private Display display;
    
@@ -131,7 +135,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
             if (!isPublicUrl(value))
             {
                display.enableImportButton(false);
-               display.getNotifyLabel().setValue("Entered URL is not a public GitHub repo URL");
+               display.getNotifyLabel().setValue(lb.importFromGithubUrlNotPublicError());
                return;
             }
             display.enableImportButton(true);
@@ -163,7 +167,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       if (gitUrl.startsWith("git@"))
          return false;
       
-      if ((gitUrl.startsWith("git:") || gitUrl.startsWith("git:")) && gitUrl.endsWith(".git"))
+      if ((gitUrl.startsWith("git:") || gitUrl.startsWith("https:")) && gitUrl.endsWith(".git"))
          return true;
       
       return false;

@@ -412,5 +412,8 @@ public interface SamplesLocalizationConstant extends Messages
    
    @Key("import.github.selectProjectType")
    String importFromGithubSelectProjectType();
+   
+   @Key("import.github.error.urlNotPublic")
+   String importFromGithubUrlNotPublicError();
 
 }
