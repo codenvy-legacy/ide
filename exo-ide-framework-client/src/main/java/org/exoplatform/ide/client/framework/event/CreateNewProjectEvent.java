@@ -16,31 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.fromtemplate;
+package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS .
+ * Event for opening form to creat project.
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: CreateNewProjectEvent.java Dec 8, 2011 5:38:18 PM vereshchaka $
  */
-
-public class CreateProjectFromTemplateEvent extends GwtEvent<CreateProjectFromTemplateHandler>
+public class CreateNewProjectEvent extends GwtEvent<CreateNewProjectHandler>
 {
    
-   public static final GwtEvent.Type<CreateProjectFromTemplateHandler> TYPE =
-      new GwtEvent.Type<CreateProjectFromTemplateHandler>();
+   public static final GwtEvent.Type<CreateNewProjectHandler> TYPE =
+      new GwtEvent.Type<CreateNewProjectHandler>();
    
    @Override
-   protected void dispatch(CreateProjectFromTemplateHandler handler)
+   protected void dispatch(CreateNewProjectHandler handler)
    {
-      handler.onCreateProjectFromTemplate(this);
+      handler.onCreateNewProject(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateProjectFromTemplateHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<CreateNewProjectHandler> getAssociatedType()
    {
       return TYPE;
    }

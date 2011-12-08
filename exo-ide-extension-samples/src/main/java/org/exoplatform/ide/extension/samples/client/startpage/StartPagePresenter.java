@@ -18,7 +18,13 @@
  */
 package org.exoplatform.ide.extension.samples.client.startpage;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.client.framework.event.CreateNewProjectEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -27,12 +33,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
 import org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for welcome view.
@@ -77,7 +77,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.fireEvent(new ShowWizardEvent());
+            IDE.fireEvent(new CreateNewProjectEvent());
          }
       });
       

@@ -32,6 +32,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.CreateNewProjectEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.PaasCallback;
@@ -40,7 +41,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -193,7 +193,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.eventBus().fireEvent(new CreateProjectFromTemplateEvent());
+            IDE.eventBus().fireEvent(new CreateNewProjectEvent());
             closeView();
          }
       });

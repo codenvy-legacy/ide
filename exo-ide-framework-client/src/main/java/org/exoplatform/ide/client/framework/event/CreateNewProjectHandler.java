@@ -16,20 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.fromtemplate;
+package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * Handler for {@link CreateNewProjectEvent}
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: CreateNewProjectHandler.java Dec 8, 2011 5:38:28 PM vereshchaka $
  */
-
-public interface CreateProjectFromTemplateHandler extends EventHandler
+public interface CreateNewProjectHandler extends EventHandler
 {
 
-   void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event);
+   void onCreateNewProject(CreateNewProjectEvent event);
 
 }

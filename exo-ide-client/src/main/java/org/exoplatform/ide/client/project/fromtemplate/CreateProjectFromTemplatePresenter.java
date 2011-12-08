@@ -18,8 +18,18 @@
  */
 package org.exoplatform.ide.client.project.fromtemplate;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -29,6 +39,8 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.CreateNewProjectEvent;
+import org.exoplatform.ide.client.framework.event.CreateNewProjectHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -57,18 +69,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -77,7 +79,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemplateHandler, ItemsSelectedHandler,
+public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandler, ItemsSelectedHandler,
    ViewClosedHandler, TemplatesMigratedHandler, VfsChangedHandler
 {
 
@@ -186,7 +188,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       IDE.getInstance().addControl(new CreateProjectFromTemplateControl());      
       
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
+      IDE.addHandler(CreateNewProjectEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -452,34 +454,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       IDE.fireEvent(new ProjectCreatedEvent(projectFolder));
    }
 
-   @Override
-   public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
-   {
-      if (vfsInfo == null) {
-         return;
-      }
-      
-      if (display != null) {
-         return;
-      }
-      
-      if (isTemplatesMigrated)
-      {
-         createProjectFromTemplate();
-      }
-      else
-      {
-         IDE.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
-         {
-            @Override
-            public void onTemplatesMigrated()
-            {
-               createProjectFromTemplate();
-            }
-         }));
-      }
-   }
-
    private void createProjectFromTemplate()
    {
       display = GWT.create(Display.class);
@@ -654,6 +628,37 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    private void getPaases()
    {
       IDE.getInstance().getPaases();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.event.CreateNewProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event.CreateNewProjectEvent)
+    */
+   @Override
+   public void onCreateNewProject(CreateNewProjectEvent event)
+   {
+      if (vfsInfo == null) {
+         return;
+      }
+      
+      if (display != null) {
+         return;
+      }
+      
+      if (isTemplatesMigrated)
+      {
+         createProjectFromTemplate();
+      }
+      else
+      {
+         IDE.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         {
+            @Override
+            public void onTemplatesMigrated()
+            {
+               createProjectFromTemplate();
+            }
+         }));
+      }
    }
 
 }
