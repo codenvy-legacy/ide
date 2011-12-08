@@ -23,6 +23,7 @@ import org.exoplatform.ide.extension.openshift.server.ExpressException;
 import org.exoplatform.ide.extension.openshift.server.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -30,6 +31,9 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -92,8 +96,17 @@ public class ExpressService
       ParsingResponseException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      return express.createApplication(appName, type,
-         (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+      AppInfo application =
+         express.createApplication(appName, type,
+            (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+
+      // Update VFS properties. Need it to uniform client.   
+      ConvertibleProperty p = new ConvertibleProperty("openshift-express-application", application.getName());
+      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      properties.add(p);
+      vfs.updateItem(projectId, properties, null);
+
+      return application;
    }
 
    @GET
@@ -123,6 +136,13 @@ public class ExpressService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       express.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
+
+      // Update VFS properties. Need it to uniform client.   
+      ConvertibleProperty p =
+         new ConvertibleProperty("openshift-express-application", Collections.<String> emptyList());
+      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      properties.add(p);
+      vfs.updateItem(projectId, properties, null);
    }
 
    @GET

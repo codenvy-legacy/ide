@@ -715,7 +715,7 @@ public class Heroku
          // Get updated info about application.
          Map<String, String> info = applicationInfo(herokuCredentials, newname, false, workDir);
 
-         String gitUrl = (String)info.get("gitUrl");
+         String gitUrl = info.get("gitUrl");
 
          RemoteListRequest listRequest = new RemoteListRequest(null, true);
          git = GitConnectionFactory.getInstance().getConnection(workDir, null);

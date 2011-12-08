@@ -24,6 +24,7 @@ import org.exoplatform.ide.extension.heroku.server.HttpChunkReader;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -33,6 +34,8 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -109,8 +112,17 @@ public class HerokuService
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      return heroku.createApplication(appName, remote,
-         (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+      Map<String, String> application =
+         heroku.createApplication(appName, remote,
+            (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+      
+      // Update VFS properties. Need it to uniform client.   
+      ConvertibleProperty p = new ConvertibleProperty("heroku-application", application.get("name"));
+      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      properties.add(p);
+      vfs.updateItem(projectId, properties, null);
+      
+      return application;
    }
 
    @Path("apps/destroy")
@@ -120,6 +132,13 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       heroku.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
+
+      // Update VFS properties. Need it to uniform client.   
+      ConvertibleProperty p = new ConvertibleProperty("heroku-application", Collections.<String>emptyList());
+      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      properties.add(p);
+      vfs.updateItem(projectId, properties, null);
+
    }
 
    @Path("apps/info")
@@ -140,8 +159,16 @@ public class HerokuService
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      return heroku.renameApplication(appName, newname,
+      Map<String, String> application = heroku.renameApplication(appName, newname,
          (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+
+      // Update VFS properties. Need it to uniform client.   
+      ConvertibleProperty p = new ConvertibleProperty("heroku-application", application.get("name"));
+      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      properties.add(p);
+      vfs.updateItem(projectId, properties, null);
+
+      return application;
    }
 
    @Path("apps/stack")
