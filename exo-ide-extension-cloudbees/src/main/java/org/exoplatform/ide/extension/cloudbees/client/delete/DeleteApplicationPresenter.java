@@ -137,11 +137,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     */
    protected void doDelete()
    {
-      String projectId = null;
-      if (((ItemContext)selectedItems.get(0)).getProject() != null)
-      {
-         projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      }
+      final String projectId =
+         ((ItemContext)selectedItems.get(0)).getProject() != null ? ((ItemContext)selectedItems.get(0)).getProject()
+            .getId() : null;
       CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
          new CloudBeesAsyncRequestCallback<String>(IDE.eventBus(), new LoggedInHandler()
          {
@@ -155,8 +153,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             @Override
             protected void onSuccess(String result)
             {
-               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
-                  .applicationDeletedMsg(appTitle), Type.INFO));
+               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appTitle),
+                  Type.INFO));
+               IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
             }
          });
    }

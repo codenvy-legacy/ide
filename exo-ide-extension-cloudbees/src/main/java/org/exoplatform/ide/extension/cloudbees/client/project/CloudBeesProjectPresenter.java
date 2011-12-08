@@ -34,6 +34,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
+import org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedEvent;
+import org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
@@ -48,12 +50,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
+ *  Presenter for managing project, deployed on CloudBeess.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 5, 2011 9:42:32 AM anya $
  *
  */
 public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOpenedHandler,
-   ManageCloudBeesProjectHandler, ViewClosedHandler, ProjectClosedHandler
+   ManageCloudBeesProjectHandler, ViewClosedHandler, ProjectClosedHandler, ApplicationDeletedHandler
 {
    interface Display extends IsView
    {
@@ -74,8 +78,14 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
       HasClickHandlers getInfoButton();
    }
 
+   /**
+    * Presenter's display.
+    */
    private Display display;
 
+   /**
+    * Opened project.
+    */
    private ProjectModel openedProject;
 
    public CloudBeesProjectPresenter()
@@ -85,6 +95,7 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ManageCloudBeesProjectEvent.TYPE, this);
+      IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -207,7 +218,7 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
 
       display.getApplicationName().setValue(map.get("title"));
       display.getApplicationStatus().setValue(map.get("status"));
-      display.getApplicationInstances().setValue("clusterSize");
+      display.getApplicationInstances().setValue(map.get("clusterSize"));
       display.setApplicationURL(map.get("url"));
    }
 
@@ -218,5 +229,18 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
    public void onProjectClosed(ProjectClosedEvent event)
    {
       openedProject = null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedEvent)
+    */
+   @Override
+   public void onApplicationDeleted(ApplicationDeletedEvent event)
+   {
+      if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
+         && openedProject != null && openedProject.getId().equals(event.getProjectId()))
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
    }
 }

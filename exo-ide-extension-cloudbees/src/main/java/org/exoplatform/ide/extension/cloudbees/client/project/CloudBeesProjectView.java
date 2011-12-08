@@ -37,6 +37,8 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 
 /**
+ * View for managing project, deployed on CloudBees.
+ * View must be pointed in <b>Views.gwt.xml</b>.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 5, 2011 12:33:20 PM anya $

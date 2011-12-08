@@ -29,6 +29,8 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 
 /**
+ * Control for user to manage project, deployed on CloudBees.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 2, 2011 6:00:15 PM anya $
  *
@@ -37,9 +39,6 @@ public class CloudBeesControl extends SimpleControl implements IDEControl, Proje
 {
    private static final String ID = "Project/PaaS/CloudBees";
 
-   /**
-    * @param id
-    */
    public CloudBeesControl()
    {
       super(ID);
