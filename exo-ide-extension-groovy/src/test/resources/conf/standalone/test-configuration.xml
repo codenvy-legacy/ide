@@ -45,8 +45,8 @@
             
             <property name="log4j.category.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" />
             <property name="log4j.category.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
-            --><!-- property name="log4j.category.exo" value="DEBUG" />
-            <property name="log4j.category.org.exoplatform" value="DEBUG" /-->
+            --><!-- property name="log4j.category.exo" value="DEBUG" /-->
+            <property name="log4j.category.org.exoplatform" value="DEBUG" />
          </properties-param>
       </init-params>
    </component>

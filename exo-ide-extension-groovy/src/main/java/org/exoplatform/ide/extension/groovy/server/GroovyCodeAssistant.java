@@ -18,15 +18,34 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistant;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -36,24 +55,33 @@ import java.util.List;
 public class GroovyCodeAssistant extends CodeAssistant
 {
 
+   private VirtualFileSystemRegistry vfsRegistry;
+
+   /** See {@link RepositoryService}. */
+   private RepositoryService repositoryService;
+
+   /** Logger. */
+   static final Log LOG = ExoLogger.getLogger(GroovyCodeAssistant.class);
+
    /**
     * @param storage
     */
-   public GroovyCodeAssistant(CodeAssistantStorage storage)
+   public GroovyCodeAssistant(CodeAssistantStorage storage, VirtualFileSystemRegistry vfsRegistry,
+      RepositoryService repositoryService)
    {
       super(storage);
+      this.vfsRegistry = vfsRegistry;
+      this.repositoryService = repositoryService;
    }
-
-
 
    /**
     * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getJavaDocFromProject(java.lang.String)
     */
    @Override
-   protected String getClassJavaDocFromProject(String fqn, String projectId, String vfsId) throws CodeAssistantException,
-      VirtualFileSystemException
+   protected String getClassJavaDocFromProject(String fqn, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
    {
-      //TODO
+      //we don't support this feature now
       throw new CodeAssistantException(404, "Not found");
    }
 
@@ -65,6 +93,36 @@ public class GroovyCodeAssistant extends CodeAssistant
    protected TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
       throws VirtualFileSystemException, CodeAssistantException
    {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      DependentResources dependentResources;
+      try
+      {
+         dependentResources = getDependentResources(projectId, vfs);
+         if (dependentResources != null)
+         {
+            TypeInfo classInfo = new GroovyClassNamesExtractor(vfs).getClassInfo(fqn, dependentResources);
+            return classInfo;
+         }
+      }
+      catch (JsonException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(404, e.getMessage());
+      }
+      catch (MalformedURLException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(404, e.getMessage());
+      }
+      catch (URISyntaxException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(404, e.getMessage());
+      }
+
       return null;
    }
 
@@ -72,7 +130,37 @@ public class GroovyCodeAssistant extends CodeAssistant
    protected List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
-      return null;
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+
+      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+      try
+      {
+         DependentResources dependentResources = getDependentResources(projectId, vfs);
+
+         if (dependentResources != null)
+         {
+            types = new GroovyClassNamesExtractor(vfs).getClassNames(className, dependentResources);
+         }
+      }
+      catch (JsonException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(404, e.getMessage());
+      }
+      catch (MalformedURLException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(404, e.getMessage());
+      }
+      catch (URISyntaxException e)
+      {
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
+         throw new CodeAssistantException(404, e.getMessage());
+      }
+      return types;
    }
 
    @Override
@@ -96,8 +184,6 @@ public class GroovyCodeAssistant extends CodeAssistant
       return null;
    }
 
-
-
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getMemberJavaDocFromProject(java.lang.String, java.lang.String, java.lang.String)
     */
@@ -105,161 +191,38 @@ public class GroovyCodeAssistant extends CodeAssistant
    protected String getMemberJavaDocFromProject(String fqn, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
-      //TODO
+      //we don't support this feature now
       throw new CodeAssistantException(404, "Not found");
    }
 
-   //   /**
-   //    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getClassByFQNFromProject(java.lang.String, java.lang.String, java.lang.String)
-   //    */
-   //   @Override
-   //   public TypeInfo getClassByFQNFromProject(String fqn, String location) throws CodeAssistantException
-   //   {
-   //      try
-   //      {
-   //         if (location != null)
-   //         {
-   //            DependentResources dependentResources =
-   //               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
-   //            if (dependentResources != null)
-   //            {
-   //               TypeInfo classInfo =
-   //                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassInfo(fqn,
-   //                     dependentResources);
-   //               if (classInfo == null)
-   //                  throw new CodeAssistantException(404, "Class info for " + fqn + " not found");
-   //               return classInfo;
-   //            }
-   //
-   //         }
-   //      }
-   //      catch (MalformedURLException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         throw new CodeAssistantException(500, e.getMessage());
-   //      }
-   //      catch (URISyntaxException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         throw new CodeAssistantException(500, e.getMessage());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         throw new CodeAssistantException(404, e.getMessage());
-   //      }
-   //      catch (RepositoryConfigurationException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         throw new CodeAssistantException(404, e.getMessage());
-   //      }
-   //      return null;
-   //   }
+   private DependentResources getDependentResources(String projectid, VirtualFileSystem vfs)
+      throws VirtualFileSystemException, JsonException
+   {
+      Folder project = (Folder)vfs.getItem(projectid, PropertyFilter.NONE_FILTER);
+      try
+      {
+         JsonParser jsonParser = new JsonParser();
+         jsonParser.parse(vfs.getContent(project.createPath(GroovyScriptService.GROOVY_CLASSPATH), null).getStream());
+         JsonValue jsonValue = jsonParser.getJsonObject();
+         GroovyClassPath classPath = ObjectBuilder.createObject(GroovyClassPath.class, jsonValue);
+         return new DependentResources(getCurrentRepository(), classPath);
+      }
+      catch (ItemNotFoundException e)
+      {
+         return null;
+      }
+   }
 
-   //   /**
-   //    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByClassNameInProject(java.lang.String, java.lang.String, java.lang.String)
-   //    */
-   //   @Override
-   //   public List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String location)
-   //      throws CodeAssistantException
-   //   {
-   //      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-   //      try
-   //      {
-   //         if (location != null && !location.isEmpty())
-   //         {
-   //            DependentResources dependentResources =
-   //               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
-   //            if (dependentResources != null)
-   //            {
-   //               types =
-   //                  new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(className,
-   //                     dependentResources);
-   //            }
-   //         }
-   //         return types;
-   //      }
-   //      catch (MalformedURLException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         throw new CodeAssistantException(400, e.getMessage());
-   //      }
-   //      catch (URISyntaxException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         throw new CodeAssistantException(400, e.getMessage());
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         throw new CodeAssistantException(404, e.getMessage());
-   //      }
-   //      catch (RepositoryConfigurationException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         throw new CodeAssistantException(404, e.getMessage());
-   //      }
-   //   }
-
-   // /**
-   // * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String, java.lang.String)
-   // */
-   //@Override
-   //public List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, String location) throws CodeAssistantException
-   //{
-   //   List<ShortTypeInfo> groovyClass = null;
-   //   try
-   //   {
-   //      if (location != null && !location.isEmpty())
-   //      {
-   //
-   //         DependentResources dependentResources =
-   //            GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
-   //         if (dependentResources != null)
-   //         {
-   //            groovyClass =
-   //               new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(prefix,
-   //                  dependentResources);
-   //
-   //         }
-   //      }
-   //   }
-   //   catch (RepositoryException e)
-   //   {
-   //      if (LOG.isDebugEnabled())
-   //         e.printStackTrace();
-   //      //TODO:need fix status code
-   //      throw new CodeAssistantException(404, e.getMessage());
-   //   }
-   //   catch (RepositoryConfigurationException e)
-   //   {
-   //      if (LOG.isDebugEnabled())
-   //         e.printStackTrace();
-   //      //TODO:need fix status code
-   //      throw new CodeAssistantException(404, e.getMessage());
-   //   }
-   //   catch (MalformedURLException e)
-   //   {
-   //      if (LOG.isDebugEnabled())
-   //         e.printStackTrace();
-   //      throw new CodeAssistantException(400, e.getMessage());
-   //   }
-   //   catch (URISyntaxException e)
-   //   {
-   //      if (LOG.isDebugEnabled())
-   //         e.printStackTrace();
-   //      throw new CodeAssistantException(400, e.getMessage());
-   //   }
-   //
-   //   return groovyClass;
-   //}
+   private String getCurrentRepository()
+   {
+      try
+      {
+         return repositoryService.getCurrentRepository().getConfiguration().getName();
+      }
+      catch (RepositoryException e)
+      {
+         throw new RuntimeException(e.getMessage(), e);
+      }
+   }
 
 }

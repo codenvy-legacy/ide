@@ -22,11 +22,14 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.extension.groovy.server.Base;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.junit.Assert;
 import org.junit.Before;
@@ -49,7 +52,6 @@ import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.version.VersionException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -61,10 +63,6 @@ import javax.ws.rs.core.Response;
 public class CodeAssitantTest extends Base
 {
 
-   /**
-    * 
-    */
-   private static final String POGO = "Pojo.groovy";
 
    /**
     * 
@@ -75,8 +73,9 @@ public class CodeAssitantTest extends Base
 
    private int decMethods;
 
-   private static final String CLASSPATH = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"ws#/project/\"},"
-      + "                        {\"kind\":\"file\", \"path\":\"ws#/project/testClass.gg\"}]}";
+   private Folder project;
+
+   private VirtualFileSystem vfs;
 
    @Before
    public void setUp() throws Exception
@@ -90,16 +89,20 @@ public class CodeAssitantTest extends Base
       putClass(classLoader, session, Integer.class.getCanonicalName());
       putClass(classLoader, session, C.class.getCanonicalName());
       putClass(classLoader, session, Foo.class.getCanonicalName());
-      createProject(session);
+      VirtualFileSystemRegistry vfsRegistry =
+         (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
+      vfs = vfsRegistry.getProvider(WS_NAME).newInstance(null);
+      project = vfs.createFolder(vfs.getInfo().getRoot().getId(), "project");
+      vfs.importZip(project.getId(),
+         Thread.currentThread().getContextClassLoader().getResourceAsStream("groovy-test-project.zip"), true);
    }
 
    @Test
    public void getClassByFqn() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("GET",
-            "/ide/code-assistant/groovy/class-description?fqn=" + Address.class.getCanonicalName(), "", null, null,
-            null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/class-description?fqn=" + Address.class.getCanonicalName()
+            + "&projectid=" + project.getId() + "&vfsid=" + WS_NAME, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       TypeInfo cd = (TypeInfo)cres.getEntity();
       Assert.assertEquals(methods, cd.getMethods().length);
@@ -107,14 +110,12 @@ public class CodeAssitantTest extends Base
    }
 
    @Test
-   @Ignore
    public void getGroovyClassByFqn() throws Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/services/" + SERVICE_NAME);
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/class-description?fqn=PHelloTest", "", headers, null,
-            null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/class-description?fqn=PHelloTest" + "&projectid="
+            + project.getId() + "&vfsid=" + WS_NAME, "", headers, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       TypeInfo cd = (TypeInfo)cres.getEntity();
       Assert.assertEquals("PHelloTest", cd.getName());
@@ -125,20 +126,20 @@ public class CodeAssitantTest extends Base
    {
       ContainerResponse cres =
          launcher.service("GET", "/ide/code-assistant/groovy/class-description?fqn=" + Address.class.getCanonicalName()
-            + "error", "", null, null, null, null);
+            + "error" + "&projectid=" + project.getId() + "&vfsid=" + WS_NAME, "", null, null, null, null);
       Assert.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), cres.getStatus());
    }
 
    @Test
    @SuppressWarnings("unchecked")
-   @Ignore
    public void findGroovyClassByName() throws Exception
    {
       String className = "Pojo";
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/services/" + SERVICE_NAME);
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find?class=" + className, "", headers, null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + className + "?where=className" +"&projectid=" + project.getId()
+            + "&vfsid=" + WS_NAME, "", headers, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(1, types.size());
@@ -146,72 +147,65 @@ public class CodeAssitantTest extends Base
 
    @SuppressWarnings("unchecked")
    @Test
-   @Ignore
    public void findClassByPrefix() throws Exception
    {
       String pkg = Address.class.getPackage().getName();
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + pkg + "?where=fqn", "", null, null,
-            null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + pkg + "?where=fqn" + "&projectid="
+            + project.getId() + "&vfsid=" + WS_NAME, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
-      //      assertTrue(cres.getEntity().getClass().isArray());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(4, types.size());
 
    }
 
    @Test
-   @Ignore
    public void findClassByPartName() throws Exception
    {
       String name = "P";
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/services/" + SERVICE_NAME);
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className", "", headers,
-            null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className"
+            + "&projectid=" + project.getId() + "&vfsid=" + WS_NAME, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
-      //      assertTrue(cres.getEntity().getClass().isArray());
       @SuppressWarnings("unchecked")
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(2, types.size());
    }
 
    @Test
-   @Ignore
+   @SuppressWarnings("unchecked")
    public void findRestServiceClassByPartName() throws Exception
    {
       String name = "H";
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/data/" + POGO);
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className", "", headers,
-            null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className"
+            + "&projectid=" + project.getId() + "&vfsid=" + WS_NAME, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
-      //      assertTrue(cres.getEntity().getClass().isArray());
-      @SuppressWarnings("unchecked")
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(1, types.size());
    }
 
    @Test
+   @SuppressWarnings("unchecked")
    public void findAnnotations() throws Exception
    {
       String type = "ANNOTATION";
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type, "", null, null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type + "?projectid=" + project.getId()
+            + "&vfsid=" + WS_NAME, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(2, types.size());
    }
 
    @Test
+   @SuppressWarnings("unchecked")
    public void findAnnotationsWithPrefix() throws Exception
    {
       String type = "ANNOTATION";
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type + "?prefix=Fo", "", null, null,
-            null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type + "?prefix=Fo" + "&projectid="
+            + project.getId() + "&vfsid=" + WS_NAME, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(1, types.size());
@@ -300,57 +294,57 @@ public class CodeAssitantTest extends Base
 
    }
 
-   /**
-    * @throws RepositoryException 
-    * @throws ConstraintViolationException 
-    * @throws VersionException 
-    * @throws LockException 
-    * @throws NoSuchNodeTypeException 
-    * @throws PathNotFoundException 
-    * @throws ItemExistsException 
-    * 
-    */
-   private void createProject(Session session) throws ItemExistsException, PathNotFoundException,
-      NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException, RepositoryException
-   {
-      Node base;
-      if (!session.getRootNode().hasNode("project"))
-      {
-         base = session.getRootNode().addNode("project", "nt:folder");
-         session.save();
-      }
-      base = session.getRootNode().getNode("project");
-
-      Node classPath = base.addNode(".groovyclasspath", "nt:file");
-      classPath = classPath.addNode("jcr:content", "nt:resource");
-      classPath.setProperty("jcr:data", CLASSPATH);
-      classPath.setProperty("jcr:lastModified", Calendar.getInstance());
-      classPath.setProperty("jcr:mimeType", MediaType.APPLICATION_JSON);
-
-      Node services = base.addNode("services", "nt:folder");
-      Node scriptFile = services.addNode(SERVICE_NAME, "nt:file");
-      Node script = scriptFile.addNode("jcr:content", "exo:groovyResourceContainer");
-      script.setProperty("exo:autoload", false);
-      script.setProperty("jcr:mimeType", "aplication/x-jaxrs+groovy");
-      script.setProperty("jcr:lastModified", Calendar.getInstance());
-      script.setProperty("jcr:data", Thread.currentThread().getContextClassLoader().getResourceAsStream(SERVICE_NAME));
-      session.save();
-      //create pojo class
-      Node data = base.addNode("data", "nt:folder");
-      Node pojo = data.addNode(POGO, "nt:file");
-      pojo = pojo.addNode("jcr:content", "nt:resource");
-      pojo.setProperty("jcr:mimeType", "application/x-groovy");
-      pojo.setProperty("jcr:lastModified", Calendar.getInstance());
-      pojo.setProperty("jcr:data", Thread.currentThread().getContextClassLoader().getResourceAsStream(POGO));
-      session.save();
-
-      Node res = base.addNode("testClass.gg", "nt:file");
-      res = res.addNode("jcr:content", "nt:resource");
-      res.setProperty("jcr:mimeType", "application/x-groovy");
-      res.setProperty("jcr:lastModified", Calendar.getInstance());
-      res.setProperty("jcr:data", Thread.currentThread().getContextClassLoader().getResourceAsStream("testClass.gg"));
-      session.save();
-
-   }
+   //   /**
+   //    * @throws RepositoryException 
+   //    * @throws ConstraintViolationException 
+   //    * @throws VersionException 
+   //    * @throws LockException 
+   //    * @throws NoSuchNodeTypeException 
+   //    * @throws PathNotFoundException 
+   //    * @throws ItemExistsException 
+   //    * 
+   //    */
+   //   private void createProject(Session session) throws ItemExistsException, PathNotFoundException,
+   //      NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException, RepositoryException
+   //   {
+   //      Node base;
+   //      if (!session.getRootNode().hasNode("project"))
+   //      {
+   //         base = session.getRootNode().addNode("project", "nt:folder");
+   //         session.save();
+   //      }
+   //      base = session.getRootNode().getNode("project");
+   //
+   //      Node classPath = base.addNode(".groovyclasspath", "nt:file");
+   //      classPath = classPath.addNode("jcr:content", "nt:resource");
+   //      classPath.setProperty("jcr:data", CLASSPATH);
+   //      classPath.setProperty("jcr:lastModified", Calendar.getInstance());
+   //      classPath.setProperty("jcr:mimeType", MediaType.APPLICATION_JSON);
+   //
+   //      Node services = base.addNode("services", "nt:folder");
+   //      Node scriptFile = services.addNode(SERVICE_NAME, "nt:file");
+   //      Node script = scriptFile.addNode("jcr:content", "exo:groovyResourceContainer");
+   //      script.setProperty("exo:autoload", false);
+   //      script.setProperty("jcr:mimeType", "aplication/x-jaxrs+groovy");
+   //      script.setProperty("jcr:lastModified", Calendar.getInstance());
+   //      script.setProperty("jcr:data", Thread.currentThread().getContextClassLoader().getResourceAsStream(SERVICE_NAME));
+   //      session.save();
+   //      //create pojo class
+   //      Node data = base.addNode("data", "nt:folder");
+   //      Node pojo = data.addNode(POGO, "nt:file");
+   //      pojo = pojo.addNode("jcr:content", "nt:resource");
+   //      pojo.setProperty("jcr:mimeType", "application/x-groovy");
+   //      pojo.setProperty("jcr:lastModified", Calendar.getInstance());
+   //      pojo.setProperty("jcr:data", Thread.currentThread().getContextClassLoader().getResourceAsStream(POGO));
+   //      session.save();
+   //
+   //      Node res = base.addNode("testClass.gg", "nt:file");
+   //      res = res.addNode("jcr:content", "nt:resource");
+   //      res.setProperty("jcr:mimeType", "application/x-groovy");
+   //      res.setProperty("jcr:lastModified", Calendar.getInstance());
+   //      res.setProperty("jcr:data", Thread.currentThread().getContextClassLoader().getResourceAsStream("testClass.gg"));
+   //      session.save();
+   //
+   //   }
 
 }

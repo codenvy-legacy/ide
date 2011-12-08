@@ -22,7 +22,6 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.util.List;
@@ -103,9 +102,9 @@ public class RestCodeAssistantGroovy
       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
-      if (where.equalsIgnoreCase("fqn"))
-         return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
-      return codeAssistant.getTypesByFqnPrefix(prefix, prefix, vfsId);
+      if ("fqn".equalsIgnoreCase(where))
+         return codeAssistant.getTypesByFqnPrefix(prefix, projectId, vfsId);
+      return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
 
    }
 

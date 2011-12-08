@@ -122,7 +122,7 @@ public class RestCodeAssistantJava
       if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
 
-      if ("className".equals(where))
+      if ("className".equalsIgnoreCase(where))
       {
          return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
       }
