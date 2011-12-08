@@ -544,7 +544,9 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       content.append("class ").append(display.getNameText().getValue());
 
       if (superFqn != null)
+      {
          content.append(" extends ").append(superFqn.substring(superFqn.lastIndexOf('.') + 1));
+      }
       else
          superFqn = OBJECT_FQN;
 
@@ -590,11 +592,24 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
                if (display.getMethods().getValue())
                {
                   generateAbstractMethods(packageDeclaration, content, result);
-                  interfaces = display.getInterfaceList().getValue();
-                  loadInterfacesDescription(packageDeclaration, content);
-                  return;
+                  if (display.getInterfaceList().getValue() != null && !display.getInterfaceList().getValue().isEmpty())
+                  {
+                     interfaces = display.getInterfaceList().getValue();
+                     loadInterfacesDescription(packageDeclaration, content);
+                     return;
+                  }
                }
 
+               content.append("}");
+               doCreateFolders(content.toString());
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
                content.append("}");
                doCreateFolders(content.toString());
             }

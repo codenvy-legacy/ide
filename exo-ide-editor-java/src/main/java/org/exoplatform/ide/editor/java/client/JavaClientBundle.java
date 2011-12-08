@@ -43,7 +43,7 @@ public interface JavaClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/java/client/images/innerinterface_public.gif")
    ImageResource interfaceItem();
-   
+
    @Source("org/exoplatform/ide/editor/java/client/images/enum_item.gif")
    ImageResource enumItem();
 
@@ -79,29 +79,35 @@ public interface JavaClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/java/client/images/row-selected.png")
    ImageResource itemSelected();
-   
+
    @Source("org/exoplatform/ide/editor/java/client/images/jsp-tag.png")
    ImageResource jspTagItem();
 
    @Source("org/exoplatform/ide/editor/java/client/images/class-private.png")
    ImageResource classPrivateItem();
-   
+
    @Source("org/exoplatform/ide/editor/java/client/images/class-protected.png")
    ImageResource classProtectedItem();
-   
+
    @Source("org/exoplatform/ide/editor/java/client/images/class-default.png")
    ImageResource classDefaultItem();
-   
+
    @Source("org/exoplatform/ide/editor/java/client/images/clock.png")
    ImageResource clockItem();
 
    @Source("org/exoplatform/ide/editor/java/client/images/groovy-tag.png")
    ImageResource groovyTagItem();
-   
+
    @Source("org/exoplatform/ide/editor/java/client/images/java.png")
    ImageResource java();
-   
+
    @Source("org/exoplatform/ide/editor/java/client/images/java-disabled.png")
    ImageResource javaDisabled();
+
+   @Source("org/exoplatform/ide/editor/java/client/images/newJavaclass_wiz.gif")
+   ImageResource newClassWizz();
+
+   @Source("org/exoplatform/ide/editor/java/client/images/newJavaclass_wiz_Disabled.gif")
+   ImageResource newClassWizzDisabled();
 
 }

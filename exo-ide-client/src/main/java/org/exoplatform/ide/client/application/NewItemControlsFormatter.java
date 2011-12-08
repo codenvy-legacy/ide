@@ -40,8 +40,8 @@ import java.util.List;
 
 public class NewItemControlsFormatter implements ControlsFormatter
 {
-private List<String> controlIdsOrder;
-   
+   private List<String> controlIdsOrder;
+
    /**
     * Initialize the order of the controls in menu "New".
     */
@@ -57,7 +57,7 @@ private List<String> controlIdsOrder;
       controlIdsOrder.add("File/New/New Java Script");
       controlIdsOrder.add("File/New/New HTML");
       controlIdsOrder.add("File/New/New CSS");
-      
+
       controlIdsOrder.add("File/New/New REST Service");
       controlIdsOrder.add("File/New/New POGO");
       controlIdsOrder.add("File/New/New Template");
@@ -66,11 +66,11 @@ private List<String> controlIdsOrder;
       controlIdsOrder.add("File/New/New JSP File");
       controlIdsOrder.add("File/New/New Ruby File");
       controlIdsOrder.add("File/New/New PHP File");
-      
+
       controlIdsOrder.add("File/New/Create File From Template...");
 
    }
-   
+
    /**
     * @param eventBus
     */
@@ -89,7 +89,7 @@ private List<String> controlIdsOrder;
       controls.removeAll(newItemControls);
       //Add sorted items controls:
       controls.addAll(newItemControls);
-      
+
       createNewItemGroup(controls);
       fillNewItemPopupControl(controls);
    }
@@ -110,11 +110,11 @@ private List<String> controlIdsOrder;
             newItemControls.add(control);
          }
       }
-      
+
       Collections.sort(newItemControls, controlComparator);
       return newItemControls;
    }
-   
+
    /**
     * Fill new item popup control with sub controls.
     * 
@@ -156,14 +156,16 @@ private List<String> controlIdsOrder;
          {
             return 0;
          }
-         
+
          Integer index1 = controlIdsOrder.indexOf(control1.getId());
          Integer index2 = controlIdsOrder.indexOf(control2.getId());
-         
+
          //If item is not found in order list, then put it at the end of the list
-         if (index2 == -1) return -1;
-         if (index1 == -1) return 1;
-         
+         if (index2 == -1)
+            return -1;
+         if (index1 == -1)
+            return 1;
+
          return index1.compareTo(index2);
       }
    };
@@ -186,26 +188,39 @@ private List<String> controlIdsOrder;
          NewFileCommand command = null;
          if (control.getMimeType() == null)
          {
-            command =
-               new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
-                  control.getIcon(), control.getEvent());
+            if (control.getNormalImage() != null)
+            {
+               command =
+                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
+                     control.getNormalImage(), control.getDisabledImage(), control.getEvent());
+            }
+            else
+            {
+               command =
+                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
+                     control.getEvent());
+            }
          }
          else
          {
-            if (control.getNormalImage() != null) {
+            if (control.getNormalImage() != null)
+            {
                command =
                   new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
-                     control.getNormalImage(), control.getDisabledImage(), new CreateNewFileEvent(control.getMimeType()));
-               
-            } else {
+                     control.getNormalImage(), control.getDisabledImage(),
+                     new CreateNewFileEvent(control.getMimeType()));
+
+            }
+            else
+            {
                command =
-                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
-                     control.getIcon(), new CreateNewFileEvent(control.getMimeType()));
-               
-            }            
+                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
+                     new CreateNewFileEvent(control.getMimeType()));
+
+            }
          }
          command.setDelimiterBefore(control.hasDelimiterBefore());
-         
+
          controls.set(position, command);
       }
    }
