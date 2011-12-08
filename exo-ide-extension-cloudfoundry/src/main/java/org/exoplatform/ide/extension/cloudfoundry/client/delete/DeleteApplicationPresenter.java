@@ -165,11 +165,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    private void deleteApplication()
    {
       boolean isDeleteServices = display.getDeleteServicesCheckbox().getValue();
-      String projectId = null;
-      if (((ItemContext)selectedItems.get(0)).getProject() != null)
-      {
-         projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      }
+      final String projectId =
+         (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject()
+            .getId() : null;
       CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, null,
          isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), deleteAppLoggedInHandler, null)
          {
@@ -177,8 +175,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             protected void onSuccess(String result)
             {
                closeView();
-               IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
-                  .applicationDeletedMsg(appName), Type.INFO));
+               IDE.fireEvent(new OutputEvent(
+                  CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName), Type.INFO));
+               IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
             }
          });
    }

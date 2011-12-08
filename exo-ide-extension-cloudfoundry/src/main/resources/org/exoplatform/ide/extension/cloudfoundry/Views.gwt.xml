@@ -49,4 +49,8 @@
    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsView">
       <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display" />
+   </replace-with>
 </module>

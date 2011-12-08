@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationInfoControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsControl;
@@ -42,12 +43,11 @@ import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * CloudFoundry extention for IDE.
@@ -61,7 +61,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
 
    public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(CloudFoundryLocalizationConstant.class);
-   
+
    /**
     * Default CloudFoundry server.
     */
@@ -73,7 +73,8 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new CloudFoundryClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
+      new CloudFoundryClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(),
+         event.getLoader());
    }
 
    /**
@@ -114,6 +115,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       new UnmapUrlPresenter();
       new UpdatePropertiesPresenter();
       new ApplicationsPresenter();
+      new CloudFoundryProjectPresenter();
    }
 
 }

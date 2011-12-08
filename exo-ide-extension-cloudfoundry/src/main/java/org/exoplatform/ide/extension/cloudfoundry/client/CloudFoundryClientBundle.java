@@ -60,6 +60,36 @@ public interface CloudFoundryClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/add_Disabled.png")
    ImageResource addButtonDisabled();
    
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/edit.png")
+   ImageResource editButton();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/edit_Disabled.png")
+   ImageResource editButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/properties.png")
+   ImageResource propertiesButton();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/properties_Disabled.png")
+   ImageResource propertiesButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/start.png")
+   ImageResource startButton();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/start_Disabled.png")
+   ImageResource startButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/restart.png")
+   ImageResource restartButton();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/restart_Disabled.png")
+   ImageResource restartButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/stop.png")
+   ImageResource stopButton();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/stop_Disabled.png")
+   ImageResource stopButtonDisabled();
+   
    /*
     * cloudfoundry controls
     */

@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -200,6 +201,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                   msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(), appUris);
                }
                IDE.fireEvent(new OutputEvent(msg));
+               IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
             }
          });
    }
@@ -244,6 +246,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                         final String msg =
                            CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(result.getName());
                         IDE.fireEvent(new OutputEvent(msg));
+                        IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                      }
                   });
             }
@@ -272,11 +275,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void restartApplication(String name)
    {
-      String projectId = null;
-      if (((ItemContext)selectedItems.get(0)).getProject() != null)
-      {
-         projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      }
+      final String projectId = (((ItemContext)selectedItems.get(0)).getProject() != null) ?  ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
 
       CloudFoundryClientService.getInstance().restartApplication(vfs.getId(), projectId, name, null,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), restartLoggedInHandler, null)
@@ -295,6 +294,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                   msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(), appUris);
                }
                IDE.fireEvent(new OutputEvent(msg));
+               IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
             }
          });
    }

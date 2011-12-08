@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -86,21 +87,20 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
    private void getOldMemoryValue()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      CloudFoundryClientService.getInstance()
-         .getApplicationInfo(
-            vfs.getId(),
-            projectId,
-            null,
-            null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), getOldMemoryValueLoggedInHandler,
-               null)
+      CloudFoundryClientService.getInstance().getApplicationInfo(
+         vfs.getId(),
+         projectId,
+         null,
+         null,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(),
+            getOldMemoryValueLoggedInHandler, null)
+         {
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
             {
-               @Override
-               protected void onSuccess(CloudfoundryApplication result)
-               {
-                  askForNewMemoryValue(result.getResources().getMemory());
-               }
-            });
+               askForNewMemoryValue(result.getResources().getMemory());
+            }
+         });
    }
 
    private void askForNewMemoryValue(int oldMemoryValue)
@@ -147,7 +147,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private void updateMemory(final int memory)
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
       CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
          new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), updateMemoryLoggedInHandler, null)
@@ -157,6 +157,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
             {
                String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemorySuccess(String.valueOf(memory));
                IDE.fireEvent(new OutputEvent(msg));
+               IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
             }
          });
    }
@@ -191,8 +192,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
          projectId,
          null,
          null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), getOldInstancesValueLoggedInHandler,
-            null)
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(),
+            getOldInstancesValueLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)
@@ -274,6 +275,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                            CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(String.valueOf(result
                               .getInstances()));
                         IDE.fireEvent(new OutputEvent(msg));
+                        IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                      }
                   });
             }
