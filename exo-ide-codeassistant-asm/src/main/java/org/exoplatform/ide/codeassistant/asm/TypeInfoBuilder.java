@@ -147,9 +147,9 @@ public class TypeInfoBuilder
       typeInfo.setModifiers(modifiers);
       typeInfo.setName(name);
       typeInfo.setQualifiedName(qualifiedName);
-      typeInfo.setFields(fields.toArray(new FieldInfo[0]));
-      typeInfo.setMethods(methods.toArray(new MethodInfo[0]));
-      typeInfo.setConstructors(constructors.toArray(new RoutineInfo[0]));
+      typeInfo.setFields(fields.toArray(new FieldInfo[fields.size()]));
+      typeInfo.setMethods(methods.toArray(new MethodInfo[methods.size()]));
+      typeInfo.setConstructors(constructors.toArray(new RoutineInfo[constructors.size()]));
 
       /*
        * There are no way to fill declared fields, methods and constructors, because there are no class hierarchy,
