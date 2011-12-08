@@ -34,6 +34,7 @@ import org.exoplatform.ide.git.client.control.DeleteRepositoryControl;
 import org.exoplatform.ide.git.client.control.FetchControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
 import org.exoplatform.ide.git.client.control.MergeControl;
+import org.exoplatform.ide.git.client.control.ShowProjectGitReadOnlyUrl;
 import org.exoplatform.ide.git.client.control.PullControl;
 import org.exoplatform.ide.git.client.control.PushToRemoteControl;
 import org.exoplatform.ide.git.client.control.RemoteControl;
@@ -47,6 +48,7 @@ import org.exoplatform.ide.git.client.delete.DeleteRepositoryCommandHandler;
 import org.exoplatform.ide.git.client.fetch.FetchPresenter;
 import org.exoplatform.ide.git.client.history.HistoryPresenter;
 import org.exoplatform.ide.git.client.init.InitRepositoryPresenter;
+import org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlPresenter;
 import org.exoplatform.ide.git.client.merge.MergePresenter;
 import org.exoplatform.ide.git.client.pull.PullPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
@@ -97,6 +99,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 
       IDE.getInstance().addControl(new ShowHistoryControl());
       IDE.getInstance().addControl(new ShowStatusControl());
+      IDE.getInstance().addControl(new ShowProjectGitReadOnlyUrl());
 
       //Create presenters:
       new CloneRepositoryPresenter();
@@ -116,6 +119,8 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new HistoryPresenter();
       new DeleteRepositoryCommandHandler();
       new MergePresenter();
+      
+      new ShowProjectGitReadOnlyUrlPresenter();
    }
 
    /**

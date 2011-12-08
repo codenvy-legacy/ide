@@ -225,4 +225,10 @@ public interface GitClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/git/images/branch/remote_branches.png")
    ImageResource remoteBranches();
+   
+   @Source("org/exoplatform/ide/git/images/controls/repository.png")
+   ImageResource projectReadOnlyGitUrl();
+   
+   @Source("org/exoplatform/ide/git/images/controls/repository_Disabled.png")
+   ImageResource projectReadOnlyGitUrlDisabled();
 }

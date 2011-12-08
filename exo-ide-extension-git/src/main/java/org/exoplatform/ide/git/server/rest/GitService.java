@@ -55,9 +55,11 @@ import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
 import org.exoplatform.ide.git.shared.TagListRequest;
+import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.GitUrlResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.security.ConversationState;
@@ -69,14 +71,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -88,6 +93,9 @@ public class GitService
 
    @Inject
    private LocalPathResolver localPathResolver;
+
+   @Inject
+   private GitUrlResolver gitUrlResolver;
 
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
@@ -410,8 +418,8 @@ public class GitService
 
    @Path("remote-delete/{name}")
    @POST
-   public void remoteDelete(@PathParam("name") String name) throws GitException,
-      LocalPathResolveException, VirtualFileSystemException
+   public void remoteDelete(@PathParam("name") String name) throws GitException, LocalPathResolveException,
+      VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
@@ -579,6 +587,14 @@ public class GitService
       {
          gitConnection.close();
       }
+   }
+
+   @Path("read-only-url")
+   @GET
+   public String readOnlyGitUrl(@Context UriInfo uriInfo) throws VirtualFileSystemException 
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      return gitUrlResolver.resolve(uriInfo, vfs, projectId);
    }
 
    protected GitConnection getGitConnection() throws GitException, LocalPathResolveException,

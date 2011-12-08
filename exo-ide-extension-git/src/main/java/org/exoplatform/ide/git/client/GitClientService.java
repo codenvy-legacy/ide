@@ -397,6 +397,17 @@ public abstract class GitClientService
     */
    @Deprecated
    public abstract void getWorkDir(String vfsId, String projectid, AsyncRequestCallback<WorkDirResponse> callback);
+   
+   /**
+    * Get the Git ReadOnly Url
+    * for the pointed item's location.
+    * 
+    * @param vfsId virtual file system's id
+    * @param projectid project's id (root of GIT repository)
+    * @param callback
+    * @throws RequestException 
+    */
+   public abstract void getGitReadOnlyUrl(String vfsId, String projectid, org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
    /**
     * Get the Git work directory (where ".git" folder is located) 

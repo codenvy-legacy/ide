@@ -636,4 +636,13 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("control.status.prompt")
    String statusControlPrompt();
 
+   @Key("control.ro.url.id")
+   String projectReadOnlyGitUrlId();
+
+   @Key("control.ro.url.title")
+   String projectReadOnlyGitUrlTitle();
+
+   @Key("control.ro.url.prompt")
+   String projectReadOnlyGitUrlPrompt();
+
 }
