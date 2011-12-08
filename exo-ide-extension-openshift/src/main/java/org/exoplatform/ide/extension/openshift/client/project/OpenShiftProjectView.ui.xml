@@ -31,6 +31,8 @@
       .link {
       	font-size: 11px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	overflow-x: hidden;
+      	white-space: nowrap;
       }
       
       .padding {
@@ -50,13 +52,13 @@
                   <g:FlowPanel width="100%" height="28px">
                      <g:Label text="{locale.manageProjectApplicationName}" addStyleNames="{style.labelH}" width="20%"></g:Label>
                      <c:TextInput ui:field="nameField" width="73%" height="22px" addStyleNames="{style.left} {style.space}"></c:TextInput>
-                     <c:ImageButton ui:field="infoButton" imageName="cancel" width="22" height="22px" text=""
+                     <c:ImageButton ui:field="infoButton" width="22" height="22px" text=""
                         title="{locale.manageProjectApplicationProperies}" styleName="{style.left}" imageResource="{resource.propertiesButton}"
                         disabledImageResource="{resource.propertiesButtonDisabled}"></c:ImageButton>
                   </g:FlowPanel>
                   <g:FlowPanel width="100%" height="23px">
                      <g:Label text="{locale.manageProjectApplicationUrl}" addStyleNames="{style.labelH}" width="20%"></g:Label>
-                     <g:Anchor ui:field="urlField" addStyleNames="{style.left} {style.link}"></g:Anchor>
+                     <g:Anchor ui:field="urlField" addStyleNames="{style.left} {style.link}" target="_blank"></g:Anchor>
                   </g:FlowPanel>
                   <g:FlowPanel width="100%" height="23px">
                      <g:Label text="{locale.manageProjectApplicationType}" addStyleNames="{style.labelH}" width="20%"></g:Label>

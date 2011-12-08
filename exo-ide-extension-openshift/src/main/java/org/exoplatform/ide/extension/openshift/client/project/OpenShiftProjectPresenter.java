@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.openshift.client.project;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasValue;
+
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
@@ -33,6 +39,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+import org.exoplatform.ide.extension.openshift.client.delete.ApplicationDeletedEvent;
+import org.exoplatform.ide.extension.openshift.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
@@ -43,12 +51,6 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
 /**
  * Presenter for managing project, deployed on OpenShift.
  * 
@@ -57,7 +59,7 @@ import com.google.gwt.user.client.ui.HasValue;
  *
  */
 public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
-   ViewClosedHandler, ManageOpenShiftProjectHandler, LoggedInHandler
+   ViewClosedHandler, ManageOpenShiftProjectHandler, LoggedInHandler, ApplicationDeletedHandler
 {
 
    interface Display extends IsView
@@ -89,6 +91,7 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ManageOpenShiftProjectEvent.TYPE, this);
+      IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -241,4 +244,16 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.openshift.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide.extension.openshift.client.delete.ApplicationDeletedEvent)
+    */
+   @Override
+   public void onApplicationDeleted(ApplicationDeletedEvent event)
+   {
+      if (display != null && vfs.getId().equals(event.getVfsId()) && openedProject != null
+         && openedProject.getId().equals(event.getProjectId()))
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
 }
