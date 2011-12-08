@@ -44,6 +44,15 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("okButton")
    String okButton();
 
+   @Key("previewButton")
+   String previewButton();
+
+   @Key("deleteButton")
+   String deleteButton();
+
+   @Key("closeButton")
+   String closeButton();
+
    /*Controls:*/
    @DefaultMessage("PaaS/OpenShift/Create domain...")
    @Key("control.createDomain.id")
@@ -71,7 +80,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Create application on OpenShift...")
    @Key("control.createApplication.prompt")
    String createApplicationControlPrompt();
-   
+
    /*
     * Delete Application
     */
@@ -101,7 +110,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Show application info...")
    @Key("control.showApplicationInfo.prompt")
    String showApplicationInfoControlPrompt();
-   
+
    /*
     * Preview Application
     */
@@ -131,7 +140,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("OpenShift")
    @Key("control.openshift.prompt")
    String openShiftControlPrompt();
-   
+
    /*
     * User Info...
     */
@@ -158,7 +167,7 @@ public interface OpenShiftLocalizationConstant extends Messages
 
    @Key("control.updatePublicKey.prompt")
    String updatePublicKeyControlPrompt();
-   
+
    /*
     * Login view
     */
@@ -253,7 +262,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Application <b>{0}</b> is successfully deleted.")
    @Key("deleteApplicationSuccess")
    String deleteApplicationSuccess(String applicationName);
-   
+
    @Key("updatePublicKeySuccess")
    String updatePublicKeySuccess();
 
@@ -271,11 +280,11 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Value")
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
-   
+
    /*Error*/
    @Key("unmarshal.application.types.failed")
    String applicationTypesUnmarshallerFail();
-   
+
    /*Application properties*/
    @DefaultMessage("Name")
    @Key("application.name")
@@ -320,4 +329,22 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Get user information failed.")
    @Key("getUserInfoFail")
    String getUserInfoFail();
+
+   @Key("manage.project.view.title")
+   String manageProjectViewTitle();
+
+   @Key("manage.project.application.name")
+   String manageProjectApplicationName();
+
+   @Key("manage.project.application.type")
+   String manageProjectApplicationType();
+
+   @Key("manage.project.application.url")
+   String manageProjectApplicationUrl();
+
+   @Key("manage.project.application.properties")
+   String manageProjectApplicationProperies();
+
+   @Key("manage.project.application.actions")
+   String manageProjectApplicationActions();
 }

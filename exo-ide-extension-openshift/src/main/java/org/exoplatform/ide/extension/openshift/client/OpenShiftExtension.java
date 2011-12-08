@@ -38,6 +38,7 @@ import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresen
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommandHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationPresenter;
+import org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectPresenter;
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
 import com.google.gwt.core.client.GWT;
@@ -74,9 +75,9 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(new PreviewApplicationControl());
       IDE.getInstance().addControl(new ShowUserInfoControl());
       IDE.getInstance().addControl(new UpdatePublicKeyControl());
-      
+
       new OpenShiftExceptionsHandler();
-      
+
       //Create presenters:
       new LoginPresenter();
       new CreateDomainPresenter();
@@ -86,8 +87,9 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new PreviewApplicationPresenter();
       new UserInfoPresenter();
       new UpdatePublicKeyCommandHandler();
-      
+
       new DeployApplicationPresenter();
+      new OpenShiftProjectPresenter();
    }
 
    /**
@@ -96,6 +98,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new OpenShiftClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
+      new OpenShiftClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(),
+         event.getLoader());
    }
 }

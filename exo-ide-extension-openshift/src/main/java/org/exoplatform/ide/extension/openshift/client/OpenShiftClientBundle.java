@@ -39,6 +39,12 @@ public interface OpenShiftClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/openshift/images/buttons/ok_Disabled.png")
    ImageResource okButtonDisabled();
 
+   @Source("org/exoplatform/ide/extension/openshift/images/buttons/properties.png")
+   ImageResource propertiesButton();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/buttons/properties_Disabled.png")
+   ImageResource propertiesButtonDisabled();
+
    @Source("org/exoplatform/ide/extension/openshift/images/buttons/cancel.png")
    ImageResource cancelButton();
 
@@ -56,13 +62,13 @@ public interface OpenShiftClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/openshift/images/controls/destroyApp_Disabled.png")
    ImageResource destroyApplicationControlDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/openshift/images/controls/appInfo.png")
    ImageResource applicationInfoControl();
 
    @Source("org/exoplatform/ide/extension/openshift/images/controls/appInfo_Disabled.png")
    ImageResource applicationInfoControlDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/openshift/images/controls/preview.png")
    ImageResource previewControl();
 
@@ -74,19 +80,19 @@ public interface OpenShiftClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/openshift/images/controls/userInfo_Disabled.png")
    ImageResource userInfoControlDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/openshift/images/controls/createDomain.png")
    ImageResource createDomainControl();
 
    @Source("org/exoplatform/ide/extension/openshift/images/controls/createDomain_Disabled.png")
    ImageResource createDomainControlDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/openshift/images/controls/updateKey.png")
    ImageResource updateKeyControl();
 
    @Source("org/exoplatform/ide/extension/openshift/images/controls/updateKey_Disabled.png")
    ImageResource updateKeyControlDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift.png")
    ImageResource openShiftControl();
 

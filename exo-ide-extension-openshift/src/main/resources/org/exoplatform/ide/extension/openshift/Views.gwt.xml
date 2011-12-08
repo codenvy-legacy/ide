@@ -43,4 +43,8 @@
    <replace-with class="org.exoplatform.ide.extension.openshift.client.deploy.DeployApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.openshift.client.deploy.DeployApplicationPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectView">
+      <when-type-is class="org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectPresenter.Display" />
+   </replace-with>
 </module>

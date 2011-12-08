@@ -29,6 +29,8 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
+ * Control for managing project, deployed on OpenShift.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 5, 2011 9:55:32 AM anya $
  *
