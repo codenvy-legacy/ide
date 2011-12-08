@@ -87,13 +87,15 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
             LinkedHashMap<String, Job> job = new LinkedHashMap<String, Job>();
             for (String key : jobs.keySet())
             {
-               if (jobs.get(key).getStatus() != JobStatus.FINISHED)
+               if (jobs.get(key).getStatus() == JobStatus.STARTED)
                {
                   job.put(key, jobs.get(key));
                }
             }
             jobs = job;
             display.updateJobs(jobs);
+            if(jobs.isEmpty())
+               control.hide();
          }
       });
    }

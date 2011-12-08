@@ -126,8 +126,9 @@ public class JobWidget extends Composite
             message.getElement().setInnerHTML(job.getFinishMessage());
             break;
          case ERROR :
-            image.setResource(IDEImageBundle.INSTANCE.delete());
+            image.setResource(IDEImageBundle.INSTANCE.cancel());
             message.setText(job.getError().getMessage());
+            message.getElement().getStyle().setColor("#880000");
             break;
       }
    }

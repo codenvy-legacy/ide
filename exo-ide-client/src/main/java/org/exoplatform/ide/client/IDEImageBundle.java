@@ -560,4 +560,7 @@ public interface IDEImageBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/client/bundled-images/progress.gif")
    ImageResource progresImage();
+   
+   @Source("org/exoplatform/ide/client/bundled-images/progress_remall.gif")
+   ImageResource progresRemall();
 }
