@@ -27,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
@@ -39,62 +40,14 @@ public class TestClassParser
    private static final String PACKAGE = "org.exoplatform.ide.codeassistant.asm.testclasses";
 
    @Test
-   public void testJarParsing() throws IOException
+   public void testAnnotationParsing() throws IOException
    {
-      assertLoadedClasses(JarParser.parse(new File("target/test-classes/testclasses/test_jar")));
-   }
+      TypeInfo annotationTest =
+         ClassParser
+            .parse(new FileInputStream(
+               new File(
+                  "target/test-classes/testclasses/classes/org/exoplatform/ide/codeassistant/asm/testclasses/TestAnnotation_class")));
 
-   private void assertLoadedClasses(List<TypeInfo> classes)
-   {
-
-      Assert.assertEquals(6, classes.size());
-      Set<String> visitedClasses = new HashSet<String>();
-      for (TypeInfo current : classes)
-      {
-         if (current.getName().equals("TestAnnotation"))
-         {
-            assertAnnotationTest(current);
-            visitedClasses.add(current.getQualifiedName());
-         }
-         else if (current.getName().equals("TestClass"))
-         {
-            assertTestClass(current);
-            visitedClasses.add(current.getName());
-
-         }
-         else if (current.getName().equals("TestEnum"))
-         {
-            assertTestEnum(current);
-            visitedClasses.add(current.getName());
-         }
-         else if (current.getName().equals("TestInterface2"))
-         {
-            assertTestInterface2(current);
-            visitedClasses.add(current.getName());
-
-         }
-         else if (current.getName().equals("TestInterface"))
-         {
-            assertTestInterface(current);
-            visitedClasses.add(current.getName());
-
-         }
-         else if (current.getName().equals("TestSuper"))
-         {
-            assertTestSuper(current);
-            visitedClasses.add(current.getName());
-
-         }
-         else
-         {
-            Assert.fail("Class with name " + current.getName() + " not found in expected classes.");
-         }
-      }
-      Assert.assertEquals(visitedClasses.size(), classes.size());
-   }
-
-   private void assertAnnotationTest(TypeInfo annotationTest)
-   {
       ShortTypeInfo shortTypeInfo = annotationTest;
       Assert.assertEquals("TestAnnotation", shortTypeInfo.getName());
       Assert.assertEquals(PACKAGE + ".TestAnnotation", shortTypeInfo.getQualifiedName());
@@ -154,8 +107,15 @@ public class TestClassParser
       }
    }
 
-   private void assertTestClass(TypeInfo testClass)
+   @Test
+   public void testTestClass() throws IOException
    {
+      TypeInfo testClass =
+         ClassParser
+            .parse(new FileInputStream(
+               new File(
+                  "target/test-classes/testclasses/classes/org/exoplatform/ide/codeassistant/asm/testclasses/TestClass_class")));
+
       ShortTypeInfo shortTypeInfo = testClass;
       Assert.assertEquals("TestClass", shortTypeInfo.getName());
       Assert.assertEquals(PACKAGE + ".TestClass", shortTypeInfo.getQualifiedName());
@@ -290,8 +250,15 @@ public class TestClassParser
       }
    }
 
-   private void assertTestEnum(TypeInfo testEnum)
+   @Test
+   public void testTestEnum() throws IOException
    {
+      TypeInfo testEnum =
+         ClassParser
+            .parse(new FileInputStream(
+               new File(
+                  "target/test-classes/testclasses/classes/org/exoplatform/ide/codeassistant/asm/testclasses/TestEnum_class")));
+
       ShortTypeInfo shortTypeInfo = testEnum;
       Assert.assertEquals("TestEnum", shortTypeInfo.getName());
       Assert.assertEquals(PACKAGE + ".TestEnum", shortTypeInfo.getQualifiedName());
@@ -410,8 +377,75 @@ public class TestClassParser
       }
    }
 
-   private void assertTestInterface2(TypeInfo testInterface2)
+   @Test
+   public void testTestInterface() throws IOException
    {
+      TypeInfo testInterface =
+         ClassParser
+            .parse(new FileInputStream(
+               new File(
+                  "target/test-classes/testclasses/classes/org/exoplatform/ide/codeassistant/asm/testclasses/TestInterface_class")));
+
+      ShortTypeInfo shortTypeInfo = testInterface;
+      Assert.assertEquals("TestInterface", shortTypeInfo.getName());
+      Assert.assertEquals(PACKAGE + ".TestInterface", shortTypeInfo.getQualifiedName());
+      Assert.assertEquals("INTERFACE", shortTypeInfo.getType());
+      Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
+         shortTypeInfo.getModifiers());
+
+      TypeInfo typeInfo = testInterface;
+      Assert.assertEquals("TestInterface", typeInfo.getName());
+      Assert.assertEquals(PACKAGE + ".TestInterface", typeInfo.getQualifiedName());
+      Assert.assertEquals("INTERFACE", typeInfo.getType());
+      Assert.assertEquals("java.lang.Object", typeInfo.getSuperClass());
+      Assert.assertEquals(0, typeInfo.getInterfaces().length);
+      Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
+         typeInfo.getModifiers());
+
+      Assert.assertEquals(0, typeInfo.getFields().length);
+      Assert.assertEquals(0, typeInfo.getConstructors().length);
+
+      {
+         // methods
+         MethodInfo[] methods = typeInfo.getMethods();
+         Assert.assertEquals(2, methods.length);
+         Set<String> visitedMethods = new HashSet<String>();
+         for (MethodInfo method : methods)
+         {
+            if (method.getName().equals("method1") && method.getParameterTypes().equals("()")
+               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
+            {
+               assertMethod(method, "method1", typeInfo.getQualifiedName(), Modifier.PUBLIC | Modifier.ABSTRACT, "()",
+                  "()", "public abstract int " + PACKAGE + ".TestInterface.method1()", new String[0], "int", "int");
+               visitedMethods.add(method.getName() + method.getParameterTypes());
+            }
+            else if (method.getName().equals("method2") && method.getParameterTypes().equals("(int)")
+               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
+            {
+               assertMethod(method, "method2", typeInfo.getQualifiedName(), Modifier.PUBLIC | Modifier.ABSTRACT,
+                  "(int)", "(int)", "public abstract int " + PACKAGE + ".TestInterface.method2(int)", new String[0],
+                  "int", "int");
+               visitedMethods.add(method.getName() + method.getParameterTypes());
+            }
+            else
+            {
+               Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+                  + ", not found in expected classes.");
+            }
+         }
+         Assert.assertEquals(methods.length, visitedMethods.size());
+      }
+   }
+
+   @Test
+   public void testTestInterface2() throws IOException
+   {
+      TypeInfo testInterface2 =
+         ClassParser
+            .parse(new FileInputStream(
+               new File(
+                  "target/test-classes/testclasses/classes/org/exoplatform/ide/codeassistant/asm/testclasses/TestInterface2_class")));
+
       ShortTypeInfo shortTypeInfo = testInterface2;
       Assert.assertEquals("TestInterface2", shortTypeInfo.getName());
       Assert.assertEquals(PACKAGE + ".TestInterface2", shortTypeInfo.getQualifiedName());
@@ -470,61 +504,15 @@ public class TestClassParser
       }
    }
 
-   private void assertTestInterface(TypeInfo testInterface)
+   @Test
+   public void testTestSuper() throws IOException
    {
-      ShortTypeInfo shortTypeInfo = testInterface;
-      Assert.assertEquals("TestInterface", shortTypeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".TestInterface", shortTypeInfo.getQualifiedName());
-      Assert.assertEquals("INTERFACE", shortTypeInfo.getType());
-      Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
-         shortTypeInfo.getModifiers());
+      TypeInfo testSuper =
+         ClassParser
+            .parse(new FileInputStream(
+               new File(
+                  "target/test-classes/testclasses/classes/org/exoplatform/ide/codeassistant/asm/testclasses/TestSuper_class")));
 
-      TypeInfo typeInfo = testInterface;
-      Assert.assertEquals("TestInterface", typeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".TestInterface", typeInfo.getQualifiedName());
-      Assert.assertEquals("INTERFACE", typeInfo.getType());
-      Assert.assertEquals("java.lang.Object", typeInfo.getSuperClass());
-      Assert.assertEquals(0, typeInfo.getInterfaces().length);
-      Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
-         typeInfo.getModifiers());
-
-      Assert.assertEquals(0, typeInfo.getFields().length);
-      Assert.assertEquals(0, typeInfo.getConstructors().length);
-
-      {
-         // methods
-         MethodInfo[] methods = typeInfo.getMethods();
-         Assert.assertEquals(2, methods.length);
-         Set<String> visitedMethods = new HashSet<String>();
-         for (MethodInfo method : methods)
-         {
-            if (method.getName().equals("method1") && method.getParameterTypes().equals("()")
-               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
-            {
-               assertMethod(method, "method1", typeInfo.getQualifiedName(), Modifier.PUBLIC | Modifier.ABSTRACT, "()",
-                  "()", "public abstract int " + PACKAGE + ".TestInterface.method1()", new String[0], "int", "int");
-               visitedMethods.add(method.getName() + method.getParameterTypes());
-            }
-            else if (method.getName().equals("method2") && method.getParameterTypes().equals("(int)")
-               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
-            {
-               assertMethod(method, "method2", typeInfo.getQualifiedName(), Modifier.PUBLIC | Modifier.ABSTRACT,
-                  "(int)", "(int)", "public abstract int " + PACKAGE + ".TestInterface.method2(int)", new String[0],
-                  "int", "int");
-               visitedMethods.add(method.getName() + method.getParameterTypes());
-            }
-            else
-            {
-               Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
-                  + ", not found in expected classes.");
-            }
-         }
-         Assert.assertEquals(methods.length, visitedMethods.size());
-      }
-   }
-
-   private void assertTestSuper(TypeInfo testSuper)
-   {
       ShortTypeInfo shortTypeInfo = testSuper;
       Assert.assertEquals("TestSuper", shortTypeInfo.getName());
       Assert.assertEquals(PACKAGE + ".TestSuper", shortTypeInfo.getQualifiedName());
@@ -636,6 +624,13 @@ public class TestClassParser
          }
          Assert.assertEquals(methods.length, visitedMethods.size());
       }
+   }
+
+   @Test
+   public void testJarParsing() throws IOException
+   {
+      List<TypeInfo> classes = JarParser.parse(new File("target/test-classes/testclasses/test_jar"));
+      Assert.assertEquals(6, classes.size());
    }
 
    private void assertRoutine(RoutineInfo routine, String name, String declaredClass, int modifiers,
