@@ -18,12 +18,19 @@
  */
 package org.exoplatform.ide.client.operation.cutcopy;
 
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.navigator.NavigatorPresenter;
+import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 
 /**
  * Created by The eXo Platform SAS.
@@ -31,8 +38,8 @@ import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsComma
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class PasteItemsCommand extends MultipleSelectionItemsCommand implements ItemsToPasteSelectedHandler,
-   PasteItemsCompleteHandler, ItemsSelectedHandler
+public class PasteItemsCommand extends SimpleControl implements IDEControl, ItemsToPasteSelectedHandler,
+   PasteItemsCompleteHandler, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler
 {
    public static final String ID = "Edit/Paste Item(s)";
 
@@ -40,7 +47,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
 
    private final static String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsPromptControl();
 
-   private boolean pastePrepared = false;
+   private boolean itemsToPasteSelected = false;
 
    /**
     * 
@@ -63,7 +70,8 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
       IDE.addHandler(ItemsToPasteSelectedEvent.TYPE, this);
       IDE.addHandler(PasteItemsCompleteEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize();
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -72,7 +80,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    @Override
    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)
    {
-      pastePrepared = true;
+      itemsToPasteSelected = true;
       setEnabled(true);
    }
 
@@ -82,8 +90,8 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    @Override
    public void onPasteItemsComlete(PasteItemsCompleteEvent event)
    {
+      itemsToPasteSelected = false;
       setEnabled(false);
-      pastePrepared = false;
    }
 
    /**
@@ -92,9 +100,15 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() == 1)
+      if (event.getSelectedItems().size() != 1)
       {
-         updateEnabling();
+         setEnabled(false);
+         return;
+      }
+
+      if (itemsToPasteSelected)
+      {
+         setEnabled(true);
       }
       else
       {
@@ -102,24 +116,23 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
-    */
    @Override
-   protected void updateEnabling()
+   public void onVfsChanged(VfsChangedEvent event)
    {
-      if (browserSelected)
+      if (event.getVfsInfo() != null)
       {
-         if (pastePrepared)
-         {
-            setEnabled(true);
-         }
-         else
-         {
-            setEnabled(false);
-         }
+         setVisible(true);
       }
       else
+      {
+         setVisible(false);
+      }
+   }
+
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      if (!(event.getView() instanceof NavigatorPresenter.Display || event.getView() instanceof TinyProjectExplorerPresenter.Display))
       {
          setEnabled(false);
       }

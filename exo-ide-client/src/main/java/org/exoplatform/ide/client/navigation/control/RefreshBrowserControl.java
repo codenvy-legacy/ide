@@ -28,9 +28,10 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
+import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,7 +41,7 @@ import org.exoplatform.ide.client.navigator.NavigatorPresenter;
  */
 @RolesAllowed({"administrators", "developers"})
 public class RefreshBrowserControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewVisibilityChangedHandler, VfsChangedHandler
+   ViewActivatedHandler, VfsChangedHandler
 {
 
    private static final String ID = "File/Refresh Selected Folder";
@@ -48,10 +49,6 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.refreshTitleControl();
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.refreshPromptControl();
-
-   private boolean browserPanelSelected = true;
-
-   private boolean oneItemSelected = true;
 
    /**
     * 
@@ -71,24 +68,9 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    @Override
    public void initialize()
    {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
-
-   /**
-    * 
-    */
-   private void updateEnabling()
-   {
-      if (browserPanelSelected && oneItemSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -99,14 +81,11 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    {
       if (event.getSelectedItems().size() != 1)
       {
-         oneItemSelected = false;
-         updateEnabling();
+         setEnabled(false);
+         return;
       }
-      else
-      {
-         oneItemSelected = true;
-         updateEnabling();
-      }
+
+      setEnabled(true);
    }
 
    /**
@@ -125,16 +104,12 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
    @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   public void onViewActivated(ViewActivatedEvent event)
    {
-      if (event.getView() instanceof NavigatorPresenter.Display)
+      if (!(event.getView() instanceof NavigatorPresenter.Display || event.getView() instanceof TinyProjectExplorerPresenter.Display))
       {
-         browserPanelSelected = event.getView().isViewVisible();
-         updateEnabling();
+         setEnabled(false);
       }
    }
 

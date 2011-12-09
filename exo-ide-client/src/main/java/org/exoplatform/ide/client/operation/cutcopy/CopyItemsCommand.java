@@ -18,16 +18,22 @@
  */
 package org.exoplatform.ide.client.operation.cutcopy;
 
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
+import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS.
@@ -35,8 +41,8 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class CopyItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler,
-   ViewActivatedHandler
+public class CopyItemsCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewActivatedHandler,
+   VfsChangedHandler
 {
 
    public static final String ID = "Edit/Copy Item(s)";
@@ -45,9 +51,7 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsPromptControl();
 
-   private Item selectedItem;
-
-   private boolean copyReady = false;
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * 
@@ -67,8 +71,9 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
    @Override
    public void initialize()
    {
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize();
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -77,45 +82,28 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 0)
-      {
-         selectedItem = event.getSelectedItems().get(0);
-         copyReady = isItemsInSameFolder(event.getSelectedItems());
-         updateEnabling();
-      }
-      else
-      {
-         setEnabled(false);
-         return;
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
-    */
-   @Override
-   protected void updateEnabling()
-   {
-      if (!browserSelected)
+      if (event.getSelectedItems().size() != 1)
       {
          setEnabled(false);
          return;
       }
 
-      if (selectedItem == null)
+      Item item = event.getSelectedItems().get(0);
+
+      if (event.getView() instanceof TinyProjectExplorerPresenter.Display && item instanceof ProjectModel)
       {
          setEnabled(false);
          return;
       }
 
-      if (copyReady)
-      {
-         setEnabled(true);
-      }
-      else
+      if (event.getView() instanceof NavigatorPresenter.Display && vfsInfo != null
+         && item.getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
+         return;
       }
+
+      setEnabled(true);
    }
 
    /**
@@ -124,13 +112,23 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (event.getView() instanceof NavigatorPresenter.Display)
+      if (!(event.getView() instanceof NavigatorPresenter.Display || event.getView() instanceof TinyProjectExplorerPresenter.Display))
       {
-         setEnabled(true);
+         setEnabled(false);
+      }
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      if (vfsInfo == null)
+      {
+         setVisible(false);
       }
       else
       {
-         setEnabled(false);
+         setVisible(true);
       }
    }
 

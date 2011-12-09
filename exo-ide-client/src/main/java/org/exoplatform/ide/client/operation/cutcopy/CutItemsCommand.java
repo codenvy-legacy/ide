@@ -18,13 +18,22 @@
  */
 package org.exoplatform.ide.client.operation.cutcopy;
 
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.navigator.NavigatorPresenter;
+import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,7 +41,8 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class CutItemsCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
+public class CutItemsCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler,
+   ViewActivatedHandler
 {
 
    private static final String ID = "Edit/Cut Item(s)";
@@ -41,9 +51,7 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.cutItemsPromptControl();
 
-   private boolean cutReady = false;
-
-   private Item selectedItem;
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * 
@@ -64,36 +72,9 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
    @Override
    public void initialize()
    {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
-    */
-   @Override
-   protected void updateEnabling()
-   {
-      if (!browserSelected)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (selectedItem == null)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (cutReady)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -102,17 +83,52 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 0)
-      {
-         selectedItem = event.getSelectedItems().get(0);
-         cutReady = isItemsInSameFolder(event.getSelectedItems());
-         updateEnabling();
-      }
-      else
+      if (event.getSelectedItems().size() != 1)
       {
          setEnabled(false);
          return;
       }
+
+      Item item = event.getSelectedItems().get(0);
+
+      if (event.getView() instanceof TinyProjectExplorerPresenter.Display && item instanceof ProjectModel)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (event.getView() instanceof NavigatorPresenter.Display && vfsInfo != null
+         && item.getId().equals(vfsInfo.getRoot().getId()))
+      {
+         setEnabled(false);
+         return;
+      }
+
+      setEnabled(true);
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      if (event.getVfsInfo() == null)
+      {
+         setVisible(false);
+      }
+      else
+      {
+         setVisible(true);
+      }
+   }
+
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      if (!(event.getView() instanceof NavigatorPresenter.Display || event.getView() instanceof TinyProjectExplorerPresenter.Display))
+      {
+         setEnabled(false);
+      }
+
    }
 
 }
