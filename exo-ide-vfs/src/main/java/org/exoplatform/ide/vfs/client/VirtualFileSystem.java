@@ -384,6 +384,7 @@ public class VirtualFileSystem
       String url = info.getUrlTemplates().get(Link.REL_SEARCH_FORM).getHref();
       url = URL.decode(url).replace("[maxItems]", String.valueOf(maxItems));
       url = url.replace("[skipCount]", String.valueOf(skipCount));
+      url = url.replace("[propertyFilter]", PropertyFilter.ALL);
       String data = "";
       for (String key : query.keySet())
       {
