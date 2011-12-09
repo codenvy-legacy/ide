@@ -23,7 +23,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -61,9 +60,6 @@ public class LogReaderView extends ViewImpl implements LogReaderPresenter.Displa
 
    @UiField
    Toolbar toolbar;
-
-   @UiField
-   FlowPanel basePanel;
 
    private IconButton nextLogButton;
 
