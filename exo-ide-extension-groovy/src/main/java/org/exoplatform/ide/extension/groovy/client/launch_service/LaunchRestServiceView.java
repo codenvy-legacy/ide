@@ -24,15 +24,16 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
+import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.groovy.client.Images;
 
 import java.util.LinkedHashMap;
@@ -44,7 +45,7 @@ import java.util.LinkedHashMap;
 */
 public class LaunchRestServiceView extends ViewImpl implements LaunchRestServicePresenter.Display
 {
-   
+
    private static final int WIDTH = 530;
 
    private static final int HEIGHT = 400;
@@ -105,23 +106,24 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
 
    private WadlParameterEntryListGrid parameterHeaderGrid;
 
-   private TextAreaItem requestbody;
+   private TextArea requestbody;
 
    private TabPanel parametersTabSet;
-   
-   public LaunchRestServiceView() {
-      super(ID, "modal", TITLE, new Image(Images.Controls.OUTPUT), WIDTH, HEIGHT);
+
+   public LaunchRestServiceView()
+   {
+      super(ID, ViewType.MODAL, TITLE, new Image(Images.Controls.OUTPUT), WIDTH, HEIGHT, false);
 
       vLayout = new VerticalPanel();
       vLayout.setWidth("100%");
       vLayout.setHeight("100%");
       vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       add(vLayout);
-      
+
       createParamsForm();
       createButtonsForm();
-      
-      parametersTabSet.selectTab(0);
+
+      parametersTabSet.selectTab(ID_QUERY_TAB);
    }
 
    private Widget createParametersHeaderTab()
@@ -137,10 +139,10 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
    {
       VerticalPanel form = new VerticalPanel();
       form.getElement().setId(ID_BODY_FORM);
-      requestbody = new TextAreaItem();
-      requestbody.setShowTitle(false);
-      requestbody.setWidth(465);
-      requestbody.setHeight(110);
+      requestbody = new TextArea();
+      //      requestbody.setShowTitle(false);
+      requestbody.setWidth("465px");
+      requestbody.setHeight("110px");
       requestbody.setValue("");
       requestbody.setName(ID_BODY_FORM_TEXT);
       form.add(requestbody);
@@ -181,7 +183,6 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
       pathField = new ComboBoxField();
       pathField.setName(NAME_PATH);
       pathField.setWidth(480);
-      
 
       Label methodLabel = new Label("Method:");
       methodField = new SelectItem();
@@ -307,7 +308,7 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
 
    public void setBodyDisabled(boolean value)
    {
-      requestbody.setDisabled(value);
+      requestbody.setEnabled(!value);
    }
 
    public void setSendRequestButtonDisabled(boolean value)

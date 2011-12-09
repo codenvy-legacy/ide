@@ -68,9 +68,10 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, EditorActiveFileChangedHandler, ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
+public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, EditorActiveFileChangedHandler,
+   ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
 {
-   
+
    public interface Display extends IsView
    {
 
@@ -150,20 +151,22 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
    private String currentResponseMediaType;
 
    private boolean undeployOnCancel;
-   
+
    private FileModel activeFile;
-   
+
    private IDEConfiguration configuration;
 
    /**
     * 
     */
-   public LaunchRestServicePresenter() {
+   public LaunchRestServicePresenter()
+   {
       IDE.getInstance().addControl(new LaunchRestServiceCommand(), Docking.TOOLBAR_RIGHT);
-      
+
       IDE.addHandler(PreviewWadlOutputEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -183,25 +186,27 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
    {
       activeFile = event.getFile();
    }
-   
+
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display) {
+      if (event.getView() instanceof Display)
+      {
          display = null;
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputHandler#onPreviewWadlOutput(org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputEvent)
     */
    @Override
    public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
    {
-      if (display != null) {
+      if (display != null)
+      {
          return;
       }
-      
+
       undeployOnCancel = event.isUndeployOnCansel();
       String content = activeFile.getContent();
       int indStart = content.indexOf("\"");
@@ -223,7 +228,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
             IDE.getInstance().openView(display.asView());
             bindDisplay();
          }
-         
+
          @Override
          protected void onFailure(Throwable exception)
          {
@@ -245,7 +250,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
             {
                url += display.getPathField().getValue();
             }
-            
+
             new RestServiceURLPresenter(url);
          }
       });
@@ -254,11 +259,11 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
       {
          public void onClick(ClickEvent event)
          {
-            if(undeployOnCancel)
+            if (undeployOnCancel)
             {
                IDE.fireEvent(new UndeployGroovyScriptSandboxEvent());
             }
-            
+
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
@@ -331,6 +336,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
 
       });
 
+      resourceArray.clear();
       Resource res = new Resource();
       res.setPath(wadlApplication.getResources().getBase());
 
@@ -549,7 +555,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
                      IDE.fireEvent(event);
                      return;
                   }
-                  
+
                   super.onFailure(exception);
                }
             });
@@ -829,7 +835,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
          String[] pathParam = display.getPathField().getValue().split(reg);
 
          //if no path parameters list return 
-         if(pathParam.length <= 1)
+         if (pathParam.length <= 1)
          {
             return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "[/]{0,1}$";
          }
@@ -920,7 +926,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
       }
 
       display.setMethods(methods);
-      if(oldMethodName == null)
+      if (oldMethodName == null)
          return;
 
       //checks is it need to change method field value
