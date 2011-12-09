@@ -33,7 +33,6 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -97,7 +96,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
    public ProjectPropertiesPresenter()
    {
-      IDE.getInstance().addControl(new ShowProjectPropertiesControl(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new ShowProjectPropertiesControl());
 
       IDE.addHandler(ShowProjectPropertiesEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);

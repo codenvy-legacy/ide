@@ -78,13 +78,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
          }
          String p = i.getPath();
          p = p.substring(0, p.lastIndexOf("/"));
-         // folders href ends with "/"
-         //         if (i instanceof FolderModel)
-         //         {
-         //            p = p.substring(0, p.lastIndexOf("/"));
-         //         }
          hrefs.add(p);
-
       }
 
       for (int i = 0; i < hrefs.size(); i++)

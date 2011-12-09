@@ -49,7 +49,7 @@ public class GetItemURLView extends ViewImpl implements
 
    private static final int DEFAULT_WIDTH = 500;
 
-   private static final int DEFAULT_HEIGHT = 160;
+   private static final int DEFAULT_HEIGHT = 170;
 
    public static final String URL_FIELD = "ideGetItemURLFormURLField";
 

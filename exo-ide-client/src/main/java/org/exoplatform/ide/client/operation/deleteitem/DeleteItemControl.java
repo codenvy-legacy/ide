@@ -18,15 +18,22 @@
  */
 package org.exoplatform.ide.client.operation.deleteitem;
 
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand;
-import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
-import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.navigator.NavigatorPresenter;
+import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,8 +42,8 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class DeleteItemCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler,
-   ItemDeletedHandler
+public class DeleteItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
+   ViewActivatedHandler
 {
 
    private static final String ID = "File/Delete...";
@@ -45,12 +52,12 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.deleteItemsPromptControl();
 
-   private Item selectedItem;
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * 
     */
-   public DeleteItemCommand()
+   public DeleteItemControl()
    {
       super(ID);
       setTitle(TITLE);
@@ -65,9 +72,33 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
    @Override
    public void initialize()
    {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ItemDeletedEvent.TYPE, this);
-      super.initialize();
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+
+      if (event.getVfsInfo() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
+   }
+
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      if (!(event.getView() instanceof NavigatorPresenter.Display || event.getView() instanceof TinyProjectExplorerPresenter.Display))
+      {
+         setEnabled(false);
+      }
    }
 
    /**
@@ -76,46 +107,21 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (!isItemsInSameFolder(event.getSelectedItems()))
+      if (event.getSelectedItems() == null || event.getSelectedItems().size() != 1)
       {
-         setEnabled(false);
          return;
       }
-      if (event.getSelectedItems().size() != 0)
-      {
-         selectedItem = event.getSelectedItems().get(0);
-         updateEnabling();
-      }
-      else
-      {
-         setEnabled(false);
-         return;
-      }
-   }
 
-   /**
-    * @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent)
-    */
-   @Override
-   public void onItemDeleted(ItemDeletedEvent event)
-   {
-      selectedItem = null;
-      updateEnabling();
-   }
+      Item selectedItem = event.getSelectedItems().get(0);
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
-    */
-   @Override
-   protected void updateEnabling()
-   {
-      if (!browserSelected)
+      if (event.getView() instanceof TinyProjectExplorerPresenter.Display && selectedItem instanceof ProjectModel)
       {
          setEnabled(false);
          return;
       }
 
-      if (selectedItem == null)
+      if (event.getView() instanceof NavigatorPresenter.Display
+         && selectedItem.getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
          return;

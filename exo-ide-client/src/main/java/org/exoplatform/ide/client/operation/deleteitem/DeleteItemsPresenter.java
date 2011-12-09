@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -36,16 +37,18 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -54,6 +57,7 @@ import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -70,7 +74,8 @@ import java.util.Map;
  */
 
 public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler, ItemsSelectedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler, ProjectOpenedHandler,
+   ProjectClosedHandler
 {
 
    public interface Display extends IsView
@@ -95,7 +100,11 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private Display display;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+   //private List<Item> selectedItems = new ArrayList<Item>();
+
+   private List<Item> items = new ArrayList<Item>();
+
+   private List<Item> itemsToDelete = new ArrayList<Item>();
 
    private Item lastDeletedItem;
 
@@ -103,18 +112,28 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private Map<String, String> lockTokens = new HashMap<String, String>();
 
+   private ProjectModel currentProject;
+
+   /**
+    * Creates new instance of this presenter.
+    */
    public DeleteItemsPresenter()
    {
-      IDE.getInstance().addControl(new DeleteItemCommand(), Docking.TOOLBAR);
-      
+      IDE.getInstance().addControl(new DeleteItemControl(), Docking.TOOLBAR);
+
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(DeleteItemEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       ApplicationSettings applicationSettings = event.getApplicationSettings();
@@ -125,43 +144,77 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       lockTokens = applicationSettings.getValueAsMap("lock-tokens");
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      selectedItems = event.getSelectedItems();
+      items = event.getSelectedItems();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
+    */
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.operation.deleteitem.DeleteItemHandler#onDeleteItem(org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent)
+    */
    public void onDeleteItem(DeleteItemEvent event)
    {
       if (display != null)
       {
          return;
       }
-      
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView((View)d);
-      bindDisplay(d);      
+
+      if (items.size() == 1 && items.get(0) instanceof ProjectModel && currentProject != null
+         && currentProject.getId().equals(items.get(0).getId()))
+      {
+         Dialogs.getInstance().showInfo("Project must be closed before deleting.");
+         return;
+      }
+
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
    }
 
-   public void bindDisplay(Display d)
+   /**
+    * Fills values on display and 
+    */
+   public void bindDisplay()
    {
-      display = d;
+      String message = "";
 
-      String prompt =
-         selectedItems.size() == 1 ? org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
-            .deleteItemsAskDeleteOneItem(selectedItems.get(0).getName())
-            : org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteSeveralItems(selectedItems
-               .size());
-      display.getPromptField().setValue(prompt);
+      if (items.size() == 1)
+      {
+         Item item = items.get(0);
+         if (item instanceof ProjectModel)
+         {
+            message = IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteProject(item.getName());
+         }
+         else
+         {
+            message = IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteOneItem(item.getName());
+         }
+      }
+      else
+      {
+         message = IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteSeveralItems(items.size());
+      }
+
+      display.getPromptField().setValue(message);
 
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -175,28 +228,39 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          public void onClick(ClickEvent event)
          {
-            deleteNextItem();
+            prepareToDelete();
          }
       });
    }
 
+   private void prepareToDelete()
+   {
+      itemsToDelete = new ArrayList<Item>();
+      itemsToDelete.addAll(items);
+      deleteNextItem();
+   }
+
    private void deleteNextItem()
    {
-      if (selectedItems.size() == 0)
+      if (itemsToDelete.size() == 0)
       {
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+
          deleteItemsComplete();
          return;
       }
 
-      final Item item = selectedItems.get(0);
+      final Item item = itemsToDelete.get(0);
       if (item instanceof FileModel)
       {
          if (openedFiles.get(item.getId()) != null)
          {
             FileModel file = openedFiles.get(item.getId());
             //TODO
-            if (file.isContentChanged()/* || file.isPropertiesChanged()*/)
+            if (file.isContentChanged())
             {
                String msg =
                   org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteModifiedFile(item
@@ -290,7 +354,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             @Override
             protected void onSuccess(String result)
             {
-               selectedItems.remove(0);
+               itemsToDelete.remove(0);
                IDE.fireEvent(new ItemDeletedEvent(item));
 
                if (item instanceof FileModel)
@@ -367,18 +431,17 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          return;
       }
 
-      selectedItems.clear();
-
       FolderModel folder = null;
       if (lastDeletedItem instanceof ItemContext)
       {
          folder = ((ItemContext)lastDeletedItem).getParent();
       }
-      
-      if (folder != null) {
+
+      if (folder != null)
+      {
          IDE.fireEvent(new RefreshBrowserEvent(folder));
-         IDE.fireEvent(new SelectItemEvent(folder.getId()));         
-      }      
+         IDE.fireEvent(new SelectItemEvent(folder.getId()));
+      }
    }
 
    @Override
@@ -388,6 +451,18 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          display = null;
       }
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      currentProject = null;
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      currentProject = event.getProject();
    }
 
 }

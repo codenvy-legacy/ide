@@ -80,6 +80,9 @@ public interface IdeLocalizationMessages extends Messages
    @Key("deleteItems.askDeleteFolderWithModifiedFiles")
    String deleteItemsAskDeleteFolderWithModifiedFiles(String folderName, int numberOfFiles);
    
+   @Key("deleteItems.askDeleteProject")
+   String deleteItemsAskDeleteProject(String projectName);
+   
    /*
     * CreateFileCommandHandler
     */
