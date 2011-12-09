@@ -354,7 +354,6 @@ public class Express
                git = GitConnectionFactory.getInstance().getConnection(workDir, null);
                git.init(new InitRequest());
                git.remoteAdd(new RemoteAddRequest("express", gitUrl));
-               git.close();
             }
             catch (GitException gite)
             {

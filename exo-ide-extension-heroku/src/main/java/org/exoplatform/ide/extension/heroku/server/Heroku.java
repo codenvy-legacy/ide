@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.heroku.server;
 
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
@@ -33,6 +32,7 @@ import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
@@ -444,16 +444,24 @@ public class Heroku
          String gitUrl = (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING);
          String webUrl = (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING);
 
-         if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
+         if (workDir != null)
          {
-            GitConnection git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+            GitConnection git = null;
             try
             {
+               git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+               if (!new File(workDir, ".git").exists())
+               {
+                  git.init(new InitRequest());
+               }
                git.remoteAdd(new RemoteAddRequest(remote, gitUrl));
             }
             finally
             {
-               git.close();
+               if (git != null)
+               {
+                  git.close();
+               }
             }
          }
 
@@ -1226,7 +1234,7 @@ public class Heroku
    private static String detectAppName(File workDir)
    {
       String app = null;
-      if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
+      if (workDir != null && new File(workDir, ".git").exists())
       {
          GitConnection git = null;
          List<Remote> remotes;
