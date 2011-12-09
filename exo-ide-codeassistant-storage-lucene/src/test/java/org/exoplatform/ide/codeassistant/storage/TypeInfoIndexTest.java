@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.index.IndexReader;
@@ -26,6 +26,9 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,21 +37,19 @@ import java.util.List;
 /**
  *
  */
-public class TypeInfoIndexTest extends TestCase
+public class TypeInfoIndexTest
 {
-   private final static String PATH_TO_JAR = "src/test/resources/test_jar";
+   private final static String PATH_TO_JAR = "src/test/resources/test.jar";
 
    private final static String PATH_TO_INDEX = "target/index";
 
-   private final static int CLASSES_IN_JAR = 6;
+   private final static int CLASSES_IN_JAR = 5;
 
-   private static TypeInfoIndexWriter writer;
+   private TypeInfoIndexWriter writer;
 
-   @Override
+   @Before
    public void setUp() throws Exception
    {
-      super.setUp();
-
       writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
 
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_JAR));
@@ -56,13 +57,13 @@ public class TypeInfoIndexTest extends TestCase
       writer.close();
    }
 
-   @Override
+   @After
    public void tearDown() throws Exception
    {
       FileUtils.deleteDirectory(new File(PATH_TO_INDEX));
-      super.tearDown();
    }
 
+   @Test
    public void testCreatedDocsCount() throws Exception
    {
       IndexReader reader = IndexReader.open(getDirectory(), true);

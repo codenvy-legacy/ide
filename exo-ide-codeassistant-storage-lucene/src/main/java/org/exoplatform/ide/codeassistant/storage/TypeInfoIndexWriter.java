@@ -97,6 +97,10 @@ public class TypeInfoIndexWriter
       }
    }
 
+   public void updateTypeInfo(TypeInfo typeInfo) throws SaveTypeInfoIndexException
+   {
+   }
+
    private Document createDocument(TypeInfo typeInfo) throws SaveTypeInfoIndexException
    {
       try

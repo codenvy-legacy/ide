@@ -18,15 +18,76 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.exoplatform.ide.codeassistant.asm.JarParser;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.List;
 
 /**
- *
+ * Test Searching in Lucene TypeInfo Storage
  */
-public class SearchTest extends TestCase
+public class SearchTest
 {
-   public void test()
+   private final static String PATH_TO_JAR = "src/test/resources/test.jar";
+
+   private final static String PATH_TO_INDEX = "target/index2";
+
+   private static LuceneCodeAssistantStorage storage;
+
+   @BeforeClass
+   public static void createIndex() throws Exception
    {
+      TypeInfoIndexWriter writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
+
+      List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_JAR));
+      writer.writeTypeInfo(typeInfos);
+      writer.close();
+
+      storage = new LuceneCodeAssistantStorage(PATH_TO_INDEX);
    }
 
+   @Ignore
+   @Test
+   public void testSearchByName() throws Exception
+   {
+      TypeInfo typeInfo = storage.getTypeByFqn("ATestClass");
+
+      assertEquals("test.classes.ATestClass", typeInfo.getName());
+      assertEquals("test.classes.ATestClass", typeInfo.getQualifiedName());
+      assertEquals(2, typeInfo.getFields().length);
+      assertEquals(1, typeInfo.getMethods().length);
+   }
+
+   @Test
+   public void testSearchByNamePrefix() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getTypesByNamePrefix("ATest");
+
+      assertEquals(2, typeInfos.size());
+
+      ShortTypeInfo info1 = typeInfos.get(0);
+      ShortTypeInfo info2 = typeInfos.get(1);
+      assertTrue(info1.getName().startsWith("ATest"));
+      assertTrue(info2.getName().startsWith("ATest"));
+   }
+
+   @Test
+   public void testSearchByFqnPrefix() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getTypesByFqnPrefix("test.");
+
+      assertEquals(5, typeInfos.size());
+      for (ShortTypeInfo shortTypeInfo : typeInfos)
+      {
+         assertTrue(shortTypeInfo.getQualifiedName().startsWith("test."));
+      }
+   }
 }
