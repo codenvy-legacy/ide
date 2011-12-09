@@ -76,8 +76,7 @@ public class HerokuControl extends SimpleControl implements IDEControl, ProjectC
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      // TODO Auto-generated method stub
-      boolean isHerokuProject = true;
+      boolean isHerokuProject = event.getProject().getPropertyValue("heroku-application") != null;
       setVisible(isHerokuProject);
       setEnabled(isHerokuProject);
    }

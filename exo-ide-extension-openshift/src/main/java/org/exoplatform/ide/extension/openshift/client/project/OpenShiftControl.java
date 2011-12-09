@@ -73,8 +73,7 @@ public class OpenShiftControl extends SimpleControl implements IDEControl, Proje
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      //TODO
-      boolean isOpenShiftProject = true;
+      boolean isOpenShiftProject = event.getProject().getPropertyValue("openshift-express-application") != null;
       setVisible(isOpenShiftProject);
       setEnabled(isOpenShiftProject);
    }
