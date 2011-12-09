@@ -25,7 +25,6 @@ import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -54,16 +53,15 @@ public class SearchTest
       storage = new LuceneCodeAssistantStorage(PATH_TO_INDEX);
    }
 
-   @Ignore
    @Test
    public void testSearchByName() throws Exception
    {
-      TypeInfo typeInfo = storage.getTypeByFqn("ATestClass");
+      TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass");
 
-      assertEquals("test.classes.ATestClass", typeInfo.getName());
+      assertEquals("ATestClass", typeInfo.getName());
       assertEquals("test.classes.ATestClass", typeInfo.getQualifiedName());
       assertEquals(2, typeInfo.getFields().length);
-      assertEquals(1, typeInfo.getMethods().length);
+      assertEquals(3, typeInfo.getMethods().length);
    }
 
    @Test
