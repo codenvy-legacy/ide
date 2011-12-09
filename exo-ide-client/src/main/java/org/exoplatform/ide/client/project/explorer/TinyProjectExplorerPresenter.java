@@ -756,7 +756,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       if (openedProject != null)
       {
-         if (openedProject.getId().equals(event.getProject().getId()))
+         if (openedProject.getId().equals(event.getProject().getId()) && openedProject.getName().equals(event.getProject().getName()))
          {
             return;
          }

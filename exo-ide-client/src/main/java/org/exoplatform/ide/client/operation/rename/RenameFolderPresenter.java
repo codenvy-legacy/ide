@@ -18,34 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.rename;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.shared.Item;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -58,6 +30,38 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter for renaming folders and files form.
@@ -195,37 +199,33 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
       return display.getNameField().getValue();
    }
 
-   private void updateOpenedFiles(FolderModel folder, String sourceHref)
+   private void updateOpenedFiles(Folder folder, String sourcePath)
    {
       //TODO
-      //      if (openedFiles == null || openedFiles.isEmpty())
-      //         return;
-      //
-      //      List<String> keys = new ArrayList<String>();
-      //      for (String key : openedFiles.keySet())
-      //      {
-      //         keys.add(key);
-      //      }
-      //
-      //      for (String key : keys)
-      //      {
-      //         if (key.startsWith(sourceHref))
-      //         {
-      //            File file = openedFiles.get(key);
-      //            String fileHref = file.getHref().replace(sourceHref, href);
-      //            file.setHref(fileHref);
-      //
-      //            openedFiles.remove(key);
-      //            openedFiles.put(fileHref, file);
-      //            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key), file));
-      //         }
-      //      }
+      if (openedFiles == null || openedFiles.isEmpty())
+         return;
+
+      for (FileModel file : openedFiles.values())
+      {
+         if (file.getPath().startsWith(sourcePath))
+         {
+            String fileHref = file.getPath().replace(sourcePath, folder.getPath());
+            file.setPath(fileHref);
+
+            IDE.fireEvent(new EditorReplaceFileEvent(file, file));
+         }
+      }
    }
 
    private void completeMove()
    {
-      FolderModel folder = (FolderModel)renamedItem;
-      IDE.fireEvent(new RefreshBrowserEvent(folder.getParent(), renamedItem));
+      if (renamedItem instanceof ProjectModel)
+      {
+         IDE.fireEvent(new OpenProjectEvent((ProjectModel)renamedItem));
+      }
+      else
+         IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)renamedItem).getParent(), renamedItem));
+
       closeView();
    }
 
@@ -245,8 +245,10 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
                @Override
                protected void onSuccess(ItemWrapper result)
                {
-                  item.setName(newName);
-                  itemMoved((FolderModel)item, item.getName());
+                  ItemContext ic = (ItemContext)result.getItem();
+                  ic.setParent(((ItemContext)item).getParent());
+                  ic.setProject(((ItemContext)item).getProject());
+                  itemMoved((Folder)result.getItem(), item.getPath());
                }
 
                @Override
@@ -270,12 +272,12 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
 
    /**
     * @param folder - moved item
-    * @param oldItemHref - href of old item
+    * @param oldItemPath - href of old item
     */
-   private void itemMoved(FolderModel folder, final String oldItemHref)
+   private void itemMoved(Folder folder, final String oldItemPath)
    {
       renamedItem = folder;
-      updateOpenedFiles(folder, oldItemHref);
+      updateOpenedFiles(folder, oldItemPath);
       completeMove();
    }
 
@@ -290,8 +292,9 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
          //throwing an exception is in RenameFilePresenter
          return;
       }
-      
-      if (selectedItems.get(0) instanceof FolderModel) {
+
+      if (selectedItems.get(0) instanceof Folder)
+      {
          openView();
       }
    }
