@@ -334,6 +334,12 @@ public interface IDEImageBundle extends ClientBundle
    
    @Source("bundled-images/projects/project-opened-disabled.png")
    ImageResource projectOpenedDisabled();
+   
+   @Source("bundled-images/projects/paas.png")
+   ImageResource paas();
+   
+   @Source("bundled-images/projects/paas_Disabled.png")
+   ImageResource paasDisabled();
 
    
    @Source("bundled-images/projects/project-closed.png")

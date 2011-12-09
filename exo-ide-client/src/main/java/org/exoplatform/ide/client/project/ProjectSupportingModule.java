@@ -61,6 +61,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
 
    public ProjectSupportingModule()
    {
+      IDE.getInstance().addControl(new ProjectPaaSControl());
       
       new CreateProjectFromTemplatePresenter();
       
