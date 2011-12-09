@@ -181,7 +181,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
                outputContent =
                   "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
                      + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
-                     + this.getResult().getPath() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+                     + this.getResult().getId() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
 
                IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
             }
