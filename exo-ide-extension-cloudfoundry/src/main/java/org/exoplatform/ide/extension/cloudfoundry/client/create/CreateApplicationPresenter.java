@@ -170,6 +170,11 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     * that convenient to send to server.
     */
    private AppData appData;
+   
+   /**
+    * 
+    */
+   private boolean isMavenProject;
 
    public CreateApplicationPresenter()
    {
@@ -399,7 +404,10 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             @Override
             protected void onSuccess(String result)
             {
-               buildApplication();
+               if (isMavenProject)
+                  buildApplication();
+               else
+                  createApplication(appData);
                closeView();
             }
          });
@@ -637,19 +645,22 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
+
                @Override
                protected void onSuccess(List<Item> result)
                {
+                  isMavenProject = false;
                   project.getChildren().setItems(result);
                   for (Item i : result)
                   {
                      if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
                      {
-                        getFrameworks();
+                        isMavenProject = true;
                         return;
                      }
                   }
-                  IDE.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(project.getName())));
+                  getFrameworks();
+//                  IDE.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(project.getName())));
                }
 
                @Override
