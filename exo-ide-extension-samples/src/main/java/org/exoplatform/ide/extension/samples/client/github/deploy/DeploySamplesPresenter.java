@@ -249,10 +249,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                display.setVisibleHerokuPanel(true);
                display.enableFinishButton(true);
             }
-            else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-            {
-               getOpenShiftTypes();
-            }
+//            else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
+//            {
+//               getOpenShiftTypes();
+//            }
             else
             {
                display.setVisibleCloudFoundryPanel(false);
@@ -668,10 +668,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   {
                      deployToHeroku();
                   }
-                  else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-                  {
-                     deployToOpenShift();
-                  }
+//                  else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
+//                  {
+//                     deployToOpenShift();
+//                  }
                   else
                   {
                      buildApplication(project);
@@ -899,11 +899,11 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          paas.add(ProjectProperties.Paas.HEROKU);
       }
 
-      //can be deployed to OpenShift
-      if ("Rails".equals(type))
-      {
-         paas.add(ProjectProperties.Paas.OPENSHIFT);
-      }
+//      //can be deployed to OpenShift
+//      if ("Rails".equals(type))
+//      {
+//         paas.add(ProjectProperties.Paas.OPENSHIFT);
+//      }
       return paas.toArray(new String[paas.size()]);
    }
 

@@ -625,11 +625,6 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       vfsInfo = event.getVfsInfo();
    }
    
-   private void getPaases()
-   {
-      IDE.getInstance().getPaases();
-   }
-
    /**
     * @see org.exoplatform.ide.client.framework.event.CreateNewProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event.CreateNewProjectEvent)
     */

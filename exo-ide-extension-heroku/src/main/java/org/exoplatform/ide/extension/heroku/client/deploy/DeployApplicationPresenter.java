@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.heroku.client.deploy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -40,9 +41,15 @@ import org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
+import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -206,7 +213,8 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    public void deploy(ProjectModel project)
    {
       this.project = project;
-      createApplication();
+      
+      checkIsGitRepository(project);
    }
 
    /**
@@ -226,6 +234,86 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    {
       IDE.removeHandler(LoggedInEvent.TYPE, this);
       createApplication();
+   }
+   
+   private void checkIsGitRepository(final ProjectModel project)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getChildren(
+            project,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  for (Item item : result)
+                  {
+                     if (".git".equals(item.getName()))
+                     {
+//                        beforeBuild();
+                        createApplication();
+                        return;
+                     }
+                  }
+                  initRepository(project.getId());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  initRepository(project.getId());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   /**
+    * Initialize Git repository.
+    * 
+    * @param path working directory of the repository
+    */
+   private void initRepository(final String projectId)
+   {
+      try
+      {
+         GitClientService.getInstance().init(vfs.getId(), projectId, false,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  createApplication();
+//                  showBuildMessage(GitExtension.MESSAGES.initSuccess());
+//                  IDE.fireEvent(new RefreshBrowserEvent());
+//                  createJob();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+                  String errorMessage =
+                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                        : GitExtension.MESSAGES.initFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         String errorMessage =
+            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
+               .initFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 
 }

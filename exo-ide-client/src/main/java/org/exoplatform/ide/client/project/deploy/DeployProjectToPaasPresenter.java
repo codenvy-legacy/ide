@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -71,7 +72,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
 
       void hidePaas();
    }
-   
+
    private Display display;
 
    private List<String> paases;
@@ -83,14 +84,14 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
    private String projectName;
 
    private String templateName;
-   
+
    private String projectType;
-   
+
    /**
     * Current paas;
     */
    private Paas paas;
-   
+
    private PaasCallback paasCallback = new PaasCallback()
    {
       @Override
@@ -123,7 +124,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       public void onDeploy(boolean result)
       {
          // TODO Auto-generated method stub
-         
+
       }
    };
 
@@ -186,10 +187,10 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
             }
          }
       });
-      
+
       display.getBackButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
@@ -216,17 +217,25 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
                new ProjectUnmarshaller(new ProjectModel()))
             {
                @Override
-               protected void onSuccess(ProjectModel result)
+               protected void onSuccess(final ProjectModel result)
                {
                   loader.hide();
                   if (paas != null)
                   {
-                     paas.deploy(result);
+                     //timer for allowing project to create fully
+                     new Timer()
+                     {
+                        @Override
+                        public void run()
+                        {
+                           paas.deploy(result);
+                        }
+                     }.schedule(2000);
                   }
-                  
+
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new ProjectCreatedEvent(result));
-                  
+
                }
 
                @Override
@@ -293,7 +302,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          {
             paases.add(paas.getName());
          }
-         
+
       }
       return paases;
    }
@@ -311,5 +320,5 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
    {
       vfsInfo = event.getVfsInfo();
    }
-   
+
 }
