@@ -41,6 +41,7 @@ public class ProjectMenuItemFormatter implements ControlsFormatter
       controlIdsOrder.add("Project/New...");
       controlIdsOrder.add("Project/Open...");
       controlIdsOrder.add("Project/Close");
+      controlIdsOrder.add("Project/PaaS");
    }
 
    /**

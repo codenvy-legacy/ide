@@ -119,8 +119,8 @@ import java.util.Map;
 public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
-   ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler,
-   CloseProjectHandler, AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler
+   ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, CloseProjectHandler,
+   AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler
 {
 
    public interface Display extends IsView
@@ -414,13 +414,43 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
             }
             else if (item instanceof Folder)
             {
+               refreshFolderProperties((Folder)item);
                foldersToRefresh.add((Folder)item);
             }
          }
       }
-
       display.setUpdateTreeValue(false);
       refreshNextFolder();
+   }
+
+   /**
+    * Refresh folder's properties.
+    * 
+    * @param folder
+    */
+   private void refreshFolderProperties(final Folder folder)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemById(folder.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+            {
+
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  folder.getProperties().clear();
+                  folder.getProperties().addAll(result.getItem().getProperties());
+               }
+
+               protected void onFailure(Throwable exception)
+               {
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+      }
    }
 
    private void refreshNextFolder()
@@ -806,7 +836,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          return;
       }
-      
+
       IDE.addHandler(AllFilesClosedEvent.TYPE, this);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
@@ -822,12 +852,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    public void onAllFilesClosed(AllFilesClosedEvent event)
    {
       IDE.removeHandler(AllFilesClosedEvent.TYPE, this);
-      
+
       if (openedProject == null)
       {
          return;
       }
-      
+
       final ProjectClosedEvent projectClosedEvent = new ProjectClosedEvent(openedProject);
       openedProject = null;
       if (display != null)
