@@ -116,7 +116,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
          public void onValueChange(ValueChangeEvent<String> event)
          {
             name = event.getValue();
-            display.getUrlField().setValue(name + "/" + domain);
+            display.getUrlField().setValue(domain + "/" + name);
          }
       });
 
@@ -126,7 +126,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
          public void onValueChange(ValueChangeEvent<String> event)
          {
             domain = display.getDomainsField().getValue();
-            display.getUrlField().setValue(name + "/" + domain);
+            display.getUrlField().setValue(domain + "/" + name);
          }
       });
 
@@ -180,7 +180,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
                domain = display.getDomainsField().getValue();
                display.getNameField().setValue(projectName);
                name = display.getNameField().getValue();
-               display.getUrlField().setValue(name + "/" + domain);
+               display.getUrlField().setValue(domain + "/" + name);
                paasCallback.onViewReceived(display.getView());
             }
          });
@@ -197,7 +197,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
          }
       };
 
-      CloudBeesClientService.getInstance().initializeApplication(name + "/" + domain, vfs.getId(), project.getId(),
+      CloudBeesClientService.getInstance().initializeApplication(domain + "/" + name, vfs.getId(), project.getId(),
          warUrl, null, new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), createAppHandler, null)
          {
 
