@@ -269,7 +269,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       try
       {
          String repository = getCurrentRepository();
-         ResourceId key = new NodeScriptKey(getCurrentRepository(), vfsid, path);
+         ResourceId key = new NodeScriptKey(getCurrentRepository(), vfsid, "/" + path + "/jcr:content");
          ObjectFactory<AbstractResourceDescriptor> resource = groovyPublisher.getResource(key);
          if (resource != null)
          {
