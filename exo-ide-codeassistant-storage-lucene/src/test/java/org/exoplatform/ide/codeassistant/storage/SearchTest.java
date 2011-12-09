@@ -47,7 +47,7 @@ public class SearchTest
       TypeInfoIndexWriter writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
 
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_JAR));
-      writer.writeTypeInfo(typeInfos);
+      writer.addTypeInfo(typeInfos);
       writer.close();
 
       storage = new LuceneCodeAssistantStorage(PATH_TO_INDEX);

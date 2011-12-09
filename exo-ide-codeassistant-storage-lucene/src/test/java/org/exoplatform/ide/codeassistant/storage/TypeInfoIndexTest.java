@@ -53,7 +53,7 @@ public class TypeInfoIndexTest
       writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
 
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_JAR));
-      writer.writeTypeInfo(typeInfos);
+      writer.addTypeInfo(typeInfos);
       writer.close();
    }
 

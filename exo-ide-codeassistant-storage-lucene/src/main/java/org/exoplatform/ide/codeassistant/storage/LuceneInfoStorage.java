@@ -109,7 +109,7 @@ public class LuceneInfoStorage implements Startable
       for (String jar : jars)
       {
          List<TypeInfo> typeInfos = JarParser.parse(new File(jar));
-         typeInfoIndexWriter.writeTypeInfo(typeInfos);
+         typeInfoIndexWriter.addTypeInfo(typeInfos);
       }
    }
 

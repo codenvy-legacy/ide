@@ -23,7 +23,7 @@ import org.junit.Test;
 /**
  *
  */
-public class WriteTest
+public class TestDescendTypeInfoExtractor
 {
    @Test
    public void test()

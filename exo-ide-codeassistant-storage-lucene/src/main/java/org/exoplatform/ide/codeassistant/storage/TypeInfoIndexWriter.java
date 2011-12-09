@@ -25,6 +25,7 @@ import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.everrest.core.impl.provider.json.JsonException;
@@ -72,15 +73,15 @@ public class TypeInfoIndexWriter
       }
    }
 
-   public void writeTypeInfo(List<TypeInfo> typeInfos) throws SaveTypeInfoIndexException
+   public void addTypeInfo(List<TypeInfo> typeInfos) throws SaveTypeInfoIndexException
    {
       for (TypeInfo typeInfo : typeInfos)
       {
-         writeTypeInfo(typeInfo);
+         addTypeInfo(typeInfo);
       }
    }
 
-   public void writeTypeInfo(TypeInfo typeInfo) throws SaveTypeInfoIndexException
+   public void addTypeInfo(TypeInfo typeInfo) throws SaveTypeInfoIndexException
    {
       try
       {
@@ -99,6 +100,19 @@ public class TypeInfoIndexWriter
 
    public void updateTypeInfo(TypeInfo typeInfo) throws SaveTypeInfoIndexException
    {
+      try
+      {
+         Document newTypeInfoDocument = createDocument(typeInfo);
+         writer.updateDocument(new Term(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName()), newTypeInfoDocument);
+      }
+      catch (CorruptIndexException e)
+      {
+         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
+      }
+      catch (IOException e)
+      {
+         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
+      }
    }
 
    private Document createDocument(TypeInfo typeInfo) throws SaveTypeInfoIndexException
