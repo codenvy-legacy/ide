@@ -23,9 +23,12 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -64,16 +67,23 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypeByFqn(java.lang.String)
+    * ${inherited doc}
     */
    @Override
    public TypeInfo getTypeByFqn(String fqn) throws CodeAssistantException
    {
       try
       {
-         Document document = searchByTerm(TypeInfoIndexFields.FQN, fqn);
-         byte[] jsonField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
-         return createTypeInfo(jsonField);
+         Document document = searchDocumentByTerm(TypeInfoIndexFields.FQN, fqn);
+         if (document != null)
+         {
+            byte[] jsonField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
+            return createTypeInfoObject(jsonField);
+         }
+         else
+         {
+            return null;
+         }
       }
       catch (CorruptIndexException e)
       {
@@ -90,13 +100,10 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
          LOG.error("Error during transforming stored in index binary field into TypeInfo object", e);
          throw new CodeAssistantException(404, "");
       }
-
-      //         IndexSearcher searcher = new IndexSearcher(dir, true);
-      //         searcher.search(new TermQuery(new Term("fld_fqn", "org.exo..")), results);
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypesByNamePrefix(java.lang.String)
+    * ${inherited doc}
     */
    @Override
    public List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix) throws CodeAssistantException
@@ -105,7 +112,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypesByFqnPrefix(java.lang.String)
+    * ${inherited doc}
     */
    @Override
    public List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix) throws CodeAssistantException
@@ -114,34 +121,34 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getAnnotations(java.lang.String)
+    * ${inherited doc}
     */
    @Override
    public List<ShortTypeInfo> getAnnotations(String prefix) throws CodeAssistantException
    {
-      return findByType(JavaType.ANNOTATION, prefix);
+      return searchJavaTypesByPrefix(JavaType.ANNOTATION, prefix);
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getIntefaces(java.lang.String)
+    * ${inherited doc}
     */
    @Override
    public List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException
    {
-      return findByType(JavaType.INTERFACE, prefix);
+      return searchJavaTypesByPrefix(JavaType.INTERFACE, prefix);
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getClasses(java.lang.String)
+    * ${inherited doc}
     */
    @Override
    public List<ShortTypeInfo> getClasses(String prefix) throws CodeAssistantException
    {
-      return findByType(JavaType.CLASS, prefix);
+      return searchJavaTypesByPrefix(JavaType.CLASS, prefix);
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getClassJavaDoc(java.lang.String)
+    * ${inherited doc}
     */
    @Override
    public String getClassJavaDoc(String fqn) throws CodeAssistantException
@@ -150,7 +157,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getMemberJavaDoc(java.lang.String)
+    * ${inherited doc}
     */
    @Override
    public String getMemberJavaDoc(String fqn) throws CodeAssistantException
@@ -162,17 +169,16 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    {
       try
       {
-         List<Document> documents = searchByPrefix(field, prefix);
-
+         List<Document> documents = searchDocumentsByFieldPrefix(field, prefix);
          if (documents.size() == 0)
          {
             return Collections.EMPTY_LIST;
          }
 
-         List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
+         List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>(documents.size());
          for (Document document : documents)
          {
-            result.add(createShortTypeInfo(document));
+            result.add(createShortTypeInfoObject(document));
          }
          return result;
       }
@@ -183,19 +189,87 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
       }
    }
 
-   protected List<ShortTypeInfo> findByType(JavaType type, String prefix)
+   protected List<ShortTypeInfo> searchJavaTypesByPrefix(JavaType type, String prefix) throws CodeAssistantException
    {
-      return null;
+      try
+      {
+         List<Document> documents = searchDocumentsByType(type, prefix);
+         if (documents.size() == 0)
+         {
+            return Collections.EMPTY_LIST;
+         }
+
+         List<ShortTypeInfo> shortTypeInfos = new ArrayList<ShortTypeInfo>(documents.size());
+         for (Document document : documents)
+         {
+            shortTypeInfos.add(createShortTypeInfoObject(document));
+         }
+         return shortTypeInfos;
+      }
+      catch (IOException e)
+      {
+         LOG.error("Error during searching Type by class name prefix", e);
+         throw new CodeAssistantException(404, "");
+      }
    }
 
-   protected Document searchByTerm(String fieldName, String value) throws CorruptIndexException, IOException
+   protected List<Document> searchDocumentsByType(JavaType type, String prefix) throws IOException
+   {
+      IndexSearcher searcher = null;
+      Directory directory = null;
+      try
+      {
+         directory = getDirectory();
+         searcher = new IndexSearcher(directory, true);
+
+         TopDocs topDocs = null;
+         TermQuery termQuery = new TermQuery(new Term(TypeInfoIndexFields.ENTITY_TYPE, type.toString()));
+         if (prefix != null && !prefix.isEmpty())
+         {
+            PrefixQuery prefixQuery = new PrefixQuery(new Term(TypeInfoIndexFields.CLASS_NAME, prefix));
+
+            BooleanQuery booleanQuery = new BooleanQuery();
+            booleanQuery.add(prefixQuery, BooleanClause.Occur.MUST);
+            booleanQuery.add(termQuery, BooleanClause.Occur.MUST);
+
+            topDocs = searcher.search(booleanQuery, Integer.MAX_VALUE);
+         }
+         else
+         {
+            topDocs = searcher.search(termQuery, Integer.MAX_VALUE);
+         }
+
+         if (topDocs.totalHits == 0)
+         {
+            return Collections.EMPTY_LIST;
+         }
+
+         List<Document> result = new ArrayList<Document>();
+         for (ScoreDoc scoreDoc : topDocs.scoreDocs)
+         {
+            result.add(searcher.doc(scoreDoc.doc));
+         }
+         searcher.close();
+
+         return result;
+      }
+      finally
+      {
+         closeDirectory(directory);
+         if (searcher != null)
+         {
+            searcher.close();
+         }
+      }
+   }
+
+   protected Document searchDocumentByTerm(String fieldName, String value) throws CorruptIndexException, IOException
    {
       IndexReader reader = null;
       Directory directory = null;
       try
       {
          directory = getDirectory();
-
          reader = IndexReader.open(directory, true);
          TermDocs termDocs = reader.termDocs(new Term(fieldName, value));
 
@@ -222,7 +296,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
       }
    }
 
-   protected List<Document> searchByPrefix(String fieldName, String prefix) throws IOException
+   protected List<Document> searchDocumentsByFieldPrefix(String fieldName, String prefix) throws IOException
    {
       IndexSearcher searcher = null;
       Directory directory = null;
@@ -251,17 +325,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
       }
    }
 
-   protected Directory getDirectory() throws IOException
-   {
-      return FSDirectory.open(new File(indexDirPath));
-   }
-
-   protected void closeDirectory(Directory directory) throws IOException
-   {
-      directory.close();
-   }
-
-   protected ShortTypeInfo createShortTypeInfo(Document document)
+   protected ShortTypeInfo createShortTypeInfoObject(Document document)
    {
       int modifier = Integer.valueOf(document.get(TypeInfoIndexFields.MODIFIERS));
       ShortTypeInfo shortTypeInfo =
@@ -270,7 +334,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
       return shortTypeInfo;
    }
 
-   protected TypeInfo createTypeInfo(byte[] data) throws JsonException
+   protected TypeInfo createTypeInfoObject(byte[] data) throws JsonException
    {
       InputStream io = null;
       try
@@ -298,5 +362,15 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
             }
          }
       }
+   }
+
+   protected Directory getDirectory() throws IOException
+   {
+      return FSDirectory.open(new File(indexDirPath));
+   }
+
+   protected void closeDirectory(Directory directory) throws IOException
+   {
+      directory.close();
    }
 }

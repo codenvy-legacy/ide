@@ -43,7 +43,7 @@ public class TypeInfoIndexTest
 
    private final static String PATH_TO_INDEX = "target/index";
 
-   private final static int CLASSES_IN_JAR = 5;
+   private final static int CLASSES_IN_JAR = 8;
 
    private TypeInfoIndexWriter writer;
 

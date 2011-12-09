@@ -54,7 +54,7 @@ public class SearchTest
    }
 
    @Test
-   public void testSearchByName() throws Exception
+   public void testSearchTypeInfoByName() throws Exception
    {
       TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass");
 
@@ -62,6 +62,7 @@ public class SearchTest
       assertEquals("test.classes.ATestClass", typeInfo.getQualifiedName());
       assertEquals(2, typeInfo.getFields().length);
       assertEquals(3, typeInfo.getMethods().length);
+      assertEquals("java.lang.Object", typeInfo.getSuperClass());
    }
 
    @Test
@@ -80,12 +81,79 @@ public class SearchTest
    @Test
    public void testSearchByFqnPrefix() throws Exception
    {
-      List<ShortTypeInfo> typeInfos = storage.getTypesByFqnPrefix("test.");
+      List<ShortTypeInfo> typeInfos = storage.getTypesByFqnPrefix("test.classes");
 
-      assertEquals(5, typeInfos.size());
+      assertEquals(3, typeInfos.size());
       for (ShortTypeInfo shortTypeInfo : typeInfos)
       {
-         assertTrue(shortTypeInfo.getQualifiedName().startsWith("test."));
+         assertTrue(shortTypeInfo.getQualifiedName().startsWith("test.classes"));
       }
+   }
+
+   @Test
+   public void testSearchAllAnnotations() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getAnnotations("");
+
+      assertEquals(2, typeInfos.size());
+   }
+
+   @Test
+   public void testSearchAnnotationsStartsWithC() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getAnnotations("C");
+
+      assertEquals(1, typeInfos.size());
+   }
+
+   @Test
+   public void testSearchClassesStartsWithA() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getClasses("A");
+
+      assertEquals(2, typeInfos.size());
+
+      ShortTypeInfo info1 = typeInfos.get(0);
+      assertTrue(info1.getName().startsWith("A"));
+      assertEquals(info1.getType(), "CLASS");
+
+      ShortTypeInfo info2 = typeInfos.get(1);
+      assertTrue(info2.getName().startsWith("A"));
+      assertEquals(info2.getType(), "CLASS");
+   }
+
+   @Test
+   public void testSearchClassesStartsWithB() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getClasses("B");
+
+      assertEquals(1, typeInfos.size());
+
+      ShortTypeInfo info = typeInfos.get(0);
+      assertTrue(info.getName().startsWith("B"));
+   }
+
+   @Test
+   public void testSearchAllInterfaces() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getIntefaces("");
+
+      assertEquals(3, typeInfos.size());
+   }
+
+   @Test
+   public void testSearchUnexistanceClasses() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getClasses("W");
+
+      assertEquals(0, typeInfos.size());
+   }
+
+   @Test
+   public void testSearchUnexistanceClasses2() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getTypesByFqnPrefix("exo");
+
+      assertEquals(0, typeInfos.size());
    }
 }
