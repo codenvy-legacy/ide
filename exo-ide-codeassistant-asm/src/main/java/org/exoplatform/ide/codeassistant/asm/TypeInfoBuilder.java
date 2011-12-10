@@ -101,7 +101,7 @@ public class TypeInfoBuilder
       }
       else
       {
-         this.superName = null;
+         this.superName = "";
       }
 
       this.interfaces = interfaces;
