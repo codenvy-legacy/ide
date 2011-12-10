@@ -27,7 +27,8 @@ import org.apache.lucene.store.FSDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,22 +38,23 @@ import java.util.List;
 /**
  *
  */
-public class TypeInfoIndexTest
+@Ignore
+public class TypeInfoIndexTest extends BaseTest
 {
-   private final static String PATH_TO_JAR = "src/test/resources/test.jar";
-
    private final static String PATH_TO_INDEX = "target/index";
 
-   private final static int CLASSES_IN_JAR = 8;
+   private final static int CLASSES_IN_JAR = 9;
 
-   private TypeInfoIndexWriter writer;
+   private static TypeInfoIndexWriter writer;
 
-   @Before
-   public void setUp() throws Exception
+   @BeforeClass
+   public static void setUp() throws Exception
    {
+      String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
+
       writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
 
-      List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_JAR));
+      List<TypeInfo> typeInfos = JarParser.parse(new File(pathToJar));
       writer.addTypeInfo(typeInfos);
       writer.close();
    }

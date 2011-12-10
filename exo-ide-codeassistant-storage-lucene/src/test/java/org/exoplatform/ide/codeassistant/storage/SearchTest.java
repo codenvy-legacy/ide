@@ -25,6 +25,7 @@ import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -33,10 +34,9 @@ import java.util.List;
 /**
  * Test Searching in Lucene TypeInfo Storage
  */
-public class SearchTest
+@Ignore
+public class SearchTest extends BaseTest
 {
-   private final static String PATH_TO_JAR = "src/test/resources/test.jar";
-
    private final static String PATH_TO_INDEX = "target/index2";
 
    private static LuceneCodeAssistantStorage storage;
@@ -44,9 +44,11 @@ public class SearchTest
    @BeforeClass
    public static void createIndex() throws Exception
    {
+      String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
+
       TypeInfoIndexWriter writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
 
-      List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_JAR));
+      List<TypeInfo> typeInfos = JarParser.parse(new File(pathToJar));
       writer.addTypeInfo(typeInfos);
       writer.close();
 

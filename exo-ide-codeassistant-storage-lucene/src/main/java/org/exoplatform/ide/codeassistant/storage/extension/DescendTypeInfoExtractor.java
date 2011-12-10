@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage;
+package org.exoplatform.ide.codeassistant.storage.extension;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -26,6 +26,8 @@ import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.Member;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.LuceneCodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.storage.TypeInfoIndexFields;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
