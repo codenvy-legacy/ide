@@ -22,7 +22,7 @@ import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 @Ignore
@@ -62,7 +62,7 @@ public class DeclaredTypeInfoResolverTest
       TypeInfo testClass = storage.getTypeByFqn("java.lang.Integer");
       testClass = resolver.resolveTypeInfo(testClass);
       System.out.println(testClass.getDeclaredMethods().length);
-      for (MethodInfo method : testClass.getDeclaredMethods())
+      for (RoutineInfo method : testClass.getDeclaredConstructors())
       {
          System.out.println(method.getGeneric());
       }
@@ -71,14 +71,14 @@ public class DeclaredTypeInfoResolverTest
       System.out.println();
       TypeInfo reflectMap = TypeInfoExtractor.extract(Integer.class);
       System.out.println(reflectMap.getDeclaredMethods().length);
-      for (MethodInfo method : reflectMap.getDeclaredMethods())
+      for (RoutineInfo method : reflectMap.getDeclaredConstructors())
       {
          System.out.println(method.getGeneric());
       }
 
       System.out.println();
       System.out.println();
-      for (Method method : Integer.class.getDeclaredMethods())
+      for (Constructor method : Integer.class.getDeclaredConstructors())
       {
          System.out.println(method.getName());
       }

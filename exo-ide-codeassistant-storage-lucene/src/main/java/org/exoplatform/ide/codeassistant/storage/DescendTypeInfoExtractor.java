@@ -23,19 +23,19 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.Member;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- *
+ * 
  */
 public class DescendTypeInfoExtractor extends LuceneCodeAssistantStorage
 {
@@ -49,7 +49,8 @@ public class DescendTypeInfoExtractor extends LuceneCodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * Get TypeInfo object which will also contain all inherited methods and
+    * fields
     */
    @Override
    public TypeInfo getTypeByFqn(String fqn) throws CodeAssistantException
@@ -62,12 +63,22 @@ public class DescendTypeInfoExtractor extends LuceneCodeAssistantStorage
             byte[] jsonField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
             TypeInfo typeInfo = createTypeInfoObject(jsonField);
 
+            // try to extract all inherited methods and fields
             String superTypeFqn = typeInfo.getSuperClass();
             if (!isEndOfTree(superTypeFqn))
             {
-               List<MethodInfo> declaredMethods = new ArrayList<MethodInfo>();
-               List<RoutineInfo> declaredConstructors = new ArrayList<RoutineInfo>();
-               List<FieldInfo> declaredFields = new ArrayList<FieldInfo>();
+               Map<String, MethodInfo> typeMethods = new HashMap<String, MethodInfo>();
+               Map<String, FieldInfo> typeFields = new HashMap<String, FieldInfo>();
+
+               for (MethodInfo methodInfo : typeInfo.getMethods())
+               {
+                  typeMethods.put(methodInfo.getGeneric(), methodInfo);
+               }
+
+               for (FieldInfo fieldInfo : typeInfo.getFields())
+               {
+                  typeFields.put(fieldInfo.getName(), fieldInfo);
+               }
 
                while (!isEndOfTree(superTypeFqn))
                {
@@ -78,10 +89,24 @@ public class DescendTypeInfoExtractor extends LuceneCodeAssistantStorage
                      byte[] superClassJsonField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
                      TypeInfo supperClassTypeInfo = createTypeInfoObject(superClassJsonField);
 
-                     // TODO: add only available for this class methods
-                     declaredConstructors.addAll(Arrays.asList(supperClassTypeInfo.getConstructors()));
-                     declaredMethods.addAll(Arrays.asList(supperClassTypeInfo.getMethods()));
-                     declaredFields.addAll(Arrays.asList(supperClassTypeInfo.getFields()));
+                     // add only available for this class methods and fields
+                     for (MethodInfo methodInfo : supperClassTypeInfo.getMethods())
+                     {
+                        if (!typeMethods.containsKey(methodInfo.getGeneric())
+                           && isAvailableMember(typeInfo, methodInfo, supperClassTypeInfo))
+                        {
+                           typeMethods.put(methodInfo.getGeneric(), methodInfo);
+                        }
+                     }
+
+                     for (FieldInfo fieldInfo : supperClassTypeInfo.getFields())
+                     {
+                        if (!typeMethods.containsKey(fieldInfo.getName())
+                           && isAvailableMember(typeInfo, fieldInfo, supperClassTypeInfo))
+                        {
+                           typeFields.put(fieldInfo.getName(), fieldInfo);
+                        }
+                     }
 
                      superTypeFqn = supperClassTypeInfo.getSuperClass();
                   }
@@ -91,9 +116,8 @@ public class DescendTypeInfoExtractor extends LuceneCodeAssistantStorage
                   }
                }
 
-               typeInfo.setDeclaredConstructors((RoutineInfo[])declaredConstructors.toArray());
-               typeInfo.setDeclaredMethods((MethodInfo[])declaredMethods.toArray());
-               typeInfo.setDeclaredFields((FieldInfo[])declaredFields.toArray());
+               typeInfo.setDeclaredMethods((MethodInfo[])typeMethods.values().toArray());
+               typeInfo.setDeclaredFields((FieldInfo[])typeFields.values().toArray());
             }
             return typeInfo;
          }
@@ -122,5 +146,37 @@ public class DescendTypeInfoExtractor extends LuceneCodeAssistantStorage
    private boolean isEndOfTree(String fqn)
    {
       return fqn.equals(OBJECT_TYPE_FQN) || fqn.isEmpty();
+   }
+
+   private boolean isAvailableMember(TypeInfo superTypeInfo, Member member, TypeInfo typeInfo)
+   {
+      // is method private?
+      if ((member.getModifiers() & Modifier.PRIVATE) == 0)
+      {
+         return false;
+      }
+
+      // if method protected check availability through packages
+      if ((member.getModifiers() & Modifier.PROTECTED) == 0)
+      {
+         String superTypePackage = getPackageName(superTypeInfo.getName(), superTypeInfo.getQualifiedName());
+         String typePackage = getPackageName(typeInfo.getName(), typeInfo.getQualifiedName());
+         if (superTypePackage.equals(typePackage))
+         {
+            return true;
+         }
+         else
+         {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   private String getPackageName(String className, String fqn)
+   {
+      String packageName = fqn.substring(fqn.length() - className.length(), fqn.length());
+      return packageName;
    }
 }

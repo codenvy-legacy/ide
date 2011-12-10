@@ -57,7 +57,7 @@ import java.util.List;
  */
 public class LuceneCodeAssistantStorage implements CodeAssistantStorage
 {
-   private static final Log LOG = ExoLogger.getLogger(LuceneCodeAssistantStorage.class.getName());
+   private static final Log LOG = ExoLogger.getLogger(LuceneCodeAssistantStorage.class);
 
    private final String indexDirPath;
 

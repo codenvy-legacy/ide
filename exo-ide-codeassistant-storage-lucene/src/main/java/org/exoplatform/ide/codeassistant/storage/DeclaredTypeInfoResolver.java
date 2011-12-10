@@ -298,7 +298,7 @@ public class DeclaredTypeInfoResolver
       declaredInfo.addDeclaredFields(typeInfo.getFields(), DeclaredInfo.ALL_ALLOWED);
       declaredInfo.addDeclaredConstructors(typeInfo.getConstructors(), DeclaredInfo.ALL_ALLOWED);
       declaredInfo.addDeclaredMethods(typeInfo.getMethods(), DeclaredInfo.ALL_ALLOWED);
-      if (typeInfo.getSuperClass() != null)
+      if (!typeInfo.getSuperClass().isEmpty())
       {
          DeclaredInfo superInfo = getDeclaredInfoByTypeInfo(storage.getTypeByFqn(typeInfo.getSuperClass()));
          declaredInfo.addDeclaredFields(superInfo.getDeclaredFields(), DeclaredInfo.EXCEPT_PRIVATE);

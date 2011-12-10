@@ -23,6 +23,8 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
 import java.io.File;
@@ -36,6 +38,8 @@ import java.util.List;
  */
 public class LuceneInfoStorage implements Startable
 {
+   private static final Log LOG = ExoLogger.getLogger(LuceneInfoStorage.class);
+
    private static final String JARS_PARAM_NAME = "jars";
 
    private static final String STORAGE_PATH_NAME = "storage-path";
@@ -82,7 +86,6 @@ public class LuceneInfoStorage implements Startable
       {
          typeInfoIndexWriter = new TypeInfoIndexWriter(storagePath);
          extractJars();
-         typeInfoIndexWriter.close();
       }
       catch (SaveTypeInfoIndexException e)
       {
@@ -91,6 +94,17 @@ public class LuceneInfoStorage implements Startable
       catch (IOException e)
       {
          throw new RuntimeException(e);
+      }
+      finally
+      {
+         try
+         {
+            typeInfoIndexWriter.close();
+         }
+         catch (SaveTypeInfoIndexException e)
+         {
+            LOG.error(e);
+         }
       }
 
    }
