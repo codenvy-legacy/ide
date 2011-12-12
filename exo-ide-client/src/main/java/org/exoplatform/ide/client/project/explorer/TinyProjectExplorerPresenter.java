@@ -414,7 +414,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
             }
             else if (item instanceof Folder)
             {
-               refreshFolderProperties((Folder)item);
                foldersToRefresh.add((Folder)item);
             }
          }
@@ -467,6 +466,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       final Folder folder = foldersToRefresh.get(0);
+      refreshFolderProperties(folder);
       try
       {
          VirtualFileSystem.getInstance().getChildren(folder,
