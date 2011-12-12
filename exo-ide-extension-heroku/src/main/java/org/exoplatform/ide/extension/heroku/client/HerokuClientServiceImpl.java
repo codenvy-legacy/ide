@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
@@ -67,11 +66,6 @@ public class HerokuClientServiceImpl extends HerokuClientService
    private static final String STACK_MIGRATE = "/ide/heroku/apps/stack-migrate";
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * REST service context.
     */
    private String restServiceContext;
@@ -82,14 +76,12 @@ public class HerokuClientServiceImpl extends HerokuClientService
    private Loader loader;
 
    /**
-    * @param eventBus eventBus
     * @param restContext rest context
     * @param loader loader to show on server request
     */
-   public HerokuClientServiceImpl(HandlerManager eventBus, String restContext, Loader loader)
+   public HerokuClientServiceImpl(String restContext, Loader loader)
    {
       this.loader = loader;
-      this.eventBus = eventBus;
       this.restServiceContext = restContext;
    }
 
@@ -106,9 +98,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       credentials.put(Constants.EMAIL, login);
       credentials.put(Constants.PASSWORD, password);
       CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
-
-      callback.setEventBus(eventBus);
-
+      
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
@@ -118,8 +108,6 @@ public class HerokuClientServiceImpl extends HerokuClientService
    public void logout(AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + LOGOUT_PATH;
-      callback.setEventBus(eventBus);
-
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 

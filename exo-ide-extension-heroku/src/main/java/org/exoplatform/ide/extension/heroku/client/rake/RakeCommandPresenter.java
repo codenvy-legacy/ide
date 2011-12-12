@@ -220,7 +220,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       try
       {
          HerokuClientService.getInstance().run(null, vfs.getId(), projectId, command,
-            new RakeCommandAsyncRequestCallback(IDE.eventBus(), this)
+            new RakeCommandAsyncRequestCallback(this)
             {
                @Override
                protected void onSuccess(RakeCommandResult result)
@@ -246,7 +246,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       try
       {
          HerokuClientService.getInstance().help(null, vfs.getId(), projectId,
-            new RakeCommandAsyncRequestCallback(IDE.eventBus(), this)
+            new RakeCommandAsyncRequestCallback(this)
             {
                @Override
                protected void onSuccess(RakeCommandResult result)

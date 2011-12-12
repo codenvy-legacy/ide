@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
@@ -44,11 +42,6 @@ import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
 public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallback<RakeCommandResult>
 {
    /**
-    * Events handler.
-    */
-   private HandlerManager eventbus;
-
-   /**
     * Handler of the {@link LoggedInEvent}.
     */
    private LoggedInHandler loggedInHandler;
@@ -57,12 +50,10 @@ public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallba
     * @param eventBus event handlers manager
     * @param handler handler of the {@link LoggedInEvent}
     */
-   public RakeCommandAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
+   public RakeCommandAsyncRequestCallback(LoggedInHandler handler)
    {
       super(new RakeResultUnmarshaller(new RakeCommandResult()));
-      this.eventbus = eventBus;
       this.loggedInHandler = handler;
-      setEventBus(eventBus);
    }
 
    /**
@@ -77,8 +68,8 @@ public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallba
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required"))
          {
-            eventbus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
-            eventbus.fireEvent(new LoginEvent());
+            IDE.addHandler(LoggedInEvent.TYPE, loggedInHandler);
+            IDE.fireEvent(new LoginEvent());
             return;
          }
       }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
@@ -44,11 +42,6 @@ import java.util.List;
 public abstract class StackListAsyncRequestCallback extends AsyncRequestCallback<List<Stack>>
 {
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Handler of the {@link LoggedInEvent}.
     */
    private LoggedInHandler loggedInHandler;
@@ -57,13 +50,12 @@ public abstract class StackListAsyncRequestCallback extends AsyncRequestCallback
     * @param eventBus event handlers manager
     * @param handler handler of the {@link LoggedInEvent}
     */
-   public StackListAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedInHandler)
+   public StackListAsyncRequestCallback(LoggedInHandler loggedInHandler)
    {
       super(new StackListUnmarshaller(new ArrayList<Stack>()));
-      this.eventBus = eventBus;
       this.loggedInHandler = loggedInHandler;
    }
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
@@ -76,8 +68,8 @@ public abstract class StackListAsyncRequestCallback extends AsyncRequestCallback
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required"))
          {
-            eventBus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
-            eventBus.fireEvent(new LoginEvent());
+            IDE.addHandler(LoggedInEvent.TYPE, loggedInHandler);
+            IDE.fireEvent(new LoginEvent());
             return;
          }
       }

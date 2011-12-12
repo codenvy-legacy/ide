@@ -148,7 +148,7 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       try
       {
          HerokuClientService.getInstance().getStackList(null, vfs.getId(), projectId,
-            new StackListAsyncRequestCallback(IDE.eventBus(), this)
+            new StackListAsyncRequestCallback(this)
             {
                @Override
                protected void onSuccess(List<Stack> result)
@@ -195,7 +195,7 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       try
       {
          HerokuClientService.getInstance().migrateStack(null, vfs.getId(), projectId, stack.getName(),
-            new StackMigrationAsyncRequestCallback(IDE.eventBus(), this)
+            new StackMigrationAsyncRequestCallback(this)
             {
 
                @Override

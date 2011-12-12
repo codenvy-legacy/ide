@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
@@ -41,11 +39,6 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationUnma
 public abstract class StackMigrationAsyncRequestCallback extends AsyncRequestCallback<StackMigrationResponse>
 {
    /**
-    * Events handler.
-    */
-   private HandlerManager eventbus;
-
-   /**
     * Handler of the {@link LoggedInEvent}.
     */
    private LoggedInHandler loggedInHandler;
@@ -54,12 +47,10 @@ public abstract class StackMigrationAsyncRequestCallback extends AsyncRequestCal
     * @param eventBus event handlers manager
     * @param handler handler of the {@link LoggedInEvent}
     */
-   public StackMigrationAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
+   public StackMigrationAsyncRequestCallback(LoggedInHandler handler)
    {
       super(new StackMigrationUnmarshaller(new StackMigrationResponse()));
-      this.eventbus = eventBus;
       this.loggedInHandler = handler;
-      setEventBus(eventBus);
    }
 
    /**
@@ -74,8 +65,8 @@ public abstract class StackMigrationAsyncRequestCallback extends AsyncRequestCal
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required"))
          {
-            eventbus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
-            eventbus.fireEvent(new LoginEvent());
+            IDE.addHandler(LoggedInEvent.TYPE, loggedInHandler);
+            IDE.fireEvent(new LoginEvent());
             return;
          }
       }

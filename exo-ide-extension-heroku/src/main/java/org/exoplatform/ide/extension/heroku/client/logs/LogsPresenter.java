@@ -159,7 +159,7 @@ public class LogsPresenter extends GitPresenter implements ShowLogsHandler, Logg
       try
       {
          HerokuClientService.getInstance().logs(null, vfs.getId(), projectId, logLines,
-            new LogsAsyncRequestCallback(IDE.eventBus(), this)
+            new LogsAsyncRequestCallback(this)
             {
                @Override
                protected void onSuccess(LogsResponse result)
