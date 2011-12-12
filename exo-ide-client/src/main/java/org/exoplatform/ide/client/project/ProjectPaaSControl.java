@@ -22,17 +22,21 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 8, 2011 2:12:50 PM anya $
  *
  */
-public class ProjectPaaSControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
+public class ProjectPaaSControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
+   ProjectClosedHandler, FolderRefreshedHandler
 {
    public static final String ID = "Project/PaaS";
 
@@ -59,6 +63,7 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
 
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
    }
 
    /**
@@ -76,6 +81,34 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      setEnabled(true);
+      boolean enabled = isDeployed(event.getProject());
+      setEnabled(enabled);
+   }
+
+   /**
+    * Check project is deployed to one of the PaaS.
+    * 
+    * @param project project
+    * @return {@link Boolean} <code>true</code> if deployed to one of the PaaS
+    */
+   private boolean isDeployed(ProjectModel project)
+   {
+      return project.getPropertyValue("cloudbees-application") != null
+         || project.getPropertyValue("heroku-application") != null
+         || project.getPropertyValue("openshift-express-application") != null
+         || project.getPropertyValue("cloudfoundry-application") != null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
+    */
+   @Override
+   public void onFolderRefreshed(FolderRefreshedEvent event)
+   {
+      if (event.getFolder() instanceof ProjectModel)
+      {
+         boolean enabled = isDeployed((ProjectModel)event.getFolder());
+         setEnabled(enabled);
+      }
    }
 }
