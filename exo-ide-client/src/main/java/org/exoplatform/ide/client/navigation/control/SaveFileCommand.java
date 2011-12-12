@@ -48,8 +48,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   EditorFileContentChangedHandler, FileSavedHandler, VfsChangedHandler,
-   ApplicationSettingsReceivedHandler
+   EditorFileContentChangedHandler, FileSavedHandler, VfsChangedHandler, ApplicationSettingsReceivedHandler
 {
 
    /**
@@ -156,7 +155,6 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       }
    }
 
-
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent)
     */
@@ -200,19 +198,10 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    @Override
    public void onFileSaved(FileSavedEvent event)
    {
-      if (event.getFile() != activeFile)
+      if (event.getFile().getId().equals(activeFile.getId()))
       {
-         return;
+         setEnabled(false);
       }
-      //TODO
-      //      if (event.getFile().isPropertiesChanged())
-      //      {
-      //         setEnabled(true);
-      //      }
-      //      else
-      //      {
-      setEnabled(false);
-      //      }
    }
 
 }
