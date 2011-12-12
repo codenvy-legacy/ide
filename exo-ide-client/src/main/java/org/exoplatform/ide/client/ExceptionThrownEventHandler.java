@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerDisconnectedException;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -66,14 +68,16 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
    {
       showErrors = event.isEnable();
    }
-   
-   private void handleEvent(ExceptionThrownEvent event) {
+
+   private void handleEvent(ExceptionThrownEvent event)
+   {
       Log.info("IDEExceptionThrownEventHandler.IDEExceptionThrownEventHandler()");
-      
+
       Throwable error = event.getException();
       Log.info(event.getErrorMessage());
-      
-      if (error instanceof UnauthorizedException) {
+
+      if (error instanceof UnauthorizedException)
+      {
          return;
       }
 
@@ -109,13 +113,13 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
             Dialogs.getInstance().showError(error.getMessage());
          else
             Dialogs.getInstance().showError(event.getErrorMessage());
-      }      
+      }
    }
-   
+
    private void showServerDisconnectedDialog(final ServerDisconnectedException exception)
    {
       Log.info("Displays Server Disconnected Dialog....");
-      
+
       String message = IDE.IDE_LOCALIZATION_CONSTANT.serverDisconnected();
       Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedHandler()
       {
@@ -124,15 +128,38 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
          {
             if (value != null && value == true)
             {
-               AsyncRequest asyncRequest = exception.getAsyncRequest();
-               if (asyncRequest != null)
+               if (exception.getAsyncRequest() != null)
                {
                   Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
-                  asyncRequest.sendRequest();
+                  exception.getAsyncRequest().sendRequest();
+               }
+               else if (exception.getRequest() != null)
+               {
+                  Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
+                  sendAgain(exception.getRequest());
                }
             }
          }
       });
-   }   
+   }
+
+   private void sendAgain(org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest request)
+   {
+      try
+      {
+         request.send(request.getCallback());
+      }
+      catch (final Exception e)
+      {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               onError(new ExceptionThrownEvent(e));
+            }
+         });
+      }
+   }
 
 }

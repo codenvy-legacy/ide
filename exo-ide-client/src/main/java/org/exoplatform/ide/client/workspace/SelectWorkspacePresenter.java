@@ -116,7 +116,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
     * Application Settings for retrieving current Workspace and storing selected Workspace
     */
    private ApplicationSettings applicationSettings;
-
    
    /**
     * List of workspaces for displaying in Workspace List

@@ -35,7 +35,6 @@ public class VFSListGrid extends ListGrid<VirtualFileSystemInfo>
 
    public VFSListGrid()
    {
-  //    super();
       setID(ID);
 
       Column<VirtualFileSystemInfo, String> entryNameColumn = new Column<VirtualFileSystemInfo, String>(new TextCell())
