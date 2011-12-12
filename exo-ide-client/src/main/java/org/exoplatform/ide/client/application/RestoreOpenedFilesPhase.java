@@ -100,7 +100,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
       instance = this;
 
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+      //TODO eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
