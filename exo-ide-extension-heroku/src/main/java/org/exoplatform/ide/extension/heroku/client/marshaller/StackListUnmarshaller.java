@@ -18,16 +18,13 @@
  */
 package org.exoplatform.ide.extension.heroku.client.marshaller;
 
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
-
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import com.google.gwt.json.client.JSONObject;
-
-import com.google.gwt.http.client.Response;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 
@@ -40,7 +37,7 @@ import java.util.List;
  * @version $Id:  Jul 28, 2011 5:38:08 PM anya $
  *
  */
-public class StackListUnmarshaller implements Unmarshallable, Constants
+public class StackListUnmarshaller implements Unmarshallable<List<Stack>>, Constants
 {
 
    /**
@@ -56,9 +53,6 @@ public class StackListUnmarshaller implements Unmarshallable, Constants
       this.stackList = stackList;
    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
@@ -83,5 +77,14 @@ public class StackListUnmarshaller implements Unmarshallable, Constants
          e.printStackTrace();
          throw new UnmarshallerException(HerokuExtension.LOCALIZATION_CONSTANT.stackListUnmarshalFailed());
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Stack> getPayload()
+   {
+      return stackList;
    }
 }

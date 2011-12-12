@@ -20,8 +20,8 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
 
 /**
@@ -31,7 +31,7 @@ import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
  * @version $Id:  Jun 20, 2011 9:46:43 AM anya $
  *
  */
-public class RakeResultUnmarshaller implements Unmarshallable
+public class RakeResultUnmarshaller implements Unmarshallable<RakeCommandResult>
 {
    /**
     * Rake command execution result.
@@ -61,6 +61,15 @@ public class RakeResultUnmarshaller implements Unmarshallable
          e.printStackTrace();
          throw new UnmarshallerException(e.getMessage());
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public RakeCommandResult getPayload()
+   {
+      return rakeCommandResult;
    }
 
 }

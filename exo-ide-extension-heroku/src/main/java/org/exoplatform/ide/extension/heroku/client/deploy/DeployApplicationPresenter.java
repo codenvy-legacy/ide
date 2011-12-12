@@ -156,24 +156,32 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
 
    private void createApplication()
    {
-      HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
-         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
-         {
-
-            @Override
-            protected void onSuccess(List<Property> result)
+      try
+      {
+         HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
+            new HerokuAsyncRequestCallback(this)
             {
-               IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
-               paasCallback.onDeploy(true);
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               super.onFailure(exception);
-               paasCallback.onDeploy(false);
-            }
-         });
+               @Override
+               protected void onSuccess(List<Property> properties)
+               {
+                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
+                  paasCallback.onDeploy(true);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  super.onFailure(exception);
+                  paasCallback.onDeploy(false);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         paasCallback.onDeploy(false);
+         e.printStackTrace();
+      }
 
    }
 

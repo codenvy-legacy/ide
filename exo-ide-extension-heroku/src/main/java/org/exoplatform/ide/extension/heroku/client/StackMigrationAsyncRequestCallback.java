@@ -20,13 +20,16 @@ package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
 import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationResponse;
+import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationUnmarshaller;
 
 /**
  * Asynchronous callback on migrate stack response.
@@ -53,6 +56,7 @@ public abstract class StackMigrationAsyncRequestCallback extends AsyncRequestCal
     */
    public StackMigrationAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
    {
+      super(new StackMigrationUnmarshaller(new StackMigrationResponse()));
       this.eventbus = eventBus;
       this.loggedInHandler = handler;
       setEventBus(eventBus);
@@ -75,7 +79,7 @@ public abstract class StackMigrationAsyncRequestCallback extends AsyncRequestCal
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 
 }

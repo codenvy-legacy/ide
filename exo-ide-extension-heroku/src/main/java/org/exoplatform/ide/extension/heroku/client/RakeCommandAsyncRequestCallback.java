@@ -20,12 +20,15 @@ package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
+import org.exoplatform.ide.extension.heroku.client.marshaller.RakeResultUnmarshaller;
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
 
 /**
@@ -56,6 +59,7 @@ public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallba
     */
    public RakeCommandAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
    {
+      super(new RakeResultUnmarshaller(new RakeCommandResult()));
       this.eventbus = eventBus;
       this.loggedInHandler = handler;
       setEventBus(eventBus);
@@ -78,6 +82,6 @@ public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallba
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 }

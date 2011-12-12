@@ -20,13 +20,16 @@ package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
 import org.exoplatform.ide.extension.heroku.client.marshaller.LogsResponse;
+import org.exoplatform.ide.extension.heroku.client.marshaller.LogsUnmarshaller;
 
 /**
  * Asynchronous request callback for getting application's logs.
@@ -53,6 +56,7 @@ public abstract class LogsAsyncRequestCallback extends AsyncRequestCallback<Logs
     */
    public LogsAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
    {
+      super(new LogsUnmarshaller(new LogsResponse()));
       this.eventbus = eventBus;
       this.loggedInHandler = handler;
       setEventBus(eventBus);
@@ -75,6 +79,6 @@ public abstract class LogsAsyncRequestCallback extends AsyncRequestCallback<Logs
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 }

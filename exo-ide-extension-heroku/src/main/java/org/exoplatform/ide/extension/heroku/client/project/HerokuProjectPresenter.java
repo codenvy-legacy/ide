@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -229,16 +230,23 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
     */
    protected void getApplicationInfo()
    {
-      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), openedProject.getId(), false,
-         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
-         {
-
-            @Override
-            protected void onSuccess(List<Property> result)
+      try
+      {
+         HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), openedProject.getId(), false,
+            new HerokuAsyncRequestCallback(this)
             {
-               displayProperties(result);
-            }
-         });
+
+               @Override
+               protected void onSuccess(List<Property> properties)
+               {
+                  displayProperties(properties);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**

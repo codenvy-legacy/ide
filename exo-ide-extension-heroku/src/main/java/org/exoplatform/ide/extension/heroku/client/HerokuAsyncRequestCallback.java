@@ -18,16 +18,18 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
+import org.exoplatform.ide.extension.heroku.client.marshaller.ApplicationInfoUnmarshaller;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,25 +43,19 @@ import java.util.List;
  */
 public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<List<Property>>
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventbus;
-
    private LoggedInHandler loggedInHandler;
 
    /**
     * @param eventBus events handler
     */
-   public HerokuAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
+   public HerokuAsyncRequestCallback(LoggedInHandler handler)
    {
-      this.eventbus = eventBus;
+      super(new ApplicationInfoUnmarshaller(new ArrayList<Property>()));
       this.loggedInHandler = handler;
-      setEventBus(eventBus);
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+    * @see org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
    protected void onFailure(Throwable exception)
@@ -67,15 +63,16 @@ public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<Li
       if (exception instanceof ServerException)
       {
          ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
+         if ((HTTPStatus.OK == serverException.getHTTPStatus() || HTTPStatus.INTERNAL_ERROR == serverException
+            .getHTTPStatus())
+            && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required"))
          {
-            eventbus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
-            eventbus.fireEvent(new LoginEvent());
+            IDE.addHandler(LoggedInEvent.TYPE, loggedInHandler);
+            IDE.fireEvent(new LoginEvent());
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
-
 }

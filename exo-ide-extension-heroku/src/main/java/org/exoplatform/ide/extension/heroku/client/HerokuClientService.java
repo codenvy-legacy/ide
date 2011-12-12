@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 
 /**
  * Heroku client service.
@@ -54,14 +56,14 @@ public abstract class HerokuClientService
     * @param password user's password
     * @param callback callback
     */
-   public abstract void login(String login, String password, AsyncRequestCallback<String> callback);
+   public abstract void login(String login, String password, AsyncRequestCallback<String> callback) throws RequestException ;
 
    /**
     * Logout from Heroku.
     * 
     * @param callback callback, that client has to implement
     */
-   public abstract void logout(AsyncRequestCallback<String> callback);
+   public abstract void logout(AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Creates new application on Heroku.
@@ -73,7 +75,7 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
-      HerokuAsyncRequestCallback callback);
+      HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Deletes application pointed by it's name or Git location.
@@ -83,21 +85,21 @@ public abstract class HerokuClientService
     * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void deleteApplication(String applicationName, String vfsId, String projectid, HerokuAsyncRequestCallback callback);
+   public abstract void deleteApplication(String applicationName, String vfsId, String projectid, HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Adds(deploys) public ssh keys on Heroku.
     * 
     * @param callback callback
     */
-   public abstract void addKey(HerokuAsyncRequestCallback callback);
+   public abstract void addKey(HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Clears (removes) public ssh keys from Heroku.
     * 
     * @param callback
     */
-   public abstract void clearKeys(HerokuAsyncRequestCallback callback);
+   public abstract void clearKeys(HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Get information about Heroku application, pointed by application's name or Git work directory location.
@@ -110,7 +112,7 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void getApplicationInfo(String applicationName, String vfsId, String projectid, boolean isRaw,
-      HerokuAsyncRequestCallback callback);
+      HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Rename Heroku application, pointed by application's name or Git work directory location.
@@ -122,7 +124,7 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void renameApplication(String applicationName, String vfsId, String projectid, String newName,
-      HerokuAsyncRequestCallback callback);
+      HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Run Heroku rake command.
@@ -134,7 +136,7 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void run(String applicationName, String vfsId, String projectid, String command,
-      RakeCommandAsyncRequestCallback callback);
+      RakeCommandAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Get application's logs.
@@ -145,7 +147,7 @@ public abstract class HerokuClientService
     * @param linesNumber number of log lines
     * @param callback callback
     */
-   public abstract void logs(String applicationName, String vfsId, String projectid, int linesNumber, LogsAsyncRequestCallback callback);
+   public abstract void logs(String applicationName, String vfsId, String projectid, int linesNumber, LogsAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Get help for rake.
@@ -155,7 +157,7 @@ public abstract class HerokuClientService
     * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void help(String applicationName, String vfsId, String projectid, RakeCommandAsyncRequestCallback callback);
+   public abstract void help(String applicationName, String vfsId, String projectid, RakeCommandAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Get the list of Heroku application's available stacks (deployment environment).
@@ -166,7 +168,7 @@ public abstract class HerokuClientService
     * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void getStackList(String applicationName, String vfsId, String projectid, StackListAsyncRequestCallback callback);
+   public abstract void getStackList(String applicationName, String vfsId, String projectid, StackListAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Migrate from one stack to another (change deployment environment)
@@ -178,5 +180,5 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void migrateStack(String applicationName, String vfsId, String projectid, String stack,
-      StackMigrationAsyncRequestCallback callback);
+      StackMigrationAsyncRequestCallback callback) throws RequestException;
 }

@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.heroku.client.info;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -37,10 +38,10 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Presenter for getting and displaying application's information.
@@ -49,7 +50,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
  * @version $Id:  Jun 1, 2011 11:32:37 AM anya $
  *
  */
-public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler, LoggedInHandler
+public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler,
+   LoggedInHandler
 {
    /**
     * Properties order to be displayed.
@@ -74,8 +76,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
       order.add("SlugSize");
       order.add("Stack");
       order.add("Workers");
-   } 
-   
+   }
+
    /**
     * Properties order comparator. 
     * 
@@ -90,15 +92,15 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
       {
          Integer index1 = order.indexOf(p1.getName());
          Integer index2 = order.indexOf(p2.getName());
-         
+
          if (index1 == -1 || index2 == -1)
             return 0;
 
          return index1.compareTo(index2);
       }
-      
+
    }
-   
+
    interface Display extends IsView
    {
       HasClickHandlers getOkButton();
@@ -163,29 +165,41 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    public void getApplicationInfo()
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
-         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
-         {
-
-            @Override
-            protected void onSuccess(List<Property> result)
+      try
+      {
+         HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
+            new HerokuAsyncRequestCallback(this)
             {
-               if (display == null)
+
+               @Override
+               protected void onSuccess(List<Property> properties)
                {
-                  display = GWT.create(Display.class);
-                  bindDisplay();
-                  IDE.getInstance().openView(display.asView());
+                  System.out
+                     .println("ApplicationInfoPresenter.getApplicationInfo().new HerokuAsyncRequestCallback() {...}.onSuccess()");
+                  if (display == null)
+                  {
+                     display = GWT.create(Display.class);
+                     bindDisplay();
+                     IDE.getInstance().openView(display.asView());
+                  }
+                  //Make first letter of property name to be in upper case.
+                  for (Property property : properties)
+                  {
+                     String name =
+                        (property.getName().length() > 1)
+                           ? (property.getName().substring(0, 1).toUpperCase() + property.getName().substring(1))
+                           : property.getName().toUpperCase();
+                     property.setName(name);
+                  }
+                  Collections.sort(properties, new PropertiesComparator());
+                  display.getApplicationInfoGrid().setValue(properties);
                }
-               //Make first letter of property name to be in upper case.
-               for (Property property : result)
-               {
-                  String name = (property.getName().length() > 1) ? (property.getName().substring(0, 1).toUpperCase() + property.getName().substring(1)) : property.getName().toUpperCase();
-                  property.setName(name);
-               }
-               Collections.sort(result, new PropertiesComparator());
-               display.getApplicationInfoGrid().setValue(result);
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**

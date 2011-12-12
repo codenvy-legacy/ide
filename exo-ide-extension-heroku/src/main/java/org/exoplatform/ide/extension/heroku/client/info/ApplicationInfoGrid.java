@@ -19,10 +19,8 @@
 package org.exoplatform.ide.extension.heroku.client.info;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
-
-import com.google.gwt.safehtml.shared.SafeHtml;
-
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;

@@ -240,7 +240,13 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("stack.list.unmarshal.failed")
    String stackListUnmarshalFailed();
-
+   
+   @Key("creatingApplication")
+   String creatingApplication();
+   
+   @Key("applicationCreated")
+   String applicationCreated();
+   
    /*Delete application*/
    @Key("deleteApplication.title")
    String deleteApplicationTitle();

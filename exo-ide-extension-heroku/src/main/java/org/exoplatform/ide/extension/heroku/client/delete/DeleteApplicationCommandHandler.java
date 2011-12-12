@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.heroku.client.delete;
 
-import java.util.List;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -34,6 +35,8 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import java.util.List;
 
 /**
  * Presenter for deleting application from Heroku.
@@ -77,24 +80,31 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    protected void getApplicationInfo()
    {
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), project.getId(), false,
-         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
-         {
-            @Override
-            protected void onSuccess(List<Property> result)
+      try
+      {
+         HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), project.getId(), false,
+            new HerokuAsyncRequestCallback(this)
             {
-               String name = null;
-               for (Property property : result)
+               @Override
+               protected void onSuccess(List<Property> properties)
                {
-                  if (NAME_PROPERTY.equals(property.getName()))
+                  String name = null;
+                  for (Property property : properties)
                   {
-                     name = property.getValue();
-                     break;
+                     if (NAME_PROPERTY.equals(property.getName()))
+                     {
+                        name = property.getValue();
+                        break;
+                     }
                   }
+                  askForDelete(name, project);
                }
-               askForDelete(name, project);
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -116,7 +126,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
             {
                if (value != null && value)
                {
-                  doDelete(project.getId());
+                  doDelete(project);
                }
             }
          });
@@ -126,19 +136,29 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     * Perform deleting the application on Heroku.
     *
     */
-   protected void doDelete(final String projectId)
+   protected void doDelete(final ProjectModel project)
    {
-      HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), projectId,
-         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
-         {
-            @Override
-            protected void onSuccess(List<Property> result)
+      try
+      {
+         HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), project.getId(),
+            new HerokuAsyncRequestCallback(this)
             {
-               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(),
-                  Type.INFO));
-               IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
-            }
-         });
+               @Override
+               protected void onSuccess(List<Property> properties)
+               {
+                  IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(),
+                     Type.INFO));
+                  IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), project.getId()));
+                  System.out
+                     .println("DeleteApplicationCommandHandler.doDelete(...).new HerokuAsyncRequestCallback() {...}.onSuccess()");
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**

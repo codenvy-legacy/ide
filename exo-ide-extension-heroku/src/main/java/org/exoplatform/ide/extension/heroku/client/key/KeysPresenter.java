@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.heroku.client.key;
 
-import java.util.List;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -31,6 +31,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
+
+import java.util.List;
 
 /**
  * Presenter for actions with keys (add, clear).
@@ -71,14 +73,21 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
    protected void addKeys()
    {
       clearKeys = false;
-      HerokuClientService.getInstance().addKey(new HerokuAsyncRequestCallback(IDE.eventBus(), this)
+      try
       {
-         @Override
-         protected void onSuccess(List<Property> result)
+         HerokuClientService.getInstance().addKey(new HerokuAsyncRequestCallback(this)
          {
-            IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.addKeysSuccess(), Type.INFO));
-         }
-      });
+            @Override
+            protected void onSuccess(List<Property> properties)
+            {
+               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.addKeysSuccess(), Type.INFO));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -108,14 +117,22 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
    protected void clearKeys()
    {
       clearKeys = true;
-      HerokuClientService.getInstance().clearKeys(new HerokuAsyncRequestCallback(IDE.eventBus(), this)
+      try
       {
-         @Override
-         protected void onSuccess(List<Property> result)
+         HerokuClientService.getInstance().clearKeys(new HerokuAsyncRequestCallback(this)
          {
-            IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysSuccess(), Type.INFO));
-         }
-      });
+            @Override
+            protected void onSuccess(List<Property> properties)
+            {
+               onSuccess(properties);
+               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysSuccess(), Type.INFO));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**

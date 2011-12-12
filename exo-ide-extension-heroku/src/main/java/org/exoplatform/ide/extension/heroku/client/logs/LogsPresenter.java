@@ -18,6 +18,16 @@
  */
 package org.exoplatform.ide.extension.heroku.client.logs;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -30,15 +40,6 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.LogsResponse;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Presenter for application's logs view.
@@ -154,15 +155,23 @@ public class LogsPresenter extends GitPresenter implements ShowLogsHandler, Logg
    {
       int logLines =
          (display != null && isCorrectValue()) ? Integer.parseInt(display.getLogLinesCount().getValue()) : 0;
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         HerokuClientService.getInstance().logs(null, vfs.getId(), projectId, logLines, new LogsAsyncRequestCallback(IDE.eventBus(), this)
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      try
       {
-         @Override
-         protected void onSuccess(LogsResponse result)
-         {
-            showLogs(result.getLogs());
-         }
-      });
+         HerokuClientService.getInstance().logs(null, vfs.getId(), projectId, logLines,
+            new LogsAsyncRequestCallback(IDE.eventBus(), this)
+            {
+               @Override
+               protected void onSuccess(LogsResponse result)
+               {
+                  showLogs(result.getLogs());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
 
    }
 

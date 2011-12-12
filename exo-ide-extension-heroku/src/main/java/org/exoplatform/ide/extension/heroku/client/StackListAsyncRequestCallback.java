@@ -20,14 +20,18 @@ package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
+import org.exoplatform.ide.extension.heroku.client.marshaller.StackListUnmarshaller;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +59,7 @@ public abstract class StackListAsyncRequestCallback extends AsyncRequestCallback
     */
    public StackListAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedInHandler)
    {
+      super(new StackListUnmarshaller(new ArrayList<Stack>()));
       this.eventBus = eventBus;
       this.loggedInHandler = loggedInHandler;
    }
@@ -76,7 +81,7 @@ public abstract class StackListAsyncRequestCallback extends AsyncRequestCallback
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 
 }

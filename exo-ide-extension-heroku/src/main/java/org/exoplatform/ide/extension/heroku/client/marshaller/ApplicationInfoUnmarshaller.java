@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.heroku.client.marshaller;
 
-import com.google.gwt.json.client.JSONObject;
-
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.ide.git.client.marshaller.JSONUmarshaller;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
 import java.util.List;
 
@@ -35,11 +35,8 @@ import java.util.List;
  * @version $Id:  May 30, 2011 11:00:13 AM anya $
  *
  */
-public class ApplicationInfoUnmarshaller extends JSONUmarshaller
+public class ApplicationInfoUnmarshaller implements Unmarshallable<List<Property>>
 {
-   /**
-    * Application's information.
-    */
    private List<Property> properties;
 
    /**
@@ -56,10 +53,15 @@ public class ApplicationInfoUnmarshaller extends JSONUmarshaller
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
+      if (response.getText() == null || response.getText().isEmpty())
+      {
+         return;
+      }
+
+      JSONValue json = JSONParser.parseStrict(response.getText());
       if (json == null)
          return;
-      JSONObject jsonObject = new JSONObject(json).isObject();
+      JSONObject jsonObject = json.isObject();
       if (jsonObject == null)
          return;
 
@@ -71,6 +73,15 @@ public class ApplicationInfoUnmarshaller extends JSONUmarshaller
             properties.add(new Property(key, value));
          }
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Property> getPayload()
+   {
+      return properties;
    }
 
 }

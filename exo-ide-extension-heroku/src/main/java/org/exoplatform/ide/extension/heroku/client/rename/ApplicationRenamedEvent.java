@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.extension.heroku.client.rename;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 
 import java.util.List;
-
-import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs after rename Heroku application operation.

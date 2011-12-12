@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -44,8 +46,6 @@ import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
 
-import com.google.gwt.core.client.GWT;
-
 /**
  * Heroku extension to be added to IDE Application.
  * 
@@ -55,9 +55,9 @@ import com.google.gwt.core.client.GWT;
  */
 public class HerokuExtension extends Extension implements InitializeServicesHandler
 {
-   
+
    public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
-   
+
    public static final HerokuCredentialsConstant CREDENTIALS_CONSTANT = GWT.create(HerokuCredentialsConstant.class);
 
    /**
@@ -100,7 +100,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new RakeCommandPresenter();
       new ChangeStackPresenter();
       new LogsPresenter();
-      
+
       new DeployApplicationPresenter();
       new HerokuProjectPresenter();
    }

@@ -19,9 +19,6 @@
 
 package org.exoplatform.ide.extension.heroku.client.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -31,6 +28,9 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 

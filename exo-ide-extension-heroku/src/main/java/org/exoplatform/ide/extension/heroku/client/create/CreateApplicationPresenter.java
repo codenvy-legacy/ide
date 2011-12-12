@@ -18,8 +18,14 @@
  */
 package org.exoplatform.ide.extension.heroku.client.create;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -34,12 +40,9 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 /**
  * Presenter for created application view.
@@ -178,27 +181,26 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    {
       String applicationName = display.getApplicationNameField().getValue();
       String remoteName = display.getRemoteNameField().getValue();
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, remoteName,
-         new HerokuAsyncRequestCallback(IDE.eventBus(), this)
-         {
-
-            @Override
-            protected void onSuccess(List<Property> result)
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      try
+      {
+         HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
+            new HerokuAsyncRequestCallback(this)
             {
-               IDE.getInstance().closeView(display.asView().getId());
-               IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
-            }
 
-            /**
-             * @see org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               super.onFailure(exception);
-            }
-         });
+               @Override
+               protected void onSuccess(List<Property> properties)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -219,7 +221,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
          message += "<b>" + property.getName() + "</b>" + " : " + property.getValue() + "<br>";
       }
       message += "] ";
-      
+
       return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(message);
    }
 

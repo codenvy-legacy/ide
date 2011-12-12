@@ -18,7 +18,13 @@
  */
 package org.exoplatform.ide.extension.heroku.client.stack;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -37,12 +43,7 @@ import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import java.util.List;
 
 /**
  * Presenter for changing Heroku application's stack.
@@ -144,21 +145,29 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
    public void getStacks()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      HerokuClientService.getInstance().getStackList(null, vfs.getId(), projectId, new StackListAsyncRequestCallback(IDE.eventBus(), this)
+      try
       {
-         @Override
-         protected void onSuccess(List<Stack> result)
-         {
-            if (display == null)
+         HerokuClientService.getInstance().getStackList(null, vfs.getId(), projectId,
+            new StackListAsyncRequestCallback(IDE.eventBus(), this)
             {
-               display = GWT.create(Display.class);
-               bindDisplay();
-               IDE.getInstance().openView(display.asView());
-            }
-            display.enableChangeButton(false);
-            display.getStackGrid().setValue(result, true);
-         }
-      });
+               @Override
+               protected void onSuccess(List<Stack> result)
+               {
+                  if (display == null)
+                  {
+                     display = GWT.create(Display.class);
+                     bindDisplay();
+                     IDE.getInstance().openView(display.asView());
+                  }
+                  display.enableChangeButton(false);
+                  display.getStackGrid().setValue(result, true);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -183,20 +192,27 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       if (stack == null)
          return;
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      HerokuClientService.getInstance().migrateStack(null, vfs.getId(), projectId, stack.getName(),
-         new StackMigrationAsyncRequestCallback(IDE.eventBus(), this)
-         {
-
-            @Override
-            protected void onSuccess(StackMigrationResponse result)
+      try
+      {
+         HerokuClientService.getInstance().migrateStack(null, vfs.getId(), projectId, stack.getName(),
+            new StackMigrationAsyncRequestCallback(IDE.eventBus(), this)
             {
-               IDE.getInstance().closeView(display.asView().getId());
-               String output =
-                  (result.getResult() != null && !result.getResult().isEmpty()) ? result.getResult().replace("\n",
-                     "<br>") : "";
-               IDE.fireEvent(new OutputEvent(output, Type.INFO));
-            }
-         });
+
+               @Override
+               protected void onSuccess(StackMigrationResponse result)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+                  String output =
+                     (result.getResult() != null && !result.getResult().isEmpty()) ? result.getResult().replace("\n",
+                        "<br>") : "";
+                  IDE.fireEvent(new OutputEvent(output, Type.INFO));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
 }

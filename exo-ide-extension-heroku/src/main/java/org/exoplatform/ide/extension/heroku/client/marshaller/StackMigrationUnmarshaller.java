@@ -20,8 +20,8 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
 /**
  * Unmarshaller for stack migration response.
@@ -30,7 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * @version $Id:  Aug 1, 2011 4:07:40 PM anya $
  *
  */
-public class StackMigrationUnmarshaller implements Unmarshallable
+public class StackMigrationUnmarshaller implements Unmarshallable<StackMigrationResponse>
 {
    /**
     * Stack migration response.
@@ -52,6 +52,15 @@ public class StackMigrationUnmarshaller implements Unmarshallable
    public void unmarshal(Response response) throws UnmarshallerException
    {
       stackMigrationResponse.setResult(response.getText());
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public StackMigrationResponse getPayload()
+   {
+      return stackMigrationResponse;
    }
 
 }

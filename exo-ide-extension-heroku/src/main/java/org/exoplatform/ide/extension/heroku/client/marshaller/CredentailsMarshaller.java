@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.client.marshaller;
 
-import com.google.gwt.json.client.JSONString;
-
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 

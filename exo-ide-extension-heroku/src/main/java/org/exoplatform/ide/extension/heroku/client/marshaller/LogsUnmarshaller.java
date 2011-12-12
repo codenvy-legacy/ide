@@ -20,8 +20,8 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
 /**
  * Unmarshaller for Heroku application's logs.
@@ -30,7 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * @version $Id:  Sep 19, 2011 2:40:47 PM anya $
  *
  */
-public class LogsUnmarshaller implements Unmarshallable
+public class LogsUnmarshaller implements Unmarshallable<LogsResponse>
 {
    /**
     * Application's logs.
@@ -52,6 +52,15 @@ public class LogsUnmarshaller implements Unmarshallable
    public void unmarshal(Response response) throws UnmarshallerException
    {
       logsResponse.setLogs(response.getText());
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public LogsResponse getPayload()
+   {
+      return logsResponse;
    }
 
 }

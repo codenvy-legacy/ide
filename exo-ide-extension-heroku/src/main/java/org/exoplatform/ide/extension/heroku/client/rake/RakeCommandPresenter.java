@@ -18,6 +18,16 @@
  */
 package org.exoplatform.ide.extension.heroku.client.rake;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -31,15 +41,6 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Presenter of the view for executing rake command.
@@ -179,18 +180,18 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    @Override
    public void onRakeCommand(RakeCommandEvent event)
    {
-//      if (makeSelectionCheck())
-//      {
+      //      if (makeSelectionCheck())
+      //      {
 
-         if (display == null)
-         {
-            display = GWT.create(Display.class);
-            bindDisplay();
-            IDE.getInstance().openView(display.asView());
-            display.enableRunButton(false);
-            display.focusInCommandField();
-         }
-//      }
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+         IDE.getInstance().openView(display.asView());
+         display.enableRunButton(false);
+         display.focusInCommandField();
+      }
+      //      }
    }
 
    /**
@@ -216,15 +217,23 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       command = (command.startsWith("rake")) ? command : "rake " + command;
       isHelp = false;
-      HerokuClientService.getInstance().run(null, vfs.getId(), projectId, command, new RakeCommandAsyncRequestCallback(IDE.eventBus(), this)
+      try
       {
-         @Override
-         protected void onSuccess(RakeCommandResult result)
-         {
-            String message = formMessage(result.getResult());
-            IDE.fireEvent(new OutputEvent(message, Type.OUTPUT));
-         }
-      });
+         HerokuClientService.getInstance().run(null, vfs.getId(), projectId, command,
+            new RakeCommandAsyncRequestCallback(IDE.eventBus(), this)
+            {
+               @Override
+               protected void onSuccess(RakeCommandResult result)
+               {
+                  String message = formMessage(result.getResult());
+                  IDE.fireEvent(new OutputEvent(message, Type.OUTPUT));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -234,15 +243,23 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    {
       isHelp = true;
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      HerokuClientService.getInstance().help(null, vfs.getId(), projectId, new RakeCommandAsyncRequestCallback(IDE.eventBus(), this)
+      try
       {
-         @Override
-         protected void onSuccess(RakeCommandResult result)
-         {
-            String message = formMessage(result.getResult());
-            IDE.fireEvent(new OutputEvent(message, Type.INFO));
-         }
-      });
+         HerokuClientService.getInstance().help(null, vfs.getId(), projectId,
+            new RakeCommandAsyncRequestCallback(IDE.eventBus(), this)
+            {
+               @Override
+               protected void onSuccess(RakeCommandResult result)
+               {
+                  String message = formMessage(result.getResult());
+                  IDE.fireEvent(new OutputEvent(message, Type.INFO));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**

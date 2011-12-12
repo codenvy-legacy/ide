@@ -18,7 +18,18 @@
  */
 package org.exoplatform.ide.extension.heroku.client.login;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -28,16 +39,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for login view.
@@ -137,15 +138,27 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
             final String password = display.getPasswordField().getValue();
             if (loggedIn)
             {
-               HerokuClientService.getInstance().logout(new AsyncRequestCallback<String>()
+               try
                {
-                  @Override
-                  protected void onSuccess(String result)
+                  HerokuClientService.getInstance().logout(new AsyncRequestCallback<String>()
                   {
-                     doLogin(email, password);
-                  }
+                     @Override
+                     protected void onSuccess(String result)
+                     {
+                        doLogin(email, password);
+                     }
 
-               });
+                     @Override
+                     protected void onFailure(Throwable exception)
+                     {
+                     }
+
+                  });
+               }
+               catch (RequestException e)
+               {
+                  e.printStackTrace();
+               }
             }
             else
             {
@@ -163,15 +176,27 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
             final String demoPassword = HerokuExtension.CREDENTIALS_CONSTANT.loginDemoAccountPassword();
             if (loggedIn)
             {
-               HerokuClientService.getInstance().logout(new AsyncRequestCallback<String>()
+               try
                {
-                  @Override
-                  protected void onSuccess(String result)
+                  HerokuClientService.getInstance().logout(new AsyncRequestCallback<String>()
                   {
-                     doLogin(demoLogin, demoPassword);
-                  }
+                     @Override
+                     protected void onSuccess(String result)
+                     {
+                        doLogin(demoLogin, demoPassword);
+                     }
 
-               });
+                     @Override
+                     protected void onFailure(Throwable exception)
+                     {
+                     }
+
+                  });
+               }
+               catch (RequestException e)
+               {
+                  e.printStackTrace();
+               }
             }
             else
             {
@@ -240,27 +265,34 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
     */
    protected void doLogin(String email, String password)
    {
-      HerokuClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
+      try
       {
-         @Override
-         protected void onSuccess(String result)
+         HerokuClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
          {
-            IDE.getInstance().closeView(display.asView().getId());
-            loggedIn = true;
-            IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
-            IDE.fireEvent(new LoggedInEvent(false));
-         }
+            @Override
+            protected void onSuccess(String result)
+            {
+               IDE.getInstance().closeView(display.asView().getId());
+               loggedIn = true;
+               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+               IDE.fireEvent(new LoggedInEvent(false));
+            }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new LoggedInEvent(true));
-            super.onFailure(exception);
-         }
-      });
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new LoggedInEvent(true));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new LoggedInEvent(true));
+         e.printStackTrace();
+      }
    }
 
    /**
