@@ -18,12 +18,30 @@
  */
 package org.exoplatform.ide.codeassistant.asm.testclasses;
 
-public @interface TestAnnotation {
+import java.io.IOException;
 
-   int a();
+public abstract class NoTestSuper
+{
 
-   double b();
+   protected int a;
 
-   String c();
+   protected abstract void method0(int a);
+
+   public void method()
+   {
+   }
+
+   public void method(int i) throws RuntimeException, IOException
+   {
+   }
+
+   public void method(double f) throws Exception
+   {
+   }
+
+   public String toString()
+   {
+      return null;
+   }
 
 }

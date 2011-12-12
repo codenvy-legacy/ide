@@ -18,48 +18,11 @@
  */
 package org.exoplatform.ide.codeassistant.asm.testclasses;
 
-public class TestClass extends TestSuper implements TestInterface, TestInterface2
+public interface NoTestInterface2
 {
 
-   private int a;
+   int method3(double a, int b, char c, float[][][] d, String[] e);
 
-   public final String b = "b";
-
-   public static final Double c = 5.0;
-
-   protected double d;
-
-   public TestClass(int a, String b) throws ClassNotFoundException
-   {
-
-   }
-
-   @Override
-   public int method3(double a, int b, char c, float[][][] d, String[] e)
-   {
-      return 0;
-   }
-
-   @Override
-   public void method4(String a, Boolean b, boolean c, int[][][][][] d)
-   {
-   }
-
-   @Override
-   public int method1()
-   {
-      return 0;
-   }
-
-   @Override
-   public int method2(int a)
-   {
-      return 0;
-   }
-
-   @Override
-   protected void method0(int a)
-   {
-   }
+   void method4(String a, Boolean b, boolean c, int[][][][][] d);
 
 }

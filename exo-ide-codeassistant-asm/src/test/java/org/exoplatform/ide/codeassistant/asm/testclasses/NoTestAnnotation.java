@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.codeassistant.asm.testclasses;
 
-public interface TestInterface2
-{
 
-   int method3(double a, int b, char c, float[][][] d, String[] e);
+public @interface NoTestAnnotation {
 
-   void method4(String a, Boolean b, boolean c, int[][][][][] d);
+   int a();
+
+   double b();
+
+   String c();
 
 }

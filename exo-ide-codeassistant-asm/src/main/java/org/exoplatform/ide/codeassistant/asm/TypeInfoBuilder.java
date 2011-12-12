@@ -192,56 +192,64 @@ public class TypeInfoBuilder
 
    void addField(int access, String name, String desc)
    {
-      fields.add(new FieldInfo(transformTypeFormat(desc), access, name, qualifiedName));
+      if ((access & MODIFIER_SYNTHETIC) == 0)
+      {
+         fields.add(new FieldInfo(transformTypeFormat(desc), access, name, qualifiedName));
+      }
    }
 
    void addMethod(int access, String methodName, String[] exceptions, String desc)
    {
-
-      MethodInfo methodInfo = new MethodInfo();
-
-      fillRoutine(methodInfo, access, methodName, exceptions, desc);
-
-      String genericReturnType = transformTypeFormat(desc.substring(desc.lastIndexOf(')') + 1));
-      methodInfo.setGenericReturnType(genericReturnType);
-      methodInfo.setReturnType(toShortName(genericReturnType));
-
-      StringBuilder genericBuilder = new StringBuilder();
-      String stringModifier = methodInfo.modifierToString();
-      if (!stringModifier.isEmpty())
+      if ((access & MODIFIER_SYNTHETIC) == 0)
       {
-         genericBuilder.append(stringModifier);
-         genericBuilder.append(" ");
-      }
-      genericBuilder.append(methodInfo.getGenericReturnType());
-      genericBuilder.append(" ");
-      genericBuilder.append(methodInfo.getDeclaringClass());
-      genericBuilder.append(".");
-      genericBuilder.append(methodInfo.getName());
-      genericBuilder.append(methodInfo.getGenericParameterTypes());
-      methodInfo.setGeneric(genericBuilder.toString());
+         MethodInfo methodInfo = new MethodInfo();
 
-      methods.add(methodInfo);
+         fillRoutine(methodInfo, access, methodName, exceptions, desc);
+
+         String genericReturnType = transformTypeFormat(desc.substring(desc.lastIndexOf(')') + 1));
+         methodInfo.setGenericReturnType(genericReturnType);
+         methodInfo.setReturnType(toShortName(genericReturnType));
+
+         StringBuilder genericBuilder = new StringBuilder();
+         String stringModifier = methodInfo.modifierToString();
+         if (!stringModifier.isEmpty())
+         {
+            genericBuilder.append(stringModifier);
+            genericBuilder.append(" ");
+         }
+         genericBuilder.append(methodInfo.getGenericReturnType());
+         genericBuilder.append(" ");
+         genericBuilder.append(methodInfo.getDeclaringClass());
+         genericBuilder.append(".");
+         genericBuilder.append(methodInfo.getName());
+         genericBuilder.append(methodInfo.getGenericParameterTypes());
+         methodInfo.setGeneric(genericBuilder.toString());
+
+         methods.add(methodInfo);
+      }
    }
 
    void addConstructor(int access, String[] exceptions, String desc)
    {
-      RoutineInfo constructorInfo = new RoutineInfo();
-
-      fillRoutine(constructorInfo, access, name, exceptions, desc);
-
-      StringBuilder genericBuilder = new StringBuilder();
-      String stringModifier = constructorInfo.modifierToString();
-      if (!stringModifier.isEmpty())
+      if ((access & MODIFIER_SYNTHETIC) == 0)
       {
-         genericBuilder.append(stringModifier);
-         genericBuilder.append(" ");
-      }
-      genericBuilder.append(constructorInfo.getDeclaringClass());
-      genericBuilder.append(constructorInfo.getGenericParameterTypes());
-      constructorInfo.setGeneric(genericBuilder.toString());
+         RoutineInfo constructorInfo = new RoutineInfo();
 
-      constructors.add(constructorInfo);
+         fillRoutine(constructorInfo, access, name, exceptions, desc);
+
+         StringBuilder genericBuilder = new StringBuilder();
+         String stringModifier = constructorInfo.modifierToString();
+         if (!stringModifier.isEmpty())
+         {
+            genericBuilder.append(stringModifier);
+            genericBuilder.append(" ");
+         }
+         genericBuilder.append(constructorInfo.getDeclaringClass());
+         genericBuilder.append(constructorInfo.getGenericParameterTypes());
+         constructorInfo.setGeneric(genericBuilder.toString());
+
+         constructors.add(constructorInfo);
+      }
    }
 
    private void fillRoutine(RoutineInfo routineInfo, int access, String name, String[] exceptions, String desc)

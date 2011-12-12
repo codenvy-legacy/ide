@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ide.codeassistant.asm.testclasses;
 
-public enum TestEnum {
+public interface NoTestInterface
+{
 
-   ENUM1, ENUM2, ENUM3, ENUM4
+   public int method1();
+
+   abstract int method2(int a);
 
 }

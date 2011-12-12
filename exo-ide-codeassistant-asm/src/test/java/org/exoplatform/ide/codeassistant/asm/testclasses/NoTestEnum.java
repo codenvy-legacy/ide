@@ -18,30 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.asm.testclasses;
 
-import java.io.IOException;
 
-public abstract class TestSuper
-{
+public enum NoTestEnum {
 
-   protected int a;
-
-   protected abstract void method0(int a);
-
-   public void method()
-   {
-   }
-
-   public void method(int i) throws RuntimeException, IOException
-   {
-   }
-
-   public void method(double f) throws Exception
-   {
-   }
-
-   public String toString()
-   {
-      return null;
-   }
+   ENUM1, ENUM2, ENUM3, ENUM4
 
 }

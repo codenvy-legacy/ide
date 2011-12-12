@@ -49,7 +49,8 @@ public abstract class BaseTest
    protected static void generateClassFile(String pathToSource) throws IOException
    {
       Runtime exec = Runtime.getRuntime();
-      Process process = exec.exec("javac " + pathToSource + " -d " + CLASSES_DIRECTORY_PATH);
+      String cmd = "javac -cp " + CLASSES_DIRECTORY_PATH + " " + pathToSource + " -d " + CLASSES_DIRECTORY_PATH;
+      Process process = exec.exec(cmd);
       try
       {
          process.waitFor();
