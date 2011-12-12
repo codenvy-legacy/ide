@@ -36,6 +36,38 @@ import java.util.List;
  */
 public class PropertiesListGrid extends ListGrid<Property>
 {
+   
+   private String toHumanReadableName(String name) {
+      String result = "";
+            
+      if (name.indexOf(":") >= 0) {
+         name = name.substring(name.indexOf(":") + 1);
+      }
+      
+      String upper = name.toUpperCase();
+      String lower = name.toLowerCase();      
+      
+      boolean up = true;
+      for (int i = 0; i < name.length(); i++) {
+         if (name.charAt(i) >= 'A' && name.charAt(i) <= 'Z') {
+            result += " ";
+            up = true;
+         } else if (name.charAt(i) == '-') {
+            result += " ";
+            up = true;
+            continue;
+         }
+
+         if (up) {
+            result += upper.charAt(i);
+            up = false;
+         } else {
+            result += lower.charAt(i);
+         }
+      }
+      
+      return result;
+   }
 
    public PropertiesListGrid() {
       
@@ -44,7 +76,7 @@ public class PropertiesListGrid extends ListGrid<Property>
          @Override
          public String getValue(Property object)
          {
-            return object.getName();
+            return toHumanReadableName(object.getName());
          }
       };
       

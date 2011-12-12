@@ -19,12 +19,10 @@
 
 package org.exoplatform.ide.client.project.properties;
 
-import com.google.gwt.uibinder.client.UiField;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -68,8 +66,8 @@ public class ProjectPropertiesView extends ViewImpl implements org.exoplatform.i
    @UiField
    PropertiesListGrid propertiesListGrid;
    
-   @UiField
-   ImageButton addButton;
+//   @UiField
+//   ImageButton addButton;
    
    @UiField
    ImageButton editButton;
@@ -87,7 +85,7 @@ public class ProjectPropertiesView extends ViewImpl implements org.exoplatform.i
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+      add(uiBinder.createAndBindUi(this));      
    }
 
    @Override
@@ -114,11 +112,11 @@ public class ProjectPropertiesView extends ViewImpl implements org.exoplatform.i
       return propertiesListGrid;
    }
 
-   @Override
-   public HasClickHandlers getAddButton()
-   {
-      return addButton;
-   }
+//   @Override
+//   public HasClickHandlers getAddButton()
+//   {
+//      return addButton;
+//   }
 
    @Override
    public HasClickHandlers getEditButton()

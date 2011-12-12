@@ -89,6 +89,8 @@ public class EditPropertyView extends ViewImpl implements org.exoplatform.ide.cl
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
+      
+      nameField.setReadOnly(true);
    }
 
    @Override

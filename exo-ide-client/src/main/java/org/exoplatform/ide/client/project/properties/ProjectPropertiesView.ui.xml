@@ -67,10 +67,12 @@
 		
 		<c:layer top="0px" bottom="45px" right="0px" width="110px">
 			<g:FlowPanel addStyleNames="{style.vertButPanel}">
+			<!-- 
 				<c:ImageButton text="Add" imageName="add" ui:field="addButton"
 					buttonId="ideProjectPropertiesAddButton" addStyleNames="{style.vertBut}, {style.vertButFirst}"></c:ImageButton>
+ 			-->
 				<c:ImageButton text="Edit" imageName="edit" ui:field="editButton"
-					buttonId="ideProjectPropertiesEditButton" addStyleNames="{style.vertBut}"></c:ImageButton>
+					buttonId="ideProjectPropertiesEditButton" addStyleNames="{style.vertBut}, {style.vertButFirst}"></c:ImageButton>
 				<c:ImageButton text="Delete" imageName="delete" ui:field="deleteButton"
 					buttonId="ideProjectPropertiesDeleteButton" addStyleNames="{style.vertBut}"></c:ImageButton>
 			</g:FlowPanel>
