@@ -483,7 +483,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       List<Item> children =
          (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
             .getChildren().getItems();
-      removeSystemItemsFromView(children);
+//      removeSystemItemsFromView(children);
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);

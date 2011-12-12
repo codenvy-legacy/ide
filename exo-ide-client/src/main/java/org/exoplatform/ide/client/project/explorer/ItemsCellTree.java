@@ -79,6 +79,11 @@ public class ItemsCellTree extends Composite
          {
             return;
          }
+         
+         if (value.getName() != null && value.getName().startsWith("."))
+         {
+            return;
+         }
 
          if (value instanceof ProjectModel)
          {

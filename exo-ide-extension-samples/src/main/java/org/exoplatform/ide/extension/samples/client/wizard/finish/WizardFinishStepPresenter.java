@@ -324,8 +324,8 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
       String url = projectProperties.getProperties().get("url");
       String server = projectProperties.getProperties().get("target");
       
-      SamplesClientService.getInstance().createCloudFoundryApplication(server, name, url, project.getPath(),
-         warUrl, new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), deployToCloudFoundryLoggedInHandler)
+      SamplesClientService.getInstance().createCloudFoundryApplication(vfs.getId(), server, name, url, project.getPath(),
+         project.getId(), warUrl, new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), deployToCloudFoundryLoggedInHandler)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)

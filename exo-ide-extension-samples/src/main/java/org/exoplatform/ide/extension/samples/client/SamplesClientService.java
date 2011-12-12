@@ -111,8 +111,8 @@ public abstract class SamplesClientService
     * @param war - URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void createCloudFoundryApplication(String server, String name, String url, String workDir,
-      String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+   public abstract void createCloudFoundryApplication(String vfsId, String server, String name, String url, String workDir,
+      String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
    
    /**
     * Get the list of CloudFoundry targets.

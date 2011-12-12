@@ -187,6 +187,11 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       for (int position = 0; position < children.size(); position++)
       {
          Item item = children.get(position);
+         
+         if (item.getName() != null && item.getName().startsWith("."))
+         {
+            continue;
+         }
 
          TreeItem node = createTreeNode(item);
          parentNode.addItem(node);
@@ -474,6 +479,10 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       for (Item item : itemsIcons.keySet())
       {
          TreeItem node = getNodeById(item.getId());
+         if (node == null)
+         {
+            continue;
+         }
          Grid grid = (Grid)node.getWidget();
          TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
          Map<TreeIconPosition, ImageResource> map = itemsIcons.get(item);

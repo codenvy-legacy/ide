@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -63,6 +64,8 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -157,25 +160,30 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    private ProjectModel project;
 
    private String warUrl;
-   
+
    //variables to store paas parameters
    //TODO: more convenience store for this params
-   
+
    //heroku
    private String herokuAppName;
+
    private String herokuRemoveService;
-   
+
    //openShift
    private String openShiftName;
+
    private String openShitfType;
-   
+
    //cloudBees
    private String cloudBeesName;
+
    private String cloudBeesDomain;
-   
+
    //cloudFoudnry
    private String cloudFoundryName;
+
    private String cloudFoundryTarget;
+
    private String cloudFoundryUrl;
 
    public DeploySamplesPresenter()
@@ -249,10 +257,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                display.setVisibleHerokuPanel(true);
                display.enableFinishButton(true);
             }
-//            else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-//            {
-//               getOpenShiftTypes();
-//            }
+            //            else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
+            //            {
+            //               getOpenShiftTypes();
+            //            }
             else
             {
                display.setVisibleCloudFoundryPanel(false);
@@ -510,7 +518,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    private void getCloudBeesDomains()
    {
       SamplesClientService.getInstance().getDomains(
-         new CloudBeesAsyncRequestCallback<List<String>>(IDE.eventBus(), domainsLoggedInHandler, domainsLoginCanceledHandler)
+         new CloudBeesAsyncRequestCallback<List<String>>(IDE.eventBus(), domainsLoggedInHandler,
+            domainsLoginCanceledHandler)
          {
             @Override
             protected void onSuccess(List<String> result)
@@ -527,10 +536,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             }
          });
    }
-   
+
    private LoginCanceledHandler domainsLoginCanceledHandler = new LoginCanceledHandler()
    {
-      
+
       @Override
       public void onCancelLogin()
       {
@@ -609,7 +618,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          e.printStackTrace();
       }
    }
-   
+
    private void storePaasValues()
    {
       if (ProjectProperties.Paas.NONE.equals(selectedPaaS))
@@ -668,13 +677,32 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   {
                      deployToHeroku();
                   }
-//                  else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-//                  {
-//                     deployToOpenShift();
-//                  }
-                  else
+                  //                  else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
+                  //                  {
+                  //                     deployToOpenShift();
+                  //                  }
+                  else if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
                   {
-                     buildApplication(project);
+                     if (isMavenProject())
+                     {
+                        buildApplication(project);
+                     }
+                     else
+                     {
+                        Dialogs.getInstance().showError(
+                           "Newly created project is not maven project. You can't deploy it to CloudBees");
+                     }
+                  }
+                  else if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(selectedPaaS))
+                  {
+                     if (isMavenProject())
+                     {
+                        buildApplication(project);
+                     }
+                     else
+                     {
+                        deployToPaas();
+                     }
                   }
                }
 
@@ -690,6 +718,19 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          e.printStackTrace();
          handleError(e);
       }
+   }
+
+   private boolean isMavenProject()
+   {
+      for (Item i : project.getChildren().getItems())
+      {
+         if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
+         {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    private void handleError(Throwable t)
@@ -757,8 +798,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void deployToCloudBees()
    {
-      final String applicationId =
-         cloudBeesName + "/" + cloudBeesDomain;
+      final String applicationId = cloudBeesName + "/" + cloudBeesDomain;
 
       SamplesClientService.getInstance().createCloudBeesApplication(applicationId, vfs.getId(), project.getId(),
          warUrl, null,
@@ -804,10 +844,12 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    private void deployToCloudFoundry()
    {
       SamplesClientService.getInstance().createCloudFoundryApplication(
+         vfs.getId(),
          cloudFoundryTarget,
          cloudFoundryName,
          cloudFoundryUrl,
          project.getPath(),
+         project.getId(),
          warUrl,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(),
             deployToCloudFoundryLoggedInHandler)
@@ -899,11 +941,11 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          paas.add(ProjectProperties.Paas.HEROKU);
       }
 
-//      //can be deployed to OpenShift
-//      if ("Rails".equals(type))
-//      {
-//         paas.add(ProjectProperties.Paas.OPENSHIFT);
-//      }
+      //      //can be deployed to OpenShift
+      //      if ("Rails".equals(type))
+      //      {
+      //         paas.add(ProjectProperties.Paas.OPENSHIFT);
+      //      }
       return paas.toArray(new String[paas.size()]);
    }
 
@@ -918,8 +960,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void deployToHeroku()
    {
-      SamplesClientService.getInstance().createHerokuApplication(herokuAppName, vfs.getId(), project.getId(), herokuRemoveService,
-         new HerokuAsyncRequestCallback<String>(IDE.eventBus(), herokuLoggedInHandler)
+      SamplesClientService.getInstance().createHerokuApplication(herokuAppName, vfs.getId(), project.getId(),
+         herokuRemoveService, new HerokuAsyncRequestCallback<String>(IDE.eventBus(), herokuLoggedInHandler)
          {
             @Override
             protected void onSuccess(String result)
@@ -928,7 +970,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             }
          });
    }
-   
+
    private LoggedInHandler openShiftLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -940,8 +982,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void deployToOpenShift()
    {
-      SamplesClientService.getInstance().createOpenShitfApplication(openShiftName, vfs.getId(), project.getId(), openShitfType,
-         new OpenShiftAsyncRequestCallback<String>(IDE.eventBus(), openShiftLoggedInHandler)
+      SamplesClientService.getInstance().createOpenShitfApplication(openShiftName, vfs.getId(), project.getId(),
+         openShitfType, new OpenShiftAsyncRequestCallback<String>(IDE.eventBus(), openShiftLoggedInHandler)
          {
             @Override
             protected void onSuccess(String result)

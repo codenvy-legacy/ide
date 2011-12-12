@@ -44,6 +44,8 @@ import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.Arrays;
@@ -167,6 +169,19 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
 
    //----Implementation------------------------
 
+   private boolean isMavenProject()
+   {
+      for (Item i : project.getChildren().getItems())
+      {
+         if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
+         {
+            return true;
+         }
+      }
+      
+      return false;
+   }
+   
    private void buildApplication()
    {
       IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
@@ -288,7 +303,14 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
    public void deploy(ProjectModel project)
    {
       this.project = project;
-      buildApplication();
+      if (isMavenProject())
+      {
+         buildApplication();
+      }
+      else
+      {
+         createApplication();
+      }
    }
 
    /**

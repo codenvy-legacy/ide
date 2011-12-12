@@ -539,7 +539,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       List<Item> children =
          (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
             .getChildren().getItems();
-      removeSystemItems(children);
+//      removeSystemItems(children);
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);

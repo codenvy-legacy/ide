@@ -26,7 +26,10 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.List;
 
 /**
  * The common control for working with Git.
@@ -37,10 +40,22 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  */
 public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler
 {
+   
+   enum EnableState {
+      BEFORE_INIT, AFTER_INIT;
+   }
    /**
     * Current workspace's href.
     */
    private VirtualFileSystemInfo workspace;
+
+   /**
+    * Variable, which indicated, when control must be enabled:
+    * before initializing the git repository or after.
+    * 
+    * IDE-1252
+    */
+   private EnableState enableState = EnableState.AFTER_INIT;
 
    /**
     * @param id control's id
@@ -61,9 +76,32 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
          setEnabled(false);
          return;
       }
-      boolean enabled = !isWorkspaceSelected(event.getSelectedItems().get(0).getId());
-      enabled = enabled && isProjectSelected((ItemContext)event.getSelectedItems().get(0));
-      setEnabled(enabled);
+
+      final Item item = event.getSelectedItems().get(0);
+      
+      if (isWorkspaceSelected(item.getId()) || !isProjectSelected((ItemContext)item))
+      {
+         setEnabled(false);
+         return;
+      }
+
+      List<Item> itemList = ((ItemContext)item).getProject().getChildren().getItems();
+      for (Item child : itemList)
+      {
+         if (".git".equals(child.getName()))
+         {
+            if (enableState == EnableState.AFTER_INIT)
+               setEnabled(true);
+            else
+               setEnabled(false);
+            return;
+         }
+      }
+      
+      if (enableState == EnableState.AFTER_INIT)
+         setEnabled(false);
+      else
+         setEnabled(true);
    }
 
    protected boolean isWorkspaceSelected(String id)
@@ -103,5 +141,18 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
       {
          setVisible(false);
       }
+   }
+
+   /**
+    * Set the state, where control must be enabled:
+    * before initializng repository or after.
+    * <p/>
+    * IDE-1252
+    * 
+    * @param enableState
+    */
+   public void setEnableState(EnableState enableState)
+   {
+      this.enableState = enableState;
    }
 }

@@ -266,8 +266,8 @@ public class SamplesClientServiceImpl extends SamplesClientService
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudFoundryApplication(String, java.lang.String, boolean, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void createCloudFoundryApplication(String server, String name, String url, String workDir,
-      String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+   public void createCloudFoundryApplication(String vfsId, String server, String name, String url, String workDir,
+      String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
    {
       final String requestUrl = restServiceContext + CLOUDFOUNDRY_CREATE;
 
@@ -285,6 +285,9 @@ public class SamplesClientServiceImpl extends SamplesClientService
       params += (server != null) ? "&server=" + server : "";
       params += (war != null) ? "&war=" + war : "";
       params += (url != null) ? "&url=" + url : "";
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      params += "&nostart=true";
 
       AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);

@@ -39,5 +39,6 @@ public class InitRepositoryControl extends GitControl
       setEvent(new InitRepositoryEvent());
       setImages(GitClientBundle.INSTANCE.initRepo(), GitClientBundle.INSTANCE.initRepoDisabled());
       setVisible(true);
+      setEnableState(EnableState.BEFORE_INIT);
    }
 }

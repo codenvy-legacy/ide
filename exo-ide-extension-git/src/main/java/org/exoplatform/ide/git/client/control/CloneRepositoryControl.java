@@ -38,5 +38,6 @@ public class CloneRepositoryControl extends GitControl
       setPrompt(GitExtension.MESSAGES.cloneControlPrompt());
       setImages(GitClientBundle.INSTANCE.cloneRepo(), GitClientBundle.INSTANCE.cloneRepoDisabled());
       setEvent(new CloneRepositoryEvent());
+      setEnableState(EnableState.BEFORE_INIT);
    }
 }
