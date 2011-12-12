@@ -48,7 +48,7 @@ public class RenameFolderView extends ViewImpl implements RenameFolderPresenter.
     */
    private static final int WIDTH = 400;
 
-   private static final int HEIGHT = 150;
+   private static final int HEIGHT = 140;
 
    private static final String ID = "ideRenameItemForm";
 
@@ -77,7 +77,7 @@ public class RenameFolderView extends ViewImpl implements RenameFolderPresenter.
 
    public RenameFolderView()
    {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT, false);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       
