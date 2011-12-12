@@ -69,7 +69,7 @@ public class TestClassParser
       Assert.assertEquals(0, typeInfo.getConstructors().length);
       {
          // methods
-         MethodInfo[] methods = typeInfo.getMethods();
+         MethodInfo[] methods = typeInfo.getDeclaredMethods();
          Assert.assertEquals(3, methods.length);
          Set<String> visitedMethods = new HashSet<String>();
          for (MethodInfo method : methods)
@@ -134,7 +134,7 @@ public class TestClassParser
 
       {
          // fields
-         FieldInfo[] fields = typeInfo.getFields();
+         FieldInfo[] fields = typeInfo.getDeclaredFields();
          Assert.assertEquals(4, fields.length);
          Set<String> visitedFields = new HashSet<String>();
          for (FieldInfo field : fields)
@@ -171,7 +171,7 @@ public class TestClassParser
 
       {
          // constructors
-         RoutineInfo[] constructors = typeInfo.getConstructors();
+         RoutineInfo[] constructors = typeInfo.getDeclaredConstructors();
          Assert.assertEquals(1, constructors.length);
          Set<String> visitedConstructors = new HashSet<String>();
          for (RoutineInfo constructor : constructors)
@@ -193,7 +193,7 @@ public class TestClassParser
 
       {
          // methods
-         MethodInfo[] methods = typeInfo.getMethods();
+         MethodInfo[] methods = typeInfo.getDeclaredMethods();
          Assert.assertEquals(5, methods.length);
          Set<String> visitedMethods = new HashSet<String>();
          for (MethodInfo method : methods)
@@ -280,7 +280,7 @@ public class TestClassParser
 
       {
          // fields
-         FieldInfo[] fields = typeInfo.getFields();
+         FieldInfo[] fields = typeInfo.getDeclaredFields();
          Assert.assertEquals(5, fields.length);
          Set<String> visitedFields = new HashSet<String>();
          for (FieldInfo field : fields)
@@ -325,7 +325,7 @@ public class TestClassParser
 
       {
          // constructors
-         RoutineInfo[] constructors = typeInfo.getConstructors();
+         RoutineInfo[] constructors = typeInfo.getDeclaredConstructors();
          Assert.assertEquals(1, constructors.length);
          Set<String> visitedConstructors = new HashSet<String>();
          for (RoutineInfo constructor : constructors)
@@ -346,7 +346,7 @@ public class TestClassParser
 
       {
          // methods
-         MethodInfo[] methods = typeInfo.getMethods();
+         MethodInfo[] methods = typeInfo.getDeclaredMethods();
          Assert.assertEquals(2, methods.length);
          Set<String> visitedMethods = new HashSet<String>();
          for (MethodInfo method : methods)
@@ -407,7 +407,7 @@ public class TestClassParser
 
       {
          // methods
-         MethodInfo[] methods = typeInfo.getMethods();
+         MethodInfo[] methods = typeInfo.getDeclaredMethods();
          Assert.assertEquals(2, methods.length);
          Set<String> visitedMethods = new HashSet<String>();
          for (MethodInfo method : methods)
@@ -467,7 +467,7 @@ public class TestClassParser
 
       {
          // methods
-         MethodInfo[] methods = typeInfo.getMethods();
+         MethodInfo[] methods = typeInfo.getDeclaredMethods();
          Assert.assertEquals(2, methods.length);
          Set<String> visitedMethods = new HashSet<String>();
          for (MethodInfo method : methods)
@@ -531,7 +531,7 @@ public class TestClassParser
 
       {
          // fields
-         FieldInfo[] fields = typeInfo.getFields();
+         FieldInfo[] fields = typeInfo.getDeclaredFields();
          Assert.assertEquals(1, fields.length);
          Set<String> visitedFields = new HashSet<String>();
          for (FieldInfo field : fields)
@@ -551,7 +551,7 @@ public class TestClassParser
 
       {
          // constructors
-         RoutineInfo[] constructors = typeInfo.getConstructors();
+         RoutineInfo[] constructors = typeInfo.getDeclaredConstructors();
          Assert.assertEquals(1, constructors.length);
          Set<String> visitedConstructors = new HashSet<String>();
          for (RoutineInfo constructor : constructors)
@@ -572,7 +572,7 @@ public class TestClassParser
 
       {
          // methods
-         MethodInfo[] methods = typeInfo.getMethods();
+         MethodInfo[] methods = typeInfo.getDeclaredMethods();
          Assert.assertEquals(5, methods.length);
          Set<String> visitedMethods = new HashSet<String>();
          for (MethodInfo method : methods)

@@ -27,7 +27,6 @@ import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,7 +36,6 @@ import java.lang.reflect.Modifier;
 /**
  * Compare information received with help of java reflection and ClassParser
  */
-@Ignore
 public class TestClassParser2 extends BaseTest
 {
    private static TypeInfo typeInfo;
@@ -68,7 +66,7 @@ public class TestClassParser2 extends BaseTest
 
       for (RoutineInfo routineInfo : typeInfo.getConstructors())
       {
-         boolean isConstructorPublic = ((routineInfo.getModifiers() & Modifier.PUBLIC) == 0);
+         boolean isConstructorPublic = ((routineInfo.getModifiers() & Modifier.PUBLIC) != 0);
          assertTrue(isConstructorPublic);
       }
    }
@@ -90,7 +88,7 @@ public class TestClassParser2 extends BaseTest
 
       for (MethodInfo methodInfo : typeInfo.getMethods())
       {
-         boolean isMethodPublic = ((methodInfo.getModifiers() & Modifier.PUBLIC) == 0);
+         boolean isMethodPublic = ((methodInfo.getModifiers() & Modifier.PUBLIC) != 0);
          assertTrue(isMethodPublic);
       }
    }
@@ -111,7 +109,7 @@ public class TestClassParser2 extends BaseTest
       assertEquals(aClass.getFields().length, typeInfo.getFields().length);
       assertEquals(1, typeInfo.getFields().length);
 
-      assertTrue((typeInfo.getFields()[0].getModifiers() & Modifier.PUBLIC) == 0);
+      assertTrue((typeInfo.getFields()[0].getModifiers() & Modifier.PUBLIC) != 0);
    }
 
    @Test

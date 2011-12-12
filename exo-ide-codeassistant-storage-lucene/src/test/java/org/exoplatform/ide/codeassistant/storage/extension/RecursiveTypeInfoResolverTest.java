@@ -27,18 +27,18 @@ import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.TypeInfoIndexWriter;
-import org.exoplatform.ide.codeassistant.storage.extension.DeclaredTypeInfoResolver;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.List;
 
 @Ignore
-public class DeclaredTypeInfoResolverTest
+public class RecursiveTypeInfoResolverTest
 {
 
    private static CodeAssistantStorage storage;
@@ -62,27 +62,27 @@ public class DeclaredTypeInfoResolverTest
    @Test
    public void testTestClassResolving() throws CodeAssistantException
    {
-      DeclaredTypeInfoResolver resolver = new DeclaredTypeInfoResolver(storage);
-      TypeInfo testClass = storage.getTypeByFqn("java.lang.Integer");
+      RecursiveTypeInfoResolver resolver = new RecursiveTypeInfoResolver(storage);
+      TypeInfo testClass = storage.getTypeByFqn("java.io.FileInputStream");
       testClass = resolver.resolveTypeInfo(testClass);
-      System.out.println(testClass.getDeclaredMethods().length);
-      for (RoutineInfo method : testClass.getDeclaredConstructors())
+      System.out.println(testClass.getMethods().length);
+      for (RoutineInfo method : testClass.getMethods())
       {
          System.out.println(method.getGeneric());
       }
 
       System.out.println();
       System.out.println();
-      TypeInfo reflectMap = TypeInfoExtractor.extract(Integer.class);
-      System.out.println(reflectMap.getDeclaredMethods().length);
-      for (RoutineInfo method : reflectMap.getDeclaredConstructors())
+      TypeInfo reflectMap = TypeInfoExtractor.extract(FileInputStream.class);
+      System.out.println(reflectMap.getMethods().length);
+      for (RoutineInfo method : reflectMap.getMethods())
       {
          System.out.println(method.getGeneric());
       }
 
       System.out.println();
       System.out.println();
-      for (Constructor method : Integer.class.getDeclaredConstructors())
+      for (Method method : FileInputStream.class.getMethods())
       {
          System.out.println(method.getName());
       }

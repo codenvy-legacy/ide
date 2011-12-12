@@ -147,17 +147,37 @@ public class TypeInfoBuilder
       typeInfo.setModifiers(modifiers);
       typeInfo.setName(name);
       typeInfo.setQualifiedName(qualifiedName);
-      typeInfo.setFields(fields.toArray(new FieldInfo[fields.size()]));
-      typeInfo.setMethods(methods.toArray(new MethodInfo[methods.size()]));
-      typeInfo.setConstructors(constructors.toArray(new RoutineInfo[constructors.size()]));
+      typeInfo.setDeclaredFields(fields.toArray(new FieldInfo[fields.size()]));
+      typeInfo.setDeclaredMethods(methods.toArray(new MethodInfo[methods.size()]));
+      typeInfo.setDeclaredConstructors(constructors.toArray(new RoutineInfo[constructors.size()]));
 
-      /*
-       * There are no way to fill declared fields, methods and constructors, because there are no class hierarchy,
-       * each class parses separately.
-       */
-      typeInfo.setDeclaredFields(null);
-      typeInfo.setDeclaredMethods(null);
-      typeInfo.setDeclaredConstructors(null);
+      List<FieldInfo> publicFields = new ArrayList<FieldInfo>();
+      for (FieldInfo field : fields)
+      {
+         if ((field.getModifiers() & Modifier.PUBLIC) > 0)
+         {
+            publicFields.add(field);
+         }
+      }
+      typeInfo.setFields(publicFields.toArray(new FieldInfo[publicFields.size()]));
+      List<RoutineInfo> publicConstructors = new ArrayList<RoutineInfo>();
+      for (RoutineInfo constructor : constructors)
+      {
+         if ((constructor.getModifiers() & Modifier.PUBLIC) > 0)
+         {
+            publicConstructors.add(constructor);
+         }
+      }
+      typeInfo.setConstructors(publicConstructors.toArray(new RoutineInfo[publicConstructors.size()]));
+      List<MethodInfo> publicMethods = new ArrayList<MethodInfo>();
+      for (MethodInfo method : methods)
+      {
+         if ((method.getModifiers() & Modifier.PUBLIC) > 0)
+         {
+            publicMethods.add(method);
+         }
+      }
+      typeInfo.setMethods(publicMethods.toArray(new MethodInfo[publicMethods.size()]));
 
       typeInfo.setInterfaces(interfaces);
       typeInfo.setSuperClass(superName);
