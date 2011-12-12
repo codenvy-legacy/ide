@@ -90,6 +90,8 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
    private boolean isLoadingOpenedFiles = false;
 
    private boolean isRestoringOpenedFiles = false;
+   
+   private ProjectModel restoredProject;
 
    public RestoreOpenedFilesPhase(HandlerManager eventBus, ApplicationSettings applicationSettings)
    {
@@ -170,6 +172,8 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       IDE.removeHandler(ProjectOpenedEvent.TYPE, instance);
+      
+      restoredProject = event.getProject();
 
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
@@ -304,7 +308,9 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
       String fileURL = filesToOpen.get(0);
       filesToOpen.remove(0);
+      
       FileModel file = openedFiles.get(fileURL);
+      file.setProject(restoredProject);
       try
       {
          String editorDescription = defaultEditors.get(file.getMimeType());
