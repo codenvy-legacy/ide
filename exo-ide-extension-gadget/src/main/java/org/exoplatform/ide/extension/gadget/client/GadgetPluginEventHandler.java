@@ -89,7 +89,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
       String container = "default";
       String domain = null;
 
-      String href = activeFile.getLinkByRelation(Link.REL_CONTENT).getHref();
+      String href = activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
       TokenRequest tokenRequest = new TokenRequest(href, owner, viewer, moduleId, container, domain);

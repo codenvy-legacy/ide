@@ -117,7 +117,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
          else
          {
             display.setPreviewAvailable(true);
-            display.showPreview(activeFile.getLinkByRelation(Link.REL_CONTENT).getHref());
+            display.showPreview(activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref());
          }
       }
       else
