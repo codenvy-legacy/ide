@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.heroku.client.stack;
 
-import com.google.gwt.cell.client.CheckboxCell;
-import com.google.gwt.cell.client.SafeHtmlCell;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.cellview.client.Column;
-
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
+
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.cellview.client.Column;
 
 /**
  * Grid for displaying application's stacks.
@@ -68,12 +67,24 @@ public class StackGrid extends ListGrid<Stack>
          }
       };
 
-      Column<Stack, Boolean> betaColumn = new Column<Stack, Boolean>(new CheckboxCell())
+      Column<Stack, SafeHtml> betaColumn = new Column<Stack, SafeHtml>(new SafeHtmlCell())
       {
          @Override
-         public Boolean getValue(Stack stack)
+         public SafeHtml getValue(final Stack stack)
          {
-            return stack.isBeta();
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  if (stack.isBeta())
+                    return (stack.isCurrent()) ? "<b>beta</b>" : "beta";
+                  return "";
+               }
+            };
+            return html;
          }
       };
 
