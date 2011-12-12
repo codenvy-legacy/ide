@@ -235,6 +235,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private void prepareToDelete()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       itemsToDelete = new ArrayList<Item>();
       itemsToDelete.addAll(items);
       deleteNextItem();
