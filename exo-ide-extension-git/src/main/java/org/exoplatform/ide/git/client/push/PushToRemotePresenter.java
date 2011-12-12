@@ -267,7 +267,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       display = GWT.create(Display.class);
       bindDisplay();
-      display.enablePushButton(false);
+//      display.enablePushButton(false);
       IDE.getInstance().openView(display.asView());
 
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
