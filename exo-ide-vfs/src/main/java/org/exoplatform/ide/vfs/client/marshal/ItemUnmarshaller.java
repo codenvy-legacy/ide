@@ -40,7 +40,7 @@ import com.google.gwt.json.client.JSONValue;
 public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
 {
 
-   private ItemWrapper item;
+   private ItemWrapper wrapper;
 
    /**
     * Item type
@@ -57,7 +57,7 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
     */
    public ItemUnmarshaller(ItemWrapper item)
    {
-      this.item = item;
+      this.wrapper = item;
    }
 
    /**
@@ -72,28 +72,31 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
          JSONObject object = val.isObject();
          ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
          String mimeType = null;
-         if(object.get(MIME_TYPE).isString() != null)
-          mimeType = object.get(MIME_TYPE).isString().stringValue();
+         if (object.get(MIME_TYPE).isString() != null)
+            mimeType = object.get(MIME_TYPE).isString().stringValue();
 
          if (type == ItemType.FOLDER)
          {
             if (Project.PROJECT_MIME_TYPE.equals(mimeType))
             {
-               item.setItem(new ProjectModel(object));
+               wrapper.setItem(new ProjectModel(object));
             }
             else
             {
-               item.setItem(new FolderModel(object));
+               wrapper.setItem(new FolderModel(object));
             }
          }
          else
          {
-            FolderModel parent = ((FileModel)item.getItem()).getParent();
-            ProjectModel project = ((FileModel)item.getItem()).getProject();
             FileModel file = new FileModel(object);
-            file.setParent(parent);
-            file.setProject(project);
-            item.setItem(file);
+            if (wrapper.getItem() != null)
+            {
+               FolderModel parent = ((FileModel)wrapper.getItem()).getParent();
+               ProjectModel project = ((FileModel)wrapper.getItem()).getProject();
+               file.setParent(parent);
+               file.setProject(project);
+            }
+            wrapper.setItem(file);
          }
       }
       catch (Exception e)
@@ -109,7 +112,7 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
    @Override
    public ItemWrapper getPayload()
    {
-      return item;
+      return wrapper;
    }
 
 }
