@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.delete;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -178,6 +180,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                IDE.fireEvent(new OutputEvent(
                   CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName), Type.INFO));
                IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
+               ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+               if (project != null && projectId != null)
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
             }
          });
    }

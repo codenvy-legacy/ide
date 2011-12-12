@@ -24,6 +24,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -452,7 +453,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          }
       };
 
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       CloudFoundryClientService.getInstance().create(app.server, app.name, app.type, app.url, app.instances,
          app.memory, app.nostart, vfs.getId(), project.getId(), warUrl,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), createAppHandler, null, app.server)
@@ -473,6 +474,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                   }
                }
                IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
             }
 
             @Override

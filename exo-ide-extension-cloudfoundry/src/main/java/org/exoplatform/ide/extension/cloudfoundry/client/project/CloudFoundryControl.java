@@ -21,12 +21,15 @@ package org.exoplatform.ide.extension.cloudfoundry.client.project;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Control for managing project, deployed on CloudFoundry.
@@ -36,7 +39,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
  *
  */
 public class CloudFoundryControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler, FolderRefreshedHandler
 {
    private static final String ID = "Project/PaaS/CloudFoundry";
 
@@ -62,6 +65,7 @@ public class CloudFoundryControl extends SimpleControl implements IDEControl, Pr
    {
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
    }
 
    /**
@@ -80,7 +84,24 @@ public class CloudFoundryControl extends SimpleControl implements IDEControl, Pr
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      boolean isCloudFoundry = event.getProject().getPropertyValue("cloudfoundry-application") != null;
+      update(event.getProject());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
+    */
+   @Override
+   public void onFolderRefreshed(FolderRefreshedEvent event)
+   {
+      if(event.getFolder() instanceof ProjectModel)
+      {
+         update((ProjectModel)event.getFolder());
+      }
+   }
+   
+   private void update(ProjectModel project)
+   {
+      boolean isCloudFoundry = project.getPropertyValue("cloudfoundry-application") != null;
       setVisible(isCloudFoundry);
       setEnabled(isCloudFoundry);
    }

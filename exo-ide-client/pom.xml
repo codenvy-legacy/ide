@@ -136,8 +136,7 @@
                   <configuration>
                      <tasks>
                         <echo file="target/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
-                           buildNumber =
-                           ${buildNumber}
+                           buildNumber = ${buildNumber}
                            buildTime =${timestamp}
                            version = ${project.version}</echo>
                      </tasks>
@@ -582,6 +581,23 @@
                         </configuration>
                      </execution>
                   </executions>
+               </plugin>
+               <plugin>
+                 <artifactId>maven-antrun-plugin</artifactId>
+                 <executions>
+                   <execution>
+                     <id>create-git-folders</id>
+                     <phase>compile</phase>
+                     <goals>
+                       <goal>run</goal>
+                     </goals>
+                     <configuration>
+                       <tasks>
+                        <mkdir dir="target/git/repository/dev-monit" />
+                       </tasks>
+                     </configuration>
+                   </execution>
+                 </executions>                 
                </plugin>
 
                <plugin>
