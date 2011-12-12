@@ -38,13 +38,13 @@ import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -63,8 +63,8 @@ import java.util.List;
  * @version $
  */
 
-public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHandler,
-   ProjectOpenedHandler, AllFilesClosedHandler, VfsChangedHandler
+public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHandler, ProjectOpenedHandler,
+   ProjectClosedHandler, AllFilesClosedHandler, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -86,12 +86,12 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
     * Instance of opened {@link Display}.
     */
    private Display display;
-   
+
    /**
     * ID of current opened project.
     */
    private String currentOpenedProjectID;
-   
+
    /**
     * Virtual File System info.
     */
@@ -108,6 +108,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(AllFilesClosedEvent.TYPE, this);
    }
 
@@ -173,7 +174,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
 
       display.setOpenButtonEnabled(false);
    }
-   
+
    /**
     * Enables or disables Open button.
     */
@@ -186,16 +187,20 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
          {
             return;
          }
-         
-         if (display.getSelectedItems().size() != 1) {
+
+         if (display.getSelectedItems().size() != 1)
+         {
             display.setOpenButtonEnabled(false);
             return;
          }
-         
+
          ProjectModel selectedProject = display.getSelectedItems().get(0);
-         if (selectedProject.getId().equals(currentOpenedProjectID)) {
+         if (selectedProject.getId().equals(currentOpenedProjectID))
+         {
             display.setOpenButtonEnabled(false);
-         } else {
+         }
+         else
+         {
             display.setOpenButtonEnabled(true);
          }
       }
@@ -212,7 +217,10 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
 
       try
       {
-         VirtualFileSystem.getInstance().search(query, -1, 0,
+         VirtualFileSystem.getInstance().search(
+            query,
+            -1,
+            0,
             new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
@@ -256,10 +264,10 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       {
          return;
       }
-      
+
       IDE.fireEvent(new CloseAllFilesEvent());
    }
-   
+
    /**
     * Opens the project after all files are closed.
     * 
@@ -268,10 +276,11 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    @Override
    public void onAllFilesClosed(AllFilesClosedEvent event)
    {
-      if (display == null) {
+      if (display == null)
+      {
          return;
       }
-      
+
       ProjectModel project = (ProjectModel)display.getSelectedItems().get(0);
       IDE.fireEvent(new OpenProjectEvent(project));
    }
@@ -299,7 +308,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       currentOpenedProjectID = event.getProject().getId();
-      
+
       if (display != null)
       {
          IDE.getInstance().closeView(display.asView().getId());
@@ -310,6 +319,15 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      if (event.getProject().getId().equals(currentOpenedProjectID))
+      {
+         currentOpenedProjectID = null;
+      }
    }
 
 }
