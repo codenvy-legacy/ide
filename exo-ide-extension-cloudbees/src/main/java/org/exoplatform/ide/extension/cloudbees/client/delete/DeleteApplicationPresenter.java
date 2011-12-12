@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -31,6 +32,7 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for deleting application from CloudBees.
@@ -137,6 +139,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     */
    protected void doDelete()
    {
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       final String projectId =
          ((ItemContext)selectedItems.get(0)).getProject() != null ? ((ItemContext)selectedItems.get(0)).getProject()
             .getId() : null;
@@ -156,6 +159,10 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appTitle),
                   Type.INFO));
                IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
+               if (project != null)
+               {
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
             }
          });
    }
