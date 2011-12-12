@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -298,7 +297,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     */
    private FileModel createClasspathFile(ProjectModel projectModel)
    {
-      String path = GroovyClassPathUtil.formPathFromHref(projectModel.getPath(), restContext);
+      String path = VirtualFileSystem.getInstance().getInfo().getId() + "#" + projectModel.getPath();
       GroovyClassPathEntry projectClassPathEntry = GroovyClassPathEntry.build(EnumSourceType.DIR.getValue(), path);
       List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();
       groovyClassPathEntries.add(projectClassPathEntry);
