@@ -21,12 +21,15 @@ package org.exoplatform.ide.extension.openshift.client.project;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Control for managing project, deployed on OpenShift.
@@ -35,7 +38,8 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * @version $Id:  Dec 5, 2011 9:55:32 AM anya $
  *
  */
-public class OpenShiftControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
+public class OpenShiftControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
+   FolderRefreshedHandler
 {
    public OpenShiftControl()
    {
@@ -55,6 +59,7 @@ public class OpenShiftControl extends SimpleControl implements IDEControl, Proje
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
    }
 
    /**
@@ -73,7 +78,27 @@ public class OpenShiftControl extends SimpleControl implements IDEControl, Proje
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      boolean isOpenShiftProject = event.getProject().getPropertyValue("openshift-express-application") != null;
+      update(event.getProject());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
+    */
+   @Override
+   public void onFolderRefreshed(FolderRefreshedEvent event)
+   {
+      if (event.getFolder() instanceof ProjectModel)
+      {
+         update((ProjectModel)event.getFolder());
+      }
+   }
+
+   /**
+    * @param project
+    */
+   private void update(ProjectModel project)
+   {
+      boolean isOpenShiftProject = project.getPropertyValue("openshift-express-application") != null;
       setVisible(isOpenShiftProject);
       setEnabled(isOpenShiftProject);
    }

@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -218,6 +219,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             {
                IDE.getInstance().closeView(display.asView().getId());
                IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
             }
 
             /**

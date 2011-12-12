@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -174,6 +175,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
                IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
                   Type.INFO));
                IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
+               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
             }
 
             /**
