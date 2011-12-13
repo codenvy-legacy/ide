@@ -135,7 +135,7 @@ public class GitClientServiceImpl extends GitClientService
 
    public static final String STATUS = "/ide/git/status";
 
-   public static final String WORKDIR = "/ide/git/workdir";
+   public static final String WORKDIR = "/ide/git-repo/workdir";
    
    public static final String RO_URL = "/ide/git/read-only-url";
 
