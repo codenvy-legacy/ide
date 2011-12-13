@@ -44,6 +44,12 @@
       	border-top: 1px solid #DBDFE5;
       	padding-top: 5px;
       }
+      
+      .textinput
+      {
+      	background-color: #FFFFFF !important;
+      	color: #000000 !important;
+      }
    </ui:style>
    <c:Border margin="15" borderColor="transparent">
       <c:layer top="0" bottom="40">
@@ -52,7 +58,7 @@
                <g:FlowPanel styleName="{style.padding}">
                   <g:FlowPanel width="100%" height="28px">
                      <g:Label text="{locale.manageProjectApplication}" addStyleNames="{style.labelH}" width="20%"></g:Label>
-                     <c:TextInput ui:field="nameField" width="67%" height="22px" addStyleNames="{style.left} {style.space}"></c:TextInput>
+                     <c:TextInput ui:field="nameField" width="67%" height="22px" addStyleNames="{style.textinput} {style.left} {style.space}" enabled="false"></c:TextInput>
                      <c:ImageButton ui:field="renameButton" width="22" height="22px" text="" title="{locale.manageProjectApplicationRename}"
                         styleName="{style.left} {style.space}" imageResource="{resource.editButton}" disabledImageResource="{resource.editButtonDisabled}"></c:ImageButton>
                      <c:ImageButton ui:field="infoButton" width="22" height="22px" text="" title="{locale.manageProjectApplicationProperties}"
@@ -64,7 +70,7 @@
                   </g:FlowPanel>
                   <g:FlowPanel width="100%" height="30px">
                      <g:Label text="{locale.manageProjectApplicationStack}" addStyleNames="{style.labelH}" width="20%"></g:Label>
-                     <c:TextInput ui:field="stackField" height="22px" addStyleNames="{style.left} {style.space}" width="73%"></c:TextInput>
+                     <c:TextInput ui:field="stackField" height="22px" addStyleNames="{style.left} {style.space} {style.textinput}" width="73%" enabled="false"></c:TextInput>
                      <c:ImageButton ui:field="editStackButton" width="22" height="22px" text=""
                         title="{locale.manageProjectApplicationEditStack}" styleName="{style.left}" imageResource="{resource.editButton}"
                         disabledImageResource="{resource.editButtonDisabled}"></c:ImageButton>

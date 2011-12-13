@@ -112,7 +112,7 @@ public class HerokuProjectView extends ViewImpl implements HerokuProjectPresente
       super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.manageProjectViewTitle(), new Image(
          HerokuClientBundle.INSTANCE.heroku()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-
+      
       deleteButton.getElement().setId(DELETE_BUTTON_ID);
       renameButton.getElement().setId(RENAME_BUTTON_ID);
       closeButton.setButtonId(CLOSE_BUTTON_ID);

@@ -43,6 +43,11 @@
       	border-top: 1px solid #DBDFE5;
       	padding-top: 5px;
       }
+      
+      .textinput {
+      	background-color: #FFFFFF !important;
+      	color: #000000 !important;
+      }
    </ui:style>
    <c:Border margin="15" borderColor="transparent">
       <c:layer top="0" height="80%">
@@ -51,7 +56,7 @@
                <g:FlowPanel styleName="{style.padding}">
                   <g:FlowPanel width="100%" height="28px">
                      <g:Label text="{locale.appNameFieldName}" addStyleNames="{style.labelH}" width="33%"></g:Label>
-                     <c:TextInput ui:field="nameField" width="60%" height="22px" addStyleNames="{style.left} {style.space}"></c:TextInput>
+                     <c:TextInput ui:field="nameField" width="60%" height="22px" enabled="false" addStyleNames="{style.textinput} {style.left} {style.space}"></c:TextInput>
                      <c:ImageButton ui:field="infoButton" imageName="cancel" width="22" height="22px" text="" styleName="{style.left}"
                         imageResource="{resource.propertiesButton}" disabledImageResource="{resource.propertiesButtonDisabled}"></c:ImageButton>
                   </g:FlowPanel>
