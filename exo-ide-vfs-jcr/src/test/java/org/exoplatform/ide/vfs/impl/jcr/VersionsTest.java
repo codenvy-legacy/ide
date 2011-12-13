@@ -151,10 +151,8 @@ public class VersionsTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("itembypath") //
-         .append("?") //
-         .append("path=") //
          .append(fileNode.getPath()) //
-         .append("&") //
+         .append("?") //
          .append("versionId=") //
          .append("2") //
          .toString();

@@ -26,7 +26,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.security.ConversationState;
 
 import javax.jcr.RepositoryException;
 import javax.ws.rs.core.UriInfo;

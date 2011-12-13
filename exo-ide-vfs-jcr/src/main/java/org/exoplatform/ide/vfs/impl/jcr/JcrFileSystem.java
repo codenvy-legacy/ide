@@ -109,10 +109,10 @@ import javax.ws.rs.core.UriBuilder;
  */
 public class JcrFileSystem implements VirtualFileSystem
 {
-   private enum Resolver {
+   enum Resolver {
       INSTANCE;
       /*=====================================*/
-      private final MimeTypeResolver resolver;
+      final MimeTypeResolver resolver;
 
       private Resolver()
       {
@@ -123,7 +123,7 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          return MediaType.valueOf(resolver.getMimeType(filename));
       }
-   };
+};
 
    static final Set<String> SKIPPED_QUERY_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:path", "jcr:score"));
 
@@ -425,7 +425,8 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String, java.lang.String)
     */
    @Override
-   public ContentStream getContent(@QueryParam("path") String path, //
+   @Path("contentbypath/{path:.*}")
+   public ContentStream getContent(@PathParam("path") String path, //
       @QueryParam("versionId") String versionId //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -532,7 +533,7 @@ public class JcrFileSystem implements VirtualFileSystem
          new Link(createURI("item", "[id]"), Link.REL_ITEM, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_ITEM_BY_PATH, //
-         new Link(createURI("itembypath", null, "path", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
+         new Link(createURI("itembypath", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_CREATE_FILE, //
          new Link(createURI("file", "[parentId]", "name", "[name]"), //
@@ -602,9 +603,10 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, java.lang.String,
     *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
+   @Path("itembypath/{path:.*}")
    @Override
    public Item getItemByPath(
-      @QueryParam("path") String path, //
+      @PathParam("path") String path, //
       @QueryParam("versionId") String versionId,
       @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter) throws ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException
@@ -1812,7 +1814,7 @@ public class JcrFileSystem implements VirtualFileSystem
          new Link(createURI("downloadfile", id), Link.REL_DOWNLOAD_FILE, file.getMediaType().toString()));
 
       links.put(Link.REL_CONTENT_BY_PATH, //
-         new Link(createURI("contentbypath", null, "path", file.getPath()), Link.REL_CONTENT_BY_PATH, file
+         new Link(createURI("contentbypath", file.getPath().substring(1)), Link.REL_CONTENT_BY_PATH, file
             .getMediaType().toString()));
 
       links.put(Link.REL_VERSION_HISTORY, //
@@ -1978,6 +1980,10 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       try
       {
+         if (!path.startsWith("/"))
+         {
+            path = "/" + path;
+         }
          String jcrPath = getJcrPath(session.getUserID(), path);
          javax.jcr.Item jcrItem = session.getItem(jcrPath);
          if (!jcrItem.isNode())

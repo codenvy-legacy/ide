@@ -141,7 +141,6 @@ public class GetContentTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("contentbypath") //
-         .append("?path=") //
          .append(filePath).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
@@ -165,9 +164,9 @@ public class GetContentTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("contentbypath") //
-         .append("?path=") //
          .append(filePath) //
-         .append("&versionId=") //
+         .append("?") //
+         .append("versionId=") //
          .append("1").toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());

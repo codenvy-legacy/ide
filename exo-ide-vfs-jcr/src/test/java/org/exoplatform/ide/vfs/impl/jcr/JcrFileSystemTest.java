@@ -286,7 +286,7 @@ public abstract class JcrFileSystemTest extends TestCase
          assertNotNull("'" + Link.REL_CONTENT_BY_PATH + "' link not found. ", link);
          assertEquals(file.getMimeType(), link.getType());
          assertEquals(Link.REL_CONTENT_BY_PATH, link.getRel());
-         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("contentbypath").queryParam("path", file.getPath()).build()
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("contentbypath").path(file.getPath().substring(1)).build()
             .toString(), link.getHref());
 
          link = links.get(Link.REL_CURRENT_VERSION);
@@ -427,7 +427,7 @@ public abstract class JcrFileSystemTest extends TestCase
       assertNotNull("'" + Link.REL_ITEM_BY_PATH + "' template not found. ", template);
       assertEquals(MediaType.APPLICATION_JSON, template.getType());
       assertEquals(Link.REL_ITEM_BY_PATH, template.getRel());
-      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("itembypath").queryParam("path", "[path]").build().toString(),
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("itembypath").path("[path]").build().toString(),
          template.getHref());
 
       template = templates.get(Link.REL_COPY);

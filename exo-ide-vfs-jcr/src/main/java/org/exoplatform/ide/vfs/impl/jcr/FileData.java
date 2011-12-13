@@ -171,20 +171,25 @@ class FileData extends ItemData
    {
       try
       {
-         String str = node.getProperty("jcr:content/jcr:mimeType").getString();
-         if (str.isEmpty())
+         String type = node.getProperty("jcr:content/jcr:mimeType").getString();
+         String resolvedMimeType = JcrFileSystem.Resolver.INSTANCE.resolver.getMimeType(getName());
+         String defaultMimeType = JcrFileSystem.Resolver.INSTANCE.resolver.getDefaultMimeType();
+         if (!resolvedMimeType.equals(defaultMimeType) && !resolvedMimeType.equals(type))
          {
-            return null;
+            type = resolvedMimeType;
+            node.getNode("jcr:content").setProperty("jcr:mimeType", type);
+            Session session = node.getSession();
+            session.save();
          }
          try
          {
             String encoding = node.getProperty("jcr:content/jcr:encoding").getString();
-            str += (";charset=" + encoding);
+            type += (";charset=" + encoding);
          }
          catch (PathNotFoundException e)
          {
          }
-         return MediaType.valueOf(str);
+         return MediaType.valueOf(type);
       }
       catch (AccessDeniedException e)
       {

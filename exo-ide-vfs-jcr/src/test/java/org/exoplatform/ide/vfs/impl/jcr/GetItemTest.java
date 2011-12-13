@@ -102,12 +102,10 @@ public class GetItemTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("itembypath") //
-         .append("?") //
-         .append("path=") //
          .append(filePath).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
-      //log.info(new String(writer.getBody()));
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FILE, item.getItemType());
       assertEquals(fileId, item.getId());
@@ -212,8 +210,6 @@ public class GetItemTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("itembypath") //
-         .append("?") //
-         .append("path=") //
          .append(folderPath).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
@@ -231,10 +227,8 @@ public class GetItemTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("itembypath") //
-         .append("?") //
-         .append("path=") //
          .append(folderPath) //
-         .append("&") //
+         .append("?") //
          .append("versionId=") //
          .append("1").toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
