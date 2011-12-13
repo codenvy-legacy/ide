@@ -19,7 +19,6 @@
 package org.exoplatform.ide.shell.client.commands;
 
 import org.exoplatform.ide.shell.client.CloudShell;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -161,7 +160,7 @@ public class Utils
                char chars[] = new char[maxLen - name.length()];
                Arrays.fill(chars, (char)' ');
                StringBuilder builder = strings.get(j).append(TAB);
-               if (item instanceof FolderModel)
+               if (item instanceof Folder)
                {
                   builder.append("<span style=\"color:#246fd5;\">").append(name).append("</span>");
                }
