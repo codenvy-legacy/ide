@@ -13,8 +13,8 @@
       background-color: transparent;
       padding: 10px 0 0;
       font-family:
-      Arial,Verdana,sans-serif;
-      font-size: 14px;
+      Verdana,Arial,sans-serif;
+      font-size: 18px;
       font-weight: bold;
       color: #5E5E5E;
       text-decoration: none;
@@ -39,6 +39,10 @@
       .img {
       margin-left: 10px;
       }
+      
+      .img2 {
+      margin-top: 9px;
+      }
 
       .linkText {
       margin-left: 3px;
@@ -46,6 +50,9 @@
       
       .welcomaLabel {
       padding-right: 5px;
+      font-size: 12px;
+      color: #5E5E5E;
+      font-family: Verdana, Arial, sans-serif;
       }
 
       .a {
@@ -55,8 +62,8 @@
       background-color: transparent;
       padding: 10px 0 0;
       font-family:
-      Arial,Verdana,sans-serif;
-      font-size: 14px;
+      Verdana,Arial,sans-serif;
+      font-size: 18px;
       font-weight: bold;
       color: #5E5E5E;
       text-decoration: none;
@@ -143,11 +150,11 @@
                      <!-- Tutorial link -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="100">
-                           <g:Image ui:field="tutorialImage" resource="{resource.welcomeTutorial}" stylePrimaryName="{style.img}"></g:Image>
+                           <g:Image ui:field="tutorialImage" resource="{resource.welcomeTutorial}" stylePrimaryName="{style.img} {style.img2}"></g:Image>
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
-                              <g:FlowPanel height="12px" width="100%">
+                              <g:FlowPanel height="20px" width="100%">
                               </g:FlowPanel>
                               <g:Anchor ui:field="tutorialLink" text="{locale.tutorialTitle}" target="_blank" styleName="{style.a}"
                                  href="http://www.exoplatform.com/company/en/eXo-Cloud-IDE"></g:Anchor>
@@ -177,7 +184,7 @@
                      <!-- Support -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="100">
-                           <g:Image resource="{resource.support}" stylePrimaryName="{style.img}"></g:Image>
+                           <g:Image resource="{resource.support}" stylePrimaryName="{style.img} {style.img2}"></g:Image>
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
@@ -212,7 +219,7 @@
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
-                              <g:FlowPanel height="12px" width="100%">
+                              <g:FlowPanel height="20px" width="100%">
                               </g:FlowPanel>
                               <g:Anchor ui:field="surveyLink" styleName="{style.a}" text="{locale.surveyTitle}"
                                  target="_blank" href="/feedback"></g:Anchor>
