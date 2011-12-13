@@ -89,6 +89,9 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-header.png")
    ImageResource welcomePageBgHeader();
    
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-top-container.png")
+   ImageResource welcomePageBgTopContainer();
+   
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/spliter.png")
    ImageResource welcomePageSpliter();
    
@@ -162,6 +165,8 @@ public interface SamplesClientBundle extends ClientBundle
       String welcomeHeaderLogo();
       
       String welcomeHeaderText();
+      
+      String welcomeTopContainer();
    }
 
 }

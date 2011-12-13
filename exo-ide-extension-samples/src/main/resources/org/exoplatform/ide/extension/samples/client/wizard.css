@@ -23,6 +23,14 @@
     height: auto;
     color: #FFFFFF;
 }
+
+@sprite .welcomeTopContainer {
+	width: 100%;
+	height: 100px;
+	gwt-image: "welcomePageBgTopContainer";
+	background-repeat: no-repeat;
+	background-position: center top;
+}
 	
 .table {
 	width: 100%;
