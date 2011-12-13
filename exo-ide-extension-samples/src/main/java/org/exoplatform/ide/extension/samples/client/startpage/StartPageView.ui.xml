@@ -6,7 +6,7 @@
 
    <!-- To make button look like link -->
    <ui:style>
-      .button-link {
+      .button-link, .a {
       cursor: pointer;
       border: none;
       /* Disable the button-style */
@@ -20,6 +20,14 @@
       text-decoration: none;
       text-align: left;
       padding-top: 20px;
+      }
+      
+      .a:visited { 
+      color: #5E5E5E;
+      }
+      
+      .a:hover {
+      color: #5E5E5E;
       }
 
       .hPanel {
@@ -53,30 +61,6 @@
       font-size: 12px;
       color: #5E5E5E;
       font-family: Verdana, Arial, sans-serif;
-      }
-
-      .a {
-      cursor: pointer;
-      border: none;
-      /* Disable the button-style */
-      background-color: transparent;
-      padding: 10px 0 0;
-      font-family:
-      Verdana,Arial,sans-serif;
-      font-size: 18px;
-      font-weight: bold;
-      color: #5E5E5E;
-      text-decoration: none;
-      text-align: left;
-      padding-top: 20px;
-      }
-      
-      .a:visited { 
-      color: #5E5E5E;
-      }
-      
-      .a:hover {
-      color: #5E5E5E;
       }
 
    </ui:style>
