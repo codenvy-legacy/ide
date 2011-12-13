@@ -21,16 +21,13 @@ package org.exoplatform.ide.git.client;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.git.client.add.AddRequestHandler;
 import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.git.client.commit.CommitRequestHandler;
