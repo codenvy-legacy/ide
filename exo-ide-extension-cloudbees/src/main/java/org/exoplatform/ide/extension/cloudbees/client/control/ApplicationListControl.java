@@ -18,20 +18,14 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.list.ShowApplicationListEvent;
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -39,13 +33,10 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $Id:  Sep 21, 2011 evgen $
  *
  */
-public class ApplicationListControl extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ItemsSelectedHandler
+public class ApplicationListControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
    private VirtualFileSystemInfo vfsInfo;
-
-   private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
     * 
@@ -66,19 +57,8 @@ public class ApplicationListControl extends SimpleControl implements IDEControl,
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 
       setVisible(true);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      refresh();
    }
 
    /**
@@ -96,7 +76,7 @@ public class ApplicationListControl extends SimpleControl implements IDEControl,
     */
    private void refresh()
    {
-      setEnabled(vfsInfo != null && selectedItems.size() > 0);
+      setEnabled(vfsInfo != null);
    }
 
 }

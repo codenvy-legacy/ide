@@ -28,6 +28,9 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationEvent;
@@ -41,7 +44,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
 public class InitializeApplicationControl extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ItemsSelectedHandler
+   ItemsSelectedHandler, ViewVisibilityChangedHandler
 {
 
    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlId();
@@ -53,6 +56,8 @@ public class InitializeApplicationControl extends SimpleControl implements IDECo
    private VirtualFileSystemInfo vfsInfo;
 
    private List<Item> selectedItems = new ArrayList<Item>();
+
+   private boolean isProjectExplorerVisible;
 
    public InitializeApplicationControl()
    {
@@ -71,6 +76,7 @@ public class InitializeApplicationControl extends SimpleControl implements IDECo
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
 
       setVisible(true);
    }
@@ -100,7 +106,19 @@ public class InitializeApplicationControl extends SimpleControl implements IDECo
     */
    private void refresh()
    {
-      setEnabled(vfsInfo != null && selectedItems.size() > 0);
+      setEnabled(vfsInfo != null && selectedItems.size() > 0 && isProjectExplorerVisible);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof ProjectExplorerDisplay)
+      {
+         isProjectExplorerVisible = event.getView().isViewVisible();
+         refresh();
+      }
+   }
 }
