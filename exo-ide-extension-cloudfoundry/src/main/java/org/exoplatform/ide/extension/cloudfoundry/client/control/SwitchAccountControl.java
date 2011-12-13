@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
@@ -51,5 +53,22 @@ public class SwitchAccountControl extends AbstractCloudFoundryControl
       setEvent(new LoginEvent(null, null));
       setDelimiterBefore(true);
    }
-   
+
+   @Override
+   public void initialize()
+   {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+
+      setVisible(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#refresh()
+    */
+   @Override
+   protected void refresh()
+   {
+      setEnabled(vfsInfo != null);
+   }
+
 }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ShowApplicationsEvent;
@@ -42,4 +44,20 @@ public class ApplicationsControl extends AbstractCloudFoundryControl
       setImages(CloudFoundryClientBundle.INSTANCE.appsList(), CloudFoundryClientBundle.INSTANCE.appsListDisabled());
    }
 
+   @Override
+   public void initialize()
+   {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+
+      setVisible(true);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#refresh()
+    */
+   @Override
+   protected void refresh()
+   {
+      setEnabled(vfsInfo != null);
+   }
 }

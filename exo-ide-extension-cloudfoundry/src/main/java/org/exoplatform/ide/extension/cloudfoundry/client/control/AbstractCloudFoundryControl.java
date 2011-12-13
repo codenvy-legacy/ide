@@ -29,6 +29,9 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -41,12 +44,14 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  */
 
 public abstract class AbstractCloudFoundryControl extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ItemsSelectedHandler
+   ItemsSelectedHandler, ViewVisibilityChangedHandler
 {
 
    protected VirtualFileSystemInfo vfsInfo;
 
    protected List<Item> selectedItems = new ArrayList<Item>();
+   
+   private boolean isProjectExplorerVisible;
 
    protected AbstractCloudFoundryControl(String id)
    {
@@ -58,6 +63,7 @@ public abstract class AbstractCloudFoundryControl extends SimpleControl implemen
    {
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
 
       setVisible(true);
    }
@@ -78,7 +84,20 @@ public abstract class AbstractCloudFoundryControl extends SimpleControl implemen
 
    protected void refresh()
    {
-      setEnabled(vfsInfo != null && selectedItems.size() > 0);
+      setEnabled(vfsInfo != null && selectedItems.size() > 0 && isProjectExplorerVisible);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof ProjectExplorerDisplay)
+      {
+         isProjectExplorerVisible = event.getView().isViewVisible();
+         refresh();
+      }
    }
 
 }
