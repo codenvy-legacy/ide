@@ -98,30 +98,10 @@ public class VirtualFileSystem
     */
    public void init(AsyncRequestCallback<VirtualFileSystemInfo> callback) throws RequestException
    {
-      //      VirtualFileSystem fs = new VirtualFileSystem(workspaceURL);
-      //      fs.info = new VirtualFileSystemInfo();
-      //      VFSInfoUnmarshaller unmarshaller = new VFSInfoUnmarshaller(fs.info);
-      //      callback.setResult(fs.info);
-      //      callback.setEventBus(eventBus);
-      //      callback.setPayload(unmarshaller);
       this.info = callback.getPayload();
       AsyncRequest.build(RequestBuilder.GET, workspaceURL).send(callback);
 
    }
-
-   //   /**
-   //    * Set information about server virtual file system and its capabilities.
-   //    * And initialize VFS instance.
-   //    * 
-   //    * @param info
-   //    * @param eventBus
-   //    * @param workspaceURL
-   //    */
-   //   public static void init(VirtualFileSystemInfo info, String workspaceURL)
-   //   {
-   //      VirtualFileSystem fs = new VirtualFileSystem(workspaceURL);
-   //      fs.info = info;
-   //   }
 
    /**
     * @return information about server virtual file system and its capabilities.
@@ -353,6 +333,8 @@ public class VirtualFileSystem
     */
    public void getItemByPath(String path, AsyncRequestCallback<ItemWrapper> callback) throws RequestException
    {
+      if(path.startsWith("/"))
+         path = path.substring(1);
       String url = info.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref();
       url = URL.decode(url).replace("[path]", path);
       AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).send(callback);
