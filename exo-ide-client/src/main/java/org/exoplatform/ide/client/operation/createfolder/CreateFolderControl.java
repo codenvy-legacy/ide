@@ -25,10 +25,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.navigator.NavigatorPresenter;
-import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -111,8 +111,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    {
       selectedItems = event.getSelectedItems();
 
-      if (event.getView() instanceof NavigatorPresenter.Display
-         || event.getView() instanceof TinyProjectExplorerPresenter.Display)
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
       {
          browserPanelSelected = true;
       }
@@ -127,8 +126,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (event.getView() instanceof NavigatorPresenter.Display
-         || event.getView() instanceof TinyProjectExplorerPresenter.Display)
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
       {
          browserPanelSelected = true;
       }

@@ -28,7 +28,7 @@
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.navigator.NavigatorView">
-      <when-type-is class="org.exoplatform.ide.client.navigator.NavigatorPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.framework.project.NavigatorDisplay" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
@@ -192,7 +192,7 @@
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.explorer.TinyProjectExplorerView">
-      <when-type-is class="org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.list.ShowProjectsView">
@@ -210,5 +210,6 @@
    <replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
       <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
    </replace-with>
+   
 
 </module>

@@ -33,13 +33,10 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -68,11 +65,11 @@ import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -106,7 +103,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -123,72 +119,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler
 {
 
-   public interface Display extends IsView
-   {
-
-      void setProjectExplorerTreeVisible(boolean visible);
-
-      /**
-       * @return {@link TreeGridItem}
-       */
-      TreeGridItem<Item> getBrowserTree();
-
-      void setUpdateTreeValue(boolean updateTreeValue);
-
-      /**
-       * Get selected items in the tree.
-       * 
-       * @return {@link List} selected items
-       */
-      List<Item> getSelectedItems();
-
-      /**
-       * Select item in browser tree by path.
-       * 
-       * @param itemId item's path
-       * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
-       */
-      boolean selectItem(String itemId);
-
-      /**
-       * Deselect item in browser tree by path.
-       * 
-       * @param itemId item's path
-       */
-      void deselectItem(String itemId);
-
-      /**
-       * Update the state of the item in the tree.
-       * 
-       * @param file
-       */
-      void updateItemState(FileModel file);
-
-      /**
-       * Set lock tokens to the items in the tree.
-       * 
-       * @param locktokens
-       */
-      void setLockTokens(Map<String, String> locktokens);
-
-      /**
-       * Add info icons to main item icon
-       */
-      void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
-
-      /**
-       * Remove info icon from item
-       */
-      void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
-
-   }
-
    private static final String DEFAULT_TITLE = "Project Explorer";
 
    private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
       .workspaceReceiveChildrenError();
 
-   private Display display;
+   private ProjectExplorerDisplay display;
 
    //private boolean viewOpened = false;
 
@@ -235,7 +171,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-      display = GWT.create(Display.class);
+      display = GWT.create(ProjectExplorerDisplay.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
    }
@@ -691,7 +627,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof Display && event.getView().isViewVisible())
+      if (event.getView() instanceof ProjectExplorerDisplay && event.getView().isViewVisible())
       {
          onItemSelected();
       }
@@ -718,7 +654,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display)
+      if (event.getView() instanceof ProjectExplorerDisplay)
       {
          display = null;
       }
@@ -751,7 +687,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          lastNavigatorId = "ideTinyProjectExplorerView";
       }
 
-      if (event.getView() instanceof Display)
+      if (event.getView() instanceof ProjectExplorerDisplay)
       {
          onItemSelected();
       }

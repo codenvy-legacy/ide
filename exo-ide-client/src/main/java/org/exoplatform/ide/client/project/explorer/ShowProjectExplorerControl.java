@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -79,7 +80,7 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof TinyProjectExplorerPresenter.Display
+      if (event.getView() instanceof ProjectExplorerDisplay
          || event.getView() instanceof ProjectExplorerPresenter.Display)
       {
          setSelected(false);
@@ -93,7 +94,7 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
    public void onViewOpened(ViewOpenedEvent event)
    {
       if (event.getView() instanceof ProjectExplorerPresenter.Display
-         || event.getView() instanceof TinyProjectExplorerPresenter.Display)
+         || event.getView() instanceof ProjectExplorerDisplay)
       {
          setSelected(true);
       }

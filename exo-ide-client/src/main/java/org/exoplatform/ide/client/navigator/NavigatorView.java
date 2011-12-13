@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -45,8 +46,7 @@ import java.util.Map;
  * @version $
  */
 
-public class NavigatorView extends ViewImpl implements
-   org.exoplatform.ide.client.navigator.NavigatorPresenter.Display
+public class NavigatorView extends ViewImpl implements NavigatorDisplay
 {
 
    public static final String ID = "ideWorkspaceView";
@@ -66,10 +66,10 @@ public class NavigatorView extends ViewImpl implements
    interface NavigatorViewUiBinder extends UiBinder<Widget, NavigatorView>
    {
    }
-   
+
    @UiField
    ItemTree treeGrid;
-   
+
    private static final String TITLE = IDE.NAVIGATION_CONSTANT.workspaceTitle();
 
    public NavigatorView()

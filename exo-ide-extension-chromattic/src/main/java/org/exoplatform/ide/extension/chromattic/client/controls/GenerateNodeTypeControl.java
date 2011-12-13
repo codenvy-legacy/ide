@@ -24,9 +24,13 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticClientBundle;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Control is used for previewing new node type definition.
@@ -35,12 +39,17 @@ import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEve
  * @version $Id: Dec 6, 2010 $
  *
  */
-public class GenerateNodeTypeControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class GenerateNodeTypeControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+   ViewVisibilityChangedHandler
 {
    /**
     * Control's ID.
     */
    public static final String ID = "Run/Preview node type";
+
+   private FileModel activeFile;
+
+   private boolean isProjectExplorerVisible;
 
    /**
     * Default constructor.
@@ -56,31 +65,56 @@ public class GenerateNodeTypeControl extends SimpleControl implements IDEControl
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null)
-      {
-         setEnabled(false);
-         setVisible(false);
-         return;
-      }
-      //Visible if file MIME type is "application/x-chromattic+groovy":
-      boolean isVisible = MimeType.CHROMATTIC_DATA_OBJECT.equals(event.getFile().getMimeType());
-      //Enabled if file is saved:
-      boolean isEnabled = (isVisible && event.getFile().isPersisted());
-      setVisible(isVisible);
-      setEnabled(isEnabled);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
    public void initialize()
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof ProjectExplorerDisplay)
+      {
+         isProjectExplorerVisible = event.getView().isViewVisible();
+         updateState();
+      }
+   }
+
+   protected void updateState()
+   {
+      if (activeFile == null)
+      {
+         setEnabled(false);
+         setVisible(false);
+         return;
+      }
+
+      if (MimeType.CHROMATTIC_DATA_OBJECT.equals(activeFile.getMimeType()))
+      {
+         setVisible(true);
+         boolean enabled = activeFile.isPersisted() && isProjectExplorerVisible;
+         setEnabled(enabled);
+      }
+      else
+      {
+         setVisible(false);
+         setEnabled(false);
+      }
    }
 }

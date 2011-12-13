@@ -25,8 +25,12 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.event.RunGroovyServiceEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,10 +39,15 @@ import org.exoplatform.ide.extension.groovy.client.event.RunGroovyServiceEvent;
  * @version $
  */
 @RolesAllowed({"developers"})
-public class RunGroovyServiceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class RunGroovyServiceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+   ViewVisibilityChangedHandler
 {
 
    private static final String ID = "Run/Run in Sandbox";
+
+   private FileModel activeFile;
+
+   private boolean isProjectExplorerVisible;
 
    public RunGroovyServiceCommand()
    {
@@ -56,23 +65,47 @@ public class RunGroovyServiceCommand extends SimpleControl implements IDEControl
    public void initialize()
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+   }
+
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
+      updateState();
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getFile() == null || !MimeType.GROOVY_SERVICE.equals(event.getFile().getMimeType())
-         || (event.getFile().isVersion()))
+      if (event.getView() instanceof ProjectExplorerDisplay)
+      {
+         isProjectExplorerVisible = event.getView().isViewVisible();
+         updateState();
+      }
+   }
+
+   protected void updateState()
+   {
+      if (activeFile == null)
       {
          setEnabled(false);
          setVisible(false);
          return;
       }
 
-      setVisible(true);
-      setEnabled(true);
+      if (MimeType.GROOVY_SERVICE.equals(activeFile.getMimeType()))
+      {
+         setVisible(true);
+         boolean enabled = activeFile.isPersisted() && isProjectExplorerVisible;
+         setEnabled(enabled);
+      }
+      else
+      {
+         setVisible(false);
+         setEnabled(false);
+      }
    }
-
 }

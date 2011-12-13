@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -44,8 +45,7 @@ import java.util.Map;
  * @version $
  */
 
-public class TinyProjectExplorerView extends ViewImpl implements
-   org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter.Display
+public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorerDisplay
 {
 
    public static final String ID = "ideTinyProjectExplorerView";

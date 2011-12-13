@@ -27,10 +27,10 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.navigator.NavigatorPresenter;
-import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -90,13 +90,13 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
 
       Item item = event.getSelectedItems().get(0);
 
-      if (event.getView() instanceof TinyProjectExplorerPresenter.Display && item instanceof ProjectModel)
+      if (event.getView() instanceof ProjectExplorerDisplay && item instanceof ProjectModel)
       {
          setEnabled(false);
          return;
       }
 
-      if (event.getView() instanceof NavigatorPresenter.Display && vfsInfo != null
+      if (event.getView() instanceof NavigatorDisplay && vfsInfo != null
          && item.getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
@@ -112,7 +112,7 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (!(event.getView() instanceof NavigatorPresenter.Display || event.getView() instanceof TinyProjectExplorerPresenter.Display))
+      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
       {
          setEnabled(false);
       }

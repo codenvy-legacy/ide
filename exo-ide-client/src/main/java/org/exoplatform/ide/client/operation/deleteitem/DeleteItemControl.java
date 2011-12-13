@@ -27,10 +27,10 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.navigator.NavigatorPresenter;
-import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -95,7 +95,7 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (!(event.getView() instanceof NavigatorPresenter.Display || event.getView() instanceof TinyProjectExplorerPresenter.Display))
+      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
       {
          setEnabled(false);
       }
@@ -114,13 +114,13 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
 
       Item selectedItem = event.getSelectedItems().get(0);
 
-      if (event.getView() instanceof TinyProjectExplorerPresenter.Display && selectedItem instanceof ProjectModel)
+      if (event.getView() instanceof ProjectExplorerDisplay && selectedItem instanceof ProjectModel)
       {
          setEnabled(false);
          return;
       }
 
-      if (event.getView() instanceof NavigatorPresenter.Display
+      if (event.getView() instanceof NavigatorDisplay
          && selectedItem.getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
