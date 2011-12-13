@@ -117,7 +117,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          node.setState(true, false);
          return node;
       }
-      
+
       node = getChild(node, id);
       return node;
    }
@@ -147,11 +147,12 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
             parent.setState(true, false);
             return child;
          }
-         
+
          if (userObject instanceof FolderModel || userObject instanceof ProjectModel)
          {
             TreeItem child2 = getChild(child, id);
-            if (child2 != null) {
+            if (child2 != null)
+            {
                parent.setState(true, false);
                child.setState(true, false);
                return child2;
@@ -187,7 +188,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       for (int position = 0; position < children.size(); position++)
       {
          Item item = children.get(position);
-         
+
          if (item.getName() != null && item.getName().startsWith("."))
          {
             continue;
@@ -214,50 +215,65 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          parentNode.setState(false);
          return;
       }
-      
+
       removeEmptyTreeNodes(parentNode);
-      
+
       // check for new items in new list children
       int position = 0;
-      for (Item item : children) {
-         if (!hasChild(parentNode, item.getId())) {
+      for (Item item : children)
+      {
+         if (item.getName() != null && item.getName().startsWith("."))
+         {
+            continue;
+         }
+         if (!hasChild(parentNode, item.getId()))
+         {
             TreeItem node = createTreeNode(item);
             parentNode.insertItem(position, node);
             position++;
          }
       }
-      
+
       // check for items which are presents in tree and not presents in list of children
       /*
        * will be in future
        */
 
       //to avoid send open event (thus extra refresh folder is not done)  
-      parentNode.setState(true, false);      
+      parentNode.setState(true, false);
    }
-   
-   private void removeEmptyTreeNodes(TreeItem parent) {
-      for (int i = 0; i < parent.getChildCount();) {
+
+   private void removeEmptyTreeNodes(TreeItem parent)
+   {
+      for (int i = 0; i < parent.getChildCount();)
+      {
          TreeItem item = parent.getChild(i);
-         if (item.getText() == null || item.getText().isEmpty()) {
+         if (item.getText() == null || item.getText().isEmpty())
+         {
             item.remove();
-         } else {
+         }
+         else
+         {
             i++;
          }
       }
    }
-   
-   private boolean hasChild(TreeItem parentNode, String childrenId) {
-      for (int i = 0; i < parentNode.getChildCount(); i++) {
+
+   private boolean hasChild(TreeItem parentNode, String childrenId)
+   {
+      for (int i = 0; i < parentNode.getChildCount(); i++)
+      {
          TreeItem item = parentNode.getChild(i);
-         if (item.getUserObject() != null) {
+         if (item.getUserObject() != null)
+         {
             Item object = (Item)item.getUserObject();
-            if (childrenId.equals(object.getId())) {
+            if (childrenId.equals(object.getId()))
+            {
                return true;
             }
          }
       }
-      
+
       return false;
    }
 
@@ -403,10 +419,10 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          tree.setSelectedItem(item, true);
          return true;
       }
-      
+
       return false;
    }
-   
+
    /**
     * Get all selected items
     * @return  List of selected items
