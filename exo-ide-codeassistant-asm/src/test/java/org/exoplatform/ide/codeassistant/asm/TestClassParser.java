@@ -42,12 +42,13 @@ public class TestClassParser extends BaseTest
    @BeforeClass
    public static void createTypeInfo() throws Exception
    {
-      generateClassFile("src/test/java/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestAnnotation.java");
-      generateClassFile("src/test/java/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestEnum.java");
-      generateClassFile("src/test/java/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface.java");
-      generateClassFile("src/test/java/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface2.java");
-      generateClassFile("src/test/java/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestSuper.java");
-      generateClassFile("src/test/java/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestClass.java");
+      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestAnnotation.java");
+      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestEnum.java");
+      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface.java");
+      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface2.java");
+      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestSuper.java");
+      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestClass.java");
+      generateJarFile("testClassParser.jar");
    }
 
    @Test
@@ -348,8 +349,8 @@ public class TestClassParser extends BaseTest
                && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
             {
                assertMethod(method, "values", typeInfo.getQualifiedName(), Modifier.PUBLIC | Modifier.STATIC, "()",
-                  "()", "public static " + PACKAGE + ".NoTestEnum[] " + PACKAGE + ".NoTestEnum.values()", new String[0],
-                  "NoTestEnum[]", PACKAGE + ".NoTestEnum[]");
+                  "()", "public static " + PACKAGE + ".NoTestEnum[] " + PACKAGE + ".NoTestEnum.values()",
+                  new String[0], "NoTestEnum[]", PACKAGE + ".NoTestEnum[]");
                visitedMethods.add(method.getName() + method.getParameterTypes());
             }
             else if (method.getName().equals("valueOf") && method.getParameterTypes().equals("(String)")
@@ -585,8 +586,8 @@ public class TestClassParser extends BaseTest
                && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
             {
                assertMethod(method, "method", typeInfo.getQualifiedName(), Modifier.PUBLIC, "(double)", "(double)",
-                  "public void " + PACKAGE + ".NoTestSuper.method(double)", new String[]{"java.lang.Exception",}, "void",
-                  "void");
+                  "public void " + PACKAGE + ".NoTestSuper.method(double)", new String[]{"java.lang.Exception",},
+                  "void", "void");
                visitedMethods.add(method.getName() + method.getParameterTypes());
             }
             else if (method.getName().equals("toString") && method.getParameterTypes().equals("()")
@@ -610,7 +611,7 @@ public class TestClassParser extends BaseTest
    @Test
    public void testJarParsing() throws IOException
    {
-      List<TypeInfo> classes = JarParser.parse(new File("target/test-classes/testclasses/test_jar"));
+      List<TypeInfo> classes = JarParser.parse(new File("target/generated-classes/testClassParser.jar"));
       Assert.assertEquals(6, classes.size());
    }
 

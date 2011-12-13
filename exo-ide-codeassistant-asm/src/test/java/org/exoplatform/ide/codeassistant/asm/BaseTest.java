@@ -68,4 +68,22 @@ public abstract class BaseTest
 
       return new FileInputStream(classFile);
    }
+
+   protected static void generateJarFile(String jarName) throws IOException
+   {
+      Runtime exec = Runtime.getRuntime();
+      String cmd = "jar -cf " + CLASSES_DIRECTORY_PATH + "../" + jarName + " -C " + CLASSES_DIRECTORY_PATH + " .";
+      Process process = exec.exec(cmd);
+      try
+      {
+         process.waitFor();
+      }
+      catch (InterruptedException e)
+      {
+         Thread.currentThread().interrupt();
+      }
+      File jar = new File(CLASSES_DIRECTORY_PATH + "../" + jarName);
+      jar.renameTo(new File(CLASSES_DIRECTORY_PATH, jarName));
+   }
+
 }
