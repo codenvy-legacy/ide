@@ -658,11 +658,9 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                      if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
                      {
                         isMavenProject = true;
-                        return;
                      }
                   }
                   getFrameworks();
-//                  IDE.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(project.getName())));
                }
 
                @Override
