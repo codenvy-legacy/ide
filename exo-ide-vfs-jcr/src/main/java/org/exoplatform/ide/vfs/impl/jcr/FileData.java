@@ -177,9 +177,6 @@ class FileData extends ItemData
          if (!resolvedMimeType.equals(defaultMimeType) && !resolvedMimeType.equals(type))
          {
             type = resolvedMimeType;
-            node.getNode("jcr:content").setProperty("jcr:mimeType", type);
-            Session session = node.getSession();
-            session.save();
          }
          try
          {
