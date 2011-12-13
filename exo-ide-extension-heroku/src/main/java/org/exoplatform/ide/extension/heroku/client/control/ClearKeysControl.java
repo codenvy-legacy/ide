@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.key.ClearKeysEvent;
@@ -39,6 +41,25 @@ public class ClearKeysControl extends AbstractHerokuControl
       setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysPrompt());
       setImages(HerokuClientBundle.INSTANCE.clearKeys(), HerokuClientBundle.INSTANCE.clearKeysDisabled());
       setEvent(new ClearKeysEvent());
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
+   @Override
+   public void initialize()
+   {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+
+      setVisible(true);
+   }
+
+   /**
+    * 
+    */
+   protected void refresh()
+   {
+      setEnabled(vfsInfo != null);
    }
 
 }

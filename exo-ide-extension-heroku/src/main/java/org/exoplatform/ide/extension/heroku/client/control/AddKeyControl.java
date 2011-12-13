@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
@@ -40,6 +42,25 @@ public class AddKeyControl extends AbstractHerokuControl
       setEvent(new AddKeyEvent());
       setImages(HerokuClientBundle.INSTANCE.addKeys(), HerokuClientBundle.INSTANCE.addKeysDisabled());
       setDelimiterBefore(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
+   @Override
+   public void initialize()
+   {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+
+      setVisible(true);
+   }
+
+   /**
+    * 
+    */
+   protected void refresh()
+   {
+      setEnabled(vfsInfo != null);
    }
 
 }

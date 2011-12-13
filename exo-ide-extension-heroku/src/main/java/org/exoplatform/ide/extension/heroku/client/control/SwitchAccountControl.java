@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.SwitchAccountEvent;
@@ -39,6 +41,25 @@ public class SwitchAccountControl extends AbstractHerokuControl
       setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchPrompt());
       setEvent(new SwitchAccountEvent());
       setImages(HerokuClientBundle.INSTANCE.switchAccount(), HerokuClientBundle.INSTANCE.switchAccountDisabled());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
+   @Override
+   public void initialize()
+   {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+
+      setVisible(true);
+   }
+
+   /**
+    * 
+    */
+   protected void refresh()
+   {
+      setEnabled(vfsInfo != null);
    }
 
 }
