@@ -44,67 +44,85 @@ public interface SamplesClientBundle extends ClientBundle
     * Buttons
     */
 
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/welcome.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome.png")
    ImageResource welcome();
 
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/welcome-disabled.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome-disabled.png")
    ImageResource welcomeDisabled();
    
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/ok.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/ok.png")
    ImageResource ok();
 
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/ok_Disabled.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/ok_Disabled.png")
    ImageResource okDisabled();
    
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/add.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/add.png")
    ImageResource add();
 
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/add_Disabled.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/add_Disabled.png")
    ImageResource addDisabled();
    
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/cancel.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/cancel.png")
    ImageResource cancel();
 
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/cancel_Disabled.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/cancel_Disabled.png")
    ImageResource cancelDisabled();
    
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/next.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/next.png")
    ImageResource next();
 
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/next_Disabled.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/next_Disabled.png")
    ImageResource nextDisabled();
    
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/back.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/back.png")
    ImageResource back();
 
-   @Source("org/exoplatform/ide/extension/samples/images/buttons/back_Disabled.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/back_Disabled.png")
    ImageResource backDisabled();
    
    /*
-    * Start page images
+    * Welcome page images
     */
-   @Source("org/exoplatform/ide/extension/samples/images/tutorial.png")
-   ImageResource welcomeTutorial();
-   
-   @Source("org/exoplatform/ide/extension/samples/images/samples.png")
-   ImageResource welcomeSamples();
-   
-   @Source("org/exoplatform/ide/extension/samples/images/eXo-IDE-Logo.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/logo.png")
    ImageResource ideLogo();
    
-   @Source("org/exoplatform/ide/extension/samples/images/project.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-header.png")
+   ImageResource welcomePageBgHeader();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/spliter.png")
+   ImageResource welcomePageSpliter();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/tutorials.png")
+   ImageResource welcomeTutorial();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/import-sample-project.png")
+   ImageResource welcomeSamples();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/new-project.png")
    ImageResource welcomeProject();
    
-   @Source("org/exoplatform/ide/extension/samples/images/convertToProject.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/convert.png")
    ImageResource convertToProject();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/documentation.png")
+   ImageResource documentation();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/import-from-github.png")
+   ImageResource importFromGithub();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/support.png")
+   ImageResource support();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/survey.png")
+   ImageResource survey();
    
    /*
     * Controls
     */
-   @Source("org/exoplatform/ide/extension/samples/images/import-from-github.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github.png")
    ImageResource importFromGithubControl();
    
-   @Source("org/exoplatform/ide/extension/samples/images/import-from-github_Disabled.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github_Disabled.png")
    ImageResource importFromGithubDisabledControl();
    
    public interface Style extends CssResource
@@ -138,6 +156,12 @@ public interface SamplesClientBundle extends ClientBundle
       String middle();
 
       String newFolderDivInput();
+      
+      String welcomeHeader();
+      
+      String welcomeHeaderLogo();
+      
+      String welcomeHeaderText();
    }
 
 }

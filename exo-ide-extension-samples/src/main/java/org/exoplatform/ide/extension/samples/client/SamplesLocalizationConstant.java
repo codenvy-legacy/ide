@@ -98,6 +98,24 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("welcome.import.text")
    String importText();
    
+   @Key("welcome.documentation.title")
+   String documentationTitle();
+   
+   @Key("welcome.documentation.text")
+   String documentationText();
+   
+   @Key("welcome.support.title")
+   String supportTitle();
+   
+   @Key("welcome.support.text")
+   String supportText();
+   
+   @Key("welcome.survey.title")
+   String surveyTitle();
+   
+   @Key("welcome.survey.text")
+   String surverText();
+   
    /*
     * SelectLocationView
     */

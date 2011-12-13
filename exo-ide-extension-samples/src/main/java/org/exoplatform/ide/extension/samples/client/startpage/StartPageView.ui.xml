@@ -11,107 +11,219 @@
       border: none;
       /* Disable the button-style */
       background-color: transparent;
-      padding: 0px;
-      color: #0000aa;
-      text-decoration: underline;
-      font-family: Arial Unicode MS, Arial, sans-serif;
-      font-size: small;
-      }
-
-      .text-block {
-      text-align: justify;
-      padding-left:
-      20px;
-      padding-right: 20px;
+      padding: 10px 0 0;
+      font-family:
+      Arial,Verdana,sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      color: #5E5E5E;
+      text-decoration: none;
+      text-align: left;
+      padding-top: 20px;
       }
 
       .hPanel {
-      margin: 20px;
+      margin-top: 20px;
       }
 
       .textPanel {
-      padding: 20px 20px 0 20px;
+      padding:
+      20px
+      20px 0 20px;
       }
+
+      .scroll {
+      overflow-x: hidden;
+      }
+
+      .img {
+      margin-left: 10px;
+      }
+
+      .linkText {
+      margin-left: 3px;
+      }
+
+      .a {
+      cursor: pointer;
+      border: none;
+      /* Disable the button-style */
+      background-color: transparent;
+      padding: 10px 0 0;
+      font-family:
+      Arial,Verdana,sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      color: #5E5E5E;
+      text-decoration: none;
+      text-align: left;
+      padding-top: 20px;
+      }
+      
+      .a:visited { 
+      color: #5E5E5E;
+      }
+      
+      .a:hover {
+      color: #5E5E5E;
+      }
+
    </ui:style>
 
-   <g:LayoutPanel>
-      <g:layer height="100%" top="0px">
-         <f:Border margin="1">
-            <f:layer>
-               <g:FlowPanel>
-                    <!-- About IDE -->
-                  <g:HorizontalPanel verticalAlignment="middle" stylePrimaryName="{style.textPanel}" height="auto" width="100%">
-                     <g:Image resource="{resource.ideLogo}" width="160px"></g:Image>
-                     <g:Label text="{locale.aboutIde}" styleName="{style.text-block}"></g:Label>
-                  </g:HorizontalPanel>
+   <f:Border margin="1">
+      <f:layer>
+         <!-- About IDE -->
+         <g:DockLayoutPanel unit="PX" height="75px" width="100%" stylePrimaryName="{resource.css.welcomeHeader}">
+            <g:west size="140">
+               <g:Image resource="{resource.ideLogo}" styleName="{resource.css.welcomeHeaderLogo}"></g:Image>
+            </g:west>
+            <g:center>
+               <g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
+            </g:center>
+         </g:DockLayoutPanel>
+      </f:layer>
+      <f:layer top="75px" bottom="0">
+         <g:ScrollPanel width="100%" height="100%" stylePrimaryName="{style.scroll}">
+            <g:FlowPanel>
+               <g:DockLayoutPanel unit="PCT" height="85px" width="100%" stylePrimaryName="{style.hPanel}">
+                  <g:west size="50">
+                     <!-- Create New Projects -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="100">
+                           <g:Image resource="{resource.welcomeProject}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:Button ui:field="projectLink" width="100%" text="{locale.projectTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.projectText}" width="100%" styleName="{style.linkText}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:west>
+                  <g:center>
+                     <!-- Documentation -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="100">
+                           <g:Image ui:field="documentationImage" resource="{resource.documentation}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:FlowPanel height="20px" width="100%">
+                              </g:FlowPanel>
+                              <g:Anchor ui:field="documentationLink" styleName="{style.a}" text="{locale.documentationTitle}"
+                                 target="_blank" href="/documentation"></g:Anchor>
+                              <g:Label text="{locale.documentationText}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
 
-                  <g:DockLayoutPanel unit="PCT" height="70px" width="100%" stylePrimaryName="{style.hPanel}">
-                     <g:west size="50">
-                        <!-- Tutorial link -->
-                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                           <g:Image ui:field="docImage" resource="{resource.welcomeTutorial}"></g:Image>
-                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
-                              <g:Anchor ui:field="docLink" text="{locale.tutorialTitle}" target="_blank"
-                                 href="https://wiki-int.exoplatform.org/display/exoproducts/eXo+IDE+User+Manual"></g:Anchor>
-                              <g:Label text="{locale.tutorialText}"></g:Label>
-                           </g:VerticalPanel>
-                        </g:HorizontalPanel>
-                     </g:west>
-                     <g:center>
-                        <!-- Samples link -->
-                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}"></g:Image>
-                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
-                              <g:Button ui:field="samplesLink" text="{locale.sampleTitle}" styleName="{style.button-link}"></g:Button>
-                              <g:Label text="{locale.sampleText}"></g:Label>
-                           </g:VerticalPanel>
-                        </g:HorizontalPanel>
-                     </g:center>
-                  </g:DockLayoutPanel>
+                  </g:center>
+               </g:DockLayoutPanel>
 
-                  <g:DockLayoutPanel unit="PCT" height="70px" width="100%" stylePrimaryName="{style.hPanel}">
-                     <g:west size="50">
-                        <!-- Projects link -->
-                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                           <g:Image resource="{resource.welcomeProject}"></g:Image>
-                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
-                              <g:Button ui:field="projectLink" text="{locale.projectTitle}" styleName="{style.button-link}"></g:Button>
-                              <g:Label text="{locale.projectText}"></g:Label>
-                           </g:VerticalPanel>
-                        </g:HorizontalPanel>
-                     </g:west>
-                     <g:center>
-                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                           <g:Image ui:field="convertImage" resource="{resource.convertToProject}"></g:Image>
-                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
-                              <g:Button ui:field="convertLink" text="{locale.convertTitle}" styleName="{style.button-link}"></g:Button>
-                              <g:Label text="{locale.convertText}"></g:Label>
-                           </g:VerticalPanel>
-                        </g:HorizontalPanel>
-                     </g:center>
-                  </g:DockLayoutPanel>
-
-                  <g:DockLayoutPanel unit="PCT" height="70px" width="100%" stylePrimaryName="{style.hPanel}">
-                     <g:west size="50">
-                        <!-- Projects link -->
-                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
-                           <g:Image resource="{resource.welcomeSamples}"></g:Image>
-                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+               <g:DockLayoutPanel unit="PCT" height="85px" width="100%" stylePrimaryName="{style.hPanel}">
+                  <g:west size="50">
+                     <!-- Import From GitHub -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="100">
+                           <g:Image resource="{resource.importFromGithub}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
                               <g:Button ui:field="importLink" text="{locale.importTitle}" styleName="{style.button-link}"></g:Button>
-                              <g:Label text="{locale.importText}"></g:Label>
-                           </g:VerticalPanel>
-                        </g:HorizontalPanel>
-                     </g:west>
-                     <g:center>
-                        <g:FlowPanel></g:FlowPanel>
-                     </g:center>
-                  </g:DockLayoutPanel>
+                              <g:Label text="{locale.importText}" styleName="{style.linkText}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:west>
+                  <g:center>
+                     <!-- Tutorial link -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="100">
+                           <g:Image ui:field="tutorialImage" resource="{resource.welcomeTutorial}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:FlowPanel height="12px" width="100%">
+                              </g:FlowPanel>
+                              <g:Anchor ui:field="tutorialLink" text="{locale.tutorialTitle}" target="_blank" styleName="{style.a}"
+                                 href="http://www.exoplatform.com/company/en/eXo-Cloud-IDE"></g:Anchor>
+                              <g:Label text="{locale.tutorialText}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:center>
+               </g:DockLayoutPanel>
 
-               </g:FlowPanel>
-            </f:layer>
-         </f:Border>
-      </g:layer>
-   </g:LayoutPanel>
+               <g:DockLayoutPanel unit="PCT" height="70px" width="100%" stylePrimaryName="{style.hPanel}">
+                  <g:west size="50">
+                     <!-- Import Sample Project -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="100">
+                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:Button ui:field="samplesLink" text="{locale.sampleTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.sampleText}" styleName="{style.linkText}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:west>
+                  <g:center>
+                     <!-- Support -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="100">
+                           <g:Image resource="{resource.support}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:Button ui:field="supportLink" text="{locale.supportTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.supportText}" styleName="{style.linkText}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:center>
+               </g:DockLayoutPanel>
+
+               <g:DockLayoutPanel unit="PCT" height="80px" width="100%" stylePrimaryName="{style.hPanel}">
+                  <g:west size="50">
+                     <!-- Convert folder to project -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="100">
+                           <g:Image ui:field="convertImage" resource="{resource.convertToProject}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:Button ui:field="convertLink" text="{locale.convertTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.convertText}" styleName="{style.linkText}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:west>
+                  <g:center>
+                     <!-- Survey -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="100">
+                           <g:Image resource="{resource.survey}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:FlowPanel height="12px" width="100%">
+                              </g:FlowPanel>
+                              <g:Anchor ui:field="surveyLink" styleName="{style.a}" text="{locale.surveyTitle}"
+                                 target="_blank" href="/feedback"></g:Anchor>
+                              <g:Label text="{locale.surverText}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:center>
+               </g:DockLayoutPanel>
+
+            </g:FlowPanel>
+         </g:ScrollPanel>
+      </f:layer>
+   </f:Border>
+
 
 
 </ui:UiBinder>

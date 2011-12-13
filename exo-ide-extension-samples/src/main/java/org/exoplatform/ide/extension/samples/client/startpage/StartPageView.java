@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.samples.client.startpage;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -39,47 +41,67 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
  */
 public class StartPageView extends ViewImpl implements StartPagePresenter.Display
 {
-   
+
    private static final String ID = "WelcomeViewId";
-   
+
    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.welcomeTitle();
-   
+
    private static StartPageViewUiBinder uiBinder = GWT.create(StartPageViewUiBinder.class);
 
    interface StartPageViewUiBinder extends UiBinder<Widget, StartPageView>
    {
    }
-   
+
    @UiField
-   Anchor docLink;
-   
+   Anchor tutorialLink;
+
    @UiField
-   Image docImage;
-   
+   Image tutorialImage;
+
    @UiField
    Button samplesLink;
-   
+
    @UiField
    Image samplesImage;
-   
+
    @UiField
    Button convertLink;
-   
+
    @UiField
    Image convertImage;
-   
+
    @UiField
    Button projectLink;
-   
+
    @UiField
    Button importLink;
-   
+
+   @UiField
+   Image documentationImage;
+
+   @UiField
+   Anchor documentationLink;
+
+   @UiField
+   Button supportLink;
+
+   @UiField
+   Anchor surveyLink;
+
    FlowPanel flowPanel;
-   
+
    public StartPageView()
    {
       super(ID, "editor", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()));
       add(uiBinder.createAndBindUi(this));
+      supportLink.addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            supportAndFeedback();
+         }
+      });
    }
 
    /**
@@ -117,5 +139,9 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    {
       return importLink;
    }
+
+   private static native void supportAndFeedback() /*-{
+                                                   $wnd.showContactUsForm();
+                                                   }-*/;
 
 }
