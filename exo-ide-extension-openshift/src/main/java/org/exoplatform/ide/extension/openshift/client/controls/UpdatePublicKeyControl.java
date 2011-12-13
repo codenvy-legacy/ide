@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyEvent;
@@ -42,4 +44,22 @@ public class UpdatePublicKeyControl extends AbstractOpenShiftControl
       setEvent(new UpdatePublicKeyEvent());
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
+   @Override
+   public void initialize()
+   {
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+
+      setVisible(true);
+   }
+
+   /**
+    * 
+    */
+   protected void refresh()
+   {
+      setEnabled(vfsInfo != null);
+   }
 }
