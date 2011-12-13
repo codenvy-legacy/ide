@@ -107,6 +107,12 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
 
    private Display display;
 
+   private ProjectModel project;
+
+   private String applicationName;
+
+   private String remoteName;
+
    /**
     * @param eventBus events handler
     */
@@ -127,6 +133,10 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
          @Override
          public void onClick(ClickEvent event)
          {
+            applicationName = display.getApplicationNameField().getValue();
+            remoteName = display.getRemoteNameField().getValue();
+            project = ((ItemContext)selectedItems.get(0)).getProject();
+            IDE.getInstance().closeView(display.asView().getId());
             doCreateApplication();
          }
       });
@@ -156,6 +166,9 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
             display = GWT.create(Display.class);
             bindDisplay();
             IDE.getInstance().openView(display.asView());
+            applicationName = null;
+            remoteName = null;
+            project = null;
             display.focusInApplicationNameField();
             display.getWorkDirLocationField().setValue(workdir);
          }
@@ -179,9 +192,6 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
     */
    protected void doCreateApplication()
    {
-      String applicationName = display.getApplicationNameField().getValue();
-      String remoteName = display.getRemoteNameField().getValue();
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       try
       {
          HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
@@ -191,7 +201,6 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
                @Override
                protected void onSuccess(List<Property> properties)
                {
-                  IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
