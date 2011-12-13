@@ -1714,33 +1714,6 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   //   /**
-   //    * Get JCR path from Virtual File System path.
-   //    * 
-   //    * @param session JCR session
-   //    * @param vfsPath Virtual File System path
-   //    * @return JCR path
-   //    */
-   //   protected final String getJcrPath(Session session, String vfsPath)
-   //   {
-   //      if (rootNodePath == null || rootNodePath.isEmpty() || "/".equals(rootNodePath))
-   //      {
-   //         // Not need to do anything if rootNodePath is not set.
-   //         return vfsPath;
-   //      }
-   //      String root = rootNodePath;
-   //      if (root.contains("${userId}"))
-   //      {
-   //         String userID = session.getUserID();
-   //         root = root.replace("${userId}", userID);
-   //      }
-   //      if ("/".equals(vfsPath))
-   //      {
-   //         return root;
-   //      }
-   //      return (root + vfsPath);
-   //   }
-
    /**
     * Get JCR path from Virtual File System path.
     * 

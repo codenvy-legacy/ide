@@ -44,9 +44,10 @@ public class VirtualFileSystemApplication extends Application
 
    public VirtualFileSystemApplication()
    {
-      classes = new HashSet<Class<?>>(2);
+      classes = new HashSet<Class<?>>(3);
       classes.add(VirtualFileSystemFactory.class);
       classes.add(RequestContextResolver.class);
+      classes.add(NoCacheJsonWriter.class);
       singletons = new HashSet<Object>(10);
       singletons.add(new ContentStreamWriter());
       singletons.add(new ConstraintExceptionMapper());

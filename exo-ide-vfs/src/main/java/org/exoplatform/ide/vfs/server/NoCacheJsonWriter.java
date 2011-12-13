@@ -19,37 +19,70 @@
 package org.exoplatform.ide.vfs.server;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Date;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+import javax.ws.rs.ext.Providers;
 
 /**
- * Serializer for ContentStream. Copy headers and content provided by method {@link ContentStream#getStream()} to HTTP
- * output stream.
+ * Add Cache-Control response header. For write JSON content use JSON provider embedded in REST framework if any.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @Provider
-public final class ContentStreamWriter implements MessageBodyWriter<ContentStream>
+@Produces({MediaType.APPLICATION_JSON})
+public class NoCacheJsonWriter<T> implements MessageBodyWriter<T>
 {
+   private Providers providers;
+   @SuppressWarnings("rawtypes")
+   private MessageBodyWriter writer;
+
+   public NoCacheJsonWriter()
+   {
+      // FIXME : Find a batter way then use EverRest embedded provider directly.
+      // Injection and instance of javax.ws.rs.ext.Providers by @Context annotation does not work.
+      // The problem is current MessageBodyWriter registered in Providers itself so when we try find 
+      // writer we met current writer and got StackOverflowError as result. 
+      try
+      {
+         Class<?> provider = Class.forName("org.everrest.core.impl.ProviderBinder");
+         Method method = provider.getMethod("getInstance");
+         providers = (Providers)method.invoke(null);
+      }
+      catch (Exception e)
+      {
+         throw new RuntimeException(e.getMessage(), e);
+      }
+   }
+
    /**
     * @see javax.ws.rs.ext.MessageBodyWriter#isWriteable(java.lang.Class, java.lang.reflect.Type,
     *      java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
     */
+   @SuppressWarnings("unchecked")
    @Override
    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType)
    {
-      return ContentStream.class.isAssignableFrom(type);
+      if (providers != null)
+      {
+         writer = providers.getMessageBodyWriter(type, genericType, annotations, mediaType);
+         if (writer != null && writer.isWriteable(type, genericType, annotations, mediaType))
+         {
+            return true;
+         }
+      }
+      return false;
    }
 
    /**
@@ -57,9 +90,9 @@ public final class ContentStreamWriter implements MessageBodyWriter<ContentStrea
     *      java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
     */
    @Override
-   public long getSize(ContentStream t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType)
+   public long getSize(T t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType)
    {
-      return t.getLength();
+      return -1;
    }
 
    /**
@@ -67,38 +100,24 @@ public final class ContentStreamWriter implements MessageBodyWriter<ContentStrea
     *      java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap,
     *      java.io.OutputStream)
     */
+   @SuppressWarnings("unchecked")
    @Override
-   public void writeTo(ContentStream t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+   public void writeTo(T t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
       MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException,
       WebApplicationException
    {
-      String mimeType = t.getMimeType();
-      if (mimeType != null)
+      if (writer == null)
       {
-         httpHeaders.putSingle(HttpHeaders.CONTENT_TYPE, mimeType);
-      }
-      Date lastModificationDate = t.getLastModificationDate();
-      if (lastModificationDate != null)
-      {
-         httpHeaders.putSingle(HttpHeaders.LAST_MODIFIED, t.getLastModificationDate());
+         // Be sure writer available.
+         String message =
+            "Not found writer for " + type + " and MIME type " + httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
+         throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity(message)
+            .type(MediaType.TEXT_PLAIN).build());
       }
 
+      // Add Cache-Control before start write body.
       httpHeaders.putSingle(HttpHeaders.CACHE_CONTROL, "public, no-cache, no-store, no-transform");
 
-      InputStream content = t.getStream();
-      try
-      {
-         byte[] buf = new byte[8192];
-         int rd = -1;
-         while ((rd = content.read(buf)) != -1)
-         {
-            entityStream.write(buf, 0, rd);
-         }
-         entityStream.flush();
-      }
-      finally
-      {
-         content.close();
-      }
+      writer.writeTo(t, type, genericType, annotations, mediaType, httpHeaders, entityStream);
    }
 }
