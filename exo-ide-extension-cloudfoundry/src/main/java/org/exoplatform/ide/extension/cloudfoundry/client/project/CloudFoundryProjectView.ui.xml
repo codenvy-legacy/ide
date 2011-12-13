@@ -43,6 +43,16 @@
       	border-top: 1px solid #DBDFE5;
       	padding-top: 5px;
       }
+      
+      .textinput {
+      	background-color: #FFFFFF !important;
+      	color: #000000 !important;
+      }
+      
+      .middle
+      {
+      	margin-top:3px;
+      }
    </ui:style>
    <c:Border margin="15" borderColor="transparent">
       <c:layer top="0" bottom="40">
@@ -50,8 +60,8 @@
             <c:layer>
                <g:FlowPanel styleName="{style.padding}">
                   <g:FlowPanel width="100%" height="28px">
-                     <g:Label text="{locale.manageProjectApplication}" addStyleNames="{style.labelH}" width="20%"></g:Label>
-                     <c:TextInput ui:field="nameField" width="72%" height="22px" addStyleNames="{style.left} {style.space}"></c:TextInput>
+                     <g:Label text="{locale.manageProjectApplication}" addStyleNames="{style.labelH} {style.middle}" width="20%"></g:Label>
+                     <c:TextInput ui:field="nameField" width="72%" height="22px" enabled="false" addStyleNames="{style.textinput} {style.left} {style.space}"></c:TextInput>
                      <c:ImageButton ui:field="infoButton" width="22" height="22px" text="" styleName="{style.left}" imageResource="{resource.propertiesButton}"
                         disabledImageResource="{resource.propertiesButtonDisabled}" title="{locale.manageProjectProperties}"></c:ImageButton>
                   </g:FlowPanel>
@@ -61,14 +71,14 @@
                      <c:ImageButton ui:field="editUrlsButton" width="24px" height="22px" text="..." styleName="{style.left}" title="more"></c:ImageButton>
                   </g:FlowPanel>
                   <g:FlowPanel width="100%" height="28px">
-                     <g:Label text="{locale.manageProjectMemory}" addStyleNames="{style.labelH}" width="20%"></g:Label>
-                     <c:TextInput ui:field="memoryField" width="72%" height="22px" addStyleNames="{style.left} {style.space}"></c:TextInput>
+                     <g:Label text="{locale.manageProjectMemory}" addStyleNames="{style.labelH} {style.middle}" width="20%"></g:Label>
+                     <c:TextInput ui:field="memoryField" width="72%" height="22px" enabled="false" addStyleNames="{style.textinput} {style.left} {style.space}"></c:TextInput>
                      <c:ImageButton ui:field="editMemoryButton" width="22" height="22px" text="" styleName="{style.left}" imageResource="{resource.editButton}"
                         disabledImageResource="{resource.editButtonDisabled}" title="{locale.manageProjectEditMemory}"></c:ImageButton>
                   </g:FlowPanel>
                   <g:FlowPanel width="100%" height="28px">
-                     <g:Label text="{locale.manageProjectInstances}" addStyleNames="{style.labelH}" width="20%"></g:Label>
-                     <c:TextInput ui:field="instancesField" width="72%" height="22px" addStyleNames="{style.left} {style.space}"></c:TextInput>
+                     <g:Label text="{locale.manageProjectInstances}" addStyleNames="{style.labelH} {style.middle}" width="20%"></g:Label>
+                     <c:TextInput ui:field="instancesField" width="72%" height="22px" enabled="false" addStyleNames="{style.textinput} {style.left} {style.space}"></c:TextInput>
                      <c:ImageButton ui:field="editInstancesButton" width="22" height="22px" text="" styleName="{style.left}"
                         imageResource="{resource.editButton}" disabledImageResource="{resource.editButtonDisabled}" title="{locale.manageProjectEditInstances}"></c:ImageButton>
                   </g:FlowPanel>
@@ -81,7 +91,8 @@
                      <c:Label ui:field="modelField" addStyleNames="{style.left}"></c:Label>
                   </g:FlowPanel>
                   <g:FlowPanel width="100%" height="28px" styleName="{style.actions}">
-                     <g:Label text="{locale.manageProjectStatus}" addStyleNames="{style.labelH}" width="20%"></g:Label>
+                     <g:Label text="{locale.manageProjectStatus}" addStyleNames="{style.labelH} {style.middle}" width="20%"></g:Label>
+                     <c:Label ui:field="statusField" addStyleNames="{style.left} {style.space} {style.middle}" width="70px"></c:Label>
                      <c:ImageButton ui:field="startButton" width="22" height="22px" text="" imageResource="{resource.startButton}"
                         disabledImageResource="{resource.startButtonDisabled}" title="{locale.manageProjectStart}" styleName="{style.left} {style.space}"></c:ImageButton>
                      <c:ImageButton ui:field="stopButton" width="22" height="22px" text="" imageResource="{resource.stopButton}"

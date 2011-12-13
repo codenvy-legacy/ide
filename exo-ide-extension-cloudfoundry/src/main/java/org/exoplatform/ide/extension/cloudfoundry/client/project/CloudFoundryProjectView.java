@@ -84,6 +84,8 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
 
    private static final String STACK_FIELD_ID = "ideCloudFoundryProjectViewStackField";
 
+   private static final String STATUS_FIELD_ID = "ideCloudFoundryProjectViewStatusField";
+
    private static CloudFoundryProjectViewUiBinder uiBinder = GWT.create(CloudFoundryProjectViewUiBinder.class);
 
    interface CloudFoundryProjectViewUiBinder extends UiBinder<Widget, CloudFoundryProjectView>
@@ -113,6 +115,9 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
 
    @UiField
    Label stackField;
+
+   @UiField
+   Label statusField;
 
    @UiField
    TextInput instancesField;
@@ -163,6 +168,7 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
       stackField.setID(STACK_FIELD_ID);
       instancesField.setName(INSTANCES_FIELD_ID);
       memoryField.setName(MEMORY_FIELD_ID);
+      statusField.setID(STATUS_FIELD_ID);
    }
 
    /**
@@ -336,5 +342,14 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
    public void setRestartButtonEnabled(boolean enabled)
    {
       restartButton.setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getApplicationStatus()
+    */
+   @Override
+   public HasValue<String> getApplicationStatus()
+   {
+      return statusField;
    }
 }

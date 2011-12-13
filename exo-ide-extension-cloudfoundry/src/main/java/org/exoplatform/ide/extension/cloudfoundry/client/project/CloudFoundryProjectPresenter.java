@@ -82,6 +82,8 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
 
       HasValue<String> getApplicationMemory();
 
+      HasValue<String> getApplicationStatus();
+
       HasClickHandlers getStartButton();
 
       HasClickHandlers getStopButton();
@@ -312,6 +314,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
       display.getApplicationMemory().setValue(String.valueOf(application.getResources().getMemory()) + "MB");
       display.getApplicationModel().setValue(String.valueOf(application.getStaging().getModel()));
       display.getApplicationStack().setValue(String.valueOf(application.getStaging().getStack()));
+      display.getApplicationStatus().setValue(String.valueOf(application.getState()));
 
       if (application.getUris() != null && application.getUris().size() > 0)
       {
