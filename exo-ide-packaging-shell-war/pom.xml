@@ -11,37 +11,37 @@
    <name>eXo IDE :: Packaging : Shell</name>
 
    <dependencies>
-       <dependency>
+      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
-       </dependency>
+      </dependency>
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
       </dependency>
-       <dependency>
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-shell</artifactId>
          <version>${project.version}</version>
-       </dependency>
-        <dependency>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
          <scope>provided</scope>
       </dependency>
 
-        <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-vfs</artifactId>
-        </dependency>
-        <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-vfs-jcr</artifactId>
-        </dependency>
-        <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-framework-client</artifactId>
-        </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs-jcr</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-framework-client</artifactId>
+      </dependency>
    </dependencies>
    <build>
       <resources>
@@ -145,8 +145,8 @@
                   **/preloadIDE.js,**/init_smartgwt_for_gadget.js,
                   **/exo-gwtframework-commons*.jar,**/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
                   **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar,**/portlet-api*.jar,**/jsf-api*.jar
-                  </packagingExcludes>
-                <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
+               </packagingExcludes>
+               <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
                <webResources>
                   <resource>
                      <directory>src/main/resources</directory>
@@ -171,37 +171,37 @@
       <!-- outputDirectory>target/war/classes</outputDirectory -->
    </build>
    <profiles>
-     <profile>
-      <id>standalone</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-               <webXml>src/main/standalone/web.xml</webXml>
-               <warSourceExcludes>.gwt-tmp/**,**/gadget/**,**/shell/**,**/application/**</warSourceExcludes>
-               <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/Commons.css,
-                  **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
-                  **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
-                  **/preloadIDE.js,**/init_smartgwt_for_gadget.js,
-                  **/exo-gwtframework-commons*.jar,**/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
-                  **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar,**/portlet-api*.jar,**/jsf-api*.jar
-                  </packagingExcludes>
-                <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
-               <webResources>
-                  <resource>
-                     <directory>src/main/resources</directory>
-                     <targetPath>.</targetPath>
-                  </resource>
-               </webResources>
-            </configuration>
-         </plugin>
-        </plugins>
-      </build>
-     </profile>
+      <profile>
+         <id>standalone</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-war-plugin</artifactId>
+                  <configuration>
+                     <webXml>src/main/standalone/WEB-INF/web.xml</webXml>
+                     <warSourceExcludes>.gwt-tmp/**,**/gadget/**,**/shell/**,**/application/**</warSourceExcludes>
+                     <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/Commons.css,
+                        **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
+                        **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
+                        **/preloadIDE.js,**/init_smartgwt_for_gadget.js,
+                        **/exo-gwtframework-commons*.jar,**/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
+                        **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar,**/portlet-api*.jar,**/jsf-api*.jar
+                     </packagingExcludes>
+                     <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
+                     <webResources>
+                        <resource>
+                           <directory>src/main/standalone</directory>
+                           <targetPath>.</targetPath>
+                        </resource>
+                     </webResources>
+                  </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
    </profiles>
 </project>
