@@ -16,10 +16,6 @@
          <artifactId>gwt-user</artifactId>
       </dependency>
       <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-dev</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-shell</artifactId>
          <version>${project.version}</version>

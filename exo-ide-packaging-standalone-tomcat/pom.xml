@@ -142,7 +142,7 @@
             </exclusion>
          </exclusions>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-gadget</artifactId>
@@ -213,10 +213,16 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-logreader</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-samples</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>com.google.gwt</groupId>
+               <artifactId>gwt-dev</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -367,7 +373,7 @@
          <version>${shindig.version}</version>
          <scope>runtime</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.hsqldb</groupId>
          <artifactId>hsqldb</artifactId>

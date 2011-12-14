@@ -387,18 +387,6 @@
             </dependency>
             <dependency>
                <groupId>com.google.gwt</groupId>
-               <artifactId>gwt-dev</artifactId>
-               <version>${gwt.version}</version>
-               <scope>compile</scope>
-               <exclusions>
-                  <exclusion>
-                     <groupId>xstream</groupId>
-                     <artifactId>xstream</artifactId>
-                  </exclusion>
-               </exclusions>
-            </dependency>
-            <dependency>
-               <groupId>com.google.gwt</groupId>
                <artifactId>gwt-servlet</artifactId>
                <scope>runtime</scope>
                <exclusions>
