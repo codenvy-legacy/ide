@@ -18,11 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.createfolder;
 
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
@@ -30,8 +25,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -47,9 +47,9 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
    
    public static final String ID = "ideCreateFolderForm";
 
-   public static final int WIDTH = 400;
+   public static final int WIDTH = 410;
 
-   public static final int HEIGHT = 170;
+   public static final int HEIGHT = 175;
 
    public final String ID_CREATE_BUTTON = "ideCreateFolderFormCreateButton";
 
@@ -62,7 +62,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFolderFormTitle();
 
    @UiField
-   TextBox folderNameField;
+   TextInput folderNameField;
 
    @UiField
    ImageButton createButton;
