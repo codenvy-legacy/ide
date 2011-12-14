@@ -273,7 +273,8 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
    private void deleteSelectedProperty()
    {
-      Dialogs.getInstance().ask("IDE", "Delete property <b>" + selectedProperty.getName() + "</b>?",
+      String name = PropertyUtil.getHumanReadableName(selectedProperty.getName());
+      Dialogs.getInstance().ask("IDE", "Delete property <b>" + name + "</b>?",
          new BooleanValueReceivedHandler()
          {
             @SuppressWarnings("unchecked")
