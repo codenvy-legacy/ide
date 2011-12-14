@@ -86,8 +86,9 @@
          </g:DockLayoutPanel>
       </f:layer>
       <f:layer top="75px" bottom="0">
-         <g:ScrollPanel width="100%" height="100%" stylePrimaryName="{style.scroll} {resource.css.welcomeTopContainer} {style.welcomeBox}">
+         <g:ScrollPanel width="100%" height="100%" stylePrimaryName="{style.scroll} {resource.css.welcomeTopContainer}">
             <g:FlowPanel>
+               <g:FlowPanel width="100%" height="40px"></g:FlowPanel>
                <g:DockLayoutPanel unit="PCT" height="90px" width="100%" stylePrimaryName="{style.hPanel}">
                   <g:west size="50">
                      <!-- Create New Projects -->
