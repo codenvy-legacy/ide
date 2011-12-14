@@ -18,9 +18,16 @@
  */
 package org.exoplatform.ide.client.project.fromtemplate;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -30,14 +37,6 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 
 import java.util.List;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -45,17 +44,18 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version @version $Id: $
  */
 
-public class CreateProjectFromTemplateForm extends ViewImpl implements org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display
+public class CreateProjectFromTemplateForm extends ViewImpl implements
+   org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display
 {
-   
-   public static final String ID = "ideCreateProjectFromTemplateView";   
+
+   public static final String ID = "ideCreateProjectFromTemplateView";
 
    public static final int DEFAULT_HEIGHT = 300;
 
    public static final int DEFAULT_WIDTH = 600;
-   
+
    private final String BUTTON_W = "90px";
-   
+
    private final String BUTTON_H = "22px";
 
    private static final String FILE_NAME_FIELD = "ideCreateFileFromTemplateFormFileNameField";
@@ -65,9 +65,9 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
    private static final String ID_CREATE_BUTTON = "ideCreateFileFromTemplateFormCreateButton";
 
    private static final String ID_DELETE_BUTTON = "ideCreateFileFromTemplateFormDeleteButton";
-   
+
    private static final String TITLE = IDE.TEMPLATE_CONSTANT.createProjectFromTemplateTitle();
-   
+
    private ImageButton cancelButton;
 
    private ImageButton createButton;
@@ -82,8 +82,8 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
 
    public CreateProjectFromTemplateForm()
    {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.createFromTemplate()), DEFAULT_WIDTH,
-         DEFAULT_HEIGHT,false);
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.createFromTemplate()), DEFAULT_WIDTH, DEFAULT_HEIGHT,
+         false);
 
       layout = new VerticalPanel();
       layout.setWidth("100%");
@@ -218,5 +218,4 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
    {
       templateListGrid.selectLastItem();
    }
-
 }

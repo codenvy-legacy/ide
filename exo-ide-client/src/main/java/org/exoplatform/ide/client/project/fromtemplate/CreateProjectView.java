@@ -41,34 +41,34 @@ import java.util.List;
  * @version $Id: CreateProjectView.java Dec 1, 2011 12:51:33 PM vereshchaka $
  *
  */
-public class CreateProjectView extends ViewImpl  implements CreateProjectFromTemplatePresenter.Display
+public class CreateProjectView extends ViewImpl implements CreateProjectFromTemplatePresenter.Display
 {
    private static final String ID = "CreateNewProjectView";
-   
+
    private static final String TITLE = IDE.TEMPLATE_CONSTANT.createProjectFromTemplateTitle();
-   
+
    private static final int HEIGHT = 345;
 
    private static final int WIDTH = 550;
-   
+
    interface CreateProjectViewUiBinder extends UiBinder<Widget, CreateProjectView>
    {
    }
-   
+
    /**
     * UIBinder instance
     */
    private static CreateProjectViewUiBinder uiBinder = GWT.create(CreateProjectViewUiBinder.class);
-   
+
    @UiField
    ProjectTemplateListGrid templateListGrid;
-   
+
    @UiField
    ImageButton nextButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    TextInput projectNameField;
 
@@ -157,8 +157,7 @@ public class CreateProjectView extends ViewImpl  implements CreateProjectFromTem
    @Override
    public void setDeleteButtonEnabled(boolean enabled)
    {
-      // TODO Auto-generated method stub
-      
+      //TODO
    }
 
    /**

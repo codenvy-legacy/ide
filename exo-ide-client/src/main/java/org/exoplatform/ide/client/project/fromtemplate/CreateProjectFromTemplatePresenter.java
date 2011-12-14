@@ -148,7 +148,6 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
        * @param enabled
        */
       void setNameFieldEnabled(boolean enabled);
-
    }
 
    //private FolderModel baseFolder;
@@ -457,8 +456,9 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    private void createProjectFromTemplate()
    {
       display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
       bindDisplay();
+      IDE.getInstance().openView(display.asView());
+      display.getNameField().setValue("untitled");
    }
 
    private void onFolderCreated(FolderModel folder)
@@ -606,8 +606,6 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       {
          display.setDeleteButtonEnabled(true);
       }
-
-      display.getNameField().setValue(selectedTemplates.get(0).getName());
    }
 
    /**

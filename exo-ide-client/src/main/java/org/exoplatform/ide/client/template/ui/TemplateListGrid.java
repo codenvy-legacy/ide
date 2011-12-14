@@ -48,7 +48,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
    
    private static final String NAME = IDE.TEMPLATE_CONSTANT.listGridName();
    
-   private static final String DESCRIPTION = IDE.TEMPLATE_CONSTANT.listGridDescription();
+   protected static final String DESCRIPTION = IDE.TEMPLATE_CONSTANT.listGridDescription();
    
    public TemplateListGrid()
    {
@@ -72,7 +72,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
     * @param template
     * @return String
     */
-   private ImageResource getItemIcon(Template template)
+   protected ImageResource getItemIcon(Template template)
    {
       if (template instanceof FileTemplate)
       {

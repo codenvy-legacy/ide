@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.client.project.fromtemplate;
 
+import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.HasAlignment;
 
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.template.ui.TemplateListGrid;
@@ -33,13 +37,24 @@ import org.exoplatform.ide.client.template.ui.TemplateListGrid;
  */
 public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
 {
-   /**
-    * @see org.exoplatform.ide.client.template.ui.TemplateListGrid#initColumns()
-    */
    @Override
    protected void initColumns()
    {
-      super.initColumns();
+      //--- icon column -----
+      ImageResourceCell iconCell = new ImageResourceCell();
+      Column<ProjectTemplate, ImageResource> iconColumn = new Column<ProjectTemplate, ImageResource>(iconCell)
+      {
+         @Override
+         public ImageResource getValue(ProjectTemplate item)
+         {
+            return getItemIcon(item);
+         }
+      };
+
+      getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
+      iconColumn.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
+      getCellTable().setColumnWidth(iconColumn, 20, Unit.PX);
+
       SafeHtmlCell typeCell = new SafeHtmlCell();
       Column<ProjectTemplate, SafeHtml> entryTypeColumn = new Column<ProjectTemplate, SafeHtml>(typeCell)
       {
@@ -56,8 +71,7 @@ public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
                {
                   if (item.getNodeName() == null)
                   {
-                     return "<span title=\"" + item.getType() + "\"><nobr>"
-                        + item.getType() + "</nobr></span>";
+                     return "<span title=\"" + item.getType() + "\"><nobr>" + item.getType() + "</nobr></span>";
                   }
                   else
                   {
@@ -69,9 +83,42 @@ public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
          }
 
       };
-      
+
       entryTypeColumn.setCellStyleNames("default-cursor");
       getCellTable().addColumn(entryTypeColumn, "Type");
       getCellTable().setColumnWidth(entryTypeColumn, 60, Unit.PX);
+
+      //--- description column -----
+      SafeHtmlCell descCell = new SafeHtmlCell();
+      Column<ProjectTemplate, SafeHtml> entryNameColumn = new Column<ProjectTemplate, SafeHtml>(descCell)
+      {
+
+         @Override
+         public SafeHtml getValue(final ProjectTemplate item)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  if (item.getNodeName() == null)
+                  {
+                     return "<span title=\"" + item.getDescription() + "\">" + item.getDescription() + "</span>";
+                  }
+                  else
+                  {
+                     return "<span title=\"" + item.getDescription() + "\">" + item.getDescription() + "</span>";
+                  }
+               }
+            };
+            return html;
+         }
+      };
+
+      entryNameColumn.setCellStyleNames("default-cursor");
+      getCellTable().addColumn(entryNameColumn, DESCRIPTION);
+      getCellTable().setColumnWidth(entryNameColumn, 70, Unit.PCT);
    }
 }
