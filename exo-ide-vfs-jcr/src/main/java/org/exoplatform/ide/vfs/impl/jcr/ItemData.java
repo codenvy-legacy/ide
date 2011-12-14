@@ -84,6 +84,10 @@ abstract class ItemData
 
    static ItemData fromNode(Node node, String rootNodePath) throws RepositoryException
    {
+      // eXo WebDAV left node in checked-in state after update.
+      // Need change state to checked-out to be able update node. 
+      if (!node.isCheckedOut() && node.isNodeType("mix:versionable"))
+         node.checkout();
       if (node.isNodeType("nt:file") && node.getNode("jcr:content").isNodeType("nt:resource"))
          return new FileData(node, rootNodePath);
       if (node.isNodeType("nt:resource") && "jcr:content".equals(node.getName()))
@@ -883,8 +887,6 @@ abstract class ItemData
    {
       if (this == obj)
          return true;
-      if (obj == null)
-         return false;
       if (obj == null || getClass() != obj.getClass())
          return false;
       ItemData other = (ItemData)obj;
