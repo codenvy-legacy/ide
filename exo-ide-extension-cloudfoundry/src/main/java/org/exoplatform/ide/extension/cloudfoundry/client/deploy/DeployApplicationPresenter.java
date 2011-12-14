@@ -21,18 +21,20 @@ package org.exoplatform.ide.extension.cloudfoundry.client.deploy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.paas.PaasComponent;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.PaasCallback;
+import org.exoplatform.ide.client.framework.paas.PaasComponent;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -43,11 +45,14 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -169,17 +174,46 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
 
    //----Implementation------------------------
 
-   private boolean isMavenProject()
+   private void isMavenProject()
    {
-      for (Item i : project.getChildren().getItems())
+      try
       {
-         if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
-         {
-            return true;
-         }
+         VirtualFileSystem.getInstance().getChildren(
+            project,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  project.getChildren().setItems(result);
+                  for (Item i : result)
+                  {
+                     if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
+                     {
+                        buildApplication();
+                        return;
+                     }
+                  }
+                  
+                  createApplication();
+                  
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Parent folder not found."));
+               }
+            });
       }
-      
-      return false;
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
    
    private void buildApplication()
@@ -303,14 +337,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
    public void deploy(ProjectModel project)
    {
       this.project = project;
-      if (isMavenProject())
-      {
-         buildApplication();
-      }
-      else
-      {
-         createApplication();
-      }
+      isMavenProject();
    }
 
    /**
