@@ -58,6 +58,8 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
    private static final String LIST = BASE_URL + "/list";
    
+   private static final String LIST_USER = BASE_URL + "/list/user";
+   
    /** CloudBees **/
    
    private static final String CLOUDBEES_DOMAINS = "/ide/cloudbees/domains";
@@ -121,6 +123,20 @@ public class SamplesClientServiceImpl extends SamplesClientService
    public void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback)
    {
       String url = restServiceContext + LIST;
+      callback.setEventBus(eventBus);
+      List<Repository> repos = new ArrayList<Repository>();
+      callback.setPayload(new RepositoriesUnmarshaller(repos));
+      callback.setResult(repos);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback)
+   {
+      String url = restServiceContext + LIST_USER + "?username=" + userName;
       callback.setEventBus(eventBus);
       List<Repository> repos = new ArrayList<Repository>();
       callback.setPayload(new RepositoriesUnmarshaller(repos));

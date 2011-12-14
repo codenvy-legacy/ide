@@ -47,7 +47,7 @@ import org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishSt
  */
 public class SamplesExtension extends Extension implements InitializeServicesHandler
 {
-   
+
    public static final SamplesLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(SamplesLocalizationConstant.class);
 
@@ -69,30 +69,33 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       SamplesClientBundle.INSTANCE.css().ensureInjected();
       IDE.getInstance().addControl(new LoadSamplesControl());
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      
+
       new StartPagePresenter();
       new ConvertToProjectPresenter();
-      
+
       //Import from GitHub
       GithubStep<ProjectData> firstStep = new ShowSamplesPresenter();
       GithubStep<ProjectData> secondStep = new DeploySamplesPresenter();
       firstStep.setNextStep(secondStep);
       secondStep.setPreviousStep(firstStep);
-      
+
       //wizard Create new Java Project
       WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter();
       WizardDeploymentStepPresenter wizardDeploymentStep = new WizardDeploymentStepPresenter();
       WizardFinishStepPresenter wizardFinishStep = new WizardFinishStepPresenter();
-      
+
       wizardDefinitionStep.setWizardContinuable(wizardDeploymentStep);
       wizardDeploymentStep.setWizardReturnable(wizardDefinitionStep);
       wizardDeploymentStep.setWizardContinuable(wizardFinishStep);
       wizardFinishStep.setWizardReturnable(wizardDeploymentStep);
-      
+
       new LoginPresenter();
-      
-      new ImportFromGithubPresenter();
-      
+
+      GithubStep<ProjectData> secondStepUser = new DeploySamplesPresenter();
+      GithubStep<ProjectData> firstStepUser = new ImportFromGithubPresenter();
+      firstStepUser.setNextStep(secondStepUser);
+      secondStepUser.setPreviousStep(firstStepUser);
+
       IDE.fireEvent(new OpenStartPageEvent());
    }
 }

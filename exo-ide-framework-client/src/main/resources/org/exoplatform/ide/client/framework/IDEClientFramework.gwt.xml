@@ -40,20 +40,22 @@
 
    <source path="annotation" />
    <source path="application" />
-   <source path="codeassistant" />
    <source path="configuration" />
    <source path="control" />
+   <source path="discovery" />
+   <source path="documentation" />
    <source path="editor" />
    <source path="event" />
-   <source path="form" />
+   <source path="job" />
    <source path="module" />
    <source path="navigation" />
+   <source path="outline" />
    <source path="output" />
+   <source path="paas" />
+   <source path="project" />
    <source path="settings" />
    <source path="ui" />
    <source path="userinfo" />
-   <source path="vfs" />
-   <source path="outline" />
-   <source path="job" />
+   <source path="util" />
    
 </module>

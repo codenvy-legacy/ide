@@ -73,6 +73,19 @@ public class Github
     */
    public Repository[] listRepositories() throws IOException, GithubException, ParsingResponseException
    {
+      return listRepositories(this.userName);
+   }
+   
+   /**
+    * Get the list of repositories for User Name.
+    * @param userName name of user 
+    * @return an array of repositories.
+    * @throws IOException if any i/o errors occurs
+    * @throws GithubException if github server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    */
+   public Repository[] listRepositories(String userName) throws IOException, GithubException, ParsingResponseException
+   {
       String url = "http://github.com/api/v2/json/repos/show/" + userName;
       String method = "GET";
       String response = doJsonRequest(url, method, null, 200);

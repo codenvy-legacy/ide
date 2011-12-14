@@ -30,7 +30,7 @@ public class ProjectData
    private String description;
 
    private String type;
-   
+
    /**
     * Url to clone from GitHub.
     */
@@ -43,7 +43,7 @@ public class ProjectData
       this.type = type;
       this.repositoryUrl = repositoryUrl;
    }
-   
+
    /**
     * Get the url to clone from GitHub.
     * @return the repositoryUrl
@@ -84,13 +84,18 @@ public class ProjectData
    {
       return type;
    }
-   
+
    /**
     * @param name the name to set
     */
    public void setName(String name)
    {
       this.name = name;
+   }
+
+   public void setType(String type)
+   {
+      this.type = type;
    }
 
 }

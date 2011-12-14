@@ -37,6 +37,8 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.model.settings.Settings;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
@@ -63,9 +65,10 @@ import java.util.Map;
  */
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
-   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, VfsChangedHandler,
-   EditorReplaceFileHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler, ProjectOpenedHandler, ProjectClosedHandler
-{   
+   EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, VfsChangedHandler, EditorReplaceFileHandler,
+   ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler, ProjectOpenedHandler,
+   ProjectClosedHandler, SaveApplicationSettingsHandler
+{
 
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
@@ -88,6 +91,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       IDE.addHandler(ItemMovedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(SaveApplicationSettingsEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -192,39 +196,39 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    public void onItemMoved(ItemMovedEvent event)
    {
       //TODO
-//      if (lockTokens.containsKey(event.getSourceHref()))
-//      {
-//         String lock = lockTokens.get(event.getSourceHref());
-//         lockTokens.remove(event.getSourceHref());
-//         lockTokens.put(event.getItem().getHref(), lock);
-//         storeLockTokens();
-//      }
-//      else if (event.getItem() instanceof Folder)
-//      {
-//         String sourceHref = event.getSourceHref();
-//         List<String> keys = new ArrayList<String>();
-//         for (String k : lockTokens.keySet())
-//         {
-//            keys.add(k);
-//         }
-//
-//         for (String key : keys)
-//         {
-//            if (key.startsWith(sourceHref))
-//            {
-//               String lock = lockTokens.get(key);
-//               String name = key.substring(sourceHref.length());
-//               String path = event.getItem().getHref();
-//               if (!path.endsWith("/"))
-//               {
-//                  path += "/";
-//               }
-//               lockTokens.remove(key);
-//               lockTokens.put(path + name, lock);
-//               storeLockTokens();
-//            }
-//         }
-//      }
+      //      if (lockTokens.containsKey(event.getSourceHref()))
+      //      {
+      //         String lock = lockTokens.get(event.getSourceHref());
+      //         lockTokens.remove(event.getSourceHref());
+      //         lockTokens.put(event.getItem().getHref(), lock);
+      //         storeLockTokens();
+      //      }
+      //      else if (event.getItem() instanceof Folder)
+      //      {
+      //         String sourceHref = event.getSourceHref();
+      //         List<String> keys = new ArrayList<String>();
+      //         for (String k : lockTokens.keySet())
+      //         {
+      //            keys.add(k);
+      //         }
+      //
+      //         for (String key : keys)
+      //         {
+      //            if (key.startsWith(sourceHref))
+      //            {
+      //               String lock = lockTokens.get(key);
+      //               String name = key.substring(sourceHref.length());
+      //               String path = event.getItem().getHref();
+      //               if (!path.endsWith("/"))
+      //               {
+      //                  path += "/";
+      //               }
+      //               lockTokens.remove(key);
+      //               lockTokens.put(path + name, lock);
+      //               storeLockTokens();
+      //            }
+      //         }
+      //      }
    }
 
    /**
@@ -268,14 +272,31 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    public void onProjectClosed(ProjectClosedEvent event)
    {
       applicationSettings.setValue(Settings.OPENED_PROJECT_ID, "", Store.COOKIES);
-      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);      
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       applicationSettings.setValue(Settings.OPENED_PROJECT_ID, event.getProject().getId(), Store.COOKIES);
-      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);      
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler#onSaveApplicationSettings(org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent)
+    */
+   @Override
+   public void onSaveApplicationSettings(SaveApplicationSettingsEvent event)
+   {
+      switch (event.getSaveType())
+      {
+         case COOKIES :
+            SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+            break;
+         default :
+            //TODO
+            break;
+      }
    }
 
    //   /**

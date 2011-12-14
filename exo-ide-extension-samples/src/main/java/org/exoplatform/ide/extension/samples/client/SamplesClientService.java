@@ -60,6 +60,14 @@ public abstract class SamplesClientService
     * @param callback the callback client has to implement
     */
    public abstract void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback);
+   
+   
+   /**
+    * Get the list of available public repositories from GitHub user.
+    * @param userName Name of GitHub User
+    * @param callback the callback client has to implement
+    */
+   public abstract void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback);
 
    /************ CloudBees operations ************/
 

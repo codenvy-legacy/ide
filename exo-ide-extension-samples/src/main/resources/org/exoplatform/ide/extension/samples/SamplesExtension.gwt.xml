@@ -26,6 +26,17 @@
    <inherits name='com.google.gwt.json.JSON' />
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    
+   <inherits name='org.exoplatform.gwtframework.ui.UI' />
+   
+   <!-- IDE Client Framework -->
+   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+
+   <!-- Initialise Virtual File System -->
+   <inherits name="org.exoplatform.ide.vfs.VFS" />
+   
+   <inherits name='org.exoplatform.ide.git.GitExtension' />
+   <inherits name='org.exoplatform.ide.extension.jenkins.JenkinsExtension' />
+   
    <inherits name='org.exoplatform.ide.extension.samples.Views' />
 
    <source path="client"/>
