@@ -4,10 +4,10 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M4-SNAPSHOT</version>
+      <version>1.2.0-M5</version>
    </parent>
    <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-   <version>1.2.0-M4-SNAPSHOT</version>
+   <version>1.2.0-M5</version>
    <name>eXo IDE :: Extension :: CLOUDFOUNDRY</name>
    <dependencies>
       <dependency>
