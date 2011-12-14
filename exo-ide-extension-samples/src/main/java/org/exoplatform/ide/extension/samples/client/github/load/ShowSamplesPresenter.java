@@ -154,10 +154,13 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
             selectedProjects = display.getSelectedItems();
             if (selectedProjects == null || selectedProjects.isEmpty())
             {
+               display.getProjectNameField().setValue("");
                display.enableNextButton(false);
             }
             else
             {
+               String name = selectedProjects.get(0).getName();
+               display.getProjectNameField().setValue(name);
                display.enableNextButton(true);
             }
          }

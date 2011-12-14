@@ -61,6 +61,7 @@ import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinish
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -681,28 +682,9 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   //                  {
                   //                     deployToOpenShift();
                   //                  }
-                  else if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
+                  else 
                   {
-                     if (isMavenProject())
-                     {
-                        buildApplication(project);
-                     }
-                     else
-                     {
-                        Dialogs.getInstance().showError(
-                           "Newly created project is not maven project. You can't deploy it to CloudBees");
-                     }
-                  }
-                  else if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(selectedPaaS))
-                  {
-                     if (isMavenProject())
-                     {
-                        buildApplication(project);
-                     }
-                     else
-                     {
-                        deployToPaas();
-                     }
+                     checkIsMavenProject(project);
                   }
                }
 
@@ -720,17 +702,58 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
    }
 
-   private boolean isMavenProject()
+   /**
+    * Check is selected item project and can be built.
+    */
+   private void checkIsMavenProject(final ProjectModel project)
    {
-      for (Item i : project.getChildren().getItems())
+      try
       {
-         if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
-         {
-            return true;
-         }
-      }
+         VirtualFileSystem.getInstance().getChildren(
+            project,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
 
-      return false;
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  project.getChildren().setItems(result);
+                  for (Item i : result)
+                  {
+                     if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
+                     {
+                        buildApplication(project);
+                        return;
+                     }
+                  }
+                  
+                  if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
+                  {
+
+                     Dialogs.getInstance().showError(
+                        "Newly created project is not maven project. You can't deploy it to CloudBees");
+                  }
+                  else if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(selectedPaaS))
+                  {
+                     deployToPaas();
+                  }
+                  
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Parent folder not found."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void handleError(Throwable t)
