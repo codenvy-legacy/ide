@@ -484,25 +484,25 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       refreshNextFolder();
    }
 
-   /**
-    * Removes items for not to be displayed, if they are system ones
-    * (for example, ".groovyclasspath" file).
-    * To known system item or not call {@link Item} method: boolean isSystem().
-    * 
-    * @param items
-    */
-   private void removeSystemItems(List<Item> items)
-   {
-      List<Item> itemsToRemove = new ArrayList<Item>();
-      for (Item item : items)
-      {
-         if (item.getName().startsWith("."))
-         {
-            itemsToRemove.add(item);
-         }
-      }
-      items.removeAll(itemsToRemove);
-   }
+//   /**
+//    * Removes items for not to be displayed, if they are system ones
+//    * (for example, ".groovyclasspath" file).
+//    * To known system item or not call {@link Item} method: boolean isSystem().
+//    * 
+//    * @param items
+//    */
+//   private void removeSystemItems(List<Item> items)
+//   {
+//      List<Item> itemsToRemove = new ArrayList<Item>();
+//      for (Item item : items)
+//      {
+//         if (item.getName().startsWith("."))
+//         {
+//            itemsToRemove.add(item);
+//         }
+//      }
+//      items.removeAll(itemsToRemove);
+//   }
 
    /**
     * Comparator for comparing items in received directory.

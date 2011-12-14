@@ -79,7 +79,6 @@ public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
       catch (Exception exc)
       {
          exc.printStackTrace();
-
          String message = "Can't parse folder content at <b>" + "id" + "</b>! ";
          throw new UnmarshallerException(message);
       }
@@ -106,8 +105,8 @@ public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
          JSONObject object = itemsArray.get(i).isObject();
          ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
          String mimeType = null;
-         if(object.get(MIME_TYPE).isString() != null)
-          mimeType = object.get(MIME_TYPE).isString().stringValue();
+         if (object.get(MIME_TYPE).isString() != null)
+            mimeType = object.get(MIME_TYPE).isString().stringValue();
 
          if (type == ItemType.FOLDER)
          {

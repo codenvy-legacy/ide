@@ -415,8 +415,11 @@ public class TemplateServiceImpl extends TemplateService
       org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback) throws RequestException
    {
       String url = restContext + "/ide/templates/project/create";
-      url +=
-         "?vfsid=" + vfsId + "&name=" + name + "&parentId=" + parentId + "&templateName=" + templateName;
+      url += "?vfsid=" + vfsId;
+      url += "&name=" + name;
+      url += "&parentId=" + parentId;
+      url += "&templateName=" + templateName;
+      url = URL.encode(url);
       org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url)
       .send(callback);
    }

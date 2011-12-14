@@ -100,7 +100,6 @@ public class VirtualFileSystem
    {
       this.info = callback.getPayload();
       AsyncRequest.build(RequestBuilder.GET, workspaceURL).send(callback);
-
    }
 
    /**
@@ -140,8 +139,9 @@ public class VirtualFileSystem
       throws RequestException
    {
       String name = callback.getPayload().getName();
-      String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();//.replace("%5Bname%5D", name);
+      String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
       String urlString = URL.decode(url).replace("[name]", name);
+      urlString = URL.encode(urlString);      
       AsyncRequest.build(RequestBuilder.POST, urlString).send(callback);
    }
 
@@ -159,6 +159,7 @@ public class VirtualFileSystem
       String url = parent.getLinkByRelation(Link.REL_CREATE_PROJECT).getHref();
       url = URL.decode(url).replace("[name]", newProject.getName());
       url = url.replace("[type]", newProject.getProjectType());
+      url = URL.encode(url);
       AsyncRequest.build(RequestBuilder.POST, url)
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(newProject.getProperties()).toString())
          .header(HTTPHeader.CONTENT_TYPE, "application/json").send(callback);
@@ -177,6 +178,7 @@ public class VirtualFileSystem
       FileModel newFile = callback.getPayload();
       String url = parent.getLinkByRelation(Link.REL_CREATE_FILE).getHref();
       url = URL.decode(url).replace("[name]", newFile.getName());
+      url = URL.encode(url);
       AsyncRequest.build(RequestBuilder.POST, url).data(newFile.getContent())
          .header(HTTPHeader.CONTENT_TYPE, newFile.getMimeType()).send(callback);
    }
@@ -243,6 +245,7 @@ public class VirtualFileSystem
       {
          url = URL.decode(url).replace("[parentId]", destination);
       }
+      url = URL.encode(url);
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
@@ -265,6 +268,7 @@ public class VirtualFileSystem
       {
          url = url.replace("[lockToken]", ((FileModel)source).getLock().getLockToken());
       }
+      url = URL.encode(url);
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
@@ -295,6 +299,7 @@ public class VirtualFileSystem
       
       url = url.replace("?&", "?");
       url = url.replaceAll("&&", "&");
+      url = URL.encode(url);
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
@@ -337,6 +342,7 @@ public class VirtualFileSystem
          path = path.substring(1);
       String url = info.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref();
       url = URL.decode(url).replace("[path]", path);
+      url = URL.encode(url);
       AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).send(callback);
    }
 
@@ -373,6 +379,8 @@ public class VirtualFileSystem
          String value = query.get(key);
          data += (value != null && !value.isEmpty()) ? key + "=" + value + "&" : "";
       }
+      
+      url = URL.encode(url);
       AsyncRequest.build(RequestBuilder.POST, url)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED).data(data).send(callback);
    }
@@ -393,4 +401,5 @@ public class VirtualFileSystem
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(item.getProperties()).toString())
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
+   
 }
