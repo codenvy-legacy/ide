@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.client.properties;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
+
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -31,13 +38,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -100,7 +100,11 @@ public class PropertiesView extends ViewImpl implements
 
          //add id to get access to field's text from Selenium tests 
          DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "propertyName", key);
-
+         
+         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "fontFamily", "Verdana,Bitstream Vera Sans,sans-serif");
+         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "fontSize", "11px");
+         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "fontFamily", "Verdana,Bitstream Vera Sans,sans-serif");
+         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "fontSize", "11px");
          DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "textAlign", "right");
          DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "width", "100%");
          DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "nowrap", "nowrap");
@@ -121,30 +125,6 @@ public class PropertiesView extends ViewImpl implements
       for (Property<?> property : properties)
       {
          String propertyName = property.getName();
-
-         //         if (ItemProperty.JCR_CONTENT.equals(propertyName))
-         //         {
-         //            for (Property p : property.getChildProperties())
-         //            {
-         //               if (!PropertyTitle.containsTitleFor(p.getName()))
-         //               {
-         //                  continue;
-         //               }
-         //
-         //               String title = PropertyTitle.getPropertyTitle(p.getName());
-         //               propertiesMap.put(title, p.getValue());
-         //            }
-         //
-         //         }
-         //         else
-         //         {
-         //            if (!PropertyTitle.containsTitleFor(propertyName))
-         //            {
-         //               continue;
-         //            }
-         //
-         //         }
-         //         String title = PropertyTitle.getPropertyTitle(propertyName);
          propertiesMap.put(propertyName, property.getValue().get(0).toString());
       }
 
