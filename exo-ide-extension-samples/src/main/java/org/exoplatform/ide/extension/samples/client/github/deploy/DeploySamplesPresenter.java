@@ -281,7 +281,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             if (ProjectProperties.Paas.CLOUDBEES.equals(display.getSelectPaasField().getValue()))
             {
                String name = display.getCloudBeesNameField().getValue();
-               String cloudBeesId = name + "/" + display.getSelectCloudBeesDomainField().getValue();
+               String cloudBeesId = display.getSelectCloudBeesDomainField().getValue() + "/" + name;
                display.getCloudBeesIdField().setValue(cloudBeesId);
                display.enableFinishButton(name != null && !name.isEmpty());
             }
@@ -296,7 +296,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             if (ProjectProperties.Paas.CLOUDBEES.equals(display.getSelectPaasField().getValue()))
             {
                String name = display.getCloudBeesNameField().getValue();
-               String cloudBeesId = name + "/" + display.getSelectCloudBeesDomainField().getValue();
+               String cloudBeesId = display.getSelectCloudBeesDomainField().getValue() + "/" + name;
                display.getCloudBeesIdField().setValue(cloudBeesId);
             }
          }
@@ -821,7 +821,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void deployToCloudBees()
    {
-      final String applicationId = cloudBeesName + "/" + cloudBeesDomain;
+      final String applicationId = cloudBeesDomain + "/" + cloudBeesName;
 
       SamplesClientService.getInstance().createCloudBeesApplication(applicationId, vfs.getId(), project.getId(),
          warUrl, null,
