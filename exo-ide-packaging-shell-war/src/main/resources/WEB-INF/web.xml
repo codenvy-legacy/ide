@@ -28,10 +28,6 @@
       <servlet-name>EverrestServlet</servlet-name>
       <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
    </servlet>
-   
-   <listener>
-      <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
-   </listener>
 
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
