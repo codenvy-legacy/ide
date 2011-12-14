@@ -56,28 +56,29 @@ public abstract class HasBranchesPresenter extends GitPresenter
     */
    public void getRemotes(String projectId)
    {
-      GitClientService.getInstance().remoteList(vfs.getId(), projectId, null, true, new AsyncRequestCallback<List<Remote>>()
-      {
-         @Override
-         protected void onSuccess(List<Remote> result)
+      GitClientService.getInstance().remoteList(vfs.getId(), projectId, null, true,
+         new AsyncRequestCallback<List<Remote>>()
          {
-            if (result.size() == 0)
+            @Override
+            protected void onSuccess(List<Remote> result)
             {
-               Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
-               return;
+               if (result.size() == 0)
+               {
+                  Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
+                  return;
+               }
+
+               onRemotesReceived(result);
             }
 
-            onRemotesReceived(result);
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteListFailed();
-            Dialogs.getInstance().showError(errorMessage);
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String errorMessage =
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteListFailed();
+               Dialogs.getInstance().showError(errorMessage);
+            }
+         });
    }
 
    public abstract void onRemotesReceived(List<Remote> remotes);
@@ -90,30 +91,32 @@ public abstract class HasBranchesPresenter extends GitPresenter
     */
    public void getBranches(String projectId, final boolean remote)
    {
-      GitClientService.getInstance().branchList(vfs.getId(), projectId, remote, new AsyncRequestCallback<List<Branch>>()
-      {
-
-         @Override
-         protected void onSuccess(List<Branch> result)
+      GitClientService.getInstance().branchList(vfs.getId(), projectId, remote,
+         new AsyncRequestCallback<List<Branch>>()
          {
-            if (remote)
+
+            @Override
+            protected void onSuccess(List<Branch> result)
             {
-               remoteBranches = result;
-               setRemoteBranches(remoteBranches);
-               return;
+               if (remote)
+               {
+                  remoteBranches = result;
+                  setRemoteBranches(remoteBranches);
+                  return;
+               }
+
+               setLocalBranches(result);
             }
 
-            setLocalBranches(result);
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.branchesListFailed();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String errorMessage =
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
+                     .branchesListFailed();
+               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            }
+         });
    }
 
    /**
@@ -144,6 +147,7 @@ public abstract class HasBranchesPresenter extends GitPresenter
          branchesToDisplay.add("master");
          return branchesToDisplay.toArray(new String[branchesToDisplay.size()]);
       }
+
       String compareString = "refs/remotes/" + remoteName + "/";
       for (Branch branch : remoteBranches)
       {
@@ -151,6 +155,10 @@ public abstract class HasBranchesPresenter extends GitPresenter
          {
             branchesToDisplay.add(branch.getName().replaceFirst(compareString, "refs/heads/"));
          }
+      }
+      if (branchesToDisplay.size() <= 0)
+      {
+         branchesToDisplay.add("master");
       }
       return branchesToDisplay.toArray(new String[branchesToDisplay.size()]);
    }
@@ -176,6 +184,10 @@ public abstract class HasBranchesPresenter extends GitPresenter
          {
             branchesToDisplay.add(branch.getName().replaceFirst(compareString, ""));
          }
+      }
+      if (branchesToDisplay.size() <= 0)
+      {
+         branchesToDisplay.add("master");
       }
       return branchesToDisplay.toArray(new String[branchesToDisplay.size()]);
    }

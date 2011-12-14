@@ -89,7 +89,7 @@ public class PullView extends ViewImpl implements PullPresenter.Display
     */
    @UiField
    ComboBoxField remoteBranchesField;
-   
+
    interface PullViewUiBinder extends UiBinder<Widget, PullView>
    {
    }
@@ -100,7 +100,7 @@ public class PullView extends ViewImpl implements PullPresenter.Display
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.pullTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      
+
       remoteField.setName(REMOTE_FIELD_ID);
       pullButton.setButtonId(PULL_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
@@ -174,9 +174,10 @@ public class PullView extends ViewImpl implements PullPresenter.Display
    public void setLocalBranches(String[] values)
    {
       localBranchesField.setValueMap(values);
+
       if (values != null && values.length > 0)
       {
-         localBranchesField.setValue(values[0]);
+         localBranchesField.setValue(values[0], true);
       }
    }
 

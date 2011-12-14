@@ -206,7 +206,6 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       Display d = GWT.create(Display.class);
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
-      display.enablePullButton(false);
 
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
@@ -236,6 +235,12 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
    @Override
    protected void setLocalBranches(List<Branch> branches)
    {
+      if (branches == null || branches.isEmpty())
+      {
+         display.setLocalBranches(new String[]{"master"});
+         return;
+      }
+
       String[] values = new String[branches.size()];
       for (int i = 0; i < branches.size(); i++)
       {
@@ -267,8 +272,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
             @Override
             protected void onSuccess(String result)
             {
-               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
                IDE.getInstance().closeView(display.asView().getId());
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
                IDE.fireEvent(new RefreshBrowserEvent());
             }
 

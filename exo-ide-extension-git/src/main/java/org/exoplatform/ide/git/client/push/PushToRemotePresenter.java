@@ -18,8 +18,14 @@
  */
 package org.exoplatform.ide.git.client.push;
 
-import java.util.LinkedHashMap;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -33,14 +39,8 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Presenter of view for pushing changes to remote repository.
@@ -181,6 +181,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             empty =
                empty || display.getLocalBranchesValue().getValue() == null
                   || display.getLocalBranchesValue().getValue().isEmpty();
+
             display.enablePushButton(!empty);
          }
       });
@@ -226,8 +227,8 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
 
       try
       {
-         GitClientService.getInstance().push(vfs.getId(), project, new String[]{localBranch + ":" + remoteBranch}, remote,
-            false, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+         GitClientService.getInstance().push(vfs.getId(), project, new String[]{localBranch + ":" + remoteBranch},
+            remote, false, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
             {
 
                @Override
@@ -253,11 +254,10 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
 
    private void handleError(Throwable t)
    {
-      String errorMessage =
-               (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pushFail();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pushFail();
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
-   
+
    /**
     * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#onRemotesReceived(java.util.List)
     */
@@ -267,7 +267,6 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       display = GWT.create(Display.class);
       bindDisplay();
-//      display.enablePushButton(false);
       IDE.getInstance().openView(display.asView());
 
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
@@ -275,7 +274,6 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       {
          remoteValues.put(remote.getUrl(), remote.getName());
       }
-
       display.setRemoteValues(remoteValues);
 
       getBranches(projectId, false);
@@ -297,6 +295,12 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    @Override
    protected void setLocalBranches(List<Branch> branches)
    {
+      if (branches == null || branches.isEmpty())
+      {
+         display.setLocalBranches(new String[]{"master"});
+         return;
+      }
+
       String[] values = new String[branches.size()];
       for (int i = 0; i < branches.size(); i++)
       {
@@ -304,5 +308,5 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       }
       display.setLocalBranches(values);
    }
-   
+
 }
