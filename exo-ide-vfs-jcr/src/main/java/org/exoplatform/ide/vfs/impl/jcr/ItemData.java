@@ -86,7 +86,7 @@ abstract class ItemData
    {
       // eXo WebDAV left node in checked-in state after update.
       // Need change state to checked-out to be able update node. 
-      if (!node.isCheckedOut() && node.isNodeType("mix:versionable"))
+      if (node.isNodeType("mix:versionable") && !node.isCheckedOut())
          node.checkout();
       if (node.isNodeType("nt:file") && node.getNode("jcr:content").isNodeType("nt:resource"))
          return new FileData(node, rootNodePath);
