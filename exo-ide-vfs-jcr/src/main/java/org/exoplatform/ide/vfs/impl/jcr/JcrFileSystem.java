@@ -117,6 +117,7 @@ public class JcrFileSystem implements VirtualFileSystem
       private Resolver()
       {
          resolver = new MimeTypeResolver();
+         resolver.setDefaultMimeType("text/plain");
       };
 
       public MediaType getMediaType(String filename)
