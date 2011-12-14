@@ -48,7 +48,7 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
    /*
     * Form constants.
     */
-   private static final int WIDTH = 400;
+   private static final int WIDTH = 440;
 
    private static final int HEIGHT = 220;
 
