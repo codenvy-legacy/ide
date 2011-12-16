@@ -222,7 +222,9 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
                   loader.hide();
                   if (paas != null)
                   {
+                     //FIXME
                      //timer for allowing project to create fully
+                     //find better sollution!!!!!!!!!
                      new Timer()
                      {
                         @Override
@@ -230,7 +232,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
                         {
                            paas.deploy(result);
                         }
-                     }.schedule(2000);
+                     }.schedule(5000);
                   }
 
                   IDE.getInstance().closeView(display.asView().getId());
