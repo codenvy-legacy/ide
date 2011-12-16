@@ -47,7 +47,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SaveFileCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+public class SaveFileControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    EditorFileContentChangedHandler, FileSavedHandler, VfsChangedHandler, ApplicationSettingsReceivedHandler
 {
 
@@ -74,7 +74,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    /**
     * Creates a new instance of this control
     */
-   public SaveFileCommand()
+   public SaveFileControl()
    {
       super(ID);
       setTitle(TITLE);

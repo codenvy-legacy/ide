@@ -78,7 +78,6 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
    public void initialize()
    {
       IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
-      //IDE.addHandler(FileContentSavedEvent.TYPE, this);
       IDE.addHandler(FileSavedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -105,11 +104,6 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
    {
       checkItemEnabling();
    }
-
-//   public void onFileContentSaved(FileContentSavedEvent event)
-//   {
-//      checkItemEnabling();
-//   }
 
    @Override
    public void onFileSaved(FileSavedEvent event)

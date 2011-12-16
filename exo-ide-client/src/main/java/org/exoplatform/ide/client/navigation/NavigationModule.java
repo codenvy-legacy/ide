@@ -48,7 +48,7 @@ import org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter;
 import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter;
 import org.exoplatform.ide.client.operation.rename.RenameFilePresenter;
 import org.exoplatform.ide.client.operation.rename.RenameFolderPresenter;
-import org.exoplatform.ide.client.operation.rename.RenameItemCommand;
+import org.exoplatform.ide.client.operation.rename.RenameItemControl;
 import org.exoplatform.ide.client.operation.search.SearchFilesPresenter;
 import org.exoplatform.ide.client.operation.search.SearchResultsPresenter;
 import org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter;
@@ -116,7 +116,7 @@ public class NavigationModule implements InitializeServicesHandler
 
       new CutCopyPasteItemsCommandHandler();
       
-      IDE.getInstance().addControl(new RenameItemCommand());
+      IDE.getInstance().addControl(new RenameItemControl());
       new RenameFilePresenter();
       new RenameFolderPresenter();
 

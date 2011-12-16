@@ -39,7 +39,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.navigation.control.SaveFileAsCommand;
+import org.exoplatform.ide.client.navigation.control.SaveFileAsControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -99,7 +99,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
 
    public SaveFileAsCommandHandler()
    {
-      IDE.getInstance().addControl(new SaveFileAsCommand(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new SaveFileAsControl(), Docking.TOOLBAR);
 
       IDE.addHandler(SaveFileAsEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);

@@ -83,7 +83,7 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize()
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsControl#initialize()
     */
    @Override
    public void initialize()

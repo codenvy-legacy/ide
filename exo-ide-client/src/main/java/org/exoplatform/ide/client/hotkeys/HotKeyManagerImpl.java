@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ide.client.navigation.control.CreateFileFromTemplateControl;
-import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
+import org.exoplatform.ide.client.navigation.control.SaveFileControl;
 import org.exoplatform.ide.client.operation.findtext.FindTextControl;
 import org.exoplatform.ide.client.operation.gotoline.GoToLineControl;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
@@ -173,7 +173,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
       hotKeys.clear();
 
-      hotKeys.put("Ctrl+83", SaveFileCommand.ID); //Ctrl+S
+      hotKeys.put("Ctrl+83", SaveFileControl.ID); //Ctrl+S
       hotKeys.put("Ctrl+70", FindTextControl.ID); //Ctrl+F
       hotKeys.put("Ctrl+68", DeleteCurrentLineControl.ID); //Ctrl+D
       hotKeys.put("Ctrl+76", GoToLineControl.ID); //Ctrl+L

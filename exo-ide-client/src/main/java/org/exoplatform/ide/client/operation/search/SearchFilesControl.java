@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.rename;
+package org.exoplatform.ide.client.operation.search;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -28,12 +28,14 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
-import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,33 +44,28 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class RenameItemCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, ItemDeletedHandler,
-   ViewVisibilityChangedHandler, VfsChangedHandler
+public class SearchFilesControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
+   ViewActivatedHandler
 {
 
-   private static final String ID = "File/Rename...";
+   public static final String ID = "File/Search...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.renameTitleControl();
-
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.renamePromptControl();
-
-   private boolean browserPanelSelected = true;
-
-   private Item selectedItem;
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.searchFilesControl();
 
    private VirtualFileSystemInfo vfsInfo;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
     * 
     */
-   public RenameItemCommand()
+   public SearchFilesControl()
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
-      setDelimiterBefore(true);
-      setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
-      setEvent(new RenameItemEvent());
+      setPrompt(TITLE);
+      setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
+      setEvent(new SearchFilesEvent());
    }
 
    /**
@@ -78,9 +75,8 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
    public void initialize()
    {
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ItemDeletedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -89,50 +85,15 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
+      selectedItems = event.getSelectedItems();
+
+      if (vfsInfo != null && selectedItems.size() == 1)
       {
-         setEnabled(false);
-         return;
-      }
-
-      selectedItem = event.getSelectedItems().get(0);
-      updateEnabling();
-   }
-
-   /**
-    * @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent)
-    */
-   @Override
-   public void onItemDeleted(ItemDeletedEvent event)
-   {
-      selectedItem = null;
-      updateEnabling();
-   }
-
-   /**
-    * 
-    */
-   private void updateEnabling()
-   {
-      if (!browserPanelSelected)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (selectedItem == null)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (selectedItem.getId().equals(vfsInfo.getRoot().getId()))
-      {
-         setEnabled(false);
+         setEnabled(true);
       }
       else
       {
-         setEnabled(true);
+         setEnabled(false);
       }
    }
 
@@ -143,26 +104,29 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
+
+      if (vfsInfo == null)
       {
          setVisible(false);
       }
+      else
+      {
+         setVisible(true);
+      }
+
+      setEnabled(false);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
     */
    @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   public void onViewActivated(ViewActivatedEvent event)
    {
-      if (event.getView() instanceof NavigatorDisplay)
+      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
       {
-         browserPanelSelected = event.getView().isViewVisible();
-         updateEnabling();
+         setEnabled(false);
       }
    }
+
 }

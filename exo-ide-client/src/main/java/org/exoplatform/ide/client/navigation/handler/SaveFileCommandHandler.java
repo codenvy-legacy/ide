@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.event.SaveFileHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
+import org.exoplatform.ide.client.navigation.control.SaveFileControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -58,7 +58,7 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
 
    public SaveFileCommandHandler()
    {
-      IDE.getInstance().addControl(new SaveFileCommand(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new SaveFileControl(), Docking.TOOLBAR);
       
       IDE.addHandler(SaveFileEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);

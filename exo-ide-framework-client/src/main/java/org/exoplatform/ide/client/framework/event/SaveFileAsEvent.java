@@ -86,6 +86,18 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
       this.dialogType = type;
    }
 
+   /**
+    * @param type
+    * @param eventFiredOnNo
+    * @param eventFiredOnCancel
+    */
+   public SaveFileAsEvent(SaveDialogType type, GwtEvent<?> eventFiredOnNo, GwtEvent<?> eventFiredOnCancel)
+   {
+      this.eventFiredOnNo = eventFiredOnNo;
+      this.eventFiredOnCancel = eventFiredOnCancel;
+      this.dialogType = type;
+   }
+
    public boolean isSaveOnly()
    {
       return saveOnly;

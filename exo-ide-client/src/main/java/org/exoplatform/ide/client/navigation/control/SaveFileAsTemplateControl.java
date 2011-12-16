@@ -36,7 +36,7 @@ import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SaveFileAsTemplateCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+public class SaveFileAsTemplateControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    VfsChangedHandler
 {
 
@@ -47,7 +47,7 @@ public class SaveFileAsTemplateCommand extends SimpleControl implements IDEContr
    /**
     * 
     */
-   public SaveFileAsTemplateCommand()
+   public SaveFileAsTemplateControl()
    {
       super(ID);
       setTitle(TITLE);

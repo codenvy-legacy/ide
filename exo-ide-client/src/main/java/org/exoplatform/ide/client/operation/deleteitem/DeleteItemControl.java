@@ -67,7 +67,7 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize()
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsControl#initialize()
     */
    @Override
    public void initialize()

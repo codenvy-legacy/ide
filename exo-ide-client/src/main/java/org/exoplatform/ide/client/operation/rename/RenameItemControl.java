@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.search;
+package org.exoplatform.ide.client.operation.rename;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -27,6 +27,15 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,23 +44,31 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SearchFilesCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler
+public class RenameItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
+   ViewActivatedHandler
 {
 
-   public static final String ID = "File/Search...";
+   private static final String ID = "File/Rename...";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.searchFilesControl();
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.renameTitleControl();
+
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.renamePromptControl();
+
+   private List<Item> selectedItems = new ArrayList<Item>();
+
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * 
     */
-   public SearchFilesCommand()
+   public RenameItemControl()
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
-      setEvent(new SearchFilesEvent());
+      setPrompt(PROMPT);
+      setDelimiterBefore(true);
+      setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
+      setEvent(new RenameItemEvent());
    }
 
    /**
@@ -60,8 +77,9 @@ public class SearchFilesCommand extends SimpleControl implements IDEControl, Ite
    @Override
    public void initialize()
    {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -70,13 +88,16 @@ public class SearchFilesCommand extends SimpleControl implements IDEControl, Ite
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
+      selectedItems = event.getSelectedItems();
+
+      if (vfsInfo != null && selectedItems.size() == 1
+         && !vfsInfo.getRoot().getId().equals(selectedItems.get(0).getId()))
       {
-         setEnabled(false);
+         setEnabled(true);
       }
       else
       {
-         setEnabled(true);
+         setEnabled(false);
       }
    }
 
@@ -86,13 +107,27 @@ public class SearchFilesCommand extends SimpleControl implements IDEControl, Ite
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
+      vfsInfo = event.getVfsInfo();
+      if (vfsInfo == null)
       {
-         setVisible(true);
+         setVisible(false);
       }
       else
       {
-         setVisible(false);
+         setVisible(true);
+         setEnabled(false);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    */
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
+      {
+         setEnabled(false);
       }
    }
 

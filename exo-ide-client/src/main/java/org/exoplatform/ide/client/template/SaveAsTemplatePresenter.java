@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.navigation.control.SaveFileAsTemplateCommand;
+import org.exoplatform.ide.client.navigation.control.SaveFileAsTemplateControl;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -96,7 +96,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
    
    public SaveAsTemplatePresenter()
    {
-      IDE.getInstance().addControl(new SaveFileAsTemplateCommand());
+      IDE.getInstance().addControl(new SaveFileAsTemplateControl());
       
       IDE.addHandler(SaveFileAsTemplateEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);

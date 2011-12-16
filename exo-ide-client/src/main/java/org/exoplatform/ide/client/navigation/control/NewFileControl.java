@@ -42,7 +42,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewFileCommand extends SimpleControl implements IDEControl, ViewVisibilityChangedHandler,
+public class NewFileControl extends SimpleControl implements IDEControl, ViewVisibilityChangedHandler,
    VfsChangedHandler, ItemsSelectedHandler
 {
 
@@ -57,7 +57,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
     * @param icon
     * @param event
     */
-   public NewFileCommand(String id, String title, String prompt, String icon, GwtEvent<?> event)
+   public NewFileControl(String id, String title, String prompt, String icon, GwtEvent<?> event)
    {
       super(id);
       setTitle(title);
@@ -75,7 +75,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
     * @param disabledIcon
     * @param event
     */
-   public NewFileCommand(String id, String title, String prompt, ImageResource normalIcon, ImageResource disabledIcon,
+   public NewFileControl(String id, String title, String prompt, ImageResource normalIcon, ImageResource disabledIcon,
       GwtEvent<?> event)
    {
       super(id);

@@ -22,7 +22,7 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.navigation.control.NewFileCommand;
+import org.exoplatform.ide.client.navigation.control.NewFileControl;
 import org.exoplatform.ide.client.navigation.control.NewItemPopupToolbarControl;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
 
@@ -185,19 +185,19 @@ public class NewItemControlsFormatter implements ControlsFormatter
 
          int position = controls.indexOf(control);
 
-         NewFileCommand command = null;
+         NewFileControl command = null;
          if (control.getMimeType() == null)
          {
             if (control.getNormalImage() != null)
             {
                command =
-                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
+                  new NewFileControl(control.getId(), control.getTitle(), control.getPrompt(),
                      control.getNormalImage(), control.getDisabledImage(), control.getEvent());
             }
             else
             {
                command =
-                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
+                  new NewFileControl(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
                      control.getEvent());
             }
          }
@@ -206,7 +206,7 @@ public class NewItemControlsFormatter implements ControlsFormatter
             if (control.getNormalImage() != null)
             {
                command =
-                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(),
+                  new NewFileControl(control.getId(), control.getTitle(), control.getPrompt(),
                      control.getNormalImage(), control.getDisabledImage(),
                      new CreateNewFileEvent(control.getMimeType()));
 
@@ -214,7 +214,7 @@ public class NewItemControlsFormatter implements ControlsFormatter
             else
             {
                command =
-                  new NewFileCommand(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
+                  new NewFileControl(control.getId(), control.getTitle(), control.getPrompt(), control.getIcon(),
                      new CreateNewFileEvent(control.getMimeType()));
 
             }

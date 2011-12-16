@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class CreateFileFromTemplateControl extends NewFileCommand
+public class CreateFileFromTemplateControl extends NewFileControl
 {
 
    public final static String ID = "File/New/Create File From Template...";

@@ -18,15 +18,24 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,39 +44,41 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements EditorActiveFileChangedHandler,
-   ItemsSelectedHandler
+public class SaveFileAsControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+   ItemsSelectedHandler, VfsChangedHandler
 {
 
    private static final String ID = "File/Save As...";
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsControl();
 
-   private boolean singleItemSelected = true;
+   private VirtualFileSystemInfo vfsInfo;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    private FileModel activeFile;
 
    /**
     * 
     */
-   public SaveFileAsCommand()
+   public SaveFileAsControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
-      setEvent(new SaveFileAsEvent(activeFile, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
+      setEvent(new SaveFileAsEvent(SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize()
+    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsControl#initialize()
     */
    @Override
    public void initialize()
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      super.initialize();
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -77,16 +88,27 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      updateEnabling();
+
+      if (vfsInfo != null && selectedItems.size() == 1 && activeFile != null)
+      {
+         setEnabled(true);
+      }
+      else
+      {
+         setEnabled(false);
+      }
+
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#updateEnabling()
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
     */
    @Override
-   protected void updateEnabling()
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (browserSelected && activeFile != null && singleItemSelected)
+      selectedItems = event.getSelectedItems();
+
+      if (vfsInfo != null && selectedItems.size() == 1 && activeFile != null)
       {
          setEnabled(true);
       }
@@ -97,21 +119,23 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getSelectedItems().size() == 1)
+      vfsInfo = event.getVfsInfo();
+
+      if (vfsInfo == null)
       {
-         singleItemSelected = true;
-         updateEnabling();
+         setVisible(false);
       }
       else
       {
-         singleItemSelected = false;
-         updateEnabling();
+         setVisible(true);
       }
+
+      setEnabled(false);
    }
 
 }

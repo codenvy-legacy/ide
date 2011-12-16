@@ -37,7 +37,7 @@ import java.util.List;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public abstract class MultipleSelectionItemsCommand extends SimpleControl implements IDEControl, VfsChangedHandler,
+public abstract class MultipleSelectionItemsControl extends SimpleControl implements IDEControl, VfsChangedHandler,
    ViewVisibilityChangedHandler
 {
 
@@ -48,7 +48,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
    /**
     * @param id
     */
-   protected MultipleSelectionItemsCommand(String id)
+   protected MultipleSelectionItemsControl(String id)
    {
       super(id);
    }
