@@ -79,7 +79,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    {
       if (makeSelectionCheck())
       {
-         isBuildApplication();
+         validateData();
       }
    }
 
@@ -140,7 +140,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
             @Override
             protected void onSuccess(String result)
             {
-               buildApplication();
+               isBuildApplication();
             }
          });
    }
@@ -169,13 +169,12 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
                   {
                      if ("pom.xml".equals(item.getName()))
                      {
-                        validateData();
+                        buildApplication();
                         return;
                      }
                   }
-                  String msg =
-                     CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationForbidden(project.getName());
-                  IDE.fireEvent(new ExceptionThrownEvent(msg));
+                  warUrl = null;
+                  updateApplication();
                }
 
                @Override
