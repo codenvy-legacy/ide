@@ -46,7 +46,7 @@ public abstract class BaseTest
       classDirectory.mkdirs();
    }
 
-   protected static void generateClassFile(String pathToSource) throws IOException
+   protected static int generateClassFile(String pathToSource) throws IOException
    {
       Runtime exec = Runtime.getRuntime();
       String cmd = "javac -cp " + CLASSES_DIRECTORY_PATH + " " + pathToSource + " -d " + CLASSES_DIRECTORY_PATH;
@@ -54,11 +54,13 @@ public abstract class BaseTest
       try
       {
          process.waitFor();
+         return process.exitValue();
       }
       catch (InterruptedException e)
       {
          Thread.currentThread().interrupt();
       }
+      return 1;
    }
 
    protected static InputStream getClassFileAsStream(String fqn) throws FileNotFoundException
@@ -69,7 +71,7 @@ public abstract class BaseTest
       return new FileInputStream(classFile);
    }
 
-   protected static void generateJarFile(String jarName) throws IOException
+   protected static File generateJarFile(String jarName) throws IOException
    {
       Runtime exec = Runtime.getRuntime();
       String cmd = "jar -cf " + CLASSES_DIRECTORY_PATH + "../" + jarName + " -C " + CLASSES_DIRECTORY_PATH + " .";
@@ -83,7 +85,9 @@ public abstract class BaseTest
          Thread.currentThread().interrupt();
       }
       File jar = new File(CLASSES_DIRECTORY_PATH + "../" + jarName);
-      jar.renameTo(new File(CLASSES_DIRECTORY_PATH, jarName));
+      File newJar = new File(CLASSES_DIRECTORY_PATH, jarName);
+      jar.renameTo(newJar);
+      return newJar;
    }
 
 }

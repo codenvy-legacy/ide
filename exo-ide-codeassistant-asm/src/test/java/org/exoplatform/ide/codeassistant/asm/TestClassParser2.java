@@ -27,7 +27,6 @@ import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,7 +36,6 @@ import java.lang.reflect.Modifier;
 /**
  * Compare information received with help of java reflection and ClassParser
  */
-@Ignore
 public class TestClassParser2 extends BaseTest
 {
    private static TypeInfo typeInfo;

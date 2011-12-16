@@ -48,7 +48,152 @@ public class TestClassParser extends BaseTest
       generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface2.java");
       generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestSuper.java");
       generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestClass.java");
+      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestGeneric.java");
       generateJarFile("testClassParser.jar");
+   }
+
+   @Test
+   public void testTestGeneric() throws IOException, ClassNotFoundException
+   {
+      /**
+       * NOTE: now code assistant not supports java generics. So this test check
+       * that all generics will removed.
+       */
+      TypeInfo annotationTest = ClassParser.parse(getClassFileAsStream(PACKAGE + ".NoTestGeneric"));
+
+      ShortTypeInfo shortTypeInfo = annotationTest;
+      Assert.assertEquals("NoTestGeneric", shortTypeInfo.getName());
+      Assert.assertEquals(PACKAGE + ".NoTestGeneric", shortTypeInfo.getQualifiedName());
+      Assert.assertEquals("CLASS", shortTypeInfo.getType());
+      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), shortTypeInfo.getModifiers());
+
+      TypeInfo typeInfo = annotationTest;
+      Assert.assertEquals("NoTestGeneric", typeInfo.getName());
+      Assert.assertEquals(PACKAGE + ".NoTestGeneric", typeInfo.getQualifiedName());
+      Assert.assertEquals("CLASS", typeInfo.getType());
+      Assert.assertEquals("java.lang.Object", typeInfo.getSuperClass());
+      Assert.assertEquals(0, typeInfo.getInterfaces().length);
+      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), typeInfo.getModifiers());
+
+      {
+         // fields
+         FieldInfo[] fields = typeInfo.getDeclaredFields();
+         Assert.assertEquals(1, fields.length);
+         Set<String> visitedFields = new HashSet<String>();
+         for (FieldInfo field : fields)
+         {
+            if (field.getName().equals("value") && !visitedFields.contains(field.getName()))
+            {
+               assertField(field, "value", "java.lang.Object", Modifier.PUBLIC, typeInfo.getQualifiedName());
+               visitedFields.add(field.getName());
+            }
+         }
+         Assert.assertEquals(fields.length, visitedFields.size());
+      }
+
+      {
+         // constructors
+         RoutineInfo[] constructors = typeInfo.getDeclaredConstructors();
+         Assert.assertEquals(1, constructors.length);
+         Set<String> visitedConstructors = new HashSet<String>();
+         for (RoutineInfo constructor : constructors)
+         {
+            if (constructor.getName().equals("NoTestGeneric") && !visitedConstructors.contains(constructor.getName()))
+            {
+               assertRoutine(constructor, "NoTestGeneric", typeInfo.getQualifiedName(), Modifier.PUBLIC, "(Object)",
+                  "(java.lang.Object)", "public " + PACKAGE + ".NoTestGeneric(java.lang.Object)", new String[0]);
+               visitedConstructors.add(constructor.getName());
+            }
+            else
+            {
+               Assert.fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
+            }
+         }
+         Assert.assertEquals(constructors.length, visitedConstructors.size());
+      }
+
+      {
+         // methods
+         MethodInfo[] methods = typeInfo.getDeclaredMethods();
+         Assert.assertEquals(6, methods.length);
+         Set<String> visitedMethods = new HashSet<String>();
+         for (MethodInfo method : methods)
+         {
+            if (method.getName().equals("noGeneric") && method.getParameterTypes().equals("()")
+               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
+            {
+               assertMethod(
+                  typeInfo.getMethods()[0],
+                  "noGeneric",
+                  PACKAGE + ".NoTestGeneric",
+                  Modifier.PUBLIC,
+                  "()",
+                  "()",
+                  "public java.lang.Object org.exoplatform.ide.codeassistant.asm.testclasses.NoTestGeneric.noGeneric()",
+                  new String[0], "Object", "java.lang.Object");
+               visitedMethods.add(method.getName() + method.getParameterTypes());
+            }
+            else if (method.getName().equals("getGeneric") && method.getParameterTypes().equals("()")
+               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
+            {
+               assertMethod(
+                  typeInfo.getMethods()[1],
+                  "getGeneric",
+                  PACKAGE + ".NoTestGeneric",
+                  Modifier.PUBLIC,
+                  "()",
+                  "()",
+                  "public java.lang.Object org.exoplatform.ide.codeassistant.asm.testclasses.NoTestGeneric.getGeneric()",
+                  new String[0], "Object", "java.lang.Object");
+               visitedMethods.add(method.getName() + method.getParameterTypes());
+            }
+            else if (method.getName().equals("getGenerics") && method.getParameterTypes().equals("(Collection)")
+               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
+            {
+               assertMethod(typeInfo.getMethods()[2], "getGenerics", PACKAGE + ".NoTestGeneric", Modifier.PUBLIC,
+                  "(Collection)", "(java.util.Collection)",
+                  "public java.util.Collection org.exoplatform.ide.codeassistant.asm.testclasses.NoTestGeneric."
+                     + "getGenerics(java.util.Collection)", new String[0], "Collection", "java.util.Collection");
+               visitedMethods.add(method.getName() + method.getParameterTypes());
+            }
+            else if (method.getName().equals("getTwoGenerics") && method.getParameterTypes().equals("()")
+               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
+            {
+               assertMethod(typeInfo.getMethods()[3], "getTwoGenerics", PACKAGE + ".NoTestGeneric", Modifier.PUBLIC,
+                  "()", "()",
+                  "public java.util.HashMap org.exoplatform.ide.codeassistant.asm.testclasses.NoTestGeneric."
+                     + "getTwoGenerics()", new String[0], "HashMap", "java.util.HashMap");
+               visitedMethods.add(method.getName() + method.getParameterTypes());
+            }
+            else if (method.getName().equals("getHashMap") && method.getParameterTypes().equals("()")
+               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
+            {
+               assertMethod(typeInfo.getMethods()[4], "getHashMap", PACKAGE + ".NoTestGeneric", Modifier.PUBLIC, "()",
+                  "()", "public java.util.HashMap org.exoplatform.ide.codeassistant.asm.testclasses.NoTestGeneric."
+                     + "getHashMap()", new String[0], "HashMap", "java.util.HashMap");
+               visitedMethods.add(method.getName() + method.getParameterTypes());
+            }
+            else if (method.getName().equals("getNumber") && method.getParameterTypes().equals("(Object)")
+               && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
+            {
+               assertMethod(
+                  typeInfo.getMethods()[5],
+                  "getNumber",
+                  PACKAGE + ".NoTestGeneric",
+                  Modifier.PUBLIC,
+                  "(Object)",
+                  "(java.lang.Object)",
+                  "public java.lang.Number org.exoplatform.ide.codeassistant.asm.testclasses.NoTestGeneric.getNumber(java.lang.Object)",
+                  new String[0], "Number", "java.lang.Number");
+               visitedMethods.add(method.getName() + method.getParameterTypes());
+            }
+            else
+            {
+               Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+                  + ", not found in expected classes.");
+            }
+         }
+      }
    }
 
    @Test
@@ -263,7 +408,7 @@ public class TestClassParser extends BaseTest
       Assert.assertEquals("NoTestEnum", shortTypeInfo.getName());
       Assert.assertEquals(PACKAGE + ".NoTestEnum", shortTypeInfo.getQualifiedName());
       Assert.assertEquals("ENUM", shortTypeInfo.getType());
-      // 0x00004000 - Modifier.ENUM
+
       Assert.assertEquals(
          Integer.valueOf(Modifier.SYNCHRONIZED | Modifier.FINAL | TypeInfoBuilder.MODIFIER_ENUM | Modifier.PUBLIC),
          shortTypeInfo.getModifiers());
@@ -578,15 +723,16 @@ public class TestClassParser extends BaseTest
                && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
             {
                assertMethod(method, "method", typeInfo.getQualifiedName(), Modifier.PUBLIC, "(int)", "(int)",
-                  "public void " + PACKAGE + ".NoTestSuper.method(int)", new String[]{"java.lang.RuntimeException",
-                     "java.io.IOException"}, "void", "void");
+                  "public void " + PACKAGE + ".NoTestSuper.method(int) throws java.lang.RuntimeException, "
+                     + "java.io.IOException", new String[]{"java.lang.RuntimeException", "java.io.IOException"},
+                  "void", "void");
                visitedMethods.add(method.getName() + method.getParameterTypes());
             }
             else if (method.getName().equals("method") && method.getParameterTypes().equals("(double)")
                && !visitedMethods.contains(method.getName() + method.getParameterTypes()))
             {
                assertMethod(method, "method", typeInfo.getQualifiedName(), Modifier.PUBLIC, "(double)", "(double)",
-                  "public void " + PACKAGE + ".NoTestSuper.method(double)", new String[]{"java.lang.Exception",},
+                  "public void " + PACKAGE + ".NoTestSuper.method(double) throws java.lang.Exception", new String[]{"java.lang.Exception",},
                   "void", "void");
                visitedMethods.add(method.getName() + method.getParameterTypes());
             }
@@ -612,7 +758,7 @@ public class TestClassParser extends BaseTest
    public void testJarParsing() throws IOException
    {
       List<TypeInfo> classes = JarParser.parse(new File("target/generated-classes/testClassParser.jar"));
-      Assert.assertEquals(6, classes.size());
+      Assert.assertEquals(7, classes.size());
    }
 
    private void assertRoutine(RoutineInfo routine, String name, String declaredClass, int modifiers,

@@ -195,6 +195,7 @@ public class TypeInfoBuilder
       if ((access & MODIFIER_SYNTHETIC) == 0)
       {
          fields.add(new FieldInfo(transformTypeFormat(desc), access, name, qualifiedName));
+         // TODO add signature parsing
       }
    }
 
@@ -223,6 +224,18 @@ public class TypeInfoBuilder
          genericBuilder.append(".");
          genericBuilder.append(methodInfo.getName());
          genericBuilder.append(methodInfo.getGenericParameterTypes());
+         if (exceptions != null && exceptions.length > 0)
+         {
+            genericBuilder.append(" throws ");
+            for (int i = 0; i < exceptions.length; i++)
+            {
+               if (i != 0)
+               {
+                  genericBuilder.append(", ");
+               }
+               genericBuilder.append(exceptions[i]);
+            }
+         }
          methodInfo.setGeneric(genericBuilder.toString());
 
          methods.add(methodInfo);
