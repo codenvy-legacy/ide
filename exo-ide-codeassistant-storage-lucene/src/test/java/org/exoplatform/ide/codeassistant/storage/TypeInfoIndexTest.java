@@ -28,7 +28,6 @@ import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.After;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -38,7 +37,6 @@ import java.util.List;
 /**
  *
  */
-@Ignore
 public class TypeInfoIndexTest extends BaseTest
 {
    private final static String PATH_TO_INDEX = "target/index";
@@ -50,11 +48,13 @@ public class TypeInfoIndexTest extends BaseTest
    @BeforeClass
    public static void setUp() throws Exception
    {
-      String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
+      //String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
+      generateClassFiles("src/test/resources/test/");
+      File jar = generateJarFile("test.jar");
 
       writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
 
-      List<TypeInfo> typeInfos = JarParser.parse(new File(pathToJar));
+      List<TypeInfo> typeInfos = JarParser.parse(jar);
       writer.addTypeInfo(typeInfos);
       writer.close();
    }

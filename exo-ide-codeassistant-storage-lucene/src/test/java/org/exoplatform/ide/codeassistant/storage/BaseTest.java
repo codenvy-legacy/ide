@@ -26,7 +26,13 @@ import org.exoplatform.services.log.Log;
 import org.junit.BeforeClass;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -60,9 +66,95 @@ public abstract class BaseTest
       jarDirectory.mkdirs();
    }
 
+   protected static int generateClassFile(String pathToSource) throws IOException
+   {
+      Runtime exec = Runtime.getRuntime();
+      String cmd = "javac -cp " + CLASSES_DIRECTORY_PATH + " " + pathToSource + " -d " + CLASSES_DIRECTORY_PATH;
+
+      Process process = exec.exec(cmd);
+      try
+      {
+         process.waitFor();
+         return process.exitValue();
+      }
+      catch (InterruptedException e)
+      {
+         Thread.currentThread().interrupt();
+      }
+      return 1;
+   }
+
+   protected static void generateClassFiles(String pathToDir) throws IOException
+   {
+      boolean z = true;
+      List<File> files = getJavaFiles(new File(pathToDir));
+      while (z)
+      {
+         z = false;
+         Iterator<File> iter = files.iterator();
+         while (iter.hasNext())
+         {
+            File current = iter.next();
+            if (generateClassFile(current.getAbsolutePath()) == 0)
+            {
+               iter.remove();
+               z = true;
+            }
+         }
+      }
+   }
+
+   protected static InputStream getClassFileAsStream(String fqn) throws FileNotFoundException
+   {
+      String pathToClass = fqn.replace(".", "/");
+      File classFile = new File(CLASSES_DIRECTORY_PATH + pathToClass + ".class");
+
+      return new FileInputStream(classFile);
+   }
+
+   protected static File generateJarFile(String jarName) throws IOException
+   {
+      Runtime exec = Runtime.getRuntime();
+      String cmd = "jar -cf " + CLASSES_DIRECTORY_PATH + "../" + jarName + " -C " + CLASSES_DIRECTORY_PATH + " .";
+      Process process = exec.exec(cmd);
+      try
+      {
+         process.waitFor();
+      }
+      catch (InterruptedException e)
+      {
+         Thread.currentThread().interrupt();
+      }
+      File jar = new File(CLASSES_DIRECTORY_PATH + "../" + jarName);
+      File newJar = new File(CLASSES_DIRECTORY_PATH, jarName);
+      jar.renameTo(newJar);
+      return newJar;
+   }
+
+   private static List<File> getJavaFiles(File dir)
+   {
+      List<File> result = new ArrayList<File>();
+      for (File file : dir.listFiles())
+      {
+         if (file.isDirectory())
+         {
+            result.addAll(getJavaFiles(file));
+         }
+         else
+         {
+            if (file.getName().endsWith(".java"))
+            {
+               result.add(file);
+            }
+         }
+      }
+      return result;
+   }
+
    /**
     * @return path to generated jar
     */
+   @Deprecated
    protected static String createJarFile(String pathToSources, String outputPath)
    {
       String pathToGeneratedJar = null;

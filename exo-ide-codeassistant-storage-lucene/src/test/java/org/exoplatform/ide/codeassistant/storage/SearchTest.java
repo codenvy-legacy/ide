@@ -25,7 +25,6 @@ import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -34,7 +33,6 @@ import java.util.List;
 /**
  * Test Searching in Lucene TypeInfo Storage
  */
-@Ignore
 public class SearchTest extends BaseTest
 {
    private final static String PATH_TO_INDEX = "target/index2";
@@ -44,11 +42,13 @@ public class SearchTest extends BaseTest
    @BeforeClass
    public static void createIndex() throws Exception
    {
-      String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
+      //String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
+      generateClassFiles("src/test/resources/test/");
+      File jar = generateJarFile("test.jar");
 
       TypeInfoIndexWriter writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
 
-      List<TypeInfo> typeInfos = JarParser.parse(new File(pathToJar));
+      List<TypeInfo> typeInfos = JarParser.parse(jar);
       writer.addTypeInfo(typeInfos);
       writer.close();
 
@@ -62,8 +62,8 @@ public class SearchTest extends BaseTest
 
       assertEquals("ATestClass", typeInfo.getName());
       assertEquals("test.classes.ATestClass", typeInfo.getQualifiedName());
-      assertEquals(2, typeInfo.getFields().length);
-      assertEquals(3, typeInfo.getMethods().length);
+      assertEquals(1, typeInfo.getFields().length);
+      assertEquals(2, typeInfo.getMethods().length);
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
    }
 
@@ -85,7 +85,7 @@ public class SearchTest extends BaseTest
    {
       List<ShortTypeInfo> typeInfos = storage.getTypesByFqnPrefix("test.classes");
 
-      assertEquals(3, typeInfos.size());
+      assertEquals(4, typeInfos.size());
       for (ShortTypeInfo shortTypeInfo : typeInfos)
       {
          assertTrue(shortTypeInfo.getQualifiedName().startsWith("test.classes"));

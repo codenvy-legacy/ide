@@ -41,8 +41,8 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -57,7 +57,9 @@ import java.util.List;
  */
 public class LuceneCodeAssistantStorage implements CodeAssistantStorage
 {
-   private static final Log LOG = ExoLogger.getLogger(LuceneCodeAssistantStorage.class);
+   // private static final Log LOG = ExoLogger.getLogger(LuceneCodeAssistantStorage.class);
+
+   private static final Logger LOG = LoggerFactory.getLogger(LuceneCodeAssistantStorage.class);
 
    private final String indexDirPath;
 
