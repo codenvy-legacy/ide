@@ -339,7 +339,7 @@ public class Cloudfoundry
             JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credential.token, null, 200),
                CloudfoundryApplication.class, null);
 
-         if (("spring".equals(cfg.getType()) || "spring".equals(cfg.getType())) && warFile != null)
+         if (("spring".equals(cfg.getType()) || "grails".equals(cfg.getType())) && warFile != null)
          {
             uploadApplication(credential, app, vfs, projectId, warFile);
          }
@@ -1670,7 +1670,7 @@ public class Cloudfoundry
          if (server == null)
          {
             server = FilesHelper.readFile(vfs, item, ".vmc_target");
-         }         
+         }
       }
       if (server == null)
       {
@@ -1736,10 +1736,9 @@ public class Cloudfoundry
             {
                digest.reset();
                java.io.File f = files.get(i);
-               fingerprints[i++] =
+               fingerprints[i] =
                   new ApplicationFile(f.length(), FilesHelper.countFileHash(f, digest), f.getAbsolutePath());
             }
-
             resources =
                JsonHelper.fromJson(
                   postJson(credential.target + "/resources", credential.token, JsonHelper.toJson(fingerprints), 200),
@@ -1756,21 +1755,15 @@ public class Cloudfoundry
                }
                resources[i].setFn(resources[i].getFn().replace(uploadDirPath, ""));
             }
-
-            // Check do we need upload any files.
-            files = FilesHelper.list(uploadDir, FilesHelper.UPLOAD_FILTER);
-         }
-
-         if (files.size() > 0)
-         {
-            zip = new java.io.File(System.getProperty("java.io.tmpdir"), app + ".zip");
-            FilesHelper.zipDir(uploadDir.getAbsolutePath(), files, zip);
          }
 
          if (resources == null)
          {
             resources = new ApplicationFile[0];
          }
+
+         zip = new java.io.File(System.getProperty("java.io.tmpdir"), app + ".zip");
+         FilesHelper.zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, FilesHelper.UPLOAD_FILTER);
 
          // Upload application data.
          http = (HttpURLConnection)new URL(credential.target + "/apps/" + app + "/application").openConnection();
@@ -2048,7 +2041,7 @@ public class Cloudfoundry
       String s = days + "d:" + hours + "h:" + minutes + "m:" + seconds + "s";
       return s;
    }
-   
+
    private static SystemService[] parseSystemServices(String json) throws ParsingResponseException
    {
       try
@@ -2065,8 +2058,8 @@ public class Cloudfoundry
                   .hasNext();)
                {
                   String version = versions.next();
-                  result.add(ObjectBuilder.createObject(SystemService.class, jservices.getElement(type).getElement(vendor)
-                     .getElement(version)));
+                  result.add(ObjectBuilder.createObject(SystemService.class,
+                     jservices.getElement(type).getElement(vendor).getElement(version)));
                }
             }
          }

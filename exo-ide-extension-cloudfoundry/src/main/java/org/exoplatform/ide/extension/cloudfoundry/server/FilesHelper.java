@@ -113,13 +113,18 @@ class FilesHelper
          {
             for (int i = 0; i < list.length; i++)
             {
-               if (list[i].isDirectory())
+               final java.io.File f = list[i];
+               if (f.isDirectory())
                {
-                  q.push(list[i]);
+                  // Always hide .git directory. Not need to send it to CloudFoundry infrastructure.
+                  if (!(".git".equals(f.getName())))
+                  {
+                     q.push(f);
+                  }
                }
-               else if (filter.accept(list[i].getName()))
+               else if (filter.accept(f.getName()))
                {
-                  files.add(list[i]);
+                  files.add(f);
                }
             }
          }
@@ -127,8 +132,12 @@ class FilesHelper
       return files;
    }
 
-   static void zipDir(String zipRootPath, List<java.io.File> files, java.io.File zip) throws IOException
+   static void zipDir(String zipRootPath, java.io.File dir, java.io.File zip, NameFilter filter) throws IOException
    {
+      if (!dir.isDirectory())
+      {
+         throw new IllegalArgumentException("Not a directory. ");
+      }
       FileOutputStream fos = null;
       ZipOutputStream zipOut = null;
       try
@@ -136,27 +145,52 @@ class FilesHelper
          byte[] b = new byte[8192];
          fos = new FileOutputStream(zip);
          zipOut = new ZipOutputStream(fos);
-         for (java.io.File f : files)
+         LinkedList<java.io.File> q = new LinkedList<java.io.File>();
+         q.add(dir);
+         while (!q.isEmpty())
          {
-            final String zipEntryName = f.getAbsolutePath().substring(zipRootPath.length() + 1).replace('\\', '/');
-            zipOut.putNextEntry(new ZipEntry(zipEntryName));
-            FileInputStream in = null;
-            try
+            java.io.File current = q.pop();
+            java.io.File[] list = current.listFiles();
+            if (list != null)
             {
-               in = new FileInputStream(f);
-               int r;
-               while ((r = in.read(b)) != -1)
+               for (int i = 0; i < list.length; i++)
                {
-                  zipOut.write(b, 0, r);
+                  final java.io.File f = list[i];
+                  final String zipEntryName =
+                     f.getAbsolutePath().substring(zipRootPath.length() + 1).replace('\\', '/');
+                  if (f.isDirectory())
+                  {
+                     if (!(".git".equals(f.getName())))
+                     {
+                        q.push(f);
+                        zipOut.putNextEntry(new ZipEntry(zipEntryName.endsWith("/") //
+                           ? zipEntryName //
+                           : zipEntryName + "/"));
+                     }
+                  }
+                  else if (filter.accept(f.getName()))
+                  {
+                     zipOut.putNextEntry(new ZipEntry(zipEntryName));
+                     FileInputStream in = null;
+                     try
+                     {
+                        in = new FileInputStream(f);
+                        int r;
+                        while ((r = in.read(b)) != -1)
+                        {
+                           zipOut.write(b, 0, r);
+                        }
+                     }
+                     finally
+                     {
+                        if (in != null)
+                        {
+                           in.close();
+                        }
+                        zipOut.closeEntry();
+                     }
+                  }
                }
-            }
-            finally
-            {
-               if (in != null)
-               {
-                  in.close();
-               }
-               zipOut.closeEntry();
             }
          }
       }
@@ -190,8 +224,7 @@ class FilesHelper
    /**
     * Read the first line from file or <code>null</code> if file not found.
     */
-   static String readFile(VirtualFileSystem vfs, String path) throws VirtualFileSystemException,
-      IOException
+   static String readFile(VirtualFileSystem vfs, String path) throws VirtualFileSystemException, IOException
    {
       InputStream in = null;
       BufferedReader r = null;
@@ -244,9 +277,9 @@ class FilesHelper
          ZipEntry zipEntry;
          while ((zipEntry = zipIn.getNextEntry()) != null)
          {
+            java.io.File file = new java.io.File(targetDir, zipEntry.getName());
             if (!zipEntry.isDirectory())
             {
-               java.io.File file = new java.io.File(targetDir, zipEntry.getName());
                java.io.File parent = file.getParentFile();
                if (!parent.exists())
                {
@@ -265,6 +298,10 @@ class FilesHelper
                {
                   fos.close();
                }
+            }
+            else
+            {
+               file.mkdirs();
             }
             zipIn.closeEntry();
          }

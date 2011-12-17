@@ -37,6 +37,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -149,8 +150,12 @@ public class RestDataObjectService
       URL[] urls = compiler.getDependencies(sources, sourceFile);
       for (int i = 0; i < urls.length; i++)
       {
-         if (MimeTypeResolver.resolve(new UnifiedNodeReference(urls[i]), "application/x-chromattic+groovy"))
+         //if (MimeTypeResolver.resolve(new UnifiedNodeReference(urls[i]), "application/x-chromattic+groovy"))
+         Item item = vfs.getItemByPath(urls[i].getRef(), null, PropertyFilter.NONE_FILTER);
+         if ("application/x-chromattic+groovy".equals(item.getMimeType()))
+         {
             nodeReferences.add(new UnifiedNodeReference(urls[i]).getPath());
+         }
       }
 
       return new DataObjectCompiler(compiler, compilationSource, nodeReferences.toArray(new String[nodeReferences
