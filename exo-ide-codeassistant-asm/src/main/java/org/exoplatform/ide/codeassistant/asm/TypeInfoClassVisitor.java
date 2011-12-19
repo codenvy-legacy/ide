@@ -80,7 +80,7 @@ public class TypeInfoClassVisitor implements ClassVisitor
    @Override
    public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
    {
-      builder.addField(access, name, desc);
+      builder.addField(new FieldInfoBuilder(access, name, desc, builder.getQualifiedName()).buildFieldInfo());
       // no need detailed info about field, so return null
       return null;
    }
@@ -90,14 +90,15 @@ public class TypeInfoClassVisitor implements ClassVisitor
    {
       if (name.equals("<init>"))
       {
-         builder.addConstructor(access, exceptions, desc);
+         builder.addConstructor(new ConstructorInfoBuilder(access, exceptions, desc, builder.getQualifiedName())
+            .buildConstructorInfo());
       }
       /*
        * "<clinit>" is static class initialization area, so ignore it
        */
       else if (!name.equals("<clinit>"))
       {
-         builder.addMethod(access, name, exceptions, desc);
+         builder.addMethod(new MethodInfoBuilder(access, name, exceptions, desc, builder.getQualifiedName()).buildMethodInfo());
       }
       // no need detailed info about method, so return null
       return null;

@@ -31,6 +31,10 @@ import java.util.zip.ZipInputStream;
 
 public class JarParser
 {
+   
+   private JarParser()
+   {
+   }
 
    public static List<TypeInfo> parse(File jarFile) throws IOException
    {

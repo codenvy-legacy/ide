@@ -38,6 +38,10 @@ import java.io.InputStream;
  */
 public class ClassParser
 {
+   
+   private ClassParser()
+   {
+   }
 
    public static TypeInfo parse(InputStream classStream) throws IOException
    {
