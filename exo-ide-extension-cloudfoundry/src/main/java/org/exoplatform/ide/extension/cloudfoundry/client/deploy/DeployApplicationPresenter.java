@@ -174,48 +174,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
 
    //----Implementation------------------------
 
-   private void isMavenProject()
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().getChildren(
-            project,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
-            {
-
-               @Override
-               protected void onSuccess(List<Item> result)
-               {
-                  project.getChildren().setItems(result);
-                  for (Item i : result)
-                  {
-                     if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
-                     {
-                        buildApplication();
-                        return;
-                     }
-                  }
-                  
-                  createApplication();
-                  
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception,
-                     "Service is not deployed.<br>Parent folder not found."));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-   
    private void buildApplication()
    {
       IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
@@ -334,10 +292,47 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
     * @see org.exoplatform.ide.client.framework.paas.PaasComponent#deploy()
     */
    @Override
-   public void deploy(ProjectModel project)
+   public void deploy(final ProjectModel project)
    {
       this.project = project;
-      isMavenProject();
+      try
+      {
+         VirtualFileSystem.getInstance().getChildren(
+            project,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  project.getChildren().setItems(result);
+                  for (Item i : result)
+                  {
+                     if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
+                     {
+                        buildApplication();
+                        return;
+                     }
+                  }
+                  
+                  createApplication();
+                  
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
+                     "Can't receive project children " + project.getName()));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
