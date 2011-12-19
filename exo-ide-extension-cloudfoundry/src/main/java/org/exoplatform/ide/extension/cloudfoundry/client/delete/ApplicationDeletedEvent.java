@@ -35,24 +35,15 @@ public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
     */
    public static final GwtEvent.Type<ApplicationDeletedHandler> TYPE = new GwtEvent.Type<ApplicationDeletedHandler>();
 
-   /**
-    * VFS id.
-    */
-   private String vfsId;
-   
-   /**
-    * Project's id.
-    */
-   private String projectId;
+   private String applicationName;
    
    /**
     * @param vfsId VFS id
     * @param projectId project's id
     */
-   public  ApplicationDeletedEvent(String vfsId, String projectId)
+   public  ApplicationDeletedEvent(String applicationName)
    {
-      this.vfsId = vfsId;
-      this.projectId = projectId;
+      this.applicationName = applicationName;
    }
    
    
@@ -76,18 +67,10 @@ public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
 
 
    /**
-    * @return the vfsId VFS id
+    * @return {@link String} deleted application name
     */
-   public String getVfsId()
+   public String getApplicationName()
    {
-      return vfsId;
-   }
-
-   /** 
-    * @return the projectId project's id
-    */
-   public String getProjectId()
-   {
-      return projectId;
+      return applicationName;
    }
 }

@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -300,10 +301,14 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
    @Override
    public void onApplicationDeleted(ApplicationDeletedEvent event)
    {
-      if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
-         && openedProject != null && openedProject.getId().equals(event.getProjectId()))
+      if (event.getApplicationName() != null && openedProject != null
+         && event.getApplicationName().equals((String)openedProject.getPropertyValue("cloudfoundry-application")))
       {
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+         IDE.fireEvent(new RefreshBrowserEvent(openedProject));
       }
    }
 
