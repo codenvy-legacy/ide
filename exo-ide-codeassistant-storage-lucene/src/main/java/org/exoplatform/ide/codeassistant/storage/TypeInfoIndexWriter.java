@@ -53,7 +53,7 @@ public class TypeInfoIndexWriter
       }
       catch (IOException e)
       {
-         throw new SaveTypeInfoIndexException(e);
+         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
       }
    }
 

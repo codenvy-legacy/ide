@@ -25,24 +25,8 @@ public class SaveTypeInfoIndexException extends Exception
 {
    private static final long serialVersionUID = 1L;
 
-   public SaveTypeInfoIndexException()
-   {
-      super();
-   }
-
    public SaveTypeInfoIndexException(String message, Throwable cause)
    {
       super(message, cause);
    }
-
-   public SaveTypeInfoIndexException(String message)
-   {
-      super(message);
-   }
-
-   public SaveTypeInfoIndexException(Throwable cause)
-   {
-      super(cause);
-   }
-
 }
