@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.control.LoadSamplesControl;
+import org.exoplatform.ide.extension.samples.client.control.WelcomeControl;
 import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
@@ -58,6 +59,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new SamplesClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
+      IDE.fireEvent(new OpenStartPageEvent());
    }
 
    /**
@@ -68,6 +70,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    {
       SamplesClientBundle.INSTANCE.css().ensureInjected();
       IDE.getInstance().addControl(new LoadSamplesControl());
+      IDE.getInstance().addControl(new WelcomeControl());
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       new StartPagePresenter();
@@ -95,7 +98,5 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       GithubStep<ProjectData> firstStepUser = new ImportFromGithubPresenter();
       firstStepUser.setNextStep(secondStepUser);
       secondStepUser.setPreviousStep(firstStepUser);
-
-      IDE.fireEvent(new OpenStartPageEvent());
    }
 }

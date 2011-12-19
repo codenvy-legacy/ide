@@ -59,6 +59,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
    public StartPagePresenter()
    {
       IDE.addHandler(OpenStartPageEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
    
    private void bindDisplay()
@@ -114,6 +115,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          IDE.getInstance().openView((View)d);
          display = d;
          bindDisplay();
+         IDE.fireEvent(new WelcomePageOpenedEvent());
          return;
       }
       else
