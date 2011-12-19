@@ -23,6 +23,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
@@ -45,7 +47,8 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: Dec 6, 2010 $
  *
  */
-public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, EditorActiveFileChangedHandler
+public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, EditorActiveFileChangedHandler,
+   ViewClosedHandler
 {
 
    interface Display extends IsView
@@ -96,6 +99,7 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
    {
       IDE.addHandler(GenerateNodeTypeEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
       new GeneratedNodeTypePreviewPresenter();
    }
 
@@ -185,6 +189,18 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
 
 }

@@ -150,11 +150,11 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-//      if (GeneratedNodeTypePreviewForm.ID.equals(event.getViewId()))
-//      {
-//         isOpened = false;
-//         removeHandlers();
-//      }
+      if (event.getView() instanceof Display)
+      {
+         isOpened = false;
+         removeHandlers();
+      }
 //      else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
 //      {
 //         handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();

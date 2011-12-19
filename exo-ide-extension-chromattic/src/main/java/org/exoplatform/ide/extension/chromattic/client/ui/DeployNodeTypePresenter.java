@@ -29,6 +29,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
@@ -52,7 +54,8 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: Dec 9, 2010 $
  *
  */
-public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorActiveFileChangedHandler
+public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorActiveFileChangedHandler,
+   ViewClosedHandler
 {
 
    interface Display extends IsView
@@ -116,6 +119,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
    {
       IDE.addHandler(DeployNodeTypeEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    private void closeView()
@@ -296,6 +300,18 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
 
 }
