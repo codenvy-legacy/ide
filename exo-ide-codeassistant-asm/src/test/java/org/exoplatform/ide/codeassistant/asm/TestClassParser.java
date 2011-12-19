@@ -42,13 +42,13 @@ public class TestClassParser extends BaseTest
    @BeforeClass
    public static void createTypeInfo() throws Exception
    {
-      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestAnnotation.java");
-      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestEnum.java");
-      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface.java");
-      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface2.java");
-      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestSuper.java");
-      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestClass.java");
-      generateClassFile("target/test-classes/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestGeneric.java");
+      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestAnnotation.java");
+      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestEnum.java");
+      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface.java");
+      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface2.java");
+      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestSuper.java");
+      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestClass.java");
+      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestGeneric.java");
       generateJarFile("testClassParser.jar");
    }
 
