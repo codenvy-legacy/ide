@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.extension;
+package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
@@ -44,7 +44,7 @@ public abstract class CachedTypeInfoResolver
       this.resolvedTypes = new HashSet<String>();
    }
 
-   abstract protected boolean saveTypeInfo(TypeInfo typeInfo);
+   abstract protected boolean saveTypeInfo(List<TypeInfo> typeInfos);
 
    public TypeInfo resolveTypeInfo(String fqn) throws CodeAssistantException
    {
@@ -58,8 +58,8 @@ public abstract class CachedTypeInfoResolver
          return null;
       }
    }
-   
-   public TypeInfo resolveTypeInfo(TypeInfo typeInfo) throws CodeAssistantException
+
+   public TypeInfo resolveTypeInfo(final TypeInfo typeInfo) throws CodeAssistantException
    {
       if (resolvedTypes.contains(typeInfo.getQualifiedName()))
       {
@@ -123,17 +123,19 @@ public abstract class CachedTypeInfoResolver
 
       typeInfo.setFields(fields.toArray(new FieldInfo[fields.size()]));
       typeInfo.setMethods(methods.toArray(new MethodInfo[methods.size()]));
-      
+
       /*
        * If saving was failed, then CachedTypeInfoResolver will not cache typeInfo,
        * so next time, when CachedTypeInfoResolver receive to resolve its class or class which extends it,
        * it resolve TypeInfo recursively again.
        */
-      if (saveTypeInfo(typeInfo))
+      List<TypeInfo> saveList = new ArrayList<TypeInfo>();
+      saveList.add(typeInfo);
+      if (saveTypeInfo(saveList))
       {
          resolvedTypes.add(typeInfo.getQualifiedName());
       }
-      
+
       return typeInfo;
    }
 

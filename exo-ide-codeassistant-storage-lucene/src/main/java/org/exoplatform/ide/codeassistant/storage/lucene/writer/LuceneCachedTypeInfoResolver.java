@@ -16,12 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.extension;
+package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.SaveTypeInfoIndexException;
-import org.exoplatform.ide.codeassistant.storage.TypeInfoIndexWriter;
+import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
+
+import java.util.List;
 
 public class LuceneCachedTypeInfoResolver extends CachedTypeInfoResolver
 {
@@ -35,7 +36,7 @@ public class LuceneCachedTypeInfoResolver extends CachedTypeInfoResolver
    }
 
    @Override
-   protected boolean saveTypeInfo(TypeInfo typeInfo)
+   protected boolean saveTypeInfo(List<TypeInfo> typeInfos)
    {
       try
       {
@@ -44,7 +45,7 @@ public class LuceneCachedTypeInfoResolver extends CachedTypeInfoResolver
           */
          if (writer != null)
          {
-            writer.addTypeInfo(typeInfo);
+            writer.addTypeInfo(typeInfos);
             return true;
          }
          else

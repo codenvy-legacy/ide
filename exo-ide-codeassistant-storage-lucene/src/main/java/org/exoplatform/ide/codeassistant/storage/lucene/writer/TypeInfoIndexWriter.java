@@ -16,24 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage;
+package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
+import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,75 +42,35 @@ import java.util.List;
  */
 public class TypeInfoIndexWriter
 {
-   private final IndexWriter writer;
 
-   public TypeInfoIndexWriter(String indexDir) throws SaveTypeInfoIndexException
-   {
-      try
-      {
-         Directory dir = getDirectory(indexDir);
-         writer = new IndexWriter(dir, new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
-      }
-      catch (IOException e)
-      {
-         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
-      }
-   }
+   private static final Logger LOG = LoggerFactory.getLogger(TypeInfoIndexWriter.class);
 
-   public void close() throws SaveTypeInfoIndexException
+   private final Directory indexDirectory;
+
+   public TypeInfoIndexWriter(Directory indexDirectory) throws SaveTypeInfoIndexException
    {
-      try
-      {
-         writer.close();
-      }
-      catch (CorruptIndexException e)
-      {
-         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
-      }
-      catch (IOException e)
-      {
-         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
-      }
+      this.indexDirectory = indexDirectory;
+
    }
 
    public void addTypeInfo(List<TypeInfo> typeInfos) throws SaveTypeInfoIndexException
    {
-      for (TypeInfo typeInfo : typeInfos)
-      {
-         addTypeInfo(typeInfo);
-      }
-   }
 
-   public void addTypeInfo(TypeInfo typeInfo) throws SaveTypeInfoIndexException
-   {
       try
       {
-         Document typeInfoDocument = createDocument(typeInfo);
-         writer.addDocument(typeInfoDocument);
-      }
-      catch (CorruptIndexException e)
-      {
-         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
+         IndexWriter writer =
+            new IndexWriter(indexDirectory, new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+         for (TypeInfo typeInfo : typeInfos)
+         {
+            Document typeInfoDocument = createDocument(typeInfo);
+            writer.addDocument(typeInfoDocument);
+         }
+         writer.commit();
+         writer.close();
       }
       catch (IOException e)
       {
-         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
-      }
-   }
-
-   public void updateTypeInfo(TypeInfo typeInfo) throws SaveTypeInfoIndexException
-   {
-      try
-      {
-         Document newTypeInfoDocument = createDocument(typeInfo);
-         writer.updateDocument(new Term(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName()), newTypeInfoDocument);
-      }
-      catch (CorruptIndexException e)
-      {
-         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
-      }
-      catch (IOException e)
-      {
+         LOG.error(e.getLocalizedMessage());
          throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
       }
    }
@@ -146,20 +106,5 @@ public class TypeInfoIndexWriter
       {
          throw new SaveTypeInfoIndexException("Can't to get json representation of TypeInfo", e);
       }
-   }
-
-   private Directory getDirectory(String indexDir) throws IOException
-   {
-      File dir = new File(indexDir);
-
-      if (!dir.exists())
-      {
-         if (!dir.mkdirs())
-         {
-            throw new IOException("Cannot create directory: " + dir);
-         }
-      }
-
-      return FSDirectory.open(new File(indexDir));
    }
 }

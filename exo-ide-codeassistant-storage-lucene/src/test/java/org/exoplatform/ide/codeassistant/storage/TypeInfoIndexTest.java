@@ -24,8 +24,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.NIOFSDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexWriter;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,11 +54,10 @@ public class TypeInfoIndexTest extends BaseTest
       generateClassFiles("src/test/resources/test/");
       File jar = generateJarFile("test.jar");
 
-      writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
+      writer = new TypeInfoIndexWriter(new NIOFSDirectory(new File(PATH_TO_INDEX)));
 
       List<TypeInfo> typeInfos = JarParser.parse(jar);
       writer.addTypeInfo(typeInfos);
-      writer.close();
    }
 
    @After

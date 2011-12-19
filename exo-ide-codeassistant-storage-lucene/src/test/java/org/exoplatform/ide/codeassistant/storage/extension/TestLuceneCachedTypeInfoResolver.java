@@ -18,14 +18,18 @@
  */
 package org.exoplatform.ide.codeassistant.storage.extension;
 
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.NIOFSDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.LuceneCodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.storage.SaveTypeInfoIndexException;
-import org.exoplatform.ide.codeassistant.storage.TypeInfoIndexWriter;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneCachedTypeInfoResolver;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexWriter;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -50,13 +54,14 @@ public class TestLuceneCachedTypeInfoResolver
    @BeforeClass
    public static void initializeStorage() throws IOException, SaveTypeInfoIndexException
    {
-      TypeInfoIndexWriter writer = new TypeInfoIndexWriter(PATH_TO_INDEX);
+
+      NIOFSDirectory indexDirectory = new NIOFSDirectory(new File(PATH_TO_INDEX));
+      TypeInfoIndexWriter writer = new TypeInfoIndexWriter(indexDirectory);
 
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_RT));
       writer.addTypeInfo(typeInfos);
-      writer.close();
 
-      storage = new LuceneCodeAssistantStorage(PATH_TO_INDEX);
+      storage = new LuceneCodeAssistantStorage(new LuceneTypeInfoSearcher(IndexReader.open(indexDirectory, true)));
    }
 
    @Ignore

@@ -16,24 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage;
+package org.exoplatform.ide.codeassistant.storage.lucene;
 
 /**
- * Keep all field names in lucene Document
+ * Exception which indicates errors on saving TypeInfo in Lucene Index
  */
-public final class TypeInfoIndexFields
+public class SaveTypeInfoIndexException extends Exception
 {
-   public static final String MODIFIERS = "modifiers";
+   private static final long serialVersionUID = 1L;
 
-   public static final String CLASS_NAME = "class-name";
-
-   public static final String FQN = "fqn";
-
-   public static final String ENTITY_TYPE = "entity-type";
-
-   public static final String SUPERCLASS = "superclass";
-
-   public static final String INTERFACES = "interfaces";
-
-   public static final String TYPE_INFO_JSON = "type-info-json";
+   public SaveTypeInfoIndexException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

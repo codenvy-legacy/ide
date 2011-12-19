@@ -16,13 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage;
+package org.exoplatform.ide.codeassistant.storage.lucene;
 
+import org.apache.lucene.store.NIOFSDirectory;
 import org.exoplatform.container.configuration.ConfigurationException;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexWriter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
@@ -84,7 +86,7 @@ public class LuceneInfoStorage implements Startable
    {
       try
       {
-         typeInfoIndexWriter = new TypeInfoIndexWriter(storagePath);
+         typeInfoIndexWriter = new TypeInfoIndexWriter(NIOFSDirectory.open(new File(storagePath)));
          extractJars();
       }
       catch (SaveTypeInfoIndexException e)
@@ -94,17 +96,6 @@ public class LuceneInfoStorage implements Startable
       catch (IOException e)
       {
          throw new RuntimeException(e);
-      }
-      finally
-      {
-         try
-         {
-            typeInfoIndexWriter.close();
-         }
-         catch (SaveTypeInfoIndexException e)
-         {
-            LOG.error(e);
-         }
       }
 
    }
