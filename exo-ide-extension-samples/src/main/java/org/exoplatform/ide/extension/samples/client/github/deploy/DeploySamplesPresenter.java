@@ -840,6 +840,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   output += entry.getKey() + " : " + entry.getValue() + "<br>";
                }
                IDE.fireEvent(new OutputEvent(output, Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
             }
 
             /**
@@ -894,6 +895,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   }
                }
                IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
             }
 
             @Override
@@ -990,6 +992,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             protected void onSuccess(String result)
             {
                IDE.fireEvent(new OutputEvent("Application deployed to Heroku successfully", OutputMessage.Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
             }
          });
    }
@@ -1012,6 +1015,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             protected void onSuccess(String result)
             {
                IDE.fireEvent(new OutputEvent("Application deployed to OpenShift successfully", OutputMessage.Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
             }
          });
    }

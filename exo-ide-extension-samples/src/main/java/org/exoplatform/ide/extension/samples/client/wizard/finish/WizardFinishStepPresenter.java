@@ -292,6 +292,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
                   output += entry.getKey() + " : " + entry.getValue() + "<br>";
                }
                IDE.fireEvent(new OutputEvent(output, Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
                projectProperties = null;
             }
 
@@ -344,6 +345,7 @@ public class WizardFinishStepPresenter extends GitPresenter implements ViewClose
                   }
                }
                IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
                projectProperties = null;
             }
 
