@@ -25,11 +25,13 @@ package org.exoplatform.ide.shell.client;
  */
 public interface EnvironmentVariables
 {
-   String WORKDIR = "workdir";
+   String CURRENT_FOLDER_ID = "projectid";
    
    String ENTRY_POINT = "ENTRY_POINT";
    
    String USER_NAME = "USER_NAME";
    
    String COMMAND_BUFFER = "COMMAND_BUFFER";
+   
+   String VFS_ID = "vfsid";
 }

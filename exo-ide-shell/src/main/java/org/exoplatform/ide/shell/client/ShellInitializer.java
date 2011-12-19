@@ -38,7 +38,6 @@ import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -55,8 +54,8 @@ public class ShellInitializer
 {
 
    private static native String getConfigurationURL()/*-{
-		return $wnd.configurationURL;
-   }-*/;
+                                                     return $wnd.configurationURL;
+                                                     }-*/;
 
    public void init()
    {
@@ -86,9 +85,8 @@ public class ShellInitializer
                               @Override
                               protected void onSuccess(VirtualFileSystemInfo result)
                               {
-                                 Environment.get().setCurrentFolder((FolderModel)result.getRoot());
-                                 updateCurrentDir();
-                                 createShell();
+                                 Environment.get().saveValue(EnvironmentVariables.VFS_ID, result.getId());
+                                 updateCurrentDir(result.getRoot());
                               }
 
                               @Override
@@ -164,7 +162,7 @@ public class ShellInitializer
 
    }
 
-   private void updateCurrentDir()
+   private void updateCurrentDir(final Folder root)
    {
       String id = Location.getParameter("workdir");
       if (id != null && !id.isEmpty())
@@ -181,20 +179,39 @@ public class ShellInitializer
                      if (result.getItem() instanceof Folder)
                      {
                         Environment.get().setCurrentFolder((Folder)result.getItem());
+                        Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, result.getItem().getId());
                      }
+                     else
+                     {
+                        Environment.get().setCurrentFolder(root);
+                        Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, root.getId());
+                     }
+                     createShell();
                   }
 
                   @Override
                   protected void onFailure(Throwable exception)
                   {
+                     Environment.get().setCurrentFolder(root);
+                     Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, root.getId());
+                     createShell();
                      exception.printStackTrace();
                   }
                });
          }
          catch (RequestException e)
          {
+            Environment.get().setCurrentFolder(root);
+            Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, root.getId());
+            createShell();
             e.printStackTrace();
          }
+      }
+      else
+      {
+         Environment.get().setCurrentFolder(root);
+         Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, root.getId());
+         createShell();
       }
    }
 

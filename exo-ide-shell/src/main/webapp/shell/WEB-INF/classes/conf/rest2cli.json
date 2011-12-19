@@ -1,6 +1,6 @@
 [
 {
-    "command": ["jcr man", "jcr cd", "jcr commit", "jcr cp", "jcr ls", "jcr mixin", "jcr mv", "jcr node", "jcr pwd", "jcr rm", "jcr rollback", "jcr select", "jcr setperm", "jcr version", "jcr ws", "jcr xpath", "jcr ws login", "jcr ws logout"],
+    "command": ["jcr man", "jcr cd", "jcr commit", "jcr cp", "jcr ls", "jcr mixin", "jcr mv", "jcr node", "jcr pwd", "jcr rm", "jcr rollback", "jcr select", "jcr setperm", "jcr version", "jcr xpath", "jcr ws login", "jcr ws logout"],
     "path": "/ide/crash/command",
     "method": "POST",
     "description": "To view command help try : [command] -h",
@@ -19,7 +19,13 @@
     "description" : "Initialize new GIT repository.",
     "params": [
       {
-	  "name": "$workdir",
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -40,7 +46,13 @@
     "description" : "Get status of working directory.",
     "params": [
       {
-	  "name": "$workdir",
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -61,7 +73,13 @@
     "description" : "Add file contents to the index.",
     "params": [
       {
-	  "name": "$workdir",
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -88,7 +106,13 @@
     "description" : "Record changes to the repository.",
     "params": [
       {
-	  "name": "$workdir",
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -138,7 +162,13 @@
     "description" : "Delete the Cloud Foundry application",
     "params": [
      {
-	  "name": "$workdir",
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -165,8 +195,14 @@
     "method": "POST",
     "description" : "Start the Cloud Foundry application",
     "params": [
-     {
-	  "name": "$workdir",
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -187,8 +223,14 @@
     "method": "POST",
     "description" : "Stop the Cloud Foundry application",
     "params": [
-     {
-	  "name": "$workdir",
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -208,8 +250,14 @@
     "method": "POST",
     "description" : "Restart the Cloud Foundry application",
     "params": [
-     {
-	  "name": "$workdir",
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -229,8 +277,14 @@
     "method": "GET",
     "description" : "Display resource usage for the Cloud Foundry application",
     "params": [
-     {
-	  "name": "$workdir",
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
@@ -256,5 +310,4 @@
     "method": "GET",
     "description" : "List deployed applications on Cloud Foundry"
 }
-
 ]

@@ -100,7 +100,7 @@ public class CdCommand extends ClientCommand
                      if (result.getItem() instanceof Folder)
                      {
                         Environment.get().setCurrentFolder((Folder)result.getItem());
-                        Environment.get().saveValue(EnvironmentVariables.WORKDIR, result.getItem().getId());
+                        Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, result.getItem().getId());
                         CloudShell.console().printPrompt();
                      }
                      else
