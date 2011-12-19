@@ -24,7 +24,7 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexWriter;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
@@ -50,7 +50,7 @@ public class LuceneInfoStorage implements Startable
 
    private final String storagePath;
 
-   private TypeInfoIndexWriter typeInfoIndexWriter;
+   private LuceneTypeInfoWriter typeInfoIndexWriter;
 
    public LuceneInfoStorage(InitParams initParams) throws ConfigurationException
    {
@@ -86,7 +86,7 @@ public class LuceneInfoStorage implements Startable
    {
       try
       {
-         typeInfoIndexWriter = new TypeInfoIndexWriter(NIOFSDirectory.open(new File(storagePath)));
+         typeInfoIndexWriter = new LuceneTypeInfoWriter(NIOFSDirectory.open(new File(storagePath)));
          extractJars();
       }
       catch (SaveTypeInfoIndexException e)

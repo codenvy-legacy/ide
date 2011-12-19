@@ -27,9 +27,9 @@ import java.util.List;
 public class LuceneCachedTypeInfoResolver extends CachedTypeInfoResolver
 {
 
-   private final TypeInfoIndexWriter writer;
+   private final LuceneTypeInfoWriter writer;
 
-   public LuceneCachedTypeInfoResolver(CodeAssistantStorage storage, TypeInfoIndexWriter writer)
+   public LuceneCachedTypeInfoResolver(CodeAssistantStorage storage, LuceneTypeInfoWriter writer)
    {
       super(storage);
       this.writer = writer;

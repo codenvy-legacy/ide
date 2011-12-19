@@ -27,7 +27,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexWriter;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class TypeInfoIndexTest extends BaseTest
 
    private final static int CLASSES_IN_JAR = 9;
 
-   private static TypeInfoIndexWriter writer;
+   private static LuceneTypeInfoWriter writer;
 
    @BeforeClass
    public static void setUp() throws Exception
@@ -54,7 +54,7 @@ public class TypeInfoIndexTest extends BaseTest
       generateClassFiles("src/test/resources/test/");
       File jar = generateJarFile("test.jar");
 
-      writer = new TypeInfoIndexWriter(new NIOFSDirectory(new File(PATH_TO_INDEX)));
+      writer = new LuceneTypeInfoWriter(new NIOFSDirectory(new File(PATH_TO_INDEX)));
 
       List<TypeInfo> typeInfos = JarParser.parse(jar);
       writer.addTypeInfo(typeInfos);

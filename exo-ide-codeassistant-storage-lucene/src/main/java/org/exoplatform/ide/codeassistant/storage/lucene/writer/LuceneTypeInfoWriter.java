@@ -18,13 +18,93 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
+import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.Directory;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonGenerator;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
+import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
+
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z
- *          aheritier $
- * 
+ * Instrument for storing TypeInfo in Lucene Index
  */
 public class LuceneTypeInfoWriter
 {
 
+   private static final Logger LOG = LoggerFactory.getLogger(LuceneTypeInfoWriter.class);
+
+   private final Directory indexDirectory;
+
+   public LuceneTypeInfoWriter(Directory indexDirectory) throws SaveTypeInfoIndexException
+   {
+      this.indexDirectory = indexDirectory;
+
+   }
+
+   public void addTypeInfo(List<TypeInfo> typeInfos) throws SaveTypeInfoIndexException
+   {
+
+      try
+      {
+         IndexWriter writer =
+            new IndexWriter(indexDirectory, new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+         for (TypeInfo typeInfo : typeInfos)
+         {
+            Document typeInfoDocument = createDocument(typeInfo);
+            writer.addDocument(typeInfoDocument);
+         }
+         writer.commit();
+         writer.close();
+      }
+      catch (IOException e)
+      {
+         LOG.error(e.getLocalizedMessage());
+         throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
+      }
+   }
+
+   private Document createDocument(TypeInfo typeInfo) throws SaveTypeInfoIndexException
+   {
+      try
+      {
+         Document typeInfoDocument = new Document();
+         typeInfoDocument.add(new Field(TypeInfoIndexFields.CLASS_NAME, typeInfo.getName(), Store.YES,
+            Index.NOT_ANALYZED));
+         typeInfoDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()),
+            Store.YES, Index.NOT_ANALYZED));
+         typeInfoDocument.add(new Field(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName(), Store.YES,
+            Index.NOT_ANALYZED));
+         typeInfoDocument.add(new Field(TypeInfoIndexFields.ENTITY_TYPE, typeInfo.getType(), Store.YES,
+            Index.NOT_ANALYZED));
+         typeInfoDocument.add(new Field(TypeInfoIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES,
+            Index.NOT_ANALYZED));
+
+         for (String string : typeInfo.getInterfaces())
+         {
+            typeInfoDocument.add(new Field(TypeInfoIndexFields.INTERFACES, string, Store.YES, Index.NOT_ANALYZED));
+         }
+
+         JsonValue jsonValue = JsonGenerator.createJsonObject(typeInfo);
+         typeInfoDocument
+            .add(new Field(TypeInfoIndexFields.TYPE_INFO_JSON, jsonValue.toString().getBytes(), Store.YES));
+
+         return typeInfoDocument;
+      }
+      catch (JsonException e)
+      {
+         throw new SaveTypeInfoIndexException("Can't to get json representation of TypeInfo", e);
+      }
+   }
 }

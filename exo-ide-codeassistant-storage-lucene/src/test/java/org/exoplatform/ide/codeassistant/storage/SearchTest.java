@@ -28,7 +28,7 @@ import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexWriter;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -52,7 +52,7 @@ public class SearchTest extends BaseTest
       File jar = generateJarFile("test.jar");
 
       NIOFSDirectory indexDirectory = new NIOFSDirectory(new File(PATH_TO_INDEX));
-      TypeInfoIndexWriter writer = new TypeInfoIndexWriter(indexDirectory);
+      LuceneTypeInfoWriter writer = new LuceneTypeInfoWriter(indexDirectory);
 
       List<TypeInfo> typeInfos = JarParser.parse(jar);
       writer.addTypeInfo(typeInfos);
