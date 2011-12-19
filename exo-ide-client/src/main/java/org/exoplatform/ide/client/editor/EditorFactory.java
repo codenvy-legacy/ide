@@ -47,7 +47,12 @@ public class EditorFactory
    static
    {
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",         
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
+         IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
+      addEditor(new CodeMirrorProducer("text/yaml", IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
+         IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
+
+      addEditor(new CodeMirrorProducer("application/x-ruby+html", IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
          IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
 
       //To initialize client bundle 

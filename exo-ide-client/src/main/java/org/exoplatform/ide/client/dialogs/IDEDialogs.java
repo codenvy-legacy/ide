@@ -226,7 +226,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    protected void openWarningDialog(String title, String message)
    {
       HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.warnDialog(), message);
-      final IDEDialogsView view = new IDEDialogsView("ideWarningModalView", title, 400, 130, content);
+      final IDEDialogsView view = new IDEDialogsView("ideWarningModalView", title, 450, 250, content);
       
       ImageButton okButton = createButton("Ok", null);
       view.getButtonsLayout().add(okButton);

@@ -18,11 +18,11 @@
          <when-property-is name="user.agent" value="ie8" />
       </any>
    </replace-with -->
-   
+
    <replace-with class="org.exoplatform.ide.client.progress.ui.ProgressView">
       <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.operation.createfolder.CreateFolderView">
       <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display" />
    </replace-with>
@@ -74,7 +74,7 @@
    <replace-with class="org.exoplatform.ide.client.operation.findtext.FindTextView">
       <when-type-is class="org.exoplatform.ide.client.operation.findtext.FindTextPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.operation.gotoline.GoToLineView">
       <when-type-is class="org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display" />
    </replace-with>
@@ -82,7 +82,7 @@
    <replace-with class="org.exoplatform.ide.client.project.fromtemplate.CreateProjectView">
       <when-type-is class="org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasView">
       <when-type-is class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter.Display" />
    </replace-with>
@@ -110,7 +110,7 @@
    <replace-with class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateView">
       <when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.template.ui.SaveAsTemplateView">
       <when-type-is class="org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display" />
    </replace-with>
@@ -122,11 +122,11 @@
    <replace-with class="org.exoplatform.ide.client.authentication.LoginView">
       <when-type-is class="org.exoplatform.ide.client.authentication.LoginPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathView">
       <when-type-is class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLView">
       <when-type-is class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display" />
    </replace-with>
@@ -134,27 +134,27 @@
    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
       <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.versioning.VersionsListView">
       <when-type-is class="org.exoplatform.ide.client.versioning.VersionsListPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.operation.rename.RenameFileView">
       <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFilePresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.operation.rename.RenameFolderView">
       <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFolderPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.permissions.PermissionsManagerView">
       <when-type-is class="org.exoplatform.ide.client.permissions.PermissionsManagerPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.project.template.CreateProjectTemplateView">
       <when-type-is class="org.exoplatform.ide.client.project.template.CreateProjectTemplatePresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
       <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display" />
    </replace-with>
@@ -166,7 +166,7 @@
    <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypeView">
       <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter.Display" />
    </replace-with>
- 
+
    <replace-with class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathView">
       <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathPresenter.Display" />
    </replace-with>
@@ -174,9 +174,9 @@
    <replace-with class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathView">
       <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectForm">
-      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display"/>
+      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileView">
@@ -210,7 +210,10 @@
    <replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
       <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
    </replace-with>
-   
+
+   <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
+      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display" />
+   </replace-with>
    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
       <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display" />
    </replace-with>
