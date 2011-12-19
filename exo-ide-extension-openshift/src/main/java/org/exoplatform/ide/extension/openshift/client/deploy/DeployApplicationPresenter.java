@@ -31,6 +31,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -169,6 +170,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
             protected void onSuccess(AppInfo result)
             {
                IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
                paasCallback.onDeploy(true);
             }
 

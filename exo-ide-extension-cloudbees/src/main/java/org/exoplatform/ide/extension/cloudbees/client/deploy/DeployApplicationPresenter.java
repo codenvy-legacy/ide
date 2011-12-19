@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -214,6 +215,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
                   output += entry.getKey() + " : " + entry.getValue() + "<br>";
                }
                IDE.fireEvent(new OutputEvent(output, Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
             }
 
             @Override

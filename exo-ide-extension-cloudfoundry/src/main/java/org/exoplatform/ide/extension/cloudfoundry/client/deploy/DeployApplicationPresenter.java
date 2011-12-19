@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -200,6 +201,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
             {
                String msg = lb.applicationCreatedSuccessfully(result.getName());
                IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
             }
 
             @Override
