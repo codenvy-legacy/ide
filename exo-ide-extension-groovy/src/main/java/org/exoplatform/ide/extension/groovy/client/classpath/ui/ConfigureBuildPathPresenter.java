@@ -80,7 +80,8 @@ import java.util.Set;
  *
  */
 public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSourceToBuildPathHandler,
-   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, VfsChangedHandler, ConfigureClasspathHandler, ProjectOpenedHandler, ProjectClosedHandler
+   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, VfsChangedHandler,
+   ConfigureClasspathHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
    /**
     * 
@@ -163,7 +164,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    private Map<String, FileModel> openedFiles;
 
    private VirtualFileSystemInfo vfsInfo;
-   
+
    private ProjectModel currentProject;
 
    /**
@@ -179,7 +180,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       IDE.addHandler(AddSourceToBuildPathEvent.TYPE, this);
       IDE.addHandler(ConfigureClasspathEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);      
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
@@ -262,27 +263,29 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     */
    public void onProjectCreated(ProjectCreatedEvent event)
    {
-      tryShowClasspathForProject(event.getProject());      
+      tryShowClasspathForProject(event.getProject());
    }
-   
+
    @Override
    public void onConfigureClasspath(ConfigureClasspathEvent event)
    {
-      if (currentProject == null) {
+      if (currentProject == null)
+      {
          Dialogs.getInstance().showError("The first you should open the project.");
          return;
       }
-      
+
       tryShowClasspathForProject(currentProject);
    }
-   
-   private void tryShowClasspathForProject(ProjectModel project) {
+
+   private void tryShowClasspathForProject(ProjectModel project)
+   {
       if (project == null)
       {
          getClassPathLocation(null);
          return;
       }
-      
+
       if (projectTypes.contains(project.getProjectType()))
       {
          getClassPathLocation(project);
@@ -298,6 +301,9 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    private FileModel createClasspathFile(ProjectModel projectModel)
    {
       String path = VirtualFileSystem.getInstance().getInfo().getId() + "#" + projectModel.getPath();
+      if (!path.endsWith("/"))
+         path += "/";
+
       GroovyClassPathEntry projectClassPathEntry = GroovyClassPathEntry.build(EnumSourceType.DIR.getValue(), path);
       List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();
       groovyClassPathEntries.add(projectClassPathEntry);

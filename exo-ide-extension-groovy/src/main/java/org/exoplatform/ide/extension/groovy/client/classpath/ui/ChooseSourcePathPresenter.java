@@ -266,7 +266,18 @@ public class ChooseSourcePathPresenter
       for (Item item : display.getSelectedItems())
       {
          String path = vfs.getId() + "#" + item.getPath();
-         String kind = (item instanceof FileModel) ? EnumSourceType.FILE.getValue() : EnumSourceType.DIR.getValue();
+         String kind = null;
+         if (item instanceof FileModel)
+         {
+            kind = EnumSourceType.FILE.getValue();
+         }
+         else
+         {
+            kind = EnumSourceType.DIR.getValue();
+            if (!path.endsWith("/"))
+               path += "/";
+         }
+
          GroovyClassPathEntry groovyClassPathEntry = GroovyClassPathEntry.build(kind, path);
          classPathEntries.add(groovyClassPathEntry);
       }
