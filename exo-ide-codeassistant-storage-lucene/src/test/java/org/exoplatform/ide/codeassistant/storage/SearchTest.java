@@ -21,8 +21,6 @@ package org.exoplatform.ide.codeassistant.storage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.NIOFSDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
@@ -40,7 +38,7 @@ import java.util.List;
  */
 public class SearchTest extends BaseTest
 {
-   private final static String PATH_TO_INDEX = "target/index2";
+   // private final static String PATH_TO_INDEX = "target/index2";
 
    private static LuceneCodeAssistantStorage storage;
 
@@ -51,13 +49,13 @@ public class SearchTest extends BaseTest
       generateClassFiles("src/test/resources/test/");
       File jar = generateJarFile("test.jar");
 
-      NIOFSDirectory indexDirectory = new NIOFSDirectory(new File(PATH_TO_INDEX));
-      LuceneTypeInfoWriter writer = new LuceneTypeInfoWriter(indexDirectory);
+      InMemoryLuceneInfoStorage luceneInfoStorage = new InMemoryLuceneInfoStorage();
+      LuceneTypeInfoWriter writer = new LuceneTypeInfoWriter(luceneInfoStorage);
 
       List<TypeInfo> typeInfos = JarParser.parse(jar);
       writer.addTypeInfo(typeInfos);
 
-      storage = new LuceneCodeAssistantStorage(new LuceneTypeInfoSearcher(IndexReader.open(indexDirectory, true)));
+      storage = new LuceneCodeAssistantStorage(new LuceneTypeInfoSearcher(luceneInfoStorage));
    }
 
    @Test

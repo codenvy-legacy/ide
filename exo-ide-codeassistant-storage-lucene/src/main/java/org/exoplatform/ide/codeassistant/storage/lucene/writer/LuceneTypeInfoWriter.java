@@ -29,6 +29,7 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 import org.slf4j.Logger;
@@ -47,9 +48,9 @@ public class LuceneTypeInfoWriter
 
    private final Directory indexDirectory;
 
-   public LuceneTypeInfoWriter(Directory indexDirectory) throws SaveTypeInfoIndexException
+   public LuceneTypeInfoWriter(LuceneInfoStorage luceneInfoStorage) throws SaveTypeInfoIndexException, IOException
    {
-      this.indexDirectory = indexDirectory;
+      this.indexDirectory = luceneInfoStorage.getTypeInfoIndexDirectory();
 
    }
 

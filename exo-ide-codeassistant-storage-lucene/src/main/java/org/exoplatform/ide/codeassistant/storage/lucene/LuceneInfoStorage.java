@@ -18,110 +18,28 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-import org.apache.lucene.store.NIOFSDirectory;
-import org.exoplatform.container.configuration.ConfigurationException;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ide.codeassistant.asm.JarParser;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.picocontainer.Startable;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.Directory;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
- * Container component responsible for extracting class information from jars
- * specified in configuration
+ *
  */
-public class LuceneInfoStorage implements Startable
+public interface LuceneInfoStorage
 {
-   private static final Log LOG = ExoLogger.getLogger(LuceneInfoStorage.class);
-
-   private static final String JARS_PARAM_NAME = "jars";
-
-   private static final String STORAGE_PATH_NAME = "storage-path";
-
-   private final List<String> jars;
-
-   private final String storagePath;
-
-   private LuceneTypeInfoWriter typeInfoIndexWriter;
-
-   public LuceneInfoStorage(InitParams initParams) throws ConfigurationException
-   {
-      ValueParam jarsParamValue = initParams.getValueParam(JARS_PARAM_NAME);
-      if (jarsParamValue == null)
-      {
-         throw new ConfigurationException();
-      }
-      jars = extractJarNames(jarsParamValue.getValue());
-
-      ValueParam storagePathParamValue = initParams.getValueParam(STORAGE_PATH_NAME);
-      if (storagePathParamValue == null)
-      {
-         throw new ConfigurationException();
-      }
-      storagePath = storagePathParamValue.getValue();
-   }
+   /**
+    * 
+    * @return IndexReader of type info lucene storage
+    * @throws IOException
+    */
+   IndexReader getTypeInfoIndxReader() throws IOException;
 
    /**
-    * Now it will be used for test purposes
+    * 
+    * @return IndexReader of type info lucene storage
+    * @throws IOException
     */
-   public LuceneInfoStorage(List<String> jars, String storagePath)
-   {
-      this.jars = jars;
-      this.storagePath = storagePath;
-   }
-
-   /**
-    * @see org.picocontainer.Startable#start()
-    */
-   @Override
-   public void start()
-   {
-      try
-      {
-         typeInfoIndexWriter = new LuceneTypeInfoWriter(NIOFSDirectory.open(new File(storagePath)));
-         extractJars();
-      }
-      catch (SaveTypeInfoIndexException e)
-      {
-         throw new RuntimeException(e);
-      }
-      catch (IOException e)
-      {
-         throw new RuntimeException(e);
-      }
-
-   }
-
-   /**
-    * @see org.picocontainer.Startable#stop()
-    */
-   @Override
-   public void stop()
-   {
-
-   }
-
-   private void extractJars() throws IOException, SaveTypeInfoIndexException
-   {
-      for (String jar : jars)
-      {
-         List<TypeInfo> typeInfos = JarParser.parse(new File(jar));
-         typeInfoIndexWriter.addTypeInfo(typeInfos);
-      }
-   }
-
-   private List<String> extractJarNames(String conf)
-   {
-      String[] jars = conf.split(",");
-      return Arrays.asList(jars);
-   }
+   Directory getTypeInfoIndexDirectory() throws IOException;
 
 }

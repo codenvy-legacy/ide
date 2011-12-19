@@ -20,20 +20,14 @@ package org.exoplatform.ide.codeassistant.storage;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.NIOFSDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -47,35 +41,27 @@ public class TypeInfoIndexTest extends BaseTest
 
    private static LuceneTypeInfoWriter writer;
 
+   private static InMemoryLuceneInfoStorage luceneInfoStorage;
+
    @BeforeClass
    public static void setUp() throws Exception
    {
       //String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
       generateClassFiles("src/test/resources/test/");
       File jar = generateJarFile("test.jar");
-
-      writer = new LuceneTypeInfoWriter(new NIOFSDirectory(new File(PATH_TO_INDEX)));
+      luceneInfoStorage = new InMemoryLuceneInfoStorage();
+      writer = new LuceneTypeInfoWriter(luceneInfoStorage);
 
       List<TypeInfo> typeInfos = JarParser.parse(jar);
       writer.addTypeInfo(typeInfos);
    }
 
-   @After
-   public void tearDown() throws Exception
-   {
-      FileUtils.deleteDirectory(new File(PATH_TO_INDEX));
-   }
-
    @Test
    public void testCreatedDocsCount() throws Exception
    {
-      IndexReader reader = IndexReader.open(getDirectory(), true);
+      IndexReader reader = luceneInfoStorage.getTypeInfoIndxReader();
       assertEquals(CLASSES_IN_JAR, reader.numDocs());
       reader.close();
    }
 
-   private Directory getDirectory() throws IOException
-   {
-      return FSDirectory.open(new File(PATH_TO_INDEX));
-   }
 }

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
@@ -38,6 +37,7 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,20 +57,19 @@ public class LuceneTypeInfoSearcher
 
    private static final Logger LOG = LoggerFactory.getLogger(LuceneTypeInfoSearcher.class);
 
-   private IndexReader indexReader;
+   private final LuceneInfoStorage infoStorage;
 
-   public LuceneTypeInfoSearcher(IndexReader indexReader)
+   public LuceneTypeInfoSearcher(LuceneInfoStorage infoStorage)
    {
-      super();
-      this.indexReader = indexReader;
+      this.infoStorage = infoStorage;
    }
 
    public TypeInfo searchDocumentByTerm(String fieldName, String value) throws CodeAssistantException
    {
       try
       {
-         reopenReaderWhenNeed();
-         TermDocs termDocs = indexReader.termDocs(new Term(fieldName, value));
+         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
+         TermDocs termDocs = typeInfoIndxReader.termDocs(new Term(fieldName, value));
 
          int[] docs = new int[1];
          int[] freqs = new int[1];
@@ -79,7 +78,7 @@ public class LuceneTypeInfoSearcher
          if (count == 1)
          {
 
-            byte[] jsonField = indexReader.document(docs[0]).getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
+            byte[] jsonField = typeInfoIndxReader.document(docs[0]).getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
             return createTypeInfoObject(jsonField);
 
          }
@@ -103,8 +102,8 @@ public class LuceneTypeInfoSearcher
    {
       try
       {
-         reopenReaderWhenNeed();
-         IndexSearcher searcher = new IndexSearcher(indexReader);
+         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
+         IndexSearcher searcher = new IndexSearcher(typeInfoIndxReader);
          TopDocs topDocs = searcher.search(new PrefixQuery(new Term(fieldName, prefix)), Integer.MAX_VALUE);
 
          List<Document> result = new ArrayList<Document>();
@@ -127,8 +126,8 @@ public class LuceneTypeInfoSearcher
    {
       try
       {
-         reopenReaderWhenNeed();
-         IndexSearcher searcher = new IndexSearcher(indexReader);
+         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
+         IndexSearcher searcher = new IndexSearcher(typeInfoIndxReader);
          TopDocs topDocs = null;
          TermQuery termQuery = new TermQuery(new Term(TypeInfoIndexFields.ENTITY_TYPE, type.toString()));
          if (prefix != null && !prefix.isEmpty())
@@ -238,20 +237,4 @@ public class LuceneTypeInfoSearcher
       }
    }
 
-   /**
-    * Reopen reader if where is some changes in index
-    * 
-    * @throws CorruptIndexException
-    * @throws IOException
-    */
-   private void reopenReaderWhenNeed() throws CorruptIndexException, IOException
-   {
-
-      IndexReader newReader = indexReader.reopen();
-      if (newReader != indexReader)
-      {
-         indexReader.close();
-      }
-      indexReader = newReader;
-   }
 }
