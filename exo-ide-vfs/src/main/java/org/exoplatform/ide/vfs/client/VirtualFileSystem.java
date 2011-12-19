@@ -342,7 +342,6 @@ public class VirtualFileSystem
          path = path.substring(1);
       String url = info.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref();
       url = URL.decode(url).replace("[path]", path);
-      url = URL.encode(url);
       AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).send(callback);
    }
 
