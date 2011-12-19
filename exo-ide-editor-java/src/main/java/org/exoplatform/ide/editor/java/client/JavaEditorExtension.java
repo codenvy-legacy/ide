@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -34,6 +35,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant;
@@ -45,6 +48,8 @@ import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaOutlineItemCreator;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaParser;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -62,6 +67,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    private JavaCodeValidator javaCodeValidator;
 
    private JavaTokenWidgetFactory factory;
+
+   private JavaCodeAssistantService service;
 
    private String projectId;
 
@@ -90,7 +97,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      JavaCodeAssistantService service;
+
       if (JavaCodeAssistantService.get() == null)
          service = new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
       else
@@ -142,11 +149,25 @@ public class JavaEditorExtension extends Extension implements InitializeServices
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
    @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   public void onEditorActiveFileChanged(final EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
-         javaCodeValidator.loadClassesFromProject(event.getFile().getId(), projectId);
+         service.findClassesByProject(event.getFile().getId(), projectId, new AsyncRequestCallback<List<Token>>()
+         {
+            @Override
+            protected void onSuccess(List<Token> result)
+            {
+               javaCodeValidator.setClassesFromProject(result);
+               ((CodeMirror)event.getEditor()).validateCode();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               handleError(exception);
+            }
+         });
       }
    }
 
