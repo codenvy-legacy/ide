@@ -5,7 +5,7 @@
     <parent>
         <artifactId>exo-ide-parent</artifactId>
         <groupId>org.exoplatform.ide</groupId>
-        <version>1.2.0-M4-SNAPSHOT</version>
+        <version>1.2.0-M5</version>
     </parent>
     <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
     <packaging>jar</packaging>
@@ -48,17 +48,7 @@
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
             <version>2.9.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-spellchecker</artifactId>
-            <version>2.9.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-memory</artifactId>
-            <version>2.9.4</version>
-        </dependency>
+        </dependency>  
 
         <dependency>
             <groupId>org.everrest</groupId>

@@ -155,6 +155,16 @@
             <artifactId>exo-ide-codeassistant-framework</artifactId>
             <version>${project.version}</version>
          </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-asm</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -679,7 +689,9 @@
 
       <module>exo-ide-framework-client</module>
       <module>exo-ide-codeassistant-api</module>
+      <module>exo-ide-codeassistant-asm</module>      
       <module>exo-ide-codeassistant-framework</module>
+      <module>exo-ide-codeassistant-storage-lucene</module>
 
       <module>exo-ide-maven</module>
       <module>exo-ide-maven-webapp-archetype</module>
