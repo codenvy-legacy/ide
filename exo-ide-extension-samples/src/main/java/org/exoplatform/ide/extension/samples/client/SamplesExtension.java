@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.samples.client.control.ImportFromGithubControl;
 import org.exoplatform.ide.extension.samples.client.control.LoadSamplesControl;
 import org.exoplatform.ide.extension.samples.client.control.WelcomeControl;
 import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
@@ -70,6 +71,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    {
       SamplesClientBundle.INSTANCE.css().ensureInjected();
       IDE.getInstance().addControl(new LoadSamplesControl());
+      IDE.getInstance().addControl(new ImportFromGithubControl());
       IDE.getInstance().addControl(new WelcomeControl());
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

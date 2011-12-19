@@ -128,6 +128,12 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github_Disabled.png")
    ImageResource importFromGithubDisabledControl();
    
+   @Source("org/exoplatform/ide/extension/samples/client/images/import-samples.png")
+   ImageResource importSamplesControl();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/import-samples_Disabled.png")
+   ImageResource importSamplesDisabledControl();
+   
    public interface Style extends CssResource
    {
       String table();

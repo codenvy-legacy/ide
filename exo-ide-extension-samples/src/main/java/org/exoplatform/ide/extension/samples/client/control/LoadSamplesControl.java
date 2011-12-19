@@ -55,8 +55,8 @@ public class LoadSamplesControl extends SimpleControl implements IDEControl, Vfs
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.importFromGithubControl(),
-         SamplesClientBundle.INSTANCE.importFromGithubDisabledControl());
+      setImages(SamplesClientBundle.INSTANCE.importSamplesControl(),
+         SamplesClientBundle.INSTANCE.importSamplesDisabledControl());
       setEvent(new ShowSamplesEvent());
    }
 
