@@ -18,18 +18,20 @@
  */
 package org.exoplatform.ide.codeassistant.storage.extension;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneCachedTypeInfoResolver;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,9 +46,9 @@ import java.util.Set;
 public class TestLuceneCachedTypeInfoResolver
 {
 
-   private static CodeAssistantStorage storage;
-
    private static LuceneTypeInfoSearcher searcher;
+
+   private static LuceneTypeInfoWriter writer;
 
    private final static String PATH_TO_INDEX = "target/index3";
 
@@ -57,7 +59,7 @@ public class TestLuceneCachedTypeInfoResolver
    {
 
       NIOFSDirectory indexDirectory = new NIOFSDirectory(new File(PATH_TO_INDEX));
-      LuceneTypeInfoWriter writer = new LuceneTypeInfoWriter(indexDirectory);
+      writer = new LuceneTypeInfoWriter(indexDirectory);
 
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_RT));
       writer.addTypeInfo(typeInfos);
@@ -69,40 +71,39 @@ public class TestLuceneCachedTypeInfoResolver
    @Test
    public void testCachedTypeInfoResolver() throws CodeAssistantException
    {
-      LuceneCachedTypeInfoResolver resolver = new LuceneCachedTypeInfoResolver(searcher, null);
-      TypeInfo testClass = storage.getTypeByFqn("java.util.HashMap");
+      LuceneCachedTypeInfoResolver resolver = new LuceneCachedTypeInfoResolver(searcher, writer);
+      TypeInfo testClass = new LuceneCodeAssistantStorage(searcher).getTypeByFqn("java.util.HashMap");
       testClass = resolver.resolveTypeInfo(testClass);
       Set<String> methods = new HashSet<String>();
       for (RoutineInfo method : testClass.getMethods())
       {
          methods.add(method.getGeneric());
       }
-      Assert.assertEquals(22, methods.size());
-      Assert.assertTrue(methods.contains("public int java.util.HashMap.size()"));
-      Assert.assertTrue(methods.contains("public boolean java.util.HashMap.isEmpty()"));
-      Assert.assertTrue(methods.contains("public java.lang.Object java.util.HashMap.get(java.lang.Object)"));
-      Assert.assertTrue(methods.contains("public boolean java.util.HashMap.containsKey(java.lang.Object)"));
-      Assert.assertTrue(methods
-         .contains("public java.lang.Object java.util.HashMap.put(java.lang.Object, java.lang.Object)"));
-      Assert.assertTrue(methods.contains("public void java.util.HashMap.putAll(java.util.Map)"));
-      Assert.assertTrue(methods.contains("public java.lang.Object java.util.HashMap.remove(java.lang.Object)"));
-      Assert.assertTrue(methods.contains("public void java.util.HashMap.clear()"));
-      Assert.assertTrue(methods.contains("public boolean java.util.HashMap.containsValue(java.lang.Object)"));
-      Assert.assertTrue(methods.contains("public java.lang.Object java.util.HashMap.clone()"));
-      Assert.assertTrue(methods.contains("public java.util.Set java.util.HashMap.keySet()"));
-      Assert.assertTrue(methods.contains("public java.util.Collection java.util.HashMap.values()"));
-      Assert.assertTrue(methods.contains("public java.util.Set java.util.HashMap.entrySet()"));
-      Assert.assertTrue(methods.contains("public boolean java.util.AbstractMap.equals(java.lang.Object)"));
-      Assert.assertTrue(methods.contains("public int java.util.AbstractMap.hashCode()"));
-      Assert.assertTrue(methods.contains("public java.lang.String java.util.AbstractMap.toString()"));
-      Assert.assertTrue(methods.contains("public final native java.lang.Class java.lang.Object.getClass()"));
-      Assert.assertTrue(methods.contains("public final native void java.lang.Object.notify()"));
-      Assert.assertTrue(methods.contains("public final native void java.lang.Object.notifyAll()"));
-      Assert.assertTrue(methods.contains("public final native void java.lang.Object.wait(long)"
+      assertEquals(22, methods.size());
+      assertTrue(methods.contains("public int java.util.HashMap.size()"));
+      assertTrue(methods.contains("public boolean java.util.HashMap.isEmpty()"));
+      assertTrue(methods.contains("public java.lang.Object java.util.HashMap.get(java.lang.Object)"));
+      assertTrue(methods.contains("public boolean java.util.HashMap.containsKey(java.lang.Object)"));
+      assertTrue(methods.contains("public java.lang.Object java.util.HashMap.put(java.lang.Object, java.lang.Object)"));
+      assertTrue(methods.contains("public void java.util.HashMap.putAll(java.util.Map)"));
+      assertTrue(methods.contains("public java.lang.Object java.util.HashMap.remove(java.lang.Object)"));
+      assertTrue(methods.contains("public void java.util.HashMap.clear()"));
+      assertTrue(methods.contains("public boolean java.util.HashMap.containsValue(java.lang.Object)"));
+      assertTrue(methods.contains("public java.lang.Object java.util.HashMap.clone()"));
+      assertTrue(methods.contains("public java.util.Set java.util.HashMap.keySet()"));
+      assertTrue(methods.contains("public java.util.Collection java.util.HashMap.values()"));
+      assertTrue(methods.contains("public java.util.Set java.util.HashMap.entrySet()"));
+      assertTrue(methods.contains("public boolean java.util.AbstractMap.equals(java.lang.Object)"));
+      assertTrue(methods.contains("public int java.util.AbstractMap.hashCode()"));
+      assertTrue(methods.contains("public java.lang.String java.util.AbstractMap.toString()"));
+      assertTrue(methods.contains("public final native java.lang.Class java.lang.Object.getClass()"));
+      assertTrue(methods.contains("public final native void java.lang.Object.notify()"));
+      assertTrue(methods.contains("public final native void java.lang.Object.notifyAll()"));
+      assertTrue(methods.contains("public final native void java.lang.Object.wait(long)"
          + " throws java.lang.InterruptedException"));
-      Assert.assertTrue(methods.contains("public final void java.lang.Object.wait(long, int)"
+      assertTrue(methods.contains("public final void java.lang.Object.wait(long, int)"
          + " throws java.lang.InterruptedException"));
-      Assert.assertTrue(methods.contains("public final void java.lang.Object.wait()"
+      assertTrue(methods.contains("public final void java.lang.Object.wait()"
          + " throws java.lang.InterruptedException"));
    }
 
