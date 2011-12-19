@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
-import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
 
 import java.util.List;
 
@@ -29,9 +29,9 @@ public class LuceneCachedTypeInfoResolver extends CachedTypeInfoResolver
 
    private final LuceneTypeInfoWriter writer;
 
-   public LuceneCachedTypeInfoResolver(CodeAssistantStorage storage, LuceneTypeInfoWriter writer)
+   public LuceneCachedTypeInfoResolver(LuceneTypeInfoSearcher searcher, LuceneTypeInfoWriter writer)
    {
-      super(storage);
+      super(searcher);
       this.writer = writer;
    }
 

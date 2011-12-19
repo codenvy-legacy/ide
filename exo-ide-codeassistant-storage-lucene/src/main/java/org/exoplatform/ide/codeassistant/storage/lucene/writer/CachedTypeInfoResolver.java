@@ -19,11 +19,12 @@
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.Member;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -34,13 +35,15 @@ import java.util.Set;
 public abstract class CachedTypeInfoResolver
 {
 
-   protected final CodeAssistantStorage storage;
+   //protected final CodeAssistantStorage storage;
 
    protected final Set<String> resolvedTypes;
 
-   public CachedTypeInfoResolver(CodeAssistantStorage storage)
+   private final LuceneTypeInfoSearcher searcher;
+
+   public CachedTypeInfoResolver(LuceneTypeInfoSearcher searcher)
    {
-      this.storage = storage;
+      this.searcher = searcher;
       this.resolvedTypes = new HashSet<String>();
    }
 
@@ -48,7 +51,7 @@ public abstract class CachedTypeInfoResolver
 
    public TypeInfo resolveTypeInfo(String fqn) throws CodeAssistantException
    {
-      TypeInfo typeInfo = storage.getTypeByFqn(fqn);
+      TypeInfo typeInfo = searcher.searchDocumentByTerm(TypeInfoIndexFields.FQN, fqn);
       if (typeInfo != null)
       {
          return resolveTypeInfo(typeInfo);

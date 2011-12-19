@@ -25,7 +25,6 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneCachedTypeInfoResolver;
@@ -47,6 +46,8 @@ public class TestLuceneCachedTypeInfoResolver
 
    private static CodeAssistantStorage storage;
 
+   private static LuceneTypeInfoSearcher searcher;
+
    private final static String PATH_TO_INDEX = "target/index3";
 
    private final static String PATH_TO_RT = System.getProperty("java.home") + "/lib/rt.jar";
@@ -61,14 +62,14 @@ public class TestLuceneCachedTypeInfoResolver
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_RT));
       writer.addTypeInfo(typeInfos);
 
-      storage = new LuceneCodeAssistantStorage(new LuceneTypeInfoSearcher(IndexReader.open(indexDirectory, true)));
+      searcher = new LuceneTypeInfoSearcher(IndexReader.open(indexDirectory, true));
    }
 
    @Ignore
    @Test
    public void testCachedTypeInfoResolver() throws CodeAssistantException
    {
-      LuceneCachedTypeInfoResolver resolver = new LuceneCachedTypeInfoResolver(storage, null);
+      LuceneCachedTypeInfoResolver resolver = new LuceneCachedTypeInfoResolver(searcher, null);
       TypeInfo testClass = storage.getTypeByFqn("java.util.HashMap");
       testClass = resolver.resolveTypeInfo(testClass);
       Set<String> methods = new HashSet<String>();
