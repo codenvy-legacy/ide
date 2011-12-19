@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.client.operation.search;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -38,14 +38,15 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
  * @version $Id:   $
  *
  */
-public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display
+public class SearchFilesView extends ViewImpl implements
+   org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display
 {
-   
+
    private static final String ID = "ideSearchView";
 
    private static final int WIDTH = 470;
 
-   private static final int HEIGHT = 220;
+   private static final int HEIGHT = 210;
 
    private static final String ID_SEARCH_BUTTON = "ideSearchFormSearchButton";
 
@@ -57,31 +58,28 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
 
    private static final String PATH_FIELD = "ideSearchFormPathField";
 
-   private static final String ID_DYNAMIC_FORM = "ideSearchFormDynamicForm";
+   @UiField
+   TextInput contentField;
 
-   private static final int BUTTON_HEIGHT = 22;
+   @UiField
+   TextInput pathField;
 
-   private static final String FIELD_WIDTH = "300px";
+   @UiField
+   ImageButton searchButton;
 
-   private static final String FIELD_HEIGHT = "18px";
+   @UiField
+   ImageButton cancelButton;
 
-   private TextInput contentField;
+   @UiField
+   ComboBoxField mimeTypesField;
 
-   private TextInput pathField;
-
-   private ImageButton searchButton;
-
-   private ImageButton cancelButton;
-
-   private ComboBoxField mimeTypesField;
-   
    private static final String TITLE = IDE.NAVIGATION_CONSTANT.searchFilesTitle();
-   
-   private static final String PATH = IDE.NAVIGATION_CONSTANT.searchFilesPath();
-   
-   private static final String CONTAINING_TEXT = IDE.NAVIGATION_CONSTANT.searchFilesContainingText();
-   
-   private static final String MIME_TYPE = IDE.NAVIGATION_CONSTANT.searchFilesMimeType();
+
+   private static SearchFilesViewUiBinder uiBinder = GWT.create(SearchFilesViewUiBinder.class);
+
+   interface SearchFilesViewUiBinder extends UiBinder<Widget, SearchFilesView>
+   {
+   }
 
    /**
     * {@inheritDoc}
@@ -112,79 +110,13 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
 
-      VerticalPanel mainLayout = new VerticalPanel();
-      mainLayout.setHeight("100%");
-      mainLayout.setWidth("100%");
-      mainLayout.setSpacing(20);
-      mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
+      add(uiBinder.createAndBindUi(this));
 
-      mainLayout.add(createSearchForm());
-      mainLayout.add(createButtonsLayout());
-
-      add(mainLayout);
-
-      UIHelper.setAsReadOnly(pathField.getName());
-   }
-
-   private VerticalPanel createSearchForm()
-   {
-      VerticalPanel paramForm = new VerticalPanel();
-      paramForm.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
-      paramForm.getElement().setId(ID_DYNAMIC_FORM);
-      paramForm.setSpacing(3);
-
-      pathField = createValueField(PATH, PATH_FIELD);
-
-      contentField = createValueField(CONTAINING_TEXT, CONTENT_FIELD);
-
-      HorizontalPanel mimeTypeHorizotalPanel = new HorizontalPanel();
-      Label mimeTypeLabel = new Label(MIME_TYPE);
-      mimeTypeHorizotalPanel.add(mimeTypeLabel);
-      mimeTypesField = createSelectField(MIME_TYPE_FIELD);
-      mimeTypeHorizotalPanel.add(mimeTypesField);
-
-      paramForm.add(pathField);
-      paramForm.add(contentField);
-      paramForm.add(mimeTypeHorizotalPanel);
-
-      return paramForm;
-   }
-
-   private TextInput createValueField(String title, String id)
-   {
-      TextInput textField = new TextInput();
-      textField.setName(id);
-      textField.setTitle(title);
-      textField.setHeight(FIELD_HEIGHT);
-      textField.setWidth(FIELD_WIDTH);
-      return textField;
-   }
-
-   private ComboBoxField createSelectField(String id)
-   {
-      ComboBoxField comboboxField = new ComboBoxField();
-      comboboxField.setName(id);
-      comboboxField.setWidth(FIELD_WIDTH);
-      comboboxField.setHeight(22);
-      return comboboxField;
-   }
-
-   private HorizontalPanel createButtonsLayout()
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
-      buttonsLayout.setSpacing(5);
-
-      searchButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.searchButton(), "search");
+      pathField.setName(PATH_FIELD);
+      contentField.setName(CONTENT_FIELD);
+      mimeTypesField.setName(MIME_TYPE_FIELD);
       searchButton.setId(ID_SEARCH_BUTTON);
-      
-      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), "cancel");
       cancelButton.setId(ID_CANCEL_BUTTON);
-
-      buttonsLayout.add(searchButton);
-      buttonsLayout.add(cancelButton);
-
-      return buttonsLayout;
    }
 
    /**

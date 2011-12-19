@@ -211,5 +211,8 @@
       <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
    </replace-with>
    
+   <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
+      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display" />
+   </replace-with>
 
 </module>

@@ -1,0 +1,82 @@
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
+   <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.client.messages.IdeNavigationLocalizationConstant"></ui:with>
+   <ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .center {
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .left {
+      	float: left;
+      }
+      
+      .right {
+      	float: right;
+      }
+      
+      .labelH {
+      	margin-right: 5px;
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	float: left;
+      }
+      
+      .textinput {
+      	background-color: #FFFFFF !important;
+      	color: #000000 !important;
+      }
+   </ui:style>
+
+   <c:Border margin="20" borderColor="transparent">
+      <c:layer top="0" bottom="30">
+         <g:FlowPanel>
+            <g:FlowPanel width="100%" height="28px">
+               <g:Label text="{locale.searchFilesPath}" addStyleNames="{style.labelH}" width="27%"></g:Label>
+               <c:TextInput ui:field="pathField" width="71%" height="22px" enabled="false" addStyleNames="{style.textinput} {style.left}"></c:TextInput>
+            </g:FlowPanel>
+            <g:FlowPanel width="100%" height="28px">
+               <g:Label text="{locale.searchFilesContainingText}" addStyleNames="{style.labelH}" width="27%"></g:Label>
+               <c:TextInput ui:field="contentField" width="71%" height="22px" addStyleNames="{style.left}"></c:TextInput>
+            </g:FlowPanel>
+            <g:FlowPanel width="100%" height="28px">
+               <g:Label text="{locale.searchFilesMimeType}" addStyleNames="{style.labelH}" width="27%"></g:Label>
+               <c:ComboBoxField ui:field="mimeTypesField" width="71%" addStyleNames="{style.left}"></c:ComboBoxField>
+            </g:FlowPanel>
+         </g:FlowPanel>
+      </c:layer>
+      <c:layer height="22px" bottom="0">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <c:ImageButton ui:field="searchButton" width="90px" height="22" text="{ideLocale.searchButton}" imageResource="{resource.search}"
+               disabledImageResource="{resource.searchDisabled}" addStyleNames="{style.left}"></c:ImageButton>
+            <g:FlowPanel width="5px" height="22px" addStyleNames="{style.left}"></g:FlowPanel>
+            <c:ImageButton ui:field="cancelButton" width="90px" height="22" text="{ideLocale.cancelButton}" imageResource="{resource.cancel}"
+               disabledImageResource="{resource.cancelDisabled}" addStyleNames="{style.left}"></c:ImageButton>
+         </g:FlowPanel>
+
+      </c:layer>
+   </c:Border>
+</ui:UiBinder>

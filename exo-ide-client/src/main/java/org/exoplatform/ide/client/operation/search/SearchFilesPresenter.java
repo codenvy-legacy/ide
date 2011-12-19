@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -114,26 +115,17 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
    private void setPath()
    {
-      //TODO
-      //      String path;
-      //      if (selectedItems.size() == 0)
-      //      {
-      //         path = "/";
-      //      }
-      //      else
-      //      {
-      //         Item selectedItem = selectedItems.get(0);
-      //
-      //         String href = selectedItem.getHref();
-      //         if (selectedItem instanceof File)
-      //         {
-      //            href = href.substring(0, href.lastIndexOf("/") + 1);
-      //         }
-      //
-      //         path = href.substring(entryPoint.length() - 1);
-      //      }
-      //
-      //      display.getPathItem().setValue(path);
+      if (selectedItems.size() > 0)
+      {
+         Item selectedItem = selectedItems.get(0);
+
+         String path = selectedItem.getPath();
+         if (selectedItem instanceof FileModel && ((FileModel)selectedItem).getParent() != null)
+         {
+            path = ((FileModel)selectedItem).getParent().getPath();
+         }
+         display.getPathItem().setValue(path);
+      }
    }
 
    private void doSearch()
