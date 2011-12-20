@@ -23,20 +23,18 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
-
 
 /**
  * View for displaying application's logs.
@@ -69,14 +67,11 @@ public class LogsView extends ViewImpl implements LogsPresenter.Display
    @UiField
    Toolbar toolbar;
 
-   @UiField
-   FlowPanel basePanel;
-
    /**
     * Field for max number of logs to be shown.
     */
    @UiField
-   TextField logLinesField;
+   TextInput logLinesField;
 
    /**
     * Get logs button.
@@ -88,7 +83,9 @@ public class LogsView extends ViewImpl implements LogsPresenter.Display
       super(ID, ViewType.OPERATION, HerokuExtension.LOCALIZATION_CONSTANT.logsViewTitle(), new Image(
          HerokuClientBundle.INSTANCE.logs()));
       add(uiBinder.createAndBindUi(this));
-
+      
+      
+      logLinesField.setName(LOG_LINES_FIELD_ID);
       getLogButton =
          new IconButton(new Image(HerokuClientBundle.INSTANCE.getLogs()), new Image(
             HerokuClientBundle.INSTANCE.getLogsDisabled()));
@@ -139,6 +136,6 @@ public class LogsView extends ViewImpl implements LogsPresenter.Display
    @Override
    public void focusInLogLinesField()
    {
-      logLinesField.focusInItem();
+      logLinesField.setFocus(true);
    }
 }
