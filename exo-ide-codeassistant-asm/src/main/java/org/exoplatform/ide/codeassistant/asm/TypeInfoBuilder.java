@@ -58,7 +58,7 @@ public class TypeInfoBuilder extends MemberInfoBuilder
       }
       else
       {
-         this.superName = null;
+         this.superName = "";
       }
       this.interfaces = interfaces;
       for (int i = 0; i < interfaces.length; i++)
