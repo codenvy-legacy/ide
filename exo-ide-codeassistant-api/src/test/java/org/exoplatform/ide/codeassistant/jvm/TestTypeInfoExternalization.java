@@ -22,7 +22,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -82,46 +81,72 @@ public class TestTypeInfoExternalization extends BaseTest
       assertArrayEquals(serializedTypeInfo.getInterfaces(), deserializedTypeInfo.getInterfaces());
    }
 
-   @Ignore
    @Test
    public void testConstructorsDeserialization()
    {
-      assertArrayEquals(serializedTypeInfo.getConstructors(), deserializedTypeInfo.getConstructors());
+      RoutineInfo[] serializedConstructors = serializedTypeInfo.getConstructors();
+      RoutineInfo[] deserializedConstructors = deserializedTypeInfo.getConstructors();
+
+      assertEquals(serializedConstructors.length, deserializedConstructors.length);
+      assertEquals(1, deserializedConstructors.length);
+      assertEquals(serializedConstructors[0].getName(), deserializedConstructors[0].getName());
    }
 
-   @Ignore
    @Test
    public void testDeclaredConstructorsDeserialization()
    {
-      assertArrayEquals(serializedTypeInfo.getDeclaredConstructors(), deserializedTypeInfo.getDeclaredConstructors());
+      RoutineInfo[] serializedConstructors = serializedTypeInfo.getDeclaredConstructors();
+      RoutineInfo[] deserializedConstructors = deserializedTypeInfo.getDeclaredConstructors();
+
+      assertEquals(serializedConstructors.length, deserializedConstructors.length);
+      assertEquals(2, deserializedConstructors.length);
+      assertEquals(serializedConstructors[0].getName(), deserializedConstructors[0].getName());
+      assertEquals(serializedConstructors[1].getName(), deserializedConstructors[1].getName());
    }
 
-   @Ignore
    @Test
    public void testMethodsDeserialization()
    {
-      assertArrayEquals(serializedTypeInfo.getMethods(), deserializedTypeInfo.getMethods());
+      MethodInfo[] serializedMethods = serializedTypeInfo.getMethods();
+      MethodInfo[] deserializedMethods = deserializedTypeInfo.getMethods();
+
+      assertEquals(serializedMethods.length, deserializedMethods.length);
+      assertEquals(1, deserializedMethods.length);
+      assertEquals(serializedMethods[0].getName(), deserializedMethods[0].getName());
    }
 
-   @Ignore
    @Test
    public void testDeclaredMethodsDeserialization()
    {
-      assertArrayEquals(serializedTypeInfo.getDeclaredMethods(), deserializedTypeInfo.getDeclaredMethods());
+      MethodInfo[] serializedMethods = serializedTypeInfo.getDeclaredMethods();
+      MethodInfo[] deserializedMethods = deserializedTypeInfo.getDeclaredMethods();
+
+      assertEquals(serializedMethods.length, deserializedMethods.length);
+      assertEquals(2, deserializedMethods.length);
+      assertEquals(serializedMethods[0].getName(), deserializedMethods[0].getName());
+      assertEquals(serializedMethods[1].getName(), deserializedMethods[1].getName());
    }
 
-   @Ignore
    @Test
    public void testFieldsDeserialization()
    {
-      assertArrayEquals(serializedTypeInfo.getFields(), deserializedTypeInfo.getFields());
+      FieldInfo[] serializedFields = serializedTypeInfo.getFields();
+      FieldInfo[] deserializedFields = deserializedTypeInfo.getFields();
+
+      assertEquals(serializedFields.length, deserializedFields.length);
+      assertEquals(1, deserializedFields.length);
+      assertEquals(serializedFields[0].getName(), deserializedFields[0].getName());
    }
 
-   @Ignore
    @Test
    public void testDeclaredFieldsDeserialization()
    {
-      assertArrayEquals(serializedTypeInfo.getDeclaredFields(), deserializedTypeInfo.getDeclaredFields());
+      FieldInfo[] serializedFields = serializedTypeInfo.getDeclaredFields();
+      FieldInfo[] deserializedFields = deserializedTypeInfo.getDeclaredFields();
+
+      assertEquals(serializedFields.length, deserializedFields.length);
+      assertEquals(serializedFields[0].getName(), deserializedFields[0].getName());
+      assertEquals(serializedFields[1].getName(), deserializedFields[1].getName());
    }
 
    private TypeInfo generateTypeInfo()
