@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import static org.junit.Assert.assertEquals;
+
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Modifier;
@@ -42,8 +43,8 @@ public class TestFieldInfoBuilder
          new FieldInfoBuilder(Modifier.PUBLIC | Modifier.FINAL, name, desc, declaredClass);
       FieldInfo fieldInfo = fieldInfoBuilder.buildFieldInfo();
 
-      Assert.assertEquals(fieldInfo.getModifiers(), Integer.valueOf(Modifier.PUBLIC | Modifier.FINAL));
-      Assert.assertEquals("public final", fieldInfo.modifierToString());
+      assertEquals(fieldInfo.getModifiers(), Integer.valueOf(Modifier.PUBLIC | Modifier.FINAL));
+      assertEquals("public final", fieldInfo.modifierToString());
    }
 
    @Test
@@ -52,7 +53,7 @@ public class TestFieldInfoBuilder
       FieldInfoBuilder fieldInfoBuilder = new FieldInfoBuilder(access, "Field1", desc, declaredClass);
       FieldInfo fieldInfo = fieldInfoBuilder.buildFieldInfo();
 
-      Assert.assertEquals("Field1", fieldInfo.getName());
+      assertEquals("Field1", fieldInfo.getName());
    }
 
    @Test
@@ -61,7 +62,7 @@ public class TestFieldInfoBuilder
       FieldInfoBuilder fieldInfoBuilder = new FieldInfoBuilder(access, name, "Z", declaredClass);
       FieldInfo fieldInfo = fieldInfoBuilder.buildFieldInfo();
 
-      Assert.assertEquals("boolean", fieldInfo.getType());
+      assertEquals("boolean", fieldInfo.getType());
    }
 
    @Test
@@ -70,7 +71,7 @@ public class TestFieldInfoBuilder
       FieldInfoBuilder fieldInfoBuilder = new FieldInfoBuilder(access, name, "[[D", declaredClass);
       FieldInfo fieldInfo = fieldInfoBuilder.buildFieldInfo();
 
-      Assert.assertEquals("double[][]", fieldInfo.getType());
+      assertEquals("double[][]", fieldInfo.getType());
    }
 
    @Test
@@ -79,7 +80,7 @@ public class TestFieldInfoBuilder
       FieldInfoBuilder fieldInfoBuilder = new FieldInfoBuilder(access, name, "Ljava/lang/String;", declaredClass);
       FieldInfo fieldInfo = fieldInfoBuilder.buildFieldInfo();
 
-      Assert.assertEquals("java.lang.String", fieldInfo.getType());
+      assertEquals("java.lang.String", fieldInfo.getType());
    }
 
    @Test
@@ -88,7 +89,7 @@ public class TestFieldInfoBuilder
       FieldInfoBuilder fieldInfoBuilder = new FieldInfoBuilder(access, name, desc, "org.exoplatform.test.TestClass");
       FieldInfo fieldInfo = fieldInfoBuilder.buildFieldInfo();
 
-      Assert.assertEquals("org.exoplatform.test.TestClass", fieldInfo.getDeclaringClass());
+      assertEquals("org.exoplatform.test.TestClass", fieldInfo.getDeclaringClass());
    }
 
 }

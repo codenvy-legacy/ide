@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,21 +38,6 @@ public class TestClassParser extends BaseTest
 
    private static final String PACKAGE = "org.exoplatform.ide.codeassistant.asm.testclasses";
 
-   @BeforeClass
-   public static void createTypeInfo() throws Exception
-   {
-      /*
-      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestAnnotation.java");
-      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestEnum.java");
-      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface.java");
-      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestInterface2.java");
-      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestSuper.java");
-      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestClass.java");
-      generateClassFile("src/test/resources/testclasses/org/exoplatform/ide/codeassistant/asm/testclasses/NoTestGeneric.java");
-      generateJarFile("testClassParser.jar");
-      */
-   }
-
    @Test
    public void testTestGeneric() throws IOException, ClassNotFoundException
    {
@@ -62,22 +48,22 @@ public class TestClassParser extends BaseTest
       TypeInfo annotationTest = ClassParser.parse(getClassFileAsStream(PACKAGE + ".NoTestGeneric"));
 
       ShortTypeInfo shortTypeInfo = annotationTest;
-      Assert.assertEquals("NoTestGeneric", shortTypeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestGeneric", shortTypeInfo.getQualifiedName());
-      Assert.assertEquals("CLASS", shortTypeInfo.getType());
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), shortTypeInfo.getModifiers());
+      assertEquals("NoTestGeneric", shortTypeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestGeneric", shortTypeInfo.getQualifiedName());
+      assertEquals("CLASS", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = annotationTest;
-      Assert.assertEquals("NoTestGeneric", typeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestGeneric", typeInfo.getQualifiedName());
-      Assert.assertEquals("CLASS", typeInfo.getType());
-      Assert.assertEquals("java.lang.Object", typeInfo.getSuperClass());
-      Assert.assertEquals(0, typeInfo.getInterfaces().length);
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), typeInfo.getModifiers());
+      assertEquals("NoTestGeneric", typeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestGeneric", typeInfo.getQualifiedName());
+      assertEquals("CLASS", typeInfo.getType());
+      assertEquals("java.lang.Object", typeInfo.getSuperClass());
+      assertEquals(0, typeInfo.getInterfaces().length);
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), typeInfo.getModifiers());
 
       // fields
       FieldInfo[] fields = typeInfo.getDeclaredFields();
-      Assert.assertEquals(1, fields.length);
+      assertEquals(1, fields.length);
       Set<String> visitedFields = new HashSet<String>();
       for (FieldInfo field : fields)
       {
@@ -87,11 +73,11 @@ public class TestClassParser extends BaseTest
             visitedFields.add(field.getName());
          }
       }
-      Assert.assertEquals(fields.length, visitedFields.size());
+      assertEquals(fields.length, visitedFields.size());
 
       // constructors
       RoutineInfo[] constructors = typeInfo.getDeclaredConstructors();
-      Assert.assertEquals(1, constructors.length);
+      assertEquals(1, constructors.length);
       Set<String> visitedConstructors = new HashSet<String>();
       for (RoutineInfo constructor : constructors)
       {
@@ -103,14 +89,14 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
+            fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(constructors.length, visitedConstructors.size());
+      assertEquals(constructors.length, visitedConstructors.size());
 
       // methods
       MethodInfo[] methods = typeInfo.getDeclaredMethods();
-      Assert.assertEquals(6, methods.length);
+      assertEquals(6, methods.length);
       Set<String> visitedMethods = new HashSet<String>();
       for (MethodInfo method : methods)
       {
@@ -173,7 +159,7 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+            fail("Method with name " + method.getName() + method.getParameterTypes()
                + ", not found in expected classes.");
          }
       }
@@ -185,27 +171,27 @@ public class TestClassParser extends BaseTest
       TypeInfo annotationTest = ClassParser.parse(getClassFileAsStream(PACKAGE + ".NoTestAnnotation"));
 
       ShortTypeInfo shortTypeInfo = annotationTest;
-      Assert.assertEquals("NoTestAnnotation", shortTypeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestAnnotation", shortTypeInfo.getQualifiedName());
-      Assert.assertEquals("ANNOTATION", shortTypeInfo.getType());
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE
+      assertEquals("NoTestAnnotation", shortTypeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestAnnotation", shortTypeInfo.getQualifiedName());
+      assertEquals("ANNOTATION", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE
          | TypeInfoBuilder.MODIFIER_ANNOTATION), shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = annotationTest;
-      Assert.assertEquals("NoTestAnnotation", typeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestAnnotation", typeInfo.getQualifiedName());
-      Assert.assertEquals("ANNOTATION", typeInfo.getType());
-      Assert.assertEquals("java.lang.Object", typeInfo.getSuperClass());
-      Assert.assertEquals(1, typeInfo.getInterfaces().length);
-      Assert.assertEquals("java.lang.annotation.Annotation", typeInfo.getInterfaces()[0]);
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE
+      assertEquals("NoTestAnnotation", typeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestAnnotation", typeInfo.getQualifiedName());
+      assertEquals("ANNOTATION", typeInfo.getType());
+      assertEquals("java.lang.Object", typeInfo.getSuperClass());
+      assertEquals(1, typeInfo.getInterfaces().length);
+      assertEquals("java.lang.annotation.Annotation", typeInfo.getInterfaces()[0]);
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE
          | TypeInfoBuilder.MODIFIER_ANNOTATION), typeInfo.getModifiers());
 
-      Assert.assertEquals(0, typeInfo.getFields().length);
-      Assert.assertEquals(0, typeInfo.getConstructors().length);
+      assertEquals(0, typeInfo.getFields().length);
+      assertEquals(0, typeInfo.getConstructors().length);
       // methods
       MethodInfo[] methods = typeInfo.getDeclaredMethods();
-      Assert.assertEquals(3, methods.length);
+      assertEquals(3, methods.length);
       Set<String> visitedMethods = new HashSet<String>();
       for (MethodInfo method : methods)
       {
@@ -233,11 +219,11 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+            fail("Method with name " + method.getName() + method.getParameterTypes()
                + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(methods.length, visitedMethods.size());
+      assertEquals(methods.length, visitedMethods.size());
 
    }
 
@@ -247,24 +233,24 @@ public class TestClassParser extends BaseTest
       TypeInfo testClass = ClassParser.parse(getClassFileAsStream(PACKAGE + ".NoTestClass"));
 
       ShortTypeInfo shortTypeInfo = testClass;
-      Assert.assertEquals("NoTestClass", shortTypeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestClass", shortTypeInfo.getQualifiedName());
-      Assert.assertEquals("CLASS", shortTypeInfo.getType());
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), shortTypeInfo.getModifiers());
+      assertEquals("NoTestClass", shortTypeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestClass", shortTypeInfo.getQualifiedName());
+      assertEquals("CLASS", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testClass;
-      Assert.assertEquals("NoTestClass", typeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestClass", typeInfo.getQualifiedName());
-      Assert.assertEquals("CLASS", typeInfo.getType());
-      Assert.assertEquals(PACKAGE + ".NoTestSuper", typeInfo.getSuperClass());
-      Assert.assertEquals(2, typeInfo.getInterfaces().length);
-      Assert.assertEquals(PACKAGE + ".NoTestInterface", typeInfo.getInterfaces()[0]);
-      Assert.assertEquals(PACKAGE + ".NoTestInterface2", typeInfo.getInterfaces()[1]);
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), typeInfo.getModifiers());
+      assertEquals("NoTestClass", typeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestClass", typeInfo.getQualifiedName());
+      assertEquals("CLASS", typeInfo.getType());
+      assertEquals(PACKAGE + ".NoTestSuper", typeInfo.getSuperClass());
+      assertEquals(2, typeInfo.getInterfaces().length);
+      assertEquals(PACKAGE + ".NoTestInterface", typeInfo.getInterfaces()[0]);
+      assertEquals(PACKAGE + ".NoTestInterface2", typeInfo.getInterfaces()[1]);
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), typeInfo.getModifiers());
 
       // fields
       FieldInfo[] fields = typeInfo.getDeclaredFields();
-      Assert.assertEquals(4, fields.length);
+      assertEquals(4, fields.length);
       Set<String> visitedFields = new HashSet<String>();
       for (FieldInfo field : fields)
       {
@@ -291,14 +277,14 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Field with name " + field.getName() + ", not found in expected classes.");
+            fail("Field with name " + field.getName() + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(fields.length, visitedFields.size());
+      assertEquals(fields.length, visitedFields.size());
 
       // constructors
       RoutineInfo[] constructors = typeInfo.getDeclaredConstructors();
-      Assert.assertEquals(1, constructors.length);
+      assertEquals(1, constructors.length);
       Set<String> visitedConstructors = new HashSet<String>();
       for (RoutineInfo constructor : constructors)
       {
@@ -312,14 +298,14 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
+            fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(constructors.length, visitedConstructors.size());
+      assertEquals(constructors.length, visitedConstructors.size());
 
       // methods
       MethodInfo[] methods = typeInfo.getDeclaredMethods();
-      Assert.assertEquals(5, methods.length);
+      assertEquals(5, methods.length);
       Set<String> visitedMethods = new HashSet<String>();
       for (MethodInfo method : methods)
       {
@@ -367,11 +353,11 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+            fail("Method with name " + method.getName() + method.getParameterTypes()
                + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(methods.length, visitedMethods.size());
+      assertEquals(methods.length, visitedMethods.size());
    }
 
    @Test
@@ -380,27 +366,27 @@ public class TestClassParser extends BaseTest
       TypeInfo testEnum = ClassParser.parse(getClassFileAsStream(PACKAGE + ".NoTestEnum"));
 
       ShortTypeInfo shortTypeInfo = testEnum;
-      Assert.assertEquals("NoTestEnum", shortTypeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestEnum", shortTypeInfo.getQualifiedName());
-      Assert.assertEquals("ENUM", shortTypeInfo.getType());
+      assertEquals("NoTestEnum", shortTypeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestEnum", shortTypeInfo.getQualifiedName());
+      assertEquals("ENUM", shortTypeInfo.getType());
 
-      Assert.assertEquals(
+      assertEquals(
          Integer.valueOf(Modifier.SYNCHRONIZED | Modifier.FINAL | TypeInfoBuilder.MODIFIER_ENUM | Modifier.PUBLIC),
          shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testEnum;
-      Assert.assertEquals("NoTestEnum", typeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestEnum", typeInfo.getQualifiedName());
-      Assert.assertEquals("ENUM", typeInfo.getType());
-      Assert.assertEquals("java.lang.Enum", typeInfo.getSuperClass());
-      Assert.assertEquals(0, typeInfo.getInterfaces().length);
-      Assert.assertEquals(
+      assertEquals("NoTestEnum", typeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestEnum", typeInfo.getQualifiedName());
+      assertEquals("ENUM", typeInfo.getType());
+      assertEquals("java.lang.Enum", typeInfo.getSuperClass());
+      assertEquals(0, typeInfo.getInterfaces().length);
+      assertEquals(
          Integer.valueOf(Modifier.SYNCHRONIZED | Modifier.FINAL | TypeInfoBuilder.MODIFIER_ENUM | Modifier.PUBLIC),
          typeInfo.getModifiers());
 
       // fields
       FieldInfo[] fields = typeInfo.getDeclaredFields();
-      Assert.assertEquals(4, fields.length);
+      assertEquals(4, fields.length);
       Set<String> visitedFields = new HashSet<String>();
       for (FieldInfo field : fields)
       {
@@ -430,14 +416,14 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Field with name " + field.getName() + ", not found in expected classes.");
+            fail("Field with name " + field.getName() + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(fields.length, visitedFields.size());
+      assertEquals(fields.length, visitedFields.size());
 
       // constructors
       RoutineInfo[] constructors = typeInfo.getDeclaredConstructors();
-      Assert.assertEquals(1, constructors.length);
+      assertEquals(1, constructors.length);
       Set<String> visitedConstructors = new HashSet<String>();
       for (RoutineInfo constructor : constructors)
       {
@@ -449,14 +435,14 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
+            fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(constructors.length, visitedConstructors.size());
+      assertEquals(constructors.length, visitedConstructors.size());
 
       // methods
       MethodInfo[] methods = typeInfo.getDeclaredMethods();
-      Assert.assertEquals(2, methods.length);
+      assertEquals(2, methods.length);
       Set<String> visitedMethods = new HashSet<String>();
       for (MethodInfo method : methods)
       {
@@ -478,11 +464,11 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+            fail("Method with name " + method.getName() + method.getParameterTypes()
                + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(methods.length, visitedMethods.size());
+      assertEquals(methods.length, visitedMethods.size());
    }
 
    @Test
@@ -491,27 +477,26 @@ public class TestClassParser extends BaseTest
       TypeInfo testInterface = ClassParser.parse(getClassFileAsStream(PACKAGE + ".NoTestInterface"));
 
       ShortTypeInfo shortTypeInfo = testInterface;
-      Assert.assertEquals("NoTestInterface", shortTypeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestInterface", shortTypeInfo.getQualifiedName());
-      Assert.assertEquals("INTERFACE", shortTypeInfo.getType());
-      Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
+      assertEquals("NoTestInterface", shortTypeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestInterface", shortTypeInfo.getQualifiedName());
+      assertEquals("INTERFACE", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
          shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testInterface;
-      Assert.assertEquals("NoTestInterface", typeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestInterface", typeInfo.getQualifiedName());
-      Assert.assertEquals("INTERFACE", typeInfo.getType());
-      Assert.assertEquals("java.lang.Object", typeInfo.getSuperClass());
-      Assert.assertEquals(0, typeInfo.getInterfaces().length);
-      Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
-         typeInfo.getModifiers());
+      assertEquals("NoTestInterface", typeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestInterface", typeInfo.getQualifiedName());
+      assertEquals("INTERFACE", typeInfo.getType());
+      assertEquals("java.lang.Object", typeInfo.getSuperClass());
+      assertEquals(0, typeInfo.getInterfaces().length);
+      assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC), typeInfo.getModifiers());
 
-      Assert.assertEquals(0, typeInfo.getFields().length);
-      Assert.assertEquals(0, typeInfo.getConstructors().length);
+      assertEquals(0, typeInfo.getFields().length);
+      assertEquals(0, typeInfo.getConstructors().length);
 
       // methods
       MethodInfo[] methods = typeInfo.getDeclaredMethods();
-      Assert.assertEquals(2, methods.length);
+      assertEquals(2, methods.length);
       Set<String> visitedMethods = new HashSet<String>();
       for (MethodInfo method : methods)
       {
@@ -531,11 +516,11 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+            fail("Method with name " + method.getName() + method.getParameterTypes()
                + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(methods.length, visitedMethods.size());
+      assertEquals(methods.length, visitedMethods.size());
    }
 
    @Test
@@ -544,27 +529,26 @@ public class TestClassParser extends BaseTest
       TypeInfo testInterface2 = ClassParser.parse(getClassFileAsStream(PACKAGE + ".NoTestInterface2"));
 
       ShortTypeInfo shortTypeInfo = testInterface2;
-      Assert.assertEquals("NoTestInterface2", shortTypeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestInterface2", shortTypeInfo.getQualifiedName());
-      Assert.assertEquals("INTERFACE", shortTypeInfo.getType());
-      Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
+      assertEquals("NoTestInterface2", shortTypeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestInterface2", shortTypeInfo.getQualifiedName());
+      assertEquals("INTERFACE", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
          shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testInterface2;
-      Assert.assertEquals("NoTestInterface2", typeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestInterface2", typeInfo.getQualifiedName());
-      Assert.assertEquals("INTERFACE", typeInfo.getType());
-      Assert.assertEquals("java.lang.Object", typeInfo.getSuperClass());
-      Assert.assertEquals(0, typeInfo.getInterfaces().length);
-      Assert.assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
-         typeInfo.getModifiers());
+      assertEquals("NoTestInterface2", typeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestInterface2", typeInfo.getQualifiedName());
+      assertEquals("INTERFACE", typeInfo.getType());
+      assertEquals("java.lang.Object", typeInfo.getSuperClass());
+      assertEquals(0, typeInfo.getInterfaces().length);
+      assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC), typeInfo.getModifiers());
 
-      Assert.assertEquals(0, typeInfo.getFields().length);
-      Assert.assertEquals(0, typeInfo.getConstructors().length);
+      assertEquals(0, typeInfo.getFields().length);
+      assertEquals(0, typeInfo.getConstructors().length);
 
       // methods
       MethodInfo[] methods = typeInfo.getDeclaredMethods();
-      Assert.assertEquals(2, methods.length);
+      assertEquals(2, methods.length);
       Set<String> visitedMethods = new HashSet<String>();
       for (MethodInfo method : methods)
       {
@@ -592,11 +576,11 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+            fail("Method with name " + method.getName() + method.getParameterTypes()
                + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(methods.length, visitedMethods.size());
+      assertEquals(methods.length, visitedMethods.size());
    }
 
    @Test
@@ -605,24 +589,24 @@ public class TestClassParser extends BaseTest
       TypeInfo testSuper = ClassParser.parse(getClassFileAsStream(PACKAGE + ".NoTestSuper"));
 
       ShortTypeInfo shortTypeInfo = testSuper;
-      Assert.assertEquals("NoTestSuper", shortTypeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestSuper", shortTypeInfo.getQualifiedName());
-      Assert.assertEquals("CLASS", shortTypeInfo.getType());
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED),
+      assertEquals("NoTestSuper", shortTypeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestSuper", shortTypeInfo.getQualifiedName());
+      assertEquals("CLASS", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED),
          shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testSuper;
-      Assert.assertEquals("NoTestSuper", typeInfo.getName());
-      Assert.assertEquals(PACKAGE + ".NoTestSuper", typeInfo.getQualifiedName());
-      Assert.assertEquals("CLASS", typeInfo.getType());
-      Assert.assertEquals("java.lang.Object", typeInfo.getSuperClass());
-      Assert.assertEquals(0, typeInfo.getInterfaces().length);
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED),
+      assertEquals("NoTestSuper", typeInfo.getName());
+      assertEquals(PACKAGE + ".NoTestSuper", typeInfo.getQualifiedName());
+      assertEquals("CLASS", typeInfo.getType());
+      assertEquals("java.lang.Object", typeInfo.getSuperClass());
+      assertEquals(0, typeInfo.getInterfaces().length);
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED),
          typeInfo.getModifiers());
 
       // fields
       FieldInfo[] fields = typeInfo.getDeclaredFields();
-      Assert.assertEquals(1, fields.length);
+      assertEquals(1, fields.length);
       Set<String> visitedFields = new HashSet<String>();
       for (FieldInfo field : fields)
       {
@@ -633,14 +617,14 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Field with name " + field.getName() + ", not found in expected classes.");
+            fail("Field with name " + field.getName() + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(fields.length, visitedFields.size());
+      assertEquals(fields.length, visitedFields.size());
 
       // constructors
       RoutineInfo[] constructors = typeInfo.getDeclaredConstructors();
-      Assert.assertEquals(1, constructors.length);
+      assertEquals(1, constructors.length);
       Set<String> visitedConstructors = new HashSet<String>();
       for (RoutineInfo constructor : constructors)
       {
@@ -652,14 +636,14 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
+            fail("Constructor with name " + constructor.getName() + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(constructors.length, visitedConstructors.size());
+      assertEquals(constructors.length, visitedConstructors.size());
 
       // methods
       MethodInfo[] methods = typeInfo.getDeclaredMethods();
-      Assert.assertEquals(5, methods.length);
+      assertEquals(5, methods.length);
       Set<String> visitedMethods = new HashSet<String>();
       for (MethodInfo method : methods)
       {
@@ -705,27 +689,27 @@ public class TestClassParser extends BaseTest
          }
          else
          {
-            Assert.fail("Method with name " + method.getName() + method.getParameterTypes()
+            fail("Method with name " + method.getName() + method.getParameterTypes()
                + ", not found in expected classes.");
          }
       }
-      Assert.assertEquals(methods.length, visitedMethods.size());
+      assertEquals(methods.length, visitedMethods.size());
    }
 
    private void assertRoutine(RoutineInfo routine, String name, String declaredClass, int modifiers,
       String parameterTypes, String genericParameterTypes, String generic, String[] exceptions)
    {
-      Assert.assertEquals(name, routine.getName());
-      Assert.assertEquals(declaredClass, routine.getDeclaringClass());
-      Assert.assertEquals(Integer.valueOf(modifiers), routine.getModifiers());
-      Assert.assertEquals(exceptions.length, routine.getGenericExceptionTypes().length);
+      assertEquals(name, routine.getName());
+      assertEquals(declaredClass, routine.getDeclaringClass());
+      assertEquals(Integer.valueOf(modifiers), routine.getModifiers());
+      assertEquals(exceptions.length, routine.getGenericExceptionTypes().length);
       for (int i = 0; i < exceptions.length; i++)
       {
-         Assert.assertEquals(exceptions[i], routine.getGenericExceptionTypes()[i]);
+         assertEquals(exceptions[i], routine.getGenericExceptionTypes()[i]);
       }
-      Assert.assertEquals(parameterTypes, routine.getParameterTypes());
-      Assert.assertEquals(genericParameterTypes, routine.getGenericParameterTypes());
-      Assert.assertEquals(generic, routine.getGeneric());
+      assertEquals(parameterTypes, routine.getParameterTypes());
+      assertEquals(genericParameterTypes, routine.getGenericParameterTypes());
+      assertEquals(generic, routine.getGeneric());
    }
 
    private void assertMethod(MethodInfo method, String name, String declaredClass, int modifiers,
@@ -733,16 +717,16 @@ public class TestClassParser extends BaseTest
       String genericReturnType)
    {
       assertRoutine(method, name, declaredClass, modifiers, parameterTypes, genericParameterTypes, generic, exceptions);
-      Assert.assertEquals(returnType, method.getReturnType());
-      Assert.assertEquals(genericReturnType, method.getGenericReturnType());
+      assertEquals(returnType, method.getReturnType());
+      assertEquals(genericReturnType, method.getGenericReturnType());
    }
 
    private void assertField(FieldInfo field, String name, String type, int modifiers, String declaredClass)
    {
-      Assert.assertEquals(name, field.getName());
-      Assert.assertEquals(type, field.getType());
-      Assert.assertEquals(Integer.valueOf(modifiers), field.getModifiers());
-      Assert.assertEquals(declaredClass, field.getDeclaringClass());
+      assertEquals(name, field.getName());
+      assertEquals(type, field.getType());
+      assertEquals(Integer.valueOf(modifiers), field.getModifiers());
+      assertEquals(declaredClass, field.getDeclaringClass());
    }
 
 }

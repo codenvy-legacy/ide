@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import static org.junit.Assert.assertEquals;
+
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Modifier;
@@ -42,8 +43,8 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, exceptions, desc, declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), constructorInfo.getModifiers());
-      Assert.assertEquals("public abstract", constructorInfo.modifierToString());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), constructorInfo.getModifiers());
+      assertEquals("public abstract", constructorInfo.modifierToString());
    }
 
    @Test
@@ -54,9 +55,9 @@ public class TestConstructorInfoBuilder
             declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals(2, constructorInfo.getGenericExceptionTypes().length);
-      Assert.assertEquals("java.io.IOException", constructorInfo.getGenericExceptionTypes()[0]);
-      Assert.assertEquals("java.lang.Exception", constructorInfo.getGenericExceptionTypes()[1]);
+      assertEquals(2, constructorInfo.getGenericExceptionTypes().length);
+      assertEquals("java.io.IOException", constructorInfo.getGenericExceptionTypes()[0]);
+      assertEquals("java.lang.Exception", constructorInfo.getGenericExceptionTypes()[1]);
    }
 
    @Test
@@ -66,8 +67,8 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(access, exceptions, "(Z)", declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("(boolean)", constructorInfo.getParameterTypes());
-      Assert.assertEquals("(boolean)", constructorInfo.getGenericParameterTypes());
+      assertEquals("(boolean)", constructorInfo.getParameterTypes());
+      assertEquals("(boolean)", constructorInfo.getGenericParameterTypes());
    }
 
    @Test
@@ -77,8 +78,8 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(access, exceptions, "([Z)", declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("(boolean[])", constructorInfo.getParameterTypes());
-      Assert.assertEquals("(boolean[])", constructorInfo.getGenericParameterTypes());
+      assertEquals("(boolean[])", constructorInfo.getParameterTypes());
+      assertEquals("(boolean[])", constructorInfo.getGenericParameterTypes());
    }
 
    @Test
@@ -88,8 +89,8 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(access, exceptions, "(Z I)", declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("(boolean, int)", constructorInfo.getParameterTypes());
-      Assert.assertEquals("(boolean, int)", constructorInfo.getGenericParameterTypes());
+      assertEquals("(boolean, int)", constructorInfo.getParameterTypes());
+      assertEquals("(boolean, int)", constructorInfo.getGenericParameterTypes());
    }
 
    @Test
@@ -99,8 +100,8 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(access, exceptions, "(Ljava/lang/String; Ljava/lang/Object;)", declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("(String, Object)", constructorInfo.getParameterTypes());
-      Assert.assertEquals("(java.lang.String, java.lang.Object)", constructorInfo.getGenericParameterTypes());
+      assertEquals("(String, Object)", constructorInfo.getParameterTypes());
+      assertEquals("(java.lang.String, java.lang.Object)", constructorInfo.getGenericParameterTypes());
    }
 
    @Test
@@ -110,7 +111,7 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(access, exceptions, desc, "org.exoplatform.test.TestClass");
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("org.exoplatform.test.TestClass", constructorInfo.getDeclaringClass());
+      assertEquals("org.exoplatform.test.TestClass", constructorInfo.getDeclaringClass());
    }
 
    @Test
@@ -120,7 +121,7 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(Modifier.PUBLIC, new String[0], "()", declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("public org.exoplatform.test.TestClass()", constructorInfo.getGeneric());
+      assertEquals("public org.exoplatform.test.TestClass()", constructorInfo.getGeneric());
    }
 
    @Test
@@ -130,7 +131,7 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(Modifier.PROTECTED, new String[0], "(F)", declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("protected org.exoplatform.test.TestClass(float)", constructorInfo.getGeneric());
+      assertEquals("protected org.exoplatform.test.TestClass(float)", constructorInfo.getGeneric());
    }
 
    @Test
@@ -141,7 +142,7 @@ public class TestConstructorInfoBuilder
             declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("public abstract org.exoplatform.test.TestClass(boolean, java.lang.String)",
+      assertEquals("public abstract org.exoplatform.test.TestClass(boolean, java.lang.String)",
          constructorInfo.getGeneric());
    }
 
@@ -153,7 +154,7 @@ public class TestConstructorInfoBuilder
             declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      Assert.assertEquals("public org.exoplatform.test.TestClass() throws java.lang.Exception, java.io.IOException",
+      assertEquals("public org.exoplatform.test.TestClass() throws java.lang.Exception, java.io.IOException",
          constructorInfo.getGeneric());
    }
 

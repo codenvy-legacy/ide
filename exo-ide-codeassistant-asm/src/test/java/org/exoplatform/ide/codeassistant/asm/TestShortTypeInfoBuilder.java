@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import static org.junit.Assert.assertEquals;
+
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Modifier;
@@ -42,8 +43,8 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), shortTypeInfo.getModifiers());
-      Assert.assertEquals("public abstract", shortTypeInfo.modifierToString());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), shortTypeInfo.getModifiers());
+      assertEquals("public abstract", shortTypeInfo.modifierToString());
    }
 
    @Test
@@ -53,8 +54,8 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(access, "org/exoplatform/test/Class", superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      Assert.assertEquals("Class", shortTypeInfo.getName());
-      Assert.assertEquals("org.exoplatform.test.Class", shortTypeInfo.getQualifiedName());
+      assertEquals("Class", shortTypeInfo.getName());
+      assertEquals("org.exoplatform.test.Class", shortTypeInfo.getQualifiedName());
    }
 
    @Test
@@ -63,8 +64,8 @@ public class TestShortTypeInfoBuilder
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(Modifier.PUBLIC, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC), shortTypeInfo.getModifiers());
-      Assert.assertEquals("CLASS", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC), shortTypeInfo.getModifiers());
+      assertEquals("CLASS", shortTypeInfo.getType());
    }
 
    @Test
@@ -74,8 +75,8 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | Modifier.INTERFACE, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.INTERFACE), shortTypeInfo.getModifiers());
-      Assert.assertEquals("INTERFACE", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.INTERFACE), shortTypeInfo.getModifiers());
+      assertEquals("INTERFACE", shortTypeInfo.getType());
    }
 
    @Test
@@ -85,9 +86,8 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION),
-         shortTypeInfo.getModifiers());
-      Assert.assertEquals("ANNOTATION", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION), shortTypeInfo.getModifiers());
+      assertEquals("ANNOTATION", shortTypeInfo.getType());
    }
 
    @Test
@@ -97,9 +97,8 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM),
-         shortTypeInfo.getModifiers());
-      Assert.assertEquals("ENUM", shortTypeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM), shortTypeInfo.getModifiers());
+      assertEquals("ENUM", shortTypeInfo.getType());
    }
 
 }

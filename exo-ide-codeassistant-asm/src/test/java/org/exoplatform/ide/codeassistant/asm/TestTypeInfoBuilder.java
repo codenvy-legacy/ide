@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import static org.junit.Assert.assertEquals;
+
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Modifier;
@@ -45,8 +46,8 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), typeInfo.getModifiers());
-      Assert.assertEquals("public abstract", typeInfo.modifierToString());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), typeInfo.getModifiers());
+      assertEquals("public abstract", typeInfo.modifierToString());
    }
 
    @Test
@@ -56,8 +57,8 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(access, "org/exoplatform/test/Class", superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals("Class", typeInfo.getName());
-      Assert.assertEquals("org.exoplatform.test.Class", typeInfo.getQualifiedName());
+      assertEquals("Class", typeInfo.getName());
+      assertEquals("org.exoplatform.test.Class", typeInfo.getQualifiedName());
    }
 
    @Test
@@ -66,8 +67,8 @@ public class TestTypeInfoBuilder
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(Modifier.PUBLIC, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC), typeInfo.getModifiers());
-      Assert.assertEquals("CLASS", typeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC), typeInfo.getModifiers());
+      assertEquals("CLASS", typeInfo.getType());
    }
 
    @Test
@@ -77,8 +78,8 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | Modifier.INTERFACE, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.INTERFACE), typeInfo.getModifiers());
-      Assert.assertEquals("INTERFACE", typeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.INTERFACE), typeInfo.getModifiers());
+      assertEquals("INTERFACE", typeInfo.getType());
    }
 
    @Test
@@ -88,9 +89,8 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION),
-         typeInfo.getModifiers());
-      Assert.assertEquals("ANNOTATION", typeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION), typeInfo.getModifiers());
+      assertEquals("ANNOTATION", typeInfo.getType());
    }
 
    @Test
@@ -100,8 +100,47 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM), typeInfo.getModifiers());
-      Assert.assertEquals("ENUM", typeInfo.getType());
+      assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM), typeInfo.getModifiers());
+      assertEquals("ENUM", typeInfo.getType());
+   }
+
+   @Test
+   public void testSuperClass()
+   {
+      TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, "java/lang/Object", interfaces);
+      TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
+
+      assertEquals("java.lang.Object", typeInfo.getSuperClass());
+   }
+
+   @Test
+   public void testSuperClassNull()
+   {
+      TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, null, interfaces);
+      TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
+
+      assertEquals("", typeInfo.getSuperClass());
+   }
+
+   @Test
+   public void testInterfaces()
+   {
+      TypeInfoBuilder typeInfoBuilder =
+         new TypeInfoBuilder(access, name, superName, new String[]{"java/util/Map", "java/lang/Comparable"});
+      TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
+
+      assertEquals(2, typeInfo.getInterfaces().length);
+      assertEquals("java.util.Map", typeInfo.getInterfaces()[0]);
+      assertEquals("java.lang.Comparable", typeInfo.getInterfaces()[1]);
+   }
+
+   @Test
+   public void testInterfacesNull()
+   {
+      TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, null);
+      TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
+
+      assertEquals(0, typeInfo.getInterfaces().length);
    }
 
    @Test
@@ -115,7 +154,7 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getDeclaredFields().length);
+      assertEquals(0, typeInfo.getDeclaredFields().length);
    }
 
    @Test
@@ -126,8 +165,8 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getDeclaredFields().length);
-      Assert.assertEquals("field1", typeInfo.getDeclaredFields()[0].getName());
+      assertEquals(1, typeInfo.getDeclaredFields().length);
+      assertEquals("field1", typeInfo.getDeclaredFields()[0].getName());
    }
 
    @Test
@@ -140,9 +179,9 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(2, typeInfo.getDeclaredFields().length);
-      Assert.assertEquals("field1", typeInfo.getDeclaredFields()[0].getName());
-      Assert.assertEquals("field2", typeInfo.getDeclaredFields()[1].getName());
+      assertEquals(2, typeInfo.getDeclaredFields().length);
+      assertEquals("field1", typeInfo.getDeclaredFields()[0].getName());
+      assertEquals("field2", typeInfo.getDeclaredFields()[1].getName());
    }
 
    @Test
@@ -153,7 +192,7 @@ public class TestTypeInfoBuilder
          "(boolean)", "(boolean)", "org.exoplatform.test.TestClass(boolean)", "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getDeclaredConstructors().length);
+      assertEquals(0, typeInfo.getDeclaredConstructors().length);
    }
 
    @Test
@@ -165,8 +204,8 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getDeclaredConstructors().length);
-      Assert.assertEquals("TestClass", typeInfo.getDeclaredConstructors()[0].getName());
+      assertEquals(1, typeInfo.getDeclaredConstructors().length);
+      assertEquals("TestClass", typeInfo.getDeclaredConstructors()[0].getName());
    }
 
    @Test
@@ -181,9 +220,9 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(2, typeInfo.getDeclaredConstructors().length);
-      Assert.assertEquals("TestClass", typeInfo.getDeclaredConstructors()[0].getName());
-      Assert.assertEquals("TestClass1", typeInfo.getDeclaredConstructors()[1].getName());
+      assertEquals(2, typeInfo.getDeclaredConstructors().length);
+      assertEquals("TestClass", typeInfo.getDeclaredConstructors()[0].getName());
+      assertEquals("TestClass1", typeInfo.getDeclaredConstructors()[1].getName());
    }
 
    @Test
@@ -195,7 +234,7 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getDeclaredMethods().length);
+      assertEquals(0, typeInfo.getDeclaredMethods().length);
    }
 
    @Test
@@ -207,8 +246,8 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getDeclaredMethods().length);
-      Assert.assertEquals("method1", typeInfo.getDeclaredMethods()[0].getName());
+      assertEquals(1, typeInfo.getDeclaredMethods().length);
+      assertEquals("method1", typeInfo.getDeclaredMethods()[0].getName());
    }
 
    @Test
@@ -229,9 +268,9 @@ public class TestTypeInfoBuilder
             "org.exoplatform.test.TestClass", "java.lang.Object", "Object"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(2, typeInfo.getDeclaredMethods().length);
-      Assert.assertEquals("method1", typeInfo.getDeclaredMethods()[0].getName());
-      Assert.assertEquals("method2", typeInfo.getDeclaredMethods()[1].getName());
+      assertEquals(2, typeInfo.getDeclaredMethods().length);
+      assertEquals("method1", typeInfo.getDeclaredMethods()[0].getName());
+      assertEquals("method2", typeInfo.getDeclaredMethods()[1].getName());
    }
 
    @Test
@@ -245,7 +284,7 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getFields().length);
+      assertEquals(0, typeInfo.getFields().length);
    }
 
    @Test
@@ -256,8 +295,8 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getFields().length);
-      Assert.assertEquals("field1", typeInfo.getFields()[0].getName());
+      assertEquals(1, typeInfo.getFields().length);
+      assertEquals("field1", typeInfo.getFields()[0].getName());
    }
 
    @Test
@@ -267,7 +306,7 @@ public class TestTypeInfoBuilder
       typeInfoBuilder.addField(new FieldInfo("boolean", (Modifier.FINAL), "field1", "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getFields().length);
+      assertEquals(0, typeInfo.getFields().length);
    }
 
    @Test
@@ -278,7 +317,7 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getFields().length);
+      assertEquals(0, typeInfo.getFields().length);
    }
 
    @Test
@@ -291,8 +330,8 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getFields().length);
-      Assert.assertEquals("field2", typeInfo.getFields()[0].getName());
+      assertEquals(1, typeInfo.getFields().length);
+      assertEquals("field2", typeInfo.getFields()[0].getName());
    }
 
    @Test
@@ -303,7 +342,7 @@ public class TestTypeInfoBuilder
          "(boolean)", "(boolean)", "org.exoplatform.test.TestClass(boolean)", "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getConstructors().length);
+      assertEquals(0, typeInfo.getConstructors().length);
    }
 
    @Test
@@ -315,8 +354,8 @@ public class TestTypeInfoBuilder
          "public final org.exoplatform.test.TestClass(boolean)", "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getConstructors().length);
-      Assert.assertEquals("TestClass", typeInfo.getConstructors()[0].getName());
+      assertEquals(1, typeInfo.getConstructors().length);
+      assertEquals("TestClass", typeInfo.getConstructors()[0].getName());
    }
 
    @Test
@@ -327,7 +366,7 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass(java.lang.Object)", "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getConstructors().length);
+      assertEquals(0, typeInfo.getConstructors().length);
    }
 
    @Test
@@ -339,7 +378,7 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getConstructors().length);
+      assertEquals(0, typeInfo.getConstructors().length);
    }
 
    @Test
@@ -354,8 +393,8 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getConstructors().length);
-      Assert.assertEquals("TestClass", typeInfo.getConstructors()[0].getName());
+      assertEquals(1, typeInfo.getConstructors().length);
+      assertEquals("TestClass", typeInfo.getConstructors()[0].getName());
    }
 
    @Test
@@ -367,7 +406,7 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getMethods().length);
+      assertEquals(0, typeInfo.getMethods().length);
    }
 
    @Test
@@ -379,8 +418,8 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getMethods().length);
-      Assert.assertEquals("method1", typeInfo.getMethods()[0].getName());
+      assertEquals(1, typeInfo.getMethods().length);
+      assertEquals("method1", typeInfo.getMethods()[0].getName());
    }
 
    @Test
@@ -392,7 +431,7 @@ public class TestTypeInfoBuilder
          "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getMethods().length);
+      assertEquals(0, typeInfo.getMethods().length);
    }
 
    @Test
@@ -404,7 +443,7 @@ public class TestTypeInfoBuilder
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(0, typeInfo.getMethods().length);
+      assertEquals(0, typeInfo.getMethods().length);
    }
 
    @Test
@@ -425,8 +464,8 @@ public class TestTypeInfoBuilder
             "org.exoplatform.test.TestClass", "java.lang.Object", "Object"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      Assert.assertEquals(1, typeInfo.getMethods().length);
-      Assert.assertEquals("method1", typeInfo.getMethods()[0].getName());
+      assertEquals(1, typeInfo.getMethods().length);
+      assertEquals("method1", typeInfo.getMethods()[0].getName());
    }
 
 }

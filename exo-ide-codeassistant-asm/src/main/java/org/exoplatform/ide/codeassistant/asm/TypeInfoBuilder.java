@@ -60,10 +60,17 @@ public class TypeInfoBuilder extends MemberInfoBuilder
       {
          this.superName = "";
       }
-      this.interfaces = interfaces;
-      for (int i = 0; i < interfaces.length; i++)
+      if (interfaces == null)
       {
-         interfaces[i] = toDot(interfaces[i]);
+         this.interfaces = new String[0];
+      }
+      else
+      {
+         this.interfaces = interfaces;
+      }
+      for (int i = 0; i < this.interfaces.length; i++)
+      {
+         this.interfaces[i] = toDot(this.interfaces[i]);
       }
 
       if ((access & MODIFIER_ENUM) != 0)
