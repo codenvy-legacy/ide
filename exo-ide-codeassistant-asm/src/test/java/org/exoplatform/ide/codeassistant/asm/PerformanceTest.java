@@ -50,6 +50,16 @@ public class PerformanceTest
 
    @Ignore
    @Test
+   public void shouldParseRtJar() throws IOException, ClassNotFoundException
+   {
+      long start = System.currentTimeMillis();
+      List<TypeInfo> classes = JarParser.parse(new File(System.getProperty("java.home") + "/lib/rt.jar"));
+      System.out.println("Class count: " + classes.size());
+      System.out.println("Time: " + (System.currentTimeMillis() - start));
+   }
+
+   @Ignore
+   @Test
    public void testReflect() throws IOException, ClassNotFoundException
    {
       long start = System.currentTimeMillis();
