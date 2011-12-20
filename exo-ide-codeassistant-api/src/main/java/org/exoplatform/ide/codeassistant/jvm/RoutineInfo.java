@@ -136,11 +136,7 @@ public class RoutineInfo extends Member
       out.writeObject(generic);
       out.writeObject(declaringClass);
 
-      out.writeInt(genericExceptionTypes.length);
-      for (String genericExceptionType : genericExceptionTypes)
-      {
-         out.writeObject(genericExceptionType);
-      }
+      writeArrayToObjectOutput(genericExceptionTypes, out);
    }
 
    /**
@@ -157,11 +153,7 @@ public class RoutineInfo extends Member
       declaringClass = (String)in.readObject();
 
       int genericExceptionTypesLength = in.readInt();
-      genericExceptionTypes = new String[genericExceptionTypesLength];
-      for (int i = 0; i < genericExceptionTypesLength; i++)
-      {
-         genericExceptionTypes[i] = (String)in.readObject();
-      }
+      genericExceptionTypes = readArrayFromObjectInput(new String[genericExceptionTypesLength], in, genericExceptionTypesLength);
    }
 
 }

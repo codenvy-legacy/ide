@@ -201,4 +201,23 @@ public abstract class Member implements Externalizable
       name = (String)in.readObject();
    }
 
+   protected <T> void writeArrayToObjectOutput(T[] array, ObjectOutput out) throws IOException
+   {
+      out.writeInt(array.length);
+      for (T element : array)
+      {
+         out.writeObject(element);
+      }
+   }
+
+   protected <T> T[] readArrayFromObjectInput(T[] array, ObjectInput in, int length) throws IOException,
+      ClassNotFoundException
+   {
+      for (int i = 0; i < length; i++)
+      {
+         array[i] = (T)in.readObject();
+      }
+      return array;
+   }
+
 }

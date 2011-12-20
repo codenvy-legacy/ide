@@ -86,7 +86,7 @@ public class TestRoutineInfoExternalization extends BaseTest
    }
 
    @Test
-   public void testArrayFieldsDeserialization()
+   public void testGenericExceptionTypesFieldDeserialization()
    {
       assertArrayEquals(serializedRoutineInfo.getGenericExceptionTypes(),
          deserializedRoutineInfo.getGenericExceptionTypes());

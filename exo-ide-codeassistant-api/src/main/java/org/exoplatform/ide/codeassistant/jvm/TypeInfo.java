@@ -206,49 +206,13 @@ public class TypeInfo extends ShortTypeInfo
    {
       super.writeExternal(out);
       out.writeObject(superClass);
-
-      out.writeInt(interfaces.length);
-      for (String methodInfo : interfaces)
-      {
-         out.writeObject(methodInfo);
-      }
-
-      out.writeInt(constructors.length);
-      for (RoutineInfo methodInfo : constructors)
-      {
-         out.writeObject(methodInfo);
-      }
-
-      out.writeInt(declaredConstructors.length);
-      for (RoutineInfo methodInfo : declaredConstructors)
-      {
-         out.writeObject(methodInfo);
-      }
-
-      out.writeInt(fields.length);
-      for (FieldInfo methodInfo : fields)
-      {
-         out.writeObject(methodInfo);
-      }
-
-      out.writeInt(declaredFields.length);
-      for (FieldInfo methodInfo : declaredFields)
-      {
-         out.writeObject(methodInfo);
-      }
-
-      out.writeInt(methods.length);
-      for (MethodInfo methodInfo : methods)
-      {
-         out.writeObject(methodInfo);
-      }
-
-      out.writeInt(declaredMethods.length);
-      for (MethodInfo methodInfo : declaredMethods)
-      {
-         out.writeObject(methodInfo);
-      }
-
+      writeArrayToObjectOutput(interfaces, out);
+      writeArrayToObjectOutput(constructors, out);
+      writeArrayToObjectOutput(declaredConstructors, out);
+      writeArrayToObjectOutput(fields, out);
+      writeArrayToObjectOutput(declaredFields, out);
+      writeArrayToObjectOutput(methods, out);
+      writeArrayToObjectOutput(declaredMethods, out);
    }
 
    @Override
@@ -258,53 +222,24 @@ public class TypeInfo extends ShortTypeInfo
       superClass = (String)in.readObject();
 
       int interfacesCount = in.readInt();
-      interfaces = new String[interfacesCount];
-      for (int i = 0; i < interfacesCount; i++)
-      {
-         interfaces[i] = (String)in.readObject();
-      }
+      interfaces = readArrayFromObjectInput(new String[interfacesCount], in, interfacesCount);
 
       int constructorsCount = in.readInt();
-      constructors = new RoutineInfo[constructorsCount];
-      for (int i = 0; i < constructorsCount; i++)
-      {
-         constructors[i] = (RoutineInfo)in.readObject();
-      }
+      constructors = readArrayFromObjectInput(new RoutineInfo[constructorsCount], in, constructorsCount);
 
       int declaredConstructorsCount = in.readInt();
-      declaredConstructors = new RoutineInfo[declaredConstructorsCount];
-      for (int i = 0; i < declaredConstructorsCount; i++)
-      {
-         declaredConstructors[i] = (RoutineInfo)in.readObject();
-      }
+      declaredConstructors = readArrayFromObjectInput(new RoutineInfo[declaredConstructorsCount], in, declaredConstructorsCount);
 
       int fieldsCount = in.readInt();
-      fields = new FieldInfo[fieldsCount];
-      for (int i = 0; i < fieldsCount; i++)
-      {
-         fields[i] = (FieldInfo)in.readObject();
-      }
+      fields = readArrayFromObjectInput(new FieldInfo[fieldsCount], in, fieldsCount);
 
       int declaredFieldsCount = in.readInt();
-      declaredFields = new FieldInfo[declaredFieldsCount];
-      for (int i = 0; i < declaredFieldsCount; i++)
-      {
-         declaredFields[i] = (FieldInfo)in.readObject();
-      }
+      declaredFields = readArrayFromObjectInput(new FieldInfo[declaredFieldsCount], in, declaredFieldsCount);
 
       int methodsCount = in.readInt();
-      methods = new MethodInfo[methodsCount];
-      for (int i = 0; i < methodsCount; i++)
-      {
-         methods[i] = (MethodInfo)in.readObject();
-      }
+      methods = readArrayFromObjectInput(new MethodInfo[methodsCount], in, methodsCount);
 
       int declaredMethodsCount = in.readInt();
-      declaredMethods = new MethodInfo[declaredMethodsCount];
-      for (int i = 0; i < declaredMethodsCount; i++)
-      {
-         declaredMethods[i] = (MethodInfo)in.readObject();
-      }
+      declaredMethods = readArrayFromObjectInput(new MethodInfo[declaredMethodsCount], in, declaredMethodsCount);
    }
-
 }
