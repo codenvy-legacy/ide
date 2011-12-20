@@ -19,41 +19,39 @@
 package org.exoplatform.ide.codeassistant.jvm;
 
 
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class TypeInfo extends ShortTypeInfo
 {
-   
-   
-   private MethodInfo[] methods;   
-   
+   private static final long serialVersionUID = -7546406345889913738L;
+
+   private MethodInfo[] methods;
+
    private MethodInfo[] declaredMethods;;
-   
+
    private RoutineInfo[] constructors;
-   
+
    private RoutineInfo[] declaredConstructors;
-   
+
    private FieldInfo[] fields;
-   
+
    private FieldInfo[] declaredFields;
-   
+
    private String superClass;
-   
+
    private String[] interfaces;
-   
-   
+
    public TypeInfo()
    {
    }
-   
-   
-   public TypeInfo(Integer modifiers, String name, MethodInfo[] methods,
-      MethodInfo[] declaredMethods, RoutineInfo[] constructors, RoutineInfo[] declaredConstructors,
-      FieldInfo[] fields, FieldInfo[] declaredFields, String superClass, String[] interfaces,String qualifiedName, String type)
+
+   public TypeInfo(Integer modifiers, String name, MethodInfo[] methods, MethodInfo[] declaredMethods,
+      RoutineInfo[] constructors, RoutineInfo[] declaredConstructors, FieldInfo[] fields, FieldInfo[] declaredFields,
+      String superClass, String[] interfaces, String qualifiedName, String type)
    {
       super(modifiers, name, qualifiedName, type);
       this.methods = methods;
@@ -75,7 +73,8 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @param methods the methods to set
+    * @param methods
+    *           the methods to set
     */
    public void setMethods(MethodInfo[] methods)
    {
@@ -91,7 +90,8 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @param declaredMethods the declaredMethods to set
+    * @param declaredMethods
+    *           the declaredMethods to set
     */
    public void setDeclaredMethods(MethodInfo[] declaredMethods)
    {
@@ -107,7 +107,8 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @param constructors the constructors to set
+    * @param constructors
+    *           the constructors to set
     */
    public void setConstructors(RoutineInfo[] constructors)
    {
@@ -123,7 +124,8 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @param declaredConstructors the declaredConstructors to set
+    * @param declaredConstructors
+    *           the declaredConstructors to set
     */
    public void setDeclaredConstructors(RoutineInfo[] declaredConstructors)
    {
@@ -139,7 +141,8 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @param fields the fields to set
+    * @param fields
+    *           the fields to set
     */
    public void setFields(FieldInfo[] fields)
    {
@@ -155,7 +158,8 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @param declaredFields the declaredFields to set
+    * @param declaredFields
+    *           the declaredFields to set
     */
    public void setDeclaredFields(FieldInfo[] declaredFields)
    {
@@ -171,7 +175,8 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @param superClass the superClass to set
+    * @param superClass
+    *           the superClass to set
     */
    public void setSuperClass(String superClass)
    {
@@ -187,11 +192,12 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @param interfaces the interfaces to set
+    * @param interfaces
+    *           the interfaces to set
     */
    public void setInterfaces(String[] interfaces)
    {
       this.interfaces = interfaces;
    }
-   
+
 }

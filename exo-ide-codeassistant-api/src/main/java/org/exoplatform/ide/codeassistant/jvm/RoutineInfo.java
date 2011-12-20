@@ -18,28 +18,31 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class RoutineInfo extends Member
 {
    /**
-    * Array FQN of exceptions throws by method 
+    * Array FQN of exceptions throws by method
     */
    private String[] genericExceptionTypes;
 
    /**
-    * Full Qualified Class Name of parameter
-    * <code>(java.lang.Object)</code>
+    * Full Qualified Class Name of parameter <code>(java.lang.Object)</code>
     * (not use for now)
     */
    private String genericParameterTypes;
 
    /**
-    * Short Class name of Parameter
-    * <code>(Object)</code> 
+    * Short Class name of Parameter <code>(Object)</code>
     */
    private String parameterTypes;
 
@@ -50,9 +53,8 @@ public class RoutineInfo extends Member
    private String generic;
 
    /**
-    * Full Qualified Class Name where method declared 
-    * Example: 
-    * method equals() declared in java.lang.String
+    * Full Qualified Class Name where method declared Example: method equals()
+    * declared in java.lang.String
     */
    private String declaringClass;
 
@@ -119,6 +121,47 @@ public class RoutineInfo extends Member
    public void setParameterTypes(String parameterTypes)
    {
       this.parameterTypes = parameterTypes;
+   }
+
+   /**
+    * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+    */
+   @Override
+   public void writeExternal(ObjectOutput out) throws IOException
+   {
+      super.writeExternal(out);
+
+      out.writeObject(genericParameterTypes);
+      out.writeObject(parameterTypes);
+      out.writeObject(generic);
+      out.writeObject(declaringClass);
+
+      out.writeInt(genericExceptionTypes.length);
+      for (String genericExceptionType : genericExceptionTypes)
+      {
+         out.writeObject(genericExceptionType);
+      }
+   }
+
+   /**
+    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+    */
+   @Override
+   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+   {
+      super.readExternal(in);
+
+      genericParameterTypes = (String)in.readObject();
+      parameterTypes = (String)in.readObject();
+      generic = (String)in.readObject();
+      declaringClass = (String)in.readObject();
+
+      int genericExceptionTypesLength = in.readInt();
+      genericExceptionTypes = new String[genericExceptionTypesLength];
+      for (int i = 0; i < genericExceptionTypesLength; i++)
+      {
+         genericExceptionTypes[i] = (String)in.readObject();
+      }
    }
 
 }

@@ -19,36 +19,39 @@
 
 package org.exoplatform.ide.codeassistant.jvm;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 /**
- * Represent information about class field. 
- * Can be transform to JSON.
- * Example of JSON:
- * <code>
+ * Represent information about class field. Can be transform to JSON. Example of
+ * JSON: <code>
  * {
  * "declaringClass": "java.lang.String",
  * "name": "CASE_INSENSITIVE_ORDER",
  * "modifiers": 25,
  * "type": "Comparator"
  * }
- * </code> 
+ * </code>
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class FieldInfo extends Member
 {
-   
+   private static final long serialVersionUID = 3476911861830439687L;
+
    /**
-    * Short Class Name 
-    * <code>Comparator</code> 
+    * Short Class Name <code>Comparator</code>
     */
    private String type;
-   
+
    /**
-    * Full Qualified Class Name where field declared 
+    * Full Qualified Class Name where field declared
     */
-   private String declaringClass; 
+   private String declaringClass;
 
    public FieldInfo(String type, Integer modifiers, String name, String declaringClass)
    {
@@ -56,30 +59,54 @@ public class FieldInfo extends Member
       this.type = type;
       this.declaringClass = declaringClass;
    }
-   
+
    public FieldInfo()
    {
-      
+
    }
-   
+
    public String getType()
    {
       return type;
    }
-   
+
    public void setType(String type)
    {
       this.type = type;
    }
-   
+
    public String getDeclaringClass()
    {
       return declaringClass;
    }
-   
+
    public void setDeclaringClass(String declaringClass)
    {
       this.declaringClass = declaringClass;
+   }
+
+   /**
+    * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+    */
+   @Override
+   public void writeExternal(ObjectOutput out) throws IOException
+   {
+      super.writeExternal(out);
+
+      out.writeObject(type);
+      out.writeObject(declaringClass);
+   }
+
+   /**
+    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+    */
+   @Override
+   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+   {
+      super.readExternal(in);
+
+      type = (String)in.readObject();
+      declaringClass = (String)in.readObject();
    }
 
 }

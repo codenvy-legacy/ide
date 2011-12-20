@@ -18,32 +18,30 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 /**
- * Short information about class or interface.
- * Contain fqn, short name, modifiers 
- * Example :
- *  {
- *   "name": "String",
- *   "qualifiedName": "java.lang.String",
- *   "modifiers": 0,
- *   "type": "CLASS"
- * } 
+ * Short information about class or interface. Contain fqn, short name,
+ * modifiers Example : { "name": "String", "qualifiedName": "java.lang.String",
+ * "modifiers": 0, "type": "CLASS" }
  * 
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class ShortTypeInfo extends Member
 {
-
    /**
-    *  Full Qualified Class Name
+    * Full Qualified Class Name
     */
    private String qualifiedName;
 
    /**
-    * Means this is CLASS, INTERFACE or ANNOTATION  
+    * Means this is CLASS, INTERFACE or ANNOTATION
     */
    private String type;
 
@@ -76,6 +74,24 @@ public class ShortTypeInfo extends Member
    public void setType(String type)
    {
       this.type = type;
+   }
+
+   @Override
+   public void writeExternal(ObjectOutput out) throws IOException
+   {
+      super.writeExternal(out);
+
+      out.writeObject(qualifiedName);
+      out.writeObject(type);
+   }
+
+   @Override
+   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+   {
+      super.readExternal(in);
+
+      qualifiedName = (String)in.readObject();
+      type = (String)in.readObject();
    }
 
 }

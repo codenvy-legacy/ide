@@ -19,9 +19,7 @@
 package org.exoplatform.ide.codeassistant.jvm;
 
 /**
- * Represent information about class method. 
- * Can be transform to JSON.
- * <code>
+ * Represent information about class method. Can be transform to JSON. <code>
  *  {
  *     "generic": "public boolean java.lang.String.equals(java.lang.Object)",
  *     "genericExceptionTypes": [],
@@ -36,21 +34,21 @@ package org.exoplatform.ide.codeassistant.jvm;
  * </code>
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class MethodInfo extends RoutineInfo
 {
+   private static final long serialVersionUID = 5735372561826927591L;
 
    /**
-    * Full Qualified Class Name that method return
-    * <code>java.lang.String</code>
+    * Full Qualified Class Name that method return <code>java.lang.String</code>
     */
    private String genericReturnType;
-   
+
    /**
-    * Short Class Name that method return 
-    * <code>String</code>
+    * Short Class Name that method return <code>String</code>
     */
    private String returnType;
 
@@ -58,10 +56,10 @@ public class MethodInfo extends RoutineInfo
    {
    }
 
-   public MethodInfo(Integer modifiers, String name, String[] genericExceptionTypes,
-      String genericParameterTypes,  String parameterTypes, String generic, String declaringClass, String genericReturnType, String returnType)
+   public MethodInfo(Integer modifiers, String name, String[] genericExceptionTypes, String genericParameterTypes,
+      String parameterTypes, String generic, String declaringClass, String genericReturnType, String returnType)
    {
-      super(modifiers, name, genericExceptionTypes,genericParameterTypes,parameterTypes, generic, declaringClass);
+      super(modifiers, name, genericExceptionTypes, genericParameterTypes, parameterTypes, generic, declaringClass);
       this.genericReturnType = genericReturnType;
       this.returnType = returnType;
    }
@@ -75,12 +73,12 @@ public class MethodInfo extends RoutineInfo
    {
       this.genericReturnType = genericReturnType;
    }
-   
+
    public void setReturnType(String returnType)
    {
       this.returnType = returnType;
    }
-   
+
    public String getReturnType()
    {
       return returnType;
