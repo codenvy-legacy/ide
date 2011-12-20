@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.BeforeClass;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -32,62 +28,12 @@ import java.io.InputStream;
  */
 public abstract class BaseTest
 {
-   private static String CLASSES_DIRECTORY_PATH = System.getProperty("generated.classes.directory",
-      "target/generated-classes/");
-
-   @BeforeClass
-   public static void setUp() throws Exception
-   {
-      File classDirectory = new File(CLASSES_DIRECTORY_PATH);
-      if (classDirectory.exists())
-      {
-         FileUtils.deleteDirectory(classDirectory);
-      }
-      classDirectory.mkdirs();
-   }
-
-   protected static int generateClassFile(String pathToSource) throws IOException
-   {
-      Runtime exec = Runtime.getRuntime();
-      String cmd = "javac -cp " + CLASSES_DIRECTORY_PATH + " " + pathToSource + " -d " + CLASSES_DIRECTORY_PATH;
-      Process process = exec.exec(cmd);
-      try
-      {
-         process.waitFor();
-         return process.exitValue();
-      }
-      catch (InterruptedException e)
-      {
-         Thread.currentThread().interrupt();
-      }
-      return 1;
-   }
-
    protected static InputStream getClassFileAsStream(String fqn) throws FileNotFoundException
    {
       String pathToClass = fqn.replace(".", "/");
-      File classFile = new File(CLASSES_DIRECTORY_PATH + pathToClass + ".class");
+      File classFile = new File("target/test-classes/" + pathToClass + ".class");
 
       return new FileInputStream(classFile);
-   }
-
-   protected static File generateJarFile(String jarName) throws IOException
-   {
-      Runtime exec = Runtime.getRuntime();
-      String cmd = "jar -cf " + CLASSES_DIRECTORY_PATH + "../" + jarName + " -C " + CLASSES_DIRECTORY_PATH + " .";
-      Process process = exec.exec(cmd);
-      try
-      {
-         process.waitFor();
-      }
-      catch (InterruptedException e)
-      {
-         Thread.currentThread().interrupt();
-      }
-      File jar = new File(CLASSES_DIRECTORY_PATH + "../" + jarName);
-      File newJar = new File(CLASSES_DIRECTORY_PATH, jarName);
-      jar.renameTo(newJar);
-      return newJar;
    }
 
 }

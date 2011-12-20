@@ -20,6 +20,9 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 
+/**
+ * This class used for building RoutineInfo objects as constructors
+ */
 public class ConstructorInfoBuilder extends RoutineInfoBuilder
 {
 
@@ -30,29 +33,34 @@ public class ConstructorInfoBuilder extends RoutineInfoBuilder
 
    public RoutineInfo buildConstructorInfo()
    {
-      if ((access & MODIFIER_SYNTHETIC) == 0)
+      RoutineInfo constructorInfo = new RoutineInfo();
+
+      fillRoutineInfo(constructorInfo);
+
+      StringBuilder genericBuilder = new StringBuilder();
+      String stringModifier = constructorInfo.modifierToString();
+      if (!stringModifier.isEmpty())
       {
-         RoutineInfo constructorInfo = new RoutineInfo();
-
-         fillRoutineInfo(constructorInfo);
-
-         StringBuilder genericBuilder = new StringBuilder();
-         String stringModifier = constructorInfo.modifierToString();
-         if (!stringModifier.isEmpty())
+         genericBuilder.append(stringModifier);
+         genericBuilder.append(" ");
+      }
+      genericBuilder.append(constructorInfo.getDeclaringClass());
+      genericBuilder.append(constructorInfo.getGenericParameterTypes());
+      if (exceptions != null && exceptions.length > 0)
+      {
+         genericBuilder.append(" throws ");
+         for (int i = 0; i < exceptions.length; i++)
          {
-            genericBuilder.append(stringModifier);
-            genericBuilder.append(" ");
+            if (i != 0)
+            {
+               genericBuilder.append(", ");
+            }
+            genericBuilder.append(exceptions[i]);
          }
-         genericBuilder.append(constructorInfo.getDeclaringClass());
-         genericBuilder.append(constructorInfo.getGenericParameterTypes());
-         constructorInfo.setGeneric(genericBuilder.toString());
+      }
+      constructorInfo.setGeneric(genericBuilder.toString());
 
-         return constructorInfo;
-      }
-      else
-      {
-         return null;
-      }
+      return constructorInfo;
    }
 
 }

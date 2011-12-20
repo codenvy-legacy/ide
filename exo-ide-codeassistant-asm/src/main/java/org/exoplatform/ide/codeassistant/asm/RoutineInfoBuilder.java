@@ -26,7 +26,11 @@ import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 
 import java.util.ArrayList;
 
-public class RoutineInfoBuilder extends MemberInfoBuilder
+/**
+ * This class used for building RoutineInfo objects, this class can't be used as
+ * is. You can use: ConstructorInfoBuilder and MethodInfoBuilder
+ */
+public abstract class RoutineInfoBuilder extends MemberInfoBuilder
 {
 
    protected String desc;
@@ -43,7 +47,7 @@ public class RoutineInfoBuilder extends MemberInfoBuilder
       this.declaredClass = declaredClass;
 
    }
-   
+
    protected void fillRoutineInfo(RoutineInfo routineInfo)
    {
       routineInfo.setModifiers(access);
@@ -86,7 +90,7 @@ public class RoutineInfoBuilder extends MemberInfoBuilder
       routineInfo.setParameterTypes(parameterTypesBuilder.toString());
 
    }
-   
+
    /**
     * Method get method description and return genericParameterTypes. Return
     * type ignored<br>

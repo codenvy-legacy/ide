@@ -20,9 +20,12 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import java.lang.reflect.Modifier;
 
+/**
+ * This class used for building MemberInfo objects
+ */
 public class MemberInfoBuilder
 {
-   
+
    /**
     * There are constants for <b>modifier</b> flag.<br>
     * There are no (yet) <b>public</b> constants for this flags in {@list
@@ -35,11 +38,11 @@ public class MemberInfoBuilder
    public static final int MODIFIER_ANNOTATION = 0x00002000;
 
    public static final int MODIFIER_ENUM = 0x00004000;
-   
+
    protected final int access;
-   
+
    protected final String name;
-   
+
    public MemberInfoBuilder(int access, String name)
    {
       this.access = access;
@@ -134,10 +137,10 @@ public class MemberInfoBuilder
    {
       return name.substring(name.lastIndexOf('.') + 1);
    }
-   
+
    protected static String toDot(String name)
    {
       return name.replace('/', '.');
    }
-   
+
 }

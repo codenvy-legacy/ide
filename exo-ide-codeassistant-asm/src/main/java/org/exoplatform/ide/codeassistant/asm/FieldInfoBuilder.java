@@ -20,6 +20,9 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 
+/**
+ * This class used for building FieldInfo objects
+ */
 public class FieldInfoBuilder extends MemberInfoBuilder
 {
 
@@ -36,14 +39,7 @@ public class FieldInfoBuilder extends MemberInfoBuilder
 
    public FieldInfo buildFieldInfo()
    {
-      if ((access & MODIFIER_SYNTHETIC) == 0)
-      {
-         return new FieldInfo(transformTypeFormat(desc), access, name, declaredClass);
-      }
-      else
-      {
-         return null;
-      }
+      return new FieldInfo(transformTypeFormat(desc), access, name, declaredClass);
    }
 
 }

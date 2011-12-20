@@ -98,7 +98,8 @@ public class TypeInfoClassVisitor implements ClassVisitor
        */
       else if (!name.equals("<clinit>"))
       {
-         builder.addMethod(new MethodInfoBuilder(access, name, exceptions, desc, builder.getQualifiedName()).buildMethodInfo());
+         builder.addMethod(new MethodInfoBuilder(access, name, exceptions, desc, builder.getQualifiedName())
+            .buildMethodInfo());
       }
       // no need detailed info about method, so return null
       return null;

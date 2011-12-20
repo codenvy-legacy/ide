@@ -28,6 +28,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class used for building TypeInfo object
+ */
 public class TypeInfoBuilder extends MemberInfoBuilder
 {
 
@@ -49,7 +52,14 @@ public class TypeInfoBuilder extends MemberInfoBuilder
    {
       super(access, toShortName(toDot(name)));
       this.qualifiedName = toDot(name);
-      this.superName = toDot(superName);
+      if (superName != null)
+      {
+         this.superName = toDot(superName);
+      }
+      else
+      {
+         this.superName = null;
+      }
       this.interfaces = interfaces;
       for (int i = 0; i < interfaces.length; i++)
       {
@@ -77,7 +87,7 @@ public class TypeInfoBuilder extends MemberInfoBuilder
       this.constructors = new ArrayList<RoutineInfo>();
       this.methods = new ArrayList<MethodInfo>();
    }
-   
+
    public String getQualifiedName()
    {
       return qualifiedName;
@@ -134,7 +144,7 @@ public class TypeInfoBuilder extends MemberInfoBuilder
 
    public void addField(FieldInfo field)
    {
-      if (field != null)
+      if ((field.getModifiers() & MODIFIER_SYNTHETIC) == 0)
       {
          this.fields.add(field);
       }
@@ -142,7 +152,7 @@ public class TypeInfoBuilder extends MemberInfoBuilder
 
    public void addConstructor(RoutineInfo constructor)
    {
-      if (constructor != null)
+      if ((constructor.getModifiers() & MODIFIER_SYNTHETIC) == 0)
       {
          this.constructors.add(constructor);
       }
@@ -150,7 +160,7 @@ public class TypeInfoBuilder extends MemberInfoBuilder
 
    public void addMethod(MethodInfo method)
    {
-      if (method != null)
+      if ((method.getModifiers() & MODIFIER_SYNTHETIC) == 0)
       {
          this.methods.add(method);
       }

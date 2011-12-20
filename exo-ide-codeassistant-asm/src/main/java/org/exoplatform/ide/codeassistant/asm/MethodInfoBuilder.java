@@ -20,6 +20,9 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 
+/**
+ * This class used for building MethodInfo objects
+ */
 public class MethodInfoBuilder extends RoutineInfoBuilder
 {
 
@@ -27,52 +30,45 @@ public class MethodInfoBuilder extends RoutineInfoBuilder
    {
       super(access, methodName, exceptions, desc, declaredClass);
    }
-   
+
    public MethodInfo buildMethodInfo()
    {
-      if ((access & MODIFIER_SYNTHETIC) == 0)
+      MethodInfo methodInfo = new MethodInfo();
+
+      fillRoutineInfo(methodInfo);
+
+      String genericReturnType = transformTypeFormat(desc.substring(desc.lastIndexOf(')') + 1));
+      methodInfo.setGenericReturnType(genericReturnType);
+      methodInfo.setReturnType(toShortName(genericReturnType));
+
+      StringBuilder genericBuilder = new StringBuilder();
+      String stringModifier = methodInfo.modifierToString();
+      if (!stringModifier.isEmpty())
       {
-         MethodInfo methodInfo = new MethodInfo();
-
-         fillRoutineInfo(methodInfo);
-
-         String genericReturnType = transformTypeFormat(desc.substring(desc.lastIndexOf(')') + 1));
-         methodInfo.setGenericReturnType(genericReturnType);
-         methodInfo.setReturnType(toShortName(genericReturnType));
-
-         StringBuilder genericBuilder = new StringBuilder();
-         String stringModifier = methodInfo.modifierToString();
-         if (!stringModifier.isEmpty())
-         {
-            genericBuilder.append(stringModifier);
-            genericBuilder.append(" ");
-         }
-         genericBuilder.append(methodInfo.getGenericReturnType());
+         genericBuilder.append(stringModifier);
          genericBuilder.append(" ");
-         genericBuilder.append(methodInfo.getDeclaringClass());
-         genericBuilder.append(".");
-         genericBuilder.append(methodInfo.getName());
-         genericBuilder.append(methodInfo.getGenericParameterTypes());
-         if (exceptions != null && exceptions.length > 0)
-         {
-            genericBuilder.append(" throws ");
-            for (int i = 0; i < exceptions.length; i++)
-            {
-               if (i != 0)
-               {
-                  genericBuilder.append(", ");
-               }
-               genericBuilder.append(exceptions[i]);
-            }
-         }
-         methodInfo.setGeneric(genericBuilder.toString());
-
-         return methodInfo;
       }
-      else
+      genericBuilder.append(methodInfo.getGenericReturnType());
+      genericBuilder.append(" ");
+      genericBuilder.append(methodInfo.getDeclaringClass());
+      genericBuilder.append(".");
+      genericBuilder.append(methodInfo.getName());
+      genericBuilder.append(methodInfo.getGenericParameterTypes());
+      if (exceptions != null && exceptions.length > 0)
       {
-         return null;
+         genericBuilder.append(" throws ");
+         for (int i = 0; i < exceptions.length; i++)
+         {
+            if (i != 0)
+            {
+               genericBuilder.append(", ");
+            }
+            genericBuilder.append(exceptions[i]);
+         }
       }
+      methodInfo.setGeneric(genericBuilder.toString());
+
+      return methodInfo;
    }
 
 }

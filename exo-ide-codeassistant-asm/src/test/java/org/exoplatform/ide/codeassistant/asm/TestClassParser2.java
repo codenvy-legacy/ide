@@ -45,7 +45,6 @@ public class TestClassParser2 extends BaseTest
    @BeforeClass
    public static void createTypeInfo() throws Exception
    {
-      generateClassFile("src/test/java/org/exoplatform/ide/codeassistant/asm/objects/A.java");
       InputStream io = getClassFileAsStream(aClass.getCanonicalName());
       typeInfo = ClassParser.parse(io);
    }

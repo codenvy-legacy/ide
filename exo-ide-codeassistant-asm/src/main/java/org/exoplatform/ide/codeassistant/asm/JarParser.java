@@ -23,20 +23,24 @@ import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * This class used for parsing jar file
+ */
 public class JarParser
 {
-   
+
    private JarParser()
    {
    }
 
-   public static List<TypeInfo> parse(File jarFile) throws IOException
+   public static List<TypeInfo> parse(InputStream jar) throws IOException
    {
       /*
        * There are no way to predict entries order in jar, so, manifest will be added
@@ -45,7 +49,7 @@ public class JarParser
       Manifest manifest = null;
 
       List<TypeInfo> classes = new ArrayList<TypeInfo>();
-      ZipInputStream zip = new ZipInputStream(new FileInputStream(jarFile));
+      ZipInputStream zip = new ZipInputStream(jar);
       try
       {
          ZipEntry entry = zip.getNextEntry();
@@ -76,6 +80,11 @@ public class JarParser
       }
       */
       return classes;
+   }
+
+   public static List<TypeInfo> parse(File jarFile) throws IOException
+   {
+      return parse(new FileInputStream(jarFile));
    }
 
 }
