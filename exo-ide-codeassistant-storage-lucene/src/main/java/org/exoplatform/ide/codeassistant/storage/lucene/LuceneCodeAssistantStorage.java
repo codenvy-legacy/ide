@@ -45,7 +45,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getAnnotations(java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> getAnnotations(String prefix) throws CodeAssistantException
@@ -54,7 +55,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getClasses(java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> getClasses(String prefix) throws CodeAssistantException
@@ -63,7 +65,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getClassJavaDoc(java.lang.String)
     */
    @Override
    public String getClassJavaDoc(String fqn) throws CodeAssistantException
@@ -72,7 +75,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getIntefaces(java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException
@@ -81,7 +85,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getMemberJavaDoc(java.lang.String)
     */
    @Override
    public String getMemberJavaDoc(String fqn) throws CodeAssistantException
@@ -91,7 +96,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypeByFqn(java.lang.String)
     */
    @Override
    public TypeInfo getTypeByFqn(String fqn) throws CodeAssistantException
@@ -100,7 +106,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypesByFqnPrefix(java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix) throws CodeAssistantException
@@ -109,7 +116,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    }
 
    /**
-    * ${inherited doc}
+    * 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypesByFqnPrefix(java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix) throws CodeAssistantException
