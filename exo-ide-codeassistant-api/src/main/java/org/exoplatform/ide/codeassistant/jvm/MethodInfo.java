@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 /**
  * Represent information about class method. Can be transform to JSON. <code>
  *  {
@@ -40,8 +44,6 @@ package org.exoplatform.ide.codeassistant.jvm;
  */
 public class MethodInfo extends RoutineInfo
 {
-   private static final long serialVersionUID = 5735372561826927591L;
-
    /**
     * Full Qualified Class Name that method return <code>java.lang.String</code>
     */
@@ -82,5 +84,21 @@ public class MethodInfo extends RoutineInfo
    public String getReturnType()
    {
       return returnType;
+   }
+
+   @Override
+   public void writeExternal(ObjectOutput out) throws IOException
+   {
+      super.writeExternal(out);
+      out.writeObject(genericReturnType);
+      out.writeObject(returnType);
+   }
+
+   @Override
+   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+   {
+      super.readExternal(in);
+      genericReturnType = (String)in.readObject();
+      returnType = (String)in.readObject();
    }
 }

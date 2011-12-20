@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 
 /**
  * Check correctness of RoutineInfo deserialization
@@ -38,25 +39,49 @@ public class TestRoutineInfoExternalization extends BaseTest
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
-      serializedRoutineInfo = generateRoutineInfo();
+      serializedRoutineInfo =
+         new RoutineInfo(Modifier.PUBLIC, "TestClass", new String[]{"java.io.IOException",
+            "java.lang.IllegalStateException"}, "java.lang.Object", "Object",
+            "public test.TestClass(java.lang.Object) throws java.io.IOException, java.lang.IllegalStateException",
+            "test.TestClass");
       byte[] serializedData = serializeObject(serializedRoutineInfo);
       deserializedRoutineInfo = new RoutineInfo();
       deserializedRoutineInfo.readExternal(createObjectInputStream(serializedData));
    }
 
    @Test
-   public void testSuperTypeFieldsDeserialization()
+   public void testModifiersFieldDeserialization()
    {
       assertEquals(serializedRoutineInfo.getModifiers(), deserializedRoutineInfo.getModifiers());
+   }
+
+   @Test
+   public void testNameFieldDeserialization()
+   {
       assertEquals(serializedRoutineInfo.getName(), deserializedRoutineInfo.getName());
    }
 
    @Test
-   public void testObjectFieldsDeserialization()
+   public void testDeclaringClassFieldDeserialization()
    {
       assertEquals(serializedRoutineInfo.getDeclaringClass(), deserializedRoutineInfo.getDeclaringClass());
+   }
+
+   @Test
+   public void testParameterTypesFieldDeserialization()
+   {
       assertEquals(serializedRoutineInfo.getParameterTypes(), deserializedRoutineInfo.getParameterTypes());
+   }
+
+   @Test
+   public void testGenericParameterTypesFieldDeserialization()
+   {
       assertEquals(serializedRoutineInfo.getGenericParameterTypes(), deserializedRoutineInfo.getGenericParameterTypes());
+   }
+
+   @Test
+   public void testGenericFieldDeserialization()
+   {
       assertEquals(serializedRoutineInfo.getGeneric(), deserializedRoutineInfo.getGeneric());
    }
 
@@ -65,20 +90,5 @@ public class TestRoutineInfoExternalization extends BaseTest
    {
       assertArrayEquals(serializedRoutineInfo.getGenericExceptionTypes(),
          deserializedRoutineInfo.getGenericExceptionTypes());
-   }
-
-   private RoutineInfo generateRoutineInfo()
-   {
-      RoutineInfo routineInfo = new RoutineInfo();
-      routineInfo.setModifiers(1);
-      routineInfo.setName("field");
-      routineInfo.setDeclaringClass("test.TestClass");
-      routineInfo.setParameterTypes("Object");
-      routineInfo.setGenericParameterTypes("java.lang.Object");
-      routineInfo.setGenericExceptionTypes(new String[]{"java.io.IOException", "java.lang.IllegalStateException"});
-      routineInfo
-         .setGeneric("public void test.TestClass.method() throws java.io.IOException, java.lang.IllegalStateException");
-
-      return routineInfo;
    }
 }

@@ -41,8 +41,6 @@ import java.io.ObjectOutput;
  */
 public class FieldInfo extends Member
 {
-   private static final long serialVersionUID = 3476911861830439687L;
-
    /**
     * Short Class Name <code>Comparator</code>
     */

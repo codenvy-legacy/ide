@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 
 /**
  * Check correctness of FieldInfo deserialization
@@ -37,34 +38,33 @@ public class TestFieldInfoExternalization extends BaseTest
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
-      serializedFieldInfo = generateFieldInfo();
+      serializedFieldInfo = new FieldInfo("field", Modifier.PUBLIC, "test.TestClass", "String");
       byte[] serializedData = serializeObject(serializedFieldInfo);
       deserializedFieldInfo = new FieldInfo();
       deserializedFieldInfo.readExternal(createObjectInputStream(serializedData));
    }
 
    @Test
-   public void testSuperTypeDeserialization()
+   public void testNameFieldDeserialization()
    {
-      assertEquals(serializedFieldInfo.getModifiers(), deserializedFieldInfo.getModifiers());
       assertEquals(serializedFieldInfo.getName(), deserializedFieldInfo.getName());
    }
 
    @Test
-   public void testObjectFieldsDeserialization()
+   public void testModifiersFieldDeserialization()
    {
-      assertEquals(serializedFieldInfo.getDeclaringClass(), deserializedFieldInfo.getDeclaringClass());
-      assertEquals(serializedFieldInfo.getType(), deserializedFieldInfo.getType());
+      assertEquals(serializedFieldInfo.getModifiers(), deserializedFieldInfo.getModifiers());
    }
 
-   private FieldInfo generateFieldInfo()
+   @Test
+   public void testDeclaringClassFieldDeserialization()
    {
-      FieldInfo fieldInfo = new FieldInfo();
-      fieldInfo.setModifiers(1);
-      fieldInfo.setName("field");
-      fieldInfo.setDeclaringClass("test.TestClass");
-      fieldInfo.setType("String");
+      assertEquals(serializedFieldInfo.getDeclaringClass(), deserializedFieldInfo.getDeclaringClass());
+   }
 
-      return fieldInfo;
+   @Test
+   public void testTypeFieldDeserialization()
+   {
+      assertEquals(serializedFieldInfo.getType(), deserializedFieldInfo.getType());
    }
 }

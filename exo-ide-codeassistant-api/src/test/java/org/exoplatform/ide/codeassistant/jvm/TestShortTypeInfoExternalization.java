@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 
 /**
  * Check correctness of ShortTypeInfo deserialization
@@ -37,34 +38,33 @@ public class TestShortTypeInfoExternalization extends BaseTest
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
-      serializedShortTypeInfo = generateShortTypeInfo();
+      serializedShortTypeInfo = new ShortTypeInfo(Modifier.PUBLIC, "TestClass", "test.TestClass", "CLASS");
       byte[] serializedData = serializeObject(serializedShortTypeInfo);
       deserializedShortTypeInfo = new ShortTypeInfo();
       deserializedShortTypeInfo.readExternal(createObjectInputStream(serializedData));
    }
 
    @Test
-   public void testSuperTypeFieldsDeserialization() throws IOException, ClassNotFoundException
+   public void testModifiersFieldDeserialization()
    {
       assertEquals(serializedShortTypeInfo.getModifiers(), deserializedShortTypeInfo.getModifiers());
+   }
+
+   @Test
+   public void testNameFieldDeserialization()
+   {
       assertEquals(serializedShortTypeInfo.getName(), deserializedShortTypeInfo.getName());
    }
 
    @Test
-   public void testObjectFieldsDeserialization() throws IOException, ClassNotFoundException
+   public void testQualifiedNameFieldDeserialization()
    {
       assertEquals(serializedShortTypeInfo.getQualifiedName(), deserializedShortTypeInfo.getQualifiedName());
-      assertEquals(serializedShortTypeInfo.getType(), deserializedShortTypeInfo.getType());
    }
 
-   private ShortTypeInfo generateShortTypeInfo()
+   @Test
+   public void testTypeFieldDeserialization()
    {
-      ShortTypeInfo shortTypeInfo = new ShortTypeInfo();
-      shortTypeInfo.setModifiers(1);
-      shortTypeInfo.setName("TestClass");
-      shortTypeInfo.setQualifiedName("test.TestClass");
-      shortTypeInfo.setType("CLASS");
-
-      return shortTypeInfo;
+      assertEquals(serializedShortTypeInfo.getType(), deserializedShortTypeInfo.getType());
    }
 }
