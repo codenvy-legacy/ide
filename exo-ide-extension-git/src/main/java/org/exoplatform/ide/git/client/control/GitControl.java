@@ -23,9 +23,12 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -38,12 +41,14 @@ import java.util.List;
  * @version $Id:  Apr 15, 2011 10:06:58 AM anya $
  *
  */
-public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler
+public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
+   FolderRefreshedHandler
 {
-   
+
    enum EnableState {
       BEFORE_INIT, AFTER_INIT;
    }
+
    /**
     * Current workspace's href.
     */
@@ -78,30 +83,14 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
       }
 
       final Item item = event.getSelectedItems().get(0);
-      
+
       if (isWorkspaceSelected(item.getId()) || !isProjectSelected((ItemContext)item))
       {
          setEnabled(false);
          return;
       }
 
-      List<Item> itemList = ((ItemContext)item).getProject().getChildren().getItems();
-      for (Item child : itemList)
-      {
-         if (".git".equals(child.getName()))
-         {
-            if (enableState == EnableState.AFTER_INIT)
-               setEnabled(true);
-            else
-               setEnabled(false);
-            return;
-         }
-      }
-      
-      if (enableState == EnableState.AFTER_INIT)
-         setEnabled(false);
-      else
-         setEnabled(true);
+      updateControlState(((ItemContext)item).getProject());
    }
 
    protected boolean isWorkspaceSelected(String id)
@@ -122,6 +111,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    public void initialize()
    {
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       setVisible(true);
    }
@@ -145,7 +135,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
 
    /**
     * Set the state, where control must be enabled:
-    * before initializng repository or after.
+    * before initializing repository or after.
     * <p/>
     * IDE-1252
     * 
@@ -154,5 +144,35 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    public void setEnableState(EnableState enableState)
    {
       this.enableState = enableState;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
+    */
+   @Override
+   public void onFolderRefreshed(FolderRefreshedEvent event)
+   {
+      updateControlState(((ItemContext)event.getFolder()).getProject());
+   }
+
+   protected void updateControlState(ProjectModel project)
+   {
+      List<Item> itemList = project.getChildren().getItems();
+      for (Item child : itemList)
+      {
+         if (".git".equals(child.getName()))
+         {
+            if (enableState == EnableState.AFTER_INIT)
+               setEnabled(true);
+            else
+               setEnabled(false);
+            return;
+         }
+      }
+
+      if (enableState == EnableState.AFTER_INIT)
+         setEnabled(false);
+      else
+         setEnabled(true);
    }
 }
