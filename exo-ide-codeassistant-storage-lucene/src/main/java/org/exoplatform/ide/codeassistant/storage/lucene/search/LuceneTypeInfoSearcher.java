@@ -19,9 +19,7 @@
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermDocs;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -68,17 +66,13 @@ public class LuceneTypeInfoSearcher
    {
       try
       {
-         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
-         TermDocs termDocs = typeInfoIndxReader.termDocs(new Term(fieldName, value));
+         IndexSearcher searcher = infoStorage.getTypeInfoIndexSearcher();
+         TopDocs docs = searcher.search(new TermQuery(new Term(fieldName, value)), 1);
 
-         int[] docs = new int[1];
-         int[] freqs = new int[1];
-
-         int count = termDocs.read(docs, freqs);
-         if (count == 1)
+         if (docs.totalHits == 1)
          {
 
-            byte[] jsonField = typeInfoIndxReader.document(docs[0]).getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
+            byte[] jsonField = searcher.doc(docs.scoreDocs[0].doc).getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
             return createTypeInfoObject(jsonField);
 
          }
@@ -174,8 +168,7 @@ public class LuceneTypeInfoSearcher
    {
       try
       {
-         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
-         IndexSearcher searcher = new IndexSearcher(typeInfoIndxReader);
+         IndexSearcher searcher = infoStorage.getTypeInfoIndexSearcher();
          TopDocs topDocs = searcher.search(new PrefixQuery(new Term(fieldName, prefix)), Integer.MAX_VALUE);
 
          List<Document> result = new ArrayList<Document>();
@@ -198,8 +191,7 @@ public class LuceneTypeInfoSearcher
    {
       try
       {
-         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
-         IndexSearcher searcher = new IndexSearcher(typeInfoIndxReader);
+         IndexSearcher searcher = infoStorage.getTypeInfoIndexSearcher();
          TopDocs topDocs = null;
          TermQuery termQuery = new TermQuery(new Term(TypeInfoIndexFields.ENTITY_TYPE, type.toString()));
          if (prefix != null && !prefix.isEmpty())

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 
 import java.io.IOException;
@@ -30,14 +30,14 @@ public interface LuceneInfoStorage
 {
    /**
     * 
-    * @return IndexReader of type info lucene storage
+    * @return IndexSearcher
     * @throws IOException
     */
-   IndexReader getTypeInfoIndxReader() throws IOException;
+   IndexSearcher getTypeInfoIndexSearcher() throws IOException;
 
    /**
     * 
-    * @return IndexReader of type info lucene storage
+    * @return Directory
     * @throws IOException
     */
    Directory getTypeInfoIndexDirectory() throws IOException;

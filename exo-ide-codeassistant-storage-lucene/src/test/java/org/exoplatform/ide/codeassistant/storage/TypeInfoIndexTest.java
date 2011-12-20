@@ -59,7 +59,7 @@ public class TypeInfoIndexTest extends BaseTest
    @Test
    public void testCreatedDocsCount() throws Exception
    {
-      IndexReader reader = luceneInfoStorage.getTypeInfoIndxReader();
+      IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
       assertEquals(CLASSES_IN_JAR, reader.numDocs());
       reader.close();
    }

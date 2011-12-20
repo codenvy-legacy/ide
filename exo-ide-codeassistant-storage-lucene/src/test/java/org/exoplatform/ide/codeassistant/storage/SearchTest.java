@@ -45,7 +45,7 @@ public class SearchTest extends BaseTest
    @BeforeClass
    public static void createIndex() throws Exception
    {
-      //String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
+      String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
       generateClassFiles("src/test/resources/test/");
       File jar = generateJarFile("test.jar");
 

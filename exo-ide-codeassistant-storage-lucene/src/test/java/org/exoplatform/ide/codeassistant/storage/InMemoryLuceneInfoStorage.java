@@ -20,6 +20,7 @@ package org.exoplatform.ide.codeassistant.storage;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
@@ -27,10 +28,7 @@ import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import java.io.IOException;
 
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z
- *          aheritier $
- * 
+ * In memory storage manager
  */
 public class InMemoryLuceneInfoStorage implements LuceneInfoStorage
 {
@@ -38,20 +36,12 @@ public class InMemoryLuceneInfoStorage implements LuceneInfoStorage
 
    private IndexReader typeInfoIndexReader;
 
+   private IndexSearcher typeInfoIndexSearcher;
+
    public InMemoryLuceneInfoStorage()
    {
       super();
       this.directory = new RAMDirectory();
-   }
-
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage#getTypeInfoIndxReader()
-    */
-   @Override
-   public IndexReader getTypeInfoIndxReader() throws IOException
-   {
-      reopenReaderWhenNeed();
-      return typeInfoIndexReader;
    }
 
    /**
@@ -74,6 +64,7 @@ public class InMemoryLuceneInfoStorage implements LuceneInfoStorage
       if (typeInfoIndexReader == null)
       {
          typeInfoIndexReader = IndexReader.open(directory, true);
+         typeInfoIndexSearcher = new IndexSearcher(typeInfoIndexReader);
       }
       else
       {
@@ -81,9 +72,20 @@ public class InMemoryLuceneInfoStorage implements LuceneInfoStorage
          if (newReader != typeInfoIndexReader)
          {
             typeInfoIndexReader.close();
+            typeInfoIndexSearcher = new IndexSearcher(newReader);
          }
          typeInfoIndexReader = newReader;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage#getTypeInfoIndexSearcher()
+    */
+   @Override
+   public IndexSearcher getTypeInfoIndexSearcher() throws IOException
+   {
+      reopenReaderWhenNeed();
+      return typeInfoIndexSearcher;
    }
 
 }

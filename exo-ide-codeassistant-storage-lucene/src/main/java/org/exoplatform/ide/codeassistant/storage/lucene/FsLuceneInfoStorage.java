@@ -20,6 +20,7 @@ package org.exoplatform.ide.codeassistant.storage.lucene;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.exoplatform.container.configuration.ConfigurationException;
@@ -80,6 +81,8 @@ public class FsLuceneInfoStorage implements Startable, LuceneInfoStorage
 
    private IndexReader typeInfoIndexReader;
 
+   private IndexSearcher typeInfoIndexSearcher;
+
    public FsLuceneInfoStorage(InitParams initParams) throws ConfigurationException, IOException
    {
       this(extractJarNames(initParams), extractStoragePath(initParams));
@@ -103,16 +106,6 @@ public class FsLuceneInfoStorage implements Startable, LuceneInfoStorage
    public Directory getTypeInfoIndexDirectory() throws IOException
    {
       return typeInfoIndexDirectory;
-   }
-
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage#getTypeInfoIndxReader()
-    */
-   @Override
-   public IndexReader getTypeInfoIndxReader() throws IOException
-   {
-      reopenReaderWhenNeed();
-      return typeInfoIndexReader;
    }
 
    /**
@@ -176,6 +169,7 @@ public class FsLuceneInfoStorage implements Startable, LuceneInfoStorage
       if (typeInfoIndexReader == null)
       {
          typeInfoIndexReader = IndexReader.open(typeInfoIndexDirectory, true);
+         typeInfoIndexSearcher = new IndexSearcher(typeInfoIndexReader);
       }
       else
       {
@@ -183,9 +177,19 @@ public class FsLuceneInfoStorage implements Startable, LuceneInfoStorage
          if (newReader != typeInfoIndexReader)
          {
             typeInfoIndexReader.close();
+            typeInfoIndexSearcher = new IndexSearcher(newReader);
          }
          typeInfoIndexReader = newReader;
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage#getTypeInfoIndexSearcher()
+    */
+   @Override
+   public IndexSearcher getTypeInfoIndexSearcher() throws IOException
+   {
+      reopenReaderWhenNeed();
+      return typeInfoIndexSearcher;
+   }
 }
