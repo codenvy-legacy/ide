@@ -18,20 +18,19 @@
  */
 package org.exoplatform.ide.client.authentication;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.PasswordField;
-import org.exoplatform.gwtframework.ui.client.component.TextInput;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class LoginView extends ViewImpl implements org.exoplatform.ide.client.authentication.LoginPresenter.Display
 {
-   
+
    private static final String ID = "ideLoginView";
 
    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
@@ -50,23 +49,24 @@ public class LoginView extends ViewImpl implements org.exoplatform.ide.client.au
    interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
    {
    }
-   
+
    @UiField
    ImageButton loginButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    TextInput loginField;
-   
+
    @UiField
-   PasswordField passwordField;
+   PasswordTextInput passwordField;
 
    public LoginView()
    {
-      super(ID, "modal", "Login", new Image(IDEImageBundle.INSTANCE.ok()), 450, 260);
+      super(ID, "modal", "Login", new Image(IDEImageBundle.INSTANCE.ok()), 430, 270);
       add(uiBinder.createAndBindUi(this));
+      passwordField.setName("ideLoginViewPasswordField");
    }
 
    @Override
