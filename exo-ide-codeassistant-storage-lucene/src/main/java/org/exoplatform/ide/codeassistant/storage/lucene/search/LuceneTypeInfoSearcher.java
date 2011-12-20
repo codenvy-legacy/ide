@@ -98,73 +98,6 @@ public class LuceneTypeInfoSearcher
       }
    }
 
-   private List<Document> searchDocumentsByFieldPrefix(String fieldName, String prefix) throws CodeAssistantException
-   {
-      try
-      {
-         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
-         IndexSearcher searcher = new IndexSearcher(typeInfoIndxReader);
-         TopDocs topDocs = searcher.search(new PrefixQuery(new Term(fieldName, prefix)), Integer.MAX_VALUE);
-
-         List<Document> result = new ArrayList<Document>();
-         for (ScoreDoc scoreDoc : topDocs.scoreDocs)
-         {
-            result.add(searcher.doc(scoreDoc.doc));
-         }
-         searcher.close();
-
-         return result;
-      }
-      catch (IOException e)
-      {
-         LOG.error(e.getLocalizedMessage(), e);
-         throw new CodeAssistantException(404, e.getLocalizedMessage());
-      }
-   }
-
-   private List<Document> searchDocumentsByType(JavaType type, String prefix) throws CodeAssistantException
-   {
-      try
-      {
-         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
-         IndexSearcher searcher = new IndexSearcher(typeInfoIndxReader);
-         TopDocs topDocs = null;
-         TermQuery termQuery = new TermQuery(new Term(TypeInfoIndexFields.ENTITY_TYPE, type.toString()));
-         if (prefix != null && !prefix.isEmpty())
-         {
-            PrefixQuery prefixQuery = new PrefixQuery(new Term(TypeInfoIndexFields.CLASS_NAME, prefix));
-
-            BooleanQuery booleanQuery = new BooleanQuery();
-            booleanQuery.add(prefixQuery, BooleanClause.Occur.MUST);
-            booleanQuery.add(termQuery, BooleanClause.Occur.MUST);
-
-            topDocs = searcher.search(booleanQuery, Integer.MAX_VALUE);
-         }
-         else
-         {
-            topDocs = searcher.search(termQuery, Integer.MAX_VALUE);
-         }
-
-         if (topDocs.totalHits == 0)
-         {
-            return Collections.emptyList();
-         }
-
-         List<Document> result = new ArrayList<Document>();
-         for (ScoreDoc scoreDoc : topDocs.scoreDocs)
-         {
-            result.add(searcher.doc(scoreDoc.doc));
-         }
-
-         return result;
-      }
-      catch (IOException e)
-      {
-         LOG.error(e.getLocalizedMessage(), e);
-         throw new CodeAssistantException(404, e.getLocalizedMessage());
-      }
-   }
-
    public List<ShortTypeInfo> searchFieldByPrefix(String field, String prefix) throws CodeAssistantException
    {
 
@@ -234,6 +167,73 @@ public class LuceneTypeInfoSearcher
                LOG.warn("Error on InputStream closing");
             }
          }
+      }
+   }
+
+   private List<Document> searchDocumentsByFieldPrefix(String fieldName, String prefix) throws CodeAssistantException
+   {
+      try
+      {
+         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
+         IndexSearcher searcher = new IndexSearcher(typeInfoIndxReader);
+         TopDocs topDocs = searcher.search(new PrefixQuery(new Term(fieldName, prefix)), Integer.MAX_VALUE);
+
+         List<Document> result = new ArrayList<Document>();
+         for (ScoreDoc scoreDoc : topDocs.scoreDocs)
+         {
+            result.add(searcher.doc(scoreDoc.doc));
+         }
+         searcher.close();
+
+         return result;
+      }
+      catch (IOException e)
+      {
+         LOG.error(e.getLocalizedMessage(), e);
+         throw new CodeAssistantException(404, e.getLocalizedMessage());
+      }
+   }
+
+   private List<Document> searchDocumentsByType(JavaType type, String prefix) throws CodeAssistantException
+   {
+      try
+      {
+         IndexReader typeInfoIndxReader = infoStorage.getTypeInfoIndxReader();
+         IndexSearcher searcher = new IndexSearcher(typeInfoIndxReader);
+         TopDocs topDocs = null;
+         TermQuery termQuery = new TermQuery(new Term(TypeInfoIndexFields.ENTITY_TYPE, type.toString()));
+         if (prefix != null && !prefix.isEmpty())
+         {
+            PrefixQuery prefixQuery = new PrefixQuery(new Term(TypeInfoIndexFields.CLASS_NAME, prefix));
+
+            BooleanQuery booleanQuery = new BooleanQuery();
+            booleanQuery.add(prefixQuery, BooleanClause.Occur.MUST);
+            booleanQuery.add(termQuery, BooleanClause.Occur.MUST);
+
+            topDocs = searcher.search(booleanQuery, Integer.MAX_VALUE);
+         }
+         else
+         {
+            topDocs = searcher.search(termQuery, Integer.MAX_VALUE);
+         }
+
+         if (topDocs.totalHits == 0)
+         {
+            return Collections.emptyList();
+         }
+
+         List<Document> result = new ArrayList<Document>();
+         for (ScoreDoc scoreDoc : topDocs.scoreDocs)
+         {
+            result.add(searcher.doc(scoreDoc.doc));
+         }
+
+         return result;
+      }
+      catch (IOException e)
+      {
+         LOG.error(e.getLocalizedMessage(), e);
+         throw new CodeAssistantException(404, e.getLocalizedMessage());
       }
    }
 
