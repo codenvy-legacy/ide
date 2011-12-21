@@ -211,6 +211,12 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("login.field.target")
    String loginViewTargetField();
+   
+   @Key("login.error.unknowTarget")
+   String loginViewErrorUnknownTarget();
+   
+   @Key("login.error.invalidUserOrPassword")
+   String loginViewErrorInvalidUserOrPassword();
 
    /*
     * CreateApplicationView.

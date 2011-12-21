@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -85,15 +82,10 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
          }
          else
          {
-
             String msg = "";
             if (serverException.isErrorMessageProvided())
             {
                msg = serverException.getLocalizedMessage();
-               if (msg.startsWith("{") && msg.endsWith("}"))
-               {
-                  msg = fromJson(msg);
-               }
             }
             else
             {
@@ -105,47 +97,5 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
       }
       super.onFailure(exception);
    }
-   
-   private static String fromJson(String jsonMsg)
-   {
-      JavaScriptObject json = build(jsonMsg);
-      if (json == null)
-         return jsonMsg;
-      JSONObject jsonObject = new JSONObject(json).isObject();
-      if (jsonObject == null)
-         return jsonMsg;
-      
-      String result = "";
-
-      for (String key : jsonObject.keySet())
-      {
-         JSONValue jsonValue = jsonObject.get(key);
-         if (jsonValue.isString() != null)
-         {
-            result += key + " : " + jsonValue.isString().stringValue() + "<br>";
-         }
-         else if (jsonValue.isNumber() != null)
-         {
-            result += key + " : " + (int)jsonValue.isNumber().doubleValue() + "<br>";
-         }
-      }
-      
-      return result;
-   }
-   
-   /**
-    * Build {@link JavaScriptObject} from string.
-    * 
-    * @param json string that contains object
-    * @return {@link JavaScriptObject}
-    */
-   protected static native JavaScriptObject build(String json) /*-{
-      try {
-         var object = eval('(' + json + ')');
-         return object;
-      } catch (e) {
-         return null;
-      }
-   }-*/;
 
 }

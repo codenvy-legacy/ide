@@ -67,7 +67,7 @@
                   <g:Label text="{locale.loginViewEmailField}" styleName="{style.label}"></g:Label>
                </g:west>
                <g:center>
-                  <g:TextBox ui:field="emailField" height="20px" width="100%" addStyleNames="{style.spacing}"></g:TextBox>
+                  <g:TextBox ui:field="emailField" height="22px" width="100%" addStyleNames="{style.spacing}"></g:TextBox>
                </g:center>
             </g:DockLayoutPanel>
             
@@ -76,7 +76,7 @@
                   <g:Label text="{locale.loginViewPasswordField}" styleName="{style.label}"></g:Label>
                </g:west>
                <g:center>
-                  <f:PasswordTextInput ui:field="passwordField" height="20px" width="100%" addStyleNames="{style.spacing}"></f:PasswordTextInput>
+                  <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%" addStyleNames="{style.spacing}"></f:PasswordTextInput>
                </g:center>
             </g:DockLayoutPanel>
 

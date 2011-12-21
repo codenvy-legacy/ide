@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import com.google.gwt.core.client.GWT;
@@ -113,6 +114,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        */
       void setTargetValues(String[] targets);
    }
+   
+   private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
 
    private Display display;
 
@@ -300,7 +303,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          protected void onSuccess(String result)
          {
             server = enteredServer;
-            IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+            IDE.fireEvent(new OutputEvent(lb.loginSuccess(), Type.INFO));
             if (loggedIn != null)
             {
                loggedIn.onLoggedIn();
@@ -314,27 +317,23 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          @Override
          protected void onFailure(Throwable exception)
          {
-            IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
+            IDE.fireEvent(new OutputEvent(lb.loginFailed(), Type.INFO));
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
                if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
                         && serverException.getMessage().contains("Can't access target."))
                {
-                  display.getErrorLabelField().setValue("Unknown Cloud Foundry target. Try again.");
+                  display.getErrorLabelField().setValue(lb.loginViewErrorUnknownTarget());
                   return;
                }
                else if (HTTPStatus.OK != serverException.getHTTPStatus() && serverException.getMessage() != null
                         && serverException.getMessage().contains("Operation not permitted"))
                {
-                  display.getErrorLabelField().setValue("Invalid username or password. Try again.");
+                  display.getErrorLabelField().setValue(lb.loginViewErrorInvalidUserOrPassword());
                   return;
                }
-               else
-               {
-                  super.onFailure(exception);
-                  return;
-               }
+               //otherwise will be called method from superclass.
             }
             super.onFailure(exception);
          }
