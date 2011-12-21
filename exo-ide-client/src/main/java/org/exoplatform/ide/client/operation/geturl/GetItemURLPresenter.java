@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,11 +90,12 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
    {
       if (display != null)
       {
-         String url = selectedItems.get(0).getPath();
+         Item item = selectedItems.get(0);
+         String url = item.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
          display.getURLField().setValue(url);
       }
    }
-
+   
    public void bindDisplay()
    {
       display.getOkButton().addClickHandler(new ClickHandler()
