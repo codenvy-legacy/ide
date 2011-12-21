@@ -41,7 +41,7 @@ import java.util.List;
 /**
  *
  */
-public class TypeInfoIndexTest extends BaseTest
+public class TypeInfoIndexTest
 {
    private static LuceneCodeAssistantStorage storage;
 
