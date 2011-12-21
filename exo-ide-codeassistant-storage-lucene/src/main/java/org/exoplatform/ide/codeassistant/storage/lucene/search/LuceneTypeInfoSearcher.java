@@ -27,10 +27,6 @@ import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
@@ -42,7 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,7 +68,7 @@ public class LuceneTypeInfoSearcher
          if (docs.totalHits == 1)
          {
 
-            byte[] jsonField = searcher.doc(docs.scoreDocs[0].doc).getBinaryValue(TypeInfoIndexFields.TYPE_INFO_JSON);
+            byte[] jsonField = searcher.doc(docs.scoreDocs[0].doc).getBinaryValue(TypeInfoIndexFields.TYPE_INFO);
             return createTypeInfoObject(jsonField);
 
          }
@@ -86,7 +82,7 @@ public class LuceneTypeInfoSearcher
          LOG.error("Error during searching Type by FQN", e);
          throw new CodeAssistantException(404, e.getLocalizedMessage());
       }
-      catch (JsonException e)
+      catch (ClassNotFoundException e)
       {
          throw new CodeAssistantException(404, e.getLocalizedMessage());
       }
@@ -134,19 +130,22 @@ public class LuceneTypeInfoSearcher
       return shortTypeInfo;
    }
 
-   private TypeInfo createTypeInfoObject(byte[] data) throws JsonException
+   private TypeInfo createTypeInfoObject(byte[] data) throws IOException, ClassNotFoundException
    {
-      InputStream io = null;
+      ObjectInputStream io = null;
       try
       {
-         io = new ByteArrayInputStream(data);
+         io = new ObjectInputStream(new ByteArrayInputStream(data));
+         TypeInfo result = new TypeInfo();
+         result.readExternal(io);
+         return result;
 
-         JsonParser jsonParser = new JsonParser();
-         jsonParser.parse(io);
-         JsonValue jsonValue = jsonParser.getJsonObject();
-         TypeInfo typeInfo = ObjectBuilder.createObject(TypeInfo.class, jsonValue);
-
-         return typeInfo;
+         //         JsonParser jsonParser = new JsonParser();
+         //         jsonParser.parse(io);
+         //         JsonValue jsonValue = jsonParser.getJsonObject();
+         //         TypeInfo typeInfo = ObjectBuilder.createObject(TypeInfo.class, jsonValue);
+         //
+         //         return typeInfo;
       }
       finally
       {

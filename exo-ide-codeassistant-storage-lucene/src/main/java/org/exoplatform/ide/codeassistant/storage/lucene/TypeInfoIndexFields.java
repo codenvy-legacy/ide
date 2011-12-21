@@ -35,5 +35,5 @@ public final class TypeInfoIndexFields
 
    public static final String INTERFACES = "interfaces";
 
-   public static final String TYPE_INFO_JSON = "type-info-json";
+   public static final String TYPE_INFO = "type-info";
 }

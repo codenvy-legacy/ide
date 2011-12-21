@@ -25,9 +25,6 @@ import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonGenerator;
-import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
@@ -35,7 +32,9 @@ import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 /**
@@ -76,36 +75,35 @@ public class LuceneTypeInfoWriter
       }
    }
 
-   private Document createDocument(TypeInfo typeInfo) throws SaveTypeInfoIndexException
+   private Document createDocument(TypeInfo typeInfo) throws IOException
    {
-      try
+      Document typeInfoDocument = new Document();
+      typeInfoDocument
+         .add(new Field(TypeInfoIndexFields.CLASS_NAME, typeInfo.getName(), Store.YES, Index.NOT_ANALYZED));
+
+      typeInfoDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()),
+         Store.YES, Index.NOT_ANALYZED));
+
+      typeInfoDocument.add(new Field(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName(), Store.YES,
+         Index.NOT_ANALYZED));
+      typeInfoDocument
+         .add(new Field(TypeInfoIndexFields.ENTITY_TYPE, typeInfo.getType(), Store.YES, Index.NOT_ANALYZED));
+      typeInfoDocument.add(new Field(TypeInfoIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES,
+         Index.NOT_ANALYZED));
+
+      for (String string : typeInfo.getInterfaces())
       {
-         Document typeInfoDocument = new Document();
-         typeInfoDocument.add(new Field(TypeInfoIndexFields.CLASS_NAME, typeInfo.getName(), Store.YES,
-            Index.NOT_ANALYZED));
-         typeInfoDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()),
-            Store.YES, Index.NOT_ANALYZED));
-         typeInfoDocument.add(new Field(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName(), Store.YES,
-            Index.NOT_ANALYZED));
-         typeInfoDocument.add(new Field(TypeInfoIndexFields.ENTITY_TYPE, typeInfo.getType(), Store.YES,
-            Index.NOT_ANALYZED));
-         typeInfoDocument.add(new Field(TypeInfoIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES,
-            Index.NOT_ANALYZED));
-
-         for (String string : typeInfo.getInterfaces())
-         {
-            typeInfoDocument.add(new Field(TypeInfoIndexFields.INTERFACES, string, Store.YES, Index.NOT_ANALYZED));
-         }
-
-         JsonValue jsonValue = JsonGenerator.createJsonObject(typeInfo);
-         typeInfoDocument
-            .add(new Field(TypeInfoIndexFields.TYPE_INFO_JSON, jsonValue.toString().getBytes(), Store.YES));
-
-         return typeInfoDocument;
+         typeInfoDocument.add(new Field(TypeInfoIndexFields.INTERFACES, string, Store.YES, Index.NOT_ANALYZED));
       }
-      catch (JsonException e)
-      {
-         throw new SaveTypeInfoIndexException("Can't to get json representation of TypeInfo", e);
-      }
+
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      ObjectOutputStream out = new ObjectOutputStream(bos);
+      typeInfo.writeExternal(out);
+      out.close();
+
+      typeInfoDocument.add(new Field(TypeInfoIndexFields.TYPE_INFO, bos.toByteArray(), Store.YES));
+
+      return typeInfoDocument;
+
    }
 }
