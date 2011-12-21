@@ -37,21 +37,8 @@ import java.util.List;
  * @version $Id: FrameworksUnmarshaller.java Jul 8, 2011 11:12:16 AM vereshchaka $
  *
  */
-public class FrameworksUnmarshaller implements Unmarshallable
+public class FrameworksUnmarshaller implements Unmarshallable, Constants
 {
-   interface Constants
-   {
-      public static final String DISPLAY_NAME = "displayName";
-      
-      public static final String TYPE = "type";
-      
-      /* Default memory size in megabytes.*/
-      public static final String MEMORY = "memory";
-      
-      public static final String DESCRIPTION = "description";
-      
-   }
-   
    private List<Framework> frameworks;
 
    public FrameworksUnmarshaller(List<Framework> frameworks)
@@ -76,34 +63,34 @@ public class FrameworksUnmarshaller implements Unmarshallable
          frameworks.add(framework);
       }
    }
-   
+
    private void parseObject(JSONObject jsonObject, Framework framework)
    {
       for (String key : jsonObject.keySet())
       {
          JSONValue jsonValue = jsonObject.get(key);
-         if (key.equals(Constants.MEMORY))
+         if (key.equals(MEMORY))
          {
             if (jsonValue.isNumber() != null)
             {
                framework.setMemory((int)jsonValue.isNumber().doubleValue());
             }
          }
-         else if (key.equals(Constants.DISPLAY_NAME))
+         else if (key.equals(DISPLAY_NAME))
          {
             if (jsonValue.isString() != null)
             {
                framework.setDisplayName(jsonValue.isString().stringValue());
             }
          }
-         else if (key.equals(Constants.TYPE))
+         else if (key.equals(TYPE))
          {
             if (jsonValue.isString() != null)
             {
                framework.setType(jsonValue.isString().stringValue());
             }
          }
-         else if (key.equals(Constants.DESCRIPTION))
+         else if (key.equals(DESCRIPTION))
          {
             if (jsonValue.isString() != null)
             {

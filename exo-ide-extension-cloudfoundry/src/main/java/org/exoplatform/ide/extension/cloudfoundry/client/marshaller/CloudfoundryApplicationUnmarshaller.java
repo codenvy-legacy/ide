@@ -42,53 +42,8 @@ import java.util.List;
  * @version $Id: CloudfoundryApplicationUnmarshaller Jun 22, 2011 5:06:40 PM vereshchaka $
  *
  */
-public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
+public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Constants
 {
-   interface Constants
-   {
-      /* String */
-      public static final String NAME = "name";
-      
-      /* List */
-      public static final String URIS = "uris";
-      
-      /* int */
-      public static final String INSTANCES = "instances";
-      
-      /* int */
-      public static final String RUNNING_INSTANCES = "runningInstances";
-      
-      /* String */
-      public static final String STATE = "state";
-      
-      /* List */
-      public static final String SERVICES = "services";
-      
-      /* String */
-      public static final String VERSION = "version";
-      
-      /* List */
-      public static final String ENV = "env";
-      
-      /* {@link CloudfoundryApplicationResources} */
-      public static final String RESOURCES = "resources";
-      
-      /* {@link Staging} */
-      public static final String STAGING = "staging";
-      
-      //CloudfoundryApplicationResource
-      /* int */
-      public static final String MEMORY = "memory";
-      
-      /* int */
-      public static final String DISK = "dist";
-      
-      //Staging
-      public static final String MODEL = "model";
-      
-      public static final String STACK = "stack";
-   }
-
    private CloudfoundryApplication cloudfoundryApplication;
    
    public CloudfoundryApplicationUnmarshaller(CloudfoundryApplication application)
@@ -127,7 +82,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
       for (String key : jsonObject.keySet())
       {
          JSONValue jsonValue = jsonObject.get(key);
-         if (key.equals(Constants.NAME))
+         if (key.equals(NAME))
          {
             if (jsonValue.isString() != null)
             {
@@ -135,7 +90,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
             }
             
          }
-         else if (key.equals(Constants.URIS))
+         else if (key.equals(URIS))
          {
             List<String> uris = new ArrayList<String>();
             if (jsonValue.isArray() != null)
@@ -146,28 +101,28 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
             }
             cloudfoundryApplication.setUris(uris);
          }
-         else if (key.equals(Constants.INSTANCES))
+         else if (key.equals(INSTANCES))
          {
             if (jsonValue.isNumber() != null)
              {
                 cloudfoundryApplication.setInstances((int)jsonValue.isNumber().doubleValue());
              }
          }
-         else if (key.equals(Constants.RUNNING_INSTANCES))
+         else if (key.equals(RUNNING_INSTANCES))
          {
             if (jsonValue.isNumber() != null)
              {
                 cloudfoundryApplication.setRunningInstances((int)jsonValue.isNumber().doubleValue());
              }
          }
-         else if (key.equals(Constants.STATE))
+         else if (key.equals(STATE))
          {
             if (jsonValue.isString() != null)
             {
                cloudfoundryApplication.setState(jsonValue.isString().stringValue());
             }
          }
-         else if (key.equals(Constants.SERVICES))
+         else if (key.equals(SERVICES))
          {
             List<String> services = new ArrayList<String>();
             if (jsonValue.isArray() != null)
@@ -179,14 +134,14 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
             cloudfoundryApplication.setServices(services);
 
          }
-         else if (key.equals(Constants.VERSION))
+         else if (key.equals(VERSION))
          {
             if (jsonValue.isString() != null)
             {
                cloudfoundryApplication.setVersion(jsonValue.isString().stringValue());
             }
          }
-         else if (key.equals(Constants.ENV))
+         else if (key.equals(ENV))
          {
             List<String> envs = new ArrayList<String>();
             if (jsonValue.isArray() != null)
@@ -198,7 +153,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
             cloudfoundryApplication.setEnv(envs);
 
          }
-         else if (key.equals(Constants.RESOURCES))
+         else if (key.equals(RESOURCES))
          {
             CloudfoundryApplicationResources resources = new CloudfoundryApplicationResources();
             if (jsonValue.isObject() != null)
@@ -208,7 +163,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
             cloudfoundryApplication.setResources(resources);
 
          }
-         else if (key.equals(Constants.STAGING))
+         else if (key.equals(STAGING))
          {
             Staging staging = new Staging();
             if (jsonValue.isObject() != null)
@@ -225,14 +180,14 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
       for (String key : jsonObject.keySet())
       {
          JSONValue jsonValue = jsonObject.get(key);
-         if (key.equals(Constants.MODEL))
+         if (key.equals(MODEL))
          {
             if (jsonValue.isString() != null)
              {
                staging.setModel(jsonValue.isString().stringValue());
              }
          }
-         else if (key.equals(Constants.STACK))
+         else if (key.equals(STACK))
          {
             if (jsonValue.isString() != null)
              {
@@ -247,14 +202,14 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
       for (String key : jsonObject.keySet())
       {
          JSONValue jsonValue = jsonObject.get(key);
-         if (key.equals(Constants.DISK))
+         if (key.equals(DISK))
          {
             if (jsonValue.isNumber() != null)
              {
                resources.setDisk((int)jsonValue.isNumber().doubleValue());
              }
          }
-         else if (key.equals(Constants.MEMORY))
+         else if (key.equals(MEMORY))
          {
             if (jsonValue.isNumber() != null)
              {

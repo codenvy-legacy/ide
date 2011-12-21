@@ -37,32 +37,8 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
  * @version $Id:  Aug 18, 2011 10:45:14 AM anya $
  *
  */
-public class SystemInfoUnmarshaller implements Unmarshallable
+public class SystemInfoUnmarshaller implements Unmarshallable, Constants
 {
-
-   interface Constants
-   {
-      public static final String LIMITS = "limits";
-
-      public static final String USAGE = "usage";
-
-      public static final String DESCRIPTION = "description";
-
-      public static final String USER = "user";
-
-      public static final String VERSION = "version";
-
-      public static final String NAME = "name";
-
-      public static final String SUPPORT = "support";
-
-      public static final String SERVICES = "services";
-
-      public static final String APPS = "apps";
-
-      public static final String MEMORY = "memory";
-   }
-
    /**
     * System information.
     */
@@ -75,7 +51,6 @@ public class SystemInfoUnmarshaller implements Unmarshallable
    public SystemInfoUnmarshaller(SystemInfo systemInfo)
    {
       this.systemInfo = systemInfo;
-
    }
 
    /**
@@ -87,13 +62,15 @@ public class SystemInfoUnmarshaller implements Unmarshallable
       try
       {
          JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
-         systemInfo.setDescription(jsonObject.get(Constants.DESCRIPTION).isString().stringValue());
-         systemInfo.setName(jsonObject.get(Constants.NAME).isString().stringValue());
-         systemInfo.setSupport(jsonObject.get(Constants.SUPPORT).isString().stringValue());
-         systemInfo.setUser(jsonObject.get(Constants.USER).isString().stringValue());
-         systemInfo.setVersion(jsonObject.get(Constants.VERSION).isString().stringValue());
-         systemInfo.setLimits(parseSystemResources(jsonObject.get(Constants.LIMITS).isObject()));
-         systemInfo.setUsage(parseSystemResources(jsonObject.get(Constants.USAGE).isObject()));
+         if (jsonObject == null)
+            return;
+         systemInfo.setDescription(jsonObject.get(DESCRIPTION).isString().stringValue());
+         systemInfo.setName(jsonObject.get(NAME).isString().stringValue());
+         systemInfo.setSupport(jsonObject.get(SUPPORT).isString().stringValue());
+         systemInfo.setUser(jsonObject.get(USER).isString().stringValue());
+         systemInfo.setVersion(jsonObject.get(VERSION).isString().stringValue());
+         systemInfo.setLimits(parseSystemResources(jsonObject.get(LIMITS).isObject()));
+         systemInfo.setUsage(parseSystemResources(jsonObject.get(USAGE).isObject()));
       }
       catch (Exception e)
       {
@@ -110,9 +87,9 @@ public class SystemInfoUnmarshaller implements Unmarshallable
    protected SystemResources parseSystemResources(JSONObject jsonObject)
    {
       SystemResources systemResources = new SystemResources();
-      systemResources.setApps((int)jsonObject.get(Constants.APPS).isNumber().doubleValue());
-      systemResources.setMemory((int)jsonObject.get(Constants.MEMORY).isNumber().doubleValue());
-      systemResources.setServices((int)jsonObject.get(Constants.SERVICES).isNumber().doubleValue());
+      systemResources.setApps((int)jsonObject.get(APPS).isNumber().doubleValue());
+      systemResources.setMemory((int)jsonObject.get(MEMORY).isNumber().doubleValue());
+      systemResources.setServices((int)jsonObject.get(SERVICES).isNumber().doubleValue());
       return systemResources;
    }
 
