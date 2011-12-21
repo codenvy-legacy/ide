@@ -28,13 +28,17 @@ import java.lang.reflect.Array;
 /**
  * Contains set of operations for more efficient object Externalization. String
  * objects will be saved as array of bytes in UTF-8 format. For serialization
- * and deserialization of objects where it's possible will be used mechanism of
- * Externalization.
+ * and deserialization of objects where it's possible will be used they own
+ * Externalization mechanism.
  */
 public class ExternalizationTools
 {
 
    private static final String UTF_8 = "UTF-8";
+
+   private ExternalizationTools()
+   {
+   }
 
    public static void writeStringUTF(String string, ObjectOutput out) throws UnsupportedEncodingException, IOException
    {

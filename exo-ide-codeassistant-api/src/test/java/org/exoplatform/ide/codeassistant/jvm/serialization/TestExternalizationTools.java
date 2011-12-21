@@ -39,7 +39,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Test read and write operations from ExternalizationTool
  */
-public class TestExternalizationTool extends BaseTest
+public class TestExternalizationTools extends BaseTest
 {
    @Test
    public void shouldSerializeCyrillicString() throws IOException
