@@ -21,12 +21,13 @@ package org.exoplatform.ide.codeassistant.storage.extension;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.InMemoryLuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneCachedTypeInfoResolver;
@@ -49,7 +50,7 @@ public class TestLuceneCachedTypeInfoResolver
 
    private static LuceneTypeInfoWriter writer;
 
-   private static InMemoryLuceneInfoStorage luceneInfoStorage;
+   private static LuceneInfoStorage luceneInfoStorage;
 
    private final static String PATH_TO_INDEX = "target/index3";
 
@@ -59,7 +60,7 @@ public class TestLuceneCachedTypeInfoResolver
    public static void initializeStorage() throws IOException, SaveTypeInfoIndexException
    {
 
-      luceneInfoStorage = new InMemoryLuceneInfoStorage();
+      luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
 
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_RT));
@@ -101,11 +102,11 @@ public class TestLuceneCachedTypeInfoResolver
       assertTrue(methods.contains("public final native void java.lang.Object.notify()"));
       assertTrue(methods.contains("public final native void java.lang.Object.notifyAll()"));
       assertTrue(methods.contains("public final native void java.lang.Object.wait(long)"
-         + " throws java.lang.InterruptedException"));
+               + " throws java.lang.InterruptedException"));
       assertTrue(methods.contains("public final void java.lang.Object.wait(long, int)"
-         + " throws java.lang.InterruptedException"));
+               + " throws java.lang.InterruptedException"));
       assertTrue(methods.contains("public final void java.lang.Object.wait()"
-         + " throws java.lang.InterruptedException"));
+               + " throws java.lang.InterruptedException"));
    }
 
 }

@@ -18,28 +18,107 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.NIOFSDirectory;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
- *
+ * Container component responsible for extracting class information from jars
+ * specified in configuration
  */
-public interface LuceneInfoStorage
+public class LuceneInfoStorage
 {
-   /**
-    * 
-    * @return IndexSearcher
-    * @throws IOException
-    */
-   IndexSearcher getTypeInfoIndexSearcher() throws IOException;
+
+   private static final Log LOG = ExoLogger.getLogger(LuceneInfoStorage.class);
+
+
+   private final Directory typeInfoIndexDirectory;
+
+   private IndexReader typeInfoIndexReader;
+
+   private IndexSearcher typeInfoIndexSearcher;
 
    /**
+    *  Create file based lucene storage.
     * 
-    * @return Directory
     * @throws IOException
     */
-   Directory getTypeInfoIndexDirectory() throws IOException;
+   public LuceneInfoStorage(String storagePath) throws IOException
+   {
+      this(NIOFSDirectory.open(new File(storagePath)));
+   }
 
+   /**
+    * Create lucene info storage on the given directory.
+    * 
+    * @throws IOException
+    */
+   public LuceneInfoStorage(Directory typeInfoIndexDirectory) throws IOException
+   {
+      this.typeInfoIndexDirectory = typeInfoIndexDirectory;
+   }
+
+
+   public Directory getTypeInfoIndexDirectory() throws IOException
+   {
+      return typeInfoIndexDirectory;
+   }
+
+   /**
+    * Close all open resources.
+    */
+   public void closeIndexes()
+   {
+      try
+      {
+         if (typeInfoIndexReader != null)
+         {
+            typeInfoIndexReader.close();
+         }
+         typeInfoIndexDirectory.close();
+      }
+      catch (IOException e)
+      {
+         LOG.error(e.getLocalizedMessage(), e);
+      }
+   }
+
+   /**
+    * Reopen reader if where is some changes in index
+    * 
+    * @throws CorruptIndexException
+    * @throws IOException
+    */
+   private void reopenReaderWhenNeed() throws IOException
+   {
+      if (typeInfoIndexReader == null)
+      {
+         typeInfoIndexReader = IndexReader.open(typeInfoIndexDirectory, true);
+         typeInfoIndexSearcher = new IndexSearcher(typeInfoIndexReader);
+      }
+      else
+      {
+         IndexReader newReader = typeInfoIndexReader.reopen(true);
+         if (newReader != typeInfoIndexReader)
+         {
+            typeInfoIndexReader.close();
+            typeInfoIndexSearcher = new IndexSearcher(newReader);
+         }
+         typeInfoIndexReader = newReader;
+      }
+   }
+
+
+   public IndexSearcher getTypeInfoIndexSearcher() throws IOException
+   {
+      reopenReaderWhenNeed();
+      return typeInfoIndexSearcher;
+   }
 }

@@ -21,10 +21,12 @@ package org.exoplatform.ide.codeassistant.storage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
@@ -49,7 +51,7 @@ public class SearchTest extends BaseTest
       generateClassFiles("src/test/resources/test/");
       File jar = generateJarFile("test.jar");
 
-      InMemoryLuceneInfoStorage luceneInfoStorage = new InMemoryLuceneInfoStorage();
+      LuceneInfoStorage luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
       LuceneTypeInfoWriter writer = new LuceneTypeInfoWriter(luceneInfoStorage);
 
       List<TypeInfo> typeInfos = JarParser.parse(jar);
