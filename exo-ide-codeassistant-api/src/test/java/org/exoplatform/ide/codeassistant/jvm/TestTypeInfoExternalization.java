@@ -21,6 +21,10 @@ package org.exoplatform.ide.codeassistant.jvm;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.Before;
 import org.junit.Test;
 
