@@ -19,19 +19,15 @@
 package org.exoplatform.ide.extension.groovy.client.controls;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureClasspathEvent;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Control for calling the dialog for configuring classpath file.
@@ -40,8 +36,8 @@ import java.util.List;
  * @version $Id: Jan 6, 2011 $
  *
  */
-public class ConfigureClasspathCommand extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ItemsSelectedHandler
+public class ConfigureClasspathCommand extends SimpleControl implements IDEControl, ProjectOpenedHandler,
+   ProjectClosedHandler
 {
 
    private static final String ID = "File/Configure Classpath...";
@@ -49,10 +45,6 @@ public class ConfigureClasspathCommand extends SimpleControl implements IDEContr
    private final String TITLE = "Configure Classpath...";
 
    private final String PROMPT = "Configure Groovy Classpath...";
-
-   private VirtualFileSystemInfo vfsInfo;
-
-   private List<Item> selectedItems = new ArrayList<Item>();
 
    public ConfigureClasspathCommand()
    {
@@ -70,30 +62,36 @@ public class ConfigureClasspathCommand extends SimpleControl implements IDEContr
    @Override
    public void initialize()
    {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      setVisible(true);
-
-      updateEnabling();
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
-   private void updateEnabling()
-   {
-      setEnabled(vfsInfo != null && selectedItems.size() > 0);
-   }
-
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
    @Override
-   public void onVfsChanged(VfsChangedEvent event)
+   public void onProjectOpened(ProjectOpenedEvent event)
    {
-      vfsInfo = event.getVfsInfo();
-      updateEnabling();
+      if (ProjectResolver.EXO_APP.equals(event.getProject().getProjectType()))
+      {
+         setEnabled(true);
+         setVisible(true);
+      }
+      else
+      {
+         setEnabled(false);
+         setVisible(false);
+      }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
    @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
+   public void onProjectClosed(ProjectClosedEvent event)
    {
-      selectedItems = event.getSelectedItems();
-      updateEnabling();
+      setVisible(false);
+      setEnabled(false);
    }
 
 }
