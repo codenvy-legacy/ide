@@ -16,12 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package test.annotations;
+package test;
+
+import test.annotations.CTestAnnotation;
+import test.annotations.DTestAnnotation;
+import test.classes.ATestClass;
+import test.classes.ATestClass2;
+import test.classes.BTestClass;
+import test.classes2.ITestClass;
+import test.interfaces.DTestInterface;
+import test.interfaces.ETestInterface;
+import test.interfaces.ETestInterface2;
 
 /**
- *
+ * Test classes enumerator
  */
-public @interface DTestAnnotation
+public class ClassManager
 {
-
+   //disable instance creation
+   private ClassManager()
+   {
+      super();
+   }
+   /**
+    * 
+    * @return array of all test classes.
+    */
+   public static Class<?>[] getAllTestClasses()
+   {
+      return new Class[]{CTestAnnotation.class, DTestAnnotation.class, ATestClass.class, ATestClass2.class,
+         BTestClass.class, ITestClass.class, DTestInterface.class, ETestInterface.class, ETestInterface2.class};
+   }
 }

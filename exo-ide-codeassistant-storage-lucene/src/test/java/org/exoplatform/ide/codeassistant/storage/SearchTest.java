@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import static org.exoplatform.ide.codeassistant.storage.TypeInfoIndexTest.createIndexForClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import test.ClassManager;
+
 import org.apache.lucene.store.RAMDirectory;
-import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
@@ -32,57 +34,53 @@ import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWri
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * Test Searching in Lucene TypeInfo Storage
  */
-public class SearchTest extends BaseTest
+public class SearchTest
 {
-   // private final static String PATH_TO_INDEX = "target/index2";
 
    private static LuceneCodeAssistantStorage storage;
+
+   private static LuceneTypeInfoWriter writer;
+
+   private static LuceneInfoStorage luceneInfoStorage;
 
    @BeforeClass
    public static void createIndex() throws Exception
    {
-      String pathToJar = createJarFile("src/test/java/test/*/*", "searchTest");
-      generateClassFiles("src/test/resources/test/");
-      File jar = generateJarFile("test.jar");
-
-      LuceneInfoStorage luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
-      LuceneTypeInfoWriter writer = new LuceneTypeInfoWriter(luceneInfoStorage);
-
-      List<TypeInfo> typeInfos = JarParser.parse(jar);
-      writer.addTypeInfo(typeInfos);
-
+      luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
+      writer = new LuceneTypeInfoWriter(luceneInfoStorage);
       storage = new LuceneCodeAssistantStorage(new LuceneTypeInfoSearcher(luceneInfoStorage));
+
+      createIndexForClass(writer, ClassManager.getAllTestClasses());
+
    }
 
    @Test
-   public void testSearchTypeInfoByName() throws Exception
+   public void testSearchAllAnnotations() throws Exception
    {
-      TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass");
-
-      assertEquals("ATestClass", typeInfo.getName());
-      assertEquals("test.classes.ATestClass", typeInfo.getQualifiedName());
-      assertEquals(1, typeInfo.getFields().length);
-      assertEquals(2, typeInfo.getMethods().length);
-      assertEquals("java.lang.Object", typeInfo.getSuperClass());
-   }
-
-   @Test
-   public void testSearchByNamePrefix() throws Exception
-   {
-      List<ShortTypeInfo> typeInfos = storage.getTypesByNamePrefix("ATest");
+      List<ShortTypeInfo> typeInfos = storage.getAnnotations("");
 
       assertEquals(2, typeInfos.size());
+   }
 
-      ShortTypeInfo info1 = typeInfos.get(0);
-      ShortTypeInfo info2 = typeInfos.get(1);
-      assertTrue(info1.getName().startsWith("ATest"));
-      assertTrue(info2.getName().startsWith("ATest"));
+   @Test
+   public void testSearchAllInterfaces() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getIntefaces("");
+
+      assertEquals(3, typeInfos.size());
+   }
+
+   @Test
+   public void testSearchAnnotationsStartsWithC() throws Exception
+   {
+      List<ShortTypeInfo> typeInfos = storage.getAnnotations("C");
+
+      assertEquals(1, typeInfos.size());
    }
 
    @Test
@@ -98,19 +96,16 @@ public class SearchTest extends BaseTest
    }
 
    @Test
-   public void testSearchAllAnnotations() throws Exception
+   public void testSearchByNamePrefix() throws Exception
    {
-      List<ShortTypeInfo> typeInfos = storage.getAnnotations("");
+      List<ShortTypeInfo> typeInfos = storage.getTypesByNamePrefix("ATest");
 
       assertEquals(2, typeInfos.size());
-   }
 
-   @Test
-   public void testSearchAnnotationsStartsWithC() throws Exception
-   {
-      List<ShortTypeInfo> typeInfos = storage.getAnnotations("C");
-
-      assertEquals(1, typeInfos.size());
+      ShortTypeInfo info1 = typeInfos.get(0);
+      ShortTypeInfo info2 = typeInfos.get(1);
+      assertTrue(info1.getName().startsWith("ATest"));
+      assertTrue(info2.getName().startsWith("ATest"));
    }
 
    @Test
@@ -141,11 +136,16 @@ public class SearchTest extends BaseTest
    }
 
    @Test
-   public void testSearchAllInterfaces() throws Exception
+   public void testSearchTypeInfoByName() throws Exception
    {
-      List<ShortTypeInfo> typeInfos = storage.getIntefaces("");
 
-      assertEquals(3, typeInfos.size());
+      TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass");
+
+      assertEquals("ATestClass", typeInfo.getName());
+      assertEquals("test.classes.ATestClass", typeInfo.getQualifiedName());
+      assertEquals(1, typeInfo.getFields().length);
+      assertEquals(2, typeInfo.getMethods().length);
+      assertEquals("java.lang.Object", typeInfo.getSuperClass());
    }
 
    @Test
@@ -163,4 +163,6 @@ public class SearchTest extends BaseTest
 
       assertEquals(0, typeInfos.size());
    }
+
+
 }
