@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
-import static org.exoplatform.ide.codeassistant.storage.TypeInfoIndexTest.createIndexForClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -55,7 +54,7 @@ public class SearchTest
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
       storage = new LuceneCodeAssistantStorage(new LuceneTypeInfoSearcher(luceneInfoStorage));
 
-      createIndexForClass(writer, ClassManager.getAllTestClasses());
+      ClassManager.createIndexForClass(writer, ClassManager.getAllTestClasses());
 
    }
 
@@ -163,6 +162,5 @@ public class SearchTest
 
       assertEquals(0, typeInfos.size());
    }
-
 
 }

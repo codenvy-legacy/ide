@@ -19,24 +19,17 @@
 package org.exoplatform.ide.codeassistant.storage;
 
 import static org.junit.Assert.assertEquals;
-
-import test.ClassManager;
+import static test.ClassManager.createIndexForClass;
+import static test.ClassManager.getAllTestClasses;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.RAMDirectory;
-import org.exoplatform.ide.codeassistant.asm.ClassParser;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
-import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -56,37 +49,15 @@ public class TypeInfoIndexTest
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
       storage = new LuceneCodeAssistantStorage(new LuceneTypeInfoSearcher(luceneInfoStorage));
 
-      createIndexForClass(writer, ClassManager.getAllTestClasses());
-
    }
 
    @Test
-   public void testCreatedDocsCount() throws Exception
+   public void shouldIndexAllClasses() throws Exception
    {
+      createIndexForClass(writer, getAllTestClasses());
       IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
-      assertEquals(ClassManager.getAllTestClasses().length, reader.numDocs());
+      assertEquals(getAllTestClasses().length, reader.numDocs());
       reader.close();
    }
 
-   /**
-    * @param className
-    *           TODO
-    * @throws IOException
-    * @throws SaveTypeInfoIndexException
-    */
-   public static void createIndexForClass(LuceneTypeInfoWriter typeWriter, Class<?>... classesToIndex)
-      throws IOException, SaveTypeInfoIndexException
-   {
-      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-
-      List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
-
-      for (Class<?> classToIndex : classesToIndex)
-      {
-         String classResource = classToIndex.getName().replace('.', '/') + ".class";
-         typeInfos.add(ClassParser.parse(contextClassLoader.getResourceAsStream(classResource)));
-      }
-
-      typeWriter.addTypeInfo(typeInfos);
-   }
 }

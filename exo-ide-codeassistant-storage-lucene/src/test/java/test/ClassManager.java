@@ -28,6 +28,16 @@ import test.interfaces.DTestInterface;
 import test.interfaces.ETestInterface;
 import test.interfaces.ETestInterface2;
 
+import org.exoplatform.ide.codeassistant.asm.ClassParser;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Test classes enumerator
  */
@@ -38,6 +48,7 @@ public class ClassManager
    {
       super();
    }
+
    /**
     * 
     * @return array of all test classes.
@@ -46,5 +57,38 @@ public class ClassManager
    {
       return new Class[]{CTestAnnotation.class, DTestAnnotation.class, ATestClass.class, ATestClass2.class,
          BTestClass.class, ITestClass.class, DTestInterface.class, ETestInterface.class, ETestInterface2.class};
+   }
+
+   /**
+    * 
+    * @param class2Find
+    *           - class to find
+    * @return - content of the 'class2Find.class' file
+    */
+   public static InputStream getClassFile(Class<?> class2Find)
+   {
+      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+      String classResource = class2Find.getName().replace('.', '/') + ".class";
+      return contextClassLoader.getResourceAsStream(classResource);
+   }
+
+   /**
+    * @param className
+    *           TODO
+    * @throws IOException
+    * @throws SaveTypeInfoIndexException
+    */
+   public static void createIndexForClass(LuceneTypeInfoWriter typeWriter, Class<?>... classesToIndex)
+      throws IOException, SaveTypeInfoIndexException
+   {
+
+      List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
+
+      for (Class<?> classToIndex : classesToIndex)
+      {
+         typeInfos.add(ClassParser.parse(ClassManager.getClassFile(classToIndex)));
+      }
+
+      typeWriter.addTypeInfo(typeInfos);
    }
 }
