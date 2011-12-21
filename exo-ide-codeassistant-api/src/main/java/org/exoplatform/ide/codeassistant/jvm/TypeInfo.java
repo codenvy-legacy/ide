@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readObjectArray;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFArray;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeObjectArray;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFArray;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -206,13 +211,13 @@ public class TypeInfo extends ShortTypeInfo
    {
       super.writeExternal(out);
       out.writeObject(superClass);
-      writeArrayToObjectOutput(interfaces, out);
-      writeArrayToObjectOutput(constructors, out);
-      writeArrayToObjectOutput(declaredConstructors, out);
-      writeArrayToObjectOutput(fields, out);
-      writeArrayToObjectOutput(declaredFields, out);
-      writeArrayToObjectOutput(methods, out);
-      writeArrayToObjectOutput(declaredMethods, out);
+      writeStringUTFArray(interfaces, out);
+      writeObjectArray(RoutineInfo.class, constructors, out);
+      writeObjectArray(RoutineInfo.class, declaredConstructors, out);
+      writeObjectArray(FieldInfo.class, fields, out);
+      writeObjectArray(FieldInfo.class, declaredFields, out);
+      writeObjectArray(MethodInfo.class, methods, out);
+      writeObjectArray(MethodInfo.class, declaredMethods, out);
    }
 
    @Override
@@ -220,26 +225,12 @@ public class TypeInfo extends ShortTypeInfo
    {
       super.readExternal(in);
       superClass = (String)in.readObject();
-
-      int interfacesCount = in.readInt();
-      interfaces = readArrayFromObjectInput(new String[interfacesCount], in, interfacesCount);
-
-      int constructorsCount = in.readInt();
-      constructors = readArrayFromObjectInput(new RoutineInfo[constructorsCount], in, constructorsCount);
-
-      int declaredConstructorsCount = in.readInt();
-      declaredConstructors = readArrayFromObjectInput(new RoutineInfo[declaredConstructorsCount], in, declaredConstructorsCount);
-
-      int fieldsCount = in.readInt();
-      fields = readArrayFromObjectInput(new FieldInfo[fieldsCount], in, fieldsCount);
-
-      int declaredFieldsCount = in.readInt();
-      declaredFields = readArrayFromObjectInput(new FieldInfo[declaredFieldsCount], in, declaredFieldsCount);
-
-      int methodsCount = in.readInt();
-      methods = readArrayFromObjectInput(new MethodInfo[methodsCount], in, methodsCount);
-
-      int declaredMethodsCount = in.readInt();
-      declaredMethods = readArrayFromObjectInput(new MethodInfo[declaredMethodsCount], in, declaredMethodsCount);
+      interfaces = readStringUTFArray(in);
+      constructors = readObjectArray(RoutineInfo.class, in);
+      declaredConstructors = readObjectArray(RoutineInfo.class, in);
+      fields = readObjectArray(FieldInfo.class, in);
+      declaredFields = readObjectArray(FieldInfo.class, in);
+      methods = readObjectArray(MethodInfo.class, in);
+      declaredMethods = readObjectArray(MethodInfo.class, in);
    }
 }

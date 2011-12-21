@@ -26,22 +26,21 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.exoplatform.ide.codeassistant.jvm.BaseTest;
-import org.exoplatform.ide.codeassistant.jvm.serialization.ObjectOutputWriter;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 
 /**
- *
+ * Test read and write operations from ExternalizationTool
  */
-public class TestObjectOutputWriter extends BaseTest
+public class TestExternalizationTool extends BaseTest
 {
-
    @Test
    public void shouldSerializeCyrillicString() throws IOException
    {
@@ -49,9 +48,23 @@ public class TestObjectOutputWriter extends BaseTest
    }
 
    @Test
-   public void shouldDeserializeLatinString() throws IOException
+   public void shouldSerializeLatinString() throws IOException
    {
       shouldSerializeString("Latin String");
+   }
+
+   private void shouldSerializeString(String string) throws IOException
+   {
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      ObjectOutputStream oos = new ObjectOutputStream(out);
+
+      ExternalizationTools.writeStringUTF(string, oos);
+      oos.flush();
+
+      ObjectInputStream in = createObjectInputStream(out.toByteArray());
+      String deserializedString = readString(in);
+
+      assertEquals(string, deserializedString);
    }
 
    @Test
@@ -61,8 +74,7 @@ public class TestObjectOutputWriter extends BaseTest
       ObjectOutputStream oos = new ObjectOutputStream(out);
       Integer[] serializedArray = new Integer[]{1, 2, 3};
 
-      ObjectOutputWriter objectOutputWtiter = new ObjectOutputWriter(oos);
-      objectOutputWtiter.writeObjectArray(serializedArray);
+      ExternalizationTools.writeObjectArray(Integer.class, serializedArray, oos);
       oos.flush();
 
       ObjectInputStream in = createObjectInputStream(out.toByteArray());
@@ -83,8 +95,7 @@ public class TestObjectOutputWriter extends BaseTest
       ObjectOutputStream oos = new ObjectOutputStream(out);
       String[] strings = new String[]{"one", "two", "tree"};
 
-      ObjectOutputWriter objectOutputWtiter = new ObjectOutputWriter(oos);
-      objectOutputWtiter.writeObjectArray(strings);
+      ExternalizationTools.writeStringUTFArray(strings, oos);
       oos.flush();
 
       ObjectInputStream in = createObjectInputStream(out.toByteArray());
@@ -103,8 +114,7 @@ public class TestObjectOutputWriter extends BaseTest
    {
       ObjectOutput out = mock(ObjectOutput.class);
 
-      ObjectOutputWriter objectOutputWriter = new ObjectOutputWriter(out);
-      objectOutputWriter.writeString("String");
+      ExternalizationTools.writeStringUTF("String", out);
 
       verify(out, never()).writeObject(anyString());
    }
@@ -114,25 +124,103 @@ public class TestObjectOutputWriter extends BaseTest
    {
       ObjectOutput out = mock(ObjectOutput.class);
 
-      ObjectOutputWriter objectOutputWriter = new ObjectOutputWriter(out);
-      objectOutputWriter.writeObjectArray(new String[]{"one", "two", "three"});
+      ExternalizationTools.writeStringUTFArray(new String[]{"one", "two", "three"}, out);
 
       verify(out, never()).writeObject(anyString());
    }
 
-   private void shouldSerializeString(String string) throws IOException
+   @Test
+   public void shouldDeserializeCyrillicString() throws IOException
+   {
+      shouldDeserializeString("Кириллическая строка");
+   }
+
+   @Test
+   public void shouldDeserializeLatinString() throws IOException
+   {
+      shouldDeserializeString("Latin string");
+   }
+
+   private void shouldDeserializeString(String serializedString) throws IOException
    {
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(out);
 
-      ObjectOutputWriter objectOutputWtiter = new ObjectOutputWriter(oos);
-      objectOutputWtiter.writeString(string);
+      byte[] bytes = serializedString.getBytes("UTF-8");
+      oos.writeInt(bytes.length);
+      oos.write(bytes);
       oos.flush();
 
-      ObjectInputStream in = createObjectInputStream(out.toByteArray());
-      String deserializedString = readString(in);
+      ObjectInputStream io = createObjectInputStream(out.toByteArray());
 
-      assertEquals(string, deserializedString);
+      String deserializedString = ExternalizationTools.readStringUTF(io);
+
+      assertEquals(serializedString, deserializedString);
+   }
+
+   @Test
+   public void shouldDeserializeObjectArray() throws IOException, ClassNotFoundException
+   {
+      Integer[] serializedArray = new Integer[]{1, 2, 3};
+
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      ObjectOutputStream oos = new ObjectOutputStream(out);
+
+      oos.writeInt(serializedArray.length);
+
+      for (Integer element : serializedArray)
+      {
+         oos.writeObject(element);
+      }
+      oos.flush();
+
+      ObjectInputStream io = createObjectInputStream(out.toByteArray());
+      Integer[] deserializedArray = ExternalizationTools.readObjectArray(Integer.class, io);
+
+      assertArrayEquals(serializedArray, deserializedArray);
+   }
+
+   @Test
+   public void shouldDeserializeStringArray() throws IOException
+   {
+      String[] serializedArray = new String[]{"one", "two", "three"};
+
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      ObjectOutputStream oos = new ObjectOutputStream(out);
+
+      oos.writeInt(serializedArray.length);
+
+      for (String element : serializedArray)
+      {
+         oos.writeInt(element.length());
+         oos.write(element.getBytes("UTF-8"));
+      }
+      oos.flush();
+
+      ObjectInputStream io = createObjectInputStream(out.toByteArray());
+      String[] deserializedArray = ExternalizationTools.readStringUTFArray(io);
+
+      assertArrayEquals(serializedArray, deserializedArray);
+   }
+
+   @Test
+   public void shouldNotInvokeReadObjectOnStringReading() throws IOException, ClassNotFoundException
+   {
+      ObjectInput in = mock(ObjectInput.class);
+
+      ExternalizationTools.readStringUTF(in);
+
+      verify(in, never()).readObject();
+   }
+
+   @Test
+   public void shouldNotInvokeReadObjectOnStringArrayReading() throws IOException, ClassNotFoundException
+   {
+      ObjectInput in = mock(ObjectInput.class);
+
+      ExternalizationTools.readStringUTFArray(in);
+
+      verify(in, never()).readObject();
    }
 
    private String readString(ObjectInputStream in) throws IOException, UnsupportedEncodingException

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFArray;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFArray;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -135,8 +138,7 @@ public class RoutineInfo extends Member
       out.writeObject(parameterTypes);
       out.writeObject(generic);
       out.writeObject(declaringClass);
-
-      writeArrayToObjectOutput(genericExceptionTypes, out);
+      writeStringUTFArray(genericExceptionTypes, out);
    }
 
    /**
@@ -151,9 +153,7 @@ public class RoutineInfo extends Member
       parameterTypes = (String)in.readObject();
       generic = (String)in.readObject();
       declaringClass = (String)in.readObject();
-
-      int genericExceptionTypesLength = in.readInt();
-      genericExceptionTypes = readArrayFromObjectInput(new String[genericExceptionTypesLength], in, genericExceptionTypesLength);
+      genericExceptionTypes = readStringUTFArray(in);
    }
 
 }
