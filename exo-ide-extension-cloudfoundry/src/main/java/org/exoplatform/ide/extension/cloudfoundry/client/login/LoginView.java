@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -46,7 +47,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 
    private static final int WIDTH = 400;
 
-   private static final int HEIGHT = 230;
+   private static final int HEIGHT = 190;
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
@@ -96,6 +97,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    ImageButton cancelButton;
+   
+   @UiField
+   Label errLabel;
    
    public LoginView()
    {
@@ -179,5 +183,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    public void setTargetValues(String[] targets)
    {
       targetField.setValueMap(targets);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter.Display#getErrorLabelField()
+    */
+   @Override
+   public HasValue<String> getErrorLabelField()
+   {
+      return errLabel;
    }
 }

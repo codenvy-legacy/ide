@@ -46,6 +46,7 @@ import java.io.StringReader;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -162,6 +163,11 @@ public class CloudfoundryAuthenticator
       {
          throw new ParsingResponseException(jsone.getMessage(), jsone);
       }
+      catch (UnknownHostException exc)
+      {
+         throw new CloudfoundryException(500, "Can't access target.\n", "text/plain");
+      }
+      
       finally
       {
          if (http != null)

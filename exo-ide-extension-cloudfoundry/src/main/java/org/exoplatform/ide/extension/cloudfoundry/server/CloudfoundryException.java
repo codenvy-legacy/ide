@@ -32,6 +32,10 @@ public class CloudfoundryException extends Exception
 
    /** Content type of response from Cloudfoundry server. */
    private final String contentType;
+   
+   /** Exit code of command execution at Cloudfoundry server. May be -1 if cannot get exit code from Cloudfoundry
+    * response. */
+   private final int exitCode;
 
    /**
     * @param responseStatus HTTP status of response from Cloudfoundry server
@@ -40,8 +44,14 @@ public class CloudfoundryException extends Exception
     */
    public CloudfoundryException(int responseStatus, String message, String contentType)
    {
+      this(responseStatus, -1, message, contentType);
+   }
+   
+   public CloudfoundryException(int responseStatus, int exitCode, String message, String contentType)
+   {
       super(message);
       this.responseStatus = responseStatus;
+      this.exitCode = exitCode;
       this.contentType = contentType;
    }
 
@@ -53,5 +63,10 @@ public class CloudfoundryException extends Exception
    public String getContentType()
    {
       return contentType;
+   }
+   
+   public int getExitCode()
+   {
+      return exitCode;
    }
 }

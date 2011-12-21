@@ -20,8 +20,10 @@ package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -86,6 +88,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * @return
        */
       HasValue<String> getTargetSelectField();
+      
+      /**
+       * Get the label, where error message will be displayed.
+       * @return
+       */
+      HasValue<String> getErrorLabelField();
 
       /**
        * Change the enable state of the login button.
@@ -273,7 +281,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          }
       });
    }
-
+   
    /**
     * Perform log in OpenShift.
     */
@@ -307,6 +315,27 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          protected void onFailure(Throwable exception)
          {
             IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
+            if (exception instanceof ServerException)
+            {
+               ServerException serverException = (ServerException)exception;
+               if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
+                        && serverException.getMessage().contains("Can't access target."))
+               {
+                  display.getErrorLabelField().setValue("Unknown Cloud Foundry target. Try again.");
+                  return;
+               }
+               else if (HTTPStatus.OK != serverException.getHTTPStatus() && serverException.getMessage() != null
+                        && serverException.getMessage().contains("Operation not permitted"))
+               {
+                  display.getErrorLabelField().setValue("Invalid username or password. Try again.");
+                  return;
+               }
+               else
+               {
+                  super.onFailure(exception);
+                  return;
+               }
+            }
             super.onFailure(exception);
          }
       });

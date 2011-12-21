@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
 import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.ApplicationFile;
@@ -28,7 +29,6 @@ import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateService;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.Stats;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryError;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -1523,11 +1524,9 @@ public class Cloudfoundry
       }
       catch (CloudfoundryException e)
       {
-         // Need parse error message to check error code.
          // If application does not exists then expected code is 301.
          // NOTE this is not HTTP status but status of Cloudfoundry action.
-         CloudfoundryError err = toError(e);
-         if (err == null || 301 != err.getCode())
+         if (301 != e.getExitCode())
             throw e;
          // 301 - Good, application name is not used yet.
       }
@@ -1977,34 +1976,49 @@ public class Cloudfoundry
 
    static CloudfoundryException fault(HttpURLConnection http) throws IOException
    {
-      InputStream errorStream = null;
-      try
+      final String contentType = http.getContentType();
+      final int responseCode = http.getResponseCode();
+      final int length = http.getContentLength();
+      String msg = null;
+      int exitCode = -1;
+      if (length != 0)
       {
-         int responseCode = http.getResponseCode();
-         //System.err.println("fault : " + responseCode);
-         errorStream = http.getErrorStream();
-         if (errorStream == null)
-            return new CloudfoundryException(responseCode, null, null);
-
-         int length = http.getContentLength();
-         String body = readBody(errorStream, length);
-
-         if (body != null)
-            return new CloudfoundryException(responseCode, body, http.getContentType());
-
-         return new CloudfoundryException(responseCode, null, null);
+         InputStream in = null;
+         try
+         {
+            in = http.getErrorStream();
+            msg = readBody(in, length);
+         }
+         finally
+         {
+            if (in != null)
+               in.close();
+         }
+         if (contentType.startsWith("application/json")) // May have '; charset=utf-8'
+         {
+            try
+            {
+               JsonParser jsonParser = new JsonParser();
+               jsonParser.parse(new StringReader(msg));
+               JsonValue resultJson = jsonParser.getJsonObject().getElement("description");
+               if (resultJson != null)
+               {
+                  msg = resultJson.getStringValue();
+               }
+               JsonValue exitCodeJson = jsonParser.getJsonObject().getElement("code");
+               if (exitCodeJson != null)
+               {
+                  exitCode = exitCodeJson.getIntValue();
+               }
+               return new CloudfoundryException(responseCode, exitCode, msg, "text/plain");
+            }
+            catch (JsonException ignored)
+            {
+               // Cannot parse JSON send as is.
+            }
+         }
       }
-      finally
-      {
-         if (errorStream != null)
-            errorStream.close();
-      }
-   }
-
-   private static CloudfoundryError toError(CloudfoundryException e) throws ParsingResponseException
-   {
-      String message = e.getMessage();
-      return JsonHelper.fromJson(message, CloudfoundryError.class, null);
+      return new CloudfoundryException(responseCode, exitCode, msg, contentType);
    }
 
    private static String readBody(InputStream input, int contentLength) throws IOException

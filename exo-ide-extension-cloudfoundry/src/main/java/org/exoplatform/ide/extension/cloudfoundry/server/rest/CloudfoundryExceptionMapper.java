@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
@@ -41,7 +42,15 @@ public class CloudfoundryExceptionMapper implements ExceptionMapper<Cloudfoundry
          return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
             .entity(e.getMessage()).type(e.getContentType()).build();
       
-      return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
-         .entity(e.getMessage()).type(e.getContentType()).build();
+      if (e.getResponseStatus() == 500 && "Can't access target.\n".equals(e.getMessage()))
+         return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Unknown-target")
+            .entity(e.getMessage()).type(e.getContentType()).build();
+      
+      ResponseBuilder rb = Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+         .entity(e.getMessage()).type(e.getContentType());
+      int exitCode = e.getExitCode();
+      if (exitCode != -1)
+         rb.header("Cloudfoundry-Exit-Code", exitCode);
+      return rb.build();
    }
 }

@@ -6,7 +6,6 @@
 
    <ui:style>
       .label {
-      	margin-bottom: 5px;
       	cursor: default;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
       	font-size: 11px;
@@ -27,20 +26,59 @@
       .floatLeft {
       	float: left;
       }
+      
+      .errLabel {
+         margin-bottom: 11px;
+         cursor: default;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         font-size: 11px;
+         font-style: normal;
+         font-weight: normal;
+         color: #d21a1a;
+         text-align: center;
+         height: 14px;
+      }
+      
+      .line {
+         margin-bottom: 8px;
+      }
+      
+      .borderBox {
+         margin: 10px 15px 15px;
+      }
    </ui:style>
 
 
-   <f:Border margin="15" borderColor="transparent">
+   <f:Border borderColor="transparent" styleName="{style.borderBox}">
       <f:layer>
          <g:FlowPanel>
-            <g:Label text="{locale.loginViewTargetField}" styleName="{style.label}"></g:Label>
-            <f:ComboBoxField ui:field="targetField" height="20px" width="100%" addStyleNames="{style.spacing}"></f:ComboBoxField>
+            <f:Label ui:field="errLabel" styleName="{style.errLabel}"></f:Label>
+            <g:DockLayoutPanel width="100%" unit="PX" height="22px" styleName="{style.line}">
+               <g:west size="75">
+                  <g:Label text="{locale.loginViewTargetField}" styleName="{style.label}"></g:Label>
+               </g:west>
+               <g:center>
+                  <f:ComboBoxField ui:field="targetField" height="22px" width="100%" addStyleNames="{style.spacing}"></f:ComboBoxField>
+               </g:center>
+            </g:DockLayoutPanel>
 
-            <g:Label text="{locale.loginViewEmailField}" styleName="{style.label}"></g:Label>
-            <g:TextBox ui:field="emailField" height="20" width="100%" addStyleNames="{style.spacing}"></g:TextBox>
-
-            <g:Label text="{locale.loginViewPasswordField}" styleName="{style.label}"></g:Label>
-            <f:PasswordTextInput ui:field="passwordField" height="20" width="100%" addStyleNames="{style.spacing}"></f:PasswordTextInput>
+            <g:DockLayoutPanel width="100%" unit="PX" height="22px" styleName="{style.line}">
+               <g:west size="75">
+                  <g:Label text="{locale.loginViewEmailField}" styleName="{style.label}"></g:Label>
+               </g:west>
+               <g:center>
+                  <g:TextBox ui:field="emailField" height="20px" width="100%" addStyleNames="{style.spacing}"></g:TextBox>
+               </g:center>
+            </g:DockLayoutPanel>
+            
+            <g:DockLayoutPanel width="100%" unit="PX" height="22px" styleName="{style.line}">
+               <g:west size="75">
+                  <g:Label text="{locale.loginViewPasswordField}" styleName="{style.label}"></g:Label>
+               </g:west>
+               <g:center>
+                  <f:PasswordTextInput ui:field="passwordField" height="20px" width="100%" addStyleNames="{style.spacing}"></f:PasswordTextInput>
+               </g:center>
+            </g:DockLayoutPanel>
 
          </g:FlowPanel>
       </f:layer>
