@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.serialization;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -33,6 +36,7 @@ import java.lang.reflect.Array;
  */
 public class ExternalizationTools
 {
+   private static final Logger LOG = LoggerFactory.getLogger(ExternalizationTools.class);
 
    private static final String UTF_8 = "UTF-8";
 
@@ -63,7 +67,7 @@ public class ExternalizationTools
 
       for (T element : array)
       {
-         if (type.isAssignableFrom(Externalizable.class))
+         if (Externalizable.class.isAssignableFrom(type))
          {
             ((Externalizable)element).writeExternal(out);
          }
@@ -102,15 +106,26 @@ public class ExternalizationTools
       T[] elements = (T[])Array.newInstance(type, size);
       for (int i = 0; i < size; i++)
       {
-         if (type.isAssignableFrom(Externalizable.class))
+         if (Externalizable.class.isAssignableFrom(type))
          {
-            ((Externalizable)elements[i]).readExternal(in);
+            try
+            {
+               elements[i] = type.newInstance();
+               ((Externalizable)elements[i]).readExternal(in);
+            }
+            catch (InstantiationException e)
+            {
+               LOG.warn("Can't instantiate component of type " + type.getCanonicalName(), e);
+            }
+            catch (IllegalAccessException e)
+            {
+               LOG.warn("Can't instantiate component of type " + type.getCanonicalName(), e);
+            }
          }
          else
          {
             elements[i] = (T)in.readObject();
          }
-
       }
       return elements;
    }
