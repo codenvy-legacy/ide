@@ -240,7 +240,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
             name = projectName;
             server = display.getServerField().getValue();
             String urlSufix = server.substring(server.indexOf("."));
-            display.getUrlField().setValue("<name>" + urlSufix);
+            display.getUrlField().setValue(name + urlSufix);
             url = display.getUrlField().getValue();
 
             paasCallback.onViewReceived(display.getView());
@@ -317,16 +317,16 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
                         return;
                      }
                   }
-                  
+
                   createApplication();
-                  
+
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception,
-                     "Can't receive project children " + project.getName()));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Can't receive project children "
+                     + project.getName()));
                }
             });
       }
