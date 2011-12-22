@@ -5,11 +5,11 @@
    <parent>
       <artifactId>exo-ide-parent</artifactId>
       <groupId>org.exoplatform.ide</groupId>
-      <version>1.2.0-M5</version>
+      <version>1.2.0-M5-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-ruby</artifactId>
-   <version>1.2.0-M5</version>
+   <version>1.2.0-M5-SNAPSHOT</version>
    <name>eXo IDE :: Editor : Ruby</name>
    
    <properties>                                                                                                                                                                                                 
