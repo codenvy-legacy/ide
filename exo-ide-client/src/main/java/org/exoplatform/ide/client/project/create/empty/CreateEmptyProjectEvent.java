@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.create;
+package org.exoplatform.ide.client.project.create.empty;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -27,19 +27,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class CreateProjectEvent extends GwtEvent<CreateProjectHandler>
+public class CreateEmptyProjectEvent extends GwtEvent<CreateEmptyProjectHandler>
 {
    
-   public static final GwtEvent.Type<CreateProjectHandler> TYPE = new GwtEvent.Type<CreateProjectHandler>();
+   public static final GwtEvent.Type<CreateEmptyProjectHandler> TYPE = new GwtEvent.Type<CreateEmptyProjectHandler>();
    
    @Override
-   protected void dispatch(CreateProjectHandler handler)
+   protected void dispatch(CreateEmptyProjectHandler handler)
    {
       handler.onCreateProject(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateProjectHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<CreateEmptyProjectHandler> getAssociatedType()
    {
       return TYPE;
    }

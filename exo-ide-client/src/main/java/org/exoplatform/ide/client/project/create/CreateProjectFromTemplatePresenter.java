@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.fromtemplate;
+package org.exoplatform.ide.client.project.create;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -629,11 +629,15 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    @Override
    public void onCreateNewProject(CreateNewProjectEvent event)
    {
-      if (vfsInfo == null) {
+      if (vfsInfo == null)
+      {
+         Dialogs.getInstance().showError("Vfs info is not received. Can't create project.");
          return;
       }
-      
-      if (display != null) {
+
+      if (display != null)
+      {
+         Dialogs.getInstance().showError("Display for Create project presenter can't be null.");
          return;
       }
       

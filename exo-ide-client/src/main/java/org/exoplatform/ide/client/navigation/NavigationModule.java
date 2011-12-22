@@ -55,7 +55,7 @@ import org.exoplatform.ide.client.operation.search.SearchResultsPresenter;
 import org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter;
 import org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter;
 import org.exoplatform.ide.client.progress.ProgressPresenter;
-import org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplateControl;
+import org.exoplatform.ide.client.project.create.CreateProjectFromTemplateControl;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.create;
+package org.exoplatform.ide.client.project.create.empty;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -51,7 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedHandler, ViewClosedHandler
+public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, VfsChangedHandler, ViewClosedHandler
 {
 
    public interface ErrorMessage extends Constants
@@ -89,11 +89,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    private VirtualFileSystemInfo vfsInfo;
    
-   public CreateProjectPresenter() {
+   public CreateEmptyProjectPresenter() {
 //      IDE.getInstance().addControl(new NewProjectMenuGroup());
 //      IDE.getInstance().addControl(new CreateProjectControl());
 
-      IDE.addHandler(CreateProjectEvent.TYPE, this);      
+      IDE.addHandler(CreateEmptyProjectEvent.TYPE, this);      
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
@@ -184,7 +184,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
 
    @Override
-   public void onCreateProject(CreateProjectEvent event)
+   public void onCreateProject(CreateEmptyProjectEvent event)
    {
       if (display != null) {
          return;

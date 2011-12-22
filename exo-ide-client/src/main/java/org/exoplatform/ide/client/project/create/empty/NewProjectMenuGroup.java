@@ -16,44 +16,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.create;
+
+package org.exoplatform.ide.client.project.create.empty;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
- * Created by The eXo Platform SAS.
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
+ * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
+ */
+
 @RolesAllowed({"administrators", "developers"})
-public class CreateProjectControl extends SimpleControl implements IDEControl, VfsChangedHandler
+public class NewProjectMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
-   public static final String ID = "Project/New/Empty Project...";
+   public static final String ID = "Project/New";
 
-   private static final String TITLE = "Empty Project...";
-
-   private static final String PROMPT = "Create Empty Project...";
-
-   private VirtualFileSystemInfo vfsInfo;
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
 
    /**
     * 
     */
-   public CreateProjectControl()
+   public NewProjectMenuGroup()
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new CreateProjectEvent());
-      setImages(IDEImageBundle.INSTANCE.newProject(), IDEImageBundle.INSTANCE.newProjectDisabled());
+      setPrompt(TITLE);
+      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+      setEnabled(true);
    }
 
    /**
@@ -63,23 +62,6 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      update();
-   }
-
-   /**
-    * 
-    */
-   private void update()
-   {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-
-      setVisible(true);
-      setEnabled(true);
    }
 
    /**
@@ -88,8 +70,14 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      vfsInfo = event.getVfsInfo();
-      update();
+      if (event.getVfsInfo() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
    }
 
 }

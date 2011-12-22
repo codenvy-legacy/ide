@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.fromtemplate;
+package org.exoplatform.ide.client.project.create;
 
 import com.google.gwt.uibinder.client.UiField;
 
@@ -79,7 +79,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -88,7 +88,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#getCreateButton()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getCreateButton()
     */
    @Override
    public HasClickHandlers getCreateButton()
@@ -97,7 +97,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#getDeleteButton()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getDeleteButton()
     */
    @Override
    public HasClickHandlers getDeleteButton()
@@ -107,7 +107,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#getNameField()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getNameField()
     */
    @Override
    public HasValue<String> getNameField()
@@ -116,7 +116,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#getSelectedTemplates()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getSelectedTemplates()
     */
    @Override
    public List<ProjectTemplate> getSelectedTemplates()
@@ -125,7 +125,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#getTemplateListGrid()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getTemplateListGrid()
     */
    @Override
    public ListGridItem<ProjectTemplate> getTemplateListGrid()
@@ -134,7 +134,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#selectLastTemplate()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#selectLastTemplate()
     */
    @Override
    public void selectLastTemplate()
@@ -143,7 +143,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#setCreateButtonEnabled(boolean)
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#setCreateButtonEnabled(boolean)
     */
    @Override
    public void setCreateButtonEnabled(boolean enabled)
@@ -152,7 +152,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#setDeleteButtonEnabled(boolean)
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#setDeleteButtonEnabled(boolean)
     */
    @Override
    public void setDeleteButtonEnabled(boolean enabled)
@@ -161,7 +161,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display#setNameFieldEnabled(boolean)
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#setNameFieldEnabled(boolean)
     */
    @Override
    public void setNameFieldEnabled(boolean enabled)

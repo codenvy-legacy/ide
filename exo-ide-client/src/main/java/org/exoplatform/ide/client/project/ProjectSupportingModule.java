@@ -33,10 +33,10 @@ import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
+import org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter;
+import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
-import org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
@@ -73,7 +73,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
 
       new TinyProjectExplorerPresenter();
 
-      new CreateProjectPresenter();
+      new CreateEmptyProjectPresenter();
       
       new ProjectPropertiesPresenter();
       

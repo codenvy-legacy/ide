@@ -79,8 +79,8 @@
       <when-type-is class="org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.fromtemplate.CreateProjectView">
-      <when-type-is class="org.exoplatform.ide.client.project.fromtemplate.CreateProjectFromTemplatePresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectView">
+      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasView">
@@ -175,8 +175,8 @@
       <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectForm">
-      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectForm">
+      <when-type-is class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileView">

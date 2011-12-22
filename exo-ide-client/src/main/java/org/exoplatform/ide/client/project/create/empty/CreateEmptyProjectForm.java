@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.create;
+package org.exoplatform.ide.client.project.create.empty;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -38,15 +38,15 @@ import java.util.Set;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class CreateProjectForm extends ViewImpl implements
-   org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display
+public class CreateEmptyProjectForm extends ViewImpl implements
+   org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display
 {
 
    private static final int WIDTH = 420;
 
    private static final int HEIGHT = 210;
 
-   private static final String ID = CreateProjectForm.class.getName();
+   private static final String ID = CreateEmptyProjectForm.class.getName();
 
    private static final String PROJECT_NAME_ID = "CreateProjectFormProjectName";
 
@@ -70,11 +70,11 @@ public class CreateProjectForm extends ViewImpl implements
 
    private static CreateProjectFormUiBinder uiBinder = GWT.create(CreateProjectFormUiBinder.class);
 
-   interface CreateProjectFormUiBinder extends UiBinder<Widget, CreateProjectForm>
+   interface CreateProjectFormUiBinder extends UiBinder<Widget, CreateEmptyProjectForm>
    {
    }
 
-   public CreateProjectForm()
+   public CreateEmptyProjectForm()
    {
       super(ID, ViewType.MODAL, "Create Project", null, WIDTH, HEIGHT);
       setCloseOnEscape(true);
