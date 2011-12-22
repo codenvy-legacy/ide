@@ -94,4 +94,13 @@ public class ShortTypeInfo extends Member
       type = (String)in.readObject();
    }
 
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.Member#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return modifierToString() + " " + type + " " + qualifiedName;
+   }
+
 }

@@ -20,7 +20,6 @@ package org.exoplatform.ide.codeassistant.jvm;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +38,7 @@ public class TestFieldInfoExternalization extends BaseTest
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
-      serializedFieldInfo = new FieldInfo("field", Modifier.PUBLIC, "test.TestClass", "String");
+      serializedFieldInfo = new FieldInfo("java.lang.String", Modifier.PUBLIC, "field", "test.TestClass");
       byte[] serializedData = serializeObject(serializedFieldInfo);
       deserializedFieldInfo = new FieldInfo();
       deserializedFieldInfo.readExternal(createObjectInputStream(serializedData));

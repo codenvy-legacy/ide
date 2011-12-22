@@ -201,4 +201,13 @@ public abstract class Member implements Externalizable
       name = (String)in.readObject();
    }
 
+   /**
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return modifierToString() + " " + name;
+   }
+
 }

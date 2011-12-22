@@ -156,4 +156,13 @@ public class RoutineInfo extends Member
       genericExceptionTypes = readStringUTFArray(in);
    }
 
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.Member#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return generic;
+   }
+
 }

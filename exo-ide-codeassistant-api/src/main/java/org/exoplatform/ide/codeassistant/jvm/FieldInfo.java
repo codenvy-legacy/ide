@@ -107,4 +107,13 @@ public class FieldInfo extends Member
       declaringClass = (String)in.readObject();
    }
 
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.Member#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return modifierToString() + " " + type + " " + declaringClass + "." + name;
+   }
+
 }

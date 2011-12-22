@@ -233,4 +233,14 @@ public class TypeInfo extends ShortTypeInfo
       methods = readObjectArray(MethodInfo.class, in);
       declaredMethods = readObjectArray(MethodInfo.class, in);
    }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return super.toString();
+   }
+
 }

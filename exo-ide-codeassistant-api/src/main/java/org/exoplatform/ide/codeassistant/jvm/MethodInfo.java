@@ -101,4 +101,14 @@ public class MethodInfo extends RoutineInfo
       genericReturnType = (String)in.readObject();
       returnType = (String)in.readObject();
    }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.RoutineInfo#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return getGeneric();
+   }
+
 }
