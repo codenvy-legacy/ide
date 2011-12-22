@@ -232,7 +232,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
                         {
                            paas.deploy(result);
                         }
-                     }.schedule(5000);
+                     }.schedule(2000);
                   }
 
                   IDE.getInstance().closeView(display.asView().getId());
