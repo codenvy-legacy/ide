@@ -46,7 +46,7 @@
       <dependency>
          <groupId>org.exoplatform.log-reader</groupId>
          <artifactId>log-reader-service</artifactId>
-         <version>1.0-M2</version>
+         <version>1.0-M5-SNAPSHOT</version>
       </dependency>
 
    </dependencies>
