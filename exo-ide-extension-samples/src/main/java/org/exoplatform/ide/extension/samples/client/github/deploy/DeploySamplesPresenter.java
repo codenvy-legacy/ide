@@ -57,7 +57,6 @@ import org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncReque
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.samples.client.paas.openshift.OpenShiftAsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -200,7 +199,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.fireEvent(new ProjectCreationFinishedEvent(true));
             closeView();
          }
       });

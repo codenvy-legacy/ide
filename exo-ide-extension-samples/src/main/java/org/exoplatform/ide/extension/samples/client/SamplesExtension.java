@@ -36,9 +36,6 @@ import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithu
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
-import org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter;
-import org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter;
-import org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter;
 
 /**
  * Samples extension for IDE.
@@ -83,16 +80,6 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       GithubStep<ProjectData> secondStep = new DeploySamplesPresenter();
       firstStep.setNextStep(secondStep);
       secondStep.setPreviousStep(firstStep);
-
-      //wizard Create new Java Project
-      WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter();
-      WizardDeploymentStepPresenter wizardDeploymentStep = new WizardDeploymentStepPresenter();
-      WizardFinishStepPresenter wizardFinishStep = new WizardFinishStepPresenter();
-
-      wizardDefinitionStep.setWizardContinuable(wizardDeploymentStep);
-      wizardDeploymentStep.setWizardReturnable(wizardDefinitionStep);
-      wizardDeploymentStep.setWizardContinuable(wizardFinishStep);
-      wizardFinishStep.setWizardReturnable(wizardDeploymentStep);
 
       new LoginPresenter();
 
