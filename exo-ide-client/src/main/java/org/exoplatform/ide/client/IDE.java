@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
+import org.exoplatform.ide.client.application.ViewControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.dialogs.IDEDialogs;
@@ -76,34 +77,40 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
 
    private ControlsRegistration controlsRegistration;
-   
+
    private List<Paas> paasRegistration;
 
    private IDEPresenter presenter;
-   
+
    /**
     * Initialize constants  for UI 
     */
    public static final IdeLocalizationConstant IDE_LOCALIZATION_CONSTANT = GWT.create(IdeLocalizationConstant.class);
-   
-   public static final IdeTemplateLocalizationConstant TEMPLATE_CONSTANT = GWT.create(IdeTemplateLocalizationConstant.class);
-   
-   public static final IdePreferencesLocalizationConstant PREFERENCES_CONSTANT = GWT.create(IdePreferencesLocalizationConstant.class);
-   
-   public static final IdeVersionsLocalizationConstant VERSIONS_CONSTANT = GWT.create(IdeVersionsLocalizationConstant.class);
-   
+
+   public static final IdeTemplateLocalizationConstant TEMPLATE_CONSTANT = GWT
+      .create(IdeTemplateLocalizationConstant.class);
+
+   public static final IdePreferencesLocalizationConstant PREFERENCES_CONSTANT = GWT
+      .create(IdePreferencesLocalizationConstant.class);
+
+   public static final IdeVersionsLocalizationConstant VERSIONS_CONSTANT = GWT
+      .create(IdeVersionsLocalizationConstant.class);
+
    public static final IdeUploadLocalizationConstant UPLOAD_CONSTANT = GWT.create(IdeUploadLocalizationConstant.class);
-   
-   public static final IdePermissionsLocalizationConstant PERMISSIONS_CONSTANT = GWT.create(IdePermissionsLocalizationConstant.class);
-   
-   public static final IdeNavigationLocalizationConstant NAVIGATION_CONSTANT = GWT.create(IdeNavigationLocalizationConstant.class);
-   
+
+   public static final IdePermissionsLocalizationConstant PERMISSIONS_CONSTANT = GWT
+      .create(IdePermissionsLocalizationConstant.class);
+
+   public static final IdeNavigationLocalizationConstant NAVIGATION_CONSTANT = GWT
+      .create(IdeNavigationLocalizationConstant.class);
+
    public static final IdeEditorLocalizationConstant EDITOR_CONSTANT = GWT.create(IdeEditorLocalizationConstant.class);
-   
+
    public static final IdeErrorsLocalizationConstant ERRORS_CONSTANT = GWT.create(IdeErrorsLocalizationConstant.class);
-   
-   public static final IdeOperationLocalizationConstant OPERATION_CONSTANT = GWT.create(IdeOperationLocalizationConstant.class);
-   
+
+   public static final IdeOperationLocalizationConstant OPERATION_CONSTANT = GWT
+      .create(IdeOperationLocalizationConstant.class);
+
    public static final IdeLocalizationMessages IDE_LOCALIZATION_MESSAGES = GWT.create(IdeLocalizationMessages.class);
 
    public IDE()
@@ -112,7 +119,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
        * Remember browser's window.alert(...) function
        */
       Alert.init();
-      
+
       /*
        * Create the list of available icons.
        * 
@@ -121,7 +128,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new IDEDialogs();
       new AskForValueDialog();
-      
+
       /*
        * Initialize SeleniumTestsHelper.
        * It creates HTML DIV elements and logs to them IDE current application state.
@@ -135,21 +142,20 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
       controlsRegistration = new ControlsRegistration();
-      controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
       controlsRegistration.addControlsFormatter(new NewItemControlsFormatter());
-      
-      paasRegistration = new ArrayList<Paas>();
+      controlsRegistration.addControlsFormatter(new ViewControlsFormatter());
 
+      paasRegistration = new ArrayList<Paas>();
 
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(ideForm, controlsRegistration);
 
       new EditorController();
-      
+
       new LoginPresenter();
-      
+
       new ViewHighlightManager(IDE.eventBus());
-      
+
       new ApplicationStateSnapshotListener();
 
       // MODULES INITIALIZATION
@@ -164,20 +170,20 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new DocumentationPresenter();
 
       new PreferencesModule();
-      
+
       //initialize extensions
       for (Extension ext : extensions())
       {
          ext.initialize();
       }
-
+      controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
       controlsRegistration.formatControls();
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).
        */
       //disableTextSelectInternal(RootPanel.get().getElement(), true);
    }
-   
+
    /**
     * Disables selection of HTML on element. 
     * 
@@ -185,16 +191,16 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
     * @param disable <b>true</b> disables all selection on element, <b>false</b> enables selection
     */
    private native static void disableTextSelectInternal(Element e, boolean disable)/*-{
-      if (disable) {
-          e.ondrag = function () { return false; };
-          e.onselectstart = function () { return false; };
-          e.style.MozUserSelect="none"
-      } else {
-          e.ondrag = null;
-          e.onselectstart = null;
-          e.style.MozUserSelect="text"
-      }
-   }-*/;
+                                                                                   if (disable) {
+                                                                                   e.ondrag = function () { return false; };
+                                                                                   e.onselectstart = function () { return false; };
+                                                                                   e.style.MozUserSelect="none"
+                                                                                   } else {
+                                                                                   e.ondrag = null;
+                                                                                   e.onselectstart = null;
+                                                                                   e.style.MozUserSelect="text"
+                                                                                   }
+                                                                                   }-*/;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget)
@@ -212,8 +218,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public void addControl(Control<?> control)
    {
       controlsRegistration.addControl(control, Docking.NONE);
-   }   
-   
+   }
+
    /**
     * @see org.exoplatform.ide.client.framework.module.IDE#closeView(java.lang.String)
     */

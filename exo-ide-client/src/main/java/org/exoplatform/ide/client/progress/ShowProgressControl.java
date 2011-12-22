@@ -43,6 +43,7 @@ public class ShowProgressControl extends SimpleControl implements IDEControl
       setTitle(IDE.IDE_LOCALIZATION_CONSTANT.progressControlTitle());
       setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.progressControlPrompt());
       setImages(IDEImageBundle.INSTANCE.progresImage(), IDEImageBundle.INSTANCE.progresImage());
+      setDelimiterBefore(true);
       setEvent(new ShowProgressEvent());
    }
 
