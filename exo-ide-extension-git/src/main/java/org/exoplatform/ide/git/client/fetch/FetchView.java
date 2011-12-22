@@ -98,7 +98,7 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
     */
    @UiField
    CheckBox removeDeletedRefsField;
-   
+
    interface FetchViewUiBinder extends UiBinder<Widget, FetchView>
    {
    }
@@ -112,17 +112,16 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.fetchTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-     
+
       remoteField.setName(REMOTE_FIELD_ID);
       removeDeletedRefsField.setName(REMOVE_DELETED_REFS_FIELD_ID);
       localBranchesField.setName(LOCAL_BRANCHES_FIELD_ID);
       remoteBranchesField.setName(REMOTE_BRANCHES_FIELD_ID);
-      
+
       fetchButton.setButtonId(FETCH_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
-      
    }
-  
+
    /**
     * @see org.exoplatform.ide.git.client.fetch.FetchPresenter.Display#getFetchButton()
     */

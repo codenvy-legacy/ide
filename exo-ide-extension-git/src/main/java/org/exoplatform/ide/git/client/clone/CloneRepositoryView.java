@@ -142,7 +142,7 @@ public class CloneRepositoryView extends ViewImpl implements
    @Override
    public void focusInRemoteUrlField()
    {
-      remoteUriField.setFocus(true);
+      remoteUriField.focus();
    }
 
 }

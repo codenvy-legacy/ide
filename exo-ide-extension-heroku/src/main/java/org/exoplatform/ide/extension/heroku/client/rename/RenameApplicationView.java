@@ -120,7 +120,7 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
    @Override
    public void selectValueInRenameField()
    {
-      nameField.setFocus(true);
+      nameField.focus();
    }
 
    /**

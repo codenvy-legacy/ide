@@ -136,6 +136,7 @@ public class LogsView extends ViewImpl implements LogsPresenter.Display
    @Override
    public void focusInLogLinesField()
    {
-      logLinesField.setFocus(true);
+      logLinesField.focus();
    }
+   
 }

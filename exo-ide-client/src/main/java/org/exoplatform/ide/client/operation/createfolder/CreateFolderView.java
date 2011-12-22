@@ -118,7 +118,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
    @Override
    public void setFocusInNameField()
    {
-      folderNameField.setFocus(true);
+      folderNameField.focus();
    }
 
 }

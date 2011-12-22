@@ -46,12 +46,12 @@ public class ShowProjectGitReadOnlyUrlView extends ViewImpl implements ShowProje
    /*Elements IDs*/
 
    private static final String OK_BUTTON_ID = "ideGitUrlOkButton";
-   
+
    private static final String GIT_URL_FIELD_ID = "ideGitUrlField";
 
    @UiField
    TextInput gitUrl;
-   
+
    @UiField
    ImageButton closeButton;
 
@@ -67,10 +67,8 @@ public class ShowProjectGitReadOnlyUrlView extends ViewImpl implements ShowProje
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
-      
       gitUrl.setName(GIT_URL_FIELD_ID);
       closeButton.setButtonId(OK_BUTTON_ID);
-      
    }
 
    @Override
@@ -85,5 +83,4 @@ public class ShowProjectGitReadOnlyUrlView extends ViewImpl implements ShowProje
       return closeButton;
    }
 
-  
 }

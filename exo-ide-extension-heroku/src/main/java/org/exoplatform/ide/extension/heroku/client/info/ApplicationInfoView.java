@@ -87,4 +87,5 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
    {
       return applicationInfoGrid;
    }
+   
 }

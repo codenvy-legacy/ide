@@ -46,6 +46,7 @@ import org.exoplatform.ide.git.shared.Revision;
  */
 public class ResetToCommitView extends ViewImpl implements ResetToCommitPresenter.Display
 {
+   
    private static final int HEIGHT = 345;
 
    private static final int WIDTH = 610;

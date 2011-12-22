@@ -126,7 +126,7 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
    @Override
    public void focusInPathField()
    {
-      filePathField.setFocus(true);
+      filePathField.focus();
    }
    
 }

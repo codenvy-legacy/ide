@@ -160,7 +160,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @Override
    public void focusInEmailField()
    {
-      emailField.setFocus(true);
+      emailField.focus();
    }
 
    /**
@@ -171,4 +171,5 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    {
       return loginDemoButton;
    }
+   
 }

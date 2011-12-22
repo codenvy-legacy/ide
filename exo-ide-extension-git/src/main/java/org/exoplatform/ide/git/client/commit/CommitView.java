@@ -71,7 +71,7 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
 
    @UiField
    CheckBox allField;
-   
+
    interface CommitViewUiBinder extends UiBinder<Widget, CommitView>
    {
    }
@@ -83,7 +83,7 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.commitTitle(), null, WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      
+
       allField.setName(ALL_FIELD_ID);
 
       messageField.setName(MESSAGE_FIELD_ID);
@@ -134,7 +134,7 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    @Override
    public void focusInMessageField()
    {
-      messageField.setFocus(true);
+      messageField.focus();
    }
 
    /**

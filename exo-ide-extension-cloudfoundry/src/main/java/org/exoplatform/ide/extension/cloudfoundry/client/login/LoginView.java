@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -56,7 +58,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
 
    private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
-   
+
    private static final String TARGET_FIELD_ID = "ideLoginViewTargetField";
 
    /**
@@ -73,7 +75,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    ComboBoxField targetField;
-   
+
    /**
     * Email field.
     */
@@ -97,13 +99,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    Label errLabel;
-   
+
    public LoginView()
    {
-      super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT, false);
+      super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT,
+         false);
       add(uiBinder.createAndBindUi(this));
 
       targetField.setName(TARGET_FIELD_ID);
@@ -164,7 +167,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @Override
    public void focusInEmailField()
    {
-      emailField.setFocus(true);
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            emailField.setFocus(true);
+         }
+      });
    }
 
    /**

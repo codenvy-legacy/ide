@@ -113,9 +113,6 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
 
    private String remoteName;
 
-   /**
-    * @param eventBus events handler
-    */
    public CreateApplicationPresenter()
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);

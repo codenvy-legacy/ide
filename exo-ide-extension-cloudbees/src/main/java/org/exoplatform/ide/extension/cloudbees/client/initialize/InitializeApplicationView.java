@@ -34,7 +34,7 @@ public class InitializeApplicationView extends ViewImpl implements InitializeApp
    private static final String CANCEL_BUTTON_ID = "ideApplicationNameViewCancelButton";
 
    private static final String DOMAIN_FIELD_ID = "ideApplicationNameViewDomainField";
-   
+
    private static final String NAME_FIELD_ID = "ideApplicationNameViewNameField";
 
    private static final String ID_FIELD_ID = "ideApplicationNameViewIdField";
@@ -50,7 +50,7 @@ public class InitializeApplicationView extends ViewImpl implements InitializeApp
     */
    @UiField
    SelectItem domainField;
-   
+
    /**
     * Remote repository name field.
     */
@@ -138,7 +138,7 @@ public class InitializeApplicationView extends ViewImpl implements InitializeApp
    @Override
    public void focusInApplicationNameField()
    {
-      nameField.getElement().focus();
+      nameField.focus();
    }
 
    /**

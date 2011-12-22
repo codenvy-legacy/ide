@@ -153,7 +153,7 @@ public class SaveAsTemplateView extends ViewImpl implements SaveAsTemplatePresen
    @Override
    public void focusInNameField()
    {
-      nameField.setFocus(true);
+      nameField.focus();
    }
 
 }

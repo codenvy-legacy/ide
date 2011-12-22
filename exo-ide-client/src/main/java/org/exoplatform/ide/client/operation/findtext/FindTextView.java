@@ -196,7 +196,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
    @Override
    public void focusInFindField()
    {
-      findTextField.setFocus(true);
+      findTextField.focus();
    }
 
 }

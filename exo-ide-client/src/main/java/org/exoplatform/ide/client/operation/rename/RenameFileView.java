@@ -174,6 +174,6 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
    @Override
    public void focusInNameField()
    {
-      nameField.setFocus(true);
+      nameField.focus();
    }
 }

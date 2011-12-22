@@ -120,7 +120,7 @@ public class RenameFolderView extends ViewImpl implements RenameFolderPresenter.
    @Override
    public void focusInNameField()
    {
-      nameField.setFocus(true);
+      nameField.focus();
    }
 
 }

@@ -80,14 +80,12 @@ public class GetItemURLView extends ViewImpl implements
 
       new Timer()
       {
-
          @Override
          public void run()
          {
             urlField.selectAll();
             urlField.setFocus(true);
          }
-
       }.schedule(500);
    }
 

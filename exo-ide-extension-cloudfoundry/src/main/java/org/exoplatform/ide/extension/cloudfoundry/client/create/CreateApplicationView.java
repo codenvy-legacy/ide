@@ -188,7 +188,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    @Override
    public void focusInNameField()
    {
-      nameField.setFocus(true);
+      nameField.focus();
    }
 
    /**

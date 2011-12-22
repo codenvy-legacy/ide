@@ -130,7 +130,7 @@ public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.
    @Override
    public void focusInDomainNameField()
    {
-      nameField.getElement().focus();
+      nameField.focus();
    }
 
 }

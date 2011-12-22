@@ -18,22 +18,20 @@
  */
 package org.exoplatform.ide.client.dialogs;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.gwtframework.ui.client.component.TextInput;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -116,22 +114,13 @@ public class AskForValueView extends ViewImpl implements org.exoplatform.ide.cli
    {
       yesButton.setEnabled(enabled);
    }
-   
+
    @Override
    protected void onAttach()
    {
       super.onAttach();
-      
-      ScheduledCommand command = new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            textField.setFocus(true);
-         }
-      };
-      
-      Scheduler.get().scheduleDeferred(command);
+
+      textField.focus();
    }
 
 }

@@ -121,7 +121,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
    protected void execute()
    {
-      String openedProjectId = applicationSettings.getValueAsString(Settings.OPENED_PROJECT_ID);
+      String openedProjectId = applicationSettings.getValueAsString(Settings.OPENED_PROJECT);
 
       if (openedProjectId == null || openedProjectId.isEmpty())
       {

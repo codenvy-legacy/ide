@@ -147,6 +147,7 @@ public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Di
    @Override
    public void focusInCommandField()
    {
-      commandField.setFocus(true);
+      commandField.focus();
    }
+   
 }

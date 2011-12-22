@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.client.launch_service;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -25,12 +31,6 @@ import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.groovy.client.Images;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Created by The eXo Platform SAS.
@@ -88,7 +88,7 @@ public class RestServiceURLView extends ViewImpl implements
       urlField.setHeight(20);
 
       paramsForm.add(urlField);
-      urlField.focusInItem();
+      urlField.focus();
 
       mainLayout.add(paramsForm);
       mainLayout.setCellVerticalAlignment(paramsForm, VerticalPanel.ALIGN_MIDDLE);
@@ -131,5 +131,5 @@ public class RestServiceURLView extends ViewImpl implements
    {
       return okButton;
    }
-   
+
 }

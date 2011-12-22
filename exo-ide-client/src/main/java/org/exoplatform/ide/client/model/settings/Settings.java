@@ -38,7 +38,7 @@ public interface Settings
    
    public static final String ENTRY_POINT = "entry-point";
    
-   public static final String OPENED_PROJECT_ID = "opened-project-id";
+   public static final String OPENED_PROJECT = "opened-project";
    
    public static final String TOOLBAR_ITEMS = "toolbar-items";
    

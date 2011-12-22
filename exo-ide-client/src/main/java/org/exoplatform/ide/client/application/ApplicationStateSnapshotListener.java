@@ -271,14 +271,14 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
-      applicationSettings.setValue(Settings.OPENED_PROJECT_ID, "", Store.COOKIES);
+      applicationSettings.setValue(Settings.OPENED_PROJECT, "", Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      applicationSettings.setValue(Settings.OPENED_PROJECT_ID, event.getProject().getId(), Store.COOKIES);
+      applicationSettings.setValue(Settings.OPENED_PROJECT, event.getProject().getId(), Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 

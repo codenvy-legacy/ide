@@ -1,6 +1,8 @@
 package org.exoplatform.ide.extension.openshift.client.create;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -139,7 +141,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    @Override
    public void focusInApplicationNameField()
    {
-      nameField.getElement().focus();
+      nameField.focus();
    }
 
    /**

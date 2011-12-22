@@ -124,7 +124,7 @@ public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client
    @Override
    public void setFocusInLineNumberField()
    {
-      lineNumberField.setFocus(true);
+      lineNumberField.focus();
    }
 
    /**

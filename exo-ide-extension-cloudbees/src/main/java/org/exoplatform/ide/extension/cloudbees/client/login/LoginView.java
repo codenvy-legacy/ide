@@ -87,7 +87,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    ImageButton cancelButton;
-   
+
    public LoginView()
    {
       super(ID, ViewType.MODAL, CloudBeesExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT);
@@ -150,6 +150,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @Override
    public void focusInEmailField()
    {
-      emailField.getElement().focus();
+      emailField.focus();
    }
 }
