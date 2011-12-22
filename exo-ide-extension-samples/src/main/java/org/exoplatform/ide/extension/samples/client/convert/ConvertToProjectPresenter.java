@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -659,7 +660,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       try
       {
          String workspace = (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + vfs.getId() : vfsBaseUrl + "/" + vfs.getId();
-         new VirtualFileSystem(workspace).init(new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(
+         new VirtualFileSystem(workspace, new GWTLoader()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(
             new VirtualFileSystemInfo()))
          {
 
