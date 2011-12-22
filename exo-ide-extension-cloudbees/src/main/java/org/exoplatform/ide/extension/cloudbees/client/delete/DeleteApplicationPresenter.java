@@ -47,10 +47,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  */
 public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler
 {
-   private String appId;
-
-   private String appTitle;
-
    /**
     * @param eventBus
     */
@@ -69,8 +65,8 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
       //e.g.when, delete from application manager form
       if (event.getAppId() != null && event.getAppTitle() != null)
       {
-         appId = event.getAppId();
-         appTitle = event.getAppTitle() != null ? event.getAppTitle() : appId;
+         String appId = event.getAppId();
+         String appTitle = event.getAppTitle() != null ? event.getAppTitle() : appId;
          askForDelete(null, null, appId, appTitle);
       }
       else if (makeSelectionCheck())
@@ -99,8 +95,8 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             @Override
             protected void onSuccess(Map<String, String> result)
             {
-               appId = result.get("id");
-               appTitle = result.get("title");
+               String appId = result.get("id");
+               String appTitle = result.get("title");
                final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
                askForDelete(project, vfs.getId(), appId, appTitle);
             }
