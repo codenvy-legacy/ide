@@ -157,6 +157,11 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
 
    protected void updateControlState(ProjectModel project)
    {
+      if (project == null || project.getChildren() == null)
+      {
+         return;
+      }
+
       List<Item> itemList = project.getChildren().getItems();
       for (Item child : itemList)
       {

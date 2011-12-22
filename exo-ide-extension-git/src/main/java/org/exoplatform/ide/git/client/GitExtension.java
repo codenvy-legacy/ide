@@ -100,6 +100,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new ShowHistoryControl());
       IDE.getInstance().addControl(new ShowStatusControl());
       IDE.getInstance().addControl(new ShowProjectGitReadOnlyUrl());
+      IDE.getInstance().addControlsFormatter(new GitControlsFormatter());
 
       //Create presenters:
       new CloneRepositoryPresenter();
@@ -119,7 +120,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new HistoryPresenter();
       new DeleteRepositoryCommandHandler();
       new MergePresenter();
-      
+
       new ShowProjectGitReadOnlyUrlPresenter();
    }
 
