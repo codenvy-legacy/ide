@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.client.preview;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Link;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Created by The eXo Platform SAS .
@@ -41,7 +42,7 @@ import com.google.gwt.core.client.GWT;
 public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandler, EditorActiveFileChangedHandler
 {
 
-   public interface Display
+   public interface Display extends IsView
    {
 
       /**
@@ -61,10 +62,9 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       void setMessage(String message);
 
    }
-   
-   private static final String PREVIEW_NOT_AVAILABLE = org.exoplatform.ide.client.IDE.OPERATION_CONSTANT.previewNotAvailable();
-   
-   private static final String PREVIEW_NOT_AVAILABLE_SAVE_FILE = org.exoplatform.ide.client.IDE.OPERATION_CONSTANT.previewNotAvailableSaveFile();
+
+   private static final String PREVIEW_NOT_AVAILABLE_SAVE_FILE = org.exoplatform.ide.client.IDE.OPERATION_CONSTANT
+      .previewNotAvailableSaveFile();
 
    /**
     * Instance of attached Display
@@ -78,7 +78,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       IDE.addHandler(PreviewHTMLEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      
+
       IDE.getInstance().addControl(new PreviewHTMLControl(), Docking.TOOLBAR_RIGHT);
    }
 
@@ -95,6 +95,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
          display = GWT.create(Display.class);
          IDE.getInstance().openView((View)display);
       }
+      display.asView().setViewVisible();
       previewActiveFile();
    }
 
@@ -102,8 +103,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
    {
       if (activeFile == null)
       {
-         display.setPreviewAvailable(false);
-         display.setMessage(PREVIEW_NOT_AVAILABLE);
+         IDE.getInstance().closeView(display.asView().getId());
          return;
       }
 
@@ -122,8 +122,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       }
       else
       {
-         display.setPreviewAvailable(false);
-         display.setMessage(PREVIEW_NOT_AVAILABLE);
+         IDE.getInstance().closeView(display.asView().getId());
       }
    }
 
