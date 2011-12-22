@@ -65,13 +65,13 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      //application id and applicaiton title can be received from event
+      //application id and application title can be received from event
       //e.g.when, delete from application manager form
       if (event.getAppId() != null && event.getAppTitle() != null)
       {
          appId = event.getAppId();
-         appTitle = event.getAppTitle();
-         askForDelete(appTitle);
+         appTitle = event.getAppTitle() != null ? event.getAppTitle() : appId;
+         askForDelete(null, null, appId, appTitle);
       }
       else if (makeSelectionCheck())
       {
@@ -101,7 +101,8 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             {
                appId = result.get("id");
                appTitle = result.get("title");
-               askForDelete(appTitle);
+               final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+               askForDelete(project, vfs.getId(), appId, appTitle);
             }
          });
    }
@@ -111,15 +112,10 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     * 
     * @param gitWorkDir
     */
-   protected void askForDelete(final String applicationTitle)
+   protected void askForDelete(final ProjectModel project, final String vfsId, final String appId, final String appTitle)
    {
-      String title = (applicationTitle != null) ? applicationTitle : "";
-      title =
-         (title.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems
-            .get(0)).getProject().getPath() : title;
-
       Dialogs.getInstance().ask(CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
-         CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(title), new BooleanValueReceivedHandler()
+         CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(appTitle), new BooleanValueReceivedHandler()
          {
 
             @Override
@@ -127,29 +123,22 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             {
                if (value != null && value)
                {
-                  doDelete();
+                  doDelete(project, vfsId, appId, appTitle);
                }
             }
          });
    }
 
-   /**
-    * Perform deleting the application on CloudBees.
-    *
-    */
-   protected void doDelete()
+   protected void doDelete(final ProjectModel project, final String vfsId, final String appId, final String appTitle)
    {
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      final String projectId =
-         ((ItemContext)selectedItems.get(0)).getProject() != null ? ((ItemContext)selectedItems.get(0)).getProject()
-            .getId() : null;
-      CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
+      final String projectId = project != null ? project.getId() : null;
+      CloudBeesClientService.getInstance().deleteApplication(appId, vfsId, projectId,
          new CloudBeesAsyncRequestCallback<String>(IDE.eventBus(), new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()
             {
-               doDelete();
+               doDelete(project, vfsId, appId, appTitle);
             }
          }, null)
          {
@@ -158,7 +147,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             {
                IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appTitle),
                   Type.INFO));
-               IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
+               IDE.fireEvent(new ApplicationDeletedEvent(vfsId, projectId));
                if (project != null)
                {
                   IDE.fireEvent(new RefreshBrowserEvent(project));

@@ -55,7 +55,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    private static final String APPS_INFO = BASE_URL + "/apps/info";
 
    private static final String APPS_DELETE = BASE_URL + "/apps/delete";
-   
+
    private static final String APPS_UPDATE = BASE_URL + "/apps/update";
 
    private static final String LOGIN = BASE_URL + "/login";
@@ -197,14 +197,36 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    {
       final String url = restServiceContext + APPS_DELETE;
 
-      String params = (appId != null) ? "appid=" + appId + "&" : "";
-      params += "vfsid=" + vfsId;
-      params += (projectId != null) ? "&projectid=" + projectId : "";
+      List<String> paramList = new ArrayList<String>();
+      if (appId != null)
+         paramList.add("appid=" + appId);
+      if (vfsId != null)
+         paramList.add("vfsid=" + vfsId);
+      if (projectId != null)
+         paramList.add("projectid=" + projectId);
+
+      String params;
+
+      if (paramList.size() < 1)
+      {
+         params = "";
+      }
+      else
+      {
+         params = "?" + paramList.get(0);
+         if (paramList.size() > 1)
+         {
+            for (int i = 1; i < paramList.size(); i++)
+            {
+               params += "&" + paramList.get(i);
+            }
+         }
+      }
 
       callback.setResult(null);
       callback.setEventBus(eventBus);
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
    }
 
    /**
