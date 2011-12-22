@@ -22,6 +22,8 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
@@ -66,6 +68,8 @@ public class VirtualFileSystem
     */
    private VirtualFileSystemInfo info;
 
+   private Loader loader;
+
    public static VirtualFileSystem getInstance()
    {
       return instance;
@@ -76,16 +80,24 @@ public class VirtualFileSystem
     */
    public VirtualFileSystem(String workspaceURL)
    {
-      this(workspaceURL, null);
+      this(workspaceURL, null, null);
    }
 
-   VirtualFileSystem(String workspaceURL, VirtualFileSystemInfo info)
+   /**
+    * @param workspaceURL
+    */
+   public VirtualFileSystem(String workspaceURL, Loader loader)
+   {
+      this(workspaceURL, null, loader);
+   }
+
+   VirtualFileSystem(String workspaceURL, VirtualFileSystemInfo info, Loader loader)
    {
       instance = this;
 
       this.workspaceURL = workspaceURL;
-
       this.info = info;
+      this.loader = (loader == null) ? new EmptyLoader() : loader;
    }
 
    /**
@@ -126,7 +138,8 @@ public class VirtualFileSystem
    public void getChildren(Folder folder, AsyncRequestCallback<List<Item>> callback) throws RequestException
    {
       String param = "propertyFilter=" + PropertyFilter.ALL;
-      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param).send(
+      loader.setMessage("Loading content...");
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param).loader(loader).send(
          callback);
    }
 
@@ -141,8 +154,9 @@ public class VirtualFileSystem
       String name = callback.getPayload().getName();
       String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
       String urlString = URL.decode(url).replace("[name]", name);
-      urlString = URL.encode(urlString);      
-      AsyncRequest.build(RequestBuilder.POST, urlString).send(callback);
+      urlString = URL.encode(urlString);
+      loader.setMessage("Creating new folder...");
+      AsyncRequest.build(RequestBuilder.POST, urlString).loader(loader).send(callback);
    }
 
    /**
@@ -160,9 +174,10 @@ public class VirtualFileSystem
       url = URL.decode(url).replace("[name]", newProject.getName());
       url = url.replace("[type]", newProject.getProjectType());
       url = URL.encode(url);
+      loader.setMessage("Creating new project...");
       AsyncRequest.build(RequestBuilder.POST, url)
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(newProject.getProperties()).toString())
-         .header(HTTPHeader.CONTENT_TYPE, "application/json").send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(callback);
    }
 
    /**
@@ -179,8 +194,9 @@ public class VirtualFileSystem
       String url = parent.getLinkByRelation(Link.REL_CREATE_FILE).getHref();
       url = URL.decode(url).replace("[name]", newFile.getName());
       url = URL.encode(url);
+      loader.setMessage("Creating new file...");
       AsyncRequest.build(RequestBuilder.POST, url).data(newFile.getContent())
-         .header(HTTPHeader.CONTENT_TYPE, newFile.getMimeType()).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, newFile.getMimeType()).loader(loader).send(callback);
    }
 
    /**
@@ -192,7 +208,8 @@ public class VirtualFileSystem
    public void getContent(AsyncRequestCallback<FileModel> callback) throws RequestException
    {
       String url = callback.getPayload().getLinkByRelation(Link.REL_CONTENT).getHref();
-      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      loader.setMessage("Loading content...");
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    /**
@@ -207,8 +224,9 @@ public class VirtualFileSystem
       //TODO check with lock
       String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
       url += (file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "";
+      loader.setMessage("Updating content...");
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
-         .data(file.getContent()).send(callback);
+         .data(file.getContent()).loader(loader).send(callback);
    }
 
    /**
@@ -226,7 +244,8 @@ public class VirtualFileSystem
       {
          url = URL.decode(url).replace("[lockToken]", ((FileModel)item).getLock().getLockToken());
       }
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      loader.setMessage("Deleting item...");
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -246,7 +265,8 @@ public class VirtualFileSystem
          url = URL.decode(url).replace("[parentId]", destination);
       }
       url = URL.encode(url);
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      loader.setMessage("Copying item...");
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -269,7 +289,8 @@ public class VirtualFileSystem
          url = url.replace("[lockToken]", ((FileModel)source).getLock().getLockToken());
       }
       url = URL.encode(url);
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      loader.setMessage("Moving item...");
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -296,11 +317,12 @@ public class VirtualFileSystem
       {
          url = url.replace("[lockToken]", ((FileModel)item).getLock().getLockToken());
       }
-      
+
       url = url.replace("?&", "?");
       url = url.replaceAll("&&", "&");
       url = URL.encode(url);
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      loader.setMessage("Renaming item...");
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -312,7 +334,8 @@ public class VirtualFileSystem
    public void lock(FileModel file, AsyncRequestCallback<LockToken> callback) throws RequestException
    {
       String url = file.getLinkByRelation(Link.REL_LOCK).getHref();
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      loader.setMessage("Locking file...");
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -326,7 +349,8 @@ public class VirtualFileSystem
    {
       String url = file.getLinkByRelation(Link.REL_UNLOCK).getHref();
       url = URL.decode(url).replace("[lockToken]", lockToken);
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      loader.setMessage("Unlocking file...");
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -338,11 +362,12 @@ public class VirtualFileSystem
     */
    public void getItemByPath(String path, AsyncRequestCallback<ItemWrapper> callback) throws RequestException
    {
-      if(path.startsWith("/"))
+      if (path.startsWith("/"))
          path = path.substring(1);
       String url = info.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref();
       url = URL.decode(url).replace("[path]", path);
-      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).send(callback);
+      loader.setMessage("Loading data...");
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(callback);
    }
 
    /**
@@ -355,7 +380,8 @@ public class VirtualFileSystem
    {
       String url = info.getUrlTemplates().get((Link.REL_ITEM)).getHref();
       url = URL.decode(url).replace("[id]", id);
-      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).send(callback);
+      loader.setMessage("Loading data...");
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(callback);
    }
 
    /**
@@ -378,10 +404,11 @@ public class VirtualFileSystem
          String value = query.get(key);
          data += (value != null && !value.isEmpty()) ? key + "=" + value + "&" : "";
       }
-      
+
       url = URL.encode(url);
+      loader.setMessage("Searching...");
       AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED).data(data).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED).loader(loader).data(data).send(callback);
    }
 
    /**
@@ -396,9 +423,10 @@ public class VirtualFileSystem
    {
       String url = item.getLinkByRelation(Link.REL_SELF).getHref();
       url += (lockToken != null) ? "?lockToken=" + lockToken : "";
+      loader.setMessage("Updating item...");
       AsyncRequest.build(RequestBuilder.POST, url)
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(item.getProperties()).toString())
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).loader(loader).send(callback);
    }
-   
+
 }

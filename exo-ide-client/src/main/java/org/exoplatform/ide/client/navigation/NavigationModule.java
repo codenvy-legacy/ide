@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.download.DownloadHandler;
@@ -150,6 +151,6 @@ public class NavigationModule implements InitializeServicesHandler
          (event.getApplicationConfiguration().getVfsBaseUrl().endsWith("/")) ? event.getApplicationConfiguration()
             .getVfsBaseUrl() + event.getApplicationConfiguration().getVfsId() : event.getApplicationConfiguration()
             .getVfsBaseUrl() + "/" + event.getApplicationConfiguration().getVfsId();
-            new VirtualFileSystem(workspace);
+            new VirtualFileSystem(workspace, new GWTLoader());
    }
 }

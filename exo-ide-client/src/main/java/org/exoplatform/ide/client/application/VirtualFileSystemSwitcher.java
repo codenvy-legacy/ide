@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.application;
 
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
@@ -63,7 +64,7 @@ public class VirtualFileSystemSwitcher implements SwitchVFSHandler, Configuratio
          (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + vfsId : vfsBaseUrl + "/" + vfsId;
 
       try {
-         new VirtualFileSystem(workspaceUrl).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+         new VirtualFileSystem(workspaceUrl, new GWTLoader()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
             new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
             @Override

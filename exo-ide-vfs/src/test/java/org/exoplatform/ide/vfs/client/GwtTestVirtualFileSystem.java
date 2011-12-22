@@ -74,7 +74,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
          new VirtualFileSystemInfo("test", true, true, "ANONIM", "ANY", Collections.EMPTY_LIST, ACLCapability.MANAGE,
             QueryCapability.BOTHCOMBINED, links, new FolderModel());
 
-      new VirtualFileSystem("/", info);
+      new VirtualFileSystem("/", info, null);
 
       //VirtualFileSystem.init(info, "/");
    }
