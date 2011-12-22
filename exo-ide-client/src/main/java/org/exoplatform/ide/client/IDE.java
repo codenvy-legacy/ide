@@ -158,10 +158,10 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new TextEditModule();
 
       new PropertiesPresenter();
+      new OutputPresenter();
       new OutlinePresenter();
       new PreviewHTMLPresenter();
       new DocumentationPresenter();
-      new OutputPresenter();
 
       new PreferencesModule();
       

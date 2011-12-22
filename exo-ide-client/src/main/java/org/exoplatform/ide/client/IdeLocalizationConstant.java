@@ -235,6 +235,12 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.deleteItems.prompt")
    String deleteItemsPromptControl();
+   
+   @Key("control.output.title")
+   String outputTitleControl();
+   
+   @Key("control.output.prompt")
+   String outputPromptControl();
 
    /*
     * DOWNLOAD CONTROL

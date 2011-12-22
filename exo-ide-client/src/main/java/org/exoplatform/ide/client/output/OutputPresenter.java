@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.output;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
@@ -42,7 +43,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
  * @version @version $Id: $
  */
 
-public class OutputPresenter implements OutputHandler, ViewClosedHandler
+public class OutputPresenter implements OutputHandler, ViewClosedHandler, ShowOutputHandler
 {
 
    public interface Display extends IsView
@@ -64,6 +65,8 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
    {
       IDE.addHandler(OutputEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ShowOutputEvent.TYPE, this);
+      IDE.getInstance().addControl(new ShowOutputCommand(), Docking.NONE);
    }
 
    public void bindDisplay()
@@ -87,16 +90,7 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
    {
       try
       {
-         if (display == null)
-         {
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView((View)display);
-            bindDisplay();
-         }
-         else
-         {
-            ((View)display).setViewVisible();
-         }
+         openView();
 
          OutputMessage message = new OutputMessage(event.getMessage(), event.getOutputType());
          if (message.getType() == OutputMessage.Type.LOG)
@@ -123,6 +117,33 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler
       {
          display = null;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.output.ShowOutputHandler#onShowOutput(org.exoplatform.ide.client.output.ShowOutputEvent)
+    */
+   @Override
+   public void onShowOutput(ShowOutputEvent event)
+   {
+      openView();
+   }
+
+   /**
+    * 
+    */
+   private void openView()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView((View)display);
+         bindDisplay();
+      }
+      else
+      {
+         ((View)display).setViewVisible();
+      }
+
    }
 
 }
