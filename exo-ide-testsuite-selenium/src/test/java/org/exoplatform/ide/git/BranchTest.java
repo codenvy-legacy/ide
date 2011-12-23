@@ -90,9 +90,10 @@ public class BranchTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES));
 
@@ -114,9 +115,10 @@ public class BranchTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Open Branches view:
@@ -146,9 +148,10 @@ public class BranchTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Open Branches view:
@@ -180,9 +183,10 @@ public class BranchTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Open Branches view:
@@ -233,9 +237,10 @@ public class BranchTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Open Branches view:
@@ -272,10 +277,12 @@ public class BranchTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
@@ -292,6 +299,7 @@ public class BranchTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.LOADER.waitClosed();
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FIRST_BRANCH_FILE);
       assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + SECOND_BRANCH_FILE));
@@ -308,6 +316,7 @@ public class BranchTest extends BaseTest
       //Check file from first branch is not present:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.LOADER.waitClosed();
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SECOND_BRANCH_FILE);
       assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FIRST_BRANCH_FILE));
