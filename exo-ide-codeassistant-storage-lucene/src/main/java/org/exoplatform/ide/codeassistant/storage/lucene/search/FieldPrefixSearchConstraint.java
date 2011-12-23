@@ -24,13 +24,18 @@ import org.apache.lucene.search.Query;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 
 /**
- * 
+ * Field prefixed constraint
  */
 public class FieldPrefixSearchConstraint implements LuceneSearchConstraint
 {
-
+   /**
+    * Name of field to search
+    */
    private final String filedName;
 
+   /**
+    * Prefix of the field
+    */
    private final String prefix;
 
    public FieldPrefixSearchConstraint(String filedName, String prefix)
@@ -50,7 +55,7 @@ public class FieldPrefixSearchConstraint implements LuceneSearchConstraint
       return new PrefixQuery(new Term(filedName, prefix));
    }
 
-   public static FieldPrefixSearchConstraint prefix(String fieldName, String prefix)
+   public static LuceneSearchConstraint prefix(String fieldName, String prefix)
    {
       return new FieldPrefixSearchConstraint(fieldName, prefix);
    }

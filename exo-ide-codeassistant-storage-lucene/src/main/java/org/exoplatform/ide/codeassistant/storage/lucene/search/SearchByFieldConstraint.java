@@ -57,7 +57,7 @@ public class SearchByFieldConstraint implements LuceneSearchConstraint
       return new SearchByFieldConstraint(fieldName, value);
    }
 
-   public static SearchByFieldConstraint eqJavaType(JavaType type)
+   public static LuceneSearchConstraint eqJavaType(JavaType type)
    {
       return new SearchByFieldConstraint(TypeInfoIndexFields.ENTITY_TYPE, type.toString());
    }
