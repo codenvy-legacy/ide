@@ -19,18 +19,20 @@
 package org.exoplatform.ide.operation.gadget;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Response;
+import org.exoplatform.ide.core.Templates;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * Test for creating gadget from template.
@@ -41,62 +43,72 @@ import java.io.IOException;
  */
 public class GadgetDevelopmentTest extends BaseTest
 {
+   private static final String PROJECT = GadgetDevelopmentTest.class.getSimpleName();
 
    private static final String FILE_NAME = "Test Gadget File";
 
    private static final String FILE_NAME_FULL = "Test Gadget File.xml";
 
-   private static final String FOLDER_NAME = GadgetDevelopmentTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
-
    @BeforeClass
    public static void setUp() throws IOException
    {
-      VirtualFileSystemUtils.mkcol(URL);
+      VirtualFileSystemUtils.createDefaultProject(PROJECT);
+   }
+   
+   @AfterClass
+   public static void tearDown() throws IOException
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (Exception e)
+      {
+      }
    }
 
-   //IDE-78
    @Test
    public void createGadgetFromTemplate() throws Exception
    {
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-      IDE.WORKSPACE.selectItem(URL);
-
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      
+      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
 
       //Select "Google Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
-      IDE.TEMPLATES.selectTemplate("Google Gadget");
+      IDE.TEMPLATES.selectTemplate(Templates.GADGET_TEMPLATE);
 
       IDE.TEMPLATES.setFileName(FILE_NAME);
       IDE.TEMPLATES.clickCreateButton();
-
-      IDE.EDITOR.waitTabPresent(0);
-      Assert.assertTrue(IDE.EDITOR.isFileContentChanged(FILE_NAME));
+      IDE.TEMPLATES.waitClosed();
+      IDE.EDITOR.waitTabPresent(1);
+      
+      assertEquals(FILE_NAME + " *", IDE.EDITOR.getTabTitle(1));
 
       //Click on "Save As" button and save file "Test Gadget File" with default name.
-      saveAsUsingToolbarButton(FILE_NAME_FULL);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      IDE.EDITOR.saveAs(1, FILE_NAME_FULL);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_FULL);
 
-      assertEquals(200, VirtualFileSystemUtils.get(URL + FILE_NAME_FULL).getStatusCode());
+      //check file created on server
+      final String fileUrl = WS_URL + PROJECT + "/" + URLEncoder.encode(FILE_NAME_FULL, "UTF-8");
+      Response response = VirtualFileSystemUtils.get(fileUrl);
+      assertEquals(200, response.getStatusCode());
 
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(FILE_NAME_FULL);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME_FULL, false);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_FULL);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_FULL);
+      
+      IDE.EDITOR.waitTabPresent(1);
+      //new file with appropriate titles and highlighting should be opened in the Content Panel
+      assertEquals(FILE_NAME_FULL, IDE.EDITOR.getTabTitle(1));
 
-      final String tabTitle = IDE.EDITOR.getTabTitle(0);
-      assertTrue(tabTitle.equals(FILE_NAME_FULL) || tabTitle.equals(FILE_NAME_FULL + " *"));
-      IDE.EDITOR.closeFile(0);
-   }
-
-   @AfterClass
-   public static void tearDown() throws IOException
-   {
-      VirtualFileSystemUtils.delete(URL);
+      IDE.EDITOR.closeFile(FILE_NAME_FULL);
    }
 
 }

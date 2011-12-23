@@ -36,41 +36,42 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class Templates extends AbstractTestModule
 {
-   private interface Locators
-   {
-      String VIEW_ID = "ideCreateFileFromTemplateForm";
+   // Template names
+   public static final String GADGET_TEMPLATE = "Google Gadget";
+   
+   // Locators
+   private static final String VIEW_ID = "ideCreateFileFromTemplateForm";
 
-      String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
+   private static final String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
-      String TEMPLATES_GRID_ID = "ideCreateFileFromTemplateFormTemplateListGrid";
+   private static final String TEMPLATES_GRID_ID = "ideCreateFileFromTemplateFormTemplateListGrid";
 
-      String NAME_FIELD_ID = "ideCreateFileFromTemplateFormNameField";
+   private static final String NAME_FIELD_ID = "ideCreateFileFromTemplateFormNameField";
 
-      String DELETE_BUTTON_ID = "ideCreateFileFromTemplateFormDeleteButton";
+   private static final String DELETE_BUTTON_ID = "ideCreateFileFromTemplateFormDeleteButton";
 
-      String CREATE_BUTTON_ID = "ideCreateFileFromTemplateFormCreateButton";
+   private static final String CREATE_BUTTON_ID = "ideCreateFileFromTemplateFormCreateButton";
 
-      String CANCEL_BUTTON_ID = "ideCreateFileFromTemplateFormCancelButton";
+   private static final String CANCEL_BUTTON_ID = "ideCreateFileFromTemplateFormCancelButton";
 
-      String TEMPLATE_SELECTOR = "table#" + TEMPLATES_GRID_ID + " span[title='%s']";
-   }
+   private static final String TEMPLATE_SELECTOR = "table#" + TEMPLATES_GRID_ID + " span[title='%s']";
 
-   @FindBy(xpath = Locators.VIEW_LOCATOR)
+   @FindBy(xpath = VIEW_LOCATOR)
    private WebElement view;
 
-   @FindBy(id = Locators.TEMPLATES_GRID_ID)
+   @FindBy(id = TEMPLATES_GRID_ID)
    private WebElement templateGrid;
 
-   @FindBy(id = Locators.CREATE_BUTTON_ID)
+   @FindBy(id = CREATE_BUTTON_ID)
    private WebElement createButton;
 
-   @FindBy(id = Locators.DELETE_BUTTON_ID)
+   @FindBy(id = DELETE_BUTTON_ID)
    private WebElement deleteButton;
 
-   @FindBy(id = Locators.CANCEL_BUTTON_ID)
+   @FindBy(id = CANCEL_BUTTON_ID)
    private WebElement cancelButton;
 
-   @FindBy(name = Locators.NAME_FIELD_ID)
+   @FindBy(name = NAME_FIELD_ID)
    private WebElement nameField;
 
    /**
@@ -112,7 +113,7 @@ public class Templates extends AbstractTestModule
          {
             try
             {
-               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
+               input.findElement(By.xpath(VIEW_LOCATOR));
                return false;
             }
             catch (NoSuchElementException e)
@@ -151,7 +152,7 @@ public class Templates extends AbstractTestModule
    public void selectTemplate(String templateName) throws InterruptedException
    {
       WebElement template =
-         driver().findElement(By.cssSelector(String.format(Locators.TEMPLATE_SELECTOR, templateName)));
+         driver().findElement(By.cssSelector(String.format(TEMPLATE_SELECTOR, templateName)));
       template.click();
    }
 
@@ -254,7 +255,7 @@ public class Templates extends AbstractTestModule
       try
       {
          WebElement template =
-            driver().findElement(By.cssSelector(String.format(Locators.TEMPLATE_SELECTOR, templateName)));
+            driver().findElement(By.cssSelector(String.format(TEMPLATE_SELECTOR, templateName)));
          return template != null && template.isDisplayed();
       }
       catch (NoSuchElementException e)
