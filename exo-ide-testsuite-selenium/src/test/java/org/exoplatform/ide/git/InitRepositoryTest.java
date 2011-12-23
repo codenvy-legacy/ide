@@ -85,10 +85,12 @@ public class InitRepositoryTest extends BaseTest
    public void testInitRepositoryView() throws Exception
    {
       driver.navigate().refresh();
+      IDE.LOADER.waitClosed();   
 
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitOpened();
@@ -115,10 +117,12 @@ public class InitRepositoryTest extends BaseTest
    public void testInitRepositoryWithSelectedFile() throws Exception
    {
       driver.navigate().refresh();
-
+      
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
@@ -150,11 +154,13 @@ public class InitRepositoryTest extends BaseTest
    public void testInitRepository() throws Exception
    {
       driver.navigate().refresh();
-
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitOpened();
@@ -166,6 +172,9 @@ public class InitRepositoryTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
+      IDE.LOADER.waitClosed();
+      
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT));
 
       driver.navigate().to(WS_URL + PROJECT);
 
@@ -187,33 +196,5 @@ public class InitRepositoryTest extends BaseTest
 
       driver.navigate().back();
       IDE.PROJECT.EXPLORER.waitOpened();
-   }
-
-   /**
-    * Test init Git repository in folder with Git repository.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testInitRepositoryIfExists() throws Exception
-   {
-      driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-
-      IDE.OUTPUT.waitForMessageShow(1, 10);
-      String message = IDE.OUTPUT.getOutputMessage(1);
-      assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
-
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(2, 10);
-      message = IDE.OUTPUT.getOutputMessage(2);
-      assertTrue(message.startsWith(GIT.Messages.REPOSITORY_EXISTS));
-      assertTrue(message.contains(PROJECT));
    }
 }
