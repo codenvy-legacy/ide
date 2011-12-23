@@ -30,7 +30,7 @@ import java.util.Set;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Item
+public abstract class Item
 {
    /** Id of object. */
    protected String id;
