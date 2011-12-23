@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import org.exoplatform.ide.downloadfiles.DownloadFileToLocalDriveTest;
-import org.exoplatform.ide.downloadfiles.DownloadZIPedFoldeToLocalDriveTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -33,8 +31,6 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({CursorPositionStatusBarTest.class, 
                MaximizeRestoreOperationsTest.class, 
                DialogAboutTest.class, CustomizeToolbarTest.class, 
-               DownloadFileToLocalDriveTest.class,
-               DownloadZIPedFoldeToLocalDriveTest.class,
                CookiesTest.class,
                HotkeysFormTest.class,
                HotkeysCustomizationTest.class,
