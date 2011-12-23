@@ -27,9 +27,7 @@ import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 import java.io.IOException;
 
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z
- *          aheritier $
+ * Create ShortTypeInfo from lucene document.
  * 
  */
 public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>

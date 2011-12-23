@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 /**
- * 
+ * Create TypeInfo from lucene document.
  */
 public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
 {
