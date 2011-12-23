@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValuesParam;
 import org.exoplatform.ide.vfs.server.RequestContext;
+import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -175,6 +176,7 @@ public final class JcrFileSystemInitializer implements Startable
    @Override
    public void start()
    {
+      URLHandlerFactorySetup.setup(vfsRegistry);
       initializeProviders();
    }
 
