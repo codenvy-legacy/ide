@@ -19,23 +19,15 @@
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
 import org.apache.lucene.analysis.SimpleAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
-import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.List;
 
 /**
@@ -48,12 +40,16 @@ public class LuceneTypeInfoWriter
 
    private final Directory indexDirectory;
 
+   private final TypeInfoIndexer indexer;
+
    public LuceneTypeInfoWriter(LuceneInfoStorage luceneInfoStorage) throws SaveTypeInfoIndexException, IOException
    {
       this.indexDirectory = luceneInfoStorage.getTypeInfoIndexDirectory();
-
+      this.indexer = new TypeInfoIndexer();
    }
 
+   /**
+    */
    public void addTypeInfo(List<TypeInfo> typeInfos) throws SaveTypeInfoIndexException
    {
 
@@ -63,8 +59,7 @@ public class LuceneTypeInfoWriter
             new IndexWriter(indexDirectory, new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
          for (TypeInfo typeInfo : typeInfos)
          {
-            Document typeInfoDocument = createDocument(typeInfo);
-            writer.addDocument(typeInfoDocument);
+            writer.addDocument(indexer.createDocument(typeInfo));
          }
          writer.commit();
          writer.close();
@@ -74,41 +69,5 @@ public class LuceneTypeInfoWriter
          LOG.error(e.getLocalizedMessage());
          throw new SaveTypeInfoIndexException(e.getLocalizedMessage(), e);
       }
-   }
-
-   private Document createDocument(TypeInfo typeInfo) throws IOException
-   {
-      Document typeInfoDocument = new Document();
-
-      typeInfoDocument.add(new Field(IndexType.JAVA.getIndexFieldName(), IndexType.JAVA.getIndexFieldValue(),
-         Store.YES, Index.NOT_ANALYZED));
-
-      typeInfoDocument
-         .add(new Field(TypeInfoIndexFields.CLASS_NAME, typeInfo.getName(), Store.YES, Index.NOT_ANALYZED));
-
-      typeInfoDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()),
-         Store.YES, Index.NOT_ANALYZED));
-
-      typeInfoDocument.add(new Field(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName(), Store.YES,
-         Index.NOT_ANALYZED));
-      typeInfoDocument
-         .add(new Field(TypeInfoIndexFields.ENTITY_TYPE, typeInfo.getType(), Store.YES, Index.NOT_ANALYZED));
-      typeInfoDocument.add(new Field(TypeInfoIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES,
-         Index.NOT_ANALYZED));
-
-      for (String string : typeInfo.getInterfaces())
-      {
-         typeInfoDocument.add(new Field(TypeInfoIndexFields.INTERFACES, string, Store.YES, Index.NOT_ANALYZED));
-      }
-
-      ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      ObjectOutputStream out = new ObjectOutputStream(bos);
-      typeInfo.writeExternal(out);
-      out.close();
-
-      typeInfoDocument.add(new Field(TypeInfoIndexFields.TYPE_INFO, bos.toByteArray(), Store.YES));
-
-      return typeInfoDocument;
-
    }
 }

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
@@ -43,7 +44,9 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
    public ShortTypeInfo getValue(IndexReader reader, int doc) throws IOException
    {
       //TODO read only necessary fields
-      Document document = reader.document(doc);
+      Document document =
+         reader.document(doc, new MapFieldSelector(new String[]{TypeInfoIndexFields.MODIFIERS,
+            TypeInfoIndexFields.CLASS_NAME, TypeInfoIndexFields.FQN, TypeInfoIndexFields.ENTITY_TYPE}));
 
       int modifier = Integer.valueOf(document.get(TypeInfoIndexFields.MODIFIERS));
       ShortTypeInfo shortTypeInfo =
@@ -52,5 +55,4 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
       return shortTypeInfo;
 
    }
-
 }

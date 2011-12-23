@@ -16,26 +16,23 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-codeassistant-api</artifactId>
       </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-codeassistant-framework</artifactId>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-codeassistant-asm</artifactId>
          <version>${project.version}</version>
       </dependency>
-
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
       </dependency>
 
+
       <dependency>
-         <groupId>picocontainer</groupId>
-         <artifactId>picocontainer</artifactId>
-         <scope>provided</scope>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-all</artifactId>
+         <version>1.9.0</version>
+         <scope>test</scope>
       </dependency>
 
       <dependency>
