@@ -52,7 +52,7 @@ public class AddTest extends BaseTest
    private static final String TEST_ADD_FOLDER = "TestAddFolder";
 
    @Before
-   public void setUp() throws Exception
+   public void beforeTest() throws Exception
    {
       try
       {
@@ -65,7 +65,7 @@ public class AddTest extends BaseTest
    }
 
    @After
-   public void tearDown()
+   public void afterTest()
    {
       try
       {
@@ -87,7 +87,7 @@ public class AddTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      waitForLoaderDissapeared();
+      IDE.LOADER.waitClosed();
       
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Check Add to index is available:
@@ -108,7 +108,6 @@ public class AddTest extends BaseTest
    public void testAddFile() throws Exception
    {
       driver.navigate().refresh();
-
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -166,6 +165,7 @@ public class AddTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       //Create new folder:
       IDE.FOLDER.createFolder(TEST_ADD_FOLDER);
@@ -203,6 +203,7 @@ public class AddTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
@@ -255,6 +256,7 @@ public class AddTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
