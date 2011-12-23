@@ -32,6 +32,7 @@ import org.exoplatform.ide.core.Folder;
 import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Input;
+import org.exoplatform.ide.core.Loader;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
 import org.exoplatform.ide.core.Outline;
@@ -87,6 +88,8 @@ public class IDE
 
    public AboutDialog ABOUT;
 
+   public Loader LOADER;
+
    public Outline OUTLINE;
 
    public Navigation NAVIGATION = new Navigation();
@@ -108,7 +111,7 @@ public class IDE
    public Statusbar STATUSBAR;
 
    public SelectWorkspace SELECT_WORKSPACE;
-   
+
    @Deprecated
    public Workspace WORKSPACE = new Workspace();
 
@@ -171,6 +174,7 @@ public class IDE
       FINDREPLACE = PageFactory.initElements(driver, FindReplace.class);
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
       INPUT = PageFactory.initElements(driver, Input.class);
+      LOADER = PageFactory.initElements(driver, Loader.class);
       MENU = PageFactory.initElements(driver, Menu.class);
       OUTLINE = PageFactory.initElements(driver, Outline.class);
       OUTPUT = PageFactory.initElements(driver, Output.class);

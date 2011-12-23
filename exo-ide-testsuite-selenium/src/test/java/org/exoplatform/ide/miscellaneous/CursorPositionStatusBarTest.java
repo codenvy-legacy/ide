@@ -69,7 +69,7 @@ public class CursorPositionStatusBarTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
       IDE.NAVIGATION.saveFileAs(FILE_1);
 
-      waitForLoaderDissapeared();
+      IDE.LOADER.waitClosed();
       
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       Thread.sleep(TestConstants.REDRAW_PERIOD);

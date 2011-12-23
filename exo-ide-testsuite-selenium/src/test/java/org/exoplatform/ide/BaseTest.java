@@ -115,7 +115,7 @@ public abstract class BaseTest
    /**
     * Default workspace URL.
     */
-   public static final String WS_URL = ENTRY_POINT_URL + WS_NAME + "/" + USER_NAME + "/";
+   public static final String WS_URL = ENTRY_POINT_URL + WS_NAME + "/" /*+ USER_NAME + "/"*/;
 
    protected static final String REGISTER_IN_PORTAL = BASE_URL + "portal/private";
 
@@ -982,16 +982,6 @@ public abstract class BaseTest
    {
       selenium().click(locator + "CancelButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   /**
-    * Wait, while loader dissapears (which meens, that operation is done).
-    * @throws Exception
-    */
-   protected void waitForLoaderDissapeared() throws Exception
-   {
-      waitForElementPresent("//div[contains(@url, loader-background-element.png)]");
-      waitForElementNotPresent("//div[contains(@url, loader-background-element.png)]");
    }
 
    /**

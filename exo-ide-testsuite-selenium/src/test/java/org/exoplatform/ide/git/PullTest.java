@@ -89,15 +89,15 @@ public class PullTest extends BaseTest
     * Test command is not available for pull in not Git repository.
     * @throws Exception 
     */
-   //@Test
+   @Test
    public void testPullCommand() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      waitForLoaderDissapeared();
-
+      IDE.LOADER.waitClosed();
+      
       //Check Pull command is available:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
@@ -115,15 +115,15 @@ public class PullTest extends BaseTest
     * 
     * @throws Exception
     */
-   //@Test
+   @Test
    public void testPullView() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      waitForLoaderDissapeared();
-
+      IDE.LOADER.waitClosed();
+      
       IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
          + REMOTE);
 
@@ -162,8 +162,8 @@ public class PullTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      waitForLoaderDissapeared();
-
+      IDE.LOADER.waitClosed();
+      
       assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER1));
 
       IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
@@ -175,7 +175,7 @@ public class PullTest extends BaseTest
       //Pull from remote:
       IDE.GIT.PULL.typeToRemoteBranch(BRANCH);
       IDE.GIT.PULL.typeToLocalBranch(BRANCH);
-      
+
       IDE.GIT.PULL.waitPullButtonEnabled();
       IDE.GIT.PULL.clickPullButton();
       IDE.GIT.PULL.waitClosed();
@@ -191,7 +191,7 @@ public class PullTest extends BaseTest
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Sleep is necessary for file to appear on file system:
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      waitForLoaderDissapeared();
+      IDE.LOADER.waitClosed();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1);

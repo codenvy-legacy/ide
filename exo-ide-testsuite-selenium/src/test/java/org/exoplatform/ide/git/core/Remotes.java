@@ -198,9 +198,9 @@ public class Remotes extends AbstractTestModule
     */
    public boolean isAddRepositoryOpened()
    {
-      return (addRemoteView != null && addRemoteView.isDisplayed() && cancelButton != null && cancelButton.isDisplayed()
-         && okButton != null && okButton.isDisplayed() && nameField != null && nameField.isDisplayed()
-         && urlField != null && urlField.isDisplayed());
+      return (addRemoteView != null && addRemoteView.isDisplayed() && cancelButton != null
+         && cancelButton.isDisplayed() && okButton != null && okButton.isDisplayed() && nameField != null
+         && nameField.isDisplayed() && urlField != null && urlField.isDisplayed());
    }
 
    /**
@@ -307,7 +307,7 @@ public class Remotes extends AbstractTestModule
 
    public void waitForRemotesCount(final int count) throws Exception
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -340,6 +340,7 @@ public class Remotes extends AbstractTestModule
    {
       IDE().MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
       waitOpened();
+      int remotes = getRemoteRepositoriesCount();
 
       //Add remote repository:
       clickAddButton();
@@ -349,6 +350,7 @@ public class Remotes extends AbstractTestModule
       typeToUrlField(location);
       clickOkButton();
       waitAddRemoteViewClosed();
+      waitForRemotesCount(remotes + 1);
 
       //Close Remotes view:
       clickCloseButton();

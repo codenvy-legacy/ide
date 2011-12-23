@@ -92,8 +92,8 @@ public class MergeTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      waitForLoaderDissapeared();
-
+      IDE.LOADER.waitClosed();
+      
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Check Merge is available:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.MERGE));
@@ -111,8 +111,8 @@ public class MergeTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      waitForLoaderDissapeared();
-
+      IDE.LOADER.waitClosed();
+      
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
@@ -188,8 +188,8 @@ public class MergeTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      waitForLoaderDissapeared();
-
+      IDE.LOADER.waitClosed();
+      
       IDE.PROJECT.EXPLORER.openItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
 
@@ -234,8 +234,8 @@ public class MergeTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      waitForLoaderDissapeared();
-
+      IDE.LOADER.waitClosed();
+      
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);

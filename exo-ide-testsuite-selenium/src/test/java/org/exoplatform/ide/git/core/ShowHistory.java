@@ -58,17 +58,17 @@ public class ShowHistory extends AbstractTestModule
 
       String REFRESH_REVISION_LIST_BUTTON_TITLE = "Refresh revision list";
 
-      String CHANGES_IN_PROJECT_BUTTON_SELECTOR = "div[title=" + CHANGES_IN_PROJECT_BUTTON_TITLE + "]";
+      String CHANGES_IN_PROJECT_BUTTON_SELECTOR = "div[title='" + CHANGES_IN_PROJECT_BUTTON_TITLE + "']";
 
-      String CHANGES_OF_RESOURCE_BUTTON_SELECTOR = "div[title=" + CHANGES_OF_RESOURCE_BUTTON_TITLE + "]";
+      String CHANGES_OF_RESOURCE_BUTTON_SELECTOR = "div[title='" + CHANGES_OF_RESOURCE_BUTTON_TITLE + "']";
 
-      String DIFF_INDEX_BUTTON_SELECTOR = "div[title=" + DIFF_INDEX_BUTTON_TITLE + "]";
+      String DIFF_INDEX_BUTTON_SELECTOR = "div[title='" + DIFF_INDEX_BUTTON_TITLE + "']";
 
-      String DIFF_WORK_TREE_BUTTON_SELECTOR = "div[title=" + DIFF_WORK_TREE_BUTTON_TITLE + "]";
+      String DIFF_WORK_TREE_BUTTON_SELECTOR = "div[title='" + DIFF_WORK_TREE_BUTTON_TITLE + "']";
 
-      String DIFF_PREV_REVISION_BUTTON_SELECTOR = "div[title=" + DIFF_PREV_REVISION_BUTTON_TITLE + "]";
+      String DIFF_PREV_REVISION_BUTTON_SELECTOR = "div[title='" + DIFF_PREV_REVISION_BUTTON_TITLE + "']";
 
-      String REFRESH_REVISION_LIST_BUTTON_SELCTOR = "div[title=" + REFRESH_REVISION_LIST_BUTTON_TITLE + "]";
+      String REFRESH_REVISION_LIST_BUTTON_SELECTOR = "div[title='" + REFRESH_REVISION_LIST_BUTTON_TITLE + "']";
 
       String INDEX_STATE = "index state";
 
@@ -104,7 +104,7 @@ public class ShowHistory extends AbstractTestModule
    @FindBy(css = Locators.DIFF_PREV_REVISION_BUTTON_SELECTOR)
    private WebElement diffPrevRevisionButton;
 
-   @FindBy(css = Locators.REFRESH_REVISION_LIST_BUTTON_SELCTOR)
+   @FindBy(css = Locators.REFRESH_REVISION_LIST_BUTTON_SELECTOR)
    private WebElement refreshButton;
 
    @FindBy(xpath = Locators.CONTENT_FRAME_LOCATOR)
@@ -353,7 +353,7 @@ public class ShowHistory extends AbstractTestModule
    {
       return view.getText().contains(Locators.NOTHING_FOR_COMPARANCE);
    }
-   
+
    /**
     * Returns whether it is compare with index state.
     * 
@@ -363,7 +363,7 @@ public class ShowHistory extends AbstractTestModule
    {
       return view.getText().contains(Locators.INDEX_STATE);
    }
-   
+
    /**
     * Returns whether it is compare with working tree state.
     * 

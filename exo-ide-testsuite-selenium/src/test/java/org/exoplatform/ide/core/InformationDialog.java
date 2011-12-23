@@ -36,7 +36,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class InformationDialog extends AbstractTestModule
 {
    private static final String VIEW_ID = "ideInformationModalView";
-   
+
    private static final String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
    private static final String OK_BUTTON_ID = "OkButton";
@@ -135,6 +135,8 @@ public class InformationDialog extends AbstractTestModule
     */
    public String getMessage()
    {
-      return message.getText();
+      String text = message.getText().trim();
+      text = (text.endsWith("\n")) ? text.substring(0, text.length() - 2) : text;
+      return text;
    }
 }

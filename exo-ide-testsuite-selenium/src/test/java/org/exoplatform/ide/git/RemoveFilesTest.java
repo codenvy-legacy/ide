@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.git;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -36,7 +38,7 @@ import org.junit.Test;
  */
 public class RemoveFilesTest extends BaseTest
 {
-   private static final String TEST_FOLDER = RemoveFilesTest.class.getSimpleName();
+   private static final String PROJECT = RemoveFilesTest.class.getSimpleName();
 
    private static final String TEST_FILE1 = "TestFile1";
 
@@ -44,19 +46,18 @@ public class RemoveFilesTest extends BaseTest
 
    private static final String TEST_FILE3 = "TestFile3";
 
-   private static final String TEST_FOLDER2 = "testFolder";
+   private static final String TEST_FOLDER = "testFolder";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
+   private static final String EMPTY_ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/empty-repository.zip";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(new byte[]{1}, MimeType.TEXT_CSS, URL + TEST_FILE1);
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER + "/" + TEST_FOLDER2);
+         VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
+         VirtualFileSystemUtils.put(new byte[]{1}, MimeType.TEXT_CSS, WS_URL + PROJECT + "/" + TEST_FILE1);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + TEST_FOLDER);
       }
       catch (Exception e)
       {
@@ -64,12 +65,12 @@ public class RemoveFilesTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest()
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -84,35 +85,19 @@ public class RemoveFilesTest extends BaseTest
    @Test
    public void testRemoveFilesCommand() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectRootItem();
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE, false);
-
-      //Not Git repository:
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE, true);
-
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE);
-      IDE.WARNING_DIALOG.waitOpened();
-      String message = IDE.WARNING_DIALOG.getWarningMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
-
-      //Init repository:
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      IDE.LOADER.waitClosed();
+      
       //Check Remove files is available:
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE);
 
       IDE.INFORMATION_DIALOG.waitOpened();
-      message = IDE.INFORMATION_DIALOG.getMessage();
-      Assert.assertEquals(GIT.Messages.NOTHING_TO_COMMIT, message);
+      String message = IDE.INFORMATION_DIALOG.getMessage();
+      assertEquals(GIT.Messages.NOTHING_TO_COMMIT, message);
       IDE.INFORMATION_DIALOG.clickOk();
       IDE.INFORMATION_DIALOG.waitClosed();
    }
@@ -126,31 +111,33 @@ public class RemoveFilesTest extends BaseTest
    @Test
    public void testRemoveFilesView() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      IDE.LOADER.waitClosed();
+      
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE2);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE2);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE2);
+      IDE.EDITOR.closeFile(TEST_FILE2);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE2);
 
       //Add file to index
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
+      assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Remove files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE);
       IDE.GIT.REMOVE_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOVE_FILES.isOpened());
-      Assert.assertEquals(1, IDE.GIT.REMOVE_FILES.getFilesCount());
+      assertTrue(IDE.GIT.REMOVE_FILES.isOpened());
+      assertEquals(2, IDE.GIT.REMOVE_FILES.getFilesCount());
 
       IDE.GIT.REMOVE_FILES.clickCancelButton();
       IDE.GIT.REMOVE_FILES.waitClosed();
@@ -164,44 +151,42 @@ public class RemoveFilesTest extends BaseTest
    @Test
    public void testRemoveFiles() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FOLDER2 + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_FOLDER2 + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FOLDER);
 
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE3);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FOLDER2 + "/" + TEST_FILE3);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE3);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + TEST_FILE3);
+      IDE.EDITOR.closeFile(TEST_FILE3);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE3);
 
       //Add folder to index
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
+      assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open Remove files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE);
       IDE.GIT.REMOVE_FILES.waitOpened();
-      Assert.assertEquals(2, IDE.GIT.REMOVE_FILES.getFilesCount());
+      assertEquals(2, IDE.GIT.REMOVE_FILES.getFilesCount());
 
       //Remove file in sub folder:
-      IDE.GIT.REMOVE_FILES.checkFileByName(TEST_FOLDER2 + "/" + TEST_FILE3);
+      IDE.GIT.REMOVE_FILES.checkFileByName(TEST_FOLDER + "/" + TEST_FILE3);
       IDE.GIT.REMOVE_FILES.clickRemoveButton();
       IDE.GIT.REMOVE_FILES.waitClosed();
 
       //Check files in Browser tree:
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE1);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE2);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_FOLDER2 + "/");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + TEST_FOLDER));
    }
 
    /**
@@ -212,32 +197,40 @@ public class RemoveFilesTest extends BaseTest
    @Test
    public void testRemoveEditedFiles() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      IDE.LOADER.waitClosed();
+      
+      //Add to index:
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.GIT.ADD.addToIndex();
+      IDE.OUTPUT.waitForMessageShow(1, 10);
+      String message = IDE.OUTPUT.getOutputMessage(1);
+      assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open and edit file:
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEST_FILE1, true);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, "somithing");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FILE1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FILE1);
+      IDE.EDITOR.typeTextIntoEditor(0, "something");
+      IDE.EDITOR.waitFileContentModificationMark(TEST_FILE1);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
-      waitForLoaderDissapeared();
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitNoContentModificationMark(TEST_FILE1);
+      IDE.EDITOR.closeFile(TEST_FILE1);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE1);
 
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
+      IDE.OUTPUT.waitForMessageShow(2, 10);
+      message = IDE.OUTPUT.getOutputMessage(1);
+      assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Remove files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOVE);
       IDE.GIT.REMOVE_FILES.waitOpened();
-      Assert.assertEquals(2, IDE.GIT.REMOVE_FILES.getFilesCount());
+      assertEquals(1, IDE.GIT.REMOVE_FILES.getFilesCount());
 
       //Remove edited file:
       IDE.GIT.REMOVE_FILES.checkFileByName(TEST_FILE1);
@@ -246,7 +239,7 @@ public class RemoveFilesTest extends BaseTest
 
       //Check files in Browser tree:
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE2);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_FILE1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER);
+      assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + TEST_FILE1));
    }
 }

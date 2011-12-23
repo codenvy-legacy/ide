@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -78,18 +79,22 @@ public class DeleteRepositoryTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
+      
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.DELETE));
+      
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitOpened();
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
       IDE.GIT.INIT_REPOSITORY.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(1, 10);
-
+      IDE.LOADER.waitClosed();
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.DELETE));
+      
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.DELETE);
 
       IDE.ASK_DIALOG.waitOpened();
-      assertEquals(GIT.DialogTitles.DELETE_DIALOG, IDE.ASK_DIALOG.getQuestion());
+      assertEquals(GIT.DialogTitles.DELETE_DIALOG, IDE.ASK_DIALOG.getTitle());
       IDE.ASK_DIALOG.clickYes();
       IDE.ASK_DIALOG.waitClosed();
 
@@ -123,20 +128,5 @@ public class DeleteRepositoryTest extends BaseTest
       }
       driver.navigate().back();
       IDE.PROJECT.EXPLORER.waitOpened();
-   }
-
-   @Test
-   public void deleteRepositoryFromNonGitFolder() throws Exception
-   {
-      driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.DELETE);
-      IDE.WARNING_DIALOG.waitOpened();
-      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(
-         "Not a git repository (or any of the parent directories)."));
    }
 }

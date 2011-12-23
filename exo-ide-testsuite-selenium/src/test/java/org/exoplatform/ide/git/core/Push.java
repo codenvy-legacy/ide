@@ -100,7 +100,7 @@ public class Push extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -174,7 +174,7 @@ public class Push extends AbstractTestModule
     */
    public String getRemoteRepositoryValue()
    {
-      return IDE().INPUT.getValue(remoteField);
+      return IDE().INPUT.getDisplayValue(remoteField);
    }
 
    /**
@@ -196,6 +196,11 @@ public class Push extends AbstractTestModule
    public void setRemoteBranch(String text) throws InterruptedException
    {
       IDE().INPUT.setComboboxValue(remoteBranchesField, text);
+   }
+   
+   public void clearRemoteBranch() throws InterruptedException
+   {
+      IDE().INPUT.clearComboboxValue(remoteBranchesField);
    }
 
    /**

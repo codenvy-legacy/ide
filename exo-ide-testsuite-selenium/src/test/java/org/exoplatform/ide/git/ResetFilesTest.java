@@ -18,14 +18,17 @@
  */
 package org.exoplatform.ide.git;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -37,7 +40,7 @@ import java.util.List;
  */
 public class ResetFilesTest extends BaseTest
 {
-   private static final String TEST_FOLDER = ResetFilesTest.class.getSimpleName();
+   private static final String PROJECT = ResetFilesTest.class.getSimpleName();
 
    private static final String TEST_FILE1 = "TestFile1";
 
@@ -47,13 +50,15 @@ public class ResetFilesTest extends BaseTest
 
    private static final String SRC_FOLDER = "src";
 
-   @BeforeClass
-   public static void setUp()
+   private static final String EMPTY_ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/empty-repository.zip";
+
+   @Before
+   public void beforeTest()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER + "/" + SRC_FOLDER);
+         VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + SRC_FOLDER);
       }
       catch (Exception e)
       {
@@ -61,12 +66,12 @@ public class ResetFilesTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest()
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -81,35 +86,19 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testResetFilesCommand() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectRootItem();
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES, false);
-
-      //Not Git repository:
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES, true);
-
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
-      IDE.WARNING_DIALOG.waitOpened();
-      String message = IDE.WARNING_DIALOG.getWarningMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
-
-      //Init repository:
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
+      IDE.LOADER.waitClosed();
+      
       //Check Reset files is available:
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
 
       IDE.INFORMATION_DIALOG.waitOpened();
-      message = IDE.INFORMATION_DIALOG.getMessage();
-      Assert.assertEquals(GIT.Messages.NOTHING_TO_COMMIT, message);
+      String message = IDE.INFORMATION_DIALOG.getMessage();
+      assertEquals(GIT.Messages.NOTHING_TO_COMMIT, message);
       IDE.INFORMATION_DIALOG.clickOk();
       IDE.INFORMATION_DIALOG.waitClosed();
    }
@@ -123,22 +112,18 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testResetFilesView() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
+      IDE.LOADER.waitClosed();
+      
       //Create new file:
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE1);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE1);
-      IDE.EDITOR.closeFile(0);
+      createFile(TEST_FILE1);
 
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
@@ -162,39 +147,38 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testResetFolderFiles() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
-      //Create new file:
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE2);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE2);
-      IDE.EDITOR.closeFile(0);
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
+      IDE.LOADER.waitClosed();
+      
+      createFile(TEST_FILE1);
+      createFile(TEST_FILE2);
 
       //Create file in sub folder
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + SRC_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + SRC_FOLDER);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE3);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + SRC_FOLDER + "/" + TEST_FILE3);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + SRC_FOLDER + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE3);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER + "/" + TEST_FILE3);
+      IDE.EDITOR.closeFile(TEST_FILE3);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE3);
 
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
+      assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
       IDE.GIT.RESET_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_FILES.isOpened());
-      Assert.assertEquals(2, IDE.GIT.RESET_FILES.getFilesCount());
+      assertTrue(IDE.GIT.RESET_FILES.isOpened());
+      assertEquals(3, IDE.GIT.RESET_FILES.getFilesCount());
 
       //Uncheck file contained in folder:
       IDE.GIT.RESET_FILES.checkFileByName(SRC_FOLDER + "/" + TEST_FILE3);
@@ -227,24 +211,37 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testCancelResetFiles() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
+      IDE.LOADER.waitClosed();
+      
+      createFile(TEST_FILE1);
+      createFile(TEST_FILE2);
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
-      //Add folder to index
+      //Create file in sub folder
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + SRC_FOLDER);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + SRC_FOLDER + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE3);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER + "/" + TEST_FILE3);
+      IDE.EDITOR.closeFile(TEST_FILE3);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE3);
+      
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      //Add to index
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
-
+      assertEquals(GIT.Messages.ADD_SUCCESS, message);
+      
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
       IDE.GIT.RESET_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_FILES.isOpened());
-      Assert.assertEquals(3, IDE.GIT.RESET_FILES.getFilesCount());
+      assertTrue(IDE.GIT.RESET_FILES.isOpened());
+      assertEquals(3, IDE.GIT.RESET_FILES.getFilesCount());
 
       //Check file contained in folder:
       IDE.GIT.RESET_FILES.checkFileByName(TEST_FILE2);
@@ -256,8 +253,8 @@ public class ResetFilesTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
       IDE.GIT.RESET_FILES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.RESET_FILES.isOpened());
-      Assert.assertEquals(3, IDE.GIT.RESET_FILES.getFilesCount());
+      assertTrue(IDE.GIT.RESET_FILES.isOpened());
+      assertEquals(3, IDE.GIT.RESET_FILES.getFilesCount());
 
       IDE.GIT.RESET_FILES.clickCancelButton();
       IDE.GIT.RESET_FILES.waitClosed();
@@ -272,17 +269,31 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testResetFiles() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
+      IDE.LOADER.waitClosed();
+      
+      createFile(TEST_FILE1);
+      createFile(TEST_FILE2);
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      //Create file in sub folder
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + SRC_FOLDER);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + SRC_FOLDER + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, TEST_FILE3);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER + "/" + TEST_FILE3);
+      IDE.EDITOR.closeFile(TEST_FILE3);
+      IDE.EDITOR.waitTabNotPresent(TEST_FILE3);
 
-      //Add folder to index
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      
+      //Add to index
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
+      assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
@@ -300,7 +311,7 @@ public class ResetFilesTest extends BaseTest
       IDE.GIT.RESET_FILES.waitClosed();
 
       //Check success reset files message:
-      IDE.OUTPUT.waitForMessageShow(2);
+      IDE.OUTPUT.waitForMessageShow(2, 10);
       message = IDE.OUTPUT.getOutputMessage(2);
       Assert.assertEquals(GIT.Messages.RESET_FILES_SUCCESS, message);
 
@@ -310,5 +321,15 @@ public class ResetFilesTest extends BaseTest
       Assert.assertEquals(GIT.Messages.NOTHING_TO_COMMIT, message);
       IDE.INFORMATION_DIALOG.clickOk();
       IDE.INFORMATION_DIALOG.waitClosed();
+   }
+
+   private void createFile(String fileName) throws Exception
+   {
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.saveAs(1, fileName);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + fileName);
+      IDE.EDITOR.closeFile(fileName);
+      IDE.EDITOR.waitTabNotPresent(fileName);
    }
 }

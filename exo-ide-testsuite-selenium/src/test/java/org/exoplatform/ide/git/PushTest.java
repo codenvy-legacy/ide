@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.git;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.BaseTest;
@@ -36,13 +39,9 @@ import org.junit.Test;
  */
 public class PushTest extends BaseTest
 {
-   private static final String TEST_FOLDER = PushTest.class.getSimpleName();
+   private static final String PROJECT = PushTest.class.getSimpleName();
 
    private static final String TEST_FILE = "test1.html";
-
-   private static final String NOT_GIT = "NotGit";
-
-   private static final String REPOSITORY = "repository";
 
    private static final String REMOTE = "remote";
 
@@ -50,13 +49,16 @@ public class PushTest extends BaseTest
 
    private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/push-test.zip";
 
+   private static final String EMPTY_ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/empty-repository.zip";
+
    @Before
    public void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL);
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER + "/" + NOT_GIT);
+         VirtualFileSystemUtils.importZipProject(REMOTE, EMPTY_ZIP_PATH);
+         VirtualFileSystemUtils.importZipProject(PROJECT, ZIP_PATH);
+         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -69,7 +71,8 @@ public class PushTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + REMOTE);
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -85,31 +88,14 @@ public class PushTest extends BaseTest
    @Test
    public void testPushCommand() throws Exception
    {
-      selenium().refresh();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+      
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE));
 
-      IDE.WORKSPACE.waitForRootItem();
-
-      //Not Git repository:
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + NOT_GIT + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + NOT_GIT + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
-
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
-      IDE.WARNING_DIALOG.waitOpened();
-      String message = IDE.WARNING_DIALOG.getWarningMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
-
-      //Init repository:
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
-
-      //Check Push command is available:
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
 
       //Get error message - no remote repositories:
@@ -128,30 +114,27 @@ public class PushTest extends BaseTest
    @Test
    public void testPushView() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-
-      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-         + "/" + REMOTE);
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+      
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
+         + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
       IDE.GIT.PUSH.waitOpened();
 
-      Assert.assertEquals("refs/heads/master", IDE.GIT.PUSH.getLocalBranchValue());
-      Assert.assertEquals("refs/heads/master", IDE.GIT.PUSH.getRemoteBranchValue());
-      Assert.assertEquals("origin", IDE.GIT.PUSH.getRemoteRepositoryValue());
+      assertEquals("refs/heads/master", IDE.GIT.PUSH.getLocalBranchValue());
+      assertEquals("refs/heads/master", IDE.GIT.PUSH.getRemoteBranchValue());
+      assertEquals("origin", IDE.GIT.PUSH.getRemoteRepositoryValue());
 
-      Assert.assertTrue(IDE.GIT.PUSH.isPushButtonEnabled());
-      Assert.assertTrue(IDE.GIT.PUSH.isCancelButtonEnabled());
+      assertTrue(IDE.GIT.PUSH.isPushButtonEnabled());
+      assertTrue(IDE.GIT.PUSH.isCancelButtonEnabled());
 
       //Test Push button enabled state:
-      IDE.GIT.PUSH.setRemoteBranch("");
+      IDE.GIT.PUSH.clearRemoteBranch();
       Assert.assertFalse(IDE.GIT.PUSH.isPushButtonEnabled());
       IDE.GIT.PUSH.setRemoteBranch(TEST_BRANCH);
       Assert.assertTrue(IDE.GIT.PUSH.isPushButtonEnabled());
@@ -168,21 +151,14 @@ public class PushTest extends BaseTest
    @Test
    public void testPushToRemote() throws Exception
    {
-      selenium().refresh();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
       
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REMOTE + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/" + REMOTE + "/");
-      waitForLoaderDissapeared();
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + REMOTE + "/" + TEST_FILE);
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-
-      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-         + "/" + REMOTE);
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
+         + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
       IDE.GIT.PUSH.waitOpened();
@@ -194,22 +170,26 @@ public class PushTest extends BaseTest
       IDE.GIT.PUSH.waitClosed();
 
       //Check pushed message:
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertEquals(String.format(GIT.Messages.PUSH_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/"
-         + TEST_FOLDER + "/" + REMOTE), message);
+      assertEquals(
+         String.format(GIT.Messages.PUSH_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/" + REMOTE),
+         message);
 
-      //Switch to test branch
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REMOTE + "/");
+      //Open project with remote repository
+      IDE.PROJECT.OPEN.openProject(REMOTE);
+      IDE.PROJECT.EXPLORER.waitForItem(REMOTE);
+      IDE.LOADER.waitClosed();
+      
       IDE.GIT.BRANCHES.switchBranch(TEST_BRANCH);
-
-      //Check file in browser tree
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REMOTE + "/");
-      //Sleep is necessary for file to appear on file system:
+      //Necessary for refreshing davfs:
       Thread.sleep(3000);
+      
+      //Check file in browser tree
+      IDE.PROJECT.EXPLORER.selectItem(REMOTE);
+      //Sleep is necessary for file to appear on file system:
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      waitForLoaderDissapeared();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REMOTE + "/" + TEST_FILE);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(REMOTE + "/" + TEST_FILE);
    }
 }

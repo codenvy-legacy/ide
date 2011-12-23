@@ -18,14 +18,18 @@
  */
 package org.exoplatform.ide.git;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -35,7 +39,7 @@ import org.junit.Test;
  */
 public class RemoteRepositoriesTest extends BaseTest
 {
-   private static final String TEST_FOLDER = RemoteRepositoriesTest.class.getSimpleName();
+   private static final String PROJECT = RemoteRepositoriesTest.class.getSimpleName();
 
    private static final String REMOTE1_NAME = "remote1";
 
@@ -45,12 +49,14 @@ public class RemoteRepositoriesTest extends BaseTest
 
    private static final String REMOTE2_URL = "url2";
 
-   @BeforeClass
-   public static void setUp()
+   private static final String EMPTY_ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/empty-repository.zip";
+
+   @Before
+   public void before()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
       }
       catch (Exception e)
       {
@@ -58,12 +64,12 @@ public class RemoteRepositoriesTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void after()
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -78,30 +84,14 @@ public class RemoteRepositoriesTest extends BaseTest
    @Test
    public void testRemotesCommand() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectRootItem();
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, false);
-
-      //Not Git repository:
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
       
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
-      IDE.WARNING_DIALOG.waitOpened();
-      String message = IDE.WARNING_DIALOG.getWarningMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
-
-      //Init repository:
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
-
       //Check Remove files is available:
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
 
       IDE.GIT.REMOTES.waitOpened();
@@ -118,21 +108,20 @@ public class RemoteRepositoriesTest extends BaseTest
    @Test
    public void testRemoteRepositoriesView() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+      
       //Open Remote repositories view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
       IDE.GIT.REMOTES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOTES.isOpened());
-      Assert.assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
-
-      Assert.assertFalse(IDE.GIT.REMOTES.isDeleteButtonEnabled());
-      Assert.assertTrue(IDE.GIT.REMOTES.isAddButtonEnabled());
+      assertTrue(IDE.GIT.REMOTES.isOpened());
+      assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
+      assertFalse(IDE.GIT.REMOTES.isDeleteButtonEnabled());
+      assertTrue(IDE.GIT.REMOTES.isAddButtonEnabled());
 
       IDE.GIT.REMOTES.clickCloseButton();
       IDE.GIT.REMOTES.waitClosed();
@@ -147,34 +136,34 @@ public class RemoteRepositoriesTest extends BaseTest
    @Test
    public void testAddRemoteRepository() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+      
       //Open Remote repositories view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
       IDE.GIT.REMOTES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOTES.isOpened());
-      Assert.assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
+      assertTrue(IDE.GIT.REMOTES.isOpened());
+      assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       //Add remote repository:
       IDE.GIT.REMOTES.clickAddButton();
       IDE.GIT.REMOTES.waitAddRemoteViewOpened();
-      Assert.assertTrue(IDE.GIT.REMOTES.isAddRepositoryOpened());
-      Assert.assertFalse(IDE.GIT.REMOTES.isOkButtonEnabled());
+      assertTrue(IDE.GIT.REMOTES.isAddRepositoryOpened());
+      assertFalse(IDE.GIT.REMOTES.isOkButtonEnabled());
 
       IDE.GIT.REMOTES.typeToNameField(REMOTE1_NAME);
-      Assert.assertFalse(IDE.GIT.REMOTES.isOkButtonEnabled());
+      assertFalse(IDE.GIT.REMOTES.isOkButtonEnabled());
       IDE.GIT.REMOTES.typeToUrlField(REMOTE1_URL);
-      Assert.assertTrue(IDE.GIT.REMOTES.isOkButtonEnabled());
+      assertTrue(IDE.GIT.REMOTES.isOkButtonEnabled());
       IDE.GIT.REMOTES.clickOkButton();
       IDE.GIT.REMOTES.waitAddRemoteViewClosed();
 
       IDE.GIT.REMOTES.waitForRemotesCount(1);
-      Assert.assertEquals(1, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
+      assertEquals(1, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       //Close Remotes view:
       IDE.GIT.REMOTES.clickCloseButton();
@@ -201,18 +190,20 @@ public class RemoteRepositoriesTest extends BaseTest
    @Test
    public void testDeleteRemoteRepository() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
-
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+      
+      IDE.GIT.REMOTES.addRemoteRepository(REMOTE1_NAME, REMOTE1_URL);
 
       //Open Remote repositories view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.REMOTES);
       IDE.GIT.REMOTES.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.REMOTES.isOpened());
-      Assert.assertEquals(1, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
+      assertTrue(IDE.GIT.REMOTES.isOpened());
+      assertEquals(1, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       //Add remote repository:
       IDE.GIT.REMOTES.clickAddButton();
@@ -224,17 +215,16 @@ public class RemoteRepositoriesTest extends BaseTest
       IDE.GIT.REMOTES.waitAddRemoteViewClosed();
 
       IDE.GIT.REMOTES.waitForRemotesCount(2);
-      Assert.assertEquals(2, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
+      assertEquals(2, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
 
       //Delete second repository:
       IDE.GIT.REMOTES.selectRemoteByName(REMOTE2_NAME);
-      Assert.assertTrue(IDE.GIT.REMOTES.isDeleteButtonEnabled());
+      assertTrue(IDE.GIT.REMOTES.isDeleteButtonEnabled());
       IDE.GIT.REMOTES.clickDeleteButton();
 
       //Check confirmation dialog:
       IDE.ASK_DIALOG.waitOpened();
-      Assert.assertEquals(String.format(GIT.Messages.DELETE_REMOTE_QUESTION, REMOTE2_NAME),
-         IDE.ASK_DIALOG.getQuestion());
+      assertEquals(String.format(GIT.Messages.DELETE_REMOTE_QUESTION, REMOTE2_NAME), IDE.ASK_DIALOG.getQuestion());
       IDE.ASK_DIALOG.clickYes();
       IDE.ASK_DIALOG.waitClosed();
 
@@ -253,9 +243,9 @@ public class RemoteRepositoriesTest extends BaseTest
       IDE.ASK_DIALOG.clickYes();
       IDE.ASK_DIALOG.waitClosed();
 
-      waitForLoaderDissapeared();
-      Assert.assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
-      Assert.assertFalse(IDE.GIT.REMOTES.isDeleteButtonEnabled());
+      IDE.GIT.REMOTES.waitForRemotesCount(0);
+      assertEquals(0, IDE.GIT.REMOTES.getRemoteRepositoriesCount());
+      assertFalse(IDE.GIT.REMOTES.isDeleteButtonEnabled());
 
       //Close Remotes view:
       IDE.GIT.REMOTES.clickCloseButton();

@@ -68,7 +68,7 @@ public class ResetToCommit extends AbstractTestModule
    @FindBy(id = Locators.CANCEL_BUTTON_ID)
    private WebElement cancelButton;
 
-   @FindBy(id = Locators.MODE_ID)
+   @FindBy(name = Locators.MODE_ID)
    private WebElement modeField;
 
    @FindBy(id = Locators.REVISION_GRID_ID)

@@ -117,7 +117,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       //------ 3 ----------
       //Click on button "Yes".
       IDE.ASK_DIALOG.clickYes();
-      waitForLoaderDissapeared();
+      IDE.LOADER.waitClosed();
       IDE.ASK_DIALOG.waitClosed();
       IDE.TEMPLATES.waitForTemplateDeleted(FILE_TEMPLATE_NAME_1);
       Thread.sleep(5000);

@@ -124,7 +124,8 @@ public class GoToLineTest extends BaseTest
       // Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitOpened();
-      IDE.GOTOLINE.typeIntoLineNumberField("1" + Keys.ENTER.toString());
+      IDE.GOTOLINE.typeIntoLineNumberField("1");
+      IDE.GOTOLINE.typeIntoLineNumberField(Keys.ENTER.toString());
       IDE.GOTOLINE.waitClosed();
       IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());

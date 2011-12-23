@@ -172,6 +172,7 @@ public class VirtualFileSystemUtils
     */
    public static int delete(String storageUrl) throws IOException
    {
+      System.out.println("VirtualFileSystemUtils.delete()"+storageUrl);
       int status = -1;
       HttpURLConnection connection = null;
       try
@@ -180,6 +181,7 @@ public class VirtualFileSystemUtils
          connection = Utils.getConnection(url);
          connection.setRequestMethod(HTTPMethod.DELETE);
          status = connection.getResponseCode();
+         System.out.println("VirtualFileSystemUtils.delete()!!!!!!!!!!!!"+status);
       }
       finally
       {
@@ -324,6 +326,7 @@ public class VirtualFileSystemUtils
          out.write(content.getBytes());
          out.close();
          status = connection.getResponseCode();
+         System.out.println("VirtualFileSystemUtils.createFile()STATUS>!!!"+status);
       }
       finally
       {
@@ -365,6 +368,7 @@ public class VirtualFileSystemUtils
          inputStream.close();
          outputStream.close();
          connection.getResponseCode();
+         System.out.println("VirtualFileSystemUtils.importZipProject()"+connection.getResponseMessage());
          return folderLiks;
       }
       finally
@@ -448,7 +452,6 @@ public class VirtualFileSystemUtils
 
          Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
          rootLinks = ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(), element);
-         System.out.println("VFS initialized - " + vfsInfo.getId());
       }
       catch (JsonException e)
       {

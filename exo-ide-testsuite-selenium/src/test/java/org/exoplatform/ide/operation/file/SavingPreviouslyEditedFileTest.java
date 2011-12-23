@@ -120,7 +120,6 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(1, XML_TEXT1);
       IDE.EDITOR.typeTextIntoEditor(1, XML_TEXT2);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      waitForLoaderDissapeared();
       IDE.EDITOR.closeFile(1);
 
       selenium.refresh();

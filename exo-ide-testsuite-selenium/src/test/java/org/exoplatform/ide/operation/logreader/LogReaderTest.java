@@ -63,8 +63,8 @@ public class LogReaderTest extends BaseTest
       Assert.assertFalse(isButtonEnabled(NEX_LOG));
 
       clicOnButton(PREV_LOG_BUTTON);
-      waitForLoaderDissapeared();
-
+      IDE.LOADER.waitClosed();
+      
       Assert.assertFalse(log.equals(getLogContent()));
       log = getLogContent();
       Assert.assertTrue(isButtonEnabled(NEX_LOG));
