@@ -110,4 +110,12 @@ public class AndLuceneSearchConstraintTest
       assertEquals(Occur.MUST, clauses[0].getOccur());
       assertEquals(Occur.MUST, clauses[1].getOccur());
    }
+
+   @Test
+   public void shouldNotMachAll() throws Exception
+   {
+      LuceneSearchConstraint constraint = and(prefix("test", "test"), eq("test", "somePrefix"));
+      assertFalse(constraint.matchAll());
+
+   }
 }
