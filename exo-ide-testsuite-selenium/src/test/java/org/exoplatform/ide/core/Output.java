@@ -39,7 +39,7 @@ public class Output extends AbstractTestModule
 
       String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
-      String CLEAR_BUTTON_SELECTOR = "div#" + VIEW_ID + " div[title='Clear output']>img";
+      String CLEAR_BUTTON_SELECTOR = "div[view-id='" + VIEW_ID + "'] div[title='Clear output']>img";
 
       String OUTPUT_CONTENT_ID = "ideOutputContent";
 

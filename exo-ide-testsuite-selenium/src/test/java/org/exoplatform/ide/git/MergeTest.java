@@ -90,6 +90,8 @@ public class MergeTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
@@ -109,6 +111,7 @@ public class MergeTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
@@ -147,6 +150,7 @@ public class MergeTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
@@ -174,6 +178,7 @@ public class MergeTest extends BaseTest
       //Check file appeared:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.LOADER.waitClosed();
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE2);
@@ -185,6 +190,7 @@ public class MergeTest extends BaseTest
    public void testMergeConflict() throws Exception
    {
       driver.navigate().refresh();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -231,6 +237,7 @@ public class MergeTest extends BaseTest
    public void testMergeUptoDate() throws Exception
    {
       driver.navigate().refresh();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);

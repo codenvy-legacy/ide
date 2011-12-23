@@ -88,6 +88,7 @@ public class ResetToCommitTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
@@ -112,6 +113,7 @@ public class ResetToCommitTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
@@ -137,6 +139,7 @@ public class ResetToCommitTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
@@ -157,6 +160,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
       assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
+      IDE.LOADER.waitClosed();
 
       //Check file in tree:
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
@@ -190,6 +194,7 @@ public class ResetToCommitTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
@@ -263,6 +268,7 @@ public class ResetToCommitTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();

@@ -81,7 +81,7 @@ public class ShowHistoryTest extends BaseTest
     * Test command is not available for show history in not Git repository.
     * @throws Exception 
     */
-   //@Test
+   @Test
    public void testShowHistoryCommand() throws Exception
    {
       driver.navigate().refresh();
@@ -102,11 +102,12 @@ public class ShowHistoryTest extends BaseTest
     * Test Show history view elements.
     * @throws Exception 
     */
-   //@Test
+   @Test
    public void testShowHistoryView() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
@@ -135,6 +136,7 @@ public class ShowHistoryTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
@@ -168,16 +170,18 @@ public class ShowHistoryTest extends BaseTest
     * 
     * @throws Exception
     */
-   //   @Test
+   @Test
    public void testChangesMode() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
       createFileAndCommit(TEST_FILE1, COMMIT1);
+      IDE.OUTPUT.clickClearButton();
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
       //Open Show history view:
@@ -189,6 +193,7 @@ public class ShowHistoryTest extends BaseTest
       //Select first file on the first commit:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FILE1);
       IDE.GIT.SHOW_HISTORY.clickChangesOfResourceButton();
+      IDE.LOADER.waitClosed();
       assertTrue(IDE.GIT.SHOW_HISTORY.isChangesOfResourceButtonSelected());
       assertFalse(IDE.GIT.SHOW_HISTORY.isChangesInProjectButtonSelected());
       //Select second commit:
@@ -205,6 +210,7 @@ public class ShowHistoryTest extends BaseTest
       //Select second file on the second commit:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FILE2);
       IDE.GIT.SHOW_HISTORY.clickRefreshRevisionListButton();
+      IDE.LOADER.waitClosed();
 
       //Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
@@ -242,16 +248,18 @@ public class ShowHistoryTest extends BaseTest
     * 
     * @throws Exception
     */
-   //@Test
+   @Test
    public void testDiffWithPrevVersion() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
       createFileAndCommit(TEST_FILE1, COMMIT1);
+      IDE.OUTPUT.clickClearButton();
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
       //Open Show history view:
@@ -285,7 +293,7 @@ public class ShowHistoryTest extends BaseTest
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
-      assertTrue(diffContent.isEmpty());
+      assertTrue(diffContent.trim().isEmpty());
 
       //Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
@@ -305,16 +313,18 @@ public class ShowHistoryTest extends BaseTest
     * 
     * @throws Exception
     */
-   //  @Test
+   @Test
    public void testDiffWithIndex() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
       createFileAndCommit(TEST_FILE1, COMMIT1);
+      IDE.OUTPUT.clickClearButton();
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
       //Open Show history view:
@@ -367,16 +377,18 @@ public class ShowHistoryTest extends BaseTest
     * 
     * @throws Exception
     */
-   //@Test
+   @Test
    public void testDiffWithWorkingTreeMode() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
       createFileAndCommit(TEST_FILE1, COMMIT1);
+      IDE.OUTPUT.clickClearButton();
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
       //Open Show history view:

@@ -80,7 +80,7 @@ public class ShowHistory extends AbstractTestModule
 
       String REVISION_ROW_SELECTOR = "table#" + REVISION_GRID_ID + ">tbody:first-of-type tr";
 
-      String CONTENT_FRAME_LOCATOR = Locators.VIEW_LOCATOR + "//frame";
+      String CONTENT_FRAME_LOCATOR = Locators.VIEW_LOCATOR + "//iframe";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
