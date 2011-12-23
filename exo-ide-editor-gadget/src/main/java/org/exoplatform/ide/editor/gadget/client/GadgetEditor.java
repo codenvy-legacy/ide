@@ -48,7 +48,7 @@ public class GadgetEditor extends Extension
       CodeMirrorProducer producer = new CodeMirrorProducer(
          MimeType.GOOGLE_GADGET,
          "CodeMirror Google Gadget editor",
-         "xml",
+         "gadget",
          Images.INSTANCE.gadgetImage(),
          true,
          
@@ -63,7 +63,7 @@ public class GadgetEditor extends Extension
             setCanHaveSeveralMimeTypes(true)
       );
       
-      IDE.getInstance().addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor Google Gadget editor", "xml",Images.INSTANCE.gadgetImage(), false,
+      IDE.getInstance().addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor Google Gadget editor", "gadget", Images.INSTANCE.gadgetImage(), false,
          new CKEditorConfiguration()));
       
       IDE.getInstance().addEditor(producer);
