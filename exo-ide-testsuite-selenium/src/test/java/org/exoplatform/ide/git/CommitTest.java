@@ -76,6 +76,7 @@ public class CommitTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       if (!PROJECT.equals(IDE.PROJECT.EXPLORER.getCurrentProject()))
       {
          IDE.PROJECT.OPEN.openProject(PROJECT);
@@ -84,22 +85,14 @@ public class CommitTest extends BaseTest
 
       //Not Git repository:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT));
-
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
-      IDE.GIT.COMMIT.waitOpened();
-      IDE.GIT.COMMIT.typeToMessageField("123");
-      IDE.GIT.COMMIT.clickCommitButton();
-      IDE.GIT.COMMIT.waitClosed();
-      IDE.OUTPUT.waitForMessageShow(1, 10);
-      String message = IDE.OUTPUT.getOutputMessage(1);
-      assertTrue(message.startsWith("[ERROR]"));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT));
 
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(2, 10);
-      message = IDE.OUTPUT.getOutputMessage(2);
+      IDE.OUTPUT.waitForMessageShow(1, 10);
+      String message = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
+      IDE.LOADER.waitClosed();
 
       //Check commit is available:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT));
@@ -120,12 +113,13 @@ public class CommitTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
-      waitForLoaderDissapeared();
+      IDE.LOADER.waitClosed();
       if (!PROJECT.equals(IDE.PROJECT.EXPLORER.getCurrentProject()))
       {
          IDE.PROJECT.OPEN.openProject(PROJECT);
       }
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       //Open Commit view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
@@ -156,11 +150,12 @@ public class CommitTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
-      waitForLoaderDissapeared();
+      IDE.LOADER.waitClosed();
       if (!PROJECT.equals(IDE.PROJECT.EXPLORER.getCurrentProject()))
       {
          IDE.PROJECT.OPEN.openProject(PROJECT);
       }
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       createFiles();
@@ -209,6 +204,7 @@ public class CommitTest extends BaseTest
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       if (!PROJECT.equals(IDE.PROJECT.EXPLORER.getCurrentProject()))
       {
          IDE.PROJECT.OPEN.openProject(PROJECT);
