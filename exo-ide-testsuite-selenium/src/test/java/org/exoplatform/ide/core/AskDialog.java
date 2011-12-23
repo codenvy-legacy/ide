@@ -40,7 +40,7 @@ public class AskDialog extends AbstractTestModule
       
       String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
-      String ASK_TITLE_SELECTOR = "div[view-id=" + VIEW_ID + "] div.Caption>span";
+      String ASK_TITLE_SELECTOR = "div[id^=" + VIEW_ID + "] div.Caption>div";
 
       String QUESTION_SELECTOR = "div[view-id=" + VIEW_ID + "] div.gwt-Label";
 
