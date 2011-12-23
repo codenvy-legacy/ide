@@ -26,6 +26,7 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
@@ -78,6 +79,10 @@ public class LuceneTypeInfoWriter
    private Document createDocument(TypeInfo typeInfo) throws IOException
    {
       Document typeInfoDocument = new Document();
+
+      typeInfoDocument.add(new Field(IndexType.JAVA.getIndexFieldName(), IndexType.JAVA.getIndexFieldValue(),
+         Store.YES, Index.NOT_ANALYZED));
+
       typeInfoDocument
          .add(new Field(TypeInfoIndexFields.CLASS_NAME, typeInfo.getName(), Store.YES, Index.NOT_ANALYZED));
 

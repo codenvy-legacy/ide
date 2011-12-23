@@ -29,8 +29,6 @@ import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
-import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneCachedTypeInfoResolver;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -46,7 +44,7 @@ import java.util.Set;
 public class TestLuceneCachedTypeInfoResolver
 {
 
-   private static LuceneTypeInfoSearcher searcher;
+   //private static LuceneTypeInfoSearcher searcher;
 
    private static LuceneTypeInfoWriter writer;
 
@@ -66,16 +64,16 @@ public class TestLuceneCachedTypeInfoResolver
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_RT));
       writer.addTypeInfo(typeInfos);
 
-      searcher = new LuceneTypeInfoSearcher(luceneInfoStorage);
+      // searcher = new LuceneTypeInfoSearcher(luceneInfoStorage);
    }
 
    @Ignore
    @Test
    public void testCachedTypeInfoResolver() throws CodeAssistantException
    {
-      LuceneCachedTypeInfoResolver resolver = new LuceneCachedTypeInfoResolver(searcher, writer);
-      TypeInfo testClass = new LuceneCodeAssistantStorage(searcher).getTypeByFqn("java.util.HashMap");
-      testClass = resolver.resolveTypeInfo(testClass);
+      //  LuceneCachedTypeInfoResolver resolver = new LuceneCachedTypeInfoResolver(searcher, writer);
+      TypeInfo testClass = new LuceneCodeAssistantStorage(luceneInfoStorage).getTypeByFqn("java.util.HashMap");
+      // testClass = resolver.resolveTypeInfo(testClass);
       Set<String> methods = new HashSet<String>();
       for (RoutineInfo method : testClass.getMethods())
       {
@@ -102,11 +100,11 @@ public class TestLuceneCachedTypeInfoResolver
       assertTrue(methods.contains("public final native void java.lang.Object.notify()"));
       assertTrue(methods.contains("public final native void java.lang.Object.notifyAll()"));
       assertTrue(methods.contains("public final native void java.lang.Object.wait(long)"
-               + " throws java.lang.InterruptedException"));
+         + " throws java.lang.InterruptedException"));
       assertTrue(methods.contains("public final void java.lang.Object.wait(long, int)"
-               + " throws java.lang.InterruptedException"));
+         + " throws java.lang.InterruptedException"));
       assertTrue(methods.contains("public final void java.lang.Object.wait()"
-               + " throws java.lang.InterruptedException"));
+         + " throws java.lang.InterruptedException"));
    }
 
 }

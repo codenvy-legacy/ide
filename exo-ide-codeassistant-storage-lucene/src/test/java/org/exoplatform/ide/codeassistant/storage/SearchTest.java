@@ -28,7 +28,6 @@ import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
-import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneTypeInfoSearcher;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class SearchTest
    {
       luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
-      storage = new LuceneCodeAssistantStorage(new LuceneTypeInfoSearcher(luceneInfoStorage));
+      storage = new LuceneCodeAssistantStorage(luceneInfoStorage);
 
       ClassManager.createIndexForClass(writer, ClassManager.getAllTestClasses());
 
