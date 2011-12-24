@@ -12,6 +12,10 @@
    <name>eXo IDE :: vfs</name>
    <dependencies>
       <dependency>
+          <groupId>org.exoplatform.kernel</groupId>
+          <artifactId>exo.kernel.commons</artifactId>
+      </dependency>
+      <dependency>
          <groupId>javax.annotation</groupId>
          <artifactId>jsr250-api</artifactId>
       </dependency>
