@@ -16,12 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package test.interfaces;
+package test.classes;
+
+import test.interfaces.DTestInterface;
 
 /**
- *
+ * @author <a href="mailto:foo@bar.org">Foo Bar</a>
+ * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z
+ *          aheritier $
+ * 
  */
-public interface DTestInterface
+public class DTestClass implements DTestInterface
 {
-   String getName();
+
+   /**
+    * @see test.interfaces.DTestInterface#getName()
+    */
+   @Override
+   public String getName()
+   {
+      return "Name";
+   }
+
 }

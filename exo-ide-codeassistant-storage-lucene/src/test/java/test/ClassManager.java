@@ -23,6 +23,8 @@ import test.annotations.DTestAnnotation;
 import test.classes.ATestClass;
 import test.classes.ATestClass2;
 import test.classes.BTestClass;
+import test.classes.CTestClass;
+import test.classes.DTestClass;
 import test.classes2.ITestClass;
 import test.interfaces.DTestInterface;
 import test.interfaces.ETestInterface;
@@ -56,7 +58,8 @@ public class ClassManager
    public static Class<?>[] getAllTestClasses()
    {
       return new Class[]{CTestAnnotation.class, DTestAnnotation.class, ATestClass.class, ATestClass2.class,
-         BTestClass.class, ITestClass.class, DTestInterface.class, ETestInterface.class, ETestInterface2.class};
+         BTestClass.class, ITestClass.class, DTestInterface.class, ETestInterface.class, ETestInterface2.class,
+         CTestClass.class, DTestClass.class};
    }
 
    /**

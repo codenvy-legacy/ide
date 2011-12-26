@@ -16,12 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package test.interfaces;
+package test.classes;
+
+import test.interfaces.ETestInterface;
+import test.interfaces.ETestInterface2;
 
 /**
  *
  */
-public interface DTestInterface
+public class CTestClass extends BTestClass implements ETestInterface, ETestInterface2
 {
-   String getName();
+
 }

@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import test.ClassManager;
-import test.classes.ATestClass2;
+import test.classes.CTestClass;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -76,7 +76,7 @@ public class ShortTypeInfoExtractorTest
    @Test
    public void shouldReconstructShortTypeInfo() throws Exception
    {
-      TypeInfo expected = ClassParser.parse(ClassManager.getClassFile(ATestClass2.class));
+      TypeInfo expected = ClassParser.parse(ClassManager.getClassFile(CTestClass.class));
       Document luceneDocument = new TypeInfoIndexer().createDocument(expected);
 
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
