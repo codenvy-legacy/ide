@@ -56,10 +56,12 @@ public class ShortTypeInfoExtractorTest
    @Mock
    private IndexReader reader;
 
+   private final ShortTypeInfoExtractor extractor = new ShortTypeInfoExtractor();
+
    @Test
    public void shouldCallReaderGetDocumentWithSameIdAndFieldSelector() throws Exception
    {
-      ShortTypeInfoExtractor extractor = new ShortTypeInfoExtractor();
+
       Document luceneDocument = new Document();
       //add minimal set of field to be able to call method  extractor.getValue
       luceneDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
@@ -74,7 +76,6 @@ public class ShortTypeInfoExtractorTest
    @Test
    public void shouldReconstructShortTypeInfo() throws Exception
    {
-      ShortTypeInfoExtractor extractor = new ShortTypeInfoExtractor();
       TypeInfo expected = ClassParser.parse(ClassManager.getClassFile(ATestClass2.class));
       Document luceneDocument = new TypeInfoIndexer().createDocument(expected);
 
@@ -91,7 +92,6 @@ public class ShortTypeInfoExtractorTest
    @Test
    public void shouldGetDocumentFromReaderWithPredefinedSetOfFields() throws Exception
    {
-      ShortTypeInfoExtractor extractor = new ShortTypeInfoExtractor();
       Document luceneDocument = new Document();
       //add minimal set of field to be able to call method  extractor.getValue
       luceneDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
