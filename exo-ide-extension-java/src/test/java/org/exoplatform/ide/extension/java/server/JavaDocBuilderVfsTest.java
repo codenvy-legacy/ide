@@ -43,7 +43,7 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
          javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", project.getId(),
             VFS_ID);
       Assert.assertEquals("AutoCompletionManager", clazz.getName());
-      Assert.assertEquals(1, clazz.getModifiers().intValue());
+      Assert.assertEquals(1, clazz.getModifiers());
       Assert.assertEquals(2, clazz.getConstructors().length);
       RoutineInfo info = clazz.getConstructors()[0];
       Assert.assertEquals("AutoCompletionManager", info.getName());
