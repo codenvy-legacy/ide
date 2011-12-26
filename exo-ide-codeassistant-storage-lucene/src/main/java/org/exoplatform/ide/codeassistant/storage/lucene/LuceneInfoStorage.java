@@ -23,8 +23,8 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,8 +36,7 @@ import java.io.IOException;
 public class LuceneInfoStorage
 {
 
-   private static final Log LOG = ExoLogger.getLogger(LuceneInfoStorage.class);
-
+   private static final Logger LOG = LoggerFactory.getLogger(LuceneInfoStorage.class);
 
    private final Directory typeInfoIndexDirectory;
 
@@ -46,7 +45,7 @@ public class LuceneInfoStorage
    private IndexSearcher typeInfoIndexSearcher;
 
    /**
-    *  Create file based lucene storage.
+    * Create file based lucene storage.
     * 
     * @throws IOException
     */
@@ -64,7 +63,6 @@ public class LuceneInfoStorage
    {
       this.typeInfoIndexDirectory = typeInfoIndexDirectory;
    }
-
 
    public Directory getTypeInfoIndexDirectory() throws IOException
    {
@@ -114,7 +112,6 @@ public class LuceneInfoStorage
          typeInfoIndexReader = newReader;
       }
    }
-
 
    public IndexSearcher getTypeInfoIndexSearcher() throws IOException
    {
