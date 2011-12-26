@@ -34,6 +34,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
@@ -42,6 +43,7 @@ import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -85,4 +87,29 @@ public class ShortTypeInfoExtractorTest
       assertEquals(expected.getModifiers(), actual.getModifiers());
       assertEquals(expected.getName(), actual.getName());
    }
+
+   @Test
+   public void shouldGetDocumentFromReaderWithPredefinedSetOfFields() throws Exception
+   {
+      ShortTypeInfoExtractor extractor = new ShortTypeInfoExtractor();
+      Document luceneDocument = new Document();
+      //add minimal set of field to be able to call method  extractor.getValue
+      luceneDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
+      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+
+      extractor.getValue(reader, 5);
+
+      ArgumentCaptor<FieldSelector> model = ArgumentCaptor.forClass(FieldSelector.class);
+      verify(reader).document(eq(5), model.capture());
+
+      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(TypeInfoIndexFields.MODIFIERS));
+      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(TypeInfoIndexFields.CLASS_NAME));
+      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(TypeInfoIndexFields.FQN));
+      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(TypeInfoIndexFields.ENTITY_TYPE));
+      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(TypeInfoIndexFields.SUPERCLASS));
+      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(TypeInfoIndexFields.INTERFACES));
+      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(TypeInfoIndexFields.INTERFACES));
+
+   }
+
 }

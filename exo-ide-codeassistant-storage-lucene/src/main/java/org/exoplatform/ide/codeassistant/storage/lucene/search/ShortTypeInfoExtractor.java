@@ -43,16 +43,14 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
    @Override
    public ShortTypeInfo getValue(IndexReader reader, int doc) throws IOException
    {
-      //TODO read only necessary fields
       Document document =
          reader.document(doc, new MapFieldSelector(new String[]{TypeInfoIndexFields.MODIFIERS,
             TypeInfoIndexFields.CLASS_NAME, TypeInfoIndexFields.FQN, TypeInfoIndexFields.ENTITY_TYPE}));
 
       int modifier = Integer.valueOf(document.get(TypeInfoIndexFields.MODIFIERS));
-      ShortTypeInfo shortTypeInfo =
-         new ShortTypeInfo(modifier, document.get(TypeInfoIndexFields.CLASS_NAME),
-            document.get(TypeInfoIndexFields.FQN), document.get(TypeInfoIndexFields.ENTITY_TYPE));
-      return shortTypeInfo;
+
+      return new ShortTypeInfo(modifier, document.get(TypeInfoIndexFields.CLASS_NAME),
+         document.get(TypeInfoIndexFields.FQN), document.get(TypeInfoIndexFields.ENTITY_TYPE));
 
    }
 }
