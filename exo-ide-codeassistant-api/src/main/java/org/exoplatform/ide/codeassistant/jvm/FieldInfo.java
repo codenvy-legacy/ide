@@ -34,10 +34,7 @@ import java.io.ObjectOutput;
  * }
  * </code>
  * 
- * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public class FieldInfo extends Member
 {
@@ -51,6 +48,11 @@ public class FieldInfo extends Member
     */
    private String declaringClass;
 
+   public FieldInfo()
+   {
+
+   }
+
    public FieldInfo(String type, int modifiers, String name, String declaringClass)
    {
       super(modifiers, name);
@@ -58,9 +60,9 @@ public class FieldInfo extends Member
       this.declaringClass = declaringClass;
    }
 
-   public FieldInfo()
+   public String getDeclaringClass()
    {
-
+      return declaringClass;
    }
 
    public String getType()
@@ -68,19 +70,35 @@ public class FieldInfo extends Member
       return type;
    }
 
-   public void setType(String type)
+   /**
+    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+    */
+   @Override
+   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
    {
-      this.type = type;
-   }
+      super.readExternal(in);
 
-   public String getDeclaringClass()
-   {
-      return declaringClass;
+      type = (String)in.readObject();
+      declaringClass = (String)in.readObject();
    }
 
    public void setDeclaringClass(String declaringClass)
    {
       this.declaringClass = declaringClass;
+   }
+
+   public void setType(String type)
+   {
+      this.type = type;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.Member#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return modifierToString() + " " + type + " " + declaringClass + "." + getName();
    }
 
    /**
@@ -96,24 +114,60 @@ public class FieldInfo extends Member
    }
 
    /**
-    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+    * @see java.lang.Object#hashCode()
     */
    @Override
-   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+   public int hashCode()
    {
-      super.readExternal(in);
-
-      type = (String)in.readObject();
-      declaringClass = (String)in.readObject();
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + ((declaringClass == null) ? 0 : declaringClass.hashCode());
+      result = prime * result + ((type == null) ? 0 : type.hashCode());
+      return result;
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#toString()
+    * @see java.lang.Object#equals(java.lang.Object)
     */
    @Override
-   public String toString()
+   public boolean equals(Object obj)
    {
-      return modifierToString() + " " + type + " " + declaringClass + "." + getName();
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      FieldInfo other = (FieldInfo)obj;
+      if (declaringClass == null)
+      {
+         if (other.declaringClass != null)
+         {
+            return false;
+         }
+      }
+      else if (!declaringClass.equals(other.declaringClass))
+      {
+         return false;
+      }
+      if (type == null)
+      {
+         if (other.type != null)
+         {
+            return false;
+         }
+      }
+      else if (!type.equals(other.type))
+      {
+         return false;
+      }
+      return true;
    }
 
 }

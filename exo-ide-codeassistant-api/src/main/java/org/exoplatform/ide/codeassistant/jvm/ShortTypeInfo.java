@@ -30,8 +30,6 @@ import java.io.ObjectOutput;
  * 
  * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public class ShortTypeInfo extends Member
 {
@@ -101,6 +99,63 @@ public class ShortTypeInfo extends Member
    public String toString()
    {
       return modifierToString() + " " + type + " " + qualifiedName;
+   }
+
+   /**
+    * @see java.lang.Object#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + (qualifiedName == null ? 0 : qualifiedName.hashCode());
+      result = prime * result + (type == null ? 0 : type.hashCode());
+      return result;
+   }
+
+   /**
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      ShortTypeInfo other = (ShortTypeInfo)obj;
+      if (qualifiedName == null)
+      {
+         if (other.qualifiedName != null)
+         {
+            return false;
+         }
+      }
+      else if (!qualifiedName.equals(other.qualifiedName))
+      {
+         return false;
+      }
+      if (type == null)
+      {
+         if (other.type != null)
+         {
+            return false;
+         }
+      }
+      else if (!type.equals(other.type))
+      {
+         return false;
+      }
+      return true;
    }
 
 }

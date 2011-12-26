@@ -33,9 +33,6 @@ import java.lang.reflect.Modifier;
  * @see FieldInfo
  * @see MethodInfo
  * 
- *      Created by The eXo Platform SAS.
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public abstract class Member implements Externalizable
 {
@@ -55,6 +52,43 @@ public abstract class Member implements Externalizable
    }
 
    /**
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      Member other = (Member)obj;
+      if (modifiers != other.modifiers)
+      {
+         return false;
+      }
+      if (name == null)
+      {
+         if (other.name != null)
+         {
+            return false;
+         }
+      }
+      else if (!name.equals(other.name))
+      {
+         return false;
+      }
+      return true;
+   }
+
+   /**
     * @return the modifiers
     */
    public int getModifiers()
@@ -71,21 +105,16 @@ public abstract class Member implements Externalizable
    }
 
    /**
-    * @param modifiers
-    *           the modifiers to set
+    * @see java.lang.Object#hashCode()
     */
-   public void setModifiers(int modifiers)
+   @Override
+   public int hashCode()
    {
-      this.modifiers = modifiers;
-   }
-
-   /**
-    * @param name
-    *           the name to set
-    */
-   public void setName(String name)
-   {
-      this.name = name;
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + modifiers;
+      result = prime * result + (name == null ? 0 : name.hashCode());
+      return result;
    }
 
    /**
@@ -188,17 +217,28 @@ public abstract class Member implements Externalizable
    }
 
    @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      out.writeInt(modifiers);
-      out.writeObject(name);
-   }
-
-   @Override
    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
    {
       modifiers = in.readInt();
       name = (String)in.readObject();
+   }
+
+   /**
+    * @param modifiers
+    *           the modifiers to set
+    */
+   public void setModifiers(int modifiers)
+   {
+      this.modifiers = modifiers;
+   }
+
+   /**
+    * @param name
+    *           the name to set
+    */
+   public void setName(String name)
+   {
+      this.name = name;
    }
 
    /**
@@ -208,6 +248,13 @@ public abstract class Member implements Externalizable
    public String toString()
    {
       return modifierToString() + " " + name;
+   }
+
+   @Override
+   public void writeExternal(ObjectOutput out) throws IOException
+   {
+      out.writeInt(modifiers);
+      out.writeObject(name);
    }
 
 }

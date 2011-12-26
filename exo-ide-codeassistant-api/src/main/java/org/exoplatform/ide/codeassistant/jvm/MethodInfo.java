@@ -37,10 +37,6 @@ import java.io.ObjectOutput;
  *   }
  * </code>
  * 
- * Created by The eXo Platform SAS.
- * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public class MethodInfo extends RoutineInfo
 {
@@ -109,6 +105,63 @@ public class MethodInfo extends RoutineInfo
    public String toString()
    {
       return getGeneric();
+   }
+
+   /**
+    * @see java.lang.Object#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + (genericReturnType == null ? 0 : genericReturnType.hashCode());
+      result = prime * result + (returnType == null ? 0 : returnType.hashCode());
+      return result;
+   }
+
+   /**
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      MethodInfo other = (MethodInfo)obj;
+      if (genericReturnType == null)
+      {
+         if (other.genericReturnType != null)
+         {
+            return false;
+         }
+      }
+      else if (!genericReturnType.equals(other.genericReturnType))
+      {
+         return false;
+      }
+      if (returnType == null)
+      {
+         if (other.returnType != null)
+         {
+            return false;
+         }
+      }
+      else if (!returnType.equals(other.returnType))
+      {
+         return false;
+      }
+      return true;
    }
 
 }

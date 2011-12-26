@@ -26,12 +26,11 @@ import static org.exoplatform.ide.codeassistant.jvm.serialization.Externalizatio
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Arrays;
 
 /**
  * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public class TypeInfo extends ShortTypeInfo
 {
@@ -235,12 +234,83 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo#toString()
+    * @see java.lang.Object#hashCode()
     */
    @Override
-   public String toString()
+   public int hashCode()
    {
-      return super.toString();
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + Arrays.hashCode(constructors);
+      result = prime * result + Arrays.hashCode(declaredConstructors);
+      result = prime * result + Arrays.hashCode(declaredFields);
+      result = prime * result + Arrays.hashCode(declaredMethods);
+      result = prime * result + Arrays.hashCode(fields);
+      result = prime * result + Arrays.hashCode(interfaces);
+      result = prime * result + Arrays.hashCode(methods);
+      result = prime * result + (superClass == null ? 0 : superClass.hashCode());
+      return result;
+   }
+
+   /**
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      TypeInfo other = (TypeInfo)obj;
+      if (!Arrays.equals(constructors, other.constructors))
+      {
+         return false;
+      }
+      if (!Arrays.equals(declaredConstructors, other.declaredConstructors))
+      {
+         return false;
+      }
+      if (!Arrays.equals(declaredFields, other.declaredFields))
+      {
+         return false;
+      }
+      if (!Arrays.equals(declaredMethods, other.declaredMethods))
+      {
+         return false;
+      }
+      if (!Arrays.equals(fields, other.fields))
+      {
+         return false;
+      }
+      if (!Arrays.equals(interfaces, other.interfaces))
+      {
+         return false;
+      }
+      if (!Arrays.equals(methods, other.methods))
+      {
+         return false;
+      }
+      if (superClass == null)
+      {
+         if (other.superClass != null)
+         {
+            return false;
+         }
+      }
+      else if (!superClass.equals(other.superClass))
+      {
+         return false;
+      }
+      return true;
    }
 
 }

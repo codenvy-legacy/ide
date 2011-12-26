@@ -24,12 +24,11 @@ import static org.exoplatform.ide.codeassistant.jvm.serialization.Externalizatio
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Arrays;
 
 /**
  * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public class RoutineInfo extends Member
 {
@@ -162,7 +161,94 @@ public class RoutineInfo extends Member
    @Override
    public String toString()
    {
+
       return generic;
+   }
+
+   /**
+    * @see java.lang.Object#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + (declaringClass == null ? 0 : declaringClass.hashCode());
+      result = prime * result + (generic == null ? 0 : generic.hashCode());
+      result = prime * result + Arrays.hashCode(genericExceptionTypes);
+      result = prime * result + (genericParameterTypes == null ? 0 : genericParameterTypes.hashCode());
+      result = prime * result + (parameterTypes == null ? 0 : parameterTypes.hashCode());
+      return result;
+   }
+
+   /**
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      RoutineInfo other = (RoutineInfo)obj;
+      if (declaringClass == null)
+      {
+         if (other.declaringClass != null)
+         {
+            return false;
+         }
+      }
+      else if (!declaringClass.equals(other.declaringClass))
+      {
+         return false;
+      }
+      if (generic == null)
+      {
+         if (other.generic != null)
+         {
+            return false;
+         }
+      }
+      else if (!generic.equals(other.generic))
+      {
+         return false;
+      }
+      if (!Arrays.equals(genericExceptionTypes, other.genericExceptionTypes))
+      {
+         return false;
+      }
+      if (genericParameterTypes == null)
+      {
+         if (other.genericParameterTypes != null)
+         {
+            return false;
+         }
+      }
+      else if (!genericParameterTypes.equals(other.genericParameterTypes))
+      {
+         return false;
+      }
+      if (parameterTypes == null)
+      {
+         if (other.parameterTypes != null)
+         {
+            return false;
+         }
+      }
+      else if (!parameterTypes.equals(other.parameterTypes))
+      {
+         return false;
+      }
+      return true;
    }
 
 }
