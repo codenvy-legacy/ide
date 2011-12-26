@@ -43,7 +43,7 @@ public class TestConstructorInfoBuilder
          new ConstructorInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, exceptions, desc, declaredClass);
       RoutineInfo constructorInfo = constructorInfoBuilder.buildConstructorInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), constructorInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT, constructorInfo.getModifiers());
       assertEquals("public abstract", constructorInfo.modifierToString());
    }
 

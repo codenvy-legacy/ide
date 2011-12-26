@@ -51,7 +51,7 @@ public class TestClassParser extends BaseTest
       assertEquals("NoTestGeneric", shortTypeInfo.getName());
       assertEquals(PACKAGE + ".NoTestGeneric", shortTypeInfo.getQualifiedName());
       assertEquals("CLASS", shortTypeInfo.getType());
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.SYNCHRONIZED, shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = annotationTest;
       assertEquals("NoTestGeneric", typeInfo.getName());
@@ -59,7 +59,7 @@ public class TestClassParser extends BaseTest
       assertEquals("CLASS", typeInfo.getType());
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
       assertEquals(0, typeInfo.getInterfaces().length);
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.SYNCHRONIZED, typeInfo.getModifiers());
 
       // fields
       FieldInfo[] fields = typeInfo.getDeclaredFields();
@@ -174,8 +174,8 @@ public class TestClassParser extends BaseTest
       assertEquals("NoTestAnnotation", shortTypeInfo.getName());
       assertEquals(PACKAGE + ".NoTestAnnotation", shortTypeInfo.getQualifiedName());
       assertEquals("ANNOTATION", shortTypeInfo.getType());
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE
-         | TypeInfoBuilder.MODIFIER_ANNOTATION), shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE | TypeInfoBuilder.MODIFIER_ANNOTATION,
+         shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = annotationTest;
       assertEquals("NoTestAnnotation", typeInfo.getName());
@@ -184,8 +184,8 @@ public class TestClassParser extends BaseTest
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
       assertEquals(1, typeInfo.getInterfaces().length);
       assertEquals("java.lang.annotation.Annotation", typeInfo.getInterfaces()[0]);
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE
-         | TypeInfoBuilder.MODIFIER_ANNOTATION), typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE | TypeInfoBuilder.MODIFIER_ANNOTATION,
+         typeInfo.getModifiers());
 
       assertEquals(0, typeInfo.getFields().length);
       assertEquals(0, typeInfo.getConstructors().length);
@@ -236,7 +236,7 @@ public class TestClassParser extends BaseTest
       assertEquals("NoTestClass", shortTypeInfo.getName());
       assertEquals(PACKAGE + ".NoTestClass", shortTypeInfo.getQualifiedName());
       assertEquals("CLASS", shortTypeInfo.getType());
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.SYNCHRONIZED, shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testClass;
       assertEquals("NoTestClass", typeInfo.getName());
@@ -246,7 +246,7 @@ public class TestClassParser extends BaseTest
       assertEquals(2, typeInfo.getInterfaces().length);
       assertEquals(PACKAGE + ".NoTestInterface", typeInfo.getInterfaces()[0]);
       assertEquals(PACKAGE + ".NoTestInterface2", typeInfo.getInterfaces()[1]);
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.SYNCHRONIZED), typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.SYNCHRONIZED, typeInfo.getModifiers());
 
       // fields
       FieldInfo[] fields = typeInfo.getDeclaredFields();
@@ -370,8 +370,7 @@ public class TestClassParser extends BaseTest
       assertEquals(PACKAGE + ".NoTestEnum", shortTypeInfo.getQualifiedName());
       assertEquals("ENUM", shortTypeInfo.getType());
 
-      assertEquals(
-         Integer.valueOf(Modifier.SYNCHRONIZED | Modifier.FINAL | TypeInfoBuilder.MODIFIER_ENUM | Modifier.PUBLIC),
+      assertEquals(Modifier.SYNCHRONIZED | Modifier.FINAL | TypeInfoBuilder.MODIFIER_ENUM | Modifier.PUBLIC,
          shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testEnum;
@@ -380,8 +379,7 @@ public class TestClassParser extends BaseTest
       assertEquals("ENUM", typeInfo.getType());
       assertEquals("java.lang.Enum", typeInfo.getSuperClass());
       assertEquals(0, typeInfo.getInterfaces().length);
-      assertEquals(
-         Integer.valueOf(Modifier.SYNCHRONIZED | Modifier.FINAL | TypeInfoBuilder.MODIFIER_ENUM | Modifier.PUBLIC),
+      assertEquals(Modifier.SYNCHRONIZED | Modifier.FINAL | TypeInfoBuilder.MODIFIER_ENUM | Modifier.PUBLIC,
          typeInfo.getModifiers());
 
       // fields
@@ -480,8 +478,7 @@ public class TestClassParser extends BaseTest
       assertEquals("NoTestInterface", shortTypeInfo.getName());
       assertEquals(PACKAGE + ".NoTestInterface", shortTypeInfo.getQualifiedName());
       assertEquals("INTERFACE", shortTypeInfo.getType());
-      assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
-         shortTypeInfo.getModifiers());
+      assertEquals(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC, shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testInterface;
       assertEquals("NoTestInterface", typeInfo.getName());
@@ -489,7 +486,7 @@ public class TestClassParser extends BaseTest
       assertEquals("INTERFACE", typeInfo.getType());
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
       assertEquals(0, typeInfo.getInterfaces().length);
-      assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC), typeInfo.getModifiers());
+      assertEquals(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC, typeInfo.getModifiers());
 
       assertEquals(0, typeInfo.getFields().length);
       assertEquals(0, typeInfo.getConstructors().length);
@@ -532,8 +529,7 @@ public class TestClassParser extends BaseTest
       assertEquals("NoTestInterface2", shortTypeInfo.getName());
       assertEquals(PACKAGE + ".NoTestInterface2", shortTypeInfo.getQualifiedName());
       assertEquals("INTERFACE", shortTypeInfo.getType());
-      assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC),
-         shortTypeInfo.getModifiers());
+      assertEquals(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC, shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testInterface2;
       assertEquals("NoTestInterface2", typeInfo.getName());
@@ -541,7 +537,7 @@ public class TestClassParser extends BaseTest
       assertEquals("INTERFACE", typeInfo.getType());
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
       assertEquals(0, typeInfo.getInterfaces().length);
-      assertEquals(Integer.valueOf(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC), typeInfo.getModifiers());
+      assertEquals(Modifier.ABSTRACT | Modifier.INTERFACE | Modifier.PUBLIC, typeInfo.getModifiers());
 
       assertEquals(0, typeInfo.getFields().length);
       assertEquals(0, typeInfo.getConstructors().length);
@@ -592,8 +588,7 @@ public class TestClassParser extends BaseTest
       assertEquals("NoTestSuper", shortTypeInfo.getName());
       assertEquals(PACKAGE + ".NoTestSuper", shortTypeInfo.getQualifiedName());
       assertEquals("CLASS", shortTypeInfo.getType());
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED),
-         shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED, shortTypeInfo.getModifiers());
 
       TypeInfo typeInfo = testSuper;
       assertEquals("NoTestSuper", typeInfo.getName());
@@ -601,8 +596,7 @@ public class TestClassParser extends BaseTest
       assertEquals("CLASS", typeInfo.getType());
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
       assertEquals(0, typeInfo.getInterfaces().length);
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED),
-         typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.SYNCHRONIZED, typeInfo.getModifiers());
 
       // fields
       FieldInfo[] fields = typeInfo.getDeclaredFields();
@@ -701,7 +695,7 @@ public class TestClassParser extends BaseTest
    {
       assertEquals(name, routine.getName());
       assertEquals(declaredClass, routine.getDeclaringClass());
-      assertEquals(Integer.valueOf(modifiers), routine.getModifiers());
+      assertEquals(modifiers, routine.getModifiers());
       assertEquals(exceptions.length, routine.getGenericExceptionTypes().length);
       for (int i = 0; i < exceptions.length; i++)
       {
@@ -725,7 +719,7 @@ public class TestClassParser extends BaseTest
    {
       assertEquals(name, field.getName());
       assertEquals(type, field.getType());
-      assertEquals(Integer.valueOf(modifiers), field.getModifiers());
+      assertEquals(modifiers, field.getModifiers());
       assertEquals(declaredClass, field.getDeclaringClass());
    }
 

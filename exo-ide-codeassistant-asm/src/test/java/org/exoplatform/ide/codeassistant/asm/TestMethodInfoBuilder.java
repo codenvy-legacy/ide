@@ -45,7 +45,7 @@ public class TestMethodInfoBuilder
          new MethodInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, name, exceptions, desc, declaredClass);
       MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), methodInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT, methodInfo.getModifiers());
       assertEquals("public abstract", methodInfo.modifierToString());
    }
 

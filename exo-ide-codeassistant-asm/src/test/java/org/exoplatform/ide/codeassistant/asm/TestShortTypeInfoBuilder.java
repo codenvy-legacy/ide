@@ -43,7 +43,7 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT, shortTypeInfo.getModifiers());
       assertEquals("public abstract", shortTypeInfo.modifierToString());
    }
 
@@ -64,7 +64,7 @@ public class TestShortTypeInfoBuilder
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(Modifier.PUBLIC, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC), shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC, shortTypeInfo.getModifiers());
       assertEquals("CLASS", shortTypeInfo.getType());
    }
 
@@ -75,7 +75,7 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | Modifier.INTERFACE, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.INTERFACE), shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.INTERFACE, shortTypeInfo.getModifiers());
       assertEquals("INTERFACE", shortTypeInfo.getType());
    }
 
@@ -86,7 +86,7 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION), shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION, shortTypeInfo.getModifiers());
       assertEquals("ANNOTATION", shortTypeInfo.getType());
    }
 
@@ -97,7 +97,7 @@ public class TestShortTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM, name, superName, interfaces);
       ShortTypeInfo shortTypeInfo = typeInfoBuilder.buildShortTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM), shortTypeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM, shortTypeInfo.getModifiers());
       assertEquals("ENUM", shortTypeInfo.getType());
    }
 

@@ -43,7 +43,7 @@ public class TestFieldInfoBuilder
          new FieldInfoBuilder(Modifier.PUBLIC | Modifier.FINAL, name, desc, declaredClass);
       FieldInfo fieldInfo = fieldInfoBuilder.buildFieldInfo();
 
-      assertEquals(fieldInfo.getModifiers(), Integer.valueOf(Modifier.PUBLIC | Modifier.FINAL));
+      assertEquals(fieldInfo.getModifiers(), Modifier.PUBLIC | Modifier.FINAL);
       assertEquals("public final", fieldInfo.modifierToString());
    }
 

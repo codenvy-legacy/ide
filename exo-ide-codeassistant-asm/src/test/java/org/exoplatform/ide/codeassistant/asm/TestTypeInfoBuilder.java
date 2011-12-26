@@ -46,7 +46,7 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.ABSTRACT), typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT, typeInfo.getModifiers());
       assertEquals("public abstract", typeInfo.modifierToString());
    }
 
@@ -67,7 +67,7 @@ public class TestTypeInfoBuilder
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(Modifier.PUBLIC, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC), typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC, typeInfo.getModifiers());
       assertEquals("CLASS", typeInfo.getType());
    }
 
@@ -78,7 +78,7 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | Modifier.INTERFACE, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | Modifier.INTERFACE), typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | Modifier.INTERFACE, typeInfo.getModifiers());
       assertEquals("INTERFACE", typeInfo.getType());
    }
 
@@ -89,7 +89,7 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION), typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ANNOTATION, typeInfo.getModifiers());
       assertEquals("ANNOTATION", typeInfo.getType());
    }
 
@@ -100,7 +100,7 @@ public class TestTypeInfoBuilder
          new TypeInfoBuilder(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM, name, superName, interfaces);
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
-      assertEquals(Integer.valueOf(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM), typeInfo.getModifiers());
+      assertEquals(Modifier.PUBLIC | TypeInfoBuilder.MODIFIER_ENUM, typeInfo.getModifiers());
       assertEquals("ENUM", typeInfo.getType());
    }
 
@@ -147,11 +147,10 @@ public class TestTypeInfoBuilder
    public void testSyntheticDeclaredField()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addField(new FieldInfo("boolean", (TypeInfoBuilder.MODIFIER_SYNTHETIC), "field1",
+      typeInfoBuilder.addField(new FieldInfo("boolean", TypeInfoBuilder.MODIFIER_SYNTHETIC, "field1",
          "org.exoplatform.test.Class"));
-      typeInfoBuilder.addField(new FieldInfo("boolean",
-         (Modifier.PUBLIC | Modifier.FINAL | TypeInfoBuilder.MODIFIER_SYNTHETIC), "field2",
-         "org.exoplatform.test.Class"));
+      typeInfoBuilder.addField(new FieldInfo("boolean", Modifier.PUBLIC | Modifier.FINAL
+         | TypeInfoBuilder.MODIFIER_SYNTHETIC, "field2", "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
       assertEquals(0, typeInfo.getDeclaredFields().length);
@@ -161,7 +160,7 @@ public class TestTypeInfoBuilder
    public void testSimpleDeclaredField()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addField(new FieldInfo("boolean", (Modifier.PUBLIC | Modifier.FINAL), "field1",
+      typeInfoBuilder.addField(new FieldInfo("boolean", Modifier.PUBLIC | Modifier.FINAL, "field1",
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -173,9 +172,9 @@ public class TestTypeInfoBuilder
    public void testTwoDeclaredFields()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addField(new FieldInfo("boolean", (Modifier.PUBLIC | Modifier.FINAL), "field1",
+      typeInfoBuilder.addField(new FieldInfo("boolean", Modifier.PUBLIC | Modifier.FINAL, "field1",
          "org.exoplatform.test.Class"));
-      typeInfoBuilder.addField(new FieldInfo("java.lang.Object", (Modifier.PUBLIC | Modifier.FINAL), "field2",
+      typeInfoBuilder.addField(new FieldInfo("java.lang.Object", Modifier.PUBLIC | Modifier.FINAL, "field2",
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -188,7 +187,7 @@ public class TestTypeInfoBuilder
    public void testSyntheticDeclaredConstructor()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addConstructor(new RoutineInfo((TypeInfoBuilder.MODIFIER_SYNTHETIC), "TestClass", new String[0],
+      typeInfoBuilder.addConstructor(new RoutineInfo(TypeInfoBuilder.MODIFIER_SYNTHETIC, "TestClass", new String[0],
          "(boolean)", "(boolean)", "org.exoplatform.test.TestClass(boolean)", "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -199,7 +198,7 @@ public class TestTypeInfoBuilder
    public void testSimpleDeclaredConstructor()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addConstructor(new RoutineInfo((Modifier.PUBLIC | Modifier.FINAL), "TestClass", new String[0],
+      typeInfoBuilder.addConstructor(new RoutineInfo(Modifier.PUBLIC | Modifier.FINAL, "TestClass", new String[0],
          "(boolean)", "(boolean)", "public final org.exoplatform.test.TestClass(boolean)",
          "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -212,10 +211,10 @@ public class TestTypeInfoBuilder
    public void testTwoDeclaredConstructors()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addConstructor(new RoutineInfo((Modifier.PUBLIC | Modifier.FINAL), "TestClass", new String[]{
+      typeInfoBuilder.addConstructor(new RoutineInfo(Modifier.PUBLIC | Modifier.FINAL, "TestClass", new String[]{
          "java.lang.Exception", "java.io.IOException"}, "(boolean)", "(boolean)",
          "public final org.exoplatform.test.TestClass(boolean)", "org.exoplatform.test.TestClass"));
-      typeInfoBuilder.addConstructor(new RoutineInfo((Modifier.PRIVATE), "TestClass1", new String[0],
+      typeInfoBuilder.addConstructor(new RoutineInfo(Modifier.PRIVATE, "TestClass1", new String[0],
          "(java.lang.Object)", "(Object)", "private org.exoplatform.test.TestClass(java.lang.Object)",
          "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -229,7 +228,7 @@ public class TestTypeInfoBuilder
    public void testSyntheticDeclaredMethod()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addMethod(new MethodInfo((TypeInfoBuilder.MODIFIER_SYNTHETIC), "method1", new String[0],
+      typeInfoBuilder.addMethod(new MethodInfo(TypeInfoBuilder.MODIFIER_SYNTHETIC, "method1", new String[0],
          "(boolean)", "(boolean)", "boolean org.exoplatform.test.TestClass.method1(boolean)",
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -241,8 +240,8 @@ public class TestTypeInfoBuilder
    public void testSimpleDeclaredMethod()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addMethod(new MethodInfo((Modifier.PUBLIC | Modifier.FINAL), "method1", new String[0],
-         "(boolean)", "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
+      typeInfoBuilder.addMethod(new MethodInfo(Modifier.PUBLIC | Modifier.FINAL, "method1", new String[0], "(boolean)",
+         "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -254,12 +253,12 @@ public class TestTypeInfoBuilder
    public void testTwoDeclaredMethod()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addMethod(new MethodInfo((Modifier.PUBLIC | Modifier.FINAL), "method1", new String[0],
-         "(boolean)", "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
+      typeInfoBuilder.addMethod(new MethodInfo(Modifier.PUBLIC | Modifier.FINAL, "method1", new String[0], "(boolean)",
+         "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       typeInfoBuilder
          .addMethod(new MethodInfo(
-            (Modifier.PRIVATE),
+            Modifier.PRIVATE,
             "method2",
             new String[]{"java.io.IOException"},
             "(java.lang.String)",
@@ -277,11 +276,10 @@ public class TestTypeInfoBuilder
    public void testSyntheticField()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addField(new FieldInfo("boolean", (TypeInfoBuilder.MODIFIER_SYNTHETIC), "field1",
+      typeInfoBuilder.addField(new FieldInfo("boolean", TypeInfoBuilder.MODIFIER_SYNTHETIC, "field1",
          "org.exoplatform.test.Class"));
-      typeInfoBuilder.addField(new FieldInfo("boolean",
-         (Modifier.PUBLIC | Modifier.FINAL | TypeInfoBuilder.MODIFIER_SYNTHETIC), "field2",
-         "org.exoplatform.test.Class"));
+      typeInfoBuilder.addField(new FieldInfo("boolean", Modifier.PUBLIC | Modifier.FINAL
+         | TypeInfoBuilder.MODIFIER_SYNTHETIC, "field2", "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
       assertEquals(0, typeInfo.getFields().length);
@@ -291,7 +289,7 @@ public class TestTypeInfoBuilder
    public void testFieldPublic()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addField(new FieldInfo("boolean", (Modifier.PUBLIC | Modifier.FINAL), "field1",
+      typeInfoBuilder.addField(new FieldInfo("boolean", Modifier.PUBLIC | Modifier.FINAL, "field1",
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -303,7 +301,7 @@ public class TestTypeInfoBuilder
    public void testFieldDefault()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addField(new FieldInfo("boolean", (Modifier.FINAL), "field1", "org.exoplatform.test.Class"));
+      typeInfoBuilder.addField(new FieldInfo("boolean", Modifier.FINAL, "field1", "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
       assertEquals(0, typeInfo.getFields().length);
@@ -313,7 +311,7 @@ public class TestTypeInfoBuilder
    public void testFieldPrivate()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addField(new FieldInfo("boolean", (Modifier.PRIVATE | Modifier.FINAL), "field1",
+      typeInfoBuilder.addField(new FieldInfo("boolean", Modifier.PRIVATE | Modifier.FINAL, "field1",
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -324,9 +322,9 @@ public class TestTypeInfoBuilder
    public void testFieldPublicAndPrivate()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addField(new FieldInfo("boolean", (Modifier.PRIVATE | Modifier.FINAL), "field1",
+      typeInfoBuilder.addField(new FieldInfo("boolean", Modifier.PRIVATE | Modifier.FINAL, "field1",
          "org.exoplatform.test.Class"));
-      typeInfoBuilder.addField(new FieldInfo("java.lang.Object", (Modifier.PUBLIC | Modifier.FINAL), "field2",
+      typeInfoBuilder.addField(new FieldInfo("java.lang.Object", Modifier.PUBLIC | Modifier.FINAL, "field2",
          "org.exoplatform.test.Class"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -338,7 +336,7 @@ public class TestTypeInfoBuilder
    public void testSyntheticConstructor()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addConstructor(new RoutineInfo((TypeInfoBuilder.MODIFIER_SYNTHETIC), "TestClass", new String[0],
+      typeInfoBuilder.addConstructor(new RoutineInfo(TypeInfoBuilder.MODIFIER_SYNTHETIC, "TestClass", new String[0],
          "(boolean)", "(boolean)", "org.exoplatform.test.TestClass(boolean)", "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -349,7 +347,7 @@ public class TestTypeInfoBuilder
    public void testConstructorPublic()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addConstructor(new RoutineInfo((Modifier.PUBLIC | Modifier.FINAL), "TestClass", new String[]{
+      typeInfoBuilder.addConstructor(new RoutineInfo(Modifier.PUBLIC | Modifier.FINAL, "TestClass", new String[]{
          "java.lang.Exception", "java.io.IOException"}, "(boolean)", "(boolean)",
          "public final org.exoplatform.test.TestClass(boolean)", "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -373,7 +371,7 @@ public class TestTypeInfoBuilder
    public void testConstructorPrivate()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addConstructor(new RoutineInfo((Modifier.PRIVATE), "TestClass1", new String[0],
+      typeInfoBuilder.addConstructor(new RoutineInfo(Modifier.PRIVATE, "TestClass1", new String[0],
          "(java.lang.Object)", "(Object)", "private org.exoplatform.test.TestClass(java.lang.Object)",
          "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -385,10 +383,10 @@ public class TestTypeInfoBuilder
    public void testConstructorPublicAndPrivate()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addConstructor(new RoutineInfo((Modifier.PUBLIC | Modifier.FINAL), "TestClass", new String[]{
+      typeInfoBuilder.addConstructor(new RoutineInfo(Modifier.PUBLIC | Modifier.FINAL, "TestClass", new String[]{
          "java.lang.Exception", "java.io.IOException"}, "(boolean)", "(boolean)",
          "public final org.exoplatform.test.TestClass(boolean)", "org.exoplatform.test.TestClass"));
-      typeInfoBuilder.addConstructor(new RoutineInfo((Modifier.PRIVATE), "TestClass1", new String[0],
+      typeInfoBuilder.addConstructor(new RoutineInfo(Modifier.PRIVATE, "TestClass1", new String[0],
          "(java.lang.Object)", "(Object)", "private org.exoplatform.test.TestClass(java.lang.Object)",
          "org.exoplatform.test.TestClass"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -401,7 +399,7 @@ public class TestTypeInfoBuilder
    public void testSyntheticMethod()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addMethod(new MethodInfo((TypeInfoBuilder.MODIFIER_SYNTHETIC), "method1", new String[0],
+      typeInfoBuilder.addMethod(new MethodInfo(TypeInfoBuilder.MODIFIER_SYNTHETIC, "method1", new String[0],
          "(boolean)", "(boolean)", "boolean org.exoplatform.test.TestClass.method1(boolean)",
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -413,8 +411,8 @@ public class TestTypeInfoBuilder
    public void testMethodPublic()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addMethod(new MethodInfo((Modifier.PUBLIC | Modifier.FINAL), "method1", new String[0],
-         "(boolean)", "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
+      typeInfoBuilder.addMethod(new MethodInfo(Modifier.PUBLIC | Modifier.FINAL, "method1", new String[0], "(boolean)",
+         "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
 
@@ -426,7 +424,7 @@ public class TestTypeInfoBuilder
    public void testMethodDefault()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addMethod(new MethodInfo((Modifier.FINAL), "method1", new String[0], "(boolean)", "(boolean)",
+      typeInfoBuilder.addMethod(new MethodInfo(Modifier.FINAL, "method1", new String[0], "(boolean)", "(boolean)",
          "final boolean org.exoplatform.test.TestClass.method1(boolean)", "org.exoplatform.test.TestClass", "boolean",
          "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -438,7 +436,7 @@ public class TestTypeInfoBuilder
    public void testMethodPrivate()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addMethod(new MethodInfo((Modifier.PRIVATE | Modifier.FINAL), "method1", new String[0],
+      typeInfoBuilder.addMethod(new MethodInfo(Modifier.PRIVATE | Modifier.FINAL, "method1", new String[0],
          "(boolean)", "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       TypeInfo typeInfo = typeInfoBuilder.buildTypeInfo();
@@ -450,12 +448,12 @@ public class TestTypeInfoBuilder
    public void testMethodPublicAndPrivate()
    {
       TypeInfoBuilder typeInfoBuilder = new TypeInfoBuilder(access, name, superName, interfaces);
-      typeInfoBuilder.addMethod(new MethodInfo((Modifier.PUBLIC | Modifier.FINAL), "method1", new String[0],
-         "(boolean)", "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
+      typeInfoBuilder.addMethod(new MethodInfo(Modifier.PUBLIC | Modifier.FINAL, "method1", new String[0], "(boolean)",
+         "(boolean)", "public final boolean org.exoplatform.test.TestClass.method1(boolean)",
          "org.exoplatform.test.TestClass", "boolean", "boolean"));
       typeInfoBuilder
          .addMethod(new MethodInfo(
-            (Modifier.PRIVATE),
+            Modifier.PRIVATE,
             "method2",
             new String[]{"java.io.IOException"},
             "(java.lang.String)",
