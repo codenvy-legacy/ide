@@ -21,10 +21,6 @@ package org.exoplatform.ide.codeassistant.jvm;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -91,9 +87,7 @@ public class TestTypeInfoExternalization extends BaseTest
       RoutineInfo[] serializedConstructors = serializedTypeInfo.getConstructors();
       RoutineInfo[] deserializedConstructors = deserializedTypeInfo.getConstructors();
 
-      assertEquals(serializedConstructors.length, deserializedConstructors.length);
-      assertEquals(1, deserializedConstructors.length);
-      assertEquals(serializedConstructors[0].getName(), deserializedConstructors[0].getName());
+      assertArrayEquals(serializedConstructors, deserializedConstructors);
    }
 
    @Test
@@ -102,10 +96,7 @@ public class TestTypeInfoExternalization extends BaseTest
       RoutineInfo[] serializedConstructors = serializedTypeInfo.getDeclaredConstructors();
       RoutineInfo[] deserializedConstructors = deserializedTypeInfo.getDeclaredConstructors();
 
-      assertEquals(serializedConstructors.length, deserializedConstructors.length);
-      assertEquals(2, deserializedConstructors.length);
-      assertEquals(serializedConstructors[0].getName(), deserializedConstructors[0].getName());
-      assertEquals(serializedConstructors[1].getName(), deserializedConstructors[1].getName());
+      assertArrayEquals(serializedConstructors, deserializedConstructors);
    }
 
    @Test
@@ -114,9 +105,7 @@ public class TestTypeInfoExternalization extends BaseTest
       MethodInfo[] serializedMethods = serializedTypeInfo.getMethods();
       MethodInfo[] deserializedMethods = deserializedTypeInfo.getMethods();
 
-      assertEquals(serializedMethods.length, deserializedMethods.length);
-      assertEquals(1, deserializedMethods.length);
-      assertEquals(serializedMethods[0].getName(), deserializedMethods[0].getName());
+      assertArrayEquals(serializedMethods, deserializedMethods);
    }
 
    @Test
@@ -125,10 +114,7 @@ public class TestTypeInfoExternalization extends BaseTest
       MethodInfo[] serializedMethods = serializedTypeInfo.getDeclaredMethods();
       MethodInfo[] deserializedMethods = deserializedTypeInfo.getDeclaredMethods();
 
-      assertEquals(serializedMethods.length, deserializedMethods.length);
-      assertEquals(2, deserializedMethods.length);
-      assertEquals(serializedMethods[0].getName(), deserializedMethods[0].getName());
-      assertEquals(serializedMethods[1].getName(), deserializedMethods[1].getName());
+      assertArrayEquals(serializedMethods, deserializedMethods);
    }
 
    @Test
@@ -137,9 +123,7 @@ public class TestTypeInfoExternalization extends BaseTest
       FieldInfo[] serializedFields = serializedTypeInfo.getFields();
       FieldInfo[] deserializedFields = deserializedTypeInfo.getFields();
 
-      assertEquals(serializedFields.length, deserializedFields.length);
-      assertEquals(1, deserializedFields.length);
-      assertEquals(serializedFields[0].getName(), deserializedFields[0].getName());
+      assertArrayEquals(serializedFields, deserializedFields);
    }
 
    @Test
@@ -148,9 +132,7 @@ public class TestTypeInfoExternalization extends BaseTest
       FieldInfo[] serializedFields = serializedTypeInfo.getDeclaredFields();
       FieldInfo[] deserializedFields = deserializedTypeInfo.getDeclaredFields();
 
-      assertEquals(serializedFields.length, deserializedFields.length);
-      assertEquals(serializedFields[0].getName(), deserializedFields[0].getName());
-      assertEquals(serializedFields[1].getName(), deserializedFields[1].getName());
+      assertArrayEquals(serializedFields, deserializedFields);
    }
 
    private TypeInfo generateTypeInfo()
