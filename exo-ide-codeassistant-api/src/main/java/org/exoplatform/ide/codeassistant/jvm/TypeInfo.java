@@ -234,6 +234,34 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
+    * @see org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo#toString()
+    */
+   @Override
+   public String toString()
+   {
+      StringBuilder sb = new StringBuilder(super.toString());
+      if (superClass != null && !superClass.isEmpty())
+      {
+         sb.append(" extends ");
+         sb.append(superClass);
+      }
+      if (interfaces != null && interfaces.length > 0)
+      {
+         sb.append(" implements ");
+         for (int i = 0; i < interfaces.length; i++)
+         {
+            sb.append(interfaces[i]);
+            if (i + 1 < interfaces.length)
+            {
+               sb.append(", ");
+            }
+         }
+      }
+
+      return sb.toString();
+   }
+
+   /**
     * @see java.lang.Object#hashCode()
     */
    @Override

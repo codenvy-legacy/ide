@@ -62,7 +62,7 @@ public class TestMemberToString
    {
       ShortTypeInfo shortTypeInfo = new ShortTypeInfo(Modifier.PUBLIC, "TestClass", "test.TestClass", "CLASS");
 
-      assertEquals("public CLASS test.TestClass", shortTypeInfo.toString());
+      assertEquals("public class test.TestClass", shortTypeInfo.toString());
    }
 
    @Test
@@ -70,10 +70,14 @@ public class TestMemberToString
    {
       TypeInfo typeInfo = new TypeInfo();
       typeInfo.setModifiers(Modifier.PROTECTED);
-      typeInfo.setType(JavaType.INTERFACE.toString());
-      typeInfo.setQualifiedName("test.TestInterface");
-      typeInfo.setName("TestClass");
+      typeInfo.setType(JavaType.CLASS.toString());
+      typeInfo.setQualifiedName("test.TestClass2");
+      typeInfo.setName("TestClass2");
+      typeInfo.setSuperClass("test.TestClass1");
+      typeInfo.setInterfaces(new String[]{"test.TestInterface1", "test.TestInterface2"});
 
-      assertEquals("protected INTERFACE test.TestInterface", typeInfo.toString());
+      assertEquals(
+         "protected class test.TestClass2 extends test.TestClass1 implements test.TestInterface1, test.TestInterface2",
+         typeInfo.toString());
    }
 }

@@ -98,7 +98,7 @@ public class ShortTypeInfo extends Member
    @Override
    public String toString()
    {
-      return modifierToString() + " " + type + " " + qualifiedName;
+      return modifierToString() + " " + type.toLowerCase() + " " + qualifiedName;
    }
 
    /**
