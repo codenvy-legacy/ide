@@ -155,8 +155,8 @@ public class CommitTest extends BaseTest
       {
          IDE.PROJECT.OPEN.openProject(PROJECT);
       }
-      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       createFiles();
 

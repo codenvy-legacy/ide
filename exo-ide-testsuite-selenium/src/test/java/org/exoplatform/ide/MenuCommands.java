@@ -56,7 +56,7 @@ public interface MenuCommands
       String PROJECT_FROM_TEMPLATE = "Project From Template...";
 
       String FOLDER = "Folder...";
-      
+
       String JAVA_PROJECT = "Java Project...";
 
       String JAVA_SPRING_PROJECT = "Java Spring Project...";
@@ -131,7 +131,7 @@ public interface MenuCommands
       String NEWER_VERSION = "Newer Version";
 
       String OLDER_VERSION = "Older Version";
-      
+
       String LOG_READER = "Log";
 
    }
@@ -229,6 +229,8 @@ public interface MenuCommands
       public static final String ABOUT = "About...";
 
       public static final String REST_SERVICES = "REST Services Discovery";
+
+      String AVAILABLE_DEPENDENCIES = "Show Available Dependencies...";
    }
 
    public interface Window
@@ -259,7 +261,7 @@ public interface MenuCommands
       String FETCH = "Fetch...";
 
       String INIT = "Initialize Repository";
-      
+
       String MERGE = "Merge...";
 
       String PULL = "Pull...";
@@ -280,7 +282,7 @@ public interface MenuCommands
 
       String STATUS = "Status";
    }
-   
+
    public interface Project
    {
       String PROJECT = "Project";
@@ -292,7 +294,7 @@ public interface MenuCommands
       String CLOSE_PROJECT = "Close";
 
       String EMPTY_PROJECT = "Empty Project...";
-      
+
       String FROM_TEMPLATE = "From Template...";
    }
 
@@ -318,53 +320,53 @@ public interface MenuCommands
 
          String RAKE = "Rake...";
       }
-      
+
       public interface OpenShift
       {
          String OPENSHIFT = "OpenShift";
-         
+
          String CREATE_DOMAIN = "Create domain...";
-         
+
          String CREATE_APPLICATION = "Create application...";
-         
+
          String DELETE_APPLICATION = "Delete application...";
-         
+
          String APPLICATION_INFO = "Application info...";
-         
+
          String USER_INFO = "User info...";
       }
-      
+
       public interface CloudFoundry
       {
-         
+
          String CLOUDFOUNDRY = "CloudFoundry";
-         
+
          String CREATE_APPLICATION = "Create Application";
-         
+
          String UPDATE_APPLICATION = "Update Application";
-         
+
          String DELETE_APPLICATION = "Delete Application...";
-         
+
          String APPLICATION_INFO = "Application Info...";
-         
+
          String START_APPLICATION = "Start Application";
-         
+
          String STOP_APPLICATION = "Stop Application";
-         
+
          String RESTART_APPLICATION = "Restart Application";
-         
+
          String APPLICATION_URLS = "Application URLs";
-         
+
          String UPDATE_MEMORY = "Update Memory...";
-            
+
          String UPDATE_INSTANCES = "Update Instances...";
-         
+
          String SWITCH_ACCOUNT = "Switch Account...";
-         
+
          String APPPLICATIONS = "Applications";
-         
+
       }
-      
+
    }
 
 }

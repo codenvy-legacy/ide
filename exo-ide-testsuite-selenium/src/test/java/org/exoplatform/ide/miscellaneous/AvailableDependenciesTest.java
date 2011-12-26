@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
+import static org.junit.Assert.assertEquals;
+
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.junit.Test;
 
 /**
@@ -34,7 +37,29 @@ public class AvailableDependenciesTest extends BaseTest
    @Test
    public void testAvailableDependencies() throws Exception
    {
-      System.out.println("AvailableDependenciesTest.testAvailableDependencies()");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+
+      IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.AVAILABLE_DEPENDENCIES);
+      IDE.AVAILABLE_DEPENDENCIES.waitOpened();
+      assertEquals(0, IDE.AVAILABLE_DEPENDENCIES.getAttributeCount());
+
+      IDE.AVAILABLE_DEPENDENCIES.selectDependency("exo-ide-framework-client");
+      assertEquals("Apache Maven", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Created-By"));
+      assertEquals("eXo IDE :: Framework : Client",
+         IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Title"));
+      assertEquals("eXo Platform SAS", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor"));
+      assertEquals("org.exoplatform.ide", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor-Id"));
+
+      IDE.AVAILABLE_DEPENDENCIES.selectDependency("exo-gwtframework-ui");
+      assertEquals("Apache Maven", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Created-By"));
+      assertEquals("eXo GWT Framework :: UI",
+         IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Title"));
+      assertEquals("eXo Platform SAS", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor"));
+      assertEquals("org.exoplatform.gwt", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor-Id"));
+      
+      IDE.AVAILABLE_DEPENDENCIES.clickOkButton();
+      IDE.AVAILABLE_DEPENDENCIES.waitClosed();
    }
 
 }

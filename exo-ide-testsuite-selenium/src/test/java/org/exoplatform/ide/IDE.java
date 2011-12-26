@@ -23,6 +23,7 @@ import com.thoughtworks.selenium.Selenium;
 import org.exoplatform.ide.core.AboutDialog;
 import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.AskForValueDialog;
+import org.exoplatform.ide.core.AvailableDependencies;
 import org.exoplatform.ide.core.Button;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Delete;
@@ -87,6 +88,8 @@ public class IDE
    public Editor EDITOR;
 
    public AboutDialog ABOUT;
+   
+   public AvailableDependencies AVAILABLE_DEPENDENCIES;
 
    public Loader LOADER;
 
@@ -166,6 +169,7 @@ public class IDE
       ABOUT = PageFactory.initElements(driver, AboutDialog.class);
       ASK_DIALOG = PageFactory.initElements(driver, AskDialog.class);
       ASK_FOR_VALUE_DIALOG = PageFactory.initElements(driver, AskForValueDialog.class);
+      AVAILABLE_DEPENDENCIES = PageFactory.initElements(driver, AvailableDependencies.class);
       BUTTON = PageFactory.initElements(driver, Button.class);
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       DELETE = PageFactory.initElements(driver, Delete.class);
