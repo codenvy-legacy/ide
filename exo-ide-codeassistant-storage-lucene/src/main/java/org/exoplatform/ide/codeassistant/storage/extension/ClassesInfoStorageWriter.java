@@ -24,31 +24,21 @@ import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class CodeAssistantStorageCreator
+public class ClassesInfoStorageWriter
 {
-   private static final String JAR_FILES = "src/main/codeassistant/jar-files.txt";
-
-   private static final String INDEX_DIRECTORY = "target/code-assistant/index/";
-
-   public static void main(String args[])
+   public static void writeJarsToIndex(String pathToIndex, List<String> jars)
    {
       LuceneInfoStorage luceneInfoStorage = null;
       try
       {
-         List<String> jars = getFilesList(JAR_FILES);
-
-         luceneInfoStorage = new LuceneInfoStorage(INDEX_DIRECTORY);
+         luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
          LuceneTypeInfoWriter writer = new LuceneTypeInfoWriter(luceneInfoStorage);
 
          for (String jar : jars)
@@ -73,20 +63,5 @@ public class CodeAssistantStorageCreator
             luceneInfoStorage.closeIndexes();
          }
       }
-   }
-
-   private static List<String> getFilesList(String pathToFile) throws IOException
-   {
-      Reader reader = new FileReader(new File(pathToFile));
-      BufferedReader br = new BufferedReader(reader);
-
-      List<String> list = new ArrayList<String>();
-      String nextLine = null;
-      while ((nextLine = br.readLine()) != null)
-      {
-         list.add(nextLine);
-      }
-
-      return list;
    }
 }
