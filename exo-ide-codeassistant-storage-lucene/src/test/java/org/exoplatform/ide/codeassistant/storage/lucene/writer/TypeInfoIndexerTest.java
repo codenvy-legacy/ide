@@ -18,11 +18,25 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
+import test.ClassManager;
+import test.classes.CTestClass;
+
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.index.IndexReader;
+import org.exoplatform.ide.codeassistant.asm.ClassParser;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.ShortTypeInfoExtractor;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.TypeInfoExtractor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
@@ -42,6 +56,9 @@ public class TypeInfoIndexerTest
    @Mock(answer = Answers.RETURNS_SMART_NULLS)
    private TypeInfo typeInfo;
 
+   @Mock
+   private IndexReader reader;
+
    @Test
    public void shouldCallPredefinedSetOfFields() throws Exception
    {
@@ -54,6 +71,32 @@ public class TypeInfoIndexerTest
       verify(typeInfo).getSuperClass();
       verify(typeInfo).writeExternal(any(ObjectOutput.class));
       verifyNoMoreInteractions(typeInfo);
+   }
 
+   @Test
+   public void shouldBeAbleToRestoreShortTypeInfo() throws Exception
+   {
+      TypeInfo expected = ClassParser.parse(ClassManager.getClassFile(CTestClass.class));
+      Document document = indexer.createDocument(expected);
+      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
+
+      ShortTypeInfo actual = new ShortTypeInfoExtractor().getValue(reader, 5);
+
+      assertEquals(expected.getQualifiedName(), actual.getQualifiedName());
+      assertEquals(expected.getType(), actual.getType());
+      assertEquals(expected.getModifiers(), actual.getModifiers());
+      assertEquals(expected.getName(), actual.getName());
+   }
+
+   @Test
+   public void shouldBeAbleToRestoreTypeInfo() throws Exception
+   {
+      TypeInfo expected = ClassParser.parse(ClassManager.getClassFile(CTestClass.class));
+      Document document = indexer.createDocument(expected);
+      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
+
+      TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);
+
+      assertEquals(expected, actual);
    }
 }

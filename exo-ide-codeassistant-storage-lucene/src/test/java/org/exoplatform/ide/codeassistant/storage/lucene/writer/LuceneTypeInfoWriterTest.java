@@ -24,7 +24,6 @@ import static test.ClassManager.getAllTestClasses;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.RAMDirectory;
-import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.junit.BeforeClass;
 import org.junit.Test;
