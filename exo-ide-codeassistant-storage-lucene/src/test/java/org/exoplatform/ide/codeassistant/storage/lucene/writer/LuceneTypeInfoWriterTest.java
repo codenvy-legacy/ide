@@ -26,17 +26,14 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  *
  */
-public class TypeInfoIndexTest
+public class LuceneTypeInfoWriterTest
 {
-   private static LuceneCodeAssistantStorage storage;
-
    private static LuceneTypeInfoWriter writer;
 
    private static LuceneInfoStorage luceneInfoStorage;
@@ -46,8 +43,6 @@ public class TypeInfoIndexTest
    {
       luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
-      storage = new LuceneCodeAssistantStorage(luceneInfoStorage);
-
    }
 
    @Test
