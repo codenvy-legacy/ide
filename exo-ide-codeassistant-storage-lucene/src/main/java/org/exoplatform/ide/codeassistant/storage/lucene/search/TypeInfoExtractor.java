@@ -19,8 +19,7 @@
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
+import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
@@ -41,22 +40,8 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
    @Override
    public TypeInfo getValue(IndexReader reader, int doc) throws IOException
    {
-      Document document = reader.document(doc, new FieldSelector()
-      {
 
-         @Override
-         public FieldSelectorResult accept(String fieldName)
-         {
-            if (TypeInfoIndexFields.TYPE_INFO.equals(fieldName))
-            {
-               return FieldSelectorResult.LOAD;
-            }
-            else
-            {
-               return FieldSelectorResult.NO_LOAD;
-            }
-         }
-      });
+      Document document = reader.document(doc, new MapFieldSelector(new String[]{TypeInfoIndexFields.TYPE_INFO}));
       try
       {
          byte[] contentField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO);
