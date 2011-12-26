@@ -65,7 +65,7 @@ public class RoutineInfo extends Member
    {
    }
 
-   public RoutineInfo(Integer modifiers, String name, String[] genericExceptionTypes, String genericParameterTypes,
+   public RoutineInfo(int modifiers, String name, String[] genericExceptionTypes, String genericParameterTypes,
       String parameterTypes, String generic, String declaringClass)
    {
       super(modifiers, name);

@@ -49,7 +49,7 @@ public class ShortTypeInfo extends Member
    {
    }
 
-   public ShortTypeInfo(Integer modifiers, String name, String qualifiedName, String type)
+   public ShortTypeInfo(int modifiers, String name, String qualifiedName, String type)
    {
       super(modifiers, name);
       this.qualifiedName = qualifiedName;

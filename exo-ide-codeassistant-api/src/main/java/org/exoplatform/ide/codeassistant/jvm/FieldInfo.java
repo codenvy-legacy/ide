@@ -51,7 +51,7 @@ public class FieldInfo extends Member
     */
    private String declaringClass;
 
-   public FieldInfo(String type, Integer modifiers, String name, String declaringClass)
+   public FieldInfo(String type, int modifiers, String name, String declaringClass)
    {
       super(modifiers, name);
       this.type = type;
@@ -113,7 +113,7 @@ public class FieldInfo extends Member
    @Override
    public String toString()
    {
-      return modifierToString() + " " + type + " " + declaringClass + "." + name;
+      return modifierToString() + " " + type + " " + declaringClass + "." + getName();
    }
 
 }

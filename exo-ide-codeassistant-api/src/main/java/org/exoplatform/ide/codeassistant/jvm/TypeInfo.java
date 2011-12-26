@@ -55,7 +55,7 @@ public class TypeInfo extends ShortTypeInfo
    {
    }
 
-   public TypeInfo(Integer modifiers, String name, MethodInfo[] methods, MethodInfo[] declaredMethods,
+   public TypeInfo(int modifiers, String name, MethodInfo[] methods, MethodInfo[] declaredMethods,
       RoutineInfo[] constructors, RoutineInfo[] declaredConstructors, FieldInfo[] fields, FieldInfo[] declaredFields,
       String superClass, String[] interfaces, String qualifiedName, String type)
    {

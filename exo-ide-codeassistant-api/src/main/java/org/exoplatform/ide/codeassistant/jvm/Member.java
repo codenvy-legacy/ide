@@ -40,15 +40,15 @@ import java.lang.reflect.Modifier;
 public abstract class Member implements Externalizable
 {
 
-   protected Integer modifiers;
+   private int modifiers;
 
-   protected String name;
+   private String name;
 
    public Member()
    {
    }
 
-   public Member(Integer modifiers, String name)
+   public Member(int modifiers, String name)
    {
       this.modifiers = modifiers;
       this.name = name;
@@ -57,7 +57,7 @@ public abstract class Member implements Externalizable
    /**
     * @return the modifiers
     */
-   public Integer getModifiers()
+   public int getModifiers()
    {
       return modifiers;
    }
@@ -74,7 +74,7 @@ public abstract class Member implements Externalizable
     * @param modifiers
     *           the modifiers to set
     */
-   public void setModifiers(Integer modifiers)
+   public void setModifiers(int modifiers)
    {
       this.modifiers = modifiers;
    }

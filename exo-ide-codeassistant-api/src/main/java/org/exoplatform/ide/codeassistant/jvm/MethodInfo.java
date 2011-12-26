@@ -58,7 +58,7 @@ public class MethodInfo extends RoutineInfo
    {
    }
 
-   public MethodInfo(Integer modifiers, String name, String[] genericExceptionTypes, String genericParameterTypes,
+   public MethodInfo(int modifiers, String name, String[] genericExceptionTypes, String genericParameterTypes,
       String parameterTypes, String generic, String declaringClass, String genericReturnType, String returnType)
    {
       super(modifiers, name, genericExceptionTypes, genericParameterTypes, parameterTypes, generic, declaringClass);
