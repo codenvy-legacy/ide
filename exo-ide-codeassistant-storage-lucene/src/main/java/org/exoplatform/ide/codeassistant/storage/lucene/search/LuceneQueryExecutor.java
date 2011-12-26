@@ -23,7 +23,6 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.TopScoreDocCollector;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
@@ -61,10 +60,19 @@ public class LuceneQueryExecutor
    public <T> List<T> executeQuery(ContentExtractor<T> select, IndexType from, LuceneSearchConstraint where, int limit,
       int offset) throws CodeAssistantException
    {
+      if (limit < 0)
+      {
+         throw new CodeAssistantException(500, "Negative limit " + limit + " is not allowed");
+      }
+
+      if (offset < 0)
+      {
+         throw new CodeAssistantException(500, "Negative offset " + offset + " is not allowed");
+      }
+      // long start = System.currentTimeMillis();
       try
       {
          IndexSearcher searcher = infoStorage.getTypeInfoIndexSearcher();
-         TopScoreDocCollector collector = TopScoreDocCollector.create(limit + offset, true);
 
          Query contentQuery = from.getQuery();
          if (!where.matchAll())
@@ -75,8 +83,7 @@ public class LuceneQueryExecutor
             contentQuery = booleanQuery;
          }
 
-         searcher.search(contentQuery, collector);
-         TopDocs docs = collector.topDocs();
+         TopDocs docs = searcher.search(contentQuery, limit + offset);
 
          List<T> result = new ArrayList<T>(Math.max(0, docs.totalHits - offset));
 
@@ -89,8 +96,11 @@ public class LuceneQueryExecutor
       }
       catch (IOException e)
       {
-         LOG.error(e.getLocalizedMessage(), e);
          throw new CodeAssistantException(404, e.getLocalizedMessage());
+      }
+      finally
+      {
+         //LOG.debug("Quey execution time {}", System.currentTimeMillis() - start);
       }
 
    }
