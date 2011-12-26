@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
@@ -78,7 +79,10 @@ public class ShortTypeInfoExtractorTest
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
       ShortTypeInfo actual = extractor.getValue(reader, 5);
-      //      assertEquals(expected, actual);
-   }
 
+      assertEquals(expected.getQualifiedName(), actual.getQualifiedName());
+      assertEquals(expected.getType(), actual.getType());
+      assertEquals(expected.getModifiers(), actual.getModifiers());
+      assertEquals(expected.getName(), actual.getName());
+   }
 }
