@@ -18,15 +18,22 @@
  */
 package org.exoplatform.ide.git;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -35,13 +42,9 @@ import org.junit.Test;
  */
 public class CloneRepositoryTest extends BaseTest
 {
-   private static final String TEST_FOLDER = CloneRepositoryTest.class.getSimpleName();
+   private static final String PROJECT = CloneRepositoryTest.class.getSimpleName();
 
-   private static final String REPOSITORY = "repository";
-
-   private static final String CLONE_FOLDER = "ForClone";
-
-   private static final String TEST_FILE = "TestFile.txt";
+   private static final String REPOSITORY = "clone_repository";
 
    private static final String TEST_FILE1 = "File1.txt";
 
@@ -51,12 +54,13 @@ public class CloneRepositoryTest extends BaseTest
 
    private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/clone-test.zip";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
       try
       {
-         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL);
+         VirtualFileSystemUtils.importZipProject(REPOSITORY, ZIP_PATH);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (Exception e)
       {
@@ -64,12 +68,13 @@ public class CloneRepositoryTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest()
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + REPOSITORY);
       }
       catch (Exception e)
       {
@@ -86,74 +91,33 @@ public class CloneRepositoryTest extends BaseTest
    @Test
    public void testCloneRepositoryView() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.CLONE));
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.CLONE);
       IDE.GIT.CLONE_REPOSITORY.waitOpened();
-      Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isOpened());
-      Assert.assertFalse(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
-      Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isCancelButtonEnabled());
+      assertTrue(IDE.GIT.CLONE_REPOSITORY.isOpened());
+      assertFalse(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
+      assertTrue(IDE.GIT.CLONE_REPOSITORY.isCancelButtonEnabled());
 
-      Assert.assertFalse(IDE.GIT.CLONE_REPOSITORY.getWorkDirectoryValue().isEmpty());
-      Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.getRemoteUriFieldValue().isEmpty());
-      Assert.assertEquals(DEFAULT_REMOTE_NAME, IDE.GIT.CLONE_REPOSITORY.getRemoteNameFieldValue());
+      assertFalse(IDE.GIT.CLONE_REPOSITORY.getWorkDirectoryValue().isEmpty());
+      assertTrue(IDE.GIT.CLONE_REPOSITORY.getRemoteUriFieldValue().isEmpty());
+      assertEquals(DEFAULT_REMOTE_NAME, IDE.GIT.CLONE_REPOSITORY.getRemoteNameFieldValue());
 
       //Check Clone button is disabled, when remote URI field is empty:
       IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME);
-      Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
+      assertTrue(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
       IDE.GIT.CLONE_REPOSITORY.setRemoteUri("");
-      Assert.assertFalse(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
+      assertFalse(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
 
       IDE.GIT.CLONE_REPOSITORY.clickCancelButton();
       IDE.GIT.CLONE_REPOSITORY.waitClosed();
-   }
-
-   /**
-    * Tests the Clone repository command for workspace. 
-    * Must be not allowed.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testCloneRepositoryInWorkspace() throws Exception
-   {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.CLONE, true);
-
-      IDE.WORKSPACE.selectRootItem();
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.CLONE, false);
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.CLONE, true);
-   }
-
-   /**
-    * Tests the Clone repository command for selected file. 
-    * Must be not allowed.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testCloneRepositoryWithSelectedFile() throws Exception
-   {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.CLONE, true);
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.CLONE, false);
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.CLONE, true);
    }
 
    /**
@@ -162,72 +126,60 @@ public class CloneRepositoryTest extends BaseTest
    @Test
    public void testCloneRepository() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER + "/");
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.CLONE);
       IDE.GIT.CLONE_REPOSITORY.waitOpened();
 
-      Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.getWorkDirectoryValue().endsWith(CLONE_FOLDER + "/"));
-      Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.getRemoteUriFieldValue().isEmpty());
-      Assert.assertEquals(DEFAULT_REMOTE_NAME, IDE.GIT.CLONE_REPOSITORY.getRemoteNameFieldValue());
+      assertTrue(IDE.GIT.CLONE_REPOSITORY.getWorkDirectoryValue().endsWith("/" + PROJECT));
+      assertTrue(IDE.GIT.CLONE_REPOSITORY.getRemoteUriFieldValue().isEmpty());
+      assertEquals(DEFAULT_REMOTE_NAME, IDE.GIT.CLONE_REPOSITORY.getRemoteNameFieldValue());
 
       //Check Clone button is disabled, when remote URI field is empty:
-      IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-         + "/" + REPOSITORY);
+      IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REPOSITORY);
       IDE.GIT.CLONE_REPOSITORY.clickCloneButton();
       IDE.GIT.CLONE_REPOSITORY.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(1);
+      IDE.OUTPUT.waitForMessageShow(1, 15);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.CLONE_SUCCESS));
+      assertTrue(message.endsWith(GIT.Messages.CLONE_SUCCESS));
 
       //Sleep is necessary for files to appear in Davfs:
       Thread.sleep(3000);
 
-      selenium().open(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER);
-      selenium().waitForPageToLoad("" + 5000);
-      Assert.assertTrue(selenium().isElementPresent("link=.git"));
-      Assert.assertTrue(selenium().isElementPresent("link=" + TEST_FILE1));
-      Assert.assertTrue(selenium().isElementPresent("link=" + TEST_FILE2));
-      selenium().goBack();
+      driver.navigate().to(WS_URL + PROJECT);
+      new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return driver.findElement(By.partialLinkText(".git")) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER + "/");
+      assertTrue(driver.findElement(By.partialLinkText(".git")) != null);
+      assertTrue(driver.findElement(By.partialLinkText(TEST_FILE1)) != null);
+      assertTrue(driver.findElement(By.partialLinkText(TEST_FILE2)) != null);
+      driver.navigate().back();
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER + "/" + TEST_FILE1);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER + "/" + TEST_FILE2);
-   }
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE2);
 
-   /**
-    * Test Clone Git repository in folder with Git repository.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testCloneRepositoryIfExists() throws Exception
-   {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.CLONE);
-      IDE.GIT.CLONE_REPOSITORY.waitOpened();
-      IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
-         + "/" + REPOSITORY);
-      IDE.GIT.CLONE_REPOSITORY.clickCloneButton();
-
-      IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessage(1);
-      Assert.assertTrue(message.startsWith(GIT.Messages.CLONE_REPO_EXISTS));
-      Assert.assertTrue(message.endsWith(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/"
-         + REPOSITORY + "/.git"));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.CLONE));
    }
 }

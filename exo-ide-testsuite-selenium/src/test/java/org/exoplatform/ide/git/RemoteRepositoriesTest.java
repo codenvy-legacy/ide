@@ -86,6 +86,7 @@ public class RemoteRepositoriesTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
@@ -110,6 +111,7 @@ public class RemoteRepositoriesTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
@@ -138,6 +140,7 @@ public class RemoteRepositoriesTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
@@ -192,6 +195,7 @@ public class RemoteRepositoriesTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();

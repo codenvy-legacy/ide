@@ -90,10 +90,11 @@ public class PushTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE));
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
@@ -116,12 +117,12 @@ public class PushTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
-      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
-         + REMOTE);
+
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
       IDE.GIT.PUSH.waitOpened();
@@ -153,12 +154,12 @@ public class PushTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
-      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
-         + REMOTE);
+
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
       IDE.GIT.PUSH.waitOpened();
@@ -172,19 +173,17 @@ public class PushTest extends BaseTest
       //Check pushed message:
       IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      assertEquals(
-         String.format(GIT.Messages.PUSH_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/" + REMOTE),
-         message);
+      assertEquals(String.format(GIT.Messages.PUSH_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE), message);
 
       //Open project with remote repository
       IDE.PROJECT.OPEN.openProject(REMOTE);
       IDE.PROJECT.EXPLORER.waitForItem(REMOTE);
       IDE.LOADER.waitClosed();
-      
+
       IDE.GIT.BRANCHES.switchBranch(TEST_BRANCH);
       //Necessary for refreshing davfs:
       Thread.sleep(3000);
-      
+
       //Check file in browser tree
       IDE.PROJECT.EXPLORER.selectItem(REMOTE);
       //Sleep is necessary for file to appear on file system:

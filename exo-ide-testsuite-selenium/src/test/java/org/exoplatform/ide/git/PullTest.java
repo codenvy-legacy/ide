@@ -94,10 +94,11 @@ public class PullTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       //Check Pull command is available:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
@@ -120,12 +121,12 @@ public class PullTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
-      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
-         + REMOTE);
+
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
       IDE.GIT.PULL.waitOpened();
@@ -160,14 +161,14 @@ public class PullTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER1));
 
-      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/"
-         + REMOTE);
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
       IDE.GIT.PULL.waitOpened();
@@ -181,11 +182,9 @@ public class PullTest extends BaseTest
       IDE.GIT.PULL.waitClosed();
 
       //Check pulled message:
-      IDE.OUTPUT.waitForMessageShow(1, 10);
+      IDE.OUTPUT.waitForMessageShow(1, 15);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      assertEquals(
-         String.format(GIT.Messages.PULL_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/" + USER_NAME + "/" + REMOTE),
-         message);
+      assertEquals(String.format(GIT.Messages.PULL_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE), message);
 
       //Check file in browser tree
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
