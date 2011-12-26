@@ -26,8 +26,6 @@ import test.ClassManager;
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -86,7 +84,7 @@ public class SearchTest
    {
       List<ShortTypeInfo> typeInfos = storage.getTypesByFqnPrefix("test.classes");
 
-      assertEquals(4, typeInfos.size());
+      assertEquals(6, typeInfos.size());
       for (ShortTypeInfo shortTypeInfo : typeInfos)
       {
          assertTrue(shortTypeInfo.getQualifiedName().startsWith("test.classes"));
