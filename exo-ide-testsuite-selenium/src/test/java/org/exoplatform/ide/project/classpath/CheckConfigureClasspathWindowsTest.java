@@ -114,8 +114,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * 1. Try to configure classpath for simple folder
        */
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH, true);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH);
 
       /*
        * Error dialog appeared
@@ -129,8 +129,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        * 2. Try to configure classpath for workspace
        */
       IDE.WORKSPACE.selectRootItem();
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH, true);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH);
 
       /*
        * Error dialog appeared
@@ -149,8 +149,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH, true);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH, true);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH);
       IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
 
       /*
@@ -244,7 +244,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        * 10. Open form and check, that it is empty
        */
       IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH);
       IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
 
       /*

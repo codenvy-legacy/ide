@@ -40,7 +40,7 @@ public class ConfigureClasspathCommand extends SimpleControl implements IDEContr
    ProjectClosedHandler
 {
 
-   private static final String ID = "File/Configure Classpath...";
+   private static final String ID = "Project/Configure Classpath...";
 
    private final String TITLE = "Configure Classpath...";
 

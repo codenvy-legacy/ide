@@ -172,7 +172,6 @@ public interface MenuCommands
 
       public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
 
-      public static final String CONFIGURE_CLASS_PATH = "Configure Classpath...";
    }
 
    public interface Edit
@@ -296,6 +295,8 @@ public interface MenuCommands
       String EMPTY_PROJECT = "Empty Project...";
 
       String FROM_TEMPLATE = "From Template...";
+      
+      String CONFIGURE_CLASS_PATH = "Configure Classpath...";      
    }
 
    public interface PaaS
