@@ -80,8 +80,7 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof ProjectExplorerDisplay
-         || event.getView() instanceof ProjectExplorerPresenter.Display)
+      if (event.getView() instanceof ProjectExplorerDisplay)
       {
          setSelected(false);
       }
@@ -93,8 +92,7 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (event.getView() instanceof ProjectExplorerPresenter.Display
-         || event.getView() instanceof ProjectExplorerDisplay)
+      if (event.getView() instanceof ProjectExplorerDisplay)
       {
          setSelected(true);
       }

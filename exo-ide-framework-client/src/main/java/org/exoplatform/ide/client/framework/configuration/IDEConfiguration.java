@@ -43,14 +43,15 @@ public class IDEConfiguration
    private String gadgetURL = GWT.getModuleBaseURL();
 
    private String gadgetServer;
-   
+
    private int httpsPort = 0;
-   
+
    private String vfsId;
-   
+
    private String vfsBaseUrl;
-   
-   
+
+   private String hiddenFiles;
+
    public IDEConfiguration()
    {
    }
@@ -131,35 +132,45 @@ public class IDEConfiguration
    {
       this.gadgetServer = gadgetServer;
    }
-   
+
    public int getHttpsPort()
    {
       return httpsPort;
    }
-   
+
    public void setHttpsPort(int httpsPort)
    {
       this.httpsPort = httpsPort;
    }
-   
+
    public String getVfsBaseUrl()
    {
       return vfsBaseUrl;
    }
-   
+
    public void setVfsBaseUrl(String vfsBaseUrl)
    {
       this.vfsBaseUrl = vfsBaseUrl;
    }
-   
+
    public String getVfsId()
    {
       return vfsId;
    }
-   
+
    public void setVfsId(String vfsId)
    {
       this.vfsId = vfsId;
    }
-   
+
+   public String getHiddenFiles()
+   {
+      return hiddenFiles;
+   }
+
+   public void setHiddenFiles(String hiddenFiles)
+   {
+      this.hiddenFiles = hiddenFiles;
+   }
+
 }

@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.framework.util.Utils;
@@ -60,7 +61,6 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    public ItemTree()
    {
-
    }
 
    /**
@@ -188,11 +188,15 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       for (int position = 0; position < children.size(); position++)
       {
          Item item = children.get(position);
-
-         if (item.getName() != null && item.getName().startsWith("."))
-         {
+         
+         if (DirectoryFilter.get().matchWithPattern(item.getName())) {
             continue;
          }
+
+//         if (item.getName() != null && item.getName().startsWith("."))
+//         {
+//            continue;
+//         }
 
          TreeItem node = createTreeNode(item);
          parentNode.addItem(node);
@@ -373,7 +377,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       }
 
       /*
-       * Return is wants to set node, which is not children of root node.
+       * Return if new value is not a children of root node.
        */
       Folder rootFolder = (Folder)tree.getItem(0).getUserObject();
       String rootFolderHref = rootFolder.getPath();
@@ -385,13 +389,15 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       TreeItem parent = getNodeById(value.getId());
       try
       {
+         List<Item> filteredItems = DirectoryFilter.get().filter(children.getItems());
+
          if (updateValue)
          {
-            updateItems(parent, children.getItems());
+            updateItems(parent, filteredItems);
          }
          else
          {
-            setItems(parent, children.getItems());
+            setItems(parent, filteredItems);
          }
 
          if (tree.getSelectedItem() != null)

@@ -217,7 +217,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          {
             onKeyPressed(event.getNativeEvent().getKeyCode(), event.isControlKeyDown());
          }
-
       });
    }
 
@@ -435,17 +434,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private void folderContentReceived(Folder folder, List<Item> result)
    {
-      if (folder instanceof FolderModel)
-      {
-         ((FolderModel)folder).getChildren().getItems().clear();
-         ((FolderModel)folder).getChildren().getItems().addAll(result);
-      }
-      else if (folder instanceof ProjectModel)
-      {
-         ((ProjectModel)folder).getChildren().getItems().clear();
-         ((ProjectModel)folder).getChildren().getItems().addAll(result);
-      }
-
       for (Item i : result)
       {
          if (i instanceof ItemContext)
@@ -468,6 +456,18 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          }
       }
 
+      
+      if (folder instanceof FolderModel)
+      {
+         ((FolderModel)folder).getChildren().getItems().clear();
+         ((FolderModel)folder).getChildren().getItems().addAll(result);
+      }
+      else if (folder instanceof ProjectModel)
+      {
+         ((ProjectModel)folder).getChildren().getItems().clear();
+         ((ProjectModel)folder).getChildren().getItems().addAll(result);
+      }
+      
       IDE.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
 
@@ -575,12 +575,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-
+      
       if (display != null)
       {
          display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
       }
-
+      
       ensureProjectExplorerDisplayCreated();
    }
 
@@ -717,8 +717,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    public void onOpenProject(OpenProjectEvent event)
    {
       ensureProjectExplorerDisplayCreated();
-
-      display.setProjectExplorerTreeVisible(true);
 
       if (openedProject != null)
       {

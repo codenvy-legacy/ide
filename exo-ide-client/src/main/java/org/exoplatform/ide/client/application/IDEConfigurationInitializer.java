@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -95,6 +96,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                      new SettingsServiceImpl(IDE.eventBus(), applicationConfiguration.getRegistryURL(), result
                         .getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
                      SettingsService.getInstance().restoreFromCookies(applicationSettings);
+                     
+                     DirectoryFilter.get().setPattern(applicationConfiguration.getHiddenFiles());
 
                      IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
                      IDE.fireEvent(new IsDiscoverableResultReceivedEvent(result.isDiscoverable()));

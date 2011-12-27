@@ -85,6 +85,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
       this.defaultAppConfiguration = defaultAppConfiguration;
       configuration = new IDEConfiguration();
       configuration.setRegistryURL(getRegistryURL());
+      configuration.setHiddenFiles(getHiddenFiles());
       this.initializationConfiguration.setIdeConfiguration(configuration);
    }
 
@@ -207,6 +208,10 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private static native String getRegistryURL() /*-{
 		return $wnd.registryURL;
+   }-*/;
+
+   private static native String getHiddenFiles() /*-{
+      return $wnd.hiddenFiles;
    }-*/;
 
 }
