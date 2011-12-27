@@ -19,6 +19,9 @@
 
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -78,8 +81,8 @@ public class FieldInfo extends Member
    {
       super.readExternal(in);
 
-      type = (String)in.readObject();
-      declaringClass = (String)in.readObject();
+      type = readStringUTF(in);
+      declaringClass = readStringUTF(in);
    }
 
    public void setDeclaringClass(String declaringClass)
@@ -109,8 +112,8 @@ public class FieldInfo extends Member
    {
       super.writeExternal(out);
 
-      out.writeObject(type);
-      out.writeObject(declaringClass);
+      writeStringUTF(type, out);
+      writeStringUTF(declaringClass, out);
    }
 
    /**

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -220,7 +223,7 @@ public abstract class Member implements Externalizable
    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
    {
       modifiers = in.readInt();
-      name = (String)in.readObject();
+      name = readStringUTF(in);
    }
 
    /**
@@ -254,7 +257,7 @@ public abstract class Member implements Externalizable
    public void writeExternal(ObjectOutput out) throws IOException
    {
       out.writeInt(modifiers);
-      out.writeObject(name);
+      writeStringUTF(name, out);
    }
 
 }

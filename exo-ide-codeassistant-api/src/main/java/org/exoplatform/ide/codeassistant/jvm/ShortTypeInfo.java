@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -63,15 +66,14 @@ public class ShortTypeInfo extends Member
    public void writeExternal(ObjectOutput out) throws IOException
    {
       super.writeExternal(out);
-
-      out.writeObject(type);
+      writeStringUTF(type, out);
    }
 
    @Override
    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
    {
       super.readExternal(in);
-      type = (String)in.readObject();
+      type = readStringUTF(in);
    }
 
    /**

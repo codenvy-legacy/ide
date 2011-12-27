@@ -20,13 +20,21 @@ package org.exoplatform.ide.codeassistant.jvm.serialization;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.exoplatform.ide.codeassistant.jvm.BaseTest;
+import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,6 +43,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Modifier;
 
 /**
  * Test read and write operations from ExternalizationTool
@@ -110,22 +119,40 @@ public class TestExternalizationTools extends BaseTest
    }
 
    @Test
-   public void shouldNotInvokeWriteObjectOnStringWritting() throws IOException
+   public void shouldNotInvokeWriteStringObjectOnExternalizableArrayWritting() throws IOException
+   {
+      ObjectOutput out = mock(ObjectOutput.class);
+      ShortTypeInfo shortTypeInfo = new ShortTypeInfo("TestClass", Modifier.PUBLIC, "test.TestClass");
+
+      // RoutineInfo implements Externalizable
+      ExternalizationTools.writeObjectArray(ShortTypeInfo.class, new ShortTypeInfo[]{shortTypeInfo}, out);
+
+      verify(out, atLeastOnce()).writeInt(anyInt());
+      verify(out, atLeastOnce()).write((byte[])any());
+      verify(out, never()).writeObject(anyString());
+   }
+
+   @Test
+   public void shouldNotInvokeWriteStringObjectOnStringWritting() throws IOException
    {
       ObjectOutput out = mock(ObjectOutput.class);
 
       ExternalizationTools.writeStringUTF("String", out);
 
+      verify(out, atLeastOnce()).writeInt(anyInt());
+      verify(out, atLeastOnce()).write((byte[])any());
       verify(out, never()).writeObject(anyString());
    }
 
    @Test
-   public void shouldNotInvokeWriteObjectOnStringArrayWritting() throws IOException
+   public void shouldNotInvokeWriteStringObjectOnStringArrayWritting() throws IOException
    {
       ObjectOutput out = mock(ObjectOutput.class);
 
       ExternalizationTools.writeStringUTFArray(new String[]{"one", "two", "three"}, out);
 
+      verify(out, atLeastOnce()).writeInt(anyInt());
+      verify(out, atLeastOnce()).write((byte[])any());
       verify(out, never()).writeObject(anyString());
    }
 
@@ -206,20 +233,40 @@ public class TestExternalizationTools extends BaseTest
    @Test
    public void shouldNotInvokeReadObjectOnStringReading() throws IOException, ClassNotFoundException
    {
-      ObjectInput in = mock(ObjectInput.class);
+      ObjectInput in = mock(ObjectInput.class, Mockito.RETURNS_SMART_NULLS);
+      when(in.readInt()).thenReturn(1);
 
       ExternalizationTools.readStringUTF(in);
 
+      verify(in, times(1)).readInt();
+      verify(in, times(1)).read((byte[])any());
+      verify(in, never()).readObject();
+   }
+
+   @Test
+   public void shouldNotInvokeReadObjectOnExternalizableArrayReading() throws IOException, ClassNotFoundException
+   {
+      ObjectInput in = mock(ObjectInput.class, Mockito.RETURNS_SMART_NULLS);
+      when(in.readInt()).thenReturn(1);
+
+      // RoutineInfo implements Externalizable
+      ExternalizationTools.readObjectArray(MethodInfo.class, in);
+
+      verify(in, atLeastOnce()).readInt();
+      verify(in, atLeastOnce()).read((byte[])any());
       verify(in, never()).readObject();
    }
 
    @Test
    public void shouldNotInvokeReadObjectOnStringArrayReading() throws IOException, ClassNotFoundException
    {
-      ObjectInput in = mock(ObjectInput.class);
+      ObjectInput in = mock(ObjectInput.class, Mockito.RETURNS_SMART_NULLS);
+      when(in.readInt()).thenReturn(1);
 
       ExternalizationTools.readStringUTFArray(in);
 
+      verify(in, atLeastOnce()).readInt();
+      verify(in, atLeastOnce()).read((byte[])any());
       verify(in, never()).readObject();
    }
 
