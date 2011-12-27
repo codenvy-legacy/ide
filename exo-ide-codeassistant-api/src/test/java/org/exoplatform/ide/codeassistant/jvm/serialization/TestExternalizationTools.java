@@ -44,6 +44,8 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Test read and write operations from ExternalizationTool
@@ -83,7 +85,7 @@ public class TestExternalizationTools extends BaseTest
       ObjectOutputStream oos = new ObjectOutputStream(out);
       Integer[] serializedArray = new Integer[]{1, 2, 3};
 
-      ExternalizationTools.writeObjectArray(Integer.class, serializedArray, oos);
+      ExternalizationTools.writeObjectList(Integer.class, Arrays.asList(serializedArray), oos);
       oos.flush();
 
       ObjectInputStream in = createObjectInputStream(out.toByteArray());
@@ -104,7 +106,7 @@ public class TestExternalizationTools extends BaseTest
       ObjectOutputStream oos = new ObjectOutputStream(out);
       String[] strings = new String[]{"one", "two", "tree"};
 
-      ExternalizationTools.writeStringUTFArray(strings, oos);
+      ExternalizationTools.writeStringUTFList(Arrays.asList(strings), oos);
       oos.flush();
 
       ObjectInputStream in = createObjectInputStream(out.toByteArray());
@@ -125,7 +127,7 @@ public class TestExternalizationTools extends BaseTest
       ShortTypeInfo shortTypeInfo = new ShortTypeInfo("TestClass", Modifier.PUBLIC, "test.TestClass");
 
       // RoutineInfo implements Externalizable
-      ExternalizationTools.writeObjectArray(ShortTypeInfo.class, new ShortTypeInfo[]{shortTypeInfo}, out);
+      ExternalizationTools.writeObjectList(ShortTypeInfo.class, Arrays.asList(new ShortTypeInfo[]{shortTypeInfo}), out);
 
       verify(out, atLeastOnce()).writeInt(anyInt());
       verify(out, atLeastOnce()).write((byte[])any());
@@ -149,7 +151,7 @@ public class TestExternalizationTools extends BaseTest
    {
       ObjectOutput out = mock(ObjectOutput.class);
 
-      ExternalizationTools.writeStringUTFArray(new String[]{"one", "two", "three"}, out);
+      ExternalizationTools.writeStringUTFList(Arrays.asList(new String[]{"one", "two", "three"}), out);
 
       verify(out, atLeastOnce()).writeInt(anyInt());
       verify(out, atLeastOnce()).write((byte[])any());
@@ -202,9 +204,9 @@ public class TestExternalizationTools extends BaseTest
       oos.flush();
 
       ObjectInputStream io = createObjectInputStream(out.toByteArray());
-      Integer[] deserializedArray = ExternalizationTools.readObjectArray(Integer.class, io);
+      List<Integer> deserializedArray = ExternalizationTools.readObjectList(Integer.class, io);
 
-      assertArrayEquals(serializedArray, deserializedArray);
+      assertArrayEquals(serializedArray, deserializedArray.toArray());
    }
 
    @Test
@@ -225,9 +227,9 @@ public class TestExternalizationTools extends BaseTest
       oos.flush();
 
       ObjectInputStream io = createObjectInputStream(out.toByteArray());
-      String[] deserializedArray = ExternalizationTools.readStringUTFArray(io);
+      List<String> deserializedArray = ExternalizationTools.readStringUTFList(io);
 
-      assertArrayEquals(serializedArray, deserializedArray);
+      assertArrayEquals(serializedArray, deserializedArray.toArray());
    }
 
    @Test
@@ -250,7 +252,7 @@ public class TestExternalizationTools extends BaseTest
       when(in.readInt()).thenReturn(1);
 
       // RoutineInfo implements Externalizable
-      ExternalizationTools.readObjectArray(MethodInfo.class, in);
+      ExternalizationTools.readObjectList(MethodInfo.class, in);
 
       verify(in, atLeastOnce()).readInt();
       verify(in, atLeastOnce()).read((byte[])any());
@@ -263,7 +265,7 @@ public class TestExternalizationTools extends BaseTest
       ObjectInput in = mock(ObjectInput.class, Mockito.RETURNS_SMART_NULLS);
       when(in.readInt()).thenReturn(1);
 
-      ExternalizationTools.readStringUTFArray(in);
+      ExternalizationTools.readStringUTFList(in);
 
       verify(in, atLeastOnce()).readInt();
       verify(in, atLeastOnce()).read((byte[])any());

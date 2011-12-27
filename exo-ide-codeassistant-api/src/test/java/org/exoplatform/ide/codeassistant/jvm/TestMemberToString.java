@@ -24,6 +24,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Check result of method toString() classes which extends Member
@@ -42,7 +44,8 @@ public class TestMemberToString
    public void testMethodInfoToString()
    {
       MethodInfo methodInfo =
-         new MethodInfo("method", Modifier.PUBLIC, new String[]{}, new String[]{}, false, "", "test.TestClass");
+         new MethodInfo("method", Modifier.PUBLIC, new ArrayList<String>(), new ArrayList<String>(), false, "",
+            "test.TestClass");
 
       assertEquals("public void test.TestClass.method()", methodInfo.toString());
    }
@@ -64,7 +67,7 @@ public class TestMemberToString
       typeInfo.setType(JavaType.CLASS.toString());
       typeInfo.setName("test.TestClass2");
       typeInfo.setSuperClass("test.TestClass1");
-      typeInfo.setInterfaces(new String[]{"test.TestInterface1", "test.TestInterface2"});
+      typeInfo.setInterfaces(Arrays.asList(new String[]{"test.TestInterface1", "test.TestInterface2"}));
 
       assertEquals(
          "protected CLASS test.TestClass2 extends test.TestClass1 implements test.TestInterface1, test.TestInterface2",

@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 
 /**
  * Check correctness of MethodInfo deserialization
@@ -40,9 +41,9 @@ public class TestMethodInfoExternalization extends BaseTest
    public void setUp() throws IOException, ClassNotFoundException
    {
       serializedMethodInfo =
-         new MethodInfo("method", Modifier.PUBLIC, new String[]{"java.io.IOException",
-            "java.lang.IlligalStateException"}, new String[]{"java.lang.Object", "Object"}, false, "test.TestClass",
-            "java.lang.Integer");
+         new MethodInfo("method", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
+            "java.lang.IlligalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}), false,
+            "test.TestClass", "java.lang.Integer");
       byte[] serializedData = serializeObject(serializedMethodInfo);
       deserializedMethodInfo = new MethodInfo();
       deserializedMethodInfo.readExternal(createObjectInputStream(serializedData));
@@ -69,14 +70,15 @@ public class TestMethodInfoExternalization extends BaseTest
    @Test
    public void testParameterTypesFieldDeserialization()
    {
-      assertArrayEquals(serializedMethodInfo.getParameterTypes(), deserializedMethodInfo.getParameterTypes());
+      assertArrayEquals(serializedMethodInfo.getParameterTypes().toArray(), deserializedMethodInfo.getParameterTypes()
+         .toArray());
    }
 
    @Test
    public void testGenericExceptionTypesFieldDeserialization()
    {
-      assertArrayEquals(serializedMethodInfo.getGenericExceptionTypes(),
-         deserializedMethodInfo.getGenericExceptionTypes());
+      assertArrayEquals(serializedMethodInfo.getGenericExceptionTypes().toArray(), deserializedMethodInfo
+         .getGenericExceptionTypes().toArray());
    }
 
    @Test

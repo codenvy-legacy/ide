@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readObjectArray;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFArray;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.*;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readObjectList;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFList;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeObjectList;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFList;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -128,9 +131,9 @@ public class TypeInfo extends ShortTypeInfo
    {
       super.writeExternal(out);
       writeStringUTF(superClass, out);
-      writeStringUTFArray(interfaces, out);
-      writeObjectArray(FieldInfo.class, fields, out);
-      writeObjectArray(MethodInfo.class, methods, out);
+      writeStringUTFList(interfaces, out);
+      writeObjectList(FieldInfo.class, fields, out);
+      writeObjectList(MethodInfo.class, methods, out);
    }
 
    @Override
@@ -138,9 +141,9 @@ public class TypeInfo extends ShortTypeInfo
    {
       super.readExternal(in);
       superClass = readStringUTF(in);
-      interfaces = readStringUTFArray(in);
-      fields = readObjectArray(FieldInfo.class, in);
-      methods = readObjectArray(MethodInfo.class, in);
+      interfaces = readStringUTFList(in);
+      fields = readObjectList(FieldInfo.class, in);
+      methods = readObjectList(MethodInfo.class, in);
    }
 
 }

@@ -26,7 +26,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Contains set of operations for more efficient object Externalization. String
@@ -51,21 +52,21 @@ public class ExternalizationTools
       out.write(bytes);
    }
 
-   public static void writeStringUTFArray(String[] array, ObjectOutput out) throws IOException
+   public static void writeStringUTFList(List<String> list, ObjectOutput out) throws IOException
    {
-      out.writeInt(array.length);
+      out.writeInt(list.size());
 
-      for (String element : array)
+      for (String element : list)
       {
          writeStringUTF(element, out);
       }
    }
 
-   public static <T> void writeObjectArray(Class<T> type, T[] array, ObjectOutput out) throws IOException
+   public static <T> void writeObjectList(Class<T> type, List<T> list, ObjectOutput out) throws IOException
    {
-      out.writeInt(array.length);
+      out.writeInt(list.size());
 
-      for (T element : array)
+      for (T element : list)
       {
          if (Externalizable.class.isAssignableFrom(type))
          {
@@ -87,31 +88,32 @@ public class ExternalizationTools
       return new String(bytes, UTF_8);
    }
 
-   public static String[] readStringUTFArray(ObjectInput in) throws IOException
-   {
-      int length = in.readInt();
-      String[] array = new String[length];
-
-      for (int i = 0; i < array.length; i++)
-      {
-         array[i] = readStringUTF(in);
-      }
-
-      return array;
-   }
-
-   public static <T> T[] readObjectArray(Class<T> type, ObjectInput in) throws IOException, ClassNotFoundException
+   public static List<String> readStringUTFList(ObjectInput in) throws IOException
    {
       int size = in.readInt();
-      T[] elements = (T[])Array.newInstance(type, size);
+      List<String> result = new ArrayList<String>(size);
+
+      for (int i = 0; i < size; i++)
+      {
+         result.add(readStringUTF(in));
+      }
+
+      return result;
+   }
+
+   public static <T> List<T> readObjectList(Class<T> type, ObjectInput in) throws IOException, ClassNotFoundException
+   {
+      int size = in.readInt();
+      List<T> elements = new ArrayList<T>(size);
       for (int i = 0; i < size; i++)
       {
          if (Externalizable.class.isAssignableFrom(type))
          {
             try
             {
-               elements[i] = type.newInstance();
-               ((Externalizable)elements[i]).readExternal(in);
+               T element = type.newInstance();
+               ((Externalizable)element).readExternal(in);
+               elements.add(element);
             }
             catch (InstantiationException e)
             {
@@ -124,10 +126,9 @@ public class ExternalizationTools
          }
          else
          {
-            elements[i] = (T)in.readObject();
+            elements.add((T)in.readObject());
          }
       }
       return elements;
    }
-
 }

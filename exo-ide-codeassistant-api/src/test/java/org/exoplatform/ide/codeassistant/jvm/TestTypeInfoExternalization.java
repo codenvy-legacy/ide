@@ -26,6 +26,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Check correctness of TypeInfo deserialization
@@ -72,25 +74,25 @@ public class TestTypeInfoExternalization extends BaseTest
    @Test
    public void testInterfacesDeserialization()
    {
-      assertArrayEquals(serializedTypeInfo.getInterfaces(), deserializedTypeInfo.getInterfaces());
+      assertArrayEquals(serializedTypeInfo.getInterfaces().toArray(), deserializedTypeInfo.getInterfaces().toArray());
    }
 
    @Test
    public void testMethodsDeserialization()
    {
-         MethodInfo[] serializedMethods = serializedTypeInfo.getMethods();
-      MethodInfo[] deserializedMethods = deserializedTypeInfo.getMethods();
+      List<MethodInfo> serializedMethods = serializedTypeInfo.getMethods();
+      List<MethodInfo> deserializedMethods = deserializedTypeInfo.getMethods();
 
-      assertArrayEquals(serializedMethods, deserializedMethods);
+      assertArrayEquals(serializedMethods.toArray(), deserializedMethods.toArray());
    }
 
    @Test
    public void testFieldsDeserialization()
    {
-     FieldInfo[] serializedFields = serializedTypeInfo.getFields();
-      FieldInfo[] deserializedFields = deserializedTypeInfo.getFields();
+      List<FieldInfo> serializedFields = serializedTypeInfo.getFields();
+      List<FieldInfo> deserializedFields = deserializedTypeInfo.getFields();
 
-      assertArrayEquals(serializedFields, deserializedFields);
+      assertArrayEquals(serializedFields.toArray(), deserializedFields.toArray());
    }
 
    private TypeInfo generateTypeInfo()
@@ -103,26 +105,28 @@ public class TestTypeInfoExternalization extends BaseTest
       typeInfo.setType("CLASS");
 
       String[] interfaces = new String[]{"java.io.Serializable"};
-      typeInfo.setInterfaces(interfaces);
+      typeInfo.setInterfaces(Arrays.asList(interfaces));
 
       MethodInfo publicConstructor =
-         new MethodInfo("test.TestClass", Modifier.PUBLIC, new String[]{"java.io.IOException",
-            "java.lang.IllegalStateException"}, new String[]{"java.lang.Object", "Object"}, true, "", "test.TestClass");
+         new MethodInfo("test.TestClass", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
+            "java.lang.IllegalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}), true, "",
+            "test.TestClass");
       MethodInfo protectedConstructor =
-         new MethodInfo("test.TestClass", Modifier.PROTECTED, new String[]{"java.io.IOException"}, new String[]{
-            "java.lang.String", "String"}, true, "", "test.TestClass");
+         new MethodInfo("test.TestClass", Modifier.PROTECTED, Arrays.asList(new String[]{"java.io.IOException"}),
+            Arrays.asList(new String[]{"java.lang.String", "String"}), true, "", "test.TestClass");
 
       MethodInfo publicMethod =
-         new MethodInfo("method1", Modifier.PUBLIC, new String[]{"java.io.IOException",}, new String[]{
-            "java.lang.Object", "Object"}, false, "test.TestClass", "java.lang.Integer");
+         new MethodInfo("method1", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException"}),
+            Arrays.asList(new String[]{"java.lang.Object", "Object"}), false, "test.TestClass", "java.lang.Integer");
       MethodInfo privateMethod =
-         new MethodInfo("method2", Modifier.PRIVATE, new String[]{"java.io.IOException"}, new String[]{
-            "java.lang.String", "String"}, false, "test.TestClass", "java.lang.Integer");
-      typeInfo.setMethods(new MethodInfo[]{publicConstructor, protectedConstructor, publicMethod, privateMethod});
+         new MethodInfo("method2", Modifier.PRIVATE, Arrays.asList(new String[]{"java.io.IOException"}),
+            Arrays.asList(new String[]{"java.lang.String", "String"}), false, "test.TestClass", "java.lang.Integer");
+      typeInfo.setMethods(Arrays.asList(new MethodInfo[]{publicConstructor, protectedConstructor, publicMethod,
+         privateMethod}));
 
       FieldInfo publicField = new FieldInfo("field1", Modifier.PUBLIC, "test.TestClass", "String");
       FieldInfo privateField = new FieldInfo("field2", Modifier.PRIVATE, "test.TestClass", "Integer");
-      typeInfo.setFields(new FieldInfo[]{publicField, privateField});
+      typeInfo.setFields(Arrays.asList(new FieldInfo[]{publicField, privateField}));
       return typeInfo;
    }
 }

@@ -19,13 +19,14 @@
 package org.exoplatform.ide.codeassistant.jvm;
 
 import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFArray;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFList;
 import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFArray;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFList;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.List;
 
 /**
  * Represent information about class method. Can be transform to JSON. <code>
@@ -48,12 +49,12 @@ public class MethodInfo extends Member
    /**
     * Array FQN of exceptions throws by method
     */
-   private String[] genericExceptionTypes;
+   private List<String> genericExceptionTypes;
 
    /**
     * FQN's of parameters
     */
-   private String[] parameterTypes;
+   private List<String> parameterTypes;
 
    /**
     * Full Qualified Class Name where method declared Example: method equals()
@@ -75,7 +76,7 @@ public class MethodInfo extends Member
    {
    }
 
-   public MethodInfo(String name, int modifiers, String[] genericExceptionTypes, String[] parameterTypes,
+   public MethodInfo(String name, int modifiers, List<String> genericExceptionTypes, List<String> parameterTypes,
       boolean isConstructor, String genericReturnType, String declaringClass)
    {
       super(name, modifiers);
@@ -92,7 +93,7 @@ public class MethodInfo extends Member
       return declaringClass;
    }
 
-   public String[] getGenericExceptionTypes()
+   public List<String> getGenericExceptionTypes()
    {
       return genericExceptionTypes;
    }
@@ -100,7 +101,7 @@ public class MethodInfo extends Member
    /**
     * @return the parameterTypes
     */
-   public String[] getParameterTypes()
+   public List<String> getParameterTypes()
    {
       return parameterTypes;
    }
@@ -124,8 +125,8 @@ public class MethodInfo extends Member
       super.readExternal(in);
 
       declaringClass = readStringUTF(in);
-      genericExceptionTypes = readStringUTFArray(in);
-      parameterTypes = readStringUTFArray(in);
+      genericExceptionTypes = readStringUTFList(in);
+      parameterTypes = readStringUTFList(in);
       genericReturnType = readStringUTF(in);
       isConstructor = in.readBoolean();
    }
@@ -135,7 +136,7 @@ public class MethodInfo extends Member
       this.declaringClass = declaringClass;
    }
 
-   public void setGenericExceptionTypes(String[] genericExceptionTypes)
+   public void setGenericExceptionTypes(List<String> genericExceptionTypes)
    {
       this.genericExceptionTypes = genericExceptionTypes;
    }
@@ -144,7 +145,7 @@ public class MethodInfo extends Member
     * @param parameterTypes
     *           the parameterTypes to set
     */
-   public void setParameterTypes(String[] parameterTypes)
+   public void setParameterTypes(List<String> parameterTypes)
    {
       this.parameterTypes = parameterTypes;
    }
@@ -158,8 +159,8 @@ public class MethodInfo extends Member
       super.writeExternal(out);
 
       writeStringUTF(declaringClass, out);
-      writeStringUTFArray(genericExceptionTypes, out);
-      writeStringUTFArray(parameterTypes, out);
+      writeStringUTFList(genericExceptionTypes, out);
+      writeStringUTFList(parameterTypes, out);
       writeStringUTF(genericReturnType, out);
       out.writeBoolean(isConstructor);
    }
@@ -213,28 +214,28 @@ public class MethodInfo extends Member
 
       if (parameterTypes != null)
       {
-         for (int i = 0; i < parameterTypes.length; i++)
+         for (int i = 0; i < parameterTypes.size(); i++)
          {
             if (i > 0)
             {
                buildString.append(",");
             }
-            buildString.append(parameterTypes[i]);
+            buildString.append(parameterTypes.get(i));
 
          }
       }
       buildString.append(")");
 
-      if (genericExceptionTypes != null && genericExceptionTypes.length > 0)
+      if (genericExceptionTypes != null && genericExceptionTypes.size() > 0)
       {
          buildString.append(" throws ");
-         for (int i = 0; i < genericExceptionTypes.length; i++)
+         for (int i = 0; i < genericExceptionTypes.size(); i++)
          {
             if (i > 0)
             {
                buildString.append(",");
             }
-            buildString.append(genericExceptionTypes[i]);
+            buildString.append(genericExceptionTypes.get(i));
 
          }
       }
