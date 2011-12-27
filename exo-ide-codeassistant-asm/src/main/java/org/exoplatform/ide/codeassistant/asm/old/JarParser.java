@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.asm.old;
 
+import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 
 import java.io.File;

@@ -24,6 +24,7 @@ import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.signature.SignatureReader;
 
 /**
  * <p>
@@ -38,16 +39,30 @@ import org.objectweb.asm.MethodVisitor;
 public class TypeInfoClassVisitor implements ClassVisitor
 {
 
-   private TypeInfoBuilder builder;
+   private final boolean ignorePrivateMethods;
 
-   public TypeInfoBuilder getBuilder()
+   public TypeInfoClassVisitor(boolean ignorePrivateMethods)
    {
-      return builder;
+      this.ignorePrivateMethods = ignorePrivateMethods;
    }
 
+   public TypeInfoClassVisitor()
+   {
+      this(false);
+   }
+
+   /* Examples:
+    * name = com/foo/MyClass
+    * signature = null (if not generic)
+    * superName = java/lang/Object
+    * interfaces = [ java/lang/Runnable ... ]
+    */
    @Override
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
+      System.out.println(signature);
+      SignatureReader signatureReader = new SignatureReader(signature);
+
       //this.builder = new TypeInfoBuilder(access, Type.getObjectType(name), superName, interfaces);
    }
 

@@ -16,22 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.asm;
+package org.exoplatform.ide.codeassistant.asm.objects;
 
 /**
- * @author <a href="mailto:foo@bar.org">Foo Bar</a>
- * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z
- *          aheritier $
+ * Generic version of the Box class.
  * 
+ * @param <T>
+ *           the type of value being boxed
  */
-public class ByteCodeHelper
+
+public class Box<T>
 {
-   /**
-    * @return the ASM internal name of the type
-    */
-   public static String getClassInternalName(String name)
+
+   // T stands for "Type"
+   private T t;
+
+   public void add(T t)
    {
-      return name.replace('.', '/');
+      this.t = t;
    }
 
+   public T get()
+   {
+      return t;
+   }
 }

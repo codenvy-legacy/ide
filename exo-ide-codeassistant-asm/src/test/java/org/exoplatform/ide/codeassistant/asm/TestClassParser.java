@@ -18,10 +18,20 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import org.exoplatform.ide.codeassistant.asm.objects.B;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.junit.Test;
 
 public class TestClassParser extends BaseTest
 {
+
+   @Test
+   public void shouldParseGenericClass() throws Exception
+   {
+      TypeInfo annotationTest = ClassParser.parse2(ClassParser.getClassFile(B.class));
+
+   }
+
    //
    //   private static final String PACKAGE = "org.exoplatform.ide.codeassistant.asm.testclasses";
    //

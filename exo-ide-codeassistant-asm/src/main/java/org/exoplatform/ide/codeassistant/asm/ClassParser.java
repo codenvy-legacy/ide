@@ -16,10 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.asm.old;
+package org.exoplatform.ide.codeassistant.asm;
 
+import org.exoplatform.ide.codeassistant.asm.old.TypeInfoClassVisitor;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.ClassNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +52,14 @@ public class ClassParser
    }
 
    /**
+    * @return the ASM internal name of the type
+    */
+   public static String getClassInternalName(String name)
+   {
+      return name.replace('.', '/');
+   }
+
+   /**
     * 
     * @param class2Find
     *           - class to find
@@ -65,9 +75,18 @@ public class ClassParser
    public static TypeInfo parse(InputStream classStream) throws IOException
    {
       ClassReader cr = new ClassReader(classStream);
-      TypeInfoClassVisitor typeInfoClassVisitor = new TypeInfoClassVisitor();
+      TypeInfoClassVisitor typeInfoClassVisitor = new TypeInfoClassVisitor(false);
       cr.accept(typeInfoClassVisitor, ClassReader.SKIP_CODE);
       return null;//typeInfoClassVisitor.getBuilder().buildTypeInfo();
+   }
+
+   public static TypeInfo parse2(InputStream classStream) throws IOException
+   {
+      ClassReader cr = new ClassReader(classStream);
+      ClassNode cn = new ClassNode();
+      cr.accept(cn, ClassReader.SKIP_DEBUG | ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
+
+      return TypeInfoBuilder.fromClassNode(cn);
    }
 
    private static TypeInfo parseQuietly(InputStream classStream)

@@ -29,4 +29,8 @@ public class B extends A
       super();
    }
 
+   public String getDoc(int id)
+   {
+      return "";
+   }
 }
