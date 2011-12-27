@@ -24,8 +24,8 @@ import java.io.ObjectOutput;
 
 /**
  * Short information about class or interface. Contain fqn, short name,
- * modifiers Example : { "name": "String", "qualifiedName": "java.lang.String",
- * "modifiers": 0, "type": "CLASS" }
+ * modifiers Example : { "name": "java.lang.String", "modifiers": 0, "type":
+ * "CLASS" }
  * 
  * 
  * Created by The eXo Platform SAS.
@@ -33,10 +33,6 @@ import java.io.ObjectOutput;
  */
 public class ShortTypeInfo extends Member
 {
-   /**
-    * Full Qualified Class Name
-    */
-   private String qualifiedName;
 
    /**
     * Means this is CLASS, INTERFACE or ANNOTATION
@@ -47,21 +43,10 @@ public class ShortTypeInfo extends Member
    {
    }
 
-   public ShortTypeInfo(int modifiers, String name, String qualifiedName, String type)
+   public ShortTypeInfo(String name, int modifiers, String type)
    {
-      super(modifiers, name);
-      this.qualifiedName = qualifiedName;
+      super(name, modifiers);
       this.type = type;
-   }
-
-   public void setQualifiedName(String qualifiedName)
-   {
-      this.qualifiedName = qualifiedName;
-   }
-
-   public String getQualifiedName()
-   {
-      return qualifiedName;
    }
 
    public String getType()
@@ -79,7 +64,6 @@ public class ShortTypeInfo extends Member
    {
       super.writeExternal(out);
 
-      out.writeObject(qualifiedName);
       out.writeObject(type);
    }
 
@@ -87,8 +71,6 @@ public class ShortTypeInfo extends Member
    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
    {
       super.readExternal(in);
-
-      qualifiedName = (String)in.readObject();
       type = (String)in.readObject();
    }
 
@@ -98,64 +80,13 @@ public class ShortTypeInfo extends Member
    @Override
    public String toString()
    {
-      return modifierToString() + " " + type.toLowerCase() + " " + qualifiedName;
-   }
+      StringBuilder builder = new StringBuilder();
+      builder.append(modifierToString());
+      builder.append(" ");
+      builder.append(type);
+      builder.append(" ");
+      builder.append(getName());
 
-   /**
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = super.hashCode();
-      result = prime * result + (qualifiedName == null ? 0 : qualifiedName.hashCode());
-      result = prime * result + (type == null ? 0 : type.hashCode());
-      return result;
+      return builder.toString();
    }
-
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (!super.equals(obj))
-      {
-         return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      ShortTypeInfo other = (ShortTypeInfo)obj;
-      if (qualifiedName == null)
-      {
-         if (other.qualifiedName != null)
-         {
-            return false;
-         }
-      }
-      else if (!qualifiedName.equals(other.qualifiedName))
-      {
-         return false;
-      }
-      if (type == null)
-      {
-         if (other.type != null)
-         {
-            return false;
-         }
-      }
-      else if (!type.equals(other.type))
-      {
-         return false;
-      }
-      return true;
-   }
-
 }

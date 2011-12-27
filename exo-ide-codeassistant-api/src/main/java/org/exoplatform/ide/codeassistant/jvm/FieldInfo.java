@@ -53,9 +53,9 @@ public class FieldInfo extends Member
 
    }
 
-   public FieldInfo(String type, int modifiers, String name, String declaringClass)
+   public FieldInfo(String name, int modifiers, String type, String declaringClass)
    {
-      super(modifiers, name);
+      super(name, modifiers);
       this.type = type;
       this.declaringClass = declaringClass;
    }
@@ -121,8 +121,8 @@ public class FieldInfo extends Member
    {
       final int prime = 31;
       int result = super.hashCode();
-      result = prime * result + ((declaringClass == null) ? 0 : declaringClass.hashCode());
-      result = prime * result + ((type == null) ? 0 : type.hashCode());
+      result = prime * result + (declaringClass == null ? 0 : declaringClass.hashCode());
+      result = prime * result + (type == null ? 0 : type.hashCode());
       return result;
    }
 

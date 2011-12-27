@@ -20,7 +20,6 @@ package org.exoplatform.ide.codeassistant.jvm;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +38,7 @@ public class TestShortTypeInfoExternalization extends BaseTest
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
-      serializedShortTypeInfo = new ShortTypeInfo(Modifier.PUBLIC, "TestClass", "test.TestClass", "CLASS");
+      serializedShortTypeInfo = new ShortTypeInfo("test.TestClass", Modifier.PUBLIC, "CLASS");
       byte[] serializedData = serializeObject(serializedShortTypeInfo);
       deserializedShortTypeInfo = new ShortTypeInfo();
       deserializedShortTypeInfo.readExternal(createObjectInputStream(serializedData));
@@ -55,12 +54,6 @@ public class TestShortTypeInfoExternalization extends BaseTest
    public void testNameFieldDeserialization()
    {
       assertEquals(serializedShortTypeInfo.getName(), deserializedShortTypeInfo.getName());
-   }
-
-   @Test
-   public void testQualifiedNameFieldDeserialization()
-   {
-      assertEquals(serializedShortTypeInfo.getQualifiedName(), deserializedShortTypeInfo.getQualifiedName());
    }
 
    @Test

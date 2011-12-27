@@ -26,7 +26,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.exoplatform.ide.codeassistant.jvm.BaseTest;
-import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -131,17 +130,6 @@ public class TestExternalizationTools extends BaseTest
    }
 
    @Test
-   public void shouldNotInvokeWriteObjectOnExternalizableArrayWritting() throws IOException
-   {
-      ObjectOutput out = mock(ObjectOutput.class);
-
-      // RoutineInfo implements Externalizable
-      ExternalizationTools.writeObjectArray(RoutineInfo.class, new RoutineInfo[]{}, out);
-
-      verify(out, never()).writeObject(anyString());
-   }
-
-   @Test
    public void shouldDeserializeCyrillicString() throws IOException
    {
       shouldDeserializeString("Кириллическая строка");
@@ -221,17 +209,6 @@ public class TestExternalizationTools extends BaseTest
       ObjectInput in = mock(ObjectInput.class);
 
       ExternalizationTools.readStringUTF(in);
-
-      verify(in, never()).readObject();
-   }
-
-   @Test
-   public void shouldNotInvokeReadObjectOnExternalizableArrayReading() throws IOException, ClassNotFoundException
-   {
-      ObjectInput in = mock(ObjectInput.class);
-
-      // RoutineInfo implements Externalizable
-      ExternalizationTools.readObjectArray(RoutineInfo.class, in);
 
       verify(in, never()).readObject();
    }

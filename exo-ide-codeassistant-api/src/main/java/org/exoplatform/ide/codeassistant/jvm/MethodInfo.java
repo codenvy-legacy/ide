@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFArray;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFArray;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -38,28 +43,66 @@ import java.io.ObjectOutput;
  * </code>
  * 
  */
-public class MethodInfo extends RoutineInfo
+public class MethodInfo extends Member
 {
+   /**
+    * Array FQN of exceptions throws by method
+    */
+   private String[] genericExceptionTypes;
+
+   /**
+    * FQN's of parameters
+    */
+   private String[] parameterTypes;
+
+   /**
+    * Full Qualified Class Name where method declared Example: method equals()
+    * declared in java.lang.String
+    */
+   private String declaringClass;
+
    /**
     * Full Qualified Class Name that method return <code>java.lang.String</code>
     */
    private String genericReturnType;
 
    /**
-    * Short Class Name that method return <code>String</code>
+    * true if method is a class constructor
     */
-   private String returnType;
+   private boolean isConstructor;
 
    public MethodInfo()
    {
    }
 
-   public MethodInfo(int modifiers, String name, String[] genericExceptionTypes, String genericParameterTypes,
-      String parameterTypes, String generic, String declaringClass, String genericReturnType, String returnType)
+   public MethodInfo(String name, int modifiers, String[] genericExceptionTypes, String[] parameterTypes,
+      boolean isConstructor, String genericReturnType, String declaringClass)
    {
-      super(modifiers, name, genericExceptionTypes, genericParameterTypes, parameterTypes, generic, declaringClass);
+      super(name, modifiers);
+      this.genericExceptionTypes = genericExceptionTypes;
+      this.parameterTypes = parameterTypes;
+      this.isConstructor = isConstructor;
       this.genericReturnType = genericReturnType;
-      this.returnType = returnType;
+      this.declaringClass = declaringClass;
+
+   }
+
+   public String getDeclaringClass()
+   {
+      return declaringClass;
+   }
+
+   public String[] getGenericExceptionTypes()
+   {
+      return genericExceptionTypes;
+   }
+
+   /**
+    * @return the parameterTypes
+    */
+   public String[] getParameterTypes()
+   {
+      return parameterTypes;
    }
 
    public String getGenericReturnType()
@@ -72,96 +115,129 @@ public class MethodInfo extends RoutineInfo
       this.genericReturnType = genericReturnType;
    }
 
-   public void setReturnType(String returnType)
-   {
-      this.returnType = returnType;
-   }
-
-   public String getReturnType()
-   {
-      return returnType;
-   }
-
-   @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      super.writeExternal(out);
-      out.writeObject(genericReturnType);
-      out.writeObject(returnType);
-   }
-
+   /**
+    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+    */
    @Override
    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
    {
       super.readExternal(in);
-      genericReturnType = (String)in.readObject();
-      returnType = (String)in.readObject();
+
+      declaringClass = readStringUTF(in);
+      genericExceptionTypes = readStringUTFArray(in);
+      parameterTypes = readStringUTFArray(in);
+      genericReturnType = readStringUTF(in);
+      isConstructor = in.readBoolean();
+   }
+
+   public void setDeclaringClass(String declaringClass)
+   {
+      this.declaringClass = declaringClass;
+   }
+
+   public void setGenericExceptionTypes(String[] genericExceptionTypes)
+   {
+      this.genericExceptionTypes = genericExceptionTypes;
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.RoutineInfo#toString()
+    * @param parameterTypes
+    *           the parameterTypes to set
+    */
+   public void setParameterTypes(String[] parameterTypes)
+   {
+      this.parameterTypes = parameterTypes;
+   }
+
+   /**
+    * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+    */
+   @Override
+   public void writeExternal(ObjectOutput out) throws IOException
+   {
+      super.writeExternal(out);
+
+      writeStringUTF(declaringClass, out);
+      writeStringUTFArray(genericExceptionTypes, out);
+      writeStringUTFArray(parameterTypes, out);
+      writeStringUTF(genericReturnType, out);
+      out.writeBoolean(isConstructor);
+   }
+
+   /**
+    * @return the isConstructor
+    */
+   public boolean isConstructor()
+   {
+      return isConstructor;
+   }
+
+   /**
+    * @param isConstructor
+    *           the isConstructor to set
+    */
+   public void setConstructor(boolean isConstructor)
+   {
+      this.isConstructor = isConstructor;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.Member#toString()
     */
    @Override
    public String toString()
    {
-      return getGeneric();
-   }
+      StringBuilder buildString = new StringBuilder();
 
-   /**
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = super.hashCode();
-      result = prime * result + (genericReturnType == null ? 0 : genericReturnType.hashCode());
-      result = prime * result + (returnType == null ? 0 : returnType.hashCode());
-      return result;
-   }
-
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
+      buildString.append(modifierToString());
+      buildString.append(" ");
+      if (!isConstructor)
       {
-         return true;
-      }
-      if (!super.equals(obj))
-      {
-         return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      MethodInfo other = (MethodInfo)obj;
-      if (genericReturnType == null)
-      {
-         if (other.genericReturnType != null)
+         if (genericReturnType == null || genericReturnType.length() < 1)
          {
-            return false;
+            buildString.append("void ");
+         }
+         else
+         {
+            buildString.append(genericReturnType);
+            buildString.append(" ");
          }
       }
-      else if (!genericReturnType.equals(other.genericReturnType))
+      if (declaringClass != null && declaringClass.length() > 0 && !isConstructor)
       {
-         return false;
+         buildString.append(declaringClass);
+         buildString.append(".");
       }
-      if (returnType == null)
+      buildString.append(getName());
+      buildString.append("(");
+
+      if (parameterTypes != null)
       {
-         if (other.returnType != null)
+         for (int i = 0; i < parameterTypes.length; i++)
          {
-            return false;
+            if (i > 0)
+            {
+               buildString.append(",");
+            }
+            buildString.append(parameterTypes[i]);
+
          }
       }
-      else if (!returnType.equals(other.returnType))
-      {
-         return false;
-      }
-      return true;
-   }
+      buildString.append(")");
 
+      if (genericExceptionTypes != null && genericExceptionTypes.length > 0)
+      {
+         buildString.append(" throws ");
+         for (int i = 0; i < genericExceptionTypes.length; i++)
+         {
+            if (i > 0)
+            {
+               buildString.append(",");
+            }
+            buildString.append(genericExceptionTypes[i]);
+
+         }
+      }
+      return buildString.toString();
+   }
 }

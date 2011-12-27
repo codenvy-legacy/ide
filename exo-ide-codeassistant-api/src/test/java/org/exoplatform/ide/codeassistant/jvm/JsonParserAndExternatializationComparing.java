@@ -141,42 +141,73 @@ public class JsonParserAndExternatializationComparing
       TypeInfo typeInfo = new TypeInfo();
 
       typeInfo.setModifiers(Modifier.PUBLIC);
-      typeInfo.setName("TestClass");
-      typeInfo.setQualifiedName("test.TestClass");
+      typeInfo.setName("test.TestClass");
       typeInfo.setSuperClass("java.lang.Object");
       typeInfo.setType("CLASS");
 
       String[] interfaces = new String[]{"java.io.Serializable"};
       typeInfo.setInterfaces(interfaces);
 
-      RoutineInfo publicConstructor =
-         new RoutineInfo(Modifier.PUBLIC, "TestClass", new String[]{"java.io.IOException",
-            "java.lang.IllegalStateException"}, "java.lang.Object", "Object",
-            "public test.TestClass(java.lang.Object) throws java.io.IOException, java.lang.IllegalStateException",
-            "test.TestClass");
-      RoutineInfo protectedConstructor =
-         new RoutineInfo(Modifier.PROTECTED, "TestClass", new String[]{"java.io.IOException"}, "java.lang.String",
-            "String", "protected test.TestClass(java.lang.String) throws java.io.IOException", "test.TestClass");
-      typeInfo.setConstructors(new RoutineInfo[]{publicConstructor});
-      typeInfo.setDeclaredConstructors(new RoutineInfo[]{publicConstructor, protectedConstructor});
+      MethodInfo publicConstructor =
+         new MethodInfo("test.TestClass", Modifier.PUBLIC, new String[]{"java.io.IOException",
+            "java.lang.IllegalStateException"}, new String[]{"java.lang.Object", "Object"}, true, "", "test.TestClass");
+      MethodInfo protectedConstructor =
+         new MethodInfo("test.TestClass", Modifier.PROTECTED, new String[]{"java.io.IOException"}, new String[]{
+            "java.lang.String", "String"}, true, "", "test.TestClass");
 
       MethodInfo publicMethod =
-         new MethodInfo(Modifier.PUBLIC, "method1", new String[]{"java.io.IOException",}, "java.lang.Object", "Object",
-            "public Integer test.TestClass.method1(java.lang.Object) throws java.io.IOException", "test.TestClass",
-            "java.lang.Integer", "Integer");
+         new MethodInfo("method1", Modifier.PUBLIC, new String[]{"java.io.IOException",}, new String[]{
+            "java.lang.Object", "Object"}, false, "test.TestClass", "java.lang.Integer");
       MethodInfo privateMethod =
-         new MethodInfo(Modifier.PRIVATE, "method2", new String[]{"java.io.IOException"}, "java.lang.String", "String",
-            "public Integer test.TestClass.method2(java.lang.String) throws java.io.IOException", "test.TestClass",
-            "java.lang.Integer", "Integer");
-      typeInfo.setMethods(new MethodInfo[]{publicMethod});
-      typeInfo.setDeclaredMethods(new MethodInfo[]{publicMethod, privateMethod});
+         new MethodInfo("method2", Modifier.PRIVATE, new String[]{"java.io.IOException"}, new String[]{
+            "java.lang.String", "String"}, false, "test.TestClass", "java.lang.Integer");
+      typeInfo.setMethods(new MethodInfo[]{publicConstructor, protectedConstructor, publicMethod, privateMethod});
 
       FieldInfo publicField = new FieldInfo("field1", Modifier.PUBLIC, "test.TestClass", "String");
       FieldInfo privateField = new FieldInfo("field2", Modifier.PRIVATE, "test.TestClass", "Integer");
-      typeInfo.setFields(new FieldInfo[]{publicField});
-      typeInfo.setDeclaredFields(new FieldInfo[]{publicField, privateField});
-
+      typeInfo.setFields(new FieldInfo[]{publicField, privateField});
       return typeInfo;
    }
+   //   private TypeInfo generateTypeInfo()
+   //   {
+   //      TypeInfo typeInfo = new TypeInfo();
+   //
+   //      typeInfo.setModifiers(Modifier.PUBLIC);
+   //      typeInfo.setName("test.TestClass");
+   //      typeInfo.setSuperClass("java.lang.Object");
+   //      typeInfo.setType("CLASS");
+   //
+   //      String[] interfaces = new String[]{"java.io.Serializable"};
+   //      typeInfo.setInterfaces(interfaces);
+   //
+   //      RoutineInfo publicConstructor =
+   //         new RoutineInfo(Modifier.PUBLIC, "TestClass", new String[]{"java.io.IOException",
+   //            "java.lang.IllegalStateException"}, "java.lang.Object", "Object",
+   //            "public test.TestClass(java.lang.Object) throws java.io.IOException, java.lang.IllegalStateException",
+   //            "test.TestClass");
+   //      RoutineInfo protectedConstructor =
+   //         new RoutineInfo(Modifier.PROTECTED, "TestClass", new String[]{"java.io.IOException"}, "java.lang.String",
+   //            "String", "protected test.TestClass(java.lang.String) throws java.io.IOException", "test.TestClass");
+   //      typeInfo.setConstructors(new RoutineInfo[]{publicConstructor});
+   //      typeInfo.setDeclaredConstructors(new RoutineInfo[]{publicConstructor, protectedConstructor});
+   //
+   //      MethodInfo publicMethod =
+   //         new MethodInfo(Modifier.PUBLIC, "method1", new String[]{"java.io.IOException",}, "java.lang.Object", "Object",
+   //            "public Integer test.TestClass.method1(java.lang.Object) throws java.io.IOException", "test.TestClass",
+   //            "java.lang.Integer", "Integer");
+   //      MethodInfo privateMethod =
+   //         new MethodInfo(Modifier.PRIVATE, "method2", new String[]{"java.io.IOException"}, "java.lang.String", "String",
+   //            "public Integer test.TestClass.method2(java.lang.String) throws java.io.IOException", "test.TestClass",
+   //            "java.lang.Integer", "Integer");
+   //      typeInfo.setMethods(new MethodInfo[]{publicMethod});
+   //      typeInfo.setDeclaredMethods(new MethodInfo[]{publicMethod, privateMethod});
+   //
+   //      FieldInfo publicField = new FieldInfo("field1", Modifier.PUBLIC, "test.TestClass", "String");
+   //      FieldInfo privateField = new FieldInfo("field2", Modifier.PRIVATE, "test.TestClass", "Integer");
+   //      typeInfo.setFields(new FieldInfo[]{publicField});
+   //      typeInfo.setDeclaredFields(new FieldInfo[]{publicField, privateField});
+   //
+   //      return typeInfo;
+   //   }
 
 }

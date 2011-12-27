@@ -38,7 +38,7 @@ public class TestFieldInfoExternalization extends BaseTest
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
-      serializedFieldInfo = new FieldInfo("java.lang.String", Modifier.PUBLIC, "field", "test.TestClass");
+      serializedFieldInfo = new FieldInfo("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass");
       byte[] serializedData = serializeObject(serializedFieldInfo);
       deserializedFieldInfo = new FieldInfo();
       deserializedFieldInfo.readExternal(createObjectInputStream(serializedData));

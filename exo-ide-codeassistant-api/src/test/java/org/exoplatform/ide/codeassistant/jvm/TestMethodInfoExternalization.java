@@ -21,7 +21,6 @@ package org.exoplatform.ide.codeassistant.jvm;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,10 +40,9 @@ public class TestMethodInfoExternalization extends BaseTest
    public void setUp() throws IOException, ClassNotFoundException
    {
       serializedMethodInfo =
-         new MethodInfo(Modifier.PUBLIC, "method", new String[]{"java.io.IOException",
-            "java.lang.IlligalStateException"}, "java.lang.Object", "Object",
-            "public Integer test.TestClass.method() throws java.io.IOException, java.lang.IllegalStateException",
-            "test.TestClass", "java.lang.Integer", "Integer");
+         new MethodInfo("method", Modifier.PUBLIC, new String[]{"java.io.IOException",
+            "java.lang.IlligalStateException"}, new String[]{"java.lang.Object", "Object"}, false, "test.TestClass",
+            "java.lang.Integer");
       byte[] serializedData = serializeObject(serializedMethodInfo);
       deserializedMethodInfo = new MethodInfo();
       deserializedMethodInfo.readExternal(createObjectInputStream(serializedData));
@@ -71,19 +69,7 @@ public class TestMethodInfoExternalization extends BaseTest
    @Test
    public void testParameterTypesFieldDeserialization()
    {
-      assertEquals(serializedMethodInfo.getParameterTypes(), deserializedMethodInfo.getParameterTypes());
-   }
-
-   @Test
-   public void testGenericParametersTypesFieldDeserialization()
-   {
-      assertEquals(serializedMethodInfo.getGenericParameterTypes(), deserializedMethodInfo.getGenericParameterTypes());
-   }
-
-   @Test
-   public void testGenericFieldDeserialization()
-   {
-      assertEquals(serializedMethodInfo.getGeneric(), deserializedMethodInfo.getGeneric());
+      assertArrayEquals(serializedMethodInfo.getParameterTypes(), deserializedMethodInfo.getParameterTypes());
    }
 
    @Test
@@ -91,12 +77,6 @@ public class TestMethodInfoExternalization extends BaseTest
    {
       assertArrayEquals(serializedMethodInfo.getGenericExceptionTypes(),
          deserializedMethodInfo.getGenericExceptionTypes());
-   }
-
-   @Test
-   public void testReturnTypeDeserialization()
-   {
-      assertEquals(serializedMethodInfo.getReturnType(), deserializedMethodInfo.getReturnType());
    }
 
    @Test

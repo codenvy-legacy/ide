@@ -45,7 +45,7 @@ public abstract class Member implements Externalizable
    {
    }
 
-   public Member(int modifiers, String name)
+   public Member(String name, int modifiers)
    {
       this.modifiers = modifiers;
       this.name = name;
