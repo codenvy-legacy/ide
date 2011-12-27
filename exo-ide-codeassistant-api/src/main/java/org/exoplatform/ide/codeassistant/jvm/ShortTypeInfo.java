@@ -51,7 +51,7 @@ public class ShortTypeInfo extends Member
       super(name, modifiers);
       this.type = type;
    }
-
+   
    public String getType()
    {
       return type;

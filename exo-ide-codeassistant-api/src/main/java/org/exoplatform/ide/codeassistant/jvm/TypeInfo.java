@@ -21,11 +21,11 @@ package org.exoplatform.ide.codeassistant.jvm;
 import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readObjectArray;
 import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFArray;
 import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.*;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFArray;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -33,20 +33,20 @@ import java.io.ObjectOutput;
  */
 public class TypeInfo extends ShortTypeInfo
 {
-   private MethodInfo[] methods;
+   private List<MethodInfo> methods;
 
-   private FieldInfo[] fields;
+   private List<FieldInfo> fields;
 
    private String superClass;
 
-   private String[] interfaces;
+   private List<String> interfaces;
 
    public TypeInfo()
    {
    }
 
-   public TypeInfo(String name, int modifiers, MethodInfo[] methods, FieldInfo[] fields, String superClass,
-      String[] interfaces, String type)
+   public TypeInfo(String name, int modifiers, List<MethodInfo> methods, List<FieldInfo> fields, String superClass,
+      List<String> interfaces, String type)
    {
       super(name, modifiers, type);
       this.methods = methods;
@@ -58,7 +58,7 @@ public class TypeInfo extends ShortTypeInfo
    /**
     * @return the methods
     */
-   public MethodInfo[] getMethods()
+   public List<MethodInfo> getMethods()
    {
       return methods;
    }
@@ -67,7 +67,7 @@ public class TypeInfo extends ShortTypeInfo
     * @param methods
     *           the methods to set
     */
-   public void setMethods(MethodInfo[] methods)
+   public void setMethods(List<MethodInfo> methods)
    {
       this.methods = methods;
    }
@@ -75,7 +75,7 @@ public class TypeInfo extends ShortTypeInfo
    /**
     * @return the fields
     */
-   public FieldInfo[] getFields()
+   public List<FieldInfo> getFields()
    {
       return fields;
    }
@@ -84,7 +84,7 @@ public class TypeInfo extends ShortTypeInfo
     * @param fields
     *           the fields to set
     */
-   public void setFields(FieldInfo[] fields)
+   public void setFields(List<FieldInfo> fields)
    {
       this.fields = fields;
    }
@@ -109,7 +109,7 @@ public class TypeInfo extends ShortTypeInfo
    /**
     * @return the interfaces
     */
-   public String[] getInterfaces()
+   public List<String> getInterfaces()
    {
       return interfaces;
    }
@@ -118,7 +118,7 @@ public class TypeInfo extends ShortTypeInfo
     * @param interfaces
     *           the interfaces to set
     */
-   public void setInterfaces(String[] interfaces)
+   public void setInterfaces(List<String> interfaces)
    {
       this.interfaces = interfaces;
    }
