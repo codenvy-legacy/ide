@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import org.exoplatform.ide.codeassistant.asm.old.JarParser;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.ClassNamesExtractor;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
@@ -47,6 +48,12 @@ public class PerformanceTest
 {
 
    private static final File source = new File("target/test-classes/testclasses");
+
+   @Test
+   public void testName() throws Exception
+   {
+
+   }
 
    @Ignore
    @Test

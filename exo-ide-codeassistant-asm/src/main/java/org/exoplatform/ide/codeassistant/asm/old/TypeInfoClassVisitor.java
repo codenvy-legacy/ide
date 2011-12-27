@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.asm;
+package org.exoplatform.ide.codeassistant.asm.old;
 
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.objectweb.asm.AnnotationVisitor;
@@ -48,7 +48,7 @@ public class TypeInfoClassVisitor implements ClassVisitor
    @Override
    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces)
    {
-      this.builder = new TypeInfoBuilder(access, name, superName, interfaces);
+      //this.builder = new TypeInfoBuilder(access, Type.getObjectType(name), superName, interfaces);
    }
 
    @Override
@@ -80,7 +80,7 @@ public class TypeInfoClassVisitor implements ClassVisitor
    @Override
    public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
    {
-      builder.addField(new FieldInfoBuilder(access, name, desc, builder.getQualifiedName()).buildFieldInfo());
+      // builder.addField(new FieldInfoBuilder(access, name, desc, builder.getTypeName()).buildFieldInfo());
       // no need detailed info about field, so return null
       return null;
    }
@@ -88,20 +88,20 @@ public class TypeInfoClassVisitor implements ClassVisitor
    @Override
    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
    {
-      if (name.equals("<init>"))
-      {
-         builder.addConstructor(new ConstructorInfoBuilder(access, exceptions, desc, builder.getQualifiedName())
-            .buildConstructorInfo());
-      }
-      /*
-       * "<clinit>" is static class initialization area, so ignore it
-       */
-      else if (!name.equals("<clinit>"))
-      {
-         builder.addMethod(new MethodInfoBuilder(access, name, exceptions, desc, builder.getQualifiedName())
-            .buildMethodInfo());
-      }
-      // no need detailed info about method, so return null
+      //      if (name.equals("<init>"))
+      //      {
+      //         builder.addConstructor(new ConstructorInfoBuilder(access, exceptions, desc, builder.getTypeName())
+      //            .buildConstructorInfo());
+      //      }
+      //      /*
+      //       * "<clinit>" is static class initialization area, so ignore it
+      //       */
+      //      else if (!name.equals("<clinit>"))
+      //      {
+      //         builder.addMethod(new MethodInfoBuilder(access, name, exceptions, desc, builder.getTypeName())
+      //            .buildMethodInfo());
+      //      }
+      //      // no need detailed info about method, so return null
       return null;
    }
 

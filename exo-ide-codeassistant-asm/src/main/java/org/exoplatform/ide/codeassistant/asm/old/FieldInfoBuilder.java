@@ -16,9 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.asm;
+package org.exoplatform.ide.codeassistant.asm.old;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 
 /**
  * This class used for building FieldInfo objects
@@ -26,20 +25,21 @@ import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 public class FieldInfoBuilder extends MemberInfoBuilder
 {
 
-   protected final String desc;
-
-   protected final String declaredClass;
-
-   public FieldInfoBuilder(int access, String name, String desc, String declaredClass)
-   {
-      super(access, name);
-      this.desc = desc.replace('/', '.');
-      this.declaredClass = declaredClass;
-   }
-
-   public FieldInfo buildFieldInfo()
-   {
-      return new FieldInfo(transformTypeFormat(desc), access, name, declaredClass);
-   }
+   //   protected final String desc;
+   //
+   //   protected final Type declaredClass;
+   //
+   //   public FieldInfoBuilder(int access, String name, String desc, Type declaredClass)
+   //   {
+   //      super(access, name);
+   //      this.desc = desc.replace('/', '.');
+   //      this.declaredClass = declaredClass;
+   //   }
+   //
+   //   public FieldInfo buildFieldInfo()
+   //   {
+   //      //return new FieldInfo(transformTypeFormat(desc), access, name, declaredClass);
+   //      return new FieldInfo(name, desc, access, declaredClass.getInternalName());
+   //   }
 
 }

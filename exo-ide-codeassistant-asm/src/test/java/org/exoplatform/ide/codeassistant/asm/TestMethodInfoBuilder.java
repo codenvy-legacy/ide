@@ -18,194 +18,195 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
-import static org.junit.Assert.assertEquals;
-
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.junit.Test;
-
-import java.lang.reflect.Modifier;
 
 public class TestMethodInfoBuilder
 {
-
-   private final int access = Modifier.PUBLIC & Modifier.ABSTRACT;
-
-   private final String name = "Method1";
-
-   private final String[] exceptions = {};
-
-   private final String desc = "(Z)Ljava/lang/String;";
-
-   private final String declaredClass = "org.exoplatform.test.TestClass";
+   //
+   //   private final int access = Modifier.PUBLIC & Modifier.ABSTRACT;
+   //
+   //   private final String name = "Method1";
+   //
+   //   private final String[] exceptions = {};
+   //
+   //   private final String desc = "(Z)Ljava/lang/String;";
+   //
+   //   private final String declaredClass = "org.exoplatform.test.TestClass";
+   //
+   //   @Test
+   //   public void testAccess()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, name, exceptions, desc, declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT, methodInfo.getModifiers());
+   //      assertEquals("public abstract", methodInfo.modifierToString());
+   //   }
+   //
+   //   @Test
+   //   public void testName()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, "Method1", exceptions, desc, declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("Method1", methodInfo.getName());
+   //   }
+   //
+   //   @Test
+   //   public void testExceptions()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(access, name, new String[]{"java/io/IOException", "java/lang/Exception"}, desc,
+   //            declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals(2, methodInfo.getGenericExceptionTypes().length);
+   //      assertEquals("java.io.IOException", methodInfo.getGenericExceptionTypes()[0]);
+   //      assertEquals("java.lang.Exception", methodInfo.getGenericExceptionTypes()[1]);
+   //   }
+   //
+   //   @Test
+   //   public void testSimpleReturnType()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "()Z", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("boolean", methodInfo.getReturnType());
+   //      assertEquals("boolean", methodInfo.getGenericReturnType());
+   //   }
+   //
+   //   @Test
+   //   public void testVoidReturnType()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "()V", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("void", methodInfo.getReturnType());
+   //      assertEquals("void", methodInfo.getGenericReturnType());
+   //   }
+   //
+   //   @Test
+   //   public void testArrayReturnType()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "()[[Z", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("boolean[][]", methodInfo.getReturnType());
+   //      assertEquals("boolean[][]", methodInfo.getGenericReturnType());
+   //   }
+   //
+   //   @Test
+   //   public void testObjectReturnType()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(access, name, exceptions, "()Ljava/lang/String;", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("String", methodInfo.getReturnType());
+   //      assertEquals("java.lang.String", methodInfo.getGenericReturnType());
+   //   }
+   //
+   //   @Test
+   //   public void testSimpleParam()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "(Z)V", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("(boolean)", methodInfo.getParameterTypes());
+   //      assertEquals("(boolean)", methodInfo.getGenericParameterTypes());
+   //   }
+   //
+   //   @Test
+   //   public void testArrayParam()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "([Z)V", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("(boolean[])", methodInfo.getParameterTypes());
+   //      assertEquals("(boolean[])", methodInfo.getGenericParameterTypes());
+   //   }
+   //
+   //   @Test
+   //   public void testTwoParams()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "(Z I)V", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("(boolean, int)", methodInfo.getParameterTypes());
+   //      assertEquals("(boolean, int)", methodInfo.getGenericParameterTypes());
+   //   }
+   //
+   //   @Test
+   //   public void testObjectParams()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(access, name, exceptions, "(Ljava/lang/String; Ljava/lang/Object;)V", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("(String, Object)", methodInfo.getParameterTypes());
+   //      assertEquals("(java.lang.String, java.lang.Object)", methodInfo.getGenericParameterTypes());
+   //   }
+   //
+   //   @Test
+   //   public void testDeclaringClass()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(access, name, exceptions, desc, "org.exoplatform.test.TestClass");
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("org.exoplatform.test.TestClass", methodInfo.getDeclaringClass());
+   //   }
+   //
+   //   @Test
+   //   public void testGenericPublicWithoutParams()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(Modifier.PUBLIC, "method1", new String[0], "()V", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("public void org.exoplatform.test.TestClass.method1()", methodInfo.getGeneric());
+   //   }
+   //
+   //   @Test
+   //   public void testGenericProtectedWithSimpleParam()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(Modifier.PROTECTED, "method1", new String[0], "(F)V", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("protected void org.exoplatform.test.TestClass.method1(float)", methodInfo.getGeneric());
+   //   }
+   //
+   //   @Test
+   //   public void testGenericPublicAbstractWithTwoParams()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, "method1", new String[0],
+   //            "(Z Ljava/lang/String;)D", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals("public abstract double org.exoplatform.test.TestClass.method1(boolean, java.lang.String)",
+   //         methodInfo.getGeneric());
+   //   }
+   //
+   //   @Test
+   //   public void testGenericPublicWithExceptions()
+   //   {
+   //      MethodInfoBuilder methodInfoBuilder =
+   //         new MethodInfoBuilder(Modifier.PUBLIC, "method1", new String[]{"java/lang/Exception", "java/io/IOException"},
+   //            "()V", declaredClass);
+   //      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
+   //
+   //      assertEquals(
+   //         "public void org.exoplatform.test.TestClass.method1() throws java.lang.Exception, java.io.IOException",
+   //         methodInfo.getGeneric());
+   //   }
 
    @Test
-   public void testAccess()
+   public void testName() throws Exception
    {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, name, exceptions, desc, declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
 
-      assertEquals(Modifier.PUBLIC | Modifier.ABSTRACT, methodInfo.getModifiers());
-      assertEquals("public abstract", methodInfo.modifierToString());
-   }
-
-   @Test
-   public void testName()
-   {
-      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, "Method1", exceptions, desc, declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("Method1", methodInfo.getName());
-   }
-
-   @Test
-   public void testExceptions()
-   {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(access, name, new String[]{"java/io/IOException", "java/lang/Exception"}, desc,
-            declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals(2, methodInfo.getGenericExceptionTypes().length);
-      assertEquals("java.io.IOException", methodInfo.getGenericExceptionTypes()[0]);
-      assertEquals("java.lang.Exception", methodInfo.getGenericExceptionTypes()[1]);
-   }
-
-   @Test
-   public void testSimpleReturnType()
-   {
-      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "()Z", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("boolean", methodInfo.getReturnType());
-      assertEquals("boolean", methodInfo.getGenericReturnType());
-   }
-
-   @Test
-   public void testVoidReturnType()
-   {
-      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "()V", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("void", methodInfo.getReturnType());
-      assertEquals("void", methodInfo.getGenericReturnType());
-   }
-
-   @Test
-   public void testArrayReturnType()
-   {
-      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "()[[Z", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("boolean[][]", methodInfo.getReturnType());
-      assertEquals("boolean[][]", methodInfo.getGenericReturnType());
-   }
-
-   @Test
-   public void testObjectReturnType()
-   {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(access, name, exceptions, "()Ljava/lang/String;", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("String", methodInfo.getReturnType());
-      assertEquals("java.lang.String", methodInfo.getGenericReturnType());
-   }
-
-   @Test
-   public void testSimpleParam()
-   {
-      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "(Z)V", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("(boolean)", methodInfo.getParameterTypes());
-      assertEquals("(boolean)", methodInfo.getGenericParameterTypes());
-   }
-
-   @Test
-   public void testArrayParam()
-   {
-      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "([Z)V", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("(boolean[])", methodInfo.getParameterTypes());
-      assertEquals("(boolean[])", methodInfo.getGenericParameterTypes());
-   }
-
-   @Test
-   public void testTwoParams()
-   {
-      MethodInfoBuilder methodInfoBuilder = new MethodInfoBuilder(access, name, exceptions, "(Z I)V", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("(boolean, int)", methodInfo.getParameterTypes());
-      assertEquals("(boolean, int)", methodInfo.getGenericParameterTypes());
-   }
-
-   @Test
-   public void testObjectParams()
-   {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(access, name, exceptions, "(Ljava/lang/String; Ljava/lang/Object;)V", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("(String, Object)", methodInfo.getParameterTypes());
-      assertEquals("(java.lang.String, java.lang.Object)", methodInfo.getGenericParameterTypes());
-   }
-
-   @Test
-   public void testDeclaringClass()
-   {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(access, name, exceptions, desc, "org.exoplatform.test.TestClass");
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("org.exoplatform.test.TestClass", methodInfo.getDeclaringClass());
-   }
-
-   @Test
-   public void testGenericPublicWithoutParams()
-   {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(Modifier.PUBLIC, "method1", new String[0], "()V", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("public void org.exoplatform.test.TestClass.method1()", methodInfo.getGeneric());
-   }
-
-   @Test
-   public void testGenericProtectedWithSimpleParam()
-   {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(Modifier.PROTECTED, "method1", new String[0], "(F)V", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("protected void org.exoplatform.test.TestClass.method1(float)", methodInfo.getGeneric());
-   }
-
-   @Test
-   public void testGenericPublicAbstractWithTwoParams()
-   {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(Modifier.PUBLIC | Modifier.ABSTRACT, "method1", new String[0],
-            "(Z Ljava/lang/String;)D", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals("public abstract double org.exoplatform.test.TestClass.method1(boolean, java.lang.String)",
-         methodInfo.getGeneric());
-   }
-
-   @Test
-   public void testGenericPublicWithExceptions()
-   {
-      MethodInfoBuilder methodInfoBuilder =
-         new MethodInfoBuilder(Modifier.PUBLIC, "method1", new String[]{"java/lang/Exception", "java/io/IOException"},
-            "()V", declaredClass);
-      MethodInfo methodInfo = methodInfoBuilder.buildMethodInfo();
-
-      assertEquals(
-         "public void org.exoplatform.test.TestClass.method1() throws java.lang.Exception, java.io.IOException",
-         methodInfo.getGeneric());
    }
 
 }

@@ -16,10 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.asm;
+package org.exoplatform.ide.codeassistant.asm.old;
 
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.objectweb.asm.ClassReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +40,26 @@ import java.io.InputStream;
  */
 public class ClassParser
 {
-   
+
+   private static final Logger LOG = LoggerFactory.getLogger(ClassParser.class);
+
+   public static final TypeInfo OBJECT_TYPEINFO = parseQuietly(getClassFile(Object.class));
+
    private ClassParser()
    {
+   }
+
+   /**
+    * 
+    * @param class2Find
+    *           - class to find
+    * @return - content of the 'class2Find.class' file
+    */
+   public static InputStream getClassFile(Class<?> class2Find)
+   {
+      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+      String classResource = class2Find.getName().replace('.', '/') + ".class";
+      return contextClassLoader.getResourceAsStream(classResource);
    }
 
    public static TypeInfo parse(InputStream classStream) throws IOException
@@ -48,7 +67,24 @@ public class ClassParser
       ClassReader cr = new ClassReader(classStream);
       TypeInfoClassVisitor typeInfoClassVisitor = new TypeInfoClassVisitor();
       cr.accept(typeInfoClassVisitor, ClassReader.SKIP_CODE);
-      return typeInfoClassVisitor.getBuilder().buildTypeInfo();
+      return null;//typeInfoClassVisitor.getBuilder().buildTypeInfo();
+   }
+
+   private static TypeInfo parseQuietly(InputStream classStream)
+   {
+      try
+      {
+         ClassReader cr = new ClassReader(classStream);
+         TypeInfoClassVisitor typeInfoClassVisitor = new TypeInfoClassVisitor();
+         cr.accept(typeInfoClassVisitor, ClassReader.SKIP_CODE);
+         return null;//typeInfoClassVisitor.getBuilder().buildTypeInfo();
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+         LOG.error(e.getLocalizedMessage(), e);
+      }
+      return null;
    }
 
 }
