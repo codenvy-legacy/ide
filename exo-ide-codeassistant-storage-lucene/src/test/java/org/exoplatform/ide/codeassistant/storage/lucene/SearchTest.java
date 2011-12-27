@@ -141,8 +141,8 @@ public class SearchTest
       TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass");
 
       assertEquals("test.classes.ATestClass", typeInfo.getName());
-      assertEquals(1, typeInfo.getFields().length);
-      assertEquals(2, typeInfo.getMethods().length);
+      assertEquals(1, typeInfo.getFields().size());
+      assertEquals(2, typeInfo.getMethods().size());
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
    }
 

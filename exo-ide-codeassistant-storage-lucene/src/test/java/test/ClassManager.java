@@ -30,7 +30,7 @@ import test.interfaces.DTestInterface;
 import test.interfaces.ETestInterface;
 import test.interfaces.ETestInterface2;
 
-import org.exoplatform.ide.codeassistant.asm.old.ClassParser;
+import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;

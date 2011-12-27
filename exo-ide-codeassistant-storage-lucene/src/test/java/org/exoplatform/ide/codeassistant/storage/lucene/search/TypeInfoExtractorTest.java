@@ -31,7 +31,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.IndexReader;
-import org.exoplatform.ide.codeassistant.asm.old.ClassParser;
+import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexer;

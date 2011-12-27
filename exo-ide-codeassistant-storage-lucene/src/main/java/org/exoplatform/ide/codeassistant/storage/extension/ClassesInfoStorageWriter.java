@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.storage.extension;
 
-import org.exoplatform.ide.codeassistant.asm.JarParser;
+import org.exoplatform.ide.codeassistant.asm.old.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
