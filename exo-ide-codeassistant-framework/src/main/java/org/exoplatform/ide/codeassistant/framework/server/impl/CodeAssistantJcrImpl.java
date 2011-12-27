@@ -144,8 +144,9 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), node.getProperty(
-               "exoide:fqn").getString(), node.getProperty("exoide:type").getString()));
+            types.add(new ShortTypeInfo(node.getProperty("exoide:fqn").getString(),//
+               (int)node.getProperty("exoide:modifieres").getLong(),//
+               node.getProperty("exoide:type").getString()));
          }
 
       }
@@ -186,8 +187,9 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), node.getProperty(
-               "exoide:fqn").getString(), node.getProperty("exoide:type").getString()));
+            types.add(new ShortTypeInfo(node.getProperty("exoide:fqn").getString(),//
+               (int)node.getProperty("exoide:modifieres").getLong(),// 
+               node.getProperty("exoide:type").getString()));
          }
 
       }
@@ -232,8 +234,9 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo((int)node.getProperty("exoide:modifieres").getLong(), node.getProperty("exoide:className").getString(), node.getProperty(
-               "exoide:fqn").getString(), node.getProperty("exoide:type").getString()));
+            types.add(new ShortTypeInfo(node.getProperty("exoide:fqn").getString(), //
+               (int)node.getProperty("exoide:modifieres").getLong(),//
+               node.getProperty("exoide:type").getString()));
          }
          return types;
       }

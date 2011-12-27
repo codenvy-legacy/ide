@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.codeassitant.framework;
 
-import junit.framework.TestCase;
-
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
@@ -30,6 +28,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collections;
+
+import junit.framework.TestCase;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,37 +43,19 @@ public class ClassInfoExtractorTest extends TestCase
    public void testExctractClass() throws ClassFormatError, ClassNotFoundException
    {
       TypeInfo cd = TypeInfoExtractor.extract(A.class);
-      assertEquals(A.class.getDeclaredConstructors().length, cd.getDeclaredConstructors().length);
-      assertEquals(A.class.getConstructors().length, cd.getConstructors().length);
-      assertEquals(A.class.getDeclaredMethods().length, cd.getDeclaredMethods().length);
       assertEquals(A.class.getMethods().length, cd.getMethods().length);
       assertEquals(A.class.getFields().length, cd.getFields().length);
-      assertEquals(A.class.getDeclaredFields().length, cd.getDeclaredFields().length);
-      assertEquals(A.class.getCanonicalName(), cd.getQualifiedName());
-      assertEquals(A.class.getSimpleName(), cd.getName());
-
-      Method[] c = Collections.class.getMethods();
-      for (Method element : c)
-      {
-         System.out.print(element.getName() + "(");
-         Type[] types = element.getParameterTypes();
-         for (Type type : types)
-         {
-            System.out.print(type + ",");
-         }
-         System.out.print(")");
-         System.out.println();
-      }
+      assertEquals(A.class.getCanonicalName(), cd.getName());
    }
 
    public void testExctractField()
    {
       TypeInfo cd = TypeInfoExtractor.extract(A.class);
-      FieldInfo[] fds = cd.getDeclaredFields();
-      Field[] fields = A.class.getDeclaredFields();
+      Field[] fields = A.class.getFields();
+      FieldInfo[] fds = cd.getFields();
       for (Field field : fields)
       {
-         FieldInfo fd = getFieldInfo(fds, field.getName());
+         FieldInfo fd = getFieldInfo(fds, field);
          if (fd == null)
          {
             fail();
@@ -83,11 +65,13 @@ public class ClassInfoExtractorTest extends TestCase
       }
    }
 
-   private FieldInfo getFieldInfo(FieldInfo[] fds, String fieldName)
+   private FieldInfo getFieldInfo(FieldInfo[] fds, Field field)
    {
+      
       for (FieldInfo fd : fds)
       {
-         if (fd.getName().equals(fieldName))
+         System.err.println(fd.toString());
+         if (fd.getName().equals(field.getName()))
          {
             return fd;
          }
@@ -98,11 +82,11 @@ public class ClassInfoExtractorTest extends TestCase
    public void testExctractMethod()
    {
       TypeInfo cd = TypeInfoExtractor.extract(B.class);
-      MethodInfo[] mds = cd.getDeclaredMethods();
+      MethodInfo[] mds = cd.getMethods();
       Method[] methods = B.class.getDeclaredMethods();
       for (Method method : methods)
       {
-         MethodInfo md = getMethodInfo(mds, method.toGenericString());
+         MethodInfo md = getMethodInfo(mds, method.getName());
          if (md == null)
          {
             fail();
@@ -118,11 +102,11 @@ public class ClassInfoExtractorTest extends TestCase
       assertEquals("ONE", en.getFields()[0].getName());
    }
 
-   private MethodInfo getMethodInfo(MethodInfo[] mds, String generic)
+   private MethodInfo getMethodInfo(MethodInfo[] mds, String name)
    {
       for (MethodInfo md : mds)
       {
-         if (md.getGeneric().equals(generic))
+         if (md.getName().equals(name))
          {
             return md;
          }

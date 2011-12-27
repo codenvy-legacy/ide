@@ -19,8 +19,8 @@
 package org.exoplatform.ide.codeassistant.framework.server.extractors;
 
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 
 import java.lang.reflect.Constructor;
@@ -38,10 +38,12 @@ import java.lang.reflect.Method;
 */
 public class TypeInfoExtractor
 {
-   
-   public enum JavaType {
-      CLASS, INTERFACE, ANNOTATION, ENUM
+
+   public static class V
+   {
+
    }
+
    /**
     * @param clazz
     * @return
@@ -51,28 +53,28 @@ public class TypeInfoExtractor
    {
       TypeInfo classDescription = new TypeInfo();
       Constructor<?>[] constructors = clazz.getConstructors();
-      RoutineInfo[] cds = new RoutineInfo[constructors.length];
+      MethodInfo[] cds = new MethodInfo[constructors.length];
       for (int i = 0; i < constructors.length; i++)
       {
-         cds[i] = RoutineInfoExtractor.extractConstructorInfo(constructors[i]);
+         cds[i] = MethodInfoExtractor.extractConstructorInfo(constructors[i]);
       }
       constructors = clazz.getDeclaredConstructors();
-      RoutineInfo[] decCds = new RoutineInfo[constructors.length];
+      MethodInfo[] decCds = new MethodInfo[constructors.length];
       for (int i = 0; i < constructors.length; i++)
       {
-         decCds[i] = RoutineInfoExtractor.extractConstructorInfo(constructors[i]);
+         decCds[i] = MethodInfoExtractor.extractConstructorInfo(constructors[i]);
       }
       Method[] methods = clazz.getMethods();
       MethodInfo[] mds = new MethodInfo[methods.length];
       for (int i = 0; i < methods.length; i++)
       {
-         mds[i] = RoutineInfoExtractor.extractMethodInfo(methods[i]);
+         mds[i] = MethodInfoExtractor.extractMethodInfo(methods[i]);
       }
       methods = clazz.getDeclaredMethods();
       MethodInfo[] decMds = new MethodInfo[methods.length];
       for (int i = 0; i < methods.length; i++)
       {
-         decMds[i] = RoutineInfoExtractor.extractMethodInfo(methods[i]);
+         decMds[i] = MethodInfoExtractor.extractMethodInfo(methods[i]);
       }
       Class<?>[] interfaces = clazz.getInterfaces();
       String[] iFaces = new String[interfaces.length];
@@ -85,18 +87,20 @@ public class TypeInfoExtractor
       FieldInfo[] fds = new FieldInfo[fields.length];
       for (int i = 0; i < fields.length; i++)
       {
-         fds[i] =
-            new FieldInfo(fields[i].getType().getSimpleName(), fields[i].getModifiers(), fields[i].getName(), fields[i]
-               .getDeclaringClass().getCanonicalName());
+         fds[i] = new FieldInfo(fields[i].getName(),//
+            fields[i].getModifiers(),//
+            fields[i].getType().getCanonicalName(), //
+            fields[i].getDeclaringClass().getCanonicalName());
       }
-      fields = clazz.getDeclaredFields();
-      FieldInfo[] decFds = new FieldInfo[fields.length];
-      for (int i = 0; i < fields.length; i++)
-      {
-         decFds[i] =
-            new FieldInfo(fields[i].getType().getSimpleName(), fields[i].getModifiers(), fields[i].getName(), fields[i]
-               .getDeclaringClass().getCanonicalName());
-      }
+      //      fields = clazz.getDeclaredFields();
+      //      TODO: need check declared fields
+      //      FieldInfo[] decFds = new FieldInfo[fields.length];
+      //      for (int i = 0; i < fields.length; i++)
+      //      {
+      //         decFds[i] =
+      //            new FieldInfo(fields[i].getType().getCanonicalName(), fields[i].getModifiers(), fields[i].getName(), fields[i]
+      //               .getDeclaringClass().getCanonicalName());
+      //      }
 
       classDescription.setModifiers(clazz.getModifiers());
       classDescription.setInterfaces(iFaces);
@@ -106,17 +110,11 @@ public class TypeInfoExtractor
          classDescription.setSuperClass(clazz.getSuperclass().getCanonicalName());
       }
 
-      classDescription.setConstructors(cds);
-      classDescription.setDeclaredConstructors(decCds);
-
       classDescription.setFields(fds);
-      classDescription.setDeclaredFields(decFds);
 
       classDescription.setMethods(mds);
-      classDescription.setDeclaredMethods(decMds);
 
-      classDescription.setQualifiedName(clazz.getCanonicalName());
-      classDescription.setName(clazz.getSimpleName());
+      classDescription.setName(clazz.getCanonicalName());
 
       if (clazz.isAnnotation())
       {
@@ -126,7 +124,7 @@ public class TypeInfoExtractor
       {
          classDescription.setType(JavaType.INTERFACE.name());
       }
-      else if(clazz.isEnum())
+      else if (clazz.isEnum())
       {
          classDescription.setType(JavaType.ENUM.name());
       }

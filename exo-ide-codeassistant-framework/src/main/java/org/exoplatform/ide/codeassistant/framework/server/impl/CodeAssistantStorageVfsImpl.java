@@ -169,10 +169,8 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
       {
          info.setModifiers(((Double)i.getPropertyValue("exoide:modifieres")).intValue());
       }
-      if (i.hasProperty("exoide:className"))
-         info.setName((String)i.getPropertyValue("exoide:className"));
       if (i.hasProperty("exoide:fqn"))
-         info.setQualifiedName((String)i.getPropertyValue("exoide:fqn"));
+         info.setName((String)i.getPropertyValue("exoide:fqn"));
       if (i.hasProperty("exoide:type"))
          info.setType((String)i.getPropertyValue("exoide:type"));
       return info;

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.codeassitant.framework;
 
-import java.lang.reflect.Modifier;
 import java.util.Set;
 
 /**
