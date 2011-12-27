@@ -48,6 +48,8 @@ public class AvailableDependencies extends AbstractTestModule
       static final String DEPENDENCY_LOCATOR = "//table[@id='" + DEPENDENCIES_GRID_ID
          + "']//div/span[contains(text(), '%s')]";
 
+      static final String DEPENDENCY_SELECTOR = "table#" + DEPENDENCIES_GRID_ID + " tbody:first-of-type>tr";
+
       static final String ATTRIBUTE_ROW_LOCATOR = "//table[@id='" + ATTRIBUTES_GRID_ID + "']//tr[contains(., '%s')]";;
 
       static final String ATTRIBUTE_SELECTOR = "table#" + ATTRIBUTES_GRID_ID + " tbody:first-of-type>tr";
@@ -72,7 +74,7 @@ public class AvailableDependencies extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -96,7 +98,7 @@ public class AvailableDependencies extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -145,6 +147,31 @@ public class AvailableDependencies extends AbstractTestModule
    }
 
    /**
+    * Returns number of the dependencies.
+    * 
+    * @return int number of the dependencies
+    */
+   public int getDependencyCount()
+   {
+      return driver().findElements(By.cssSelector(Locators.DEPENDENCY_SELECTOR)).size();
+   }
+
+   /**
+    * Wait for dependencies to load.
+    */
+   public void waitForDependencies()
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return getDependencyCount() > 0;
+         }
+      });
+   }
+
+   /**
     * Select dependency by it's name.
     * 
     * @param dependency dependency
@@ -153,7 +180,9 @@ public class AvailableDependencies extends AbstractTestModule
    {
       try
       {
-         driver().findElement(By.xpath(String.format(Locators.DEPENDENCY_LOCATOR, dependency))).click();
+         WebElement dependencyElement =
+            driver().findElement(By.xpath(String.format(Locators.DEPENDENCY_LOCATOR, dependency)));
+         dependencyElement.click();
       }
       catch (NoSuchElementException e)
       {

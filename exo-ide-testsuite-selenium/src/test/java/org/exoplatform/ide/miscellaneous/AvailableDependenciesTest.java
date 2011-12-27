@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.junit.Test;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,22 +43,38 @@ public class AvailableDependenciesTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.AVAILABLE_DEPENDENCIES);
       IDE.AVAILABLE_DEPENDENCIES.waitOpened();
+      IDE.AVAILABLE_DEPENDENCIES.waitForDependencies();
       assertEquals(0, IDE.AVAILABLE_DEPENDENCIES.getAttributeCount());
 
-      IDE.AVAILABLE_DEPENDENCIES.selectDependency("exo-ide-framework-client");
-      assertEquals("Apache Maven", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Created-By"));
-      assertEquals("eXo IDE :: Framework : Client",
-         IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Title"));
-      assertEquals("eXo Platform SAS", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor"));
-      assertEquals("org.exoplatform.ide", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor-Id"));
+      //This is because of scroll problem - works only in Chrome:
+      if (driver instanceof ChromeDriver)
+      {
+         IDE.AVAILABLE_DEPENDENCIES.selectDependency("exo-ide-framework-client");
+         assertEquals("Apache Maven", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Created-By"));
+         assertEquals("eXo IDE :: Framework : Client",
+            IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Title"));
+         assertEquals("eXo Platform SAS", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor"));
+         assertEquals("org.exoplatform.ide", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor-Id"));
 
-      IDE.AVAILABLE_DEPENDENCIES.selectDependency("exo-gwtframework-ui");
-      assertEquals("Apache Maven", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Created-By"));
-      assertEquals("eXo GWT Framework :: UI",
-         IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Title"));
-      assertEquals("eXo Platform SAS", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor"));
-      assertEquals("org.exoplatform.gwt", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor-Id"));
-      
+         IDE.AVAILABLE_DEPENDENCIES.selectDependency("exo-gwtframework-ui");
+         assertEquals("Apache Maven", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Created-By"));
+         assertEquals("eXo GWT Framework :: UI", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Title"));
+         assertEquals("eXo Platform SAS", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor"));
+         assertEquals("org.exoplatform.gwt", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor-Id"));
+      }
+      else
+      {
+         IDE.AVAILABLE_DEPENDENCIES.selectDependency("activation");
+         assertEquals("javax.activation", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Extension-Name"));
+         assertEquals("Sun Microsystems, Inc.", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor"));
+         assertEquals("com.sun", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Implementation-Vendor-Id"));
+
+         IDE.AVAILABLE_DEPENDENCIES.selectDependency("annotations-api");
+         assertEquals("1.5.0_15-b04 (Sun Microsystems Inc.)",
+            IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Created-By"));
+         assertEquals("Apache Ant 1.7.0", IDE.AVAILABLE_DEPENDENCIES.getAttributeValue("Ant-Version"));
+      }
+
       IDE.AVAILABLE_DEPENDENCIES.clickOkButton();
       IDE.AVAILABLE_DEPENDENCIES.waitClosed();
    }
