@@ -84,6 +84,8 @@ public interface ToolbarCommands
    public interface Run
    {
       String SHOW_PREVIEW = "Show Preview";
+      
+      String SHOW_GADGET_PREVIEW = "Show Gadget Preview";
 
       String DEPLOY_GADGET = "Deploy Gadget to GateIn";
 

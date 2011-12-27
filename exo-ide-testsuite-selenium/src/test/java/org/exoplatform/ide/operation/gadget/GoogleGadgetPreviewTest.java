@@ -23,13 +23,16 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.support.PageFactory;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Test for preview gadget feature.
@@ -40,25 +43,37 @@ import java.io.IOException;
  */
 public class GoogleGadgetPreviewTest extends BaseTest
 {
+   private static final String PROJECT = GoogleGadgetPreviewTest.class.getSimpleName();
 
-   private final static String FILE_NAME = "Calculator.xml";
-
-   private final static String FOLDER = GoogleGadgetPreviewTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER + "/";
-
+   private final static String FILE_NAME = "Calculator.gadget";
+   
+   public GadgetPreviewPage CALCULATOR;
+   
    @BeforeClass
    public static void setUp()
    {
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/Calculator.xml";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, TestConstants.NodeTypes.EXO_GOOGLE_GADGET, URL
-            + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GOOGLE_GADGET, filePath);
+         
       }
       catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
       {
          e.printStackTrace();
       }
@@ -67,64 +82,31 @@ public class GoogleGadgetPreviewTest extends BaseTest
    @Test
    public void testGadgetPreview() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(URL);
-      IDE.WORKSPACE.doubleClickOnFolder(URL);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      CALCULATOR = PageFactory.initElements(driver, GadgetPreviewPage.class);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.SHOW_GADGET_PREVIEW, true);
+      
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
-
-      assertTrue(selenium().isElementPresent("//div[@class='LeftCalculator']"));
-
-      assertTrue(selenium().isElementPresent("//div[@class='Display']"));
-
-      assertTrue(selenium().isElementPresent("//div[@class='Number']"));
-
-      //this method call error in deleteFileContent() method. 
-      //Select not content in code editor but all IDE spase
-      //  IDE.EDITOR.clickOnEditor();
-      IDE.EDITOR.deleteFileContent(0);
-
-      String hello =
-         "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "  <ModulePrefs title=\"Hello World!\" />\n"
-            + " <Content type=\"html\">\n" + "<![CDATA[     \n" + " <div>" + "Hello,world!" + "</div>\n" + "]]>\n"
-            + "</Content>\n" + "</Module>\n";
-
-      IDE.EDITOR.typeTextIntoEditor(0, hello);
-      saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.MENU.waitForMenuItemPresent(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
+      
       IDE.PREVIEW.waitGadgetPreviewOpened();
-
-      assertTrue(selenium().isElementPresent("//div[contains(text(), 'Hello,world!')]"));
-
-      //close preview
-      IDE.PREVIEW.closeView();
-      IDE.PREVIEW.waitGadgetPreviewClosed();
-
-      //and open again
-      IDE.MENU.waitForMenuItemPresent(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      IDE.PREVIEW.waitGadgetPreviewOpened();
-
-      assertTrue(selenium().isElementPresent("//div[contains(text(), 'Hello,world!')]"));
-
-      IDE.EDITOR.closeFile(1);
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+      
+      IDE.PREVIEW.selectGadgetPreviewIframe();
+      
+      assertTrue(CALCULATOR.calculatorPresent());
+      assertTrue(CALCULATOR.displayPresent());
+      assertTrue(CALCULATOR.numberPresent());
+      
+      IDE.selectMainFrame();
+      
+      IDE.EDITOR.closeFile(FILE_NAME);
+      //TODO: this test is uncomplete. Changes content of gadget, save and click Preview.
    }
 
 }

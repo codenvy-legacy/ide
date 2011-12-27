@@ -33,26 +33,30 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class Preview extends AbstractTestModule
 {
-   private interface Locators
-   {
-      String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='Preview']";
+   
+   private static final String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='Preview']";
 
-      String GADGET_PREVIEW = "//div[@view-id='gadgetpreview']";
+   private static final String GADGET_PREVIEW = "//div[@view-id='gadgetpreview']";
 
-      String HTML_PREVIEW = "//div[@view-id='idePreviewHTMLView']";
-      
-      String PREVIEW_FRAME_ID = "eXo-IDE-preview-frame";
-   }
+   private static final String HTML_PREVIEW = "//div[@view-id='idePreviewHTMLView']";
+
+   //XXX: only for groovy template and netvibes preview
+   private static final String PREVIEW_FRAME_ID = "eXo-IDE-preview-frame";
+   
+   private static final String GADGET_PREVIEW_IFRAME = GADGET_PREVIEW + "//iframe";
 
    private static final String VIEW_TITLE = "Preview";
    
-   @FindBy(xpath = Locators.HTML_PREVIEW)
+   @FindBy(xpath = HTML_PREVIEW)
    private WebElement htmlPreview;
 
-   @FindBy(xpath = Locators.GADGET_PREVIEW)
+   @FindBy(xpath = GADGET_PREVIEW)
    private WebElement gadgetPreview;
+   
+   @FindBy(xpath = GADGET_PREVIEW_IFRAME)
+   private WebElement gadgetIframe;
 
-   @FindBy(xpath = Locators.GROOVY_TEMPLATE_PREVIEW)
+   @FindBy(xpath = GROOVY_TEMPLATE_PREVIEW)
    private WebElement gtmplPreview;
 
    /**
@@ -291,7 +295,12 @@ public class Preview extends AbstractTestModule
     */
    public void selectPreviewIFrame()
    {
-      driver().switchTo().frame(Locators.PREVIEW_FRAME_ID);
+      driver().switchTo().frame(PREVIEW_FRAME_ID);
+   }
+   
+   public void selectGadgetPreviewIframe()
+   {
+      driver().switchTo().frame(gadgetIframe);
    }
 
    public void closeView()
