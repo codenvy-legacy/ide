@@ -49,8 +49,8 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
 
       int modifier = Integer.valueOf(document.get(TypeInfoIndexFields.MODIFIERS));
 
-      return new ShortTypeInfo(modifier, document.get(TypeInfoIndexFields.CLASS_NAME),
-         document.get(TypeInfoIndexFields.FQN), document.get(TypeInfoIndexFields.ENTITY_TYPE));
+      return new ShortTypeInfo(document.get(TypeInfoIndexFields.FQN), modifier,
+         document.get(TypeInfoIndexFields.ENTITY_TYPE));
 
    }
 }

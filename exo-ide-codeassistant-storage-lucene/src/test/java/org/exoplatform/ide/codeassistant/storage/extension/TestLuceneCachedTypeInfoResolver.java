@@ -22,9 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.lucene.store.RAMDirectory;
-import org.exoplatform.ide.codeassistant.asm.JarParser;
+import org.exoplatform.ide.codeassistant.asm.old.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
+import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
@@ -75,9 +75,9 @@ public class TestLuceneCachedTypeInfoResolver
       TypeInfo testClass = new LuceneCodeAssistantStorage(luceneInfoStorage).getTypeByFqn("java.util.HashMap");
       // testClass = resolver.resolveTypeInfo(testClass);
       Set<String> methods = new HashSet<String>();
-      for (RoutineInfo method : testClass.getMethods())
+      for (MethodInfo method : testClass.getMethods())
       {
-         methods.add(method.getGeneric());
+         // methods.add(method.ge);
       }
       assertEquals(22, methods.size());
       assertTrue(methods.contains("public int java.util.HashMap.size()"));

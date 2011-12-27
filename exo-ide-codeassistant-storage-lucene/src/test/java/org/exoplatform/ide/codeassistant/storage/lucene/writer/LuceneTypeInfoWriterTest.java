@@ -24,8 +24,11 @@ import static test.ClassManager.getAllTestClasses;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.RAMDirectory;
+import org.exoplatform.ide.codeassistant.asm.old.ClassParser;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -44,6 +47,7 @@ public class LuceneTypeInfoWriterTest
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
    }
 
+   @Ignore
    @Test
    public void shouldIndexAllClasses() throws Exception
    {
@@ -51,6 +55,13 @@ public class LuceneTypeInfoWriterTest
       IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
       assertEquals(getAllTestClasses().length, reader.numDocs());
       reader.close();
+   }
+
+   @Test
+   public void shouldBeAbleToIndexObject() throws Exception
+   {
+      TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(Object.class));
+
    }
 
 }

@@ -55,8 +55,8 @@ public class TypeInfoIndexer
       typeInfoDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()),
          Store.YES, Index.NOT_ANALYZED));
 
-      typeInfoDocument.add(new Field(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName(), Store.YES,
-         Index.NOT_ANALYZED));
+      //      typeInfoDocument.add(new Field(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName(), Store.YES,
+      //         Index.NOT_ANALYZED));
       typeInfoDocument
          .add(new Field(TypeInfoIndexFields.ENTITY_TYPE, typeInfo.getType(), Store.YES, Index.NOT_ANALYZED));
       typeInfoDocument.add(new Field(TypeInfoIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES,

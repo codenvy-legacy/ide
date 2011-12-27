@@ -30,13 +30,12 @@ import test.interfaces.DTestInterface;
 import test.interfaces.ETestInterface;
 import test.interfaces.ETestInterface2;
 
-import org.exoplatform.ide.codeassistant.asm.ClassParser;
+import org.exoplatform.ide.codeassistant.asm.old.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +47,6 @@ public class ClassManager
    //disable instance creation
    private ClassManager()
    {
-      super();
    }
 
    /**
@@ -60,19 +58,6 @@ public class ClassManager
       return new Class[]{CTestAnnotation.class, DTestAnnotation.class, ATestClass.class, ATestClass2.class,
          BTestClass.class, ITestClass.class, DTestInterface.class, ETestInterface.class, ETestInterface2.class,
          CTestClass.class, DTestClass.class};
-   }
-
-   /**
-    * 
-    * @param class2Find
-    *           - class to find
-    * @return - content of the 'class2Find.class' file
-    */
-   public static InputStream getClassFile(Class<?> class2Find)
-   {
-      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-      String classResource = class2Find.getName().replace('.', '/') + ".class";
-      return contextClassLoader.getResourceAsStream(classResource);
    }
 
    /**
@@ -89,7 +74,7 @@ public class ClassManager
 
       for (Class<?> classToIndex : classesToIndex)
       {
-         typeInfos.add(ClassParser.parse(ClassManager.getClassFile(classToIndex)));
+         typeInfos.add(ClassParser.parse(ClassParser.getClassFile(classToIndex)));
       }
 
       typeWriter.addTypeInfo(typeInfos);
