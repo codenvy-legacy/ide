@@ -31,16 +31,38 @@ import java.util.List;
  */
 public class CodeAssistantStorageGenerator
 {
-   public static final String INDEX_DIRECTORY = "target/code-assistant/index/";
+   private static final String DEFAULT_INDEX_DIRECTORY = "code-assistant/index/";
 
-   private static final String JAR_FILES = "src/main/resources/codeassistant/jar-files.txt";
+   private static final String DEFAULT_JAR_FILES_LIST = "src/main/resources/codeassistant/jar-files.txt";
+
+   private static String indexDirectory = DEFAULT_INDEX_DIRECTORY;
+
+   private static String jarFilesList = DEFAULT_JAR_FILES_LIST;
 
    public static void main(String[] args)
    {
+      resolveArgs(args);
+      writeClassInfosInStorage();
+   }
+
+   private static void resolveArgs(String[] args)
+   {
+      if (args.length >= 1)
+      {
+         indexDirectory = args[0];
+      }
+      if (args.length == 2)
+      {
+         jarFilesList = args[1];
+      }
+   }
+
+   private static void writeClassInfosInStorage()
+   {
       try
       {
-         List<String> jars = getFilesList(JAR_FILES);
-         ClassesInfoStorageWriter.writeJarsToIndex(INDEX_DIRECTORY, jars);
+         List<String> jars = getFilesList(jarFilesList);
+         ClassesInfoStorageWriter.writeJarsToIndex(indexDirectory, jars);
       }
       catch (IOException e)
       {

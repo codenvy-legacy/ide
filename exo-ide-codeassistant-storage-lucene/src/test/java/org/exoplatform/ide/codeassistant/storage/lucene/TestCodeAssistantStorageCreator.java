@@ -21,9 +21,6 @@ package org.exoplatform.ide.codeassistant.storage.lucene;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.storage.lucene.ClassesInfoStorageWriter;
-import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -37,12 +34,16 @@ import java.util.List;
 @Ignore
 public class TestCodeAssistantStorageCreator
 {
+   private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+
+   private static final String PATH_TO_RT_JAR = System.getProperty("java.home") + FILE_SEPARATOR + "lib"
+      + FILE_SEPARATOR + "rt.jar";
+
    @Test
    public void testClassStorageCreation() throws IOException, CodeAssistantException
    {
       List<String> jars = new ArrayList<String>();
-      // TODO: use jar which will available in all machines
-      jars.add("/home/sangre/java/exo-projects/jars/rt.jar");
+      jars.add(PATH_TO_RT_JAR);
       String pathToIndex = "target/index";
 
       ClassesInfoStorageWriter.writeJarsToIndex(pathToIndex, jars);
