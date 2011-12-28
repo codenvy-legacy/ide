@@ -123,7 +123,7 @@ public class RESTService extends AbstractTestModule
    private WebElement restServiceResponseMediaType;
 
    @FindBy(xpath = Locators.PATH_LIST_OPEN)
-   private WebElement pahtList;
+   private WebElement pahtListOpen;
 
    @FindBy(id = Locators.DROP_DOWN_PATH_LIST)
    private WebElement dropDownPahtList;
@@ -181,6 +181,24 @@ public class RESTService extends AbstractTestModule
             {
                return true;
             }
+         }
+      });
+   }
+
+   /**
+   * Wait appearance pathlistCombobox
+   * 
+   * 
+   */
+   public void waitPathListOpened() throws InterruptedException
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return dropDownPahtList != null && dropDownPahtList.isDisplayed();
          }
       });
    }
@@ -683,11 +701,21 @@ public class RESTService extends AbstractTestModule
    }
 
    /**
-    * Select specific value from Path combobox
-    * @param pathValue value to select
+    * check is path present int combobbox of PathList
+    * @param pathValue
     * @throws Exception
     */
-   public void selectPathValue(String pathValue) throws Exception
+   public void isValuePresentInPathList(String pathValue) throws Exception
+   {
+      IDE().INPUT.isComboboxValuePresent(restServicePath, pathValue);
+   }
+
+   /**
+    * select path in combobox of pathlist
+    * @param pathValue
+    * @throws Exception
+    */
+   public void selectInPathList(String pathValue) throws Exception
    {
       IDE().INPUT.selectComboboxValue(restServicePath, pathValue);
    }
@@ -708,6 +736,13 @@ public class RESTService extends AbstractTestModule
       WebElement valueInput = tableId.findElement(By.xpath(valuePrefix + "/div/input"));
       valueInput.sendKeys(valueText);
       Thread.sleep(3000);
+   }
+
+   public void typeToPathField(String value) throws InterruptedException
+   {
+      restServicePath.clear();
+      restServicePath.sendKeys(value);
+
    }
 
    /**
