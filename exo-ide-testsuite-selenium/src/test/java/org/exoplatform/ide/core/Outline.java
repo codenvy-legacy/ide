@@ -20,8 +20,10 @@ package org.exoplatform.ide.core;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -66,7 +68,15 @@ public class Outline extends AbstractTestModule
 
    private static final int LINE_HEIGHT = 31;
 
-   private static final int OUTLINE_TOP_OFFSET_POSITION = 80;
+   private int OUTLINE_TOP_OFFSET_POSITION = 80;
+   
+   public Outline()
+   {
+      if (driver() instanceof ChromeDriver)
+      {
+         OUTLINE_TOP_OFFSET_POSITION = 89;
+      }
+   }
 
    public enum TokenType {
       CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,
@@ -177,17 +187,24 @@ public class Outline extends AbstractTestModule
 
       int index = 0;
 
-      for (WebElement row : rows)
+      try
       {
-         if (row.isDisplayed())
+         for (WebElement row : rows)
          {
-            index++;
-         }
+            if (row.isDisplayed())
+            {
+               index++;
+            }
 
-         if (index == rowNumber)
-         {
-            return row;
+            if (index == rowNumber)
+            {
+               return row;
+            }
          }
+      }
+      catch (StaleElementReferenceException se)
+      {
+         return getVisibleItem(rowNumber);
       }
       return null;
    }
@@ -203,7 +220,7 @@ public class Outline extends AbstractTestModule
    {
       WebElement row = getVisibleItem(rowNumber);
       row.click();
-      new Actions(driver()).doubleClick(row).build().perform();
+      new Actions(driver()).moveToElement(row, 1, 1).doubleClick().build().perform();
    }
 
    /**
@@ -389,5 +406,23 @@ public class Outline extends AbstractTestModule
    public void typeKeys(String keys)
    {
       new Actions(driver()).sendKeys(tree, keys).build().perform();
+   }
+
+   /**
+    * Wait for item to appear at specified position (row number).
+    * 
+    * @param item item's title
+    * @param position position
+    */
+   public void waitItemAtPosition(final String item, final int position)
+   {
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return item.equals(getItemLabel(position));
+         }
+      });
    }
 }

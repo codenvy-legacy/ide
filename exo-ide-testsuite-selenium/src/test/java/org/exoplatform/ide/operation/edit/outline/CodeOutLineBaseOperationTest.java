@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -82,27 +81,28 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      
+      IDE.LOADER.waitClosed();
+
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
-      
+
       //click on second groovy code node
       IDE.OUTLINE.selectRow(2);
-      
+
       //check, than cursor go to line
       assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
       IDE.EDITOR.deleteLinesInEditor(0, 7);
-      
-      //TODO redraw condition
-      Thread.sleep(TestConstants.SLEEP);
 
+    //Schedule redraw period is 3 seconds: 
+      Thread.sleep(3000);
+      
       assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
-      
       IDE.OUTLINE.doubleClickItem(1);
+      IDE.OUTLINE.waitItemAtPosition("div", 12);
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
       assertEquals("a1 : Object", IDE.OUTLINE.getItemLabel(2));
       assertTrue(IDE.OUTLINE.isItemSelected(1));
