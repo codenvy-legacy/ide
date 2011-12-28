@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
@@ -211,7 +212,12 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    public void onEditorFocusReceived(EditorFocusReceivedEvent event)
    {
-      editorsViews.get(activeFile.getId()).activate();
+      try {
+         editorsViews.get(activeFile.getId()).activate();         
+      } catch (Exception e) {
+         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /* (non-Javadoc)
