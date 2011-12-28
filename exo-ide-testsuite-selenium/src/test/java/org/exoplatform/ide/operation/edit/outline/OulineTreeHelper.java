@@ -240,21 +240,20 @@ public class OulineTreeHelper extends BaseTest
       String fileContent =IDE.EDITOR.getTextFromCodeEditor(0);
       System.out.println("fileContent=" + fileContent);
       int fileLineNumbers = fileContent.split("\\r?\\n").length;   
-      int i = 0;
       
-      goToLine(1);
+      IDE.GOTOLINE.goToLine(1);
       IDE.EDITOR.clickOnEditor(0);
            
       // go to the end of file
       do
       {
          // Press down key on keyboard.         
-         IDE.EDITOR.moveCursorDown(0, ++i);
+         IDE.EDITOR.moveCursorDown(0, 1);
          Thread.sleep(Outline.SELECT_OUTLINE_DELAY * 2);
       } 
-      while (i <= fileLineNumbers);
+      while (--fileLineNumbers > 0);
       
-      goToLine(1);
+      IDE.GOTOLINE.goToLine(1);
 
    }
    
@@ -284,7 +283,8 @@ public class OulineTreeHelper extends BaseTest
     */
    private void checkOutlineItemFromFile(int itemRowNumber, String itemLabel, int fileLineNumber) throws Exception
    {
-      goToLine(fileLineNumber);
+      IDE.GOTOLINE.goToLine(fileLineNumber);
+      IDE.EDITOR.clickOnEditor(0);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       assertTrue(IDE.OUTLINE.isItemSelected(itemRowNumber));
    }

@@ -21,16 +21,15 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Outline.TokenType;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Test Code Outline panel for javascript file.
@@ -47,15 +46,10 @@ import java.io.IOException;
  * @version $Id:
  *
  */
-public class CodeOutlineJavaScriptTest extends BaseTest
+public class CodeOutlineJavaScriptTest extends CodeAssistantBaseTest
 {
 
    private final static String FILE_NAME = "TestJavaScriptFile.js";
-
-   private final static String FOLDER = CodeOutlineJavaScriptTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER + "/";
 
    private OulineTreeHelper outlineTreeHelper;
 
@@ -67,32 +61,30 @@ public class CodeOutlineJavaScriptTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_JAVASCRIPT, "nt:resource", URL + FILE_NAME);
+         createProject(CodeOutLineChromatticTest.class.getSimpleName());
+         VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
+            MimeType.APPLICATION_JAVASCRIPT,
+            "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-
+   
+   @Before
+   public void openFile() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
+   }
+   
    @Test
    public void testCodeOutlineJavaScript() throws Exception
    {
-      // Open groovy file with content
-      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);

@@ -21,15 +21,13 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
+import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -37,15 +35,11 @@ import java.io.IOException;
  * @version $Id: Oct 26, 2010 $
  *
  */
-public class CodeOutLineRESTServiceTest extends BaseTest
+public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
 {
 
    private final static String FILE_NAME = "RESTCodeOutline.groovy";
 
-   private final static String FOLDER = CodeOutLineRESTServiceTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
-   
    private OulineTreeHelper outlineTreeHelper;
    
    public CodeOutLineRESTServiceTest()
@@ -53,51 +47,35 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       this.outlineTreeHelper = new OulineTreeHelper();
    }
    
-   @Before
-   public void setUp()
+   @BeforeClass
+   public static void setUp()
    {
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, "exo:groovyResourceContainer", URL + FILE_NAME);
+         createProject(CodeOutLineChromatticTest.class.getSimpleName());
+         VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
+            MimeType.GROOVY_SERVICE,
+            "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
    
-   @After
-   public void tearDown() throws Exception
+   @Before
+   public void openFile() throws Exception
    {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL + FOLDER);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      IDE.EDITOR.closeFile(0);
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
    }
 
    //TODO Issue IDE - 486    
    //TODO Issue IDE - 466 
    @Test
    public void testCodeOutLineRestService() throws Exception
-   {
-      // Open REST service file with content
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-      
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.WORKSPACE.waitForItem(URL+FILE_NAME);   
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      IDE.EDITOR.waitTabPresent(0);
-      
+   {     
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOutlineTreeVisible();
