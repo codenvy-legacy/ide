@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-parent</artifactId>
+      <version>1.2.0-M5-SNAPSHOT</version>
+   </parent>
+
+   <groupId>org.exoplatform.ide</groupId>
+   <artifactId>exo-ide-shell-testsuite-selenium</artifactId>
+   <packaging>jar</packaging>
+   <name>exo-ide-shell-testsuite-selenium</name>
+
+   <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   </properties>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ws</groupId>
+         <artifactId>exo.ws.commons</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.10</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.seleniumhq.selenium</groupId>
+         <artifactId>selenium-java</artifactId>
+         <version>2.13.0</version>
+      </dependency>
+
+      <dependency>
+         <groupId>commons-httpclient</groupId>
+         <artifactId>commons-httpclient</artifactId>
+         <version>3.1</version>
+      </dependency>
+
+
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-httpclient</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.easytesting</groupId>
+         <artifactId>fest-assert</artifactId>
+         <version>1.4</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <skip>true</skip>
+            </configuration>
+         </plugin>
+      </plugins>
+      <testSourceDirectory>
+        src/test/java                
+      </testSourceDirectory>
+   </build>
+
+   <profiles>
+      <profile>
+         <id>selenium-test</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <configuration>
+                     <source>1.6</source>
+                     <target>1.6</target>
+                  </configuration>
+               </plugin>
+
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-plugin</artifactId>
+                  <version>2.7</version>
+                  <configuration>
+                     <version>2.7</version>
+                     <skip>true</skip>
+                     <runOrder>alphabetical</runOrder>
+                     <systemProperties>
+                        <property>
+                           <name>webdriver.chrome.driver</name>
+                           <value>../exo-ide-testsuite-selenium/src/test/resources/chromedriver</value>
+                        </property>
+                     </systemProperties>
+                  </configuration>
+                  <executions>
+                     <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                           <goal>test</goal>
+                        </goals>
+                        <configuration>
+                           <skip>false</skip>
+                           <excludes>
+                              <exclude>**/*TestSuite.java</exclude>
+                              <exclude>**/*RESTServiceSandboxTest.java</exclude>
+                              <exclude>**/*CloudHerokuTest.java</exclude>
+                              <exclude>**/*StoreOpenedFilesHistoryTest.java</exclude>
+                              <exclude>**/*WorkspaceTest.java</exclude>
+                           </excludes>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>selenium-maven-plugin</artifactId>
+                  <version>2.0</version>
+                  <executions>
+                     <execution>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                           <goal>start-server</goal>
+                        </goals>
+                        <configuration>
+                           <background>true</background>
+                           <userExtensions>${user.extension.dir}</userExtensions>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+
+            </plugins>
+         </build>
+         <reporting>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-report-plugin</artifactId>
+                  <version>2.7</version>
+               </plugin>
+            </plugins>
+         </reporting>
+      </profile>
+   </profiles>
+
+</project>
