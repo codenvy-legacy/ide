@@ -16,11 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.extension;
+package org.exoplatform.ide.codeassistant.storage.lucene;
 
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.storage.lucene.ClassesInfoStorageWriter;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.junit.Ignore;

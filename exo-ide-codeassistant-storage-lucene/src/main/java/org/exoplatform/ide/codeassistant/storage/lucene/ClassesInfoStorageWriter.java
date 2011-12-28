@@ -16,51 +16,50 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.extension;
+package org.exoplatform.ide.codeassistant.storage.lucene;
 
-import java.io.BufferedReader;
+import org.exoplatform.ide.codeassistant.asm.JarParser;
+import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
+
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class CodeAssistantStorageGenerator
+public class ClassesInfoStorageWriter
 {
-   public static final String INDEX_DIRECTORY = "target/code-assistant/index/";
-
-   private static final String JAR_FILES = "src/main/resources/codeassistant/jar-files.txt";
-
-   public static void main(String[] args)
+   public static void writeJarsToIndex(String pathToIndex, List<String> jars)
    {
+      LuceneInfoStorage luceneInfoStorage = null;
       try
       {
-         List<String> jars = getFilesList(JAR_FILES);
-         ClassesInfoStorageWriter.writeJarsToIndex(INDEX_DIRECTORY, jars);
+         luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
+         LuceneTypeInfoWriter writer = new LuceneTypeInfoWriter(luceneInfoStorage);
+
+         for (String jar : jars)
+         {
+            File jarFile = new File(jar);
+            List<TypeInfo> typeInfos = JarParser.parse(jarFile);
+            writer.addTypeInfo(typeInfos);
+         }
       }
       catch (IOException e)
       {
          throw new RuntimeException(e.getLocalizedMessage(), e);
       }
-   }
-
-   private static List<String> getFilesList(String pathToFile) throws IOException
-   {
-      Reader reader = new FileReader(new File(pathToFile));
-      BufferedReader br = new BufferedReader(reader);
-
-      List<String> list = new ArrayList<String>();
-      String nextLine = null;
-      while ((nextLine = br.readLine()) != null)
+      catch (SaveTypeInfoIndexException e)
       {
-         list.add(nextLine);
+         throw new RuntimeException("Can't to store data in index", e);
       }
-
-      return list;
+      finally
+      {
+         if (luceneInfoStorage != null)
+         {
+            luceneInfoStorage.closeIndexes();
+         }
+      }
    }
-
 }

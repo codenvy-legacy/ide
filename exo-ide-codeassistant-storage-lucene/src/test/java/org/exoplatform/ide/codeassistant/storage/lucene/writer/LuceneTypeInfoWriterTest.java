@@ -28,7 +28,6 @@ import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -47,7 +46,6 @@ public class LuceneTypeInfoWriterTest
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
    }
 
-   @Ignore
    @Test
    public void shouldIndexAllClasses() throws Exception
    {
