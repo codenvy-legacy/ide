@@ -18,15 +18,20 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.awt.event.KeyEvent;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -35,41 +40,249 @@ import java.awt.event.KeyEvent;
  */
 public class RESTService extends AbstractTestModule
 {
+   private interface Locators
+   {
+      String RESTSERVICE_FORM = "ideGroovyServiceOutputPreviewForm-window";
+
+      String REST_SERVICE_GET_URL_FORM = "ideGetRestServiceURLForm-window";
+
+      String REST_SERVICE_METHOD = "ideGroovyServiceMethod";
+
+      String LAUNCH_SEND_BTN = "ideGroovyServiceSend";
+
+      String GET_URL_BTN = "ideGroovyServiceGetURL";
+
+      String GET_URL_FORM_FIELD = "ideGetItemURLFormURLField";
+
+      String GET_URL_FORM_OK_BUTTON = "ideGetRestServiceURLFormOkButton";
+
+      String REST_SERVICE_FORM = "ideGroovyServiceForm";
+
+      String BODY_TEXT_FIELD = "ideGroovyServiceBodyFormText";
+
+      String REST_SERVICE_PATH = "ideGroovyServicePath";
+
+      String REST_SERVICE_REQUEST_MEDIATYPE = "ideGroovyServiceRequest";
+
+      String REST_SERVICE_RESPONSE_MEDIATYPE = "ideGroovyServiceResponse";
+
+      String QUERY_TABLE_ID = "ideGroovyServiceQueryTable";
+
+      String HEADER_TABLE_ID = "ideGroovyServiceHeaderTable";
+
+      String TABS_LOCATOR =
+         "//div[@id='ideGroovyServiceTabSet']//div[@class='gwt-TabLayoutPanelTabs']//div[@class='gwt-TabLayoutPanelTab GGUO0GHH' and @tab-bar-index=%1s]";
+
+      String CHECK_SELECTED_TABS_LOCATORS =
+         "//div[@id='ideGroovyServiceTabSet']//div[@class=\"gwt-TabLayoutPanelTab GGUO0GHH gwt-TabLayoutPanelTab-selected\"and @tab-bar-index=%1s]";
+
+      String SEND_REQUEST_BUTTON = "ideGroovyServiceSend";
+
+      String CANCEL_BUTTON = "ideGroovyServiceCancel";
+
+      String PATH_LIST_OPEN = "//table[@id='ideGroovyServiceForm']//img";
+
+      String DROP_DOWN_PATH_LIST = "exoSuggestPanel";
+
+      String TABLE_SELECT_PREFIX = "//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div";
+
+      String TABLE_VALUE_PREFIX = "//table[@id='%1s']/tbody/tr[%2s]/td[%3s]//div//input";
+
+   }
+
+   // The basic webelements of the launch 
+   // Resrservice form: 
+   @FindBy(id = Locators.QUERY_TABLE_ID)
+   private WebElement queryTable;
+
+   @FindBy(id = Locators.HEADER_TABLE_ID)
+   private WebElement headerTable;
+
+   @FindBy(name = Locators.BODY_TEXT_FIELD)
+   private WebElement bodyTable;
+
+   @FindBy(id = Locators.REST_SERVICE_FORM)
+   private WebElement restServiceForm;
+
+   @FindBy(id = Locators.CANCEL_BUTTON)
+   private WebElement cancelButton;
+
+   @FindBy(id = Locators.SEND_REQUEST_BUTTON)
+   private WebElement sendButton;
+
+   @FindBy(name = Locators.REST_SERVICE_PATH)
+   private WebElement restServicePath;
+
+   @FindBy(name = Locators.REST_SERVICE_METHOD)
+   private WebElement restServiceMethod;
+
+   @FindBy(name = Locators.REST_SERVICE_REQUEST_MEDIATYPE)
+   private WebElement restServiceRequestMediaType;
+
+   @FindBy(name = Locators.REST_SERVICE_RESPONSE_MEDIATYPE)
+   private WebElement restServiceResponseMediaType;
+
+   @FindBy(xpath = Locators.PATH_LIST_OPEN)
+   private WebElement pahtList;
+
+   @FindBy(id = Locators.DROP_DOWN_PATH_LIST)
+   private WebElement dropDownPahtList;
+
+   @FindBy(id = Locators.HEADER_TABLE_ID)
+   private WebElement headerParametrTabble;
+
+   @FindBy(id = Locators.REST_SERVICE_GET_URL_FORM)
+   private WebElement getUrlForm;
+
+   @FindBy(name = Locators.GET_URL_FORM_FIELD)
+   private WebElement getUrlFormField;
+
+   @FindBy(id = Locators.GET_URL_BTN)
+   private WebElement getUrlButton;
+
+   @FindBy(id = Locators.GET_URL_FORM_OK_BUTTON)
+   private WebElement getUrlFormOkBtn;
+
    /**
-    * 
-    */
-   private static final String GET_REST_SERVICE_URL_FORM = "ideGetRestServiceURLForm";
+    * Wait appearance REST Service Form
+   * 
+   */
+   public void waitOpened() throws InterruptedException
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
 
-   public final String REST_SERVICE_METHOD = "ideGroovyServiceMethod";
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return restServiceForm != null && restServiceForm.isDisplayed();
+         }
+      });
+   }
 
-   public final String LAUNCH_SEND_BTN = "ideGroovyServiceSend";
+   /**
+    * Wait disappearance REST Service Form
+   *  @throws InterruptedException
+   */
+   public void waitClosed() throws InterruptedException
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
 
-   public final String REST_SERVICE_FORM = "ideGroovyServiceForm";
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.id(Locators.REST_SERVICE_FORM));
+               return false;
+            }
+            catch (Exception e)
+            {
+               return true;
+            }
+         }
+      });
+   }
 
-   public final String QUERY_TABLE = "//table[@id='ideGroovyServiceQueryTable']/tbody";
+   /**
+    * Wait appearance selected tab
+   * @throws InterruptedException
+   */
+   public void waitRestServiceTabOpened(final int tabIndex) throws InterruptedException
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
 
-   public final String HEADER_TABLE = "//table[@id='ideGroovyServiceHeaderTable']/tbody";
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement viewTab =
+                  input.findElement(By.xpath(String.format(Locators.CHECK_SELECTED_TABS_LOCATORS, tabIndex)));
+               return (viewTab != null && viewTab.isDisplayed());
 
-   public final String BODY_TEXT_FIELD = "ideGroovyServiceBodyFormText";
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
 
-   public final String REST_SERVICE_PATH = "ideGroovyServicePath";
+   /**
+    * Wait while GET URL REST Service Form closed
+   * @throws InterruptedException
+   */
+   public void waitGetUrlRestServiceOpened() throws InterruptedException
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
 
-   private static final String PATH_SUGGEST_PANEL_TEXT_LOCATOR =
-      "//div[@id='exoSuggestPanel']/div[@class='popupContent']/div/table//td[contains(text(), '%1s')]";
+         @Override
+         public Boolean apply(WebDriver input)
+         {
 
-   private static final String REST_SERVICE_REQUEST_MEDIATYPE = "ideGroovyServiceRequest";
+            return getUrlForm != null && getUrlForm.isDisplayed();
 
-   private static final String REST_SERVICE_RESPONSE_MEDIATYPE = "ideGroovyServiceResponse";
+         }
+      });
+   }
 
-   private static final String QUERY_TABLE_ID = "ideGroovyServiceQueryTable";
+   /**
+    * Wait while GET URL REST Service Form closed
+   * @throws InterruptedException
+   */
+   public void waitGetUrlRestServiceClosed() throws InterruptedException
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
 
-   private static final String HEADER_TABLE_ID = "ideGroovyServiceHeaderTable";
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement view = input.findElement(By.id(Locators.REST_SERVICE_GET_URL_FORM));
+               return false;
+            }
+            catch (Exception e)
+            {
+               return true;
+            }
+         }
+      });
+   }
 
-   private static final String TABS_LOCATORS = "//table[@id='ideGroovyServiceTabSet']//td[@tab-bar-index=%1s]/table";
+   /**
+    * Wait appearance Field for type value 
+   * @throws InterruptedException
+   */
+   public void waitValueOpened(final WebElement table, final String xPathvalueField) throws InterruptedException
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
 
-   private static final String SEND_REQUEST_BUTTON = "ideGroovyServiceSend";
+         @Override
+         public Boolean apply(WebDriver input)
+         {
 
-   private static final String CANCEL_BUTTON = "ideGroovyServiceCancel";
+            try
+            {
+               WebElement view = table.findElement(By.xpath(xPathvalueField + "/div/input"));
+               return (view != null && view.isDisplayed());
+            }
+
+            catch (Exception e)
+            {
+               return false;
+            }
+
+         }
+      });
+   }
 
    /**
     * Call the "Run->Launch REST Service" topmenu command
@@ -77,48 +290,11 @@ public class RESTService extends AbstractTestModule
     * @throws Exception
     * @throws InterruptedException
     */
+
    public void launchRestService() throws Exception, InterruptedException
    {
       IDE().TOOLBAR.runCommand(ToolbarCommands.Run.LAUNCH_REST_SERVICE);
-      waitForElementPresent(REST_SERVICE_FORM);
-   }
-
-   /**
-    * Wait for Launch REST Service view to be opened.
-    * 
-    * @throws Exception
-    */
-   public void waitForLaunchRestServiceViewOpened() throws Exception
-   {
-      waitForElementPresent(REST_SERVICE_FORM);
-   }
-
-   /**
-    * Wait for Launch REST Service view to be closed.
-    * 
-    * @throws Exception
-    */
-   public void waitForLaunchRestServiceViewClosed() throws Exception
-   {
-      waitForElementNotPresent(REST_SERVICE_FORM);
-   }
-
-   /**
-    * Validate REST Service, and check, that all ok.
-    * 
-    * @param fileName - name of file
-    * @param numberOfRecord - number of notification record if Output Tab (from 1)
-    * @throws Exception
-    */
-   public void validate(String fileName, int numberOfRecord) throws Exception
-   {
-      IDE().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
-      IDE().OUTPUT.waitOpened();
-      assertTrue(IDE().OUTPUT.isOpened());
-      
-      IDE().OUTPUT.waitForMessageShow(numberOfRecord);
-      final String msg = IDE().OUTPUT.getOutputMessage(numberOfRecord);
-      assertEquals("[INFO] " + fileName + " validated successfully.", msg);
+      waitOpened();
    }
 
    /**
@@ -127,27 +303,55 @@ public class RESTService extends AbstractTestModule
     * @param numberOfRecord - number of notification record if Output Tab (from 1)
     * @throws Exception
     */
-   public void deploy(String filePath, int numberOfRecord) throws Exception
+   public String deploy(String filePath, int numberOfRecord) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       IDE().OUTPUT.waitOpened();
-      IDE().OUTPUT.waitForMessageShow(numberOfRecord);
-
+      IDE().OUTPUT.waitForMessageShow(numberOfRecord, 4);
       final String msg = IDE().OUTPUT.getOutputMessage(numberOfRecord);
-
       final String validateSuccessMsg =
-         "[INFO] " + BaseTest.ENTRY_POINT_URL_IDE + BaseTest.WS_NAME + "/" + filePath + " deployed successfully.";
+         "[INFO] " + BaseTest.ENTRY_POINT_URL_IDE + BaseTest.WS_NAME + "/" + " deployed successfully.";
 
-      assertEquals(validateSuccessMsg, msg);
+      // TODO After resolve issue IDE-1370 previouse string "validateSuccessMsg" should be removed and uncomment this string
+      //final String validateSuccessMsg =
+      //   "[INFO] " + BaseTest.ENTRY_POINT_URL_IDE + BaseTest.WS_NAME + "/" + filePath + " deployed successfully.";
+
+      return msg;
+   }
+
+   /**
+      * Validate REST Service, and check, that all ok.
+      * 
+      * @param fileName - name of file
+      * @param numberOfRecord - number of notification record if Output Tab (from 1)
+      * @throws Exception
+      */
+   public String validate(int numberOfRecord) throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
+      IDE().OUTPUT.waitOpened();
+      assertTrue(IDE().OUTPUT.isOpened());
+      IDE().OUTPUT.waitForMessageShow(numberOfRecord);
+      final String msg = IDE().OUTPUT.getOutputMessage(numberOfRecord);
+      return msg;
+
+   }
+
+   /**
+    * Close Launch REST Service form, by press Cancel button
+    */
+   public void closeForm()
+   {
+      cancelButton.click();
    }
 
    /**
     * Get Path field value
-    * @return Path of REST Service method
+    * @return Path of REST Service
     */
    public String getPathFieldValue()
    {
-      return selenium().getValue(REST_SERVICE_PATH);
+      return IDE().INPUT.getValue(restServicePath);
    }
 
    /**
@@ -156,7 +360,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getMethodFieldValue()
    {
-      return selenium().getValue(REST_SERVICE_METHOD);
+      return IDE().INPUT.getValue(restServiceMethod);
    }
 
    /**
@@ -165,7 +369,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getRequestMediaTypeFieldValue()
    {
-      return selenium().getValue(REST_SERVICE_REQUEST_MEDIATYPE);
+      return IDE().INPUT.getValue(restServiceRequestMediaType);
    }
 
    /**
@@ -174,21 +378,32 @@ public class RESTService extends AbstractTestModule
     */
    public String getResponseMediaTypeFieldValue()
    {
-      return selenium().getValue(REST_SERVICE_RESPONSE_MEDIATYPE);
+      return IDE().INPUT.getValue(restServiceResponseMediaType);
+
    }
 
+   /**
+    * @param tabIndex
+    * Click on  tab of the RestService Form and
+    * check selected tab
+    * numbering begins with zero
+    */
    private void clickOnTab(int tabIndex)
    {
-      selenium().click(String.format(TABS_LOCATORS, tabIndex));
+
+      WebElement tab = driver().findElement(By.xpath(String.format(Locators.TABS_LOCATOR, tabIndex)));
+      tab.click();
+
       try
       {
-         waitForElementPresent(String.format(TABS_LOCATORS, tabIndex));
+         waitRestServiceTabOpened(tabIndex);
       }
       catch (Exception e)
       {
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
+
    }
 
    /**
@@ -216,42 +431,12 @@ public class RESTService extends AbstractTestModule
    }
 
    /**
-    * Open Path field suggest panel
-    * @throws Exception
-    */
-   public void openPathList() throws Exception
-   {
-      selenium().click("//table[@id='ideGroovyServiceForm']//img");
-      waitForElementPresent("exoSuggestPanel");
-   }
-
-   /**
     * Check is Path suggest panel list contains element with text
     * @param text that Path suggest panel must contains 
     */
-   public void checkPathListTextPresent(String text)
+   public boolean isPathListTextPresent(String text)
    {
-      String locator = String.format(PATH_SUGGEST_PANEL_TEXT_LOCATOR, text);
-      assertTrue(selenium().isElementPresent(locator));
-   }
-
-   /**
-    * Select item from Path suggest panel
-    * @param itemText Path suggest panel item text
-    */
-   public void selectPathSuggestPanelItem(String itemText)
-   {
-      String locator = String.format(PATH_SUGGEST_PANEL_TEXT_LOCATOR, itemText);
-      selenium().click(locator);
-   }
-
-   /**
-    * Type text to Path field
-    * @param text to type
-    */
-   public void typeToPathField(String text)
-   {
-      selenium().type(REST_SERVICE_PATH, text);
+      return IDE().INPUT.isComboboxValuePresent(restServicePath, text);
    }
 
    /**
@@ -261,7 +446,7 @@ public class RESTService extends AbstractTestModule
    public void sendRequst() throws Exception
    {
       clickSendButton();
-      waitForElementNotPresent(REST_SERVICE_FORM);
+      waitClosed();
    }
 
    /**
@@ -269,48 +454,76 @@ public class RESTService extends AbstractTestModule
     */
    public void clickSendButton()
    {
-      selenium().click(SEND_REQUEST_BUTTON);
+      sendButton.click();
    }
 
-   private void checSelectElementContainsValue(String selectLocator, String val[])
+   /**
+    * @param selectLocator
+    * @param val
+    * @return
+    * Check contains element in drop down fields RestService form
+    * if drop down in RestService form is contains value return true
+    */
+   public boolean isSelectElementContainsValue(WebElement selectElement, String val[])
    {
-      String[] options = selenium().getSelectOptions(selectLocator);
-      for (String o : options)
+      List<WebElement> allOptions = selectElement.findElements(By.tagName("option"));
+
+      boolean contains = false;
+
+      for (String v : val)
       {
-         boolean contais = false;
-         for (String v : val)
+         for (WebElement option : allOptions)
          {
-            if (o.equals(v))
+            if (option.getText().equals(v))
             {
-               contais = true;
+               contains = true;
                break;
             }
          }
-         assertTrue(contais);
+         if (!contains)
+         {
+            return false;
+         }
       }
-   }
-
-   private void selectValueInSelectElement(String selectLocator, String value)
-   {
-      selenium().select(selectLocator, value);
+      return contains;
    }
 
    /**
     * Check is Request media type field has values
     * @param val  Request media type field values
     */
-   public void checkRequestFieldContainsValues(String... val)
+   public boolean isRequestFieldContainsValues(String... val)
    {
-      checSelectElementContainsValue(REST_SERVICE_REQUEST_MEDIATYPE, val);
+      return isSelectElementContainsValue(restServiceMethod, val);
+   }
+
+   /**
+    * selectElement in drop down field
+    * @param 
+    * @param value
+    */
+   private void selectValueInSelectElement(WebElement selectElement, String value)
+   {
+      Select select = new Select(selectElement);
+      select.selectByVisibleText(value);
+   }
+
+   /**
+   * Select specific value in Request Media Type Field.
+   * @param value
+   */
+   public void setRequestMediaTypeFieldValue(String value)
+   {
+      selectValueInSelectElement(restServiceRequestMediaType, value);
    }
 
    /**
     * Select specific value in Request Media Type Field.
-    * @param value To select. <b>Value must contains in Select field</b>
+    * @param value
     */
-   public void setRequestMediaTypeFieldValue(String value)
+   public void setResponceMediaTypeFieldValue(String value)
    {
-      selectValueInSelectElement(REST_SERVICE_REQUEST_MEDIATYPE, value);
+      selectValueInSelectElement(restServiceResponseMediaType, value);
    }
 
    /**
@@ -319,13 +532,22 @@ public class RESTService extends AbstractTestModule
     */
    public void setMethodFieldValue(String value)
    {
-      selectValueInSelectElement(REST_SERVICE_METHOD, value);
+      selectValueInSelectElement(restServiceMethod, value);
    }
 
+   /**
+    * return value (text) from Rest Service parameter table
+    * @param tableId
+    * @param rowIndex
+    * @param cellIndex
+    * @return 
+    * 
+    */
    private String getTableValue(String tableId, int rowIndex, int cellIndex)
    {
-      String locator = String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div", tableId, rowIndex, cellIndex);
-      return selenium().getText(locator);
+      String locator = String.format(Locators.TABLE_SELECT_PREFIX, tableId, rowIndex, cellIndex);
+      WebElement tableValue = driver().findElement(By.xpath(locator));
+      return tableValue.getText();
    }
 
    /**
@@ -335,7 +557,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getQueryParameterName(int parameterIndex)
    {
-      return getTableValue(QUERY_TABLE_ID, parameterIndex, 2);
+      return getTableValue(Locators.QUERY_TABLE_ID, parameterIndex, 2);
    }
 
    /**
@@ -345,7 +567,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getQueryParameterType(int parameterIndex)
    {
-      return getTableValue(QUERY_TABLE_ID, parameterIndex, 3);
+      return getTableValue(Locators.QUERY_TABLE_ID, parameterIndex, 3);
    }
 
    /**
@@ -355,7 +577,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getQueryParameterDefaultValue(int parameterIndex)
    {
-      return getTableValue(QUERY_TABLE_ID, parameterIndex, 4);
+      return getTableValue(Locators.QUERY_TABLE_ID, parameterIndex, 4);
    }
 
    /**
@@ -365,7 +587,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getQueryParameterValue(int parameterIndex)
    {
-      return getTableValue(QUERY_TABLE_ID, parameterIndex, 5);
+      return getTableValue(Locators.QUERY_TABLE_ID, parameterIndex, 5);
    }
 
    /**
@@ -375,7 +597,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getHeaderParameterName(int parameterIndex)
    {
-      return getTableValue(HEADER_TABLE_ID, parameterIndex, 2);
+      return getTableValue(Locators.HEADER_TABLE_ID, parameterIndex, 2);
    }
 
    /**
@@ -385,7 +607,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getHeaderParameterType(int parameterIndex)
    {
-      return getTableValue(HEADER_TABLE_ID, parameterIndex, 3);
+      return getTableValue(Locators.HEADER_TABLE_ID, parameterIndex, 3);
    }
 
    /**
@@ -395,7 +617,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getHeaderParameterDefaultValue(int parameterIndex)
    {
-      return getTableValue(HEADER_TABLE_ID, parameterIndex, 4);
+      return getTableValue(Locators.HEADER_TABLE_ID, parameterIndex, 4);
    }
 
    /**
@@ -405,29 +627,20 @@ public class RESTService extends AbstractTestModule
     */
    public String getHeaderParameterValue(int parameterIndex)
    {
-      return getTableValue(HEADER_TABLE_ID, parameterIndex, 5);
+      return getTableValue(Locators.HEADER_TABLE_ID, parameterIndex, 5);
    }
 
-   /**
-    * Close Launch REST Service form, by press Cancel button
-    */
-   public void closeForm()
+   private void changeTableCheckBox(WebElement parameter, boolean check)
    {
-      selenium().click(CANCEL_BUTTON);
-   }
-
-   private void changeTableCheckBox(String tableId, int row, int col, boolean check)
-   {
-      String locator =
-         String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div/input[@type='checkbox']", tableId, row, col);
-
-      selenium().click(String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div", tableId, row, col));
-      selenium().click(locator);
-      if (check)
-         selenium().check(locator);
-      else
-         selenium().uncheck(locator);
-
+      WebElement checkBox = parameter.findElement(By.tagName("input"));
+      if (check && (!checkBox.isSelected()))
+      {
+         checkBox.click();
+      }
+      else if (!check && (checkBox.isSelected()))
+      {
+         checkBox.click();
+      }
    }
 
    /**
@@ -435,9 +648,9 @@ public class RESTService extends AbstractTestModule
     * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
     * @param check check box state (checked/ unchecked)
     */
-   public void changeHeaderParameterSendCheckBoxState(int parameterIndex, boolean check)
+   public void changeHeaderParameterSendCheckBoxState(boolean check)
    {
-      changeTableCheckBox(HEADER_TABLE_ID, parameterIndex, 1, check);
+      changeTableCheckBox(headerParametrTabble, check);
    }
 
    /**
@@ -446,8 +659,8 @@ public class RESTService extends AbstractTestModule
     */
    public void openGetURLForm() throws Exception
    {
-      selenium().click("ideGroovyServiceGetURL");
-      waitForElementPresent(GET_REST_SERVICE_URL_FORM);
+      getUrlButton.click();
+      waitGetUrlRestServiceOpened();
    }
 
    /**
@@ -456,7 +669,7 @@ public class RESTService extends AbstractTestModule
     */
    public String getUrlFromGetURLForm()
    {
-      return selenium().getValue("ideGetItemURLFormURLField");
+      return getUrlFormField.getAttribute("value");
    }
 
    /**
@@ -465,8 +678,8 @@ public class RESTService extends AbstractTestModule
     */
    public void closeGetURLForm() throws Exception
    {
-      selenium().click("ideGetRestServiceURLFormOkButton");
-      waitForElementNotPresent(GET_REST_SERVICE_URL_FORM);
+      getUrlFormOkBtn.click();
+      waitGetUrlRestServiceClosed();
    }
 
    /**
@@ -476,66 +689,47 @@ public class RESTService extends AbstractTestModule
     */
    public void selectPathValue(String pathValue) throws Exception
    {
-      openPathList();
-      selectPathSuggestPanelItem(pathValue);
+      IDE().INPUT.selectComboboxValue(restServicePath, pathValue);
    }
 
-   private void typeToTableValue(String tableId, int row, int col, String value)
+   /**
+    * Type parameters in value field ot the REST service table  
+    * @param tableId
+    * @param row
+    * @param col
+    * @throws InterruptedException
+    */
+   private void typeToTableValue(WebElement tableId, int row, int col, String valueText) throws InterruptedException
    {
-      
-     // added waiting methods, for redrawing and appearance all elements table "LaunchRESTService"
-      String locator = String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div", tableId, row, col);
-      try
-      {
-         waitForElementPresent(locator);
-      }
-      catch (Exception e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      
-      selenium().click(locator);
-      
-      //add click, This method fixes the problem call of input field for write a value in HeaderParameter table
-      selenium().click(locator);
-            
-      try
-      {
-         waitForElementPresent(locator);
-      }
-      catch (Exception e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-
-      assertTrue(selenium().isElementPresent(locator));
-      selenium().focus(locator);
-      selenium().typeKeys(locator, value);
-      selenium().keyPressNative("" + KeyEvent.VK_ENTER);
-      assertFalse(selenium().isElementPresent(locator));
-
+      String valuePrefix = String.format("tbody/tr[%1s]/td[%2s]", row, col);
+      WebElement valueColumn = tableId.findElement(By.xpath(valuePrefix));
+      valueColumn.click();
+      waitValueOpened(tableId, valuePrefix);
+      WebElement valueInput = tableId.findElement(By.xpath(valuePrefix + "/div/input"));
+      valueInput.sendKeys(valueText);
+      Thread.sleep(3000);
    }
 
    /**
     * Type new value to Header parameter
     * @param parameterIndex of parameter
     * @param value new value
+    * @throws InterruptedException 
     */
-   public void typeToHeaderParameterValue(int parameterIndex, String value)
+   public void typeToHeaderParameterValue(int parameterIndex, String value) throws InterruptedException
    {
-      typeToTableValue(HEADER_TABLE_ID, parameterIndex, 5, value);
+      typeToTableValue(headerTable, parameterIndex, 5, value);
    }
 
    /**
     * Type new value to Query parameter
     * @param parameterIndex nidex of the parameter
     * @param value new value
+    * @throws InterruptedException 
     */
-   public void typeToQueryParameterValue(int parameterIndex, String value)
+   public void typeToQueryParameterValue(int parameterIndex, String value) throws InterruptedException
    {
-      typeToTableValue(QUERY_TABLE_ID, parameterIndex, 5, value);
+      typeToTableValue(queryTable, parameterIndex, 5, value);
    }
 
    /**
@@ -544,29 +738,53 @@ public class RESTService extends AbstractTestModule
     */
    public void typeToBodyField(String text)
    {
-      selenium().typeKeys(BODY_TEXT_FIELD, text);
+      bodyTable.sendKeys(text);
    }
 
    /**
-    * Run REST Service and wait for Launch REST Service opened
+    * Run REST Service and wait for Launch REST Service opened in sandbox
     * @throws Exception
     */
-   public void runRESTService() throws Exception
+   public void runRESTServiceInSanbox() throws Exception
    {
       IDE().TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      waitForElementPresent(REST_SERVICE_FORM);
-   }
-
-   public void checkIsFormNotOpened()
-   {
-      assertFalse(selenium().isElementPresent(REST_SERVICE_FORM));
+      waitOpened();
    }
 
    /**
-    * 
+    * @return false if REST service form is closed
+    * return false if REST service form is open
     */
-   public void checkIsFormOpened()
+   public boolean isFormNotOpened()
    {
-      assertTrue(selenium().isElementPresent(REST_SERVICE_FORM));
+
+      try
+      {
+         if (restServiceForm != null && restServiceForm.isDisplayed())
+            ;
+         return false;
+      }
+      catch (Exception e)
+      {
+         return true;
+      }
+
    }
+
+   /**
+    * @return false if REST service form is closed
+    * return true if REST service form is open
+    */
+   public boolean isFormOpened()
+   {
+
+      return (restServiceForm != null && restServiceForm.isDisplayed() && restServicePath != null
+         && restServicePath.isDisplayed() && restServiceMethod != null && restServiceMethod.isDisplayed()
+         && restServiceRequestMediaType != null && restServiceRequestMediaType.isDisplayed()
+         && restServiceResponseMediaType != null && restServiceResponseMediaType.isDisplayed() && queryTable != null
+         && getUrlButton != null && getUrlButton.isDisplayed() && sendButton != null && sendButton.isDisplayed()
+         && cancelButton != null && cancelButton.isDisplayed());
+
+   }
+
 }
