@@ -89,13 +89,12 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 
       assertParameters();
 
-     IDE.REST_SERVICE.openPathList();
 
-      IDE.REST_SERVICE.checkPathListTextPresent("/testAnnotationInheritance");
+      IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance");
       
-      IDE.REST_SERVICE.checkPathListTextPresent("/testAnnotationInheritance/InnerPath/{pathParam}");
+      IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
 
-      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testAnnotationInheritance/InnerPath/{pathParam}");
+      IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
 
       IDE.REST_SERVICE.typeToPathField(
          "/testAnnotationInheritance/InnerPath/Ñ‚ÐµÑ�Ñ‚");
@@ -122,11 +121,11 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 
       assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
 
-      assertEquals("", selenium().getText(IDE.REST_SERVICE.QUERY_TABLE));
+      assertEquals("", IDE.REST_SERVICE.getQueryParameterName(1));
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      assertEquals("", selenium().getText(IDE.REST_SERVICE.HEADER_TABLE));
+      assertEquals("", IDE.REST_SERVICE.getHeaderParameterName(1));
 
       IDE.REST_SERVICE.selectQueryParametersTab();
    }

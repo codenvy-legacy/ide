@@ -68,7 +68,7 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
 
       IDE.REST_SERVICE.launchRestService();
       
-      IDE.REST_SERVICE.selectPathValue("/helloworld/{name}");
+      IDE.REST_SERVICE.selectInPathList("/helloworld/{name}");
 
       IDE.REST_SERVICE.setMethodFieldValue("GET");
 

@@ -99,7 +99,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + SIMPLE_FILE_NAME, false);
 
       //call Run Groovy Service command
-      IDE.REST_SERVICE.runRESTService();
+      IDE.REST_SERVICE.runRESTServiceInSanbox();
       //close
       IDE.REST_SERVICE.sendRequst();
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -127,7 +127,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       //call Run Groovy Service command
-      IDE.REST_SERVICE.runRESTService();
+      IDE.REST_SERVICE.runRESTServiceInSanbox();
       //close
       IDE.REST_SERVICE.closeForm();
 

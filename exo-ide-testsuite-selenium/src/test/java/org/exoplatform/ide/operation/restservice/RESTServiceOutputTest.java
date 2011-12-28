@@ -92,7 +92,7 @@ public class RESTServiceOutputTest extends BaseTest
       checkHeaderParameter(1, "Test-Header1", "string", "", "");
 
       //Step 3
-      IDE.REST_SERVICE.selectPathValue("/overralTest");
+      IDE.REST_SERVICE.selectInPathList("/overralTest");
       checkFields("/overralTest", "OPTIONS", "", "application/vnd.sun.wadl+xml");
 
       //Step 4
@@ -179,18 +179,12 @@ public class RESTServiceOutputTest extends BaseTest
    }
 
    /**
+    * @throws InterruptedException 
     * 
     */
-   private void typeToPathField()
+   private void typeToPathField() throws InterruptedException
    {
-      selenium().focus(IDE.REST_SERVICE.REST_SERVICE_PATH);
-
-      for (int i = 0; i < 15; i++)
-      {
-         selenium().keyPress(IDE.REST_SERVICE.REST_SERVICE_PATH, "\\8");
-      }
-
-      selenium().typeKeys(IDE.REST_SERVICE.REST_SERVICE_PATH, "param1");
+      IDE.REST_SERVICE.typeToPathField("/overralTest/Inner/node/param1");
    }
 
    private void checkFields(String path, String method, String request, String response)

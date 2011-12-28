@@ -119,7 +119,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 3 -----------------
       //call Run Groovy Service command
-      IDE.REST_SERVICE.runRESTService();
+      IDE.REST_SERVICE.runRESTServiceInSanbox();
 
       //---- 4 -----------------
       //close
@@ -140,13 +140,13 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //check Launch Rest Service form doesn't appear
-      IDE.REST_SERVICE.checkIsFormNotOpened();
+      IDE.REST_SERVICE.isFormNotOpened();
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //check Launch Rest Service form doesn't appear
-      IDE.REST_SERVICE.checkIsFormNotOpened();
+      IDE.REST_SERVICE.isFormNotOpened();
 
    }
 
@@ -198,7 +198,7 @@ public class RunRestServiceCommandTest extends BaseTest
       assertEquals("[INFO] " + NON_VALID_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessage(2));
 
       //check Launch Rest Service form doesn't appear
-      IDE.REST_SERVICE.checkIsFormNotOpened();
+      IDE.REST_SERVICE.isFormNotOpened();
 
    }
 
@@ -229,7 +229,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 4 -----------------
       //call Run Groovy Service command
-      IDE.REST_SERVICE.runRESTService();
+      IDE.REST_SERVICE.runRESTServiceInSanbox();
 
       //---- 5 -----------------
       //close
@@ -278,7 +278,7 @@ public class RunRestServiceCommandTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //check Launch Rest Service form appears
-      IDE.REST_SERVICE.checkIsFormOpened();
+      IDE.REST_SERVICE.isFormNotOpened();
 
       //---- 6 -----------------
       //close

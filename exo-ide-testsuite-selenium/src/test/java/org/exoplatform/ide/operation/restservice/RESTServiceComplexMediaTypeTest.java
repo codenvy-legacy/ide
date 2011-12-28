@@ -87,17 +87,18 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       // Call the "Run->Launch REST Service" topmenu command
       IDE.REST_SERVICE.launchRestService();
 
-      IDE.REST_SERVICE.openPathList();
+      
 
-      IDE.REST_SERVICE.checkPathListTextPresent("/testMediaTypes");
-      IDE.REST_SERVICE.checkPathListTextPresent("/testMediaTypes/InnerPath");
+      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes");
+      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes/InnerPath");
 
-      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testMediaTypes");
+      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes");
 
       IDE.REST_SERVICE.sendRequst();
 
       // Expected 3
-      assertFalse(selenium().isElementPresent(IDE.REST_SERVICE.REST_SERVICE_FORM));
+      IDE.REST_SERVICE.waitOpened();
+      
 
       // Check received message:
       String mess = IDE.OUTPUT.getOutputMessage(1);
@@ -106,16 +107,19 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
 
       IDE.REST_SERVICE.launchRestService();
+    
       // Choose path:
-      IDE.REST_SERVICE.openPathList();
+      
 
-      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testMediaTypes/InnerPath");
+      IDE.REST_SERVICE.selectInPathList("/testMediaTypes/InnerPath");
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertEquals("POST", IDE.REST_SERVICE.getMethodFieldValue());
 
-      IDE.REST_SERVICE.checkRequestFieldContainsValues("application/json", "text/plain");
+      
 
+      IDE.REST_SERVICE.isRequestFieldContainsValues("application/json", "text/plain");
+      
       IDE.REST_SERVICE.setRequestMediaTypeFieldValue("text/plain");
 
       assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
@@ -128,7 +132,10 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 
       IDE.REST_SERVICE.selectBodyTab();
 
-      selenium().type(IDE.REST_SERVICE.BODY_TEXT_FIELD, "{\"value\" : \"value4\"}");
+      IDE.REST_SERVICE.typeToBodyField("{\"value\" : \"value4\"}");
+      
+      
+      
       IDE.REST_SERVICE.sendRequst();
 
       Thread.sleep(TestConstants.SLEEP);
@@ -140,14 +147,14 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 
       IDE.REST_SERVICE.launchRestService();
 
-      IDE.REST_SERVICE.openPathList();
-      IDE.REST_SERVICE.checkPathListTextPresent("/testMediaTypes/InnerPath");
-      IDE.REST_SERVICE.selectPathSuggestPanelItem("/testMediaTypes/InnerPath");
+     
+      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes/InnerPath");
+      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes/InnerPath");
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertEquals("POST", IDE.REST_SERVICE.getMethodFieldValue());
 
-      IDE.REST_SERVICE.checkRequestFieldContainsValues("application/json", "text/plain");
+      IDE.REST_SERVICE.isRequestFieldContainsValues("application/json", "text/plain");
       IDE.REST_SERVICE.setRequestMediaTypeFieldValue("text/plain");
 
       assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
@@ -159,7 +166,8 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       IDE.REST_SERVICE.typeToPathField("/testMediaTypes/InnerPath");
 
       IDE.REST_SERVICE.selectBodyTab();
-      selenium().type(IDE.REST_SERVICE.BODY_TEXT_FIELD, "{\"value\" : \"value4\"}");
+      IDE.REST_SERVICE.typeToBodyField("{\"value\" : \"value4\"}");
+      
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.REST_SERVICE.sendRequst();

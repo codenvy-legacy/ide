@@ -86,7 +86,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
 
       IDE.REST_SERVICE.launchRestService();
 
-      IDE.REST_SERVICE.selectPathValue("/test/testgroovy/{name}");
+      IDE.REST_SERVICE.selectInPathList("/test/testgroovy/{name}");
 
       IDE.REST_SERVICE.typeToPathField("/test/testgroovy/Evgen");
       IDE.REST_SERVICE.sendRequst();

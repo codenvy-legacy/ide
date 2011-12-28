@@ -93,11 +93,11 @@ public class RESTServiceOutputErrorTest extends BaseTest
 
       IDE.REST_SERVICE.launchRestService();
 
-      IDE.REST_SERVICE.openPathList();
-      IDE.REST_SERVICE.checkPathListTextPresent("/outputError/Inner/{first}/{second}/node/{paramList: .+}");
-      IDE.REST_SERVICE.checkPathListTextPresent("/outputError");
+      
+      IDE.REST_SERVICE.selectInPathList("/outputError/Inner/{first}/{second}/node/{paramList: .+}");
+      IDE.REST_SERVICE.selectInPathList("/outputError");
 
-      IDE.REST_SERVICE.selectPathSuggestPanelItem("/outputError");
+      IDE.REST_SERVICE.selectInPathList("/outputError");
 
       assertEquals("OPTIONS", IDE.REST_SERVICE.getMethodFieldValue());
 
@@ -106,11 +106,11 @@ public class RESTServiceOutputErrorTest extends BaseTest
       assertEquals("application/vnd.sun.wadl+xml", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
 
       assertEquals("",
-         selenium().getText(IDE.REST_SERVICE.QUERY_TABLE));
+         (IDE.REST_SERVICE.getQueryParameterName(1)));
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
       assertEquals("",
-         selenium().getText(IDE.REST_SERVICE.HEADER_TABLE));
+         IDE.REST_SERVICE.getHeaderParameterName(1));
 
       IDE.REST_SERVICE.selectQueryParametersTab();
 
@@ -122,9 +122,9 @@ public class RESTServiceOutputErrorTest extends BaseTest
 
       IDE.WARNING_DIALOG.clickOk();
 
-      IDE.REST_SERVICE.openPathList();
+   
 
-      IDE.REST_SERVICE.selectPathSuggestPanelItem("/outputError/Inner/{first}/{second}/node/{paramList: .+}");
+      IDE.REST_SERVICE.selectInPathList("/outputError/Inner/{first}/{second}/node/{paramList: .+}");
       IDE.REST_SERVICE.typeToPathField("/outputError/Inner/first/second/node/node1/node2/node3");
 
       IDE.REST_SERVICE.setMethodFieldValue("GET");

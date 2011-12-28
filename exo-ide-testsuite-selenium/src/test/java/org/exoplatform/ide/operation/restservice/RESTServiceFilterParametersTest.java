@@ -90,9 +90,11 @@ public class RESTServiceFilterParametersTest extends BaseTest
       //************************
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
-      waitForElementPresent(IDE.REST_SERVICE.HEADER_TABLE);
+      IDE.REST_SERVICE.waitRestServiceTabOpened(1);
       
-      IDE.REST_SERVICE.changeHeaderParameterSendCheckBoxState(1, false);      
+      
+      
+      IDE.REST_SERVICE.changeHeaderParameterSendCheckBoxState(false);      
 
       IDE.REST_SERVICE.sendRequst();
       IDE.OUTPUT.waitOpened();
