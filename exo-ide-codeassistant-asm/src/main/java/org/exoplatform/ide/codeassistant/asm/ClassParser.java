@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
-import org.exoplatform.ide.codeassistant.asm.old.TypeInfoClassVisitor;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
@@ -75,14 +74,6 @@ public class ClassParser
    public static TypeInfo parse(InputStream classStream) throws IOException
    {
       ClassReader cr = new ClassReader(classStream);
-      TypeInfoClassVisitor typeInfoClassVisitor = new TypeInfoClassVisitor(false);
-      cr.accept(typeInfoClassVisitor, ClassReader.SKIP_CODE);
-      return null;//typeInfoClassVisitor.getBuilder().buildTypeInfo();
-   }
-
-   public static TypeInfo parse2(InputStream classStream) throws IOException
-   {
-      ClassReader cr = new ClassReader(classStream);
       ClassNode cn = new ClassNode();
       cr.accept(cn, ClassReader.SKIP_DEBUG | ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
 
@@ -94,9 +85,10 @@ public class ClassParser
       try
       {
          ClassReader cr = new ClassReader(classStream);
-         TypeInfoClassVisitor typeInfoClassVisitor = new TypeInfoClassVisitor();
-         cr.accept(typeInfoClassVisitor, ClassReader.SKIP_CODE);
-         return null;//typeInfoClassVisitor.getBuilder().buildTypeInfo();
+         ClassNode cn = new ClassNode();
+         cr.accept(cn, ClassReader.SKIP_DEBUG | ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
+
+         return TypeInfoBuilder.fromClassNode(cn);
       }
       catch (IOException e)
       {
