@@ -195,6 +195,8 @@ public class IDE
       WARNING_DIALOG = PageFactory.initElements(driver, WarningDialog.class);
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
       INFORMATION_DIALOG = PageFactory.initElements(driver, InformationDialog.class);
+      REST_SERVICE=PageFactory.initElements(driver, RESTService.class);
+   
    }
 
    public Selenium getSelenium()
