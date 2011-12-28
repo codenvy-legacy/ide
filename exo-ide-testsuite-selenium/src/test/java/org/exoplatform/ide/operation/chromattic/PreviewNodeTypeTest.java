@@ -19,17 +19,16 @@
 package org.exoplatform.ide.operation.chromattic;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Editor;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Test for Chromattic generated node type preview.
@@ -40,19 +39,9 @@ import org.junit.Test;
  */
 public class PreviewNodeTypeTest extends BaseTest
 {
-   //---- Locators ------------
-   public static final String GENERATE_NODE_TYPE_DIALOG_ID = "//div[@view-id='ideGenerateNodeTypeView']";
-   
-   public static final String GENERATE_NODE_TYPE_FORMAT_FIELD = "ideGenerateNodeTypeViewFormatField";
-   
-   public static final String GENERATE_NODE_TYPE_GENERATE_BUTTON_ID = "ideGenerateNodeTypeViewGenerateButton";
-   
-   public static final String GENERATE_NODE_TYPE_CANCEL_BUTTON_ID = "ideGenerateNodeTypeViewCancelButton";
-   
-   //---- Variables ------------
-   private final static String FOLDER_NAME = PreviewNodeTypeTest.class.getSimpleName();
+   private final static String PROJECT = PreviewNodeTypeTest.class.getSimpleName();
 
-   private static final String FILE_NAME = PreviewNodeTypeTest.class.getSimpleName() + ".groovy";
+   private static final String FILE_NAME = PreviewNodeTypeTest.class.getSimpleName() + ".cmtc";
 
    /**
     * The sample of EXO node type format.
@@ -76,11 +65,9 @@ public class PreviewNodeTypeTest extends BaseTest
     * The sample CND node type format.
     */
    private final String generatedCNDFormat = "<jcr = 'http://www.jcp.org/jcr/1.0'>"
-      + "<nt = 'http://www.jcp.org/jcr/nt/1.0'>" 
-      + "<mix = 'http://www.jcp.org/jcr/mix/1.0'>"
-      + "[file] > nt:base, mix:referenceable" 
-      + "- name (String)";
-   
+      + "<nt = 'http://www.jcp.org/jcr/nt/1.0'>" + "<mix = 'http://www.jcp.org/jcr/mix/1.0'>"
+      + "[file] > nt:base, mix:referenceable" + "- name (String)";
+
    /**
     * Create test folder and test data object file.
     */
@@ -89,9 +76,10 @@ public class PreviewNodeTypeTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/chromattic/A.groovy",
-            MimeType.CHROMATTIC_DATA_OBJECT, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, "application/x-chromattic+groovy",
+            "src/test/resources/org/exoplatform/ide/operation/chromattic/A.groovy");
       }
       catch (Exception e)
       {
@@ -107,7 +95,7 @@ public class PreviewNodeTypeTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -121,122 +109,123 @@ public class PreviewNodeTypeTest extends BaseTest
    @Test
    public void testGenerateNodeTypeView() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
       //Check controls are present and enabled:
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
-
-      //check dialog
-      assertTrue(selenium().isElementPresent(GENERATE_NODE_TYPE_DIALOG_ID));
-      assertTrue(selenium().isElementPresent(GENERATE_NODE_TYPE_FORMAT_FIELD));
-      assertTrue(selenium().isElementPresent(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID));
+      IDE.PREVIEW_NODE_TYPE.waitOpened();
 
       //Click "Cancel" button
-      selenium().click(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID);
-      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
+      IDE.PREVIEW_NODE_TYPE.clickCancelButton();
+      IDE.PREVIEW_NODE_TYPE.waitClosed();
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
+      IDE.PREVIEW_NODE_TYPE.waitOpened();
 
       //Click "Generate" button
-      selenium().click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
-      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
-
-      waitForElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertTrue(selenium().isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      IDE.PREVIEW_NODE_TYPE.clickGenerateButton();
+      IDE.PREVIEW_NODE_TYPE.waitClosed();
+      IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewOpened();
 
       //Close file and check view with generated code is closed.
-      IDE.EDITOR.closeFile(0);
-      waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium().isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
+
+      IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewClosed();
    }
 
    /**
-    * Tests the preview of generated node type with EXO format.
-    */
+   * Tests the preview of generated node type with EXO format.
+   */
    @Test
    public void testGenerateExoFormat() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
 
-      //Wait while buttons will be enabled
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      //Check controls are present and enabled:
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
-      
+
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
+      IDE.PREVIEW_NODE_TYPE.waitOpened();
 
       //Click "Generate" button
-      selenium().click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
-      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
+      IDE.PREVIEW_NODE_TYPE.selectFormat("EXO");
+      IDE.PREVIEW_NODE_TYPE.clickGenerateButton();
+      IDE.PREVIEW_NODE_TYPE.waitClosed();
+      IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewOpened();
+      String text = IDE.PREVIEW_NODE_TYPE.getGeneratedNodeType();
 
-      //Check generated code:
-      waitForElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-
-      String text = getTextFromNodeTypePreviewTab();
-      
       //Clear formatting:
       text = text.replaceAll("\n", "");
       for (int i = 0; i < 8; i++)
       {
          text = text.replaceAll(" <", "<");
       }
-
       assertEquals(generatedEXOFormat, text);
 
-      IDE.EDITOR.closeFile(0);
-      waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium().isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
+      IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewClosed();
    }
 
    /**
-    * Tests the preview of generated node type withCND format.
-    * 
-    * @throws Exception
-    */
+      * Tests the preview of generated node type withCND format.
+      * 
+      * @throws Exception
+      */
    @Test
    public void testGenerateCndFormat() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
 
-      //Wait while buttons will be enabled
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      //Check controls are present and enabled:
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
-      
-      selenium().select(GENERATE_NODE_TYPE_FORMAT_FIELD, "label=CND");
+      IDE.PREVIEW_NODE_TYPE.waitOpened();
+      IDE.PREVIEW_NODE_TYPE.selectFormat("CND");
 
       //Click "Generate" button
-      selenium().click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
-      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
-      waitForElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      IDE.PREVIEW_NODE_TYPE.clickGenerateButton();
+      IDE.PREVIEW_NODE_TYPE.waitClosed();
+      IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewOpened();
 
       //Check generated code:
-
-      String text = getTextFromNodeTypePreviewTab();
+      String text = IDE.PREVIEW_NODE_TYPE.getGeneratedNodeType();
 
       //Clear formatting:
       text = text.replaceAll("\n", "");
@@ -244,26 +233,9 @@ public class PreviewNodeTypeTest extends BaseTest
       {
          text = text.replaceAll(" <", "<");
       }
-
       assertEquals(generatedCNDFormat, text);
 
-      IDE.EDITOR.closeFile(0);
-      waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium().isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewClosed();
    }
-   
-   /**
-    * Get the text from preview node type tab. 
-    * @return {@link String}
-    * @throws Exception
-    */
-   public String getTextFromNodeTypePreviewTab() throws Exception
-   {
-      final String iframeLocator = DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR + "//iframe";
-      selenium().selectFrame(iframeLocator);
-      final String text = ""; //TODO selenium().getText(Editor.Locators.CODE_MIRROR_EDITOR);
-      IDE.selectMainFrame();
-      return text;
-   }
-
 }

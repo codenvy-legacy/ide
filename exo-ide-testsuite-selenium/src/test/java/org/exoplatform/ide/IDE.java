@@ -27,6 +27,7 @@ import org.exoplatform.ide.core.AvailableDependencies;
 import org.exoplatform.ide.core.Button;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.Delete;
+import org.exoplatform.ide.core.DeployNodeType;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.FindReplace;
 import org.exoplatform.ide.core.Folder;
@@ -40,6 +41,7 @@ import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
+import org.exoplatform.ide.core.PreviewNodeType;
 import org.exoplatform.ide.core.Project;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
@@ -88,7 +90,9 @@ public class IDE
    public Editor EDITOR;
 
    public AboutDialog ABOUT;
-   
+
+   public DeployNodeType DEPLOY_NODE_TYPE;
+
    public AvailableDependencies AVAILABLE_DEPENDENCIES;
 
    public Loader LOADER;
@@ -128,13 +132,15 @@ public class IDE
 
    public SaveAsTemplate SAVE_AS_TEMPLATE;
 
-   public RESTService REST_SERVICE = new RESTService();
+   public RESTService REST_SERVICE;
 
    public Search SEARCH = new Search();
 
    public Output OUTPUT;
 
    public Properties PROPERTIES;
+
+   public PreviewNodeType PREVIEW_NODE_TYPE;
 
    public Versions VERSIONS = new Versions();
 
@@ -173,6 +179,7 @@ public class IDE
       BUTTON = PageFactory.initElements(driver, Button.class);
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       DELETE = PageFactory.initElements(driver, Delete.class);
+      DEPLOY_NODE_TYPE = PageFactory.initElements(driver, DeployNodeType.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);
       FOLDER = PageFactory.initElements(driver, Folder.class);
       FINDREPLACE = PageFactory.initElements(driver, FindReplace.class);
@@ -183,6 +190,7 @@ public class IDE
       OUTLINE = PageFactory.initElements(driver, Outline.class);
       OUTPUT = PageFactory.initElements(driver, Output.class);
       PREVIEW = PageFactory.initElements(driver, Preview.class);
+      PREVIEW_NODE_TYPE = PageFactory.initElements(driver, PreviewNodeType.class);
       PERSPECTIVE = PageFactory.initElements(driver, Perspective.class);
       PROPERTIES = PageFactory.initElements(driver, Properties.class);
       PROJECT = PageFactory.initElements(driver, Project.class);
@@ -195,8 +203,7 @@ public class IDE
       WARNING_DIALOG = PageFactory.initElements(driver, WarningDialog.class);
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
       INFORMATION_DIALOG = PageFactory.initElements(driver, InformationDialog.class);
-      REST_SERVICE=PageFactory.initElements(driver, RESTService.class);
-   
+      REST_SERVICE = PageFactory.initElements(driver, RESTService.class);
    }
 
    public Selenium getSelenium()

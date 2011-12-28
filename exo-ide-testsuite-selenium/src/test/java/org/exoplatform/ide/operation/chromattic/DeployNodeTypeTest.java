@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.operation.chromattic;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -38,24 +39,9 @@ import org.junit.Test;
  */
 public class DeployNodeTypeTest extends BaseTest
 {
-   //---- Locators ------------
-   public static final String IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR = "//div[@view-id='ideGeneratedTypePreviewView']";
+   private final static String PROJECT = DeployNodeTypeTest.class.getSimpleName();
 
-   public static final String DEPLOY_NODE_TYPE_DIALOG_ID = "//div[@view-id='ideDeployNodeTypeView']";
-
-   public static final String DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME = "ideDeployNodeTypeViewFormatField";
-
-   public static final String DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME =
-      "ideDeployNodeTypeViewAlreadyExistBehaviorField";
-
-   public static final String DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID = "ideDeployNodeTypeViewDeployButton";
-
-   public static final String DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID = "ideDeployNodeTypeViewCancelButton";
-
-   //---- Variables ------------
-   private final static String FOLDER_NAME = DeployNodeTypeTest.class.getSimpleName();
-
-   private static final String FILE_NAME = DeployNodeTypeTest.class.getSimpleName() + ".groovy";
+   private static final String FILE_NAME = DeployNodeTypeTest.class.getSimpleName() + ".cmtc";
 
    /**
     * Create test folder and test data object file.
@@ -65,9 +51,10 @@ public class DeployNodeTypeTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/chromattic/A.groovy",
-            MimeType.CHROMATTIC_DATA_OBJECT, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, "application/x-chromattic+groovy",
+            "src/test/resources/org/exoplatform/ide/operation/chromattic/A.groovy");
       }
       catch (Exception e)
       {
@@ -83,7 +70,7 @@ public class DeployNodeTypeTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -97,51 +84,49 @@ public class DeployNodeTypeTest extends BaseTest
    @Test
    public void testGenerateNodeTypeView() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
       //Check controls are present and enabled:
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
       assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.DEPLOY_NODE_TYPE));
-      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE, true);
+      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE));
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
-      waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
-
-      //check, that Deploy Node Type form is present
-      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID));
-      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME));
-      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME));
-      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID));
-      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID));
-
-      //Click "Cancel" button
-      selenium().click(DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID);
-      waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
+      IDE.DEPLOY_NODE_TYPE.waitOpened();
+      IDE.DEPLOY_NODE_TYPE.clickCancelButton();
+      IDE.DEPLOY_NODE_TYPE.waitClosed();
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
-      waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
+      IDE.DEPLOY_NODE_TYPE.waitOpened();
 
       //Select CND format:
-      selenium().select(DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME, "label=CND");
+      IDE.DEPLOY_NODE_TYPE.selectNodeTypeFormat("CND");
 
       //Click deploy button:
-      selenium().click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
-      waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
+      IDE.DEPLOY_NODE_TYPE.clickDeployButton();
 
       //Check error message that CND format is not supported:
       IDE.WARNING_DIALOG.waitOpened();
-      assertTrue(selenium().isTextPresent("Unsupported content type:text/x-jcr-cnd"));
+      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains("Unsupported content type:text/x-jcr-cnd"));
       IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
 
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
    }
 
    /**
@@ -152,33 +137,36 @@ public class DeployNodeTypeTest extends BaseTest
    @Test
    public void testDeployIgnoreIfExist() throws Exception
    {
-      selenium().refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
 
-      //Wait while button will be enabled
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      //Check controls are present and enabled:
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
-      waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
+      IDE.DEPLOY_NODE_TYPE.waitOpened();
 
       //Click deploy button:
-      selenium().click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
-      waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
+      IDE.DEPLOY_NODE_TYPE.selectAlreadyExists("ignore if exists");
+      IDE.DEPLOY_NODE_TYPE.clickDeployButton();
+      IDE.DEPLOY_NODE_TYPE.waitClosed();
 
       IDE.INFORMATION_DIALOG.waitOpened();
-      assertEquals("Node type successfully deployed.", IDE);
+      assertEquals("Node type successfully deployed.", IDE.INFORMATION_DIALOG.getMessage());
       IDE.INFORMATION_DIALOG.clickOk();
       IDE.INFORMATION_DIALOG.waitClosed();
 
-      //check, that there is no view with generated code
-      assertFalse(selenium().isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
-
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
    }
 
    /**
@@ -189,34 +177,38 @@ public class DeployNodeTypeTest extends BaseTest
    @Test
    public void testDeployFailIfExist() throws Exception
    {
-      refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      driver.navigate().refresh();
 
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
 
-      //Wait while button will be enabled
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      //Check controls are present and enabled:
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
-      waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
+      IDE.DEPLOY_NODE_TYPE.waitOpened();
 
       //Select "fail if exist" behavior:
-      selenium().select(DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME, "label=fail if exists");
+      IDE.DEPLOY_NODE_TYPE.selectAlreadyExists("fail if exists");
 
       //Click deploy button:
-      selenium().click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
-      waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
+      IDE.DEPLOY_NODE_TYPE.clickDeployButton();
+      IDE.DEPLOY_NODE_TYPE.waitClosed();
 
       IDE.WARNING_DIALOG.waitOpened();
       IDE.WARNING_DIALOG.clickOk();
 
       //check, that there is no view with generated code
-      assertFalse(selenium().isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
    }
 
 }

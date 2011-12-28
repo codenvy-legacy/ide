@@ -77,6 +77,7 @@ public class OpenProject extends AbstractTestModule
    {
       IDE().MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.OPEN_PROJECT);
       waitOpened();
+      IDE().LOADER.waitClosed();
       selectProjectName(name);
       clickOpenButton();
       waitClosed();
