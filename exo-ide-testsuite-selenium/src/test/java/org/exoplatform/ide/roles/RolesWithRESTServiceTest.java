@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.roles;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -27,6 +27,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,9 +39,22 @@ import java.io.IOException;
  */
 public class RolesWithRESTServiceTest extends BaseTest
 {
-   private final static String FILE1 = "REST Service";
+   private static final String PROJECT = RolesWithRESTServiceTest.class.getSimpleName();
+      
+   private final static String FILE_NAME = "REST Service.grs";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
    
    /**
     * Clear test results.
@@ -52,7 +66,7 @@ public class RolesWithRESTServiceTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL+FILE1);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -70,190 +84,128 @@ public class RolesWithRESTServiceTest extends BaseTest
    public void testDeveloperRoleWithRESTService() throws Exception
    {
       //fix for run tests where new session start after 7 testcases passes   
-    //  logout();
-      //standaloneLogin(TestConstants.Users.ROOT, TestConstants.Users.ROOT_PASS);
+      //you are logged as root.
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       
-      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      saveAsUsingToolbarButton(FILE1);
-      IDE.WORKSPACE.waitForItem(WS_URL + FILE1);
+      IDE.EDITOR.waitTabPresent(1);
+      
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE, true);
       
       //Check controls available for administrators 
       //and developers
-      checkDeployUndeployAllowed(true);
-      checkRunService(true);
-      checkSetAutoload(true);
-      checkSandbox(true);
-      checkLaunchService(true);
-      checkValidateService(true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE));
       
-     IDE.EDITOR.closeFile(0);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE));
+      
+      //Deploy service:
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(1);
+      //Check successfully deployed message
+      IDE.OUTPUT.waitOpened();
+      IDE.OUTPUT.waitForMessageShow(1);
+      String message = IDE.OUTPUT.getOutputMessage(1);
+      assertTrue(message.contains("[INFO]"));
+      assertTrue(message.contains(FILE_NAME + " deployed successfully."));
+
+      //Undeploy service
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(2);
+      //Check successfully undeployed message
+      message = IDE.OUTPUT.getOutputMessage(2);
+      assertTrue(message.contains("[INFO]"));
+      assertTrue(message.contains(FILE_NAME + " undeployed successfully."));
+      
+      //Check Run service:
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
+      
+      //Check Set Autoload
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.SET_AUTOLOAD));
+      
+      //Check Sandbox
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.DEPLOY_SANDBOX));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.UNDEPLOY_SANDBOX));
+      
+      //Check Launch Service
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.LAUNCH_REST_SERVICE));
+      
+      //Check Validate Service
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE));
+      
+      IDE.EDITOR.closeFile(FILE_NAME);
       
       //Logout and login as developer
-      logout();
+      IDE.LOGIN.logout();
+      IDE.LOGIN.waitStandaloneLogin();
+      IDE.LOGIN.standaloneLogin(TestConstants.Users.DEV, TestConstants.Users.DEV_PASS);
       
-      Thread.sleep(3000);
-      standaloneLogin(TestConstants.Users.DEV, TestConstants.Users.DEV_PASS);
-      IDE.WORKSPACE.waitForRootItem();
       
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE1, false);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      
+      IDE.EDITOR.waitTabPresent(1);
+      
       //Check deploy/undeploy is not available for developer
-      checkDeployUndeployAllowed(false);
+      assertFalse(IDE.MENU.isCommandVisible(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE));
+      assertFalse(IDE.MENU.isCommandVisible(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE));
       // Check run service is allowed for developer
-      checkRunService(true);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
+      
       //Check set autoload property is not available for developer
-      checkSetAutoload(false);
+      assertFalse(IDE.MENU.isCommandVisible(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD));
       //Check deploy/undeploy in sandbox is available for developer
-      checkSandbox(true);
-      // Check validate service is allowed for developer
-      checkValidateService(true);
-      // Check launch service is allowed for developer
-      checkLaunchService(false);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.DEPLOY_SANDBOX));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.UNDEPLOY_SANDBOX));
+      //Check validate service is allowed for developer
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE));
+      //Check launch service is not allowed for developer
+      assertFalse(IDE.MENU.isCommandVisible(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE));
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.LAUNCH_REST_SERVICE));
       
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       
       //Check Launch Rest Service form appears
-      IDE.REST_SERVICE.waitForLaunchRestServiceViewOpened();
+      IDE.REST_SERVICE.waitOpened();
       IDE.OUTPUT.waitForMessageShow(1);
-      String message =  IDE.OUTPUT.getOutputMessage(1);
+      message =  IDE.OUTPUT.getOutputMessage(1);
 
       assertTrue(message.contains("[INFO]"));
-      assertTrue(message.contains(FILE1 + " validated successfully."));
+      assertTrue(message.contains(FILE_NAME + " validated successfully."));
       
       IDE.OUTPUT.waitForMessageShow(2);
       message =  IDE.OUTPUT.getOutputMessage(2);
 
       assertTrue(message.contains("[INFO]"));
-      assertTrue(message.contains(FILE1 + " deployed successfully."));
+      assertTrue(message.contains(FILE_NAME + " deployed successfully."));
       
       IDE.REST_SERVICE.closeForm();
-      IDE.REST_SERVICE.waitForLaunchRestServiceViewClosed();
+      IDE.REST_SERVICE.waitClosed();
       
-     IDE.EDITOR.closeFile(0);
-   }
-   
-   /**
-    * @param allowed deploy/undeploy allowed
-    * @throws Exception
-    */
-   private void checkDeployUndeployAllowed(boolean allowed) throws Exception
-   {
-      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE, allowed);
-      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE, allowed);
-
-      if (allowed)
-      {
-         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE, allowed);
-         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE, allowed);
-
-         //Deploy service:
-         IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
-         IDE.OUTPUT.waitForMessageShow(1);
-         //Check successfully deployed message
-         IDE.OUTPUT.waitOpened();
-         IDE.OUTPUT.waitForMessageShow(1);
-         String message = IDE.OUTPUT.getOutputMessage(1);
-         assertTrue(message.contains("[INFO]"));
-         assertTrue(message.contains(FILE1 + " deployed successfully."));
-
-         //Undeploy service
-         IDE.TOOLBAR.runCommand(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE);
-         IDE.OUTPUT.waitForMessageShow(2);
-         //Check successfully undeployed message
-         message = IDE.OUTPUT.getOutputMessage(2);
-         assertTrue(message.contains("[INFO]"));
-         assertTrue(message.contains(FILE1 + " undeployed successfully."));
-      }
-   }
-
-   /**
-    * Check run service control presence 
-    * in top menu and toolbar.
-    * 
-    * @param allowed allowed to run services
-    * @throws Exception
-    */
-   private void checkRunService(boolean allowed) throws Exception
-   {
-      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
-      if (allowed)
-      {
-         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, allowed);
-         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, allowed);
-      }
-   }
-   
-   /**
-    * Check validate service control presence 
-    * in top menu and toolbar.
-    * 
-    * @param allowed allowed to validate services
-    * @throws Exception
-    */
-   private void checkValidateService(boolean allowed) throws Exception
-   {
-	   assertEquals(allowed, IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE));
-	   IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
-	   if (allowed)
-	   {
-	      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE, allowed);
-	      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE, allowed);
-	   }
-   }
-   
-   /**
-    * Check set autoload property control presence 
-    * in top menu and toolbar.
-    * 
-    * @param allowed allowed to set autoload property
-    * @throws Exception
-    */
-   private void checkSetAutoload(boolean allowed) throws Exception
-   {
-      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
-	   if (allowed)
-	   {
-	      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.SET_AUTOLOAD, allowed);
-	      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD, allowed);
-	   }
-   }
-   
-   /**
-    * Check set deploy/undeploy service to sandbox control presence 
-    * in top menu and toolbar.
-    * 
-    * @param allowed allowed to set autoload property
-    * @throws Exception
-    */
-   private void checkSandbox(boolean allowed) throws Exception
-   {
-      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
-      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
-      if (allowed)
-      {
-         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_SANDBOX, allowed);
-         IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNDEPLOY_SANDBOX, allowed);
-         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX, allowed);
-         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX, allowed);
-      }
-   }
-   
-   /**
-    * Check set launch service control presence 
-    * in top menu and toolbar.
-    * 
-    * @param allowed allowed to set autoload property
-    * @throws Exception
-    */
-   private void checkLaunchService(boolean allowed) throws Exception
-   {
-      assertEquals(allowed, IDE.TOOLBAR.isButtonPresentAtRight(MenuCommands.Run.LAUNCH_REST_SERVICE));
-      IDE.MENU.checkCommandVisibility(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
-      if (allowed)
-      {
-         IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
-         IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE, allowed);
-      }
+      IDE.EDITOR.closeFile(FILE_NAME);
    }
 }

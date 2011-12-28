@@ -204,7 +204,9 @@ public abstract class BaseTest
          }
          else if (isRunIdeAsStandalone())
          {
-            standaloneLogin(USER_NAME, USER_PASSWORD);
+//            standaloneLogin(USER_NAME, USER_PASSWORD);
+            IDE.LOGIN.waitStandaloneLogin();
+            IDE.LOGIN.standaloneLogin(USER_NAME, USER_PASSWORD);
          }
       }
       catch (Exception e)

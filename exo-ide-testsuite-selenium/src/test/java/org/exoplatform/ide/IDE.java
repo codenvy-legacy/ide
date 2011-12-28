@@ -35,6 +35,7 @@ import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Input;
 import org.exoplatform.ide.core.Loader;
+import org.exoplatform.ide.core.Login;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
 import org.exoplatform.ide.core.Outline;
@@ -161,6 +162,8 @@ public class IDE
    public Button BUTTON;
 
    public Delete DELETE;
+   
+   public Login LOGIN;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -204,6 +207,7 @@ public class IDE
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
       INFORMATION_DIALOG = PageFactory.initElements(driver, InformationDialog.class);
       REST_SERVICE = PageFactory.initElements(driver, RESTService.class);
+      LOGIN = PageFactory.initElements(driver, Login.class);
    }
 
    public Selenium getSelenium()

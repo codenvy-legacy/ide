@@ -58,7 +58,6 @@ public class GoogleGadgetPreviewTest extends BaseTest
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
          Link link = project.get(Link.REL_CREATE_FILE);
          VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GOOGLE_GADGET, filePath);
-         
       }
       catch (Exception e)
       {
