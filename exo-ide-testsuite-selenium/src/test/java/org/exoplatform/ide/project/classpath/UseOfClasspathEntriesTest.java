@@ -115,15 +115,14 @@ public class UseOfClasspathEntriesTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-     IDE.WORKSPACE.waitForItem(WORKSPACE_URL + PROJECT_NAME + "/"
-         + REST_SERVICE_FILE_NAME);
+      IDE.WORKSPACE.waitForItem(WORKSPACE_URL + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + PROJECT_NAME + "/"
          + REST_SERVICE_FILE_NAME, false);
 
       /*
        * 2. Validate REST Service and check, that is was successful.
        */
-      IDE.REST_SERVICE.validate(REST_SERVICE_FILE_NAME, 1);
+      IDE.REST_SERVICE.validate(1);
 
       /*
        * 3. Deploy REST Service.
@@ -137,7 +136,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
       /*
        * Click Send button.
        */
-      selenium().click(IDE.REST_SERVICE.LAUNCH_SEND_BTN);
+      IDE.REST_SERVICE.sendRequst();
       Thread.sleep(TestConstants.SLEEP);
 
       /*
