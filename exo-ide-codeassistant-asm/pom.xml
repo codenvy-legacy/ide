@@ -48,17 +48,6 @@
       </dependency>
 
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-codeassistant-framework</artifactId>
-         <scope>test</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>asm</groupId>
-               <artifactId>asm</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
