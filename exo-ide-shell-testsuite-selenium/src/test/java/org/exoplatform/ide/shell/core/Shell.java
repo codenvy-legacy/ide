@@ -77,7 +77,7 @@ public class Shell
    public void executeCommand()
    {
       final int contentLenth = shell.getText().length();
-      shellPre.sendKeys(Keys.ENTER);
+      shellPre.sendKeys(Keys.RETURN);
       new WebDriverWait(BaseTest.driver, 3000).until(new ExpectedCondition<Boolean>()
       {
 
