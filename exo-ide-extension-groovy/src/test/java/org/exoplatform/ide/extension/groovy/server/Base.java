@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import junit.framework.TestCase;
-
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.tools.DummySecurityContext;

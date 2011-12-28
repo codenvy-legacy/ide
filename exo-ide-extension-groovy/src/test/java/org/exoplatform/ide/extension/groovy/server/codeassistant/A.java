@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.groovy.server.codeassistant;
 
-import java.lang.reflect.Modifier;
 import java.util.Set;
 
 /**

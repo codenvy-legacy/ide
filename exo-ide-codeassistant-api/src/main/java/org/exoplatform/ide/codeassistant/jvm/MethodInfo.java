@@ -76,8 +76,13 @@ public class MethodInfo extends Member
    {
    }
 
-   public MethodInfo(String name, int modifiers, List<String> genericExceptionTypes, List<String> parameterTypes,
-      boolean isConstructor, String genericReturnType, String declaringClass)
+   public MethodInfo(String name,//
+      int modifiers,//
+      List<String> genericExceptionTypes,//
+      List<String> parameterTypes,//
+      boolean isConstructor, //
+      String genericReturnType,//
+      String declaringClass)
    {
       super(name, modifiers);
       this.genericExceptionTypes = genericExceptionTypes;

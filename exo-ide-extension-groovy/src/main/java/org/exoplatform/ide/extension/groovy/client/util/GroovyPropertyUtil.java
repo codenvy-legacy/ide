@@ -47,25 +47,10 @@ public class GroovyPropertyUtil
       return null;
    }
 
+   //TODO:not implement
    public static String getAutoloadPropertyValue(FileModel file)
    {
-      for (Property<?> property : file.getProperties())
-      {
-         //TODO AutoloadProperty
-//         QName propertyName = property.getName();
-//         if (propertyName.equals(ItemProperty.JCR_CONTENT))
-//         {
-//            Collection<Property> children = property.getChildProperties();
-//            for (Property child : children)
-//            {
-//               if (child.getName().equals(ItemProperty.EXO_AUTOLOAD))
-//               {
-//                  return child.getValue();
-//               }
-//            }
-//         }
-      }
-
+      
       return null;
    }
 

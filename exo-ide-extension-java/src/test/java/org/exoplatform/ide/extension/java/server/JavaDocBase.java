@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
@@ -26,6 +27,7 @@ import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -46,27 +48,34 @@ public abstract class JavaDocBase extends Base
    protected static VirtualFileSystem vfs;
 
    protected static Folder project;
-   
+
    protected static VirtualFileSystemRegistry vfsRegistry;
-   
+
    protected static JavaCodeAssistant javaCa;
-   
-   
+
    @BeforeClass
    public static void init() throws VirtualFileSystemException, IOException, InterruptedException
    {
-       vfsRegistry =
-         (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
+      vfsRegistry = (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
       vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null);
-      project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
+      try
+      {
+         project = (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null, PropertyFilter.NONE_FILTER);
+         vfs.delete(project.getId(), null);
+         project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
+      }
+      catch (ItemNotFoundException e)
+      {
+         project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
+      }
       vfs.importZip(project.getId(),
          Thread.currentThread().getContextClassLoader().getResourceAsStream("exo-ide-client.zip"), true);
       javaCa = new JavaCodeAssistant(null, vfsRegistry);
    }
 
    @AfterClass
-   public static void cleanUp() throws ItemNotFoundException, ConstraintException, LockException, PermissionDeniedException,
-      VirtualFileSystemException
+   public static void cleanUp() throws ItemNotFoundException, ConstraintException, LockException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       vfs.delete(project.getId(), null);
    }

@@ -33,7 +33,6 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -63,15 +62,12 @@ import javax.ws.rs.core.Response;
 public class CodeAssitantTest extends Base
 {
 
-
    /**
     * 
     */
    private static final String SERVICE_NAME = "HelloWorld.grs";
 
    private int methods;
-
-   private int decMethods;
 
    private Folder project;
 
@@ -82,7 +78,6 @@ public class CodeAssitantTest extends Base
    {
       super.setUp();
       ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      decMethods = classLoader.loadClass(Address.class.getCanonicalName()).getDeclaredMethods().length;
       methods = classLoader.loadClass(Address.class.getCanonicalName()).getMethods().length;
       putClass(classLoader, session, Address.class.getCanonicalName());
       putClass(classLoader, session, A.class.getCanonicalName());
@@ -105,8 +100,7 @@ public class CodeAssitantTest extends Base
             + "&projectid=" + project.getId() + "&vfsid=" + WS_NAME, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       TypeInfo cd = (TypeInfo)cres.getEntity();
-      Assert.assertEquals(methods, cd.getMethods().length);
-      Assert.assertEquals(decMethods, cd.getDeclaredMethods().length);
+      Assert.assertEquals(methods, cd.getMethods().size());
    }
 
    @Test
@@ -138,8 +132,8 @@ public class CodeAssitantTest extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/services/" + SERVICE_NAME);
       ContainerResponse cres =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + className + "?where=className" +"&projectid=" + project.getId()
-            + "&vfsid=" + WS_NAME, "", headers, null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + className + "?where=className"
+            + "&projectid=" + project.getId() + "&vfsid=" + WS_NAME, "", headers, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       Assert.assertEquals(1, types.size());

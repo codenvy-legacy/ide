@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
+import org.exoplatform.ide.extension.groovy.shared.Attribute;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +33,6 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
-
-import org.exoplatform.ide.extension.groovy.shared.Attribute;
-import org.exoplatform.ide.extension.groovy.shared.Jar;
 
 /**
  * Created by The eXo Platform SAS .

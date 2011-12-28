@@ -18,20 +18,16 @@
  */
 package org.exoplatform.ide.client.about;
 
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-
-import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
-import org.exoplatform.ide.client.Alert;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * Created by The eXo Platform SAS .

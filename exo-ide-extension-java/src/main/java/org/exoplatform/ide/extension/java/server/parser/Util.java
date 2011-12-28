@@ -18,21 +18,20 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.Type;
-
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.RoutineInfo;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.Type;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -62,8 +61,7 @@ public class Util
    public static TypeInfo convert(JavaClass clazz)
    {
       TypeInfo type = new TypeInfo();
-      type.setName(clazz.getName());
-      type.setQualifiedName(clazz.getFullyQualifiedName());
+      type.setName(clazz.getFullyQualifiedName());
       type.setType(getType(clazz).name());
       if (clazz.getSuperJavaClass() != null)
          type.setSuperClass(clazz.getSuperJavaClass().getFullyQualifiedName());
@@ -75,8 +73,6 @@ public class Util
       type.setInterfaces(toArray(clazz.getImplements()));
       type.setFields(toFieldInfo(clazz.getFields()));
       JavaMethod[] methods = clazz.getMethods(true);
-      type.setConstructors(toConstructors(methods));
-      // clazz.getMethods(true) return all methods, without private
       type.setMethods(toMethods(methods));
       return type;
    }
@@ -97,111 +93,55 @@ public class Util
     * @param methods
     * @return
     */
-   private static MethodInfo[] toMethods(JavaMethod[] methods)
+   private static List<MethodInfo> toMethods(JavaMethod[] methods)
    {
       List<MethodInfo> con = new ArrayList<MethodInfo>();
       for (JavaMethod m : methods)
       {
+         MethodInfo i = new MethodInfo();
+         i.setGenericExceptionTypes(toArray(m.getExceptions()));
+         i.setModifiers(modifiersToInteger(m.getModifiers()));
+         Type[] parameterTypes = m.getParameterTypes(true);
+         i.setParameterTypes(toParameters(parameterTypes));
+         i.setName(m.getName());
+         i.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
+
          if (!m.isConstructor())
          {
-            MethodInfo i = new MethodInfo();
-            i.setGenericExceptionTypes(toArray(m.getExceptions()));
-            i.setGeneric(m.getDeclarationSignature(true));
-            i.setModifiers(modifiersToInteger(m.getModifiers()));
-            Type[] parameterTypes = m.getParameterTypes(true);
-            i.setParameterTypes(toParameters(parameterTypes));
-            i.setGenericParameterTypes(toGenericParametersTypes(parameterTypes));
-            i.setName(m.getName());
-            i.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
             String returnType = m.getReturnType().getFullyQualifiedName();
             i.setGenericReturnType(returnType);
-            i.setReturnType(returnType.substring(returnType.lastIndexOf('.') + 1));
-            con.add(i);
+            i.setConstructor(false);
          }
-      }
-
-      MethodInfo[] info = new MethodInfo[con.size()];
-      return con.toArray(info);
-   }
-
-   /**
-    * @param methods
-    * @return
-    */
-   private static RoutineInfo[] toConstructors(JavaMethod[] methods)
-   {
-      List<RoutineInfo> con = new ArrayList<RoutineInfo>();
-      for (JavaMethod m : methods)
-      {
-         if (m.isConstructor())
+         else
          {
-            RoutineInfo i = new RoutineInfo();
-            i.setGenericExceptionTypes(toArray(m.getExceptions()));
-            i.setGeneric(m.getDeclarationSignature(true));
-            i.setModifiers(modifiersToInteger(m.getModifiers()));
-            Type[] parameterTypes = m.getParameterTypes(true);
-            i.setParameterTypes(toParameters(parameterTypes));
-            i.setName(m.getName());
-            i.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
-            i.setGenericParameterTypes(toGenericParametersTypes(parameterTypes));
-            con.add(i);
+            i.setConstructor(true);
          }
+         con.add(i);
       }
-
-      RoutineInfo[] info = new RoutineInfo[con.size()];
-      return con.toArray(info);
+      return con;
    }
 
    /**
     * @param parameterTypes
     * @return
     */
-   private static String toGenericParametersTypes(Type[] parameterTypes)
+   public static List<String> toParameters(Type[] parameterTypes)
    {
-      int iMax = parameterTypes.length - 1;
-      if (iMax == -1)
-         return "()";
-
-      StringBuilder b = new StringBuilder();
-      b.append('(');
-      for (int i = 0;; i++)
+      List<String> params = new ArrayList<String>();
+      for (Type type : parameterTypes)
       {
-         b.append(parameterTypes[i].getJavaClass().getFullyQualifiedName());
-         if (i == iMax)
-            return b.append(')').toString();
-         b.append(", ");
+         params.add(type.getFullyQualifiedName());
       }
-   }
-
-   /**
-    * @param parameterTypes
-    * @return
-    */
-   public static String toParameters(Type[] parameterTypes)
-   {
-      int iMax = parameterTypes.length - 1;
-      if (iMax == -1)
-         return "()";
-
-      StringBuilder b = new StringBuilder();
-      b.append('(');
-      for (int i = 0;; i++)
-      {
-         String fqn = parameterTypes[i].getJavaClass().getFullyQualifiedName();
-         b.append(fqn.substring(fqn.lastIndexOf('.') + 1));
-         if (i == iMax)
-            return b.append(')').toString();
-         b.append(", ");
-      }
+      return params;
    }
 
    /**
     * @param fields
     * @return
     */
-   private static FieldInfo[] toFieldInfo(JavaField[] fields)
+   private static List<FieldInfo> toFieldInfo(JavaField[] fields)
    {
-      FieldInfo[] fi = new FieldInfo[fields.length];
+      List<FieldInfo> fi = new ArrayList<FieldInfo>();
       for (int i = 0; i < fields.length; i++)
       {
          FieldInfo info = new FieldInfo();
@@ -210,7 +150,7 @@ public class Util
          info.setType(f.getType().getValue());
          info.setName(f.getName());
          info.setModifiers(modifiersToInteger(f.getModifiers()));
-         fi[i] = info;
+         fi.add(info);
       }
 
       return fi;
@@ -237,12 +177,12 @@ public class Util
     * @param types
     * @return
     */
-   private static String[] toArray(Type[] types)
+   private static List<String> toArray(Type[] types)
    {
-      String[] arr = new String[types.length];
+      List<String> arr = new ArrayList<String>();
       for (int i = 0; i < types.length; i++)
       {
-         arr[i] = types[i].getFullyQualifiedName();
+         arr.add(types[i].getFullyQualifiedName());
       }
       return arr;
    }
@@ -255,8 +195,7 @@ public class Util
    {
       ShortTypeInfo info = new ShortTypeInfo();
       info.setModifiers(modifiersToInteger(clazz.getModifiers()));
-      info.setName(clazz.getName());
-      info.setQualifiedName(clazz.getFullyQualifiedName());
+      info.setName(clazz.getFullyQualifiedName());
       info.setType(getType(clazz).name());
       return info;
    }

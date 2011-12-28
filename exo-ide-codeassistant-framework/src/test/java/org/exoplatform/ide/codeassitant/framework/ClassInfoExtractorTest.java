@@ -26,8 +26,7 @@ import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.Collections;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -43,8 +42,8 @@ public class ClassInfoExtractorTest extends TestCase
    public void testExctractClass() throws ClassFormatError, ClassNotFoundException
    {
       TypeInfo cd = TypeInfoExtractor.extract(A.class);
-      assertEquals(A.class.getMethods().length, cd.getMethods().length);
-      assertEquals(A.class.getFields().length, cd.getFields().length);
+      assertEquals(A.class.getMethods().length, cd.getMethods().size());
+      assertEquals(A.class.getFields().length, cd.getFields().size());
       assertEquals(A.class.getCanonicalName(), cd.getName());
    }
 
@@ -52,7 +51,7 @@ public class ClassInfoExtractorTest extends TestCase
    {
       TypeInfo cd = TypeInfoExtractor.extract(A.class);
       Field[] fields = A.class.getFields();
-      FieldInfo[] fds = cd.getFields();
+      List<FieldInfo> fds = cd.getFields();
       for (Field field : fields)
       {
          FieldInfo fd = getFieldInfo(fds, field);
@@ -65,9 +64,9 @@ public class ClassInfoExtractorTest extends TestCase
       }
    }
 
-   private FieldInfo getFieldInfo(FieldInfo[] fds, Field field)
+   private FieldInfo getFieldInfo(List<FieldInfo> fds, Field field)
    {
-      
+
       for (FieldInfo fd : fds)
       {
          System.err.println(fd.toString());
@@ -82,7 +81,7 @@ public class ClassInfoExtractorTest extends TestCase
    public void testExctractMethod()
    {
       TypeInfo cd = TypeInfoExtractor.extract(B.class);
-      MethodInfo[] mds = cd.getMethods();
+      List<MethodInfo> mds = cd.getMethods();
       Method[] methods = B.class.getDeclaredMethods();
       for (Method method : methods)
       {
@@ -99,10 +98,10 @@ public class ClassInfoExtractorTest extends TestCase
    {
       TypeInfo en = TypeInfoExtractor.extract(E.class);
       assertEquals(JavaType.ENUM.name(), en.getType());
-      assertEquals("ONE", en.getFields()[0].getName());
+      assertEquals("ONE", en.getFields().get(0).getName());
    }
 
-   private MethodInfo getMethodInfo(MethodInfo[] mds, String name)
+   private MethodInfo getMethodInfo(List<MethodInfo> mds, String name)
    {
       for (MethodInfo md : mds)
       {

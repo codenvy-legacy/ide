@@ -93,22 +93,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
 
    private void undeployFail(Throwable exc, String href)
    {
-      if (exc instanceof ServerException)
-      {
-         ServerException exception = (ServerException)exc;
-
-         String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> undeploy failed.&nbsp;";
-         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
-         if (!exception.getMessage().equals(""))
-         {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
-         }
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(exc));
-      }
-      
+      IDE.fireEvent(new ExceptionThrownEvent(exc));
       GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(href);
       event.setException(exc);
       IDE.fireEvent(event);

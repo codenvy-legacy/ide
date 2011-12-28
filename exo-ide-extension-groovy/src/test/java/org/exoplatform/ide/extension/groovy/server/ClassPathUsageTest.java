@@ -18,16 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import java.io.ByteArrayInputStream;
-
 import org.everrest.core.impl.provider.json.JsonException;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPathEntry;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>

@@ -26,6 +26,8 @@ import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Extracting meta information from given classes to the bean object that can be transform to JSON
@@ -53,55 +55,34 @@ public class TypeInfoExtractor
    {
       TypeInfo classDescription = new TypeInfo();
       Constructor<?>[] constructors = clazz.getConstructors();
-      MethodInfo[] cds = new MethodInfo[constructors.length];
+      List<MethodInfo> cds = new ArrayList<MethodInfo>(); 
       for (int i = 0; i < constructors.length; i++)
       {
-         cds[i] = MethodInfoExtractor.extractConstructorInfo(constructors[i]);
-      }
-      constructors = clazz.getDeclaredConstructors();
-      MethodInfo[] decCds = new MethodInfo[constructors.length];
-      for (int i = 0; i < constructors.length; i++)
-      {
-         decCds[i] = MethodInfoExtractor.extractConstructorInfo(constructors[i]);
+         cds.add(MethodInfoExtractor.extractConstructorInfo(constructors[i]));
       }
       Method[] methods = clazz.getMethods();
-      MethodInfo[] mds = new MethodInfo[methods.length];
+      List<MethodInfo> mds = new ArrayList<MethodInfo>(); 
       for (int i = 0; i < methods.length; i++)
       {
-         mds[i] = MethodInfoExtractor.extractMethodInfo(methods[i]);
+         mds.add(MethodInfoExtractor.extractMethodInfo(methods[i]));
       }
       methods = clazz.getDeclaredMethods();
-      MethodInfo[] decMds = new MethodInfo[methods.length];
-      for (int i = 0; i < methods.length; i++)
-      {
-         decMds[i] = MethodInfoExtractor.extractMethodInfo(methods[i]);
-      }
       Class<?>[] interfaces = clazz.getInterfaces();
-      String[] iFaces = new String[interfaces.length];
+      List<String> iFaces = new ArrayList<String>();
       for (int i = 0; i < interfaces.length; i++)
       {
-         iFaces[i] = interfaces[i].getCanonicalName();
+         iFaces.add(interfaces[i].getCanonicalName());
       }
 
       Field[] fields = clazz.getFields();
-      FieldInfo[] fds = new FieldInfo[fields.length];
+      List<FieldInfo> fds = new ArrayList<FieldInfo>();
       for (int i = 0; i < fields.length; i++)
       {
-         fds[i] = new FieldInfo(fields[i].getName(),//
+         fds.add(new FieldInfo(fields[i].getName(),//
             fields[i].getModifiers(),//
             fields[i].getType().getCanonicalName(), //
-            fields[i].getDeclaringClass().getCanonicalName());
+            fields[i].getDeclaringClass().getCanonicalName()));
       }
-      //      fields = clazz.getDeclaredFields();
-      //      TODO: need check declared fields
-      //      FieldInfo[] decFds = new FieldInfo[fields.length];
-      //      for (int i = 0; i < fields.length; i++)
-      //      {
-      //         decFds[i] =
-      //            new FieldInfo(fields[i].getType().getCanonicalName(), fields[i].getModifiers(), fields[i].getName(), fields[i]
-      //               .getDeclaringClass().getCanonicalName());
-      //      }
-
       classDescription.setModifiers(clazz.getModifiers());
       classDescription.setInterfaces(iFaces);
 

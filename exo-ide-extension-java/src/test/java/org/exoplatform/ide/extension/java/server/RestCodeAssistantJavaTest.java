@@ -44,15 +44,11 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
 
    private int methods;
 
-   private int decMethods;
 
    @Test
    public void testGetClassByFqn() throws Exception
    {
-      decMethods =
-         ClassLoader.getSystemClassLoader().loadClass(BigDecimal.class.getCanonicalName()).getDeclaredMethods().length;
       methods = ClassLoader.getSystemClassLoader().loadClass(BigDecimal.class.getCanonicalName()).getMethods().length;
-
       ContainerResponse cres =
          launcher.service("GET",
             "/ide/code-assistant/java/class-description?fqn=" + BigDecimal.class.getCanonicalName() + "&projectid="
@@ -60,8 +56,7 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
       assertEquals(HTTPStatus.OK, cres.getStatus());
       TypeInfo cd = (TypeInfo)cres.getEntity();
 
-      assertEquals(methods, cd.getMethods().length);
-      assertEquals(decMethods, cd.getDeclaredMethods().length);
+      assertEquals(methods, cd.getMethods().size());
    }
 
    @Test

@@ -179,8 +179,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          {
             if (file.getId().equals(i.getId()) || ItemType.FILE != i.getItemType())
                continue;
-            classes.add(new ShortTypeInfo(0, getClassNameOnFileName(i.getName()), getFQNByFilePath((File)i, project),
-               "CLASS"));
+            classes.add(new ShortTypeInfo(getClassNameOnFileName(i.getName()),0, "CLASS"));
          }
       }
       return classes;
