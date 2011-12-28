@@ -19,6 +19,7 @@
 package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.objectweb.asm.Type;
@@ -65,10 +66,6 @@ public class TypeInfoBuilder
 
    public static FieldInfo fromFieldNode(String declaredClass, FieldNode node)
    {
-      //      return new MethodInfo(node.name, node.access, classNamesFromTypes(node.exceptions),
-      //         argumentTypesFromMethodDescriptor(node.desc), CONSTRUCTOR_METHOD_NAME.equals(node.name), Type.getReturnType(
-      //            node.desc).getClassName(), declaredClass);
-
       return new FieldInfo(node.name, node.access, Type.getType(node.desc).getClassName(), declaredClass);
    }
 
@@ -84,9 +81,10 @@ public class TypeInfoBuilder
 
    public static MethodInfo fromMethodNode(String declaredClass, MethodNode node)
    {
-      return new MethodInfo(node.name, node.access, classNamesFromTypes(node.exceptions),
-         argumentTypesFromMethodDescriptor(node.desc), CONSTRUCTOR_METHOD_NAME.equals(node.name), Type.getReturnType(
-            node.desc).getClassName(), declaredClass);
+      boolean isConstructor = CONSTRUCTOR_METHOD_NAME.equals(node.name);
+      return new MethodInfo(isConstructor ? declaredClass : node.name, node.access,
+         classNamesFromTypes(node.exceptions), argumentTypesFromMethodDescriptor(node.desc), isConstructor, Type
+            .getReturnType(node.desc).getClassName(), declaredClass);
    }
 
    public static List<MethodInfo> fromMethodNodes(String declaredClass, List methods)
@@ -103,7 +101,7 @@ public class TypeInfoBuilder
    {
       String declaredClass = classNameFromType(node.name);
       return new TypeInfo(declaredClass, node.access, fromMethodNodes(declaredClass, node.methods), fromFieldNodes(
-         declaredClass, node.fields), classNameFromType(node.superName), classNamesFromTypes(node.interfaces),
-         "removeme");
+         declaredClass, node.fields), classNameFromType(node.superName), classNamesFromTypes(node.interfaces), JavaType
+         .fromClassAttribute(node.access).toString());
    }
 }
