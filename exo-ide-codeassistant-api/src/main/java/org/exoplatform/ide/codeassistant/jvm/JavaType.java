@@ -18,13 +18,36 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import java.lang.reflect.Modifier;
+
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public enum JavaType {
+   CLASS, INTERFACE, ANNOTATION, ENUM;
 
-   CLASS, INTERFACE, ANNOTATION, ENUM
+   /**
+    * Return JavaType depends on the value of the class attribute. See private
+    * constants in class Modifier and Class.
+    */
+   public static JavaType fromClassAttribute(int attr)
+   {
 
+      if (Modifier.isInterface(attr))
+      {
+         return INTERFACE;
+      }
+      else if ((0x00004000 & attr) != 0)
+      {
+         return ENUM;
+      }
+      else if ((0x00002000 & attr) != 0)
+      {
+         return ANNOTATION;
+      }
+      return CLASS;
+   }
 }
