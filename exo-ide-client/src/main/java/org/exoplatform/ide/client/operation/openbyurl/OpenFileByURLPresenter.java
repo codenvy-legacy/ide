@@ -19,6 +19,8 @@
 
 package org.exoplatform.ide.client.operation.openbyurl;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -229,6 +231,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
       }
 
       String fileName = url;
+      fileName = URL.decode(fileName);
       if (fileName.endsWith("/"))
       {
          fileName = fileName.substring(0, fileName.length() - 1);
@@ -238,8 +241,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
 
       final FileModel file = new FileModel();
       file.setName(fileName);
-      file.setId(fileName);
-      
+      //file.setId(fileName);
       
       AsyncRequestCallback<FileModel> callback = new AsyncRequestCallback<FileModel>()
       {
