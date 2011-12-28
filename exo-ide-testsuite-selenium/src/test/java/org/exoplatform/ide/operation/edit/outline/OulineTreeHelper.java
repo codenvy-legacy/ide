@@ -24,13 +24,14 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Outline.TokenType;
+import org.openqa.selenium.Keys;
 
 /**
  * This class helps to verify code outline tree grid.
@@ -239,6 +240,7 @@ public class OulineTreeHelper extends BaseTest
       String fileContent =IDE.EDITOR.getTextFromCodeEditor(0);
       System.out.println("fileContent=" + fileContent);
       int fileLineNumbers = fileContent.split("\\r?\\n").length;   
+      int i = 0;
       
       goToLine(1);
       IDE.EDITOR.clickOnEditor(0);
@@ -247,10 +249,10 @@ public class OulineTreeHelper extends BaseTest
       do
       {
          // Press down key on keyboard.         
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         IDE.EDITOR.moveCursorDown(0, ++i);
          Thread.sleep(Outline.SELECT_OUTLINE_DELAY * 2);
       } 
-      while ((fileLineNumbers -= 1) > 0);
+      while (i <= fileLineNumbers);
       
       goToLine(1);
 
