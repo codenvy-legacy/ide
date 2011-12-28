@@ -21,8 +21,6 @@ package org.exoplatform.ide.codeassistant.asm;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,20 +40,8 @@ import java.io.InputStream;
 public class ClassParser
 {
 
-   private static final Logger LOG = LoggerFactory.getLogger(ClassParser.class);
-
-   public static final TypeInfo OBJECT_TYPEINFO = parseQuietly(getClassFile(Object.class));
-
    private ClassParser()
    {
-   }
-
-   /**
-    * @return the ASM internal name of the type
-    */
-   public static String getClassInternalName(String name)
-   {
-      return name.replace('.', '/');
    }
 
    /**
@@ -78,24 +64,6 @@ public class ClassParser
       cr.accept(cn, ClassReader.SKIP_DEBUG | ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
 
       return TypeInfoBuilder.fromClassNode(cn);
-   }
-
-   private static TypeInfo parseQuietly(InputStream classStream)
-   {
-      try
-      {
-         ClassReader cr = new ClassReader(classStream);
-         ClassNode cn = new ClassNode();
-         cr.accept(cn, ClassReader.SKIP_DEBUG | ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
-
-         return TypeInfoBuilder.fromClassNode(cn);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         LOG.error(e.getLocalizedMessage(), e);
-      }
-      return null;
    }
 
 }
