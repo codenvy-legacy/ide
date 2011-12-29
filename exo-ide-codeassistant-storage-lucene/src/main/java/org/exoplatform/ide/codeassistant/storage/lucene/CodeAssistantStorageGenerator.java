@@ -24,8 +24,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,21 +51,26 @@ public class CodeAssistantStorageGenerator
 {
    private static final Logger LOG = LoggerFactory.getLogger(CodeAssistantStorageGenerator.class);
 
-   private static final String DEFAULT_INDEX_DIRECTORY = "code-assistant/index/";
+   private static final String DEFAULT_INDEX_DIRECTORY = "code-assistant-index";
 
-   private static final String DEFAULT_JAR_FILES_LIST = "src/main/resources/codeassistant/jar-files.txt";
+   private static final String DEFAULT_JAR_FILES_LIST = "codeassistant/jar-files.txt";
 
    private static String indexDirectory = DEFAULT_INDEX_DIRECTORY;
 
    private static String jarFilesList = DEFAULT_JAR_FILES_LIST;
 
-   public static void main(String[] args)
+   private CodeAssistantStorageGenerator()
    {
-      resolveArgs(args);
-      writeClassInfosInStorage();
    }
 
-   private static void resolveArgs(String[] args)
+   public static void main(String[] args)
+   {
+      CodeAssistantStorageGenerator codeAssistantStorageGenerator = new CodeAssistantStorageGenerator();
+      codeAssistantStorageGenerator.resolveArgs(args);
+      codeAssistantStorageGenerator.writeClassInfosInStorage();
+   }
+
+   private void resolveArgs(String[] args)
    {
       if (args.length == 0)
       {
@@ -81,11 +89,11 @@ public class CodeAssistantStorageGenerator
       LOG.info("Jar files list will be read from " + jarFilesList + " file\n");
    }
 
-   private static void writeClassInfosInStorage()
+   private void writeClassInfosInStorage()
    {
       try
       {
-         List<String> jars = getFilesList(jarFilesList);
+         List<String> jars = getJarFilesList();
          ClassesInfoStorageWriter.writeJarsToIndex(indexDirectory, jars);
       }
       catch (IOException e)
@@ -94,9 +102,9 @@ public class CodeAssistantStorageGenerator
       }
    }
 
-   private static List<String> getFilesList(String pathToFile) throws IOException
+   private List<String> getJarFilesList() throws IOException
    {
-      Reader reader = new FileReader(new File(pathToFile));
+      Reader reader = getJarFileReader();
       BufferedReader br = new BufferedReader(reader);
 
       List<String> list = new ArrayList<String>();
@@ -108,6 +116,23 @@ public class CodeAssistantStorageGenerator
       }
 
       return list;
+   }
+
+   private Reader getJarFileReader() throws FileNotFoundException
+   {
+      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+      InputStream io = contextClassLoader.getResourceAsStream(jarFilesList);
+
+      Reader reader = null;
+      if (io != null)
+      {
+         reader = new InputStreamReader(io);
+      }
+      else
+      {
+         reader = new FileReader(new File(jarFilesList));
+      }
+      return reader;
    }
 
 }
