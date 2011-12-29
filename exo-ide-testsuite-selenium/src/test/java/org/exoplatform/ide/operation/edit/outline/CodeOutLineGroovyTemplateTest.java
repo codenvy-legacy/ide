@@ -24,9 +24,12 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.edit.JavaTypeValidationAndFixingTest;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -41,10 +44,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
 
    private final static String FILE_NAME = "GroovyTemplateCodeOutline.gtmpl";
 
-   private final static String TEST_FOLDER = JavaTypeValidationAndFixingTest.class.getSimpleName();
-
-   private static final String WAIT_FOR_PARSING_TEST_LOCATOR =
-      "//html[@style='border-width: 0pt;']//body[@class='editbox']//span[284][@class='xml-tagname']";
+   private final static String PROJECT = JavaTypeValidationAndFixingTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -52,8 +52,9 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/GroovyTemplateCodeOutline.gtmpl";
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_TEMPLATE, WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_TEMPLATE, filePath);
       }
       catch (Exception e)
       {
@@ -66,7 +67,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -74,37 +75,21 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       }
    }
 
-   // IDE-178:Groovy Template Code Outline
    @Test
    public void testCreateOutlineTreeGroovyTemplate() throws Exception
    {
-      //---- 1-2 -----------------
-      //open file with text
-      // Open groovy file with test content
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
-      waitForElementPresent(WAIT_FOR_PARSING_TEST_LOCATOR);
-
-      //---- 3 -----------------
-      //open Outline Panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent("ideOutlineTreeGrid");
+      IDE.OUTLINE.waitOpened();
+      IDE.OUTLINE.waitOutlineTreeVisible();
 
-      //---- 4 -----------------
-      //check Outline tree
-      checkTreeCorrectlyCreated();
-   }
-
-   private void checkTreeCorrectlyCreated() throws Exception
-   {
-      //check for presence of tab outline
-
-      //check tree correctly created:
-      //IDE.OUTLINE.assertElmentPresentById("groovy code");
-      
       assertTrue(IDE.OUTLINE.isItemPresentById("groovy code:GROOVY_TAG:1"));
       assertTrue(IDE.OUTLINE.isItemPresentById("a1:PROPERTY:2"));
       assertTrue(IDE.OUTLINE.isItemPresentById("a2:PROPERTY:3"));

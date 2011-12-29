@@ -85,7 +85,7 @@ public class CodeOutLineBaseOperationTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-
+      
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
 

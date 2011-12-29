@@ -20,12 +20,15 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -35,12 +38,9 @@ import java.io.IOException;
  */
 public class CodeOutlineGoogleGadgetTest extends BaseTest
 {
-   private final static String FILE_NAME = "GoogleGadgetCodeOutline.xml";
+   private final static String FILE_NAME = "GoogleGadgetCodeOutline.gadget";
 
-   private final static String TEST_FOLDER = CodeOutlineGoogleGadgetTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   private final static String PROJECT = CodeOutlineGoogleGadgetTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -49,8 +49,9 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/GoogleGadgetCodeOutline.xml";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + TEST_FOLDER + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GOOGLE_GADGET, filePath);
       }
       catch (IOException e)
       {
@@ -62,21 +63,18 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
    @Test
    public void testCodeOutlineGoogleGadget() throws Exception
    {
-      //---- 1 -----------------
-      //open file with text
-      IDE.WORKSPACE.waitForItem(URL);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.WORKSPACE.doubleClickOnFolder(URL + TEST_FOLDER + "/");
-      waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + TEST_FOLDER + "/" + FILE_NAME));
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      //---- 2 -----------------
-      IDE.TOOLBAR.runCommand("Show Outline");
-      waitForElementPresent("ideOutlineTreeGrid");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.OUTLINE.waitOpened();
 
-      //---- 3 -----------------
       checkTreeCorrectlyCreated();
-
    }
 
    private void checkTreeCorrectlyCreated() throws Exception
@@ -126,7 +124,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
