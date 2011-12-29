@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.shared.Project;
-
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -67,7 +66,7 @@ public class MediaType2NodeTypeResolver
    /**
     * Get mixin for adding to JCR file node.
     * 
-    * @param type type of file
+    * @param mediaType type of file
     * @return mixins set of mixin node types
     */
    public String[] getFileMixins(String mediaType)
@@ -104,7 +103,7 @@ public class MediaType2NodeTypeResolver
    /**
     * Get mixin for adding to JCR folder node.
     * 
-    * @param type type of folder
+    * @param mediaType type of folder
     * @return mixins set of mixin node types
     */
    public String[] getFolderMixins(String mediaType)

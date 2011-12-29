@@ -109,7 +109,8 @@ import javax.ws.rs.core.UriBuilder;
  */
 public class JcrFileSystem implements VirtualFileSystem
 {
-   enum Resolver {
+   enum Resolver
+   {
       INSTANCE;
       /*=====================================*/
       final MimeTypeResolver resolver;
@@ -118,13 +119,13 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          resolver = new MimeTypeResolver();
          resolver.setDefaultMimeType("text/plain");
-      };
+      }
 
       public MediaType getMediaType(String filename)
       {
          return MediaType.valueOf(resolver.getMimeType(filename));
       }
-};
+   }
 
    static final Set<String> SKIPPED_QUERY_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:path", "jcr:score"));
 
@@ -413,7 +414,7 @@ public class JcrFileSystem implements VirtualFileSystem
          FileData fileData = (FileData)data;
          ContentStream stream =
             new ContentStream(fileData.getName(), fileData.getContent(), fileData.getMediaType().toString(),
-               fileData.getContenLength(), new java.util.Date(fileData.getLastModificationDate()));
+               fileData.getContentLength(), new java.util.Date(fileData.getLastModificationDate()));
          return stream;
       }
       finally
@@ -446,13 +447,13 @@ public class JcrFileSystem implements VirtualFileSystem
             FileData version = ((FileData)data).getVersion(versionId);
             stream =
                new ContentStream(version.getName(), version.getContent(), version.getMediaType().toString(),
-                  version.getContenLength(), new java.util.Date(version.getLastModificationDate()));
+                  version.getContentLength(), new java.util.Date(version.getLastModificationDate()));
          }
          else
          {
             stream =
                new ContentStream(fileData.getName(), fileData.getContent(), fileData.getMediaType().toString(),
-                  fileData.getContenLength(), new java.util.Date(fileData.getLastModificationDate()));
+                  fileData.getContentLength(), new java.util.Date(fileData.getLastModificationDate()));
          }
          return stream;
       }
@@ -494,7 +495,7 @@ public class JcrFileSystem implements VirtualFileSystem
    //   }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVfsInfo()
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getInfo()
     */
    @Override
    public VirtualFileSystemInfo getInfo() throws VirtualFileSystemException
@@ -635,7 +636,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersion(java.lang.String,
-    *      org.exoplatform.ide.vfs.VersionId)
+    *      java.lang.String)
     */
    @Path("version/{id}/{versionId}")
    @Override
@@ -654,7 +655,7 @@ public class JcrFileSystem implements VirtualFileSystem
          FileData versionData = ((FileData)data).getVersion(versionId);
          ContentStream stream =
             new ContentStream(versionData.getName(), versionData.getContent(), versionData.getMediaType().toString(),
-               versionData.getContenLength(), new java.util.Date(versionData.getLastModificationDate()));
+               versionData.getContentLength(), new java.util.Date(versionData.getLastModificationDate()));
          return stream;
       }
       finally
@@ -809,7 +810,8 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(javax.ws.rs.core.MultivaluedMap, int, int)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(javax.ws.rs.core.MultivaluedMap, int, int,
+    * org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
    @Override
@@ -1073,8 +1075,8 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#update(java.lang.String, java.util.Collection,
-    *      java.util.List)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateItem(java.lang.String, java.util.List,
+    *      java.lang.String)
     */
    @Path("item/{id}")
    @Override
@@ -1757,7 +1759,7 @@ public class JcrFileSystem implements VirtualFileSystem
          FileData fileData = (FileData)data;
          return new File(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getParentId(),
             fileData.getCreationDate(), fileData.getLastModificationDate(), fileData.getVersionId(), fileData
-               .getMediaType().toString(), fileData.getContenLength(), fileData.isLocked(),
+               .getMediaType().toString(), fileData.getContentLength(), fileData.isLocked(),
             fileData.getProperties(propertyFilter), createFileLinks(fileData));
       }
 
@@ -1999,11 +2001,8 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          return true;
       }
-      if (a == null || b == null)
-      {
-         return false;
-      }
-      return a.getType().equalsIgnoreCase(b.getType()) && a.getSubtype().equalsIgnoreCase(b.getSubtype());
+      return !(a == null || b == null)
+         && a.getType().equalsIgnoreCase(b.getType()) && a.getSubtype().equalsIgnoreCase(b.getSubtype());
    }
 
    /**

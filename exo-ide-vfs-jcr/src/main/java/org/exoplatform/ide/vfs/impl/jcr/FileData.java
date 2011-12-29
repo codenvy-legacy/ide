@@ -205,7 +205,7 @@ class FileData extends ItemData
     * @throws PermissionDeniedException if content length can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   long getContenLength() throws PermissionDeniedException, VirtualFileSystemException
+   long getContentLength() throws PermissionDeniedException, VirtualFileSystemException
    {
       try
       {

@@ -23,6 +23,8 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -42,6 +45,8 @@ import java.net.URLConnection;
  */
 public final class VirtualFileSystemURLConnection extends URLConnection
 {
+   private static final Log LOG = ExoLogger.getLogger(VirtualFileSystemURLConnection.class);
+
    private final VirtualFileSystemRegistry registry;
 
    private VirtualFileSystem vfs;
@@ -60,7 +65,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       this.registry = registry;
    }
 
-   private static final URL check(URL url)
+   private static URL check(URL url)
    {
       if (!"ide+vfs".equals(url.getProtocol()))
       {
@@ -75,17 +80,15 @@ public final class VirtualFileSystemURLConnection extends URLConnection
    @Override
    public void connect() throws IOException
    {
-      final URL theUrl = getURL();
-      String path = theUrl.getPath();
-      final String vfsId = (path == null || "/".equals(path)) //
-         ? null //
-         : (path.startsWith("/")) //
-            ? path.substring(1) //
-            : path;
+      final URI theUri = URI.create(getURL().toString());
+      String path = theUri.getPath();
+      final String vfsId = (path == null || "/".equals(path))
+         ? null
+         : (path.startsWith("/")) ? path.substring(1) : path;
       try
       {
          vfs = registry.getProvider(vfsId).newInstance(null);
-         final String itemIdentifier = theUrl.getRef();
+         final String itemIdentifier = theUri.getFragment();
          item = (itemIdentifier.startsWith("/")) //
             ? vfs.getItemByPath(itemIdentifier, null, PropertyFilter.NONE_FILTER) //
             : vfs.getItem(itemIdentifier, PropertyFilter.NONE_FILTER);
@@ -123,6 +126,10 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       }
       catch (IOException e)
       {
+         if (LOG.isDebugEnabled())
+         {
+            LOG.debug(e.getMessage(), e);
+         }
       }
       return -1;
    }
@@ -143,6 +150,10 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       }
       catch (IOException e)
       {
+         if (LOG.isDebugEnabled())
+         {
+            LOG.debug(e.getMessage(), e);
+         }
       }
       return null;
    }
@@ -166,6 +177,10 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       }
       catch (IOException e)
       {
+         if (LOG.isDebugEnabled())
+         {
+            LOG.debug(e.getMessage(), e);
+         }
       }
       return 0;
    }
@@ -221,8 +236,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
          }
          w.flush();
          w.close();
-         InputStream in = new ByteArrayInputStream(out.toByteArray());
-         return in;
+         return new ByteArrayInputStream(out.toByteArray());
       }
       catch (VirtualFileSystemException e)
       {

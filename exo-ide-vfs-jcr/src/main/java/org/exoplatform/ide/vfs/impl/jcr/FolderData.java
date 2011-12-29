@@ -179,8 +179,13 @@ public class FolderData extends ItemData
       }
    }
 
-   FileData createFile(String name, String nodeType, String contentNodeType, MediaType mediaType, String[] mixinTypes,
-      List<ConvertibleProperty> properties, InputStream content) throws InvalidArgumentException,
+   FileData createFile(String name,
+                       String nodeType,
+                       String contentNodeType,
+                       MediaType mediaType,
+                       String[] mixinTypes,
+                       List<ConvertibleProperty> properties,
+                       InputStream content) throws InvalidArgumentException,
       ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException
    {
       try
@@ -238,7 +243,7 @@ public class FolderData extends ItemData
     * @param properties set of properties that should be added to newly created node. Should be <code>null</code> if
     *           there is no properties
     * @return newly created folder item
-    * @throws InvalidArgumentException if folder already has item with name <code>name</code>
+    * @throws ItemAlreadyExistException if folder already has item with name <code>name</code>
     * @throws ConstraintException if any of following conditions are met:
     *            <ul>
     *            <li>at least one of updated properties is read-only</li>
