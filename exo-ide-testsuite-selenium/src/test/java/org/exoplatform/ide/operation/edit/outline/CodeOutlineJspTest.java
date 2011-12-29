@@ -22,12 +22,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -36,60 +38,63 @@ import org.junit.Test;
  */
 public class CodeOutlineJspTest extends BaseTest
 {
-   
-private final static String FILE_NAME = "JspCodeOutline.jsp";
-   
-   private final static String FOLDER_NAME = CodeOutlineJspTest.class.getSimpleName();
+
+   private final static String FILE_NAME = "JspCodeOutline.jsp";
+
+   private final static String PROJECT = CodeOutlineJspTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
    {
-      String filePath ="src/test/resources/org/exoplatform/ide/operation/edit/outline/test-jsp.jsp";
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/test-jsp.jsp";
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_JSP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.APPLICATION_JSP, filePath);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testCodeOutlineJSP() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" +FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent(Locators.CodeHelperPanel.OUTLINE_TAB_LOCATOR);
-      
-      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
-      assertTrue(IDE.OUTLINE.isOutlineViewVisible());
+      IDE.OUTLINE.waitOpened();
+      IDE.OUTLINE.waitOutlineTreeVisible();
       
       assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:1"));
-      goToLine(9);
-      
+      IDE.GOTOLINE.goToLine(9);
+
       waitForElementPresent("a:VARIABLE:9");
       assertTrue(IDE.OUTLINE.isItemPresentById("a:VARIABLE:9"));
-      
-      goToLine(23);
-      
+
+      IDE.GOTOLINE.goToLine(23);
+
       waitForElementPresent("a:PROPERTY:23");
       assertTrue(IDE.OUTLINE.isItemPresentById("a:PROPERTY:23"));
       assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:2"));
@@ -98,9 +103,10 @@ private final static String FILE_NAME = "JspCodeOutline.jsp";
       assertTrue(IDE.OUTLINE.isItemPresentById("java code:JSP_TAG:13"));
       assertTrue(IDE.OUTLINE.isItemPresentById("curentState:PROPERTY:14"));
       assertTrue(IDE.OUTLINE.isItemPresentById("identity:PROPERTY:17"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("i:PROPERTY:18"));      
-      
-      IDE.EDITOR.closeFile(0);
+      assertTrue(IDE.OUTLINE.isItemPresentById("i:PROPERTY:18"));
+
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
    }
 
 }

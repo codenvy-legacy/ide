@@ -22,13 +22,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -42,10 +44,7 @@ public class CodeOutlineXmlTest extends BaseTest
 {
    private final static String FILE_NAME = "XmlCodeOutline.xml";
 
-   private final static String TEST_FOLDER = CodeOutlineXmlTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   private final static String PROJECT = CodeOutlineXmlTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -54,8 +53,9 @@ public class CodeOutlineXmlTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/XmlCodeOutline.xml";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_XML, URL + TEST_FOLDER + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.TEXT_XML, filePath);
       }
       catch (IOException e)
       {
@@ -68,7 +68,7 @@ public class CodeOutlineXmlTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -83,21 +83,19 @@ public class CodeOutlineXmlTest extends BaseTest
    @Test
    public void testXmlCodeOutline() throws Exception
    {
-      //---- 1 -----------------
-      //open file with text
-      IDE.WORKSPACE.waitForItem(URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(URL + TEST_FOLDER + "/");
-      waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + TEST_FOLDER + "/" + FILE_NAME));
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      //---- 2 -----------------
-      IDE.TOOLBAR.runCommand("Show Outline");
-      waitForElementPresent("ideOutlineTreeGrid");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      //---- 3 -----------------
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.OUTLINE.waitOpened();
+      IDE.OUTLINE.waitOutlineTreeVisible();
+
       checkTreeCorrectlyCreated();
-
    }
 
    private void checkTreeCorrectlyCreated() throws Exception

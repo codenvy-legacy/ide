@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -55,6 +56,8 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
 
    private final static String PROJECT = OutlineWithOtherTabsInPanelTest.class.getSimpleName();
 
+   private static final String EMPTY_ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/empty-repository.zip";
+
    @Before
    public void setUp()
    {
@@ -64,7 +67,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
 
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Map<String, Link> project = VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
          Link link = project.get(Link.REL_CREATE_FILE);
          VirtualFileSystemUtils.createFileFromLocal(link, TEXT_FILE_NAME, MimeType.TEXT_PLAIN, textFilePath);
          VirtualFileSystemUtils.createFileFromLocal(link, XML_FILE_NAME, MimeType.TEXT_XML, xmlFilePath);
@@ -98,11 +101,11 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEXT_FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + XML_FILE_NAME);
-      
+
       //Open XML file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
-      
+
       //Open Outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
@@ -118,52 +121,44 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       //Open text file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEXT_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEXT_FILE_NAME);
-      IDE.OUTLINE.waitClosed();
-      //check outline is not visible
-      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
+      IDE.OUTLINE.waitNotAvailable();
 
       //Type text to file and save (create new version)
       IDE.EDITOR.typeTextIntoEditor(2, "hello");
       IDE.EDITOR.waitFileContentModificationMark(TEXT_FILE_NAME);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
       IDE.EDITOR.waitNoContentModificationMark(TEXT_FILE_NAME);
-      
-      //Open version tab
-      IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
-      //check version tab is visible, outline tab is not visible
 
+      //Open version tab
+      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
+      //check history is visible, outline tab is not visible
+      IDE.GIT.SHOW_HISTORY.waitOpened();
       assertFalse(IDE.OUTLINE.isActive());
-      IDE.VERSIONS.checkVersionPanelIsActive();
+      assertTrue(IDE.GIT.SHOW_HISTORY.isActive());
 
       //Go to XML file
-      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.selectTab(XML_FILE_NAME);
+      IDE.GIT.SHOW_HISTORY.closeView();
 
-      //version tab is closed, outline is visible
-      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
-      IDE.VERSIONS.checkViewVersionsListPanel(false);
+      //history tab is closed, outline is visible
+      IDE.OUTLINE.waitOutlineTreeVisible();
+      assertTrue(IDE.OUTLINE.isActive());
 
       //Type text and save
       IDE.EDITOR.typeTextIntoEditor(0, "abc");
       IDE.EDITOR.waitFileContentModificationMark(XML_FILE_NAME);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
       IDE.EDITOR.waitNoContentModificationMark(XML_FILE_NAME);
-      
-      //Open versions tab
-      IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_VERSION_HISTORY);
+
+      //Open history tab
+      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
+      IDE.GIT.SHOW_HISTORY.waitOpened();
       assertTrue(IDE.OUTLINE.isOutlineTreePresent());
-      IDE.VERSIONS.checkVersionPanelIsActive();
+      assertTrue(IDE.GIT.SHOW_HISTORY.isActive());
 
       //Close outline tab by clicking on close icon (x)
       IDE.OUTLINE.closeOutline();
       IDE.OUTLINE.waitClosed();
-      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
-
-      //Select text file
-      IDE.EDITOR.selectTab(2);
-      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
-
-      //Select HTML file
-      IDE.EDITOR.selectTab(1);
       assertFalse(IDE.OUTLINE.isOutlineTreePresent());
    }
 

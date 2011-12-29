@@ -173,6 +173,11 @@ public class ShowHistory extends AbstractTestModule
          && diffWorkTreeButton.isDisplayed() && refreshButton != null && refreshButton.isDisplayed());
    }
 
+   public boolean isActive()
+   {
+      return IDE().PERSPECTIVE.isViewActive(view);
+   }
+
    /**
     * Returns button's selected state.
     * 

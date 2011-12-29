@@ -21,12 +21,15 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Test for code outline for html files.
@@ -41,10 +44,7 @@ public class CodeOutLineHtmlTest extends BaseTest
 
    private final static String FILE_NAME = "HtmlCodeOutline.html";
 
-   private final static String FOLDER_NAME = CodeOutLineHtmlTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   private final static String PROJECT = CodeOutLineHtmlTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -52,8 +52,9 @@ public class CodeOutLineHtmlTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.TEXT_HTML, filePath);
       }
       catch (IOException e)
       {
@@ -66,7 +67,7 @@ public class CodeOutLineHtmlTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -78,26 +79,23 @@ public class CodeOutLineHtmlTest extends BaseTest
    @Test
    public void testCodeOutLineHtml() throws Exception
    {
-      //---- 1 -----------------
-      //open file with text
-      IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(URL + FOLDER_NAME + "/");
-      waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + FOLDER_NAME + "/" + FILE_NAME));
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      //---- 2 ----
-      //show Outline
-      IDE.TOOLBAR.runCommand("Show Outline");
-      waitForElementPresent("ideOutlineTreeGrid");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      //-----3------
+      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
+      IDE.OUTLINE.waitOpened();
+      IDE.OUTLINE.waitOutlineTreeVisible();
+
       checkTreeCorrectlyCreated();
-
    }
 
    private void checkTreeCorrectlyCreated() throws Exception
    {
-
       //check html node
       assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:1"));
 
@@ -146,7 +144,6 @@ public class CodeOutLineHtmlTest extends BaseTest
       assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:49"));
       assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:50"));
       assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:51"));
-
    }
 
 }

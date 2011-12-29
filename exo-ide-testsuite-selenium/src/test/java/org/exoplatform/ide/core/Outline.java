@@ -62,6 +62,8 @@ public class Outline extends AbstractTestModule
       String ROW_BY_TITLE_LOCATOR = "//div[@id='" + TREE_ID + "']//div[@class='gwt-Label' and text()='%s']";
    }
 
+   public static final String NOT_AVAILABLE_TITLE = "An outline is not available.";
+
    public static final String VIEW_TITLE = "Outline";
 
    public static final int SELECT_OUTLINE_DELAY = 100; // msec
@@ -69,7 +71,7 @@ public class Outline extends AbstractTestModule
    private static final int LINE_HEIGHT = 31;
 
    private int OUTLINE_TOP_OFFSET_POSITION = 80;
-   
+
    public Outline()
    {
       if (driver() instanceof ChromeDriver)
@@ -334,9 +336,9 @@ public class Outline extends AbstractTestModule
    {
       try
       {
-         return tree != null && tree.isDisplayed();
+         return driver().findElement(By.id(Locators.TREE_ID)) != null;
       }
-      catch (Exception e)
+      catch (NoSuchElementException e)
       {
          return false;
       }
@@ -422,6 +424,23 @@ public class Outline extends AbstractTestModule
          public Boolean apply(WebDriver input)
          {
             return item.equals(getItemLabel(position));
+         }
+      });
+   }
+
+   /**
+    * Wait Outline is not available.
+    * 
+    * @throws Exception
+    */
+   public void waitNotAvailable() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return NOT_AVAILABLE_TITLE.equals(view.getText().trim());
          }
       });
    }

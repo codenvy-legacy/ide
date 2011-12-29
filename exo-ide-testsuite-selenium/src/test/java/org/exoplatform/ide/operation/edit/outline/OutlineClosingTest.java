@@ -79,6 +79,7 @@ public class OutlineClosingTest extends BaseTest
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
+      IDE.OUTLINE.waitOutlineTreeVisible();
 
       // check for presence of tab outline
       assertTrue(IDE.OUTLINE.isOutlineTreePresent());

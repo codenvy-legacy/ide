@@ -299,7 +299,7 @@ public class Editor extends AbstractTestModule
                      + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
                return tab.getText().trim().endsWith(MODIFIED_MARK);
             }
-            catch (NoSuchElementException e)
+            catch (Exception e)
             {
                return false;
             }
@@ -322,7 +322,7 @@ public class Editor extends AbstractTestModule
                      + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
                return !tab.getText().trim().endsWith(MODIFIED_MARK);
             }
-            catch (NoSuchElementException e)
+            catch (Exception e)
             {
                return true;
             }
