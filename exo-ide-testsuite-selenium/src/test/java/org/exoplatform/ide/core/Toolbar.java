@@ -278,12 +278,40 @@ public class Toolbar extends AbstractTestModule
    {
       try
       {
-         return driver().findElement(By.cssSelector(String.format(Locators.LEFT_SIDE_BUTTON_SELECTOR, name))) != null;
+         WebElement button =
+            driver().findElement(By.cssSelector(String.format(Locators.LEFT_SIDE_BUTTON_SELECTOR, name)));
+         return button != null && button.isDisplayed();
       }
       catch (NoSuchElementException e)
       {
          return false;
       }
+   }
+
+   public void waitButtonNotPresentAtLeft(final String name)
+   {
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !isButtonPresentAtLeft(name);
+         }
+      });
+   }
+
+   public void waitButtonPresentAtLeft(final String name)
+   {
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return isButtonPresentAtLeft(name);
+         }
+      });
    }
 
    /**

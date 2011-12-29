@@ -18,14 +18,18 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Check, that toolbut button Show outline is present only
+ * Check, that toolbar button Show outline is present only
  * JavaScript, XML, HTML, Google Gadget or Groovy template files are opened.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -35,62 +39,87 @@ import org.junit.Test;
 
 public class ShowOutlineButtonTest extends BaseTest
 {
+   private final static String PROJECT = OutlineClosingTest.class.getSimpleName();
+
+   @BeforeClass
+   public static void setUp() throws Exception
+   {
+      VirtualFileSystemUtils.createDefaultProject(PROJECT);
+   }
+
+   @AfterClass
+   public static void tearDown() throws Exception
+   {
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+   }
+
    //check, that show outline button is shown only for
    //files, which have outline
    @Test
    public void testShowOutlineButton() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      //---- 1 ------
-      //open JavaScript file
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
-      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.js");
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
+
       //---- 2 ------
       //open xml file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
-      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
+
       //---- 3 ------
       //open html file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
-      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
+
       //---- 4 ------
       //open google gadget file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
-      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.gadget");
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
+
       //---- 5 ------
       //open text file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, false);
-      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.TOOLBAR.waitButtonNotPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
+
       //---- 6 ------
       //open css file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, false);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.css");
+      IDE.TOOLBAR.waitButtonNotPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
       
       //---- 7 ------
       //open rest service file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
-      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
+
       //---- 8 ------
       //open groovy script file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
-      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.groovy");
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
+
       //---- 9 ------
       //open groovy template file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
-      
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.gtmpl");
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
+
       //---- 10 ------
       //open select tab with xml file
-     IDE.EDITOR.selectTab(1);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.View.SHOW_OUTLINE, true);
-      
+      IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
    }
-   
 }

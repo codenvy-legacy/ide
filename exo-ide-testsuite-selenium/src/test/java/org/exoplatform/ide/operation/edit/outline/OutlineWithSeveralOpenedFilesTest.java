@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
-import org.junit.After;
-import org.junit.Before;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,24 +40,18 @@ import org.junit.Test;
 public class OutlineWithSeveralOpenedFilesTest extends BaseTest
 {
 
-   ////fix for run tests where new session start after 7 testcases passes (Outline panel  remains is open after the previous test )
-   @Before
-   public void chekOutliePresentAfterPrevTest() throws Exception
+   private final static String PROJECT = OutlineWithSeveralOpenedFilesTest.class.getSimpleName();
+
+   @BeforeClass
+   public static void setUp() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      if (selenium().isElementPresent("ideOutlineTreeGrid"))
-      {
-         IDE.OUTLINE.closeOutline();
-      }
-      else
-      {
-      }
+      VirtualFileSystemUtils.createDefaultProject(PROJECT);
    }
 
-   @After
-   public void tearDown()
+   @AfterClass
+   public static void tearDown() throws Exception
    {
-      deleteCookies();
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }
 
    //Check, that Outline tab correctly works, when we
@@ -65,11 +59,16 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
    @Test
    public void testOutlineWhenSeveralFilesOpen() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       //---- 1 --------------
       //open new javascript file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.js");
 
       //no outline panel
       assertFalse(IDE.OUTLINE.isOutlineTreePresent());
@@ -77,37 +76,28 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //---- 2 --------------
       //show outline
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent("ideOutlineTreeGrid");
-
-      //check outline appeared
-      //we can't use checkOutlineVisibility() method,
-      //because when outline appears at first time, element div
-      //doesn't have in style attribute visibility attribute
-      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
+      IDE.OUTLINE.waitOpened();
+      IDE.OUTLINE.waitOutlineTreeVisible();
 
       //---- 3 --------------
       //open new html file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
 
-      //      //check outline present
+      //check outline present
       assertTrue(IDE.OUTLINE.isOutlineTreePresent());
 
       //---- 4 --------------
       //Close Outline tab 
       IDE.OUTLINE.closeOutline();
-
-      waitForElementNotPresent("ideOutlineTreeGrid");
+      IDE.OUTLINE.waitClosed();
       assertFalse(IDE.OUTLINE.isOutlineTreePresent());
 
       //---- 5 --------------
       //go to javascript file
-      IDE.EDITOR.selectTab(0);
-      waitForElementPresent(Locators.EDITOR_LOCATOR);
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.js");
 
-      //TODO fix problem with selenium click on outline form (after  IDE.OUTLINE.closeOutline();)
-      //end
-      // IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      // IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
    }
-
 }
