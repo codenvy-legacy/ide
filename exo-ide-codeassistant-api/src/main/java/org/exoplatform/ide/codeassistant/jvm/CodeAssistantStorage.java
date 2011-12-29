@@ -28,6 +28,52 @@ import java.util.List;
 public interface CodeAssistantStorage
 {
    /**
+   * Find all annotations by prefix.
+   *  
+   * @param prefix matching first letter of type name if it set to null service MUST return all
+   * founded annotations
+   * @return {@link List<ShortTypeInfo>} 
+   * @throws CodeAssistantException
+   */
+   List<ShortTypeInfo> getAnnotations(String prefix) throws CodeAssistantException;
+
+   /**
+    * Find all classes by prefix.
+    *  
+    * @param prefix matching first letter of type name if it set to null service MUST return all
+    * founded annotations
+    * @return {@link List<ShortTypeInfo>} 
+    * @throws CodeAssistantException
+    */
+   List<ShortTypeInfo> getClasses(String prefix) throws CodeAssistantException;
+
+   /**
+    * Find JavaDoc for FQN
+    * @param fqn of type
+    * @return string Java doc  
+    * @throws CodeAssistantException if Java doc not found
+    */
+   String getClassJavaDoc(String fqn) throws CodeAssistantException;
+
+   /**
+    * Find all interfaces by prefix.
+    *  
+    * @param prefix matching first letter of type name if it set to null service MUST return all
+    * founded annotations
+    * @return {@link List<ShortTypeInfo>} 
+    * @throws CodeAssistantException
+    */
+   List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException;
+
+   /**
+    * Find JavaDoc for Java Class member FQN
+    * @param fqn of type
+    * @return string Java doc  
+    * @throws CodeAssistantException if Java doc not found
+    */
+   String getMemberJavaDoc(String fqn) throws CodeAssistantException;
+
+   /**
     * Returns the Class object associated with the class or interface with 
     * the given string Full Qualified Name.
     * 
@@ -36,24 +82,6 @@ public interface CodeAssistantStorage
     * @throws CodeAssistantException
     */
    TypeInfo getTypeByFqn(String fqn) throws CodeAssistantException;
-
-   /**
-    * 
-    * Return sets of {@link ShortTypeInfo} object associated with the class or interface 
-    * matched to name. (means Class simple name begin on {namePrefix})
-    * Example:
-    * if name == "Node"
-    * result can content information about: 
-    * - javax.xml.soap.Node 
-    * - com.google.gwt.xml.client.Node
-    * - org.w3c.dom.Node 
-    * - org.w3c.dom.traversal.NodeFilter
-    * - org.w3c.dom.traversal.NodeIterator
-    * @param namePrefix the string for matching FQNs 
-    * @return {@link List<ShortTypeInfo>} 
-    * @throws CodeAssistantException
-    */
-   List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix) throws CodeAssistantException;
 
    /**
     * sets of {@link ShortTypeInfo} matched to prefix (means FQN begin on {fqnPrefix} )
@@ -77,51 +105,23 @@ public interface CodeAssistantStorage
     * @throws CodeAssistantException
     */
    List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix) throws CodeAssistantException;
-
-   /**
-   * Find all annotations by prefix.
-   *  
-   * @param prefix matching first letter of type name if it set to null service MUST return all
-   * founded annotations
-   * @return {@link List<ShortTypeInfo>} 
-   * @throws CodeAssistantException
-   */
-   List<ShortTypeInfo> getAnnotations(String prefix) throws CodeAssistantException;
-
-   /**
-    * Find all interfaces by prefix.
-    *  
-    * @param prefix matching first letter of type name if it set to null service MUST return all
-    * founded annotations
-    * @return {@link List<ShortTypeInfo>} 
-    * @throws CodeAssistantException
-    */
-   List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException;
-
-   /**
-    * Find all classes by prefix.
-    *  
-    * @param prefix matching first letter of type name if it set to null service MUST return all
-    * founded annotations
-    * @return {@link List<ShortTypeInfo>} 
-    * @throws CodeAssistantException
-    */
-   List<ShortTypeInfo> getClasses(String prefix) throws CodeAssistantException;
-
-   /**
-    * Find JavaDoc for FQN
-    * @param fqn of type
-    * @return string Java doc  
-    * @throws CodeAssistantException if Java doc not found
-    */
-   String getClassJavaDoc(String fqn) throws CodeAssistantException;
    
    
    /**
-    * Find JavaDoc for Java Class member FQN
-    * @param fqn of type
-    * @return string Java doc  
-    * @throws CodeAssistantException if Java doc not found
+    * 
+    * Return sets of {@link ShortTypeInfo} object associated with the class or interface 
+    * matched to name. (means Class simple name begin on {namePrefix})
+    * Example:
+    * if name == "Node"
+    * result can content information about: 
+    * - javax.xml.soap.Node 
+    * - com.google.gwt.xml.client.Node
+    * - org.w3c.dom.Node 
+    * - org.w3c.dom.traversal.NodeFilter
+    * - org.w3c.dom.traversal.NodeIterator
+    * @param namePrefix the string for matching FQNs 
+    * @return {@link List<ShortTypeInfo>} 
+    * @throws CodeAssistantException
     */
-   String getMemberJavaDoc(String fqn) throws CodeAssistantException;
+   List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix) throws CodeAssistantException;
 }

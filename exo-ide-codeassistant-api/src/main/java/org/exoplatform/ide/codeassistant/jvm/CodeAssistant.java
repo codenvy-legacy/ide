@@ -46,122 +46,6 @@ public abstract class CodeAssistant
    }
 
    /**
-    * Returns the Class object associated with the class or interface with the given string name.
-    * 
-    * @param fqn the Full Qualified Name
-    * @param projectId of current project
-    * @param vfsId Id of VirtualFileSystem
-    * @return {@link TypeInfo}
-    * @throws CodeAssistantException
-    */
-   public TypeInfo getClassByFQN(String fqn, String projectId, String vfsId) throws CodeAssistantException,
-      VirtualFileSystemException
-   {
-      TypeInfo clazz = storage.getTypeByFqn(fqn);
-      if (clazz != null)
-         return clazz;
-      else
-         return getClassByFqnFromProject(fqn, projectId, vfsId);
-   }
-
-   /**
-    * Search for Java type in project. 
-    * 
-    * @param fqn the Full Qualified Name
-    * @param projectId of current project
-    * @param vfsId Id of VirtualFileSystem
-    * @return {@link TypeInfo} of null if JavaType not found.
-    */
-   protected abstract TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
-      throws VirtualFileSystemException, CodeAssistantException;
-
-   /**
-    * Returns the Class object associated with the class or interface with the given string name.
-    * @param className Name of the class, interface, enum or annotation
-    * @param projectId Id of current project
-    * @param vfsId If of the VitrualFileSystem
-    * @return list of {@link ShortTypeInfo}
-    * @throws CodeAssistantException
-    * @throws VirtualFileSystemException 
-    */
-   public List<ShortTypeInfo> getTypesByNamePrefix(String className, String projectId, String vfsId)
-      throws CodeAssistantException, VirtualFileSystemException
-   {
-      List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
-      List<ShortTypeInfo> list = storage.getTypesByNamePrefix(className);
-      if (list != null)
-         result.addAll(list);
-
-      list = getTypesByNamePrefixFromProject(className, projectId, vfsId);
-      if (list != null)
-         result.addAll(list);
-      return result;
-   }
-
-   /**
-    * Search for Java type in project 
-   @param className Name of the class, interface, enum or annotation
-    * @param projectId Id of current project
-    * @param vfsId If of the VitrualFileSystem
-    * @return list of {@link ShortTypeInfo}
-    * @throws CodeAssistantException
-    */
-   protected abstract List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId,
-      String vfsId) throws CodeAssistantException, VirtualFileSystemException;
-
-   /**
-    * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)<br>
-    * <br>
-    * Example :
-    * if prefix = "java.util.c"
-    * set must content:
-    * <pre>
-    *  {
-    *   java.util.Comparator<T>
-    *   java.util.Calendar
-    *   java.util.Collection<E>
-    *   java.util.Collections
-    *   java.util.ConcurrentModificationException
-    *   java.util.Currency
-    *   java.util.concurrent
-    *   java.util.concurrent.atomic
-    *   java.util.concurrent.locks
-    *  }
-    * </pre>
-    * @param prefix the string for matching FQNs
-    * @param where the string that indicate where find (must be "className" or "fqn")
-    * @param projectId Id of the project
-    * @param vfsId Id of the VirtualFileSystem
-    * @return
-    * @throws CodeAssistantException
-    */
-   public List<ShortTypeInfo> getTypesByFqnPrefix(String prefix, String projectId, String vfsId)
-      throws CodeAssistantException, VirtualFileSystemException
-   {
-      List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
-      List<ShortTypeInfo> list = storage.getTypesByFqnPrefix(prefix);
-      if (list != null)
-         result.addAll(list);
-
-      list = getTypesByFqnPrefixInProject(prefix, projectId, vfsId);
-      if (list != null)
-         result.addAll(list);
-      return result;
-   }
-
-   /**
-    * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)<br>
-    * @param prefix the string for matching FQNs
-    * @param where Where find FQN or CLASSNAME
-    * @param projectId Id of the project
-    * @param vfsId Id of the VirtualFileSystem
-    * @return
-    * @throws CodeAssistantException
-    */
-   protected abstract List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId, String vfsId)
-      throws CodeAssistantException, VirtualFileSystemException;
-
-   /**
     * Find all classes or annotations or interfaces
     *   
     * @param type the string that represent one of Java class type (i.e. CLASS, INTERFACE, ANNOTATION) 
@@ -201,17 +85,35 @@ public abstract class CodeAssistant
    }
 
    /**
-    * Find all classes or annotations or interfaces in project
-    *   
-    * @param type the enum, that represent one of Java class type (i.e. CLASS, INTERFACE, ANNOTATION) 
-    * @param prefix optional parameter that matching first letter of type name
-    * @param projectId Id of the project
-    * @param vfsId Id of the VirtualFileSystem
-    * @return Returns list of FQNs matched to class type
+    * Returns the Class object associated with the class or interface with the given string name.
+    * 
+    * @param fqn the Full Qualified Name
+    * @param projectId of current project
+    * @param vfsId Id of VirtualFileSystem
+    * @return {@link TypeInfo}
     * @throws CodeAssistantException
     */
-   protected abstract List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId,
-      String vfsId) throws CodeAssistantException, VirtualFileSystemException;
+   public TypeInfo getClassByFQN(String fqn, String projectId, String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
+   {
+      TypeInfo clazz = storage.getTypeByFqn(fqn);
+      if (clazz != null)
+         return clazz;
+      else
+         return getClassByFqnFromProject(fqn, projectId, vfsId);
+   }
+
+   /**
+    * Find all nested Java types for fileId file
+    * @param fileId Id of the file
+    * @param projectId Id of project
+    * @param vfsId {@link VirtualFileSystem} Id
+    * @return List of nested Java types for file
+    * @throws VirtualFileSystemException
+    * @throws CodeAssistantException
+    */
+   public abstract List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException;
 
    /**
     * Find JavaDoc for FQN
@@ -254,6 +156,93 @@ public abstract class CodeAssistant
    }
 
    /**
+    * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)<br>
+    * <br>
+    * Example :
+    * if prefix = "java.util.c"
+    * set must content:
+    * <pre>
+    *  {
+    *   java.util.Comparator<T>
+    *   java.util.Calendar
+    *   java.util.Collection<E>
+    *   java.util.Collections
+    *   java.util.ConcurrentModificationException
+    *   java.util.Currency
+    *   java.util.concurrent
+    *   java.util.concurrent.atomic
+    *   java.util.concurrent.locks
+    *  }
+    * </pre>
+    * @param prefix the string for matching FQNs
+    * @param where the string that indicate where find (must be "className" or "fqn")
+    * @param projectId Id of the project
+    * @param vfsId Id of the VirtualFileSystem
+    * @return
+    * @throws CodeAssistantException
+    */
+   public List<ShortTypeInfo> getTypesByFqnPrefix(String prefix, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
+      List<ShortTypeInfo> list = storage.getTypesByFqnPrefix(prefix);
+      if (list != null)
+         result.addAll(list);
+
+      list = getTypesByFqnPrefixInProject(prefix, projectId, vfsId);
+      if (list != null)
+         result.addAll(list);
+      return result;
+   }
+
+   /**
+    * Returns the Class object associated with the class or interface with the given string name.
+    * @param className Name of the class, interface, enum or annotation
+    * @param projectId Id of current project
+    * @param vfsId If of the VitrualFileSystem
+    * @return list of {@link ShortTypeInfo}
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException 
+    */
+   public List<ShortTypeInfo> getTypesByNamePrefix(String className, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
+      List<ShortTypeInfo> list = storage.getTypesByNamePrefix(className);
+      if (list != null)
+         result.addAll(list);
+
+      list = getTypesByNamePrefixFromProject(className, projectId, vfsId);
+      if (list != null)
+         result.addAll(list);
+      return result;
+   }
+
+   /**
+    * Find all classes or annotations or interfaces in project
+    *   
+    * @param type the enum, that represent one of Java class type (i.e. CLASS, INTERFACE, ANNOTATION) 
+    * @param prefix optional parameter that matching first letter of type name
+    * @param projectId Id of the project
+    * @param vfsId Id of the VirtualFileSystem
+    * @return Returns list of FQNs matched to class type
+    * @throws CodeAssistantException
+    */
+   protected abstract List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId,
+      String vfsId) throws CodeAssistantException, VirtualFileSystemException;
+
+   /**
+    * Search for Java type in project. 
+    * 
+    * @param fqn the Full Qualified Name
+    * @param projectId of current project
+    * @param vfsId Id of VirtualFileSystem
+    * @return {@link TypeInfo} of null if JavaType not found.
+    */
+   protected abstract TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException;
+
+   /**
     * Find JavaDoc for FQN
     * @param fqn of type
     * @return string JavaDoc
@@ -272,14 +261,25 @@ public abstract class CodeAssistant
       throws CodeAssistantException, VirtualFileSystemException;
 
    /**
-    * Find all nested Java types for fileId file
-    * @param fileId Id of the file
-    * @param projectId Id of project
-    * @param vfsId {@link VirtualFileSystem} Id
-    * @return List of nested Java types for file
-    * @throws VirtualFileSystemException
+    * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)<br>
+    * @param prefix the string for matching FQNs
+    * @param where Where find FQN or CLASSNAME
+    * @param projectId Id of the project
+    * @param vfsId Id of the VirtualFileSystem
+    * @return
     * @throws CodeAssistantException
     */
-   public abstract List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
-      throws VirtualFileSystemException, CodeAssistantException;
+   protected abstract List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException;
+
+   /**
+    * Search for Java type in project 
+   @param className Name of the class, interface, enum or annotation
+    * @param projectId Id of current project
+    * @param vfsId If of the VitrualFileSystem
+    * @return list of {@link ShortTypeInfo}
+    * @throws CodeAssistantException
+    */
+   protected abstract List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId,
+      String vfsId) throws CodeAssistantException, VirtualFileSystemException;
 }
