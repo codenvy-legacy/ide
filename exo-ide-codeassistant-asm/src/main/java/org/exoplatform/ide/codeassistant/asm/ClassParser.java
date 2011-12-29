@@ -56,22 +56,24 @@ public class ClassParser
       String classResource = class2Find.getName().replace('.', '/') + ".class";
       return contextClassLoader.getResourceAsStream(classResource);
    }
-    public static TypeInfo parse(Class<?> class2Find) throws IOException
-    {
-        return parse(getClassFile(class2Find));
-    }
-    public static TypeInfo parse(String class2Find) throws IOException
-    {
-        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        String classResource =class2Find.replace('.', '/') + ".class";
-        return parse(contextClassLoader.getResourceAsStream(classResource));
-    }
+
+   public static TypeInfo parse(Class<?> class2Find) throws IOException
+   {
+      return parse(getClassFile(class2Find));
+   }
+
+   public static TypeInfo parse(String class2Find) throws IOException
+   {
+      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+      String classResource = class2Find.replace('.', '/') + ".class";
+      return parse(contextClassLoader.getResourceAsStream(classResource));
+   }
 
    public static TypeInfo parse(InputStream classStream) throws IOException
    {
       ClassReader cr = new ClassReader(classStream);
       ClassNode cn = new ClassNode();
-      cr.accept(cn, ClassReader.SKIP_DEBUG | ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
+      cr.accept(cn, 0);
 
       return TypeInfoBuilder.fromClassNode(cn);
    }

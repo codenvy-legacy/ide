@@ -40,7 +40,7 @@ public class TypeInfoBuilder
    public static String classNameFromType(String type)
    {
       // can be null for Object super class.
-      return type == null ? null : Type.getObjectType(type).getClassName();
+      return type == null ? "" : Type.getObjectType(type).getClassName();
    }
 
    public static List<String> classNamesFromTypes(List<String> types)
@@ -83,8 +83,8 @@ public class TypeInfoBuilder
    {
       boolean isConstructor = CONSTRUCTOR_METHOD_NAME.equals(node.name);
       return new MethodInfo(isConstructor ? declaredClass : node.name, node.access,
-         classNamesFromTypes(node.exceptions), argumentTypesFromMethodDescriptor(node.desc), isConstructor, Type
-            .getReturnType(node.desc).getClassName(), declaredClass);
+         classNamesFromTypes(node.exceptions), argumentTypesFromMethodDescriptor(node.desc), new ArrayList<String>(),
+         isConstructor, Type.getReturnType(node.desc).getClassName(), declaredClass);
    }
 
    public static List<MethodInfo> fromMethodNodes(String declaredClass, List methods)
