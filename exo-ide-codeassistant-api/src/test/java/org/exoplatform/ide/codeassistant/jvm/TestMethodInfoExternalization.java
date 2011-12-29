@@ -23,6 +23,7 @@ import static org.exoplatform.ide.codeassistant.jvm.serialization.Externalizatio
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,19 +36,19 @@ import java.util.Arrays;
  */
 public class TestMethodInfoExternalization
 {
-   private MethodInfo serializedMethodInfo;
+   private MethodInfoBean serializedMethodInfo;
 
-   private MethodInfo deserializedMethodInfo;
+   private MethodInfoBean deserializedMethodInfo;
 
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
       serializedMethodInfo =
-         new MethodInfo("method", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
+         new MethodInfoBean("method", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
             "java.lang.IlligalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}),
             Arrays.asList(new String[]{"param1", "param2"}), false, "test.TestClass", "java.lang.Integer");
       byte[] serializedData = serializeObject(serializedMethodInfo);
-      deserializedMethodInfo = new MethodInfo();
+      deserializedMethodInfo = new MethodInfoBean();
       deserializedMethodInfo.readExternal(createObjectInputStream(serializedData));
    }
 

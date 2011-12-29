@@ -32,7 +32,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -124,10 +125,11 @@ public class TestExternalizationTools
    public void shouldNotInvokeWriteStringObjectOnExternalizableArrayWritting() throws IOException
    {
       ObjectOutput out = mock(ObjectOutput.class);
-      ShortTypeInfo shortTypeInfo = new ShortTypeInfo("TestClass", Modifier.PUBLIC, "test.TestClass");
+      ShortTypeInfoBean shortTypeInfo = new ShortTypeInfoBean("TestClass", Modifier.PUBLIC, "test.TestClass");
 
       // RoutineInfo implements Externalizable
-      ExternalizationTools.writeObjectList(ShortTypeInfo.class, Arrays.asList(new ShortTypeInfo[]{shortTypeInfo}), out);
+      ExternalizationTools.writeObjectList(ShortTypeInfoBean.class,
+         Arrays.asList(new ShortTypeInfoBean[]{shortTypeInfo}), out);
 
       verify(out, atLeastOnce()).writeInt(anyInt());
       verify(out, atLeastOnce()).write((byte[])any());
@@ -204,7 +206,7 @@ public class TestExternalizationTools
       oos.flush();
 
       ObjectInputStream io = createObjectInputStream(out.toByteArray());
-      List<Integer> deserializedArray = ExternalizationTools.readObjectList(Integer.class, io);
+      List<Integer> deserializedArray = ExternalizationTools.readObjectList(Integer.class, Integer.class, io);
 
       assertArrayEquals(serializedArray, deserializedArray.toArray());
    }
@@ -252,7 +254,7 @@ public class TestExternalizationTools
       when(in.readInt()).thenReturn(1);
 
       // RoutineInfo implements Externalizable
-      ExternalizationTools.readObjectList(MethodInfo.class, in);
+      ExternalizationTools.readObjectList(MethodInfo.class, MethodInfoBean.class, in);
 
       verify(in, atLeastOnce()).readInt();
       verify(in, atLeastOnce()).read((byte[])any());

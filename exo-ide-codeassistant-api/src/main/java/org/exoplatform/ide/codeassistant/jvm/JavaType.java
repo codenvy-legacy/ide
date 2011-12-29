@@ -23,8 +23,6 @@ import java.lang.reflect.Modifier;
 /**
  * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public enum JavaType {
    CLASS, INTERFACE, ANNOTATION, ENUM;

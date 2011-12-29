@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,15 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.exoplatform.ide.codeassistant.jvm;
-
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
-
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 /**
  * Represent information about class field. Can be transform to JSON. Example of
@@ -39,138 +31,15 @@ import java.io.ObjectOutput;
  * 
  * 
  */
-public class FieldInfo extends Member
+public interface FieldInfo extends Member
 {
-   /**
-    * Short Class Name <code>Comparator</code>
-    */
-   private String type;
 
-   /**
-    * Full Qualified Class Name where field declared
-    */
-   private String declaringClass;
+   String getDeclaringClass();
 
-   public FieldInfo()
-   {
+   String getType();
 
-   }
+   void setDeclaringClass(String declaringClass);
 
-   public FieldInfo(String name, int modifiers, String type, String declaringClass)
-   {
-      super(name, modifiers);
-      this.type = type;
-      this.declaringClass = declaringClass;
-   }
-
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (!super.equals(obj))
-      {
-         return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      FieldInfo other = (FieldInfo)obj;
-      if (declaringClass == null)
-      {
-         if (other.declaringClass != null)
-         {
-            return false;
-         }
-      }
-      else if (!declaringClass.equals(other.declaringClass))
-      {
-         return false;
-      }
-      if (type == null)
-      {
-         if (other.type != null)
-         {
-            return false;
-         }
-      }
-      else if (!type.equals(other.type))
-      {
-         return false;
-      }
-      return true;
-   }
-
-   public String getDeclaringClass()
-   {
-      return declaringClass;
-   }
-
-   public String getType()
-   {
-      return type;
-   }
-
-   /**
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = super.hashCode();
-      result = prime * result + (declaringClass == null ? 0 : declaringClass.hashCode());
-      result = prime * result + (type == null ? 0 : type.hashCode());
-      return result;
-   }
-
-   /**
-    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
-    */
-   @Override
-   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-   {
-      super.readExternal(in);
-
-      type = readStringUTF(in);
-      declaringClass = readStringUTF(in);
-   }
-
-   public void setDeclaringClass(String declaringClass)
-   {
-      this.declaringClass = declaringClass;
-   }
-
-   public void setType(String type)
-   {
-      this.type = type;
-   }
-
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return modifierToString() + " " + type + " " + declaringClass + "." + getName();
-   }
-
-   /**
-    * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
-    */
-   @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      super.writeExternal(out);
-
-      writeStringUTF(type, out);
-      writeStringUTF(declaringClass, out);
-   }
+   void setType(String type);
 
 }

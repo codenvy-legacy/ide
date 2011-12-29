@@ -23,6 +23,9 @@ import static org.exoplatform.ide.codeassistant.jvm.serialization.Externalizatio
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,16 +39,16 @@ import java.util.List;
  */
 public class TestTypeInfoExternalization
 {
-   private TypeInfo serializedTypeInfo;
+   private TypeInfoBean serializedTypeInfo;
 
-   private TypeInfo deserializedTypeInfo;
+   private TypeInfoBean deserializedTypeInfo;
 
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
       serializedTypeInfo = generateTypeInfo();
       byte[] serializedData = serializeObject(serializedTypeInfo);
-      deserializedTypeInfo = new TypeInfo();
+      deserializedTypeInfo = new TypeInfoBean();
       deserializedTypeInfo.readExternal(createObjectInputStream(serializedData));
    }
 
@@ -97,9 +100,9 @@ public class TestTypeInfoExternalization
       assertArrayEquals(serializedFields.toArray(), deserializedFields.toArray());
    }
 
-   private TypeInfo generateTypeInfo()
+   private TypeInfoBean generateTypeInfo()
    {
-      TypeInfo typeInfo = new TypeInfo();
+      TypeInfoBean typeInfo = new TypeInfoBean();
 
       typeInfo.setModifiers(Modifier.PUBLIC);
       typeInfo.setName("test.TestClass");
@@ -109,28 +112,28 @@ public class TestTypeInfoExternalization
       String[] interfaces = new String[]{"java.io.Serializable"};
       typeInfo.setInterfaces(Arrays.asList(interfaces));
 
-      MethodInfo publicConstructor =
-         new MethodInfo("test.TestClass", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
+      MethodInfoBean publicConstructor =
+         new MethodInfoBean("test.TestClass", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
             "java.lang.IllegalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}),
             Arrays.asList(new String[]{"param1", "param2"}), true, "", "test.TestClass");
-      MethodInfo protectedConstructor =
-         new MethodInfo("test.TestClass", Modifier.PROTECTED, Arrays.asList(new String[]{"java.io.IOException"}),
+      MethodInfoBean protectedConstructor =
+         new MethodInfoBean("test.TestClass", Modifier.PROTECTED, Arrays.asList(new String[]{"java.io.IOException"}),
             Arrays.asList(new String[]{"java.lang.String", "String"}), Arrays.asList(new String[]{"param1", "param2"}),
             true, "", "test.TestClass");
 
-      MethodInfo publicMethod =
-         new MethodInfo("method1", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException"}),
+      MethodInfoBean publicMethod =
+         new MethodInfoBean("method1", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException"}),
             Arrays.asList(new String[]{"java.lang.Object", "Object"}), Arrays.asList(new String[]{"param1", "param2"}),
             false, "test.TestClass", "java.lang.Integer");
-      MethodInfo privateMethod =
-         new MethodInfo("method2", Modifier.PRIVATE, Arrays.asList(new String[]{"java.io.IOException"}),
+      MethodInfoBean privateMethod =
+         new MethodInfoBean("method2", Modifier.PRIVATE, Arrays.asList(new String[]{"java.io.IOException"}),
             Arrays.asList(new String[]{"java.lang.String", "String"}), Arrays.asList(new String[]{"param1", "param2"}),
             false, "test.TestClass", "java.lang.Integer");
       typeInfo.setMethods(Arrays.asList(new MethodInfo[]{publicConstructor, protectedConstructor, publicMethod,
          privateMethod}));
 
-      FieldInfo publicField = new FieldInfo("field1", Modifier.PUBLIC, "test.TestClass", "String");
-      FieldInfo privateField = new FieldInfo("field2", Modifier.PRIVATE, "test.TestClass", "Integer");
+      FieldInfoBean publicField = new FieldInfoBean("field1", Modifier.PUBLIC, "test.TestClass", "String");
+      FieldInfoBean privateField = new FieldInfoBean("field2", Modifier.PRIVATE, "test.TestClass", "Integer");
       typeInfo.setFields(Arrays.asList(new FieldInfo[]{publicField, privateField}));
       return typeInfo;
    }

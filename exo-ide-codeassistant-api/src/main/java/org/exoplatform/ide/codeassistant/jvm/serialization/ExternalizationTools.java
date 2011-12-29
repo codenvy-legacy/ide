@@ -52,7 +52,8 @@ public class ExternalizationTools
       return new ObjectInputStream(io);
    }
 
-   public static <T> List<T> readObjectList(Class<T> type, ObjectInput in) throws IOException, ClassNotFoundException
+   public static <T> List<T> readObjectList(Class<T> typeInterface, Class<? extends T> implementation, ObjectInput in)
+      throws IOException, ClassNotFoundException
    {
       int size = in.readInt();
       List<T> elements = null;
@@ -66,21 +67,21 @@ public class ExternalizationTools
          elements = new ArrayList<T>(size);
          for (int i = 0; i < size; i++)
          {
-            if (Externalizable.class.isAssignableFrom(type))
+            if (Externalizable.class.isAssignableFrom(implementation))
             {
                try
                {
-                  T element = type.newInstance();
+                  T element = implementation.newInstance();
                   ((Externalizable)element).readExternal(in);
                   elements.add(element);
                }
                catch (InstantiationException e)
                {
-                  LOG.warn("Can't instantiate component of type " + type.getCanonicalName(), e);
+                  LOG.warn("Can't instantiate component of type " + implementation.getCanonicalName(), e);
                }
                catch (IllegalAccessException e)
                {
-                  LOG.warn("Can't instantiate component of type " + type.getCanonicalName(), e);
+                  LOG.warn("Can't instantiate component of type " + implementation.getCanonicalName(), e);
                }
             }
             else
@@ -144,7 +145,7 @@ public class ExternalizationTools
       return out.toByteArray();
    }
 
-   public static <T> void writeObjectList(Class<T> type, List<T> list, ObjectOutput out) throws IOException
+   public static <T> void writeObjectList(Class<? extends T> type, List<T> list, ObjectOutput out) throws IOException
    {
       if (list == null)
       {

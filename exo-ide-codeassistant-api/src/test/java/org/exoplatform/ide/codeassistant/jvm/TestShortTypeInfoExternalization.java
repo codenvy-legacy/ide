@@ -22,6 +22,7 @@ import static org.exoplatform.ide.codeassistant.jvm.serialization.Externalizatio
 import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.serializeObject;
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,16 +34,16 @@ import java.lang.reflect.Modifier;
  */
 public class TestShortTypeInfoExternalization
 {
-   private ShortTypeInfo serializedShortTypeInfo;
+   private ShortTypeInfoBean serializedShortTypeInfo;
 
-   private ShortTypeInfo deserializedShortTypeInfo;
+   private ShortTypeInfoBean deserializedShortTypeInfo;
 
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
-      serializedShortTypeInfo = new ShortTypeInfo("test.TestClass", Modifier.PUBLIC, "CLASS");
+      serializedShortTypeInfo = new ShortTypeInfoBean("test.TestClass", Modifier.PUBLIC, "CLASS");
       byte[] serializedData = serializeObject(serializedShortTypeInfo);
-      deserializedShortTypeInfo = new ShortTypeInfo();
+      deserializedShortTypeInfo = new ShortTypeInfoBean();
       deserializedShortTypeInfo.readExternal(createObjectInputStream(serializedData));
    }
 

@@ -20,6 +20,10 @@ package org.exoplatform.ide.codeassistant.jvm;
 
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -35,7 +39,7 @@ public class TestMemberToString
    @Test
    public void testFieldInfoToString()
    {
-      FieldInfo fieldInfo = new FieldInfo("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass");
+      FieldInfo fieldInfo = new FieldInfoBean("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass");
 
       assertEquals("public java.lang.String test.TestClass.field", fieldInfo.toString());
    }
@@ -44,7 +48,7 @@ public class TestMemberToString
    public void testMethodInfoToString()
    {
       MethodInfo methodInfo =
-         new MethodInfo("method", Modifier.PUBLIC, new ArrayList<String>(), new ArrayList<String>(),
+         new MethodInfoBean("method", Modifier.PUBLIC, new ArrayList<String>(), new ArrayList<String>(),
             Arrays.asList(new String[]{"param1"}), false, "", "test.TestClass");
 
       assertEquals("public void test.TestClass.method()", methodInfo.toString());
@@ -53,7 +57,7 @@ public class TestMemberToString
    @Test
    public void testShortTypeInfoToString()
    {
-      ShortTypeInfo shortTypeInfo = new ShortTypeInfo("test.TestClass", Modifier.PUBLIC, "CLASS");
+      ShortTypeInfoBean shortTypeInfo = new ShortTypeInfoBean("test.TestClass", Modifier.PUBLIC, "CLASS");
 
       assertEquals("public CLASS test.TestClass", shortTypeInfo.toString());
    }
@@ -62,7 +66,7 @@ public class TestMemberToString
    @Test
    public void testTypeInfoToString()
    {
-      TypeInfo typeInfo = new TypeInfo();
+      TypeInfoBean typeInfo = new TypeInfoBean();
       typeInfo.setModifiers(Modifier.PROTECTED);
       typeInfo.setType(JavaType.CLASS.toString());
       typeInfo.setName("test.TestClass2");

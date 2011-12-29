@@ -19,38 +19,35 @@
 package org.exoplatform.ide.codeassistant.jvm;
 
 /**
- * Created by The eXo Platform SAS.
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
+ * 
+ */
 public class CodeAssistantException extends Exception
 {
    /**
     * 
     */
    private static final long serialVersionUID = -2413708596186268688L;
-  
+
    private int status;
-   
-   
+
    public CodeAssistantException(int status, String message)
    {
       super(message);
       this.setStatus(status);
    }
-   
+
    public int getStatus()
    {
       return status;
    }
 
    /**
-    * @param status the status to set
+    * @param status
+    *           the status to set
     */
    public void setStatus(int status)
    {
       this.status = status;
    }
-   
 
 }

@@ -22,6 +22,7 @@ import static org.exoplatform.ide.codeassistant.jvm.serialization.Externalizatio
 import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.serializeObject;
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,16 +34,16 @@ import java.lang.reflect.Modifier;
  */
 public class TestFieldInfoExternalization
 {
-   private FieldInfo serializedFieldInfo;
+   private FieldInfoBean serializedFieldInfo;
 
-   private FieldInfo deserializedFieldInfo;
+   private FieldInfoBean deserializedFieldInfo;
 
    @Before
    public void setUp() throws IOException, ClassNotFoundException
    {
-      serializedFieldInfo = new FieldInfo("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass");
+      serializedFieldInfo = new FieldInfoBean("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass");
       byte[] serializedData = serializeObject(serializedFieldInfo);
-      deserializedFieldInfo = new FieldInfo();
+      deserializedFieldInfo = new FieldInfoBean();
       deserializedFieldInfo.readExternal(createObjectInputStream(serializedData));
    }
 

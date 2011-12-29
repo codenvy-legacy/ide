@@ -24,6 +24,9 @@ import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -40,9 +43,9 @@ import java.util.Arrays;
 @Ignore
 public class JsonParserAndExternatializationComparing
 {
-   private final TypeInfo[] typeInfos = generateTypeInfos();
+   private final TypeInfoBean[] typeInfos = generateTypeInfos();
 
-   private final TypeInfo typeInfo = generateTypeInfo();
+   private final TypeInfoBean typeInfo = generateTypeInfo();
 
    private static final int OBJECTS_COUNT = 100000;
 
@@ -62,7 +65,7 @@ public class JsonParserAndExternatializationComparing
    public void extSerialization() throws JsonException, IOException
    {
       long startTime = System.currentTimeMillis();
-      for (TypeInfo typeInfo : typeInfos)
+      for (TypeInfoBean typeInfo : typeInfos)
       {
          ObjectOutputStream out = new ObjectOutputStream(new ByteArrayOutputStream());
          typeInfo.writeExternal(out);
@@ -88,7 +91,7 @@ public class JsonParserAndExternatializationComparing
          JsonParser jsonParser = new JsonParser();
          jsonParser.parse(new ByteArrayInputStream(jsonBytes));
          JsonValue jsonValue2 = jsonParser.getJsonObject();
-         ObjectBuilder.createObject(TypeInfo.class, jsonValue2);
+         ObjectBuilder.createObject(TypeInfoBean.class, jsonValue2);
 
          i++;
       }
@@ -114,7 +117,7 @@ public class JsonParserAndExternatializationComparing
       while (i < OBJECTS_COUNT)
       {
          ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(extBytes));
-         TypeInfo typeInfo2 = new TypeInfo();
+         TypeInfoBean typeInfo2 = new TypeInfoBean();
          typeInfo2.readExternal(ois);
          ois.close();
 
@@ -124,10 +127,10 @@ public class JsonParserAndExternatializationComparing
       System.out.println("Deserialization Externalizable time " + (endTime - startTime));
    }
 
-   private TypeInfo[] generateTypeInfos()
+   private TypeInfoBean[] generateTypeInfos()
    {
-      TypeInfo[] typeInfos = new TypeInfo[OBJECTS_COUNT];
-      TypeInfo typeInfo = generateTypeInfo();
+      TypeInfoBean[] typeInfos = new TypeInfoBean[OBJECTS_COUNT];
+      TypeInfoBean typeInfo = generateTypeInfo();
 
       for (int i = 0; i < OBJECTS_COUNT; i++)
       {
@@ -137,9 +140,9 @@ public class JsonParserAndExternatializationComparing
       return typeInfos;
    }
 
-   private TypeInfo generateTypeInfo()
+   private TypeInfoBean generateTypeInfo()
    {
-      TypeInfo typeInfo = new TypeInfo();
+      TypeInfoBean typeInfo = new TypeInfoBean();
 
       typeInfo.setModifiers(Modifier.PUBLIC);
       typeInfo.setName("test.TestClass");
@@ -149,28 +152,28 @@ public class JsonParserAndExternatializationComparing
       String[] interfaces = new String[]{"java.io.Serializable"};
       typeInfo.setInterfaces(Arrays.asList(interfaces));
 
-      MethodInfo publicConstructor =
-         new MethodInfo("test.TestClass", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
+      MethodInfoBean publicConstructor =
+         new MethodInfoBean("test.TestClass", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
             "java.lang.IllegalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}),
             Arrays.asList(new String[]{"param1", "param2"}), true, "", "test.TestClass");
-      MethodInfo protectedConstructor =
-         new MethodInfo("test.TestClass", Modifier.PROTECTED, Arrays.asList(new String[]{"java.io.IOException"}),
+      MethodInfoBean protectedConstructor =
+         new MethodInfoBean("test.TestClass", Modifier.PROTECTED, Arrays.asList(new String[]{"java.io.IOException"}),
             Arrays.asList(new String[]{"java.lang.String", "String"}), Arrays.asList(new String[]{"param1", "param2"}),
             true, "", "test.TestClass");
 
-      MethodInfo publicMethod =
-         new MethodInfo("method1", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException"}),
+      MethodInfoBean publicMethod =
+         new MethodInfoBean("method1", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException"}),
             Arrays.asList(new String[]{"java.lang.Object", "Object"}), Arrays.asList(new String[]{"param1", "param2"}),
             false, "test.TestClass", "java.lang.Integer");
-      MethodInfo privateMethod =
-         new MethodInfo("method2", Modifier.PRIVATE, Arrays.asList(new String[]{"java.io.IOException"}),
+      MethodInfoBean privateMethod =
+         new MethodInfoBean("method2", Modifier.PRIVATE, Arrays.asList(new String[]{"java.io.IOException"}),
             Arrays.asList(new String[]{"java.lang.String", "String"}), Arrays.asList(new String[]{"param1", "param2"}),
             false, "test.TestClass", "java.lang.Integer");
       typeInfo.setMethods(Arrays.asList(new MethodInfo[]{publicConstructor, protectedConstructor, publicMethod,
          privateMethod}));
 
-      FieldInfo publicField = new FieldInfo("field1", Modifier.PUBLIC, "test.TestClass", "String");
-      FieldInfo privateField = new FieldInfo("field2", Modifier.PRIVATE, "test.TestClass", "Integer");
+      FieldInfoBean publicField = new FieldInfoBean("field1", Modifier.PUBLIC, "test.TestClass", "String");
+      FieldInfoBean privateField = new FieldInfoBean("field2", Modifier.PRIVATE, "test.TestClass", "Integer");
       typeInfo.setFields(Arrays.asList(new FieldInfo[]{publicField, privateField}));
       return typeInfo;
    }
