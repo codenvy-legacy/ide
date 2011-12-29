@@ -25,69 +25,58 @@ import org.everrest.core.tools.DummySecurityContext;
 import org.everrest.test.mock.MockHttpServletRequest;
 import org.everrest.test.mock.MockHttpServletResponse;
 import org.everrest.test.mock.MockPrincipal;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.impl.core.NodeImpl;
+import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.io.ByteArrayInputStream;
-import java.util.Calendar;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.jcr.Node;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class TestGroovyTemplateRender extends Base
 {
-   private Node testGroovyDeploy;
-   
-   private NodeImpl scriptFile;
+   private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"
+      + " import org.exoplatform.services.security.ConversationState\n "
+      + " ConversationState curentState = ConversationState.getCurrent();\n"
+      + " if (curentState != null){ Identity identity = curentState.getIdentity();\n"
+      + " 3.times { println \"Hello \" + identity.getUserId()}}%><br></body></html>";
 
-   private Node script;
-   
-  private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"                                                                                                                                                           
-                                   + " import org.exoplatform.services.security.ConversationState\n "
-                                   + " ConversationState curentState = ConversationState.getCurrent();\n"                                                                                                                                        
-                                   + " if (curentState != null){ Identity identity = curentState.getIdentity();\n"
-                                   + " 3.times { println \"Hello \" + identity.getUserId()}}%><br></body></html>";  
-   
 
-   private SecurityContext adminSecurityContext;
+   private DummySecurityContext adminSecurityContext;
+   private File script;
 
    @Before
    public void setUp() throws Exception
    {
       super.setUp();
-      resourceNumber = binder.getSize();
-      testGroovyDeploy = root.addNode("testRoot", "nt:unstructured");
-      scriptFile = (NodeImpl)testGroovyDeploy.addNode("script", "nt:file");
-      script = scriptFile.addNode("jcr:content", "nt:resource");
-      script.setProperty("jcr:mimeType", "application/x-chromattic+groovy");
-      script.setProperty("jcr:lastModified", Calendar.getInstance());
-      script
-         .setProperty("jcr:data", GTMPL);
-      session.save();
-      SessionProviderService sessionProviderService =
-         (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
-      sessionProviderService.setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("root"))));
+      InputStream source = new ByteArrayInputStream(GTMPL.getBytes());
+      script = virtualFileSystem.createFile(testRoot.getId(), "script1", new MediaType("application", "x-groovy"), source);
+      source.close();
       Set<String> adminRoles = new HashSet<String>();
       adminRoles.add("administrators");
       adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
+      ConversationState.setCurrent(new ConversationState(new Identity(
+         adminSecurityContext.getUserPrincipal().getName(),
+         Collections.<MembershipEntry>emptySet(),
+         adminSecurityContext.getUserRoles())));
    }
 
    @Test
@@ -106,7 +95,7 @@ public class TestGroovyTemplateRender extends Base
       Assert.assertEquals(200, cres.getStatus());
       Assert.assertTrue(cres.getEntity().toString().contains("Hello root"));
    }
-   
+
    @Test
    public void testRenderFromUrl() throws Exception
    {
@@ -118,8 +107,15 @@ public class TestGroovyTemplateRender extends Base
       HttpServletResponse httpServletResponse = new MockHttpServletResponse();
       ctx.put(HttpServletResponse.class, httpServletResponse);
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("GET", "/ide/gtmpl/render?vfsid=ws&id=" + scriptFile.getIdentifier(), "", headers, GTMPL.getBytes(), null, ctx);
-      Assert.assertEquals(200, cres.getStatus());
-      Assert.assertTrue(cres.getEntity().toString().contains("Hello root"));
+      ContainerResponse response = launcher.service("GET", "/ide/gtmpl/render?vfsid=ws&id=" + script.getId(), "", headers, GTMPL.getBytes(), null, ctx);
+      Assert.assertEquals(200, response.getStatus());
+      Assert.assertTrue(response.getEntity().toString().contains("Hello root"));
+   }
+
+   @After
+   @Override
+   public void tearDown() throws Exception
+   {
+      super.tearDown();
    }
 }

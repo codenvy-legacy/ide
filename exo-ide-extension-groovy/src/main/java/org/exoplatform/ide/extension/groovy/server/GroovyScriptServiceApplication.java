@@ -38,6 +38,7 @@ public class GroovyScriptServiceApplication extends Application
    {
       classes.add(GroovyTemplateService.class);
       classes.add(RestCodeAssistantGroovy.class);
+      classes.add(GroovyScriptService.class);
    }
 
    public Set<Class<?>> getClasses()

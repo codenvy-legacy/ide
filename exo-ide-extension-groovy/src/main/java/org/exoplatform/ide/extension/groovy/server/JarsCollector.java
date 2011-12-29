@@ -20,16 +20,14 @@ package org.exoplatform.ide.extension.groovy.server;
 
 import org.exoplatform.ide.extension.groovy.shared.Attribute;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
-
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLDecoder;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.Attributes;
-import java.util.jar.Attributes.Name;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -43,152 +41,134 @@ import java.util.zip.ZipEntry;
 
 public class JarsCollector
 {
+   /** Collected JARs. */
+   private final Map<String, Jar> jars;
 
-   /**
-    * The path to MANIFEST.MF file inside JAR.
-    */
-   public static final String MANIFEST = "META-INF/MANIFEST.MF";
-
-   /**
-    * List of collected JAR packages.
-    */
-   private Map<String, Jar> jars = new HashMap<String, Jar>();
-
-   /**
-    * Creates new instance of JarsCollector and search for JAR's.
-    * 
-    * @throws IOException
-    */
-   public JarsCollector() throws Exception
+   private JarsCollector()
    {
+      jars = new HashMap<String, Jar>();
+   }
+
+   public static Collection<Jar> collect() throws IOException
+   {
+      return new JarsCollector().processJars();
+   }
+
+   private Collection<Jar> processJars() throws IOException
+   {
+      String pathSeparator = System.getProperty("path.separator");
+
       String javaClassPath = System.getProperty("java.class.path");
-      getJarsFromClasspath(javaClassPath);
+      getJarsFromClasspath(javaClassPath, pathSeparator);
 
       String javaExtDirs = System.getProperty("java.ext.dirs");
-      getJarsFromClasspath(javaExtDirs);
+      getJarsFromClasspath(javaExtDirs, pathSeparator);
 
       String javaLibraryPath = System.getProperty("java.library.path");
-      getJarsFromClasspath(javaLibraryPath);
+      getJarsFromClasspath(javaLibraryPath, pathSeparator);
 
       String sunBootLibraryPath = System.getProperty("sun.boot.library.path");
-      getJarsFromClasspath(sunBootLibraryPath);
+      getJarsFromClasspath(sunBootLibraryPath, pathSeparator);
 
       String catalinaBase = System.getProperty("catalina.base");
       String catalinaHome = System.getProperty("catalina.home");
 
       String commonLoaderPath = System.getProperty("common.loader");
-      if (commonLoaderPath != null) {
+      if (commonLoaderPath != null)
+      {
          String[] commonLoaderPathEntries = commonLoaderPath.split(",");
          for (String commonLoaderPathEntry : commonLoaderPathEntries)
          {
-            if (commonLoaderPathEntry.indexOf("${catalina.base}") >= 0)
+            if (commonLoaderPathEntry.contains("${catalina.base}"))
             {
                commonLoaderPathEntry = commonLoaderPathEntry.replace("${catalina.base}", catalinaBase);
             }
 
-            if (commonLoaderPathEntry.indexOf("${catalina.home}") >= 0)
+            if (commonLoaderPathEntry.contains("${catalina.home}"))
             {
                commonLoaderPathEntry = commonLoaderPathEntry.replace("${catalina.home}", catalinaHome);
             }
 
-            getJarsFromClasspath(commonLoaderPathEntry);
-         }         
+            getJarsFromClasspath(commonLoaderPathEntry, pathSeparator);
+         }
       }
+      return jars.values();
    }
 
-   /**
-    * Get list of JAR files from classpath entry.
-    * 
-    * @param entry
-    * @throws Exception
-    */
-   private void getJarsFromEntry(String entry) throws Exception
+   private void getJarsFromClasspath(String classPath, String pathSeparator) throws IOException
    {
-      String path = URLDecoder.decode(entry, "UTF-8");
-      File file = new File(path);
-      if (file.exists() && file.isFile())
+      String[] classPathEntries = classPath.split(pathSeparator);
+      for (int i = 0; i < classPathEntries.length; i++)
       {
-         readJARManifest(file.getAbsolutePath());
-         return;
-      }
-
-      if (file.exists() && file.isDirectory())
-      {
-         File[] files = file.listFiles();
-
-         for (File f : files)
+         File file = new File(classPathEntries[i]);
+         if (!file.exists())
          {
-            if (f.getName().endsWith(".jar"))
+            return;
+         }
+
+         if (file.isFile())
+         {
+            jars.put(file.getAbsolutePath(), makeJar(file));
+         }
+         else
+         {
+            File[] files = file.listFiles(new FileFilter()
             {
-               readJARManifest(f.getAbsolutePath());
+               @Override
+               public boolean accept(File pathname)
+               {
+                  return pathname.getName().endsWith(".jar");
+               }
+            });
+            if (files != null && files.length > 0)
+            {
+               for (int k = 0; k < files.length; k++)
+               {
+                  if (files[k].exists())
+                  {
+                     jars.put(file.getAbsolutePath(), makeJar(files[k]));
+                  }
+               }
             }
          }
       }
    }
 
-   /**
-    * Get list of JAR files from classpath.
-    * 
-    * @param classPath
-    * @throws Exception
-    */
-   private void getJarsFromClasspath(String classPath) throws Exception
+   /** Create JAR description. */
+   private Jar makeJar(File file) throws IOException
    {
-      String pathSeparator = System.getProperty("path.separator");
-
-      String[] classPathEntries = classPath.split(pathSeparator);
-      for (String classPathEntry : classPathEntries)
+      Jar jar = new Jar(file.getAbsolutePath());
+      JarFile jarfile = new JarFile(file);
+      ZipEntry manifestZipEntry = jarfile.getEntry("META-INF/MANIFEST.MF");
+      if (manifestZipEntry != null)
       {
-         getJarsFromEntry(classPathEntry);
-      }
-   }
-
-   /**
-    * Reads attributes from MANIFEST.MF and adds new JAR description to the map of JAR's.
-    * 
-    * @param jarPath
-    */
-   private void readJARManifest(String path)
-   {
-      try
-      {
-         JarFile jarFile = new JarFile(path);
-         ZipEntry manifestZipEntry = jarFile.getEntry(MANIFEST);
-         if (manifestZipEntry == null)
+         InputStream in = null;
+         Attributes attributes;
+         try
          {
-            return;
+            in = jarfile.getInputStream(manifestZipEntry);
+            Manifest manifest = new Manifest(in);
+            attributes = manifest.getMainAttributes();
+         }
+         finally
+         {
+            if (in != null)
+            {
+               try
+               {
+                  in.close();
+               }
+               catch (IOException ignored)
+               {
+               }
+            }
          }
 
-         InputStream in = jarFile.getInputStream(manifestZipEntry);
-         Manifest manifest = new Manifest(in);
-         Attributes attributes = manifest.getMainAttributes();
-
-         Jar jar = new Jar(path);
-         jars.put(path, jar);
-
-         Iterator<Object> iter = attributes.keySet().iterator();
-         while (iter.hasNext())
+         for (Map.Entry<Object, Object> e : attributes.entrySet())
          {
-            Name name = (Name)iter.next();
-            String value = attributes.getValue(name);
-            jar.getAttributes().add(new Attribute(name.toString(), value));
+            jar.getAttributes().add(new Attribute((String)e.getKey(), (String)e.getValue()));
          }
       }
-      catch (Exception e)
-      {
-         System.out.println("Error reading JAR " + path);
-         e.printStackTrace();
-      }
+      return jar;
    }
-
-   /**
-    * Get list of JAR files with attributes from MANIFEST.MF.
-    * 
-    * @return
-    */
-   public Map<String, Jar> getJars()
-   {
-      return jars;
-   }
-
 }

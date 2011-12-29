@@ -19,24 +19,21 @@
 package org.exoplatform.ide.extension.groovy.server;
 
 import org.everrest.core.impl.provider.json.JsonException;
-import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
+import org.everrest.groovy.SourceFile;
+import org.everrest.groovy.SourceFolder;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPathEntry;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
 import org.junit.Assert;
 import org.junit.Test;
-
 import java.io.ByteArrayInputStream;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 28, 2010 $
- *
  */
-public class ClassPathUsageTest 
+public class ClassPathUsageTest
 {
-   private static String REPOSITORY_NAME = "repository";
-   
    private final String correctClassPathFile =
       "{\"entries\": [{\"kind\": \"file\",\"path\": \"dev-monit#/Test.groovy\"},"
          + "{\"kind\": \"dir\",\"path\": \"/dev-monit#/test/\"}]}";
@@ -62,9 +59,8 @@ public class ClassPathUsageTest
       Assert.assertEquals(entry.getKind(), "dir");
       Assert.assertEquals(entry.getPath(), "/dev-monit#/test/");
 
-      DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
-      Assert.assertEquals(dependentResources.getFileSources().size(), 1);
-      Assert.assertEquals(dependentResources.getFolderSources().size(), 1);
+      Assert.assertEquals(GroovyClassPathHelper.getSourceFiles(classPath).length, 1);
+      Assert.assertEquals(GroovyClassPathHelper.getSourceFolders(classPath).length, 1);
    }
 
    @Test
@@ -74,12 +70,13 @@ public class ClassPathUsageTest
          GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream(wrongTypeClassPathFile.getBytes()));
       Assert.assertEquals(classPath.getEntries().length, 4);
 
-      DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
-      Assert.assertEquals(dependentResources.getFileSources().size(), 1);
-      Assert.assertEquals(dependentResources.getFileSources().get(0), "jcr://repository/dev-monit#/Test.groovy");
+      SourceFile[] files = GroovyClassPathHelper.getSourceFiles(classPath);
+      SourceFolder[] src = GroovyClassPathHelper.getSourceFolders(classPath);
+      Assert.assertEquals(files.length, 1);
+      Assert.assertEquals(files[0].getPath().toString(), "ide+vfs:/dev-monit#/Test.groovy");
 
-      Assert.assertEquals(dependentResources.getFolderSources().size(), 1);
-      Assert.assertEquals(dependentResources.getFolderSources().get(0), "jcr://repository/dev-monit#/test3/");
+      Assert.assertEquals(src.length, 1);
+      Assert.assertEquals(src[0].getPath().toString(), "ide+vfs:/dev-monit#/test3/");
    }
 
    @Test
@@ -89,9 +86,8 @@ public class ClassPathUsageTest
          GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream(emptyEntriesClassPathFile.getBytes()));
       Assert.assertEquals(classPath.getEntries().length, 0);
 
-      DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
-      Assert.assertEquals(dependentResources.getFileSources().size(), 0);
-      Assert.assertEquals(dependentResources.getFolderSources().size(), 0);
+      Assert.assertEquals(GroovyClassPathHelper.getSourceFiles(classPath).length, 0);
+      Assert.assertEquals(GroovyClassPathHelper.getSourceFolders(classPath).length, 0);
    }
    
    @Test

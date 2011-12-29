@@ -19,184 +19,59 @@
 package org.exoplatform.ide.extension.groovy.server;
 
 import org.everrest.core.RequestHandler;
-import org.everrest.core.ResourceBinder;
-import org.everrest.core.tools.DummySecurityContext;
 import org.everrest.core.tools.ResourceLauncher;
-import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.CredentialsImpl;
-import org.exoplatform.services.jcr.dataflow.PersistentDataManager;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
-import org.exoplatform.services.jcr.impl.core.SessionImpl;
-import org.exoplatform.services.jcr.impl.dataflow.serialization.ReaderSpoolFileHolder;
-import org.exoplatform.services.jcr.impl.util.io.FileCleaner;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.junit.After;
-import org.junit.Before;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.ValueFactory;
-import javax.jcr.Workspace;
+import org.junit.Assert;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-
-public class Base 
+ */
+public abstract class Base
 {
-   public static final String WS_NAME = "ws";
-
-   protected SessionImpl session;
-
-   protected RepositoryImpl repository;
-
-   protected CredentialsImpl credentials;
-
-   protected Workspace workspace;
-
-   protected RepositoryService repositoryService;
-
-   protected Node root;
-
-   protected PersistentDataManager dataManager;
-
-   protected ValueFactory valueFactory;
-   
-   protected SessionProviderService sessionProviderService;
-
-   protected StandaloneContainer container;
-
-   public int maxBufferSize = 200 * 1024;
-
-   public FileCleaner fileCleaner;
-
-   public ReaderSpoolFileHolder holder;
-
-   public ResourceBinder binder;
-
-   public ResourceLauncher launcher;
-
-   public int resourceNumber = 0;
-   
-   protected DummySecurityContext adminSecurityContext;
-
    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
+   protected final String vfs_id = "ws";
+   protected VirtualFileSystem virtualFileSystem;
+   protected Folder testRoot;
+   protected StandaloneContainer container;
+   protected ResourceLauncher launcher;
 
-   @Before
    public void setUp() throws Exception
    {
-      String containerConf = Base.class.getResource("/conf/standalone/test-configuration.xml").toString();
-
-      StandaloneContainer.addConfigurationURL(containerConf);
-
+      String containerConfig = getClass().getResource("/conf/standalone/test-configuration.xml").toString();
+      StandaloneContainer.addConfigurationURL(containerConfig);
       container = StandaloneContainer.getInstance();
 
-      if (System.getProperty("java.security.auth.login.config") == null)
-         System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
-            .getResource("login.conf").toString());
+      // May be overridden in methods!
+      ConversationState user = new ConversationState(new Identity("root"));
+      ConversationState.setCurrent(user);
+//      String loginConfig = getClass().getResource("/login.conf").toString();
+//      if (System.getProperty("java.security.auth.login.config") == null)
+//         System.setProperty("java.security.auth.login.config", loginConfig);
 
-      credentials = new CredentialsImpl("root", "exo".toCharArray());
+      VirtualFileSystemRegistry virtualFileSystemRegistry =
+         (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
+      Assert.assertNotNull(virtualFileSystemRegistry);
 
-      repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      virtualFileSystem = virtualFileSystemRegistry.getProvider("ws").newInstance(null);
 
-      repository = (RepositoryImpl)repositoryService.getRepository("db1");
+      testRoot = virtualFileSystem.createFolder(virtualFileSystem.getInfo().getRoot().getId(), getClass().getSimpleName());
 
-      session = (SessionImpl)repository.login(credentials, WS_NAME);
-      workspace = session.getWorkspace();
-      root = session.getRootNode();
-      valueFactory = session.getValueFactory();
-
-      binder = (ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class);
-      resourceNumber = binder.getSize();
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
-      sessionProviderService =
-         (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
-      ConversationState state = new ConversationState(new Identity("root"));
-      SessionProvider sessionProvider = new SessionProvider(state);
-      ConversationState.setCurrent(state);
-      sessionProvider.setCurrentRepository(repository);
-      sessionProviderService.setSessionProvider(null, sessionProvider);
-      Set<String> adminRoles = new HashSet<String>();
-      adminRoles.add("administrators");
-      Set<String> devRoles = new HashSet<String>();
-      devRoles.add("developers");
-      adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
-
    }
 
-   @After
    public void tearDown() throws Exception
    {
-      
-      if (session != null)
-      {
-         try
-         {
-            session.refresh(false);
-            Node rootNode = session.getRootNode();
-            if (rootNode.hasNodes())
-            {
-               // clean test root
-               for (NodeIterator children = rootNode.getNodes(); children.hasNext();)
-               {
-                  Node node = children.nextNode();
-                  if (!node.getPath().startsWith("/jcr:system") && !node.getPath().startsWith("/exo:audit")
-                     && !node.getPath().startsWith("/exo:organization") && !node.getPath().startsWith("/dev-doc"))
-                  {
-                     node.remove();
-                  }
-               }
-               session.save();
-            }
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-            log.error("===== Exception in tearDown() " + e.toString());
-         }
-         finally
-         {
-            session.logout();
-         }
-      }
-
-      // log.info("tearDown() END " + getClass().getName() + "." + getName());
+      virtualFileSystem.delete(testRoot.getId(), null);
    }
-
-   public byte[] getResourceAsBytes(String resource) throws IOException
-   {
-      byte[] data = null;
-      InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-      if (stream != null)
-      {
-         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-         byte[] buf = new byte[1024];
-         int r = -1;
-         while ((r = stream.read(buf)) != -1)
-         {
-            bout.write(buf, 0, r);
-         }
-         data = bout.toByteArray();
-      }
-      return data;
-   }
-   
-  
 }

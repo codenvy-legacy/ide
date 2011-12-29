@@ -190,7 +190,7 @@
                <artifactId>exo.jcr.component.webdav</artifactId>
             </exclusion>
          </exclusions>
-      --></dependency>
+      --></dependency><dependency><groupId>org.everrest</groupId><artifactId>everrest-integration-exo</artifactId><version>1.0.2-SNAPSHOT</version></dependency>
    </dependencies>
    <build>
 

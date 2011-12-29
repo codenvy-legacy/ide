@@ -65,8 +65,6 @@
       </childNodeDefinitions-->
    </nodeType>
 
- 
-
    <nodeType name="exoide:classDescription" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
       <supertypes>
          <supertype>nt:resource</supertype>
@@ -90,12 +88,5 @@
          </propertyDefinition>
       </propertyDefinitions>
    </nodeType>
-   
-   
-   
-   
-  
-   
-   
-   
+
 </nodeTypes>

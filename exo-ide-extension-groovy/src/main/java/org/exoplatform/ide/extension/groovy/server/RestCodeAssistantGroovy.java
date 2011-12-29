@@ -68,8 +68,9 @@ public class RestCodeAssistantGroovy
    @GET
    @Path("/class-description")
    @Produces(MediaType.APPLICATION_JSON)
-   public TypeInfo getClassByFQN(@QueryParam("fqn") String fqn, @QueryParam("projectid") String projectId,
-      @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
+   public TypeInfo getClassByFQN(@QueryParam("fqn") String fqn,
+                                 @QueryParam("projectid") String projectId,
+                                 @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
    {
       return codeAssistant.getClassByFQN(fqn, projectId, vfsId);
    }
@@ -98,14 +99,17 @@ public class RestCodeAssistantGroovy
    @GET
    @Path("/find-by-prefix/{prefix}")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where,
-      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
+   public List<ShortTypeInfo> findFQNsByPrefix(@PathParam("prefix") String prefix,
+                                               @QueryParam("where") String where,
+                                               @QueryParam("projectid") String projectId,
+                                               @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
       if ("fqn".equalsIgnoreCase(where))
+      {
          return codeAssistant.getTypesByFqnPrefix(prefix, projectId, vfsId);
+      }
       return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
-
    }
 
    /**
@@ -120,26 +124,30 @@ public class RestCodeAssistantGroovy
    @GET
    @Path("/find-by-type/{type}")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
-      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
+   public List<ShortTypeInfo> findByType(@PathParam("type") String type,
+                                         @QueryParam("prefix") String prefix,
+                                         @QueryParam("projectid") String projectId,
+                                         @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
       return codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
-
    }
 
    @GET
    @Path("/class-doc")
    @Produces(MediaType.TEXT_HTML)
-   public String getClassDoc(@QueryParam("fqn") String fqn, @QueryParam("projectid") String projectId,
-      @QueryParam("vfsid") String vfsId, @QueryParam("isclass") @DefaultValue("true") boolean isClass)
+   public String getClassDoc(@QueryParam("fqn") String fqn,
+                             @QueryParam("projectid") String projectId,
+                             @QueryParam("vfsid") String vfsId,
+                             @QueryParam("isclass") @DefaultValue("true") boolean isClass)
       throws CodeAssistantException, VirtualFileSystemException
    {
       if (isClass)
+      {
          return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
             + codeAssistant.getClassJavaDoc(fqn, projectId, vfsId) + "</body></html>";
-      else
-         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
-            + codeAssistant.getMemberJavaDoc(fqn, projectId, vfsId) + "</body></html>";
+      }
+      return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
+         + codeAssistant.getMemberJavaDoc(fqn, projectId, vfsId) + "</body></html>";
    }
 }

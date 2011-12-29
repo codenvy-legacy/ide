@@ -29,6 +29,6 @@ public class Address
    private String city;
    public String state;
 
-   public String getCity(){return city;};
+   public String getCity(){return city;}
 
 }
