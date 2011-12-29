@@ -549,32 +549,32 @@
        <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
-         <version>1.0.1</version>
+         <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-integration-exo</artifactId>
-         <version>1.0.1</version>
+         <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-httpclient</artifactId>
-         <version>1.0.1</version>
+         <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-proxy</artifactId>
-         <version>1.0.1</version>
+         <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-groovy</artifactId>
-         <version>1.0.1</version>
+         <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-test</artifactId>
-         <version>1.0.1</version>
+         <version>1.0.2-SNAPSHOT</version>
       </dependency>
 
       </dependencies>
