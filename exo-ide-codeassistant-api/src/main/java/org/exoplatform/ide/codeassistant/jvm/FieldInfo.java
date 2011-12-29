@@ -63,6 +63,50 @@ public class FieldInfo extends Member
       this.declaringClass = declaringClass;
    }
 
+   /**
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      FieldInfo other = (FieldInfo)obj;
+      if (declaringClass == null)
+      {
+         if (other.declaringClass != null)
+         {
+            return false;
+         }
+      }
+      else if (!declaringClass.equals(other.declaringClass))
+      {
+         return false;
+      }
+      if (type == null)
+      {
+         if (other.type != null)
+         {
+            return false;
+         }
+      }
+      else if (!type.equals(other.type))
+      {
+         return false;
+      }
+      return true;
+   }
+
    public String getDeclaringClass()
    {
       return declaringClass;
@@ -71,6 +115,19 @@ public class FieldInfo extends Member
    public String getType()
    {
       return type;
+   }
+
+   /**
+    * @see java.lang.Object#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + (declaringClass == null ? 0 : declaringClass.hashCode());
+      result = prime * result + (type == null ? 0 : type.hashCode());
+      return result;
    }
 
    /**
@@ -114,63 +171,6 @@ public class FieldInfo extends Member
 
       writeStringUTF(type, out);
       writeStringUTF(declaringClass, out);
-   }
-
-   /**
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = super.hashCode();
-      result = prime * result + (declaringClass == null ? 0 : declaringClass.hashCode());
-      result = prime * result + (type == null ? 0 : type.hashCode());
-      return result;
-   }
-
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (!super.equals(obj))
-      {
-         return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      FieldInfo other = (FieldInfo)obj;
-      if (declaringClass == null)
-      {
-         if (other.declaringClass != null)
-         {
-            return false;
-         }
-      }
-      else if (!declaringClass.equals(other.declaringClass))
-      {
-         return false;
-      }
-      if (type == null)
-      {
-         if (other.type != null)
-         {
-            return false;
-         }
-      }
-      else if (!type.equals(other.type))
-      {
-         return false;
-      }
-      return true;
    }
 
 }

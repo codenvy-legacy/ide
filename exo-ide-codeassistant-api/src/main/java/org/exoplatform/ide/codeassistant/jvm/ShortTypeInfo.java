@@ -57,23 +57,16 @@ public class ShortTypeInfo extends Member
       return type;
    }
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
-
-   @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      super.writeExternal(out);
-      writeStringUTF(type, out);
-   }
-
    @Override
    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
    {
       super.readExternal(in);
       type = readStringUTF(in);
+   }
+
+   public void setType(String type)
+   {
+      this.type = type;
    }
 
    /**
@@ -90,5 +83,12 @@ public class ShortTypeInfo extends Member
       builder.append(getName());
 
       return builder.toString();
+   }
+
+   @Override
+   public void writeExternal(ObjectOutput out) throws IOException
+   {
+      super.writeExternal(out);
+      writeStringUTF(type, out);
    }
 }

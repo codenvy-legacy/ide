@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.serialization;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.createObjectInputStream;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -30,7 +31,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.exoplatform.ide.codeassistant.jvm.BaseTest;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.junit.Test;
@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * Test read and write operations from ExternalizationTool
  */
-public class TestExternalizationTools extends BaseTest
+public class TestExternalizationTools
 {
    @Test
    public void shouldSerializeCyrillicString() throws IOException

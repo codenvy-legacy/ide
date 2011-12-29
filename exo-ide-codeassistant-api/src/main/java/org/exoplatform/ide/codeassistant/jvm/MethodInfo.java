@@ -26,13 +26,14 @@ import static org.exoplatform.ide.codeassistant.jvm.serialization.Externalizatio
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Represent information about class method. Can be transform to JSON. <code>
  *  {
  *     "generic": "public boolean java.lang.String.equals(java.lang.Object)",
- *     "genericExceptionTypes": [],
+ *     "exceptionTypes": [],
  *     "declaringClass": "java.lang.String",
  *     "name": "equals",
  *     "genericParameterTypes": "(java.lang.Object)",
@@ -49,12 +50,17 @@ public class MethodInfo extends Member
    /**
     * Array FQN of exceptions throws by method
     */
-   private List<String> genericExceptionTypes;
+   private List<String> exceptionTypes;
 
    /**
     * FQN's of parameters
     */
    private List<String> parameterTypes;
+
+   /**
+    * Names of parameters
+    */
+   private List<String> parameterNames;
 
    /**
     * Full Qualified Class Name where method declared Example: method equals()
@@ -65,7 +71,7 @@ public class MethodInfo extends Member
    /**
     * Full Qualified Class Name that method return <code>java.lang.String</code>
     */
-   private String genericReturnType;
+   private String returnType;
 
    /**
     * true if method is a class constructor
@@ -74,21 +80,25 @@ public class MethodInfo extends Member
 
    public MethodInfo()
    {
+      this.parameterTypes = Collections.emptyList();
+      this.parameterNames = Collections.emptyList();
+      this.exceptionTypes = Collections.emptyList();
    }
 
    public MethodInfo(String name,//
       int modifiers,//
-      List<String> genericExceptionTypes,//
+      List<String> exceptionTypes,//
       List<String> parameterTypes,//
+      List<String> parameterNames,//
       boolean isConstructor, //
       String genericReturnType,//
       String declaringClass)
    {
       super(name, modifiers);
-      this.genericExceptionTypes = genericExceptionTypes;
+      this.exceptionTypes = exceptionTypes;
       this.parameterTypes = parameterTypes;
       this.isConstructor = isConstructor;
-      this.genericReturnType = genericReturnType;
+      this.returnType = genericReturnType;
       this.declaringClass = declaringClass;
 
    }
@@ -98,9 +108,18 @@ public class MethodInfo extends Member
       return declaringClass;
    }
 
-   public List<String> getGenericExceptionTypes()
+   public List<String> getExceptionTypes()
    {
-      return genericExceptionTypes;
+
+      return exceptionTypes;
+   }
+
+   /**
+    * @return the parameterNames
+    */
+   public List<String> getParameterNames()
+   {
+      return parameterNames;
    }
 
    /**
@@ -111,63 +130,9 @@ public class MethodInfo extends Member
       return parameterTypes;
    }
 
-   public String getGenericReturnType()
+   public String getReturnType()
    {
-      return genericReturnType;
-   }
-
-   public void setGenericReturnType(String genericReturnType)
-   {
-      this.genericReturnType = genericReturnType;
-   }
-
-   /**
-    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
-    */
-   @Override
-   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-   {
-      super.readExternal(in);
-
-      declaringClass = readStringUTF(in);
-      genericExceptionTypes = readStringUTFList(in);
-      parameterTypes = readStringUTFList(in);
-      genericReturnType = readStringUTF(in);
-      isConstructor = in.readBoolean();
-   }
-
-   public void setDeclaringClass(String declaringClass)
-   {
-      this.declaringClass = declaringClass;
-   }
-
-   public void setGenericExceptionTypes(List<String> genericExceptionTypes)
-   {
-      this.genericExceptionTypes = genericExceptionTypes;
-   }
-
-   /**
-    * @param parameterTypes
-    *           the parameterTypes to set
-    */
-   public void setParameterTypes(List<String> parameterTypes)
-   {
-      this.parameterTypes = parameterTypes;
-   }
-
-   /**
-    * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
-    */
-   @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      super.writeExternal(out);
-
-      writeStringUTF(declaringClass, out);
-      writeStringUTFList(genericExceptionTypes, out);
-      writeStringUTFList(parameterTypes, out);
-      writeStringUTF(genericReturnType, out);
-      out.writeBoolean(isConstructor);
+      return returnType;
    }
 
    /**
@@ -179,12 +144,84 @@ public class MethodInfo extends Member
    }
 
    /**
+    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+    */
+   @Override
+   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+   {
+      super.readExternal(in);
+
+      declaringClass = readStringUTF(in);
+      exceptionTypes = readStringUTFList(in);
+      parameterTypes = readStringUTFList(in);
+      parameterNames = readStringUTFList(in);
+      returnType = readStringUTF(in);
+      isConstructor = in.readBoolean();
+   }
+
+   /**
     * @param isConstructor
     *           the isConstructor to set
     */
    public void setConstructor(boolean isConstructor)
    {
       this.isConstructor = isConstructor;
+   }
+
+   public void setDeclaringClass(String declaringClass)
+   {
+      this.declaringClass = declaringClass;
+   }
+
+   public void setExceptionTypes(List<String> exceptionTypes)
+   {
+      if (exceptionTypes == null)
+      {
+         this.exceptionTypes = Collections.emptyList();
+      }
+      else
+      {
+         this.exceptionTypes = exceptionTypes;
+      }
+   }
+
+   /**
+    * @param parameterNames
+    *           the parameterNames to set
+    */
+   public void setParameterNames(List<String> parameterNames)
+   {
+      if (parameterNames == null)
+      {
+         this.parameterNames = Collections.emptyList();
+      }
+      else
+      {
+         this.parameterNames = parameterNames;
+      }
+
+   }
+
+   /**
+    * @param parameterTypes
+    *           the parameterTypes to set
+    */
+   public void setParameterTypes(List<String> parameterTypes)
+   {
+
+      if (parameterTypes == null)
+      {
+         this.parameterTypes = Collections.emptyList();
+      }
+      else
+      {
+         this.parameterTypes = parameterTypes;
+      }
+   }
+
+   public void setReturnType(String returnType)
+   {
+      this.returnType = returnType;
    }
 
    /**
@@ -199,13 +236,13 @@ public class MethodInfo extends Member
       buildString.append(" ");
       if (!isConstructor)
       {
-         if (genericReturnType == null || genericReturnType.length() < 1)
+         if (returnType == null || returnType.length() < 1)
          {
             buildString.append("void ");
          }
          else
          {
-            buildString.append(genericReturnType);
+            buildString.append(returnType);
             buildString.append(" ");
          }
       }
@@ -231,19 +268,35 @@ public class MethodInfo extends Member
       }
       buildString.append(")");
 
-      if (genericExceptionTypes != null && genericExceptionTypes.size() > 0)
+      if (exceptionTypes != null && exceptionTypes.size() > 0)
       {
          buildString.append(" throws ");
-         for (int i = 0; i < genericExceptionTypes.size(); i++)
+         for (int i = 0; i < exceptionTypes.size(); i++)
          {
             if (i > 0)
             {
                buildString.append(",");
             }
-            buildString.append(genericExceptionTypes.get(i));
+            buildString.append(exceptionTypes.get(i));
 
          }
       }
       return buildString.toString();
+   }
+
+   /**
+    * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+    */
+   @Override
+   public void writeExternal(ObjectOutput out) throws IOException
+   {
+      super.writeExternal(out);
+
+      writeStringUTF(declaringClass, out);
+      writeStringUTFList(exceptionTypes, out);
+      writeStringUTFList(parameterTypes, out);
+      writeStringUTFList(parameterNames, out);
+      writeStringUTF(returnType, out);
+      out.writeBoolean(isConstructor);
    }
 }

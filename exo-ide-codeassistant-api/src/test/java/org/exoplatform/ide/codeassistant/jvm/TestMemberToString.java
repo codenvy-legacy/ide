@@ -44,8 +44,8 @@ public class TestMemberToString
    public void testMethodInfoToString()
    {
       MethodInfo methodInfo =
-         new MethodInfo("method", Modifier.PUBLIC, new ArrayList<String>(), new ArrayList<String>(), false, "",
-            "test.TestClass");
+         new MethodInfo("method", Modifier.PUBLIC, new ArrayList<String>(), new ArrayList<String>(),
+            Arrays.asList(new String[]{"param1"}), false, "", "test.TestClass");
 
       assertEquals("public void test.TestClass.method()", methodInfo.toString());
    }

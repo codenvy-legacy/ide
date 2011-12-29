@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.createObjectInputStream;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.serializeObject;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -29,7 +31,7 @@ import java.lang.reflect.Modifier;
 /**
  * Check correctness of FieldInfo deserialization
  */
-public class TestFieldInfoExternalization extends BaseTest
+public class TestFieldInfoExternalization
 {
    private FieldInfo serializedFieldInfo;
 

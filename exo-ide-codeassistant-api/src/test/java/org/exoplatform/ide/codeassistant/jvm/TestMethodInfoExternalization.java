@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.createObjectInputStream;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.serializeObject;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -31,7 +33,7 @@ import java.util.Arrays;
 /**
  * Check correctness of MethodInfo deserialization
  */
-public class TestMethodInfoExternalization extends BaseTest
+public class TestMethodInfoExternalization
 {
    private MethodInfo serializedMethodInfo;
 
@@ -42,8 +44,8 @@ public class TestMethodInfoExternalization extends BaseTest
    {
       serializedMethodInfo =
          new MethodInfo("method", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
-            "java.lang.IlligalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}), false,
-            "test.TestClass", "java.lang.Integer");
+            "java.lang.IlligalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}),
+            Arrays.asList(new String[]{"param1", "param2"}), false, "test.TestClass", "java.lang.Integer");
       byte[] serializedData = serializeObject(serializedMethodInfo);
       deserializedMethodInfo = new MethodInfo();
       deserializedMethodInfo.readExternal(createObjectInputStream(serializedData));
@@ -77,13 +79,13 @@ public class TestMethodInfoExternalization extends BaseTest
    @Test
    public void testGenericExceptionTypesFieldDeserialization()
    {
-      assertArrayEquals(serializedMethodInfo.getGenericExceptionTypes().toArray(), deserializedMethodInfo
-         .getGenericExceptionTypes().toArray());
+      assertArrayEquals(serializedMethodInfo.getExceptionTypes().toArray(), deserializedMethodInfo.getExceptionTypes()
+         .toArray());
    }
 
    @Test
    public void testGenericReturnTypeDeserialization()
    {
-      assertEquals(serializedMethodInfo.getGenericReturnType(), deserializedMethodInfo.getGenericReturnType());
+      assertEquals(serializedMethodInfo.getReturnType(), deserializedMethodInfo.getReturnType());
    }
 }

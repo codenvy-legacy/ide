@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.createObjectInputStream;
+import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.serializeObject;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -32,7 +34,7 @@ import java.util.List;
 /**
  * Check correctness of TypeInfo deserialization
  */
-public class TestTypeInfoExternalization extends BaseTest
+public class TestTypeInfoExternalization
 {
    private TypeInfo serializedTypeInfo;
 
@@ -109,18 +111,21 @@ public class TestTypeInfoExternalization extends BaseTest
 
       MethodInfo publicConstructor =
          new MethodInfo("test.TestClass", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException",
-            "java.lang.IllegalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}), true, "",
-            "test.TestClass");
+            "java.lang.IllegalStateException"}), Arrays.asList(new String[]{"java.lang.Object", "Object"}),
+            Arrays.asList(new String[]{"param1", "param2"}), true, "", "test.TestClass");
       MethodInfo protectedConstructor =
          new MethodInfo("test.TestClass", Modifier.PROTECTED, Arrays.asList(new String[]{"java.io.IOException"}),
-            Arrays.asList(new String[]{"java.lang.String", "String"}), true, "", "test.TestClass");
+            Arrays.asList(new String[]{"java.lang.String", "String"}), Arrays.asList(new String[]{"param1", "param2"}),
+            true, "", "test.TestClass");
 
       MethodInfo publicMethod =
          new MethodInfo("method1", Modifier.PUBLIC, Arrays.asList(new String[]{"java.io.IOException"}),
-            Arrays.asList(new String[]{"java.lang.Object", "Object"}), false, "test.TestClass", "java.lang.Integer");
+            Arrays.asList(new String[]{"java.lang.Object", "Object"}), Arrays.asList(new String[]{"param1", "param2"}),
+            false, "test.TestClass", "java.lang.Integer");
       MethodInfo privateMethod =
          new MethodInfo("method2", Modifier.PRIVATE, Arrays.asList(new String[]{"java.io.IOException"}),
-            Arrays.asList(new String[]{"java.lang.String", "String"}), false, "test.TestClass", "java.lang.Integer");
+            Arrays.asList(new String[]{"java.lang.String", "String"}), Arrays.asList(new String[]{"param1", "param2"}),
+            false, "test.TestClass", "java.lang.Integer");
       typeInfo.setMethods(Arrays.asList(new MethodInfo[]{publicConstructor, protectedConstructor, publicMethod,
          privateMethod}));
 

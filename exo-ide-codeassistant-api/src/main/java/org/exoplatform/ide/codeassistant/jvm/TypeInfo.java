@@ -28,6 +28,7 @@ import static org.exoplatform.ide.codeassistant.jvm.serialization.Externalizatio
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,6 +47,8 @@ public class TypeInfo extends ShortTypeInfo
 
    public TypeInfo()
    {
+      this.methods = Collections.emptyList();
+      this.fields = Collections.emptyList();
    }
 
    public TypeInfo(String name, int modifiers, List<MethodInfo> methods, List<FieldInfo> fields, String superClass,
@@ -59,11 +62,77 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
+    * @return the fields
+    */
+   public List<FieldInfo> getFields()
+   {
+      return fields;
+   }
+
+   /**
+    * @return the interfaces
+    */
+   public List<String> getInterfaces()
+   {
+      return interfaces;
+   }
+
+   /**
     * @return the methods
     */
    public List<MethodInfo> getMethods()
    {
       return methods;
+   }
+
+   /**
+    * @return the superClass
+    */
+   public String getSuperClass()
+   {
+      return superClass;
+   }
+
+   @Override
+   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+   {
+      super.readExternal(in);
+      superClass = readStringUTF(in);
+      interfaces = readStringUTFList(in);
+      fields = readObjectList(FieldInfo.class, in);
+      methods = readObjectList(MethodInfo.class, in);
+   }
+
+   /**
+    * @param fields
+    *           the fields to set
+    */
+   public void setFields(List<FieldInfo> fields)
+   {
+      if (fields == null)
+      {
+         this.fields = Collections.emptyList();
+      }
+      else
+      {
+         this.fields = fields;
+      }
+   }
+
+   /**
+    * @param interfaces
+    *           the interfaces to set
+    */
+   public void setInterfaces(List<String> interfaces)
+   {
+      if (interfaces == null)
+      {
+         this.interfaces = Collections.emptyList();
+      }
+      else
+      {
+         this.interfaces = interfaces;
+      }
    }
 
    /**
@@ -76,54 +145,12 @@ public class TypeInfo extends ShortTypeInfo
    }
 
    /**
-    * @return the fields
-    */
-   public List<FieldInfo> getFields()
-   {
-      return fields;
-   }
-
-   /**
-    * @param fields
-    *           the fields to set
-    */
-   public void setFields(List<FieldInfo> fields)
-   {
-      this.fields = fields;
-   }
-
-   /**
-    * @return the superClass
-    */
-   public String getSuperClass()
-   {
-      return superClass;
-   }
-
-   /**
     * @param superClass
     *           the superClass to set
     */
    public void setSuperClass(String superClass)
    {
       this.superClass = superClass;
-   }
-
-   /**
-    * @return the interfaces
-    */
-   public List<String> getInterfaces()
-   {
-      return interfaces;
-   }
-
-   /**
-    * @param interfaces
-    *           the interfaces to set
-    */
-   public void setInterfaces(List<String> interfaces)
-   {
-      this.interfaces = interfaces;
    }
 
    @Override
@@ -134,16 +161,6 @@ public class TypeInfo extends ShortTypeInfo
       writeStringUTFList(interfaces, out);
       writeObjectList(FieldInfo.class, fields, out);
       writeObjectList(MethodInfo.class, methods, out);
-   }
-
-   @Override
-   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-   {
-      super.readExternal(in);
-      superClass = readStringUTF(in);
-      interfaces = readStringUTFList(in);
-      fields = readObjectList(FieldInfo.class, in);
-      methods = readObjectList(MethodInfo.class, in);
    }
 
 }
