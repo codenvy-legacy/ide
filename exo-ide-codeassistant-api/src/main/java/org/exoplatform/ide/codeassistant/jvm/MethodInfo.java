@@ -95,11 +95,12 @@ public class MethodInfo extends Member
       String declaringClass)
    {
       super(name, modifiers);
-      this.exceptionTypes = exceptionTypes;
-      this.parameterTypes = parameterTypes;
       this.isConstructor = isConstructor;
       this.returnType = genericReturnType;
       this.declaringClass = declaringClass;
+      setExceptionTypes(exceptionTypes);
+      setParameterNames(parameterNames);
+      setParameterTypes(parameterTypes);
 
    }
 

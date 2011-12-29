@@ -55,10 +55,10 @@ public class TypeInfo extends ShortTypeInfo
       List<String> interfaces, String type)
    {
       super(name, modifiers, type);
-      this.methods = methods;
-      this.fields = fields;
       this.superClass = superClass;
-      this.interfaces = interfaces;
+      setMethods(methods);
+      setFields(fields);
+      setInterfaces(interfaces);
    }
 
    /**
