@@ -23,8 +23,9 @@ import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
@@ -65,6 +66,7 @@ public class MethodInfoExtractor
          constructor.getModifiers(),//
          genExceptionTypes,//
          genericParameterTypes,//
+         Collections.<String> emptyList(),//
          true,//
          null,// 
          constructor.getDeclaringClass().getCanonicalName());
@@ -94,7 +96,9 @@ public class MethodInfoExtractor
       return new MethodInfo(method.getName(),//
          method.getModifiers(),//
          genericExceptionTypes,//
-         genericParameterTypes, false,//
+         genericParameterTypes,//
+         Collections.<String> emptyList(),
+         false,//
          genericType2String(method.getGenericReturnType()),//
          method.getDeclaringClass().getCanonicalName());
    }
