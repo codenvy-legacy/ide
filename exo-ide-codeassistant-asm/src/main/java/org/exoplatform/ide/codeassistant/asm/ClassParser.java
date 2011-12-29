@@ -74,8 +74,6 @@ public class ClassParser
       ClassReader cr = new ClassReader(classStream);
       ClassNode cn = new ClassNode();
       cr.accept(cn, 0);
-
-      return TypeInfoBuilder.fromClassNode(cn);
+      return new AsmTypeInfo(cn);
    }
-
 }
