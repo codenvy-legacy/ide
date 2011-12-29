@@ -19,14 +19,7 @@
 
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
-
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 public class FieldInfoBean extends MemberBean implements FieldInfo
 {
@@ -71,18 +64,6 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
    }
 
    /**
-    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
-    */
-   @Override
-   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-   {
-      super.readExternal(in);
-
-      type = readStringUTF(in);
-      declaringClass = readStringUTF(in);
-   }
-
-   /**
     * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#setDeclaringClass(java.lang.String)
     */
    @Override
@@ -107,18 +88,6 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
    public String toString()
    {
       return modifierToString() + " " + type + " " + declaringClass + "." + getName();
-   }
-
-   /**
-    * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
-    */
-   @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      super.writeExternal(out);
-
-      writeStringUTF(type, out);
-      writeStringUTF(declaringClass, out);
    }
 
    /**

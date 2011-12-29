@@ -18,20 +18,10 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readObjectList;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFList;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeObjectList;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFList;
-
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,16 +90,6 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
       return superClass;
    }
 
-   @Override
-   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-   {
-      super.readExternal(in);
-      superClass = readStringUTF(in);
-      interfaces = readStringUTFList(in);
-      fields = readObjectList(FieldInfo.class, FieldInfoBean.class, in);
-      methods = readObjectList(MethodInfo.class, MethodInfoBean.class, in);
-   }
-
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#setFields(java.util.List)
     */
@@ -158,16 +138,6 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    public void setSuperClass(String superClass)
    {
       this.superClass = superClass;
-   }
-
-   @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      super.writeExternal(out);
-      writeStringUTF(superClass, out);
-      writeStringUTFList(interfaces, out);
-      writeObjectList(FieldInfoBean.class, fields, out);
-      writeObjectList(MethodInfoBean.class, methods, out);
    }
 
    /**

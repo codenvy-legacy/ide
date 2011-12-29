@@ -18,16 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTFList;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTFList;
-
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Collections;
 import java.util.List;
 
@@ -143,22 +135,6 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    public boolean isConstructor()
    {
       return isConstructor;
-   }
-
-   /**
-    * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
-    */
-   @Override
-   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-   {
-      super.readExternal(in);
-
-      declaringClass = readStringUTF(in);
-      exceptionTypes = readStringUTFList(in);
-      parameterTypes = readStringUTFList(in);
-      parameterNames = readStringUTFList(in);
-      returnType = readStringUTF(in);
-      isConstructor = in.readBoolean();
    }
 
    /**
@@ -296,22 +272,6 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
          }
       }
       return buildString.toString();
-   }
-
-   /**
-    * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
-    */
-   @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      super.writeExternal(out);
-
-      writeStringUTF(declaringClass, out);
-      writeStringUTFList(exceptionTypes, out);
-      writeStringUTFList(parameterTypes, out);
-      writeStringUTFList(parameterNames, out);
-      writeStringUTF(returnType, out);
-      out.writeBoolean(isConstructor);
    }
 
    /**

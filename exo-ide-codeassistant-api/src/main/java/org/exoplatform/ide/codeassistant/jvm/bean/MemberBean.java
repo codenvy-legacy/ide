@@ -18,18 +18,11 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.readStringUTF;
-import static org.exoplatform.ide.codeassistant.jvm.serialization.ExternalizationTools.writeStringUTF;
-
 import org.exoplatform.ide.codeassistant.jvm.Member;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.lang.reflect.Modifier;
 
-public abstract class MemberBean implements Externalizable, Member
+public abstract class MemberBean implements Member
 {
 
    private int modifiers;
@@ -163,13 +156,6 @@ public abstract class MemberBean implements Externalizable, Member
       return "";
    }
 
-   @Override
-   public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-   {
-      modifiers = in.readInt();
-      name = readStringUTF(in);
-   }
-
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.Member#setModifiers(int)
     */
@@ -195,13 +181,6 @@ public abstract class MemberBean implements Externalizable, Member
    public String toString()
    {
       return modifierToString() + " " + name;
-   }
-
-   @Override
-   public void writeExternal(ObjectOutput out) throws IOException
-   {
-      out.writeInt(modifiers);
-      writeStringUTF(name, out);
    }
 
    /**
