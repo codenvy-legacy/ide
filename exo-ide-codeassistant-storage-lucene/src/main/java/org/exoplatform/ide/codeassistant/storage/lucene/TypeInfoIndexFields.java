@@ -25,8 +25,10 @@ public final class TypeInfoIndexFields
 {
    public static final String MODIFIERS = "modifiers";
 
+   //TODO check usage
    public static final String CLASS_NAME = "class-name";
 
+   //TODO check usage
    public static final String FQN = "fqn";
 
    public static final String ENTITY_TYPE = "entity-type";

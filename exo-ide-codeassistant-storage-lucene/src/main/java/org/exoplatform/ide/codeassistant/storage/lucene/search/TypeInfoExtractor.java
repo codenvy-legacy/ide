@@ -22,12 +22,11 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
 /**
  * Create TypeInfo from lucene document.
@@ -43,19 +42,7 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
    {
 
       Document document = reader.document(doc, new MapFieldSelector(new String[]{TypeInfoIndexFields.TYPE_INFO}));
-      try
-      {
-         byte[] contentField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO);
-         TypeInfoBean result = new TypeInfoBean();
-         ObjectInputStream io = new ObjectInputStream(new ByteArrayInputStream(contentField));
-         result.readExternal(io);
-         io.close();
-         return result;
-      }
-      catch (ClassNotFoundException e)
-      {
-         throw new IOException(e.getLocalizedMessage(), e);
-      }
-
+      byte[] contentField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO);
+      return ExternalizationTools.readExternal(new ByteArrayInputStream(contentField));
    }
 }
