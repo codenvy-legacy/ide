@@ -78,7 +78,7 @@ public class ProjectCreatedEventHandler implements ProjectCreatedHandler, Projec
             @Override
             public void booleanValueReceived(Boolean value)
             {
-               if (true == value)
+               if (value != null && true == value)
                {
                   projectToBeOpened = event.getProject();
                   IDE.fireEvent(new CloseProjectEvent());
