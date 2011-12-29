@@ -22,6 +22,9 @@ import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
@@ -66,7 +69,7 @@ public class TypeInfoBuilder
 
    public static FieldInfo fromFieldNode(String declaredClass, FieldNode node)
    {
-      return new FieldInfo(node.name, node.access, Type.getType(node.desc).getClassName(), declaredClass);
+      return new FieldInfoBean(node.name, node.access, Type.getType(node.desc).getClassName(), declaredClass);
    }
 
    public static List<FieldInfo> fromFieldNodes(String declaredClass, List fields)
@@ -82,7 +85,7 @@ public class TypeInfoBuilder
    public static MethodInfo fromMethodNode(String declaredClass, MethodNode node)
    {
       boolean isConstructor = CONSTRUCTOR_METHOD_NAME.equals(node.name);
-      return new MethodInfo(isConstructor ? declaredClass : node.name, node.access,
+      return new MethodInfoBean(isConstructor ? declaredClass : node.name, node.access,
          classNamesFromTypes(node.exceptions), argumentTypesFromMethodDescriptor(node.desc), new ArrayList<String>(),
          isConstructor, Type.getReturnType(node.desc).getClassName(), declaredClass);
    }
@@ -100,7 +103,7 @@ public class TypeInfoBuilder
    public static TypeInfo fromClassNode(ClassNode node)
    {
       String declaredClass = classNameFromType(node.name);
-      return new TypeInfo(declaredClass, node.access, fromMethodNodes(declaredClass, node.methods), fromFieldNodes(
+      return new TypeInfoBean(declaredClass, node.access, fromMethodNodes(declaredClass, node.methods), fromFieldNodes(
          declaredClass, node.fields), classNameFromType(node.superName), classNamesFromTypes(node.interfaces), JavaType
          .fromClassAttribute(node.access).toString());
    }

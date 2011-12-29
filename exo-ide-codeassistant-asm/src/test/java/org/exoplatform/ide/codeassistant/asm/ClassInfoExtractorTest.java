@@ -49,21 +49,19 @@ public class ClassInfoExtractorTest
    }
 
    @Test
-   public void testExctractField() throws IOException
+   public void shouldExtractNamesOfMethodParameters() throws IOException
    {
       TypeInfo cd = ClassParser.parse(A.class);
-      Field[] fields = A.class.getFields();
-      List<FieldInfo> fds = cd.getFields();
-      for (Field field : fields)
+      List<MethodInfo> methods = cd.getMethods();
+      //check names of  public A(String string, Integer integer, long l)
+      for (MethodInfo methodInfo : methods)
       {
-         FieldInfo fd = getFieldInfo(fds, field);
-         if (fd == null)
+         if (methodInfo.isConstructor() && methodInfo.getParameterTypes().size() == 3)
          {
-            fail();
+            //assertEquals(3, methodInfo.getParameterNames().size());
          }
-         assertEquals(field.getModifiers(), fd.getModifiers());
-         assertEquals(field.getType().getSimpleName(), fd.getType());
       }
+
    }
 
    private FieldInfo getFieldInfo(List<FieldInfo> fds, Field field)
