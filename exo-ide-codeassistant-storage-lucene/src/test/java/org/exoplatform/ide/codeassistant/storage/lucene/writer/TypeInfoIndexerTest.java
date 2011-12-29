@@ -34,6 +34,7 @@ import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.ShortTypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.TypeInfoExtractor;
 import org.junit.Ignore;
@@ -54,7 +55,7 @@ public class TypeInfoIndexerTest
    private final TypeInfoIndexer indexer = new TypeInfoIndexer();
 
    @Mock(answer = Answers.RETURNS_SMART_NULLS)
-   private TypeInfo typeInfo;
+   private TypeInfoBean typeInfo;
 
    @Mock
    private IndexReader reader;

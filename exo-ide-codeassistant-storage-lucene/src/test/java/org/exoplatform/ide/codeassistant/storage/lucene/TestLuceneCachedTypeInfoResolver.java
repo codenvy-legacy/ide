@@ -60,7 +60,6 @@ public class TestLuceneCachedTypeInfoResolver
 
       List<TypeInfo> typeInfos = JarParser.parse(new File(PATH_TO_RT));
       writer.addTypeInfo(typeInfos);
-
       // searcher = new LuceneTypeInfoSearcher(luceneInfoStorage);
    }
 

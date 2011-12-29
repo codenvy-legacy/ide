@@ -23,6 +23,7 @@ import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
 
       int modifier = Integer.valueOf(document.get(TypeInfoIndexFields.MODIFIERS));
 
-      return new ShortTypeInfo(document.get(TypeInfoIndexFields.FQN), modifier,
+      return new ShortTypeInfoBean(document.get(TypeInfoIndexFields.FQN), modifier,
          document.get(TypeInfoIndexFields.ENTITY_TYPE));
 
    }

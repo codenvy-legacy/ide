@@ -27,6 +27,7 @@ import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
@@ -67,13 +68,16 @@ public class TypeInfoIndexer
          typeInfoDocument.add(new Field(TypeInfoIndexFields.INTERFACES, string, Store.YES, Index.NOT_ANALYZED));
       }
 
-      ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      ObjectOutputStream out = new ObjectOutputStream(bos);
-      typeInfo.writeExternal(out);
-      out.close();
+      if (typeInfo instanceof Externalizable)
+      {
 
-      typeInfoDocument.add(new Field(TypeInfoIndexFields.TYPE_INFO, bos.toByteArray(), Store.YES));
+         ByteArrayOutputStream bos = new ByteArrayOutputStream();
+         ObjectOutputStream out = new ObjectOutputStream(bos);
+         ((Externalizable)typeInfo).writeExternal(out);
+         out.close();
 
+         typeInfoDocument.add(new Field(TypeInfoIndexFields.TYPE_INFO, bos.toByteArray(), Store.YES));
+      }
       return typeInfoDocument;
 
    }

@@ -22,6 +22,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 
 import java.io.ByteArrayInputStream;
@@ -45,7 +46,7 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
       try
       {
          byte[] contentField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO);
-         TypeInfo result = new TypeInfo();
+         TypeInfoBean result = new TypeInfoBean();
          ObjectInputStream io = new ObjectInputStream(new ByteArrayInputStream(contentField));
          result.readExternal(io);
          io.close();
