@@ -1,1 +1,1 @@
-/home/sangre/java/exo-projects/jars/rt.jar
+${java.home}/lib/rt.jar

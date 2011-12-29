@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 
  */
 @Ignore
 public class TestCodeAssistantStorageCreator

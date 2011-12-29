@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- *
+ * Writes all classes from received list of jars in lucene storage
  */
 public class ClassesInfoStorageWriter
 {
