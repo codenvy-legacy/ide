@@ -26,9 +26,9 @@ import test.ClassManager;
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -36,7 +36,6 @@ import java.util.List;
 /**
  * Test Searching in Lucene TypeInfo Storage
  */
-@Ignore
 public class SearchTest
 {
 
@@ -49,6 +48,7 @@ public class SearchTest
    @BeforeClass
    public static void createIndex() throws Exception
    {
+      //luceneInfoStorage = new LuceneInfoStorage(NIOFSDirectory.open(new File("/tmp/SearchTest")));
       luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
       storage = new LuceneCodeAssistantStorage(luceneInfoStorage);
@@ -65,7 +65,6 @@ public class SearchTest
       assertEquals(2, typeInfos.size());
    }
 
-   @Ignore
    @Test
    public void testSearchAllInterfaces() throws Exception
    {
@@ -103,8 +102,8 @@ public class SearchTest
 
       ShortTypeInfo info1 = typeInfos.get(0);
       ShortTypeInfo info2 = typeInfos.get(1);
-      assertTrue(info1.getName().startsWith("ATest"));
-      assertTrue(info2.getName().startsWith("ATest"));
+      assertTrue(ExternalizationTools.getSimpleName(info1.getName()).startsWith("ATest"));
+      assertTrue(ExternalizationTools.getSimpleName(info2.getName()).startsWith("ATest"));
    }
 
    @Test
@@ -115,11 +114,11 @@ public class SearchTest
       assertEquals(2, typeInfos.size());
 
       ShortTypeInfo info1 = typeInfos.get(0);
-      assertTrue(info1.getName().startsWith("A"));
+      assertTrue(ExternalizationTools.getSimpleName(info1.getName()).startsWith("A"));
       assertEquals(info1.getType(), "CLASS");
 
       ShortTypeInfo info2 = typeInfos.get(1);
-      assertTrue(info2.getName().startsWith("A"));
+      assertTrue(ExternalizationTools.getSimpleName(info2.getName()).startsWith("A"));
       assertEquals(info2.getType(), "CLASS");
    }
 
@@ -131,7 +130,7 @@ public class SearchTest
       assertEquals(1, typeInfos.size());
 
       ShortTypeInfo info = typeInfos.get(0);
-      assertTrue(info.getName().startsWith("B"));
+      assertTrue(ExternalizationTools.getSimpleName(info.getName()).startsWith("B"));
    }
 
    @Test
@@ -141,8 +140,9 @@ public class SearchTest
       TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass");
 
       assertEquals("test.classes.ATestClass", typeInfo.getName());
-      assertEquals(1, typeInfo.getFields().size());
-      assertEquals(2, typeInfo.getMethods().size());
+      assertEquals(3, typeInfo.getFields().size());
+      //3 methods + constructor
+      assertEquals(4, typeInfo.getMethods().size());
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
    }
 

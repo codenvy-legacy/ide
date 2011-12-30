@@ -206,6 +206,11 @@ public class ExternalizationTools
 
    }
 
+   public static String getSimpleName(String fqn)
+   {
+      return fqn.substring(fqn.lastIndexOf(".") + 1);
+   }
+
    public static void writeStringUTFList(List<String> list, ObjectOutput out) throws IOException
    {
 

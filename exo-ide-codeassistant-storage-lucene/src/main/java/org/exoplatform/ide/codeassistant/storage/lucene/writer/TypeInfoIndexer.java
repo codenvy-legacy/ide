@@ -50,7 +50,7 @@ public class TypeInfoIndexer
 
       String fqn = typeInfo.getName();
 
-      typeInfoDocument.add(new Field(TypeInfoIndexFields.CLASS_NAME, fqn.substring(fqn.lastIndexOf(".") + 1),
+      typeInfoDocument.add(new Field(TypeInfoIndexFields.CLASS_NAME, ExternalizationTools.getSimpleName(fqn),
          Store.YES, Index.NOT_ANALYZED));
 
       typeInfoDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()),
