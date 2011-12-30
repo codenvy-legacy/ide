@@ -29,7 +29,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
@@ -44,19 +44,19 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-codeassistant-api</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
-      
-       <dependency>
+
+      <dependency>
          <groupId>org.json</groupId>
          <artifactId>json</artifactId>
          <version>1.5</version>
@@ -73,7 +73,7 @@
             <directory>src/main/resources</directory>
          </resource>
       </resources>
-       <testResources>
+      <testResources>
          <testResource>
             <directory>src/test/java</directory>
          </testResource>
@@ -92,6 +92,16 @@
                <excludes>
                   <exclude>**/*Gwt*</exclude>
                </excludes>
+               <systemProperties>
+                  <property>
+                     <name>gwt.args</name>
+                     <value>-out ${project.build.directory}</value>
+                  </property>
+                  <property>
+                     <name>gwt.persistentunitcache</name>
+                     <value>false</value>
+                  </property>
+               </systemProperties>
             </configuration>
          </plugin>
       </plugins>

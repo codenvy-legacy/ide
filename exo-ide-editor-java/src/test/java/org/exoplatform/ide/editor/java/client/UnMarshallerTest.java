@@ -18,15 +18,12 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
-import static org.junit.Assert.*;
-
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.ClassDescriptionUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.TypesUnmarshaller;
 import org.exoplatform.ide.editor.java.client.model.ShortTypeInfo;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -71,7 +68,6 @@ public class UnMarshallerTest extends GWTTestCase
          + "\"name\":\"CASE_INSENSITIVE_ORDER\",\"modifiers\":25,\"type\":\"java.util.Comparator\"}]}";
 
    @Test
-   @Ignore
    public void testTypesUnmarshaller() throws Exception
    {
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
@@ -86,7 +82,6 @@ public class UnMarshallerTest extends GWTTestCase
    }
 
    @Test
-   @Ignore
    public void testFindClassesUnmarshaller() throws Exception
    {
       List<Token> tokens = new ArrayList<Token>();
