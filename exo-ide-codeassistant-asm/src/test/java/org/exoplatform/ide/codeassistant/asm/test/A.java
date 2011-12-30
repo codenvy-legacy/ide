@@ -18,23 +18,24 @@
  */
 package org.exoplatform.ide.codeassistant.asm.test;
 
+import java.util.List;
 import java.util.Set;
 
 /**
 */
-public abstract class A 
+public abstract class A
 {
    private String string;
-   
+
    protected Integer integer;
-   
+
    public long l;
-   
+
    public A() throws ClassNotFoundException
    {
-      
+
    }
-   
+
    public A(Set<Class<?>> classes) throws ClassNotFoundException, ClassFormatError
    {
    }
@@ -46,16 +47,16 @@ public abstract class A
    {
       return string;
    }
-   
+
    /**
-    * @param string the string to set
+    * @param string
+    *           the string to set
     */
    public void setString(String string)
    {
       this.string = string;
    }
-   
-   
+
    /**
     * @return the integer
     */
@@ -65,7 +66,8 @@ public abstract class A
    }
 
    /**
-    * @param integer the integer to set
+    * @param integer
+    *           the integer to set
     */
    public void setInteger(Integer integer)
    {
@@ -81,21 +83,20 @@ public abstract class A
    }
 
    /**
-    * @param l the l to set
+    * @param l
+    *           the l to set
     */
    public void setL(long l)
    {
       this.l = l;
    }
 
-   public A(String string, Integer integer, long l)
+   public A(String string, Integer integer, List<String> tt)
    {
       super();
       this.string = string;
       this.integer = integer;
       this.l = l;
    }
-   
-   
 
 }

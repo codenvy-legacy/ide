@@ -20,10 +20,13 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertArrayEquals;
 
 import org.exoplatform.ide.codeassistant.asm.test.A;
 import org.exoplatform.ide.codeassistant.asm.test.B;
 import org.exoplatform.ide.codeassistant.asm.test.E;
+import org.exoplatform.ide.codeassistant.asm.test.Foo;
+import org.exoplatform.ide.codeassistant.asm.test.I;
 import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
@@ -39,6 +42,28 @@ import java.util.List;
  */
 public class ClassInfoExtractorTest
 {
+
+   @Test
+   public void shouldExtractCorrectInterface() throws Exception
+   {
+      TypeInfo cd = ClassParser.parse(I.class);
+      assertEquals(JavaType.INTERFACE.toString(), cd.getType());
+   }
+
+   @Test
+   public void shouldExtractCorrectAnnotation() throws Exception
+   {
+      TypeInfo cd = ClassParser.parse(Foo.class);
+      assertEquals(JavaType.ANNOTATION.toString(), cd.getType());
+   }
+
+   @Test
+   public void shouldExtractCorrectEnum() throws Exception
+   {
+      TypeInfo cd = ClassParser.parse(E.class);
+      assertEquals(JavaType.ENUM.toString(), cd.getType());
+   }
+
    @Test
    public void testExctractClass() throws ClassFormatError, ClassNotFoundException, IOException
    {
@@ -58,10 +83,35 @@ public class ClassInfoExtractorTest
       {
          if (methodInfo.isConstructor() && methodInfo.getParameterTypes().size() == 3)
          {
-            //assertEquals(3, methodInfo.getParameterNames().size());
+            assertArrayEquals(new String[]{"string", "integer", "tt"}, methodInfo.getParameterNames().toArray());
          }
       }
 
+   }
+
+   @Test
+   public void shouldExtractGenerics() throws Exception
+   {
+      TypeInfo cd = ClassParser.parse(A.class);
+      List<MethodInfo> methods = cd.getMethods();
+      for (MethodInfo methodInfo : methods)
+      {
+
+         if (methodInfo.isConstructor())
+         {
+            if (methodInfo.getParameterNames().size() == 1)
+            {
+               assertArrayEquals(new String[]{"java.util.Set<java.lang.Class<?>>"}, methodInfo.getParameterTypes()
+                  .toArray());
+            }
+            else if (methodInfo.getParameterNames().size() == 3)
+            {
+               assertArrayEquals(new String[]{"java.lang.String", "java.lang.Integer",
+                  "java.util.List<java.lang.String>"}, methodInfo.getParameterTypes().toArray());
+            }
+
+         }
+      }
    }
 
    private FieldInfo getFieldInfo(List<FieldInfo> fds, Field field)

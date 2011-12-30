@@ -20,9 +20,13 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.signature.SignatureReader;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.util.TraceSignatureVisitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -83,7 +87,17 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public List<String> getParameterNames()
    {
-      return Collections.emptyList();
+      if (methodNode.localVariables == null || methodNode.localVariables.size() < 1)
+      {
+         return Collections.emptyList();
+      }
+      List<String> result = new ArrayList<String>(methodNode.localVariables.size() - 1);
+      for (int i = 1; i < methodNode.localVariables.size(); i++)
+      {
+         LocalVariableNode var = (LocalVariableNode)methodNode.localVariables.get(i);
+         result.add(var.name);
+      }
+      return result;
    }
 
    /**
@@ -92,6 +106,24 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public List<String> getParameterTypes()
    {
+      if (methodNode.signature != null)
+      {
+         SignatureReader reader = new SignatureReader(methodNode.signature);
+         TraceSignatureVisitor v = new TraceSignatureVisitor(methodNode.access);
+         reader.accept(v);
+         String declaration = v.getDeclaration();
+         if (declaration.length() > 2)
+         {
+            //(java.lang.String, java.lang.Integer, java.util.List<java.lang.String>)
+            // cut braces, and split on ', '
+            return Arrays.asList(declaration.substring(1, declaration.length() - 1).split(", "));
+         }
+         else
+         {
+            return Collections.emptyList();
+         }
+      }
+
       Type[] types = Type.getArgumentTypes(methodNode.desc);
       List<String> result = new ArrayList<String>(types.length);
       for (Type type : types)
