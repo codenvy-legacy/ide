@@ -18,13 +18,19 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -36,22 +42,21 @@ import org.junit.Test;
 // http://jira.exoplatform.org/browse/IDE-486
 public class HighlightOutlineTest extends BaseTest
 {
+   
+   private static final String PROJECT = HighlightOutlineTest.class.getSimpleName();
 
-   private final static String FILE_NAME = "RESTCodeOutline.groovy";
-
-   private final static String FOLDER_NAME = HighlightOutlineTest.class.getName();
-
-//   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-//      + "/" + FOLDER_NAME;
+   private final static String FILE_NAME = "RESTCodeOutline.grs";
 
    @Before
    public void setUp()
    {
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/RESTCodeOutline.groovy";
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE,
+         filePath);
       }
       catch (Exception e)
       {
@@ -63,40 +68,48 @@ public class HighlightOutlineTest extends BaseTest
    public void tearDown() throws Exception
    {
       deleteCookies();
-      VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
    }
 
    @Test
    public void testHighlightOutline() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
-      waitForElementPresent("//div[@panel-id='editor']");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      
+      IDE.EDITOR.waitTabPresent(1);
 
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent("ideOutlineTreeGrid");
+      IDE.OUTLINE.waitOpened();
+      assertTrue(IDE.OUTLINE.isActive());
+      
+      //reopen file
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitTabPresent(1);
+      
+      IDE.OUTLINE.waitOpened();
+      assertFalse(IDE.OUTLINE.isActive());
 
-      selenium().refresh();
-      IDE.WORKSPACE.waitForRootItem();
-
-      // TODO fix problem return highlighter to back (in Outlinepanel)
-      //IDE.PERSPECTIVE.checkViewIsActive("ideOutlineView");
-
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_F);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_O);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_O);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_B);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_R);
-
-      // TODO fix problem return highlighter in workspace
-      // IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
-
+      IDE.EDITOR.typeTextIntoEditor(1, "\nFOO\nBAR");
+      //wait for some redrawing in IDE
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE, true);
+      assertFalse(IDE.OUTLINE.isActive());
    }
 
 }
