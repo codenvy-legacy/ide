@@ -23,12 +23,12 @@ import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.junit.Ignore;
 import org.junit.Test;
 

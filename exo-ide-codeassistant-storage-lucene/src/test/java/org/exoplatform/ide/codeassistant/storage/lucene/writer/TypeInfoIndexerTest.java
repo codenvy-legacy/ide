@@ -34,11 +34,12 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.ShortTypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.TypeInfoExtractor;
 import org.junit.Test;
@@ -62,6 +63,9 @@ public class TypeInfoIndexerTest
 
    @Mock
    private IndexReader reader;
+
+   @Mock
+   private LuceneCodeAssistantStorage luceneCodeAssistantStorage;
 
    @Test
    public void shouldCallPredefinedSetOfFields() throws Exception
@@ -101,7 +105,7 @@ public class TypeInfoIndexerTest
       Document document = indexer.createDocument(expected);
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
-      TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);
+      TypeInfo actual = new TypeInfoExtractor(luceneCodeAssistantStorage).getValue(reader, 5);
 
       assertTypeInfoEquals(expected, actual);
    }

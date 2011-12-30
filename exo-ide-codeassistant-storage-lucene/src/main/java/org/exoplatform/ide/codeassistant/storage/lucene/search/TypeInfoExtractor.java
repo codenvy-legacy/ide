@@ -21,18 +21,36 @@ package org.exoplatform.ide.codeassistant.storage.lucene.search;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.asm.ClassParser;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Create TypeInfo from lucene document.
  */
 public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
 {
+
+   private final LuceneCodeAssistantStorage luceneCodeAssistantStorage;
+
+   private final static String OBJECT_NAME = "java.lang.Object";
+
+   /**
+    * @param luceneCodeAssistantStorage
+    */
+   public TypeInfoExtractor(LuceneCodeAssistantStorage luceneCodeAssistantStorage)
+   {
+      this.luceneCodeAssistantStorage = luceneCodeAssistantStorage;
+   }
 
    /**
     * @see org.exoplatform.ide.codeassistant.storage.lucene.search.ContentExtractor#getValue(int)
@@ -43,6 +61,50 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
 
       Document document = reader.document(doc, new MapFieldSelector(new String[]{TypeInfoIndexFields.TYPE_INFO}));
       byte[] contentField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO);
-      return ExternalizationTools.readExternal(new ByteArrayInputStream(contentField));
+      TypeInfo result = ExternalizationTools.readExternal(new ByteArrayInputStream(contentField));
+      if (result.getSuperClass().isEmpty() && result.getInterfaces().isEmpty())
+      {
+         return result;
+      }
+      else
+      {
+         try
+         {
+            if (!result.getSuperClass().isEmpty())
+            {
+               if (OBJECT_NAME.equals(result.getSuperClass()))
+               {
+                  mergeType(result, ClassParser.OBJECT_TYPE);
+               }
+               else
+               {
+                  mergeType(result, luceneCodeAssistantStorage.getTypeByFqn(result.getSuperClass()));
+               }
+            }
+            for (String interfaceName : result.getInterfaces())
+            {
+               mergeType(result, luceneCodeAssistantStorage.getTypeByFqn(interfaceName));
+            }
+         }
+         catch (CodeAssistantException e)
+         {
+            throw new IOException(e.getLocalizedMessage(), e);
+         }
+      }
+      return result;
+   }
+
+   public void mergeType(TypeInfo recipient, TypeInfo ancestor)
+   {
+      if (ancestor != null)
+      {
+         List<FieldInfo> fields = recipient.getFields();
+         fields.addAll(ancestor.getFields());
+         recipient.setFields(fields);
+
+         List<MethodInfo> methods = recipient.getMethods();
+         methods.addAll(ancestor.getMethods());
+         recipient.setMethods(methods);
+      }
    }
 }

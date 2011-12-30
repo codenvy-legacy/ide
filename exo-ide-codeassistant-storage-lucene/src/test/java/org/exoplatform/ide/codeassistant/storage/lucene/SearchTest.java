@@ -18,14 +18,15 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
+import static org.exoplatform.ide.codeassistant.asm.ClassParser.OBJECT_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static test.ClassManager.createIndexForClass;
 import static test.ClassManager.getAllTestClasses;
 
 import org.apache.lucene.store.RAMDirectory;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 import org.junit.BeforeClass;
@@ -144,7 +145,7 @@ public class SearchTest
       assertEquals("test.classes.ATestClass", typeInfo.getName());
       assertEquals(3, typeInfo.getFields().size());
       //3 methods + constructor
-      assertEquals(4, typeInfo.getMethods().size());
+      assertEquals(4 + OBJECT_TYPE.getMethods().size(), typeInfo.getMethods().size());
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
    }
 

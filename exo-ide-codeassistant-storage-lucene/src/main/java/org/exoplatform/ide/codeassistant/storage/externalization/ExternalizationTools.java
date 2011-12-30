@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.codeassistant.storage.externalization;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.Member;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.Member;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

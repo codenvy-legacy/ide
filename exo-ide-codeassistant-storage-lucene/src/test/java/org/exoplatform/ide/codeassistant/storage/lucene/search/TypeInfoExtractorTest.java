@@ -32,13 +32,15 @@ import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexer;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -51,7 +53,11 @@ public class TypeInfoExtractorTest
    @Mock
    private IndexReader reader;
 
-   private final TypeInfoExtractor extractor = new TypeInfoExtractor();
+   @Mock
+   private LuceneCodeAssistantStorage luceneCodeAssistantStorage;
+
+   @InjectMocks
+   private TypeInfoExtractor extractor;
 
    @Ignore
    @Test
@@ -67,7 +73,6 @@ public class TypeInfoExtractorTest
       assertEquals(expected, actual);
    }
 
-   @Ignore
    @Test
    public void shouldGetDocumentFromReaderWithPredefinedSetOfFields() throws Exception
    {

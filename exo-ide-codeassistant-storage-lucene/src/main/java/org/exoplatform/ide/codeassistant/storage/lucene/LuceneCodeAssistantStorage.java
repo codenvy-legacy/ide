@@ -25,9 +25,9 @@ import static org.exoplatform.ide.codeassistant.storage.lucene.search.SearchByFi
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.jvm.JavaType;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneQueryExecutor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.ShortTypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.TypeInfoExtractor;
@@ -120,7 +120,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    {
 
       List<TypeInfo> searchResult =
-         queryExecutor.executeQuery(new TypeInfoExtractor(), IndexType.JAVA, eq(TypeInfoIndexFields.FQN, fqn), 1, 0);
+         queryExecutor
+            .executeQuery(new TypeInfoExtractor(this), IndexType.JAVA, eq(TypeInfoIndexFields.FQN, fqn), 1, 0);
       return searchResult.size() == 1 ? searchResult.get(0) : null;
 
    }

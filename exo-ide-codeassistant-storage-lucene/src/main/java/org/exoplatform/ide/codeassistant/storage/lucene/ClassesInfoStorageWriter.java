@@ -19,7 +19,7 @@
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
 import org.exoplatform.ide.codeassistant.asm.JarParser;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
 
 import java.io.File;
