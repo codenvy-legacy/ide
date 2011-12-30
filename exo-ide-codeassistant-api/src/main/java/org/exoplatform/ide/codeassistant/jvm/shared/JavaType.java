@@ -34,7 +34,11 @@ public enum JavaType {
    public static JavaType fromClassAttribute(int attr)
    {
 
-      if (Modifier.isInterface(attr))
+      if ((0x00002000 & attr) != 0)
+      {
+         return ANNOTATION;
+      }
+      else if (Modifier.isInterface(attr))
       {
          return INTERFACE;
       }
@@ -42,10 +46,9 @@ public enum JavaType {
       {
          return ENUM;
       }
-      else if ((0x00002000 & attr) != 0)
+      else
       {
-         return ANNOTATION;
+         return CLASS;
       }
-      return CLASS;
    }
 }
