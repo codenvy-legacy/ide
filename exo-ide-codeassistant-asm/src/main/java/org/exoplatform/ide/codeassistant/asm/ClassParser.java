@@ -19,6 +19,7 @@
 package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -39,6 +40,8 @@ import java.io.InputStream;
  */
 public class ClassParser
 {
+
+   public final static TypeInfo OBJECT_TYPE = parseQuietly(Object.class);
 
    private ClassParser()
    {
@@ -67,6 +70,18 @@ public class ClassParser
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
       String classResource = class2Find.replace('.', '/') + ".class";
       return parse(contextClassLoader.getResourceAsStream(classResource));
+   }
+
+   public static TypeInfo parseQuietly(Class<?> class2Find)
+   {
+      try
+      {
+         return parse(getClassFile(class2Find));
+      }
+      catch (IOException e)
+      {
+         return new TypeInfoBean();
+      }
    }
 
    public static TypeInfo parse(InputStream classStream) throws IOException
