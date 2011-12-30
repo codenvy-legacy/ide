@@ -13,7 +13,6 @@
 
    <dependencies>
 
-
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
@@ -107,16 +106,19 @@
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
          <scope>provided</scope>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
          <scope>provided</scope>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.core</groupId>
          <artifactId>exo.core.component.security.core</artifactId>
@@ -149,6 +151,7 @@
             </exclusion>
          </exclusions>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
@@ -158,10 +161,12 @@
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
       </dependency>
+
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-groovy</artifactId>
       </dependency>
+
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-integration-exo</artifactId>
@@ -172,10 +177,12 @@
          <artifactId>gwt-servlet</artifactId>
          <scope>provided</scope>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-server</artifactId>
+         <artifactId>exo-ide-extension-groovy</artifactId>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-codeassistant-framework</artifactId>

@@ -28,12 +28,10 @@ import javax.ws.rs.core.Application;
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 12, 2011 5:03:02 PM evgen $
- *
  */
 public class ChromatticServiceApplication extends Application
 {
-
-   private final Set<Class<?>> classes = new HashSet<Class<?>>();
+   private final Set<Class<?>> classes = new HashSet<Class<?>>(1);
 
    public ChromatticServiceApplication()
    {
@@ -48,5 +46,4 @@ public class ChromatticServiceApplication extends Application
    {
       return classes;
    }
-
 }

@@ -18,38 +18,25 @@
  */
 package org.exoplatform.ide.extension.chromattic.server;
 
-import org.chromattic.dataobject.CompilationSource;
-import org.chromattic.dataobject.DataObjectService;
 import org.chromattic.dataobject.NodeTypeFormat;
 import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.groovy.SourceFile;
 import org.everrest.groovy.SourceFolder;
-import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
-import org.exoplatform.ide.groovy.JcrGroovyCompiler;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.extension.groovy.server.GroovyClassPathHelper;
+import org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
-import org.exoplatform.services.jcr.ext.resource.NodeRepresentationService;
-import org.exoplatform.services.jcr.ext.resource.UnifiedNodeReference;
-import org.exoplatform.services.jcr.impl.core.nodetype.NodeTypeManagerImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,24 +49,13 @@ import javax.ws.rs.QueryParam;
 @Path("/ide/chromattic/")
 public class RestDataObjectService
 {
-
-   /**
-    * WebDav context uses for selecting jcr path of resource which is adressed
-    * via WebDav or IDE Virtual File System service (server)
-    */
-   public static final String WEBDAV_CONTEXT = "/jcr/";
-
    private RepositoryService repositoryService;
-
-   public static final String GROOVY_CLASSPATH = ".groovyclasspath";
-
-   private JcrGroovyCompiler compiler;
-
    private VirtualFileSystemRegistry vfsRegistry;
+   private IDEGroovyCompiler compiler;
 
-   public RestDataObjectService(DataObjectService dataObjectService, RepositoryService repositoryService,
-      NodeRepresentationService nodeRepresentationService, JcrGroovyCompiler compiler,
-      VirtualFileSystemRegistry vfsRegistry)
+   public RestDataObjectService(RepositoryService repositoryService,
+                                IDEGroovyCompiler compiler,
+                                VirtualFileSystemRegistry vfsRegistry)
    {
       this.repositoryService = repositoryService;
       this.compiler = compiler;
@@ -88,131 +64,97 @@ public class RestDataObjectService
 
    /**
     * Compile Data Object Service and return Node Type definition.
-    * 
-    * @param uriInfo - UriInfo
-    * @param location - Resource URL
-    * @return
+    *
+    * @param id ID of groovy source that contains node type description
+    * @param vfsid ID of virtual file system
+    * @param projectId ID of IDE project
+    * @param format format of node type
+    * @return node type definition as string. Format or representation depends on <code>format</code> parameter.
+    * @throws VirtualFileSystemException
+    * @throws JsonException
     * @throws IOException
-    * @throws URISyntaxException
-    * @throws RepositoryException 
-    * @throws VirtualFileSystemException 
-    * @throws JsonException 
-    * @throws RepositoryConfigurationException 
-    * @throws PermissionDeniedException 
-    * @throws ItemNotFoundException 
     */
    @POST
    @Path("/generate-nodetype-definition")
-   public String getNodeTypeDefinition(@QueryParam("id") String id, @QueryParam("vfsid") String vfsid,
-      @QueryParam("projectid") String projectid, @QueryParam("nodeTypeFormat") NodeTypeFormat format)
-      throws IOException, URISyntaxException, RepositoryException, VirtualFileSystemException, JsonException,
-      RepositoryConfigurationException
+   public String getNodeTypeDefinition(@QueryParam("id") String id,
+                                       @QueryParam("vfsid") String vfsid,
+                                       @QueryParam("projectid") String projectId,
+                                       @QueryParam("nodeTypeFormat") NodeTypeFormat format)
+      throws VirtualFileSystemException, JsonException, IOException
    {
-
-      if (id == null)
-         throw new IllegalArgumentException("You must specify item ID.");
-      //TODO
-      String repository = getCurrentRepository();
-      CompilationSource compilationSource = null;
-      SourceFolder[] sources = null;
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
-      String path = vfs.getItem(id, PropertyFilter.NONE_FILTER).getPath();
-
-      if (projectid != null)
+      if (null == id)
       {
-         DependentResources dependentResources = getDependentResources(projectid, vfs);
+         throw new IllegalArgumentException("Id of groovy source item may not be null.  ");
+      }
 
-         if (dependentResources != null && dependentResources.getFolderSources().size() > 0)
-         {
-            //TODO only first one dir is taken at the moment
-            String dependencySource = dependentResources.getFolderSources().get(0);
-            UnifiedNodeReference sourceReference = new UnifiedNodeReference(dependencySource);
-            compilationSource =
-               new CompilationSource(sourceReference.getRepository(), sourceReference.getWorkspace(),
-                  sourceReference.getPath());
-            String dep = dependentResources.getFolderSources().get(0);
-            sources = new SourceFolder[]{new SourceFolder((new UnifiedNodeReference(dep)).getURL())};
-         }
-         else
-         {
-            compilationSource = new CompilationSource(repository, vfsid, path);
-         }
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      GroovyClassPath classPath = null;
+      if (null != projectId)
+      {
+         classPath = GroovyClassPathHelper.getGroovyClassPath(projectId, vfs);
+      }
+
+      SourceFile[] files;
+      if (null != classPath)
+      {
+         // Merge all source files available in class path.
+         SourceFile[] fromClassPath = GroovyClassPathHelper.getSourceFiles(classPath);
+         files = new SourceFile[fromClassPath.length + 1];
+         files[0] = new SourceFile(URI.create("ide+vfs:/" + vfsid + "#" + id).toURL());
+         System.arraycopy(fromClassPath, 0, files, 1, files.length);
       }
       else
       {
-         compilationSource = new CompilationSource(repository, vfsid, path);
+         files = new SourceFile[]{new SourceFile(URI.create("ide+vfs:/" + vfsid + "#" + id).toURL())};
       }
 
-      SourceFile[] sourceFile =
-         new SourceFile[]{new SourceFile((new UnifiedNodeReference(repository, vfsid, path)).getURL())};
-
-      List<String> nodeReferences = new ArrayList<String>();
-      URL[] urls = compiler.getDependencies(sources, sourceFile);
-      for (int i = 0; i < urls.length; i++)
+      SourceFolder[] src = null;
+      if (null != classPath)
       {
-         //if (MimeTypeResolver.resolve(new UnifiedNodeReference(urls[i]), "application/x-chromattic+groovy"))
-         Item item = vfs.getItemByPath(urls[i].getRef(), null, PropertyFilter.NONE_FILTER);
-         if ("application/x-chromattic+groovy".equals(item.getMimeType()))
+         src = GroovyClassPathHelper.getSourceFolders(classPath);
+      }
+      // Get all required compilation dependencies.
+      // Compiler try to load all dependencies from specified source folder
+      // or(and) from pre-configured source libraries if any.
+      URL[] all = compiler.getDependencies(src, files);
+
+      // Now need to filter 'chromattic' object model files.
+      List<SourceFile> model = new ArrayList<SourceFile>();
+      for (int i = 0; i < all.length; i++)
+      {
+         URLConnection connection = all[i].openConnection();
+         if ("application/x-chromattic+groovy".equals(connection.getContentType()))
          {
-            nodeReferences.add(new UnifiedNodeReference(urls[i]).getPath());
+            model.add(new SourceFile(all[i]));
          }
       }
-
-      return new DataObjectCompiler(compiler, compilationSource, nodeReferences.toArray(new String[nodeReferences
-         .size()])).generateSchema(format);
+      return new DataObjectCompiler(compiler, model.toArray(new SourceFile[model.size()])).generateSchema(format);
    }
 
    @POST
    @Path("/register-nodetype/{format}/{alreadyExistsBehaviour}")
    public void registerNodeType(@PathParam("format") NodeTypeFormat format,
-      @PathParam("alreadyExistsBehaviour") Integer alreadyExistsBehaviour, InputStream nodeTypeDefinition)
-      throws RepositoryException, RepositoryConfigurationException
-
+                                @PathParam("alreadyExistsBehaviour") Integer alreadyExistsBehaviour,
+                                InputStream nodeTypeDefinition)
+      throws RepositoryException
    {
-      NodeTypeManagerImpl nodeTypeManager = (NodeTypeManagerImpl)getRepository().getNodeTypeManager();
       switch (format)
       {
-         case EXO :
-            nodeTypeManager.registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_XML);
+         case EXO:
+            getRepository().getNodeTypeManager()
+               .registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_XML);
             break;
-         case CND :
-            nodeTypeManager.registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour,
-               NodeTypeDataManager.TEXT_X_JCR_CND);
+         case CND:
+            getRepository().getNodeTypeManager()
+               .registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_X_JCR_CND);
             break;
-         default :
+         default:
             throw new RepositoryException("Unsupported content type:" + format.name());
       }
-
    }
 
-   private DependentResources getDependentResources(String projectid, VirtualFileSystem vfs)
-      throws VirtualFileSystemException, JsonException, RepositoryException, RepositoryConfigurationException
+   private ManageableRepository getRepository() throws RepositoryException
    {
-      Folder project = (Folder)vfs.getItem(projectid, PropertyFilter.NONE_FILTER);
-      try
-      {
-         JsonParser jsonParser = new JsonParser();
-         jsonParser.parse(vfs.getContent(project.createPath(GROOVY_CLASSPATH), null).getStream());
-         JsonValue jsonValue = jsonParser.getJsonObject();
-         GroovyClassPath classPath = ObjectBuilder.createObject(GroovyClassPath.class, jsonValue);
-         return new DependentResources(getCurrentRepository(), classPath);
-      }
-      catch (ItemNotFoundException e)
-      {
-         return null;
-      }
+      return repositoryService.getCurrentRepository();
    }
-
-   // Temporary method. Remove after refactoring of GroovyScript2RestLoader.
-   private String getCurrentRepository() throws RepositoryException, RepositoryConfigurationException
-   {
-      return getRepository().getConfiguration().getName();
-   }
-
-   private ManageableRepository getRepository() throws RepositoryException, RepositoryConfigurationException
-   {
-      return repositoryService.getCurrentRepository() == null ? repositoryService.getDefaultRepository()
-         : repositoryService.getCurrentRepository();
-   }
-
 }

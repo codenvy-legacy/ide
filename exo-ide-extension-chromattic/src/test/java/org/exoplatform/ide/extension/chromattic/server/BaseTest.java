@@ -19,163 +19,116 @@
 package org.exoplatform.ide.extension.chromattic.server;
 
 import org.everrest.core.RequestHandler;
-import org.everrest.core.ResourceBinder;
-import org.everrest.core.impl.ProviderBinder;
 import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.CredentialsImpl;
-import org.exoplatform.services.jcr.dataflow.PersistentDataManager;
-import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
-import org.exoplatform.services.jcr.impl.core.SessionImpl;
-import org.exoplatform.services.jcr.impl.dataflow.serialization.ReaderSpoolFileHolder;
-import org.exoplatform.services.jcr.impl.util.io.FileCleaner;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.junit.Before;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
+import java.util.Collections;
+import java.util.Iterator;
 
-import javax.jcr.Node;
-import javax.jcr.ValueFactory;
-import javax.jcr.Workspace;
+import javax.xml.namespace.NamespaceContext;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-
-public abstract class BaseTest 
+ */
+public abstract class BaseTest
 {
-   
-   protected final Log log = ExoLogger.getLogger(BaseTest.class.getCanonicalName());
-
-   public static final String REPOSITORY = "db1";
-   
-   public static final String WORKSPACE = "ws";
-
-   protected SessionImpl session;
-
-   protected RepositoryImpl repository;
-
-   protected CredentialsImpl credentials;
-
-   protected Workspace workspace;
-
-   protected RepositoryService repositoryService;
-
-   protected Node root;
-
-   protected PersistentDataManager dataManager;
-
-   protected ValueFactory valueFactory;
-
+   protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
+   protected final String vfs_id = "ws";
+   protected VirtualFileSystem virtualFileSystem;
+   protected Folder testRoot;
    protected StandaloneContainer container;
+   protected ResourceLauncher launcher;
 
-   public int maxBufferSize = 200 * 1024;
-
-   public FileCleaner fileCleaner;
-
-   public ReaderSpoolFileHolder holder;
-
-   public ResourceBinder binder;
-
-   public ResourceLauncher launcher;
-
-   public int resourceNumber = 0;
-
-   @Before
    public void setUp() throws Exception
    {
-      String conf = getClass().getResource("/conf/standalone/test-configuration.xml").toString();
-      StandaloneContainer.addConfigurationURL(conf);
+      System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
+      String containerConfig = getClass().getResource("/conf/standalone/test-configuration.xml").toString();
+      StandaloneContainer.addConfigurationURL(containerConfig);
       container = StandaloneContainer.getInstance();
-      // reset set of providers for each test 
-      Constructor<ProviderBinder> c = ProviderBinder.class.getDeclaredConstructor();
-      c.setAccessible(true);
-      ProviderBinder.setInstance(c.newInstance());
-      
 
-      if (System.getProperty("java.security.auth.login.config") == null)
-         System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
-            .getResource("login.conf").toString());
+      // May be overridden in methods!
+      ConversationState user = new ConversationState(new Identity("root"));
+      ConversationState.setCurrent(user);
+//      String loginConfig = getClass().getResource("/login.conf").toString();
+//      if (System.getProperty("java.security.auth.login.config") == null)
+//         System.setProperty("java.security.auth.login.config", loginConfig);
 
-      credentials = new CredentialsImpl("root", "exo".toCharArray());
+      VirtualFileSystemRegistry virtualFileSystemRegistry =
+         (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
+      assertNotNull(virtualFileSystemRegistry);
 
-      repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      virtualFileSystem = virtualFileSystemRegistry.getProvider(vfs_id).newInstance(null);
 
-      repository = (RepositoryImpl)repositoryService.getRepository(REPOSITORY);
+      testRoot = virtualFileSystem.createFolder(virtualFileSystem.getInfo().getRoot().getId(), getClass().getSimpleName());
 
-      session = (SessionImpl)repository.login(credentials, WORKSPACE);
-      workspace = session.getWorkspace();
-      root = session.getRootNode();
-      valueFactory = session.getValueFactory();
-
-      binder = (ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class);
-      resourceNumber = binder.getSize();
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
    }
 
-//   @After
-//   protected void tearDown() throws Exception
-//   {
-//      if (session != null)
-//      {
-//         try
-//         {
-//            session.refresh(false);
-//            Node rootNode = session.getRootNode();
-//            if (rootNode.hasNodes())
-//            {
-//               // clean test root
-//               for (NodeIterator children = rootNode.getNodes(); children.hasNext();)
-//               {
-//                  Node node = children.nextNode();
-//                  if (!node.getPath().startsWith("/jcr:system") && !node.getPath().startsWith("/exo:audit")
-//                     && !node.getPath().startsWith("/exo:organization"))
-//                  {
-//                     node.remove();
-//                  }
-//               }
-//               session.save();
-//            }
-//         }
-//         catch (Exception e)
-//         {
-//            e.printStackTrace();
-//            log.error("===== Exception in tearDown() " + e.toString());
-//         }
-//         finally
-//         {
-//            session.logout();
-//         }
-//      }
-//
-//      super.tearDown();
-//      // log.info("tearDown() END " + getClass().getName() + "." + getName());
-//   }
-
-   public byte[] getResourceAsBytes(String resource) throws IOException
+   public void tearDown() throws Exception
    {
-      byte[] data = null;
-      InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-      if (stream != null)
-      {
-         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-         byte[] buf = new byte[1024];
-         int r = -1;
-         while ((r = stream.read(buf)) != -1)
-         {
-            bout.write(buf, 0, r);
-         }
-         data = bout.toByteArray();
-      }
-      return data;
    }
-   
+
+   // For test generated node types.
+   public static final class NodeTypesNamespaceContext implements NamespaceContext
+   {
+      @Override
+      public String getNamespaceURI(String prefix)
+      {
+         if ("jcr".equals(prefix))
+         {
+            return "http://www.jcp.org/jcr/1.0";
+         }
+         else if ("nt".equals(prefix))
+         {
+            return "http://www.jcp.org/jcr/nt/1.0";
+         }
+         else if ("mix".equals(prefix))
+         {
+            return "http://www.jcp.org/jcr/mix/1.0";
+         }
+         return null;
+      }
+
+      @Override
+      public String getPrefix(String namespaceURI)
+      {
+         if ("http://www.jcp.org/jcr/1.0".equals(namespaceURI))
+         {
+            return "jcr";
+         }
+         else if ("http://www.jcp.org/jcr/nt/1.0".equals(namespaceURI))
+         {
+            return "nt";
+         }
+         else if ("http://www.jcp.org/jcr/mix/1.0".equals(namespaceURI))
+         {
+            return "mix";
+         }
+         return "";
+      }
+
+      @Override
+      public Iterator getPrefixes(String namespaceURI)
+      {
+         String prefix = getPrefix(namespaceURI);
+         if(prefix.length() > 0)
+         {
+            return Collections.singletonList(prefix).iterator();
+         }
+         return Collections.emptyList().iterator();
+      }
+   }
 }

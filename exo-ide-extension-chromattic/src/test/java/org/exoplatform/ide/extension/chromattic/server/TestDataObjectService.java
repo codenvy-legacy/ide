@@ -19,128 +19,144 @@
 package org.exoplatform.ide.extension.chromattic.server;
 
 import org.everrest.core.impl.ContainerResponse;
-import org.junit.Assert;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.w3c.dom.Document;
 
-import java.util.Calendar;
+import java.io.ByteArrayInputStream;
 
-import javax.jcr.Node;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
 public class TestDataObjectService extends BaseTest
 {
-   
-   private static final String WEBDAV_CONTEXT = "/jcr/";
-   
-   private String id;
-   
    /** . */
-   private static final String dataObjectGroovy =
-       "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n" +
-       "class DataObject {\n" +
-       "@org.chromattic.api.annotations.Property(name = \"a\") def String a;\n" +
-       "}";
-   
+   private static final String DATA_OBJECT_BODY =
+      "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n"
+         + "class DataObject {\n"
+         + "@org.chromattic.api.annotations.Property(name = \"a\")"
+         + "String a\n"
+         + "}";
+
    private static final String ntd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-   "<!--Node type generation prototype-->" + 
-   "<nodeTypes xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\" xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\">"+
-     "<nodeType name=\"nt:unst\" isMixin=\"false\" hasOrderableChildNodes=\"false\">"+
-       "<supertypes>"+
-         "<supertype>nt:base</supertype>"+
-         "<supertype>mix:referenceable</supertype>"+
-       "</supertypes>"+
-       "<propertyDefinitions>"+
-         "<propertyDefinition name=\"a\" requiredType=\"String\" autoCreated=\"false\" mandatory=\"false\" onParentVersion=\"COPY\" protected=\"false\" multiple=\"false\">"+
-           "<valueConstraints/>"+
-         "</propertyDefinition>"+
-       "</propertyDefinitions>"+
-       "<childNodeDefinitions/>"+
-     "</nodeType>"+
-   "</nodeTypes>";
+      "<!--Node type generation prototype-->" +
+      "<nodeTypes xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\" xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\">" +
+      "<nodeType name=\"nt:unst\" isMixin=\"false\" hasOrderableChildNodes=\"false\">" +
+      "<supertypes>" +
+      "<supertype>nt:base</supertype>" +
+      "<supertype>mix:referenceable</supertype>" +
+      "</supertypes>" +
+      "<propertyDefinitions>" +
+      "<propertyDefinition name=\"a\" requiredType=\"String\" autoCreated=\"false\" mandatory=\"false\" onParentVersion=\"COPY\" protected=\"false\" multiple=\"false\">" +
+      "<valueConstraints/>" +
+      "</propertyDefinition>" +
+      "</propertyDefinitions>" +
+      "<childNodeDefinitions/>" +
+      "</nodeType>" +
+      "</nodeTypes>";
 
-   
+   private Folder dependencies;
+   private File dataObject;
+
    @Before
-   public void setUp() throws Exception {
+   public void setUp() throws Exception
+   {
       super.setUp();
-      
-      Node groovyRepo = root.addNode("dependencies", "nt:folder");
-      Node test1 = groovyRepo.addNode("DataObject.groovy", "nt:file");
-      test1 = test1.addNode("jcr:content", "nt:resource");
-      test1.setProperty("jcr:mimeType", "script/groovy");
-      test1.setProperty("jcr:lastModified", Calendar.getInstance());
-      test1.setProperty("jcr:data", dataObjectGroovy);
-      id=test1.getUUID();
-      session.save();      
+      dependencies = virtualFileSystem.createFolder(testRoot.getId(), "dependencies");
+      dataObject = virtualFileSystem.createFile(
+         dependencies.getId(),
+         "DataObject.cmtc",
+         new MediaType("application", "x-chromattic+groovy"),
+         new ByteArrayInputStream(DATA_OBJECT_BODY.getBytes()));
    }
-   
-   @Test
-   @Ignore
-   public void testNodeTypeGenration() throws Exception {
-      ContainerResponse cres =
-         launcher.service("POST",
-            "/ide/chromattic/generate-nodetype-definition?vfsid=ws&id=" + id + "&nodeTypeFormat=EXO", "", null, null,
-            null, null);
-      Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
-      String s = (String)cres.getEntity();
-      System.out.println("Generated node types " + s);
-    }
-   
-   @Test
-   public void testNodeTypeGenrationDOScriptNotFound() throws Exception {
-      String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObjectNotFound.groovy";
-      ContainerResponse cres =
-         launcher.service("POST",
-            "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=EXO", "", null, null,
-            null, null);
-      Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), cres.getStatus());
-      String s = (String)cres.getEntity();
-      System.out.println("Generated node types " + s);
-    }
-   
-   @Test
-   public void testNodeTypeGenrationLocationNotFound() throws Exception {
-      ContainerResponse cres =
-         launcher.service("POST",
-            "/ide/chromattic/generate-nodetype-definition?nodeTypeFormat=EXO", "", null, null,
-            null, null);
-      Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), cres.getStatus());
-      String s = (String)cres.getEntity();
-      System.out.println("Generated node types " + s);
-    }
-   
-   @Test
-   @Ignore
-   public void testNodeTypeGenrationCND() throws Exception {
-      String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObject.groovy";
-      ContainerResponse cres =
-         launcher.service("POST",
-            "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=CND", "", null, null,
-            null, null);
-      Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
-      String s = (String)cres.getEntity();
-      System.out.println("Generated node types " + s);
-    }
-   
-   @Test
-   public void testNodeType() throws Exception {
-//      String location = "/jcr/" + "db1/ws/dependencies/DataObject.groovy";
-      ContainerResponse cres =
-         launcher.service("POST",
-            "/ide/chromattic/register-nodetype/EXO/4", "", null, ntd.getBytes(),
-            null, null);
-      Assert.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), cres.getStatus());
-    
-    }
-   
 
+   @After
+   public void tearDown() throws Exception
+   {
+      virtualFileSystem.delete(testRoot.getId(), null);
+      super.tearDown();
+   }
+
+   @Test
+   public void testNodeTypeGeneration() throws Exception
+   {
+      ContainerResponse response = launcher.service(
+         "POST",
+         "/ide/chromattic/generate-nodetype-definition?vfsid=ws&id=" + dataObject.getId() + "&nodeTypeFormat=EXO",
+         "",
+         null,
+         null,
+         null,
+         null);
+      assertEquals(200, response.getStatus());
+      log.info("Generated node types " + response.getEntity());
+
+      // Check is response contains node type description.
+      // Do not check response structure just be sure <nodeType> tag exists.
+      Document xml = DocumentBuilderFactory.newInstance()
+         .newDocumentBuilder().parse(new ByteArrayInputStream(((String)response.getEntity()).getBytes()));
+      XPath xpath = XPathFactory.newInstance().newXPath();
+      xpath.setNamespaceContext(new NodeTypesNamespaceContext());
+      org.w3c.dom.Node nodeType = (org.w3c.dom.Node)xpath.evaluate("//nodeType", xml, XPathConstants.NODE);
+      assertNotNull("There is no generated node type in response. ", nodeType);
+   }
+
+   @Test
+   public void testNodeTypeGenerationScriptNotFound() throws Exception
+   {
+      ContainerResponse response = launcher.service(
+         "POST",
+         "/ide/chromattic/generate-nodetype-definition?vfsid=ws&id=" + dataObject.getId() + "_WRONG" + "&nodeTypeFormat=EXO",
+         "",
+         null,
+         null,
+         null,
+         null);
+      assertEquals(500, response.getStatus());
+      log.info("Generated node types " + response.getEntity());
+   }
+
+   @Test
+   public void testNodeTypeGenerationCND() throws Exception
+   {
+      ContainerResponse response = launcher.service(
+         "POST",
+         "/ide/chromattic/generate-nodetype-definition?vfsid=ws&id=" + dataObject.getId() + "&nodeTypeFormat=CND",
+         "",
+         null,
+         null,
+         null,
+         null);
+      assertEquals(200, response.getStatus());
+      log.info("Generated node types " + response.getEntity());
+   }
+
+   @Test
+   public void testNodeType() throws Exception
+   {
+      ContainerResponse response = launcher.service("POST",
+         "/ide/chromattic/register-nodetype/EXO/4",
+         "",
+         null,
+         ntd.getBytes(),
+         null,
+         null);
+      assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+   }
 }

@@ -41,11 +41,7 @@
             <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
             <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
 
-            <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
-            <property name="log4j.category.jcr.ext.RestRepositoryService" value="DEBUG" />
-            <property name="log4j.logger.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" />
-            <property name="log4j.logger.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
-
+            <property name="log4j.logger.org.everrest.core.impl.method.DefaultMethodInvoker" value="DEBUG" />
          </properties-param>
       </init-params>
    </component>
@@ -53,10 +49,12 @@
    <component>
       <type>org.everrest.exoplatform.EverrestInitializer</type>
    </component>
+
    <component>
       <key>org.everrest.core.ResourceBinder</key>
       <type>org.everrest.core.impl.ResourceBinderImpl</type>
    </component>
+
    <component>
       <type>org.everrest.exoplatform.ProvidersRegistry</type>
    </component>
@@ -64,7 +62,6 @@
    <component>
       <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
    </component>
-
 
    <component>
       <key>org.everrest.core.RequestHandler</key>
@@ -76,9 +73,11 @@
          </value-param>
       </init-params>
    </component>
+
    <component>
       <type>org.everrest.exoplatform.StartableApplication</type>
    </component>
+
    <component>
       <type>org.everrest.exoplatform.ExoDependencySupplier</type>
    </component>
@@ -128,12 +127,9 @@
       </init-params>
    </component>
 
-
    <component>
       <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
    </component>
-
-
 
    <component>
       <type>org.exoplatform.services.jcr.ext.resource.NodeRepresentationService</type>
@@ -146,7 +142,6 @@
    <component>
       <type>org.exoplatform.services.jcr.ext.resource.jcr.Handler</type>
    </component>
-
 
    <component>
       <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService</type>
@@ -170,7 +165,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.groovy.JcrGroovyCompiler</type>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
    </component>
 
    <component>
@@ -205,7 +200,6 @@
       </init-params>
    </component>
 
-
    <external-component-plugins>
       <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
       <component-plugin>
@@ -236,7 +230,6 @@
          </init-params>
       </component-plugin>
    </external-component-plugins>
-
 
 </configuration>
 
