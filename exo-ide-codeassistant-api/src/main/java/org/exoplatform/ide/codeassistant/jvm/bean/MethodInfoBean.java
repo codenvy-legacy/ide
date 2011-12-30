@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 
 import java.util.Collections;
 import java.util.List;
@@ -82,8 +82,9 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
 
    }
 
+  
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#getDeclaringClass()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#getDeclaringClass()
     */
    @Override
    public String getDeclaringClass()
@@ -92,7 +93,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#getExceptionTypes()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#getExceptionTypes()
     */
    @Override
    public List<String> getExceptionTypes()
@@ -102,7 +103,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#getParameterNames()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#getParameterNames()
     */
    @Override
    public List<String> getParameterNames()
@@ -111,7 +112,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#getParameterTypes()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#getParameterTypes()
     */
    @Override
    public List<String> getParameterTypes()
@@ -120,7 +121,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#getReturnType()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#getReturnType()
     */
    @Override
    public String getReturnType()
@@ -129,7 +130,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#isConstructor()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#isConstructor()
     */
    @Override
    public boolean isConstructor()
@@ -138,7 +139,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#setConstructor(boolean)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#setConstructor(boolean)
     */
    @Override
    public void setConstructor(boolean isConstructor)
@@ -147,7 +148,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#setDeclaringClass(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#setDeclaringClass(java.lang.String)
     */
    @Override
    public void setDeclaringClass(String declaringClass)
@@ -156,7 +157,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#setExceptionTypes(java.util.List)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#setExceptionTypes(java.util.List)
     */
    @Override
    public void setExceptionTypes(List<String> exceptionTypes)
@@ -172,7 +173,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#setParameterNames(java.util.List)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#setParameterNames(java.util.List)
     */
    @Override
    public void setParameterNames(List<String> parameterNames)
@@ -189,7 +190,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#setParameterTypes(java.util.List)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#setParameterTypes(java.util.List)
     */
    @Override
    public void setParameterTypes(List<String> parameterTypes)
@@ -206,7 +207,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#setReturnType(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#setReturnType(java.lang.String)
     */
    @Override
    public void setReturnType(String returnType)

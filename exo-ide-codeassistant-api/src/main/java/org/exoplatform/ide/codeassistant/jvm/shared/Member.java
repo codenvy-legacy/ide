@@ -16,19 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.jvm;
+package org.exoplatform.ide.codeassistant.jvm.shared;
+
 
 /**
- * Short information about class or interface. Contain fqn, short name,
- * modifiers Example : { "name": "java.lang.String", "modifiers": 0, "type":
- * "CLASS" }
+ * 
+ * Member is reflects identifying information about a single member (a field or
+ * a method) or a constructor.
+ * 
+ * @see FieldInfo
+ * @see MethodInfo
  * 
  */
-public interface ShortTypeInfo extends Member
+public interface Member
 {
 
-   String getType();
+   /**
+    * @return the modifiers
+    */
+   int getModifiers();
 
-   void setType(String type);
+   /**
+    * @return the name
+    */
+   String getName();
+
+   /**
+    * @param modifiers
+    *           the modifiers to set
+    */
+   void setModifiers(int modifiers);
+
+   /**
+    * @param name
+    *           the name to set
+    */
+   void setName(String name);
 
 }

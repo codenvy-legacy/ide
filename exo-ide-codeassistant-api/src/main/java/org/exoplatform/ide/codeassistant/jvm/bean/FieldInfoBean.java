@@ -19,7 +19,7 @@
 
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 
 public class FieldInfoBean extends MemberBean implements FieldInfo
 {
@@ -46,7 +46,7 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#getDeclaringClass()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#getDeclaringClass()
     */
    @Override
    public String getDeclaringClass()
@@ -55,7 +55,7 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#getType()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#getType()
     */
    @Override
    public String getType()
@@ -64,7 +64,7 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#setDeclaringClass(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#setDeclaringClass(java.lang.String)
     */
    @Override
    public void setDeclaringClass(String declaringClass)
@@ -73,7 +73,7 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#setType(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#setType(java.lang.String)
     */
    @Override
    public void setType(String type)

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+
 import java.util.List;
 
 /**

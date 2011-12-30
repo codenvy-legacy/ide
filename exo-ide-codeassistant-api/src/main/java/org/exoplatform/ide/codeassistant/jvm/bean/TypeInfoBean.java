@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +55,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#getFields()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#getFields()
     */
    @Override
    public List<FieldInfo> getFields()
@@ -64,7 +64,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#getInterfaces()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#getInterfaces()
     */
    @Override
    public List<String> getInterfaces()
@@ -73,7 +73,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#getMethods()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#getMethods()
     */
    @Override
    public List<MethodInfo> getMethods()
@@ -82,7 +82,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#getSuperClass()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#getSuperClass()
     */
    @Override
    public String getSuperClass()
@@ -91,7 +91,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#setFields(java.util.List)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#setFields(java.util.List)
     */
    @Override
    public void setFields(List<FieldInfo> fields)
@@ -107,7 +107,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#setInterfaces(java.util.List)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#setInterfaces(java.util.List)
     */
    @Override
    public void setInterfaces(List<String> interfaces)
@@ -123,7 +123,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#setMethods(java.util.List)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#setMethods(java.util.List)
     */
    @Override
    public void setMethods(List<MethodInfo> methods)
@@ -132,7 +132,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#setSuperClass(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#setSuperClass(java.lang.String)
     */
    @Override
    public void setSuperClass(String superClass)

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 
 public class ShortTypeInfoBean extends MemberBean implements ShortTypeInfo
 {
@@ -39,7 +39,7 @@ public class ShortTypeInfoBean extends MemberBean implements ShortTypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo#getType()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo#getType()
     */
    @Override
    public String getType()
@@ -48,7 +48,7 @@ public class ShortTypeInfoBean extends MemberBean implements ShortTypeInfo
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo#setType(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo#setType(java.lang.String)
     */
    @Override
    public void setType(String type)

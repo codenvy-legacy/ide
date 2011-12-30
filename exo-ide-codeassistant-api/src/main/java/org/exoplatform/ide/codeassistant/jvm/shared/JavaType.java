@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.jvm;
+package org.exoplatform.ide.codeassistant.jvm.shared;
 
 import java.lang.reflect.Modifier;
 
@@ -34,11 +34,7 @@ public enum JavaType {
    public static JavaType fromClassAttribute(int attr)
    {
 
-      if ((0x00002000 & attr) != 0)
-      {
-         return ANNOTATION;
-      }
-      else if (Modifier.isInterface(attr))
+      if (Modifier.isInterface(attr))
       {
          return INTERFACE;
       }
@@ -46,9 +42,10 @@ public enum JavaType {
       {
          return ENUM;
       }
-      else
+      else if ((0x00002000 & attr) != 0)
       {
-         return CLASS;
+         return ANNOTATION;
       }
+      return CLASS;
    }
 }

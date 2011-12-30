@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
-import org.exoplatform.ide.codeassistant.jvm.Member;
+import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 
 import java.lang.reflect.Modifier;
 
@@ -40,7 +40,7 @@ public abstract class MemberBean implements Member
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#getModifiers()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.Member#getModifiers()
     */
    @Override
    public int getModifiers()
@@ -49,7 +49,7 @@ public abstract class MemberBean implements Member
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#getName()
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.Member#getName()
     */
    @Override
    public String getName()
@@ -157,7 +157,7 @@ public abstract class MemberBean implements Member
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#setModifiers(int)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.Member#setModifiers(int)
     */
    @Override
    public void setModifiers(int modifiers)
@@ -166,7 +166,7 @@ public abstract class MemberBean implements Member
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#setName(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.Member#setName(java.lang.String)
     */
    @Override
    public void setName(String name)

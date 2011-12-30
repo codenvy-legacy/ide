@@ -16,29 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.jvm;
+package org.exoplatform.ide.codeassistant.jvm.shared;
 
 /**
- * Represent information about class field. Can be transform to JSON. Example of
- * JSON: <code>
- * {
- * "declaringClass": "java.lang.String",
- * "name": "CASE_INSENSITIVE_ORDER",
- * "modifiers": 25,
- * "type": "Comparator"
- * }
- * </code>
- * 
+ * Short information about class or interface. Contain fqn, short name,
+ * modifiers Example : { "name": "java.lang.String", "modifiers": 0, "type":
+ * "CLASS" }
  * 
  */
-public interface FieldInfo extends Member
+public interface ShortTypeInfo extends Member
 {
 
-   String getDeclaringClass();
-
    String getType();
-
-   void setDeclaringClass(String declaringClass);
 
    void setType(String type);
 

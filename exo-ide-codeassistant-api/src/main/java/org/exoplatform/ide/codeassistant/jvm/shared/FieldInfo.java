@@ -16,41 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.jvm;
-
+package org.exoplatform.ide.codeassistant.jvm.shared;
 
 /**
+ * Represent information about class field. Can be transform to JSON. Example of
+ * JSON: <code>
+ * {
+ * "declaringClass": "java.lang.String",
+ * "name": "CASE_INSENSITIVE_ORDER",
+ * "modifiers": 25,
+ * "type": "Comparator"
+ * }
+ * </code>
  * 
- * Member is reflects identifying information about a single member (a field or
- * a method) or a constructor.
- * 
- * @see FieldInfo
- * @see MethodInfo
  * 
  */
-public interface Member
+public interface FieldInfo extends Member
 {
 
-   /**
-    * @return the modifiers
-    */
-   int getModifiers();
+   String getDeclaringClass();
 
-   /**
-    * @return the name
-    */
-   String getName();
+   String getType();
 
-   /**
-    * @param modifiers
-    *           the modifiers to set
-    */
-   void setModifiers(int modifiers);
+   void setDeclaringClass(String declaringClass);
 
-   /**
-    * @param name
-    *           the name to set
-    */
-   void setName(String name);
+   void setType(String type);
 
 }

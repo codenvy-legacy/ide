@@ -10,49 +10,49 @@
    <packaging>jar</packaging>
    <name>eXo IDE :: CodeAssitant : API</name>
    <dependencies>
-   <dependency>
-    <groupId>org.exoplatform.ide</groupId>
-    <artifactId>exo-ide-vfs</artifactId>
-   </dependency>    
-   <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-   </dependency>
-   
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>ch.qos.logback</groupId>
          <artifactId>logback-classic</artifactId>
          <version>0.9.20</version>
          <scope>test</scope>
       </dependency>
-                                                
-   
-   <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-   </dependency>
-   <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.9.0-rc1</version>
-      <scope>test</scope>
-   </dependency>           
-   <dependency>
-      <groupId>org.everrest</groupId>
-      <artifactId>everrest-core</artifactId>
-      <scope>test</scope>
-   </dependency>
-                       
-   
+
+
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-all</artifactId>
+         <version>1.9.0-rc1</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+
    </dependencies>
    <build>
       <resources>
          <resource>
             <directory>src/main/java</directory>
-            <includes>
-               <include>**/*.xml</include>
-            </includes>
+         </resource>
+         <resource>
+            <directory>src/main/resources</directory>
          </resource>
       </resources>
       <sourceDirectory>src/main/java</sourceDirectory>
