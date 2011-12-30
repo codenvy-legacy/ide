@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -225,10 +225,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
     */
    protected void getSystemInformation()
    {
-      CloudFoundryClientService.getInstance().getSystemInfo(server, new AsyncRequestCallback<SystemInfo>()
+      CloudFoundryClientService.getInstance().getSystemInfo(server, new AsyncRequestCallback<ISystemInfo>()
       {
          @Override
-         protected void onSuccess(SystemInfo result)
+         protected void onSuccess(ISystemInfo result)
          {
             display.getEmailField().setValue(result.getUser());
             getTargets();

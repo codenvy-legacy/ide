@@ -32,9 +32,6 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
 import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
@@ -278,8 +275,8 @@ public class Cloudfoundry
       // Assume war-file may be located remotely, e.g. if use Jenkins to produce file for us.
       // Check number of applications.
       SystemInfo systemInfo = systemInfo(credential);
-      SystemResources limits = systemInfo.getLimits();
-      SystemResources usage = systemInfo.getUsage();
+      SystemResources limits = (SystemResources)systemInfo.getLimits();
+      SystemResources usage = (SystemResources)systemInfo.getUsage();
 
       checkApplicationNumberLimit(limits, usage);
 
@@ -797,8 +794,8 @@ public class Cloudfoundry
       if (memory != currentMem)
       {
          SystemInfo systemInfo = systemInfo(credential);
-         SystemResources limits = systemInfo.getLimits();
-         SystemResources usage = systemInfo.getUsage();
+         SystemResources limits = (SystemResources)systemInfo.getLimits();
+         SystemResources usage = (SystemResources)systemInfo.getUsage();
          if (limits != null && usage != null //
             && (appInfo.getInstances() * (memory - currentMem)) > (limits.getMemory() - usage.getMemory()))
          {
@@ -1456,8 +1453,8 @@ public class Cloudfoundry
          Credential credential = getCredential(server);
 
          SystemInfo systemInfo = systemInfo(credential);
-         SystemResources limits = systemInfo.getLimits();
-         SystemResources usage = systemInfo.getUsage();
+         SystemResources limits = (SystemResources)systemInfo.getLimits();
+         SystemResources usage = (SystemResources)systemInfo.getUsage();
 
          checkApplicationNumberLimit(limits, usage);
 

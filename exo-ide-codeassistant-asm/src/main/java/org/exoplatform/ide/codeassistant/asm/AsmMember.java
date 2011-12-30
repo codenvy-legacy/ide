@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
-import org.exoplatform.ide.codeassistant.jvm.Member;
+import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MemberNode;
 

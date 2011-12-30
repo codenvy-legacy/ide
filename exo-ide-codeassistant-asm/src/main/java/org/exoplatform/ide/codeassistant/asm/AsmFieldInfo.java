@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldNode;
 

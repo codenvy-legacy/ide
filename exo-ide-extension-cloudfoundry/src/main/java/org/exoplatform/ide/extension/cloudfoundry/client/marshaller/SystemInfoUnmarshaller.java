@@ -18,17 +18,18 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
-import com.google.gwt.json.client.JSONParser;
-
-import com.google.gwt.json.client.JSONObject;
-
-import com.google.gwt.http.client.Response;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
+import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemResources;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 /**
  * Unmarshaller for system information response on JSON format.
@@ -39,16 +40,23 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
  */
 public class SystemInfoUnmarshaller implements Unmarshallable, Constants
 {
+   
+   public interface MyFactory extends AutoBeanFactory
+   {
+      AutoBean<ISystemInfo> systemInfo();
+      AutoBean<ISystemResources> systemResources();
+   }
+   
    /**
     * System information.
     */
-   private SystemInfo systemInfo;
+   private ISystemInfo systemInfo;
 
    /**
     * @param systemInfo system information
       
     */
-   public SystemInfoUnmarshaller(SystemInfo systemInfo)
+   public SystemInfoUnmarshaller(ISystemInfo systemInfo)
    {
       this.systemInfo = systemInfo;
    }
@@ -61,16 +69,21 @@ public class SystemInfoUnmarshaller implements Unmarshallable, Constants
    {
       try
       {
-         JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
-         if (jsonObject == null)
-            return;
-         systemInfo.setDescription(jsonObject.get(DESCRIPTION).isString().stringValue());
-         systemInfo.setName(jsonObject.get(NAME).isString().stringValue());
-         systemInfo.setSupport(jsonObject.get(SUPPORT).isString().stringValue());
-         systemInfo.setUser(jsonObject.get(USER).isString().stringValue());
-         systemInfo.setVersion(jsonObject.get(VERSION).isString().stringValue());
-         systemInfo.setLimits(parseSystemResources(jsonObject.get(LIMITS).isObject()));
-         systemInfo.setUsage(parseSystemResources(jsonObject.get(USAGE).isObject()));
+         MyFactory factory = GWT.create(MyFactory.class);
+         
+         AutoBean<ISystemInfo> isi = AutoBeanCodex.decode(factory,ISystemInfo.class, response.getText());
+         systemInfo = isi.as();   
+         
+//         JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
+//         if (jsonObject == null)
+//            return;
+//         systemInfo.setDescription(jsonObject.get(DESCRIPTION).isString().stringValue());
+//         systemInfo.setName(jsonObject.get(NAME).isString().stringValue());
+//         systemInfo.setSupport(jsonObject.get(SUPPORT).isString().stringValue());
+//         systemInfo.setUser(jsonObject.get(USER).isString().stringValue());
+//         systemInfo.setVersion(jsonObject.get(VERSION).isString().stringValue());
+//         systemInfo.setLimits(parseSystemResources(jsonObject.get(LIMITS).isObject()));
+//         systemInfo.setUsage(parseSystemResources(jsonObject.get(USAGE).isObject()));
       }
       catch (Exception e)
       {
@@ -84,13 +97,13 @@ public class SystemInfoUnmarshaller implements Unmarshallable, Constants
     * @param jsonObject 
     * @return {@link SystemResources} system resources
     */
-   protected SystemResources parseSystemResources(JSONObject jsonObject)
-   {
-      SystemResources systemResources = new SystemResources();
-      systemResources.setApps((int)jsonObject.get(APPS).isNumber().doubleValue());
-      systemResources.setMemory((int)jsonObject.get(MEMORY).isNumber().doubleValue());
-      systemResources.setServices((int)jsonObject.get(SERVICES).isNumber().doubleValue());
-      return systemResources;
-   }
+//   protected ISystemResources parseSystemResources(JSONObject jsonObject)
+//   {
+//      ISystemResources systemResources = new SystemResources();
+//      systemResources.setApps((int)jsonObject.get(APPS).isNumber().doubleValue());
+//      systemResources.setMemory((int)jsonObject.get(MEMORY).isNumber().doubleValue());
+//      systemResources.setServices((int)jsonObject.get(SERVICES).isNumber().doubleValue());
+//      return systemResources;
+//   }
 
 }

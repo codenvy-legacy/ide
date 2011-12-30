@@ -173,7 +173,7 @@ public class ModifierHelper
     */
    public static boolean isAbstract(int mod)
    {
-      return (mod & ABSTRACT) != 0;
+     return (mod & ABSTRACT) != 0;
    }
 
    /**

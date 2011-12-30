@@ -46,8 +46,6 @@ public class FindClassesUnmarshaller implements Unmarshallable
 
    private static final String NAME = "name";
 
-   private static final String FQN = "qualifiedName";
-
    private static final String MODIFIERS = "modifiers";
 
    private static final String TYPE = "type";
@@ -81,30 +79,20 @@ public class FindClassesUnmarshaller implements Unmarshallable
    private void parseClassesName(String body)
    {
       JSONArray jArray = JSONParser.parseLenient(body).isArray();
-
       for (int i = 0; i < jArray.size(); i++)
       {
          JSONObject jObject = jArray.get(i).isObject();
-
-         Token token =
-            new TokenImpl(jObject.get(NAME).isString().stringValue(), TokenType.valueOf(jObject.get(TYPE)
-               .isString().stringValue()));
-
-         for (String key : jObject.keySet())
+         if (jObject.containsKey(NAME) && jObject.containsKey(MODIFIERS) && jObject.containsKey(TYPE))
          {
-            if (key.equals(FQN))
-            {
-               token.setProperty(TokenProperties.FQN, new StringProperty(jObject.get(key).isString().stringValue()));
-            }
-            if (key.equals(MODIFIERS))
-            {
-               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(jObject.get(key).isNumber().doubleValue()));
-            }
-            
+            String fqn = jObject.get(NAME).isString().stringValue();
+            String name = fqn.substring(fqn.lastIndexOf(".") + 1);
+            String type = jObject.get(TYPE).isString().stringValue();
+            double modifiers = (int)jObject.get(MODIFIERS).isNumber().doubleValue();
+            Token token = new TokenImpl(name, TokenType.valueOf(type));
+            token.setProperty(TokenProperties.FQN, new StringProperty(fqn));
+            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifiers));
+            tokens.add(token);
          }
-         tokens.add(token);
       }
-
    }
-
 }

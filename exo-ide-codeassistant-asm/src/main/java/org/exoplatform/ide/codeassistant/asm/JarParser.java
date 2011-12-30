@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.io.File;
 import java.io.FileInputStream;

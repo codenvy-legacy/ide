@@ -40,8 +40,6 @@ public class TypesUnmarshaller implements Unmarshallable
 
    private static final String NAME = "name";
 
-   private static final String FQN = "qualifiedName";
-
    private static final String MODIFIERS = "modifiers";
 
    private static final String TYPE = "type";
@@ -86,9 +84,11 @@ public class TypesUnmarshaller implements Unmarshallable
 
          for (String key : jObject.keySet())
          {
-            if (key.equals(FQN))
+            if (key.equals("name"))
             {
-               info.setQualifiedName(jObject.get(key).isString().stringValue());
+               String fqn = jObject.get(key).isString().stringValue();
+               info.setQualifiedName(fqn);
+               info.setName(fqn.substring(fqn.lastIndexOf(".")+1));
             }
             if (key.equals(MODIFIERS))
             {

@@ -18,13 +18,19 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.JavaType;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.thoughtworks.qdox.model.DocletTag;
@@ -60,7 +66,7 @@ public class Util
 
    public static TypeInfo convert(JavaClass clazz)
    {
-      TypeInfo type = new TypeInfo();
+      TypeInfo type = new TypeInfoBean();
       type.setName(clazz.getFullyQualifiedName());
       type.setType(getType(clazz).name());
       if (clazz.getSuperJavaClass() != null)
@@ -70,7 +76,7 @@ public class Util
 
       type.setModifiers(modifiersToInteger(clazz.getModifiers()));
 
-      type.setInterfaces(toArray(clazz.getImplements()));
+      type.setInterfaces(toListFqn(clazz.getImplements()));
       type.setFields(toFieldInfo(clazz.getFields()));
       JavaMethod[] methods = clazz.getMethods(true);
       type.setMethods(toMethods(methods));
@@ -98,8 +104,8 @@ public class Util
       List<MethodInfo> con = new ArrayList<MethodInfo>();
       for (JavaMethod m : methods)
       {
-         MethodInfo i = new MethodInfo();
-         i.setGenericExceptionTypes(toArray(m.getExceptions()));
+         MethodInfo i = new MethodInfoBean();
+         i.setExceptionTypes(toListFqn(m.getExceptions()));
          i.setModifiers(modifiersToInteger(m.getModifiers()));
          Type[] parameterTypes = m.getParameterTypes(true);
          i.setParameterTypes(toParameters(parameterTypes));
@@ -109,7 +115,7 @@ public class Util
          if (!m.isConstructor())
          {
             String returnType = m.getReturnType().getFullyQualifiedName();
-            i.setGenericReturnType(returnType);
+            i.setReturnType(returnType);
             i.setConstructor(false);
          }
          else
@@ -144,7 +150,7 @@ public class Util
       List<FieldInfo> fi = new ArrayList<FieldInfo>();
       for (int i = 0; i < fields.length; i++)
       {
-         FieldInfo info = new FieldInfo();
+         FieldInfo info = new FieldInfoBean();
          JavaField f = fields[i];
          info.setDeclaringClass(f.getParentClass().getFullyQualifiedName());
          info.setType(f.getType().getValue());
@@ -177,7 +183,7 @@ public class Util
     * @param types
     * @return
     */
-   private static List<String> toArray(Type[] types)
+   private static List<String> toListFqn(Type[] types)
    {
       List<String> arr = new ArrayList<String>();
       for (int i = 0; i < types.length; i++)
@@ -193,7 +199,7 @@ public class Util
     */
    public static ShortTypeInfo toShortTypeInfo(JavaClass clazz)
    {
-      ShortTypeInfo info = new ShortTypeInfo();
+      ShortTypeInfo info = new ShortTypeInfoBean();
       info.setModifiers(modifiersToInteger(clazz.getModifiers()));
       info.setName(clazz.getFullyQualifiedName());
       info.setType(getType(clazz).name());

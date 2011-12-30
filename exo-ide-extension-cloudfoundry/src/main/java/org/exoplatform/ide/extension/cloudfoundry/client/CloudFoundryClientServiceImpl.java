@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
@@ -31,11 +32,13 @@ import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.Cloudfoundry
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CredentailsMarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller.MyFactory;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.server.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -489,15 +492,15 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getSystemInfo(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback)
+   public void getSystemInfo(String server, AsyncRequestCallback<ISystemInfo> callback)
    {
       final String url = restServiceContext + SYSTEM_INFO_URL;
 
       String params = (server == null) ? "" : "?server=" + server;
 
-      SystemInfo systemInfo = new SystemInfo();
+      MyFactory factory = GWT.create(SystemInfoUnmarshaller.MyFactory.class);
+      ISystemInfo systemInfo = factory.systemInfo().as(); 
       SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
-
       callback.setResult(systemInfo);
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);

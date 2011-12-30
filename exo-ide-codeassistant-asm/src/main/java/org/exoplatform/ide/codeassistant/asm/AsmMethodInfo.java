@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.signature.SignatureReader;
 import org.objectweb.asm.tree.LocalVariableNode;

@@ -14,40 +14,46 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-server</artifactId>
       </dependency>
-      
-<!--       <dependency> -->
-<!--          <groupId>org.exoplatform.jcr</groupId> -->
-<!--          <artifactId>exo.jcr.component.core</artifactId> -->
-<!--          <exclusions> -->
-<!--             <exclusion> -->
-<!--                <artifactId>xstream</artifactId> -->
-<!--                <groupId>xstream</groupId> -->
-<!--             </exclusion> -->
-<!--          </exclusions> -->
-<!--       </dependency> -->
-      
+
+      <!-- <dependency> -->
+      <!-- <groupId>org.exoplatform.jcr</groupId> -->
+      <!-- <artifactId>exo.jcr.component.core</artifactId> -->
+      <!-- <exclusions> -->
+      <!-- <exclusion> -->
+      <!-- <artifactId>xstream</artifactId> -->
+      <!-- <groupId>xstream</groupId> -->
+      <!-- </exclusion> -->
+      <!-- </exclusions> -->
+      <!-- </dependency> -->
+
       <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
       </dependency>
       
+       <dependency>
+         <groupId>org.json</groupId>
+         <artifactId>json</artifactId>
+         <version>1.5</version>
+      </dependency>
+
       <dependency>
          <groupId>javax.inject</groupId>
          <artifactId>javax.inject</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-jenkins</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
-         
-   <!-- Client side -->
+
+      <!-- Client side -->
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
@@ -70,24 +76,24 @@
          <artifactId>exo-ide-framework-client</artifactId>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-integration-exo</artifactId>
          <scope>test</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-test</artifactId>
          <scope>test</scope>
       </dependency>
-    
+
    </dependencies>
    <build>
       <resources>
@@ -100,5 +106,25 @@
       </resources>
       <sourceDirectory>src/main/java</sourceDirectory>
       <outputDirectory>target/classes</outputDirectory>
+      <plugins>
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.6</version>
+            <configuration>
+               <additionalClasspathElements>
+                  <additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
+                  <additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
+               </additionalClasspathElements>
+               <useManifestOnlyJar>false</useManifestOnlyJar>
+               <forkMode>always</forkMode>
+               <systemProperties>
+                  <property>
+                     <name>gwt.args</name>
+                     <value>-out ${project.build.directory}</value>
+                  </property>
+               </systemProperties>
+            </configuration>
+         </plugin>
+      </plugins>
    </build>
 </project>

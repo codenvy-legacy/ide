@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
+import org.exoplatform.ide.extension.cloudfoundry.server.SystemService;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $

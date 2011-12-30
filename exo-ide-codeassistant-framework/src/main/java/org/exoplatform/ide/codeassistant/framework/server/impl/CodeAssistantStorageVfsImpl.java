@@ -22,12 +22,13 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage;
 import org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -54,8 +55,6 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
 
    private final String wsClassStorage;
 
-   private final String wsDocStorage;
-
    private final VirtualFileSystemRegistry vfsRegistry;
 
    /**
@@ -66,7 +65,6 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
    {
       this.vfsRegistry = vfsRegistry;
       wsClassStorage = classInfoStrorage.getClassStorageWorkspace();
-      wsDocStorage = docStorage.getDocStorageWorkspace();
    }
 
    /**
@@ -164,7 +162,7 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
     */
    private ShortTypeInfo fromItem(Item i)
    {
-      ShortTypeInfo info = new ShortTypeInfo();
+      ShortTypeInfo info = new ShortTypeInfoBean();
       if (i.hasProperty("exoide:modifieres"))
       {
          info.setModifiers(((Double)i.getPropertyValue("exoide:modifieres")).intValue());

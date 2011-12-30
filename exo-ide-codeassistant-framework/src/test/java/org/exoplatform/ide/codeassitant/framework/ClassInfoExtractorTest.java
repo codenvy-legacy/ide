@@ -19,10 +19,10 @@
 package org.exoplatform.ide.codeassitant.framework;
 
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.JavaType;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

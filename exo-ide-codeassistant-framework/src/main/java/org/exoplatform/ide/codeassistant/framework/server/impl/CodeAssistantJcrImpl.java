@@ -27,9 +27,10 @@ import org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorag
 import org.exoplatform.ide.codeassistant.framework.server.utils.JcrUtils;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.jvm.JavaType;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
@@ -144,7 +145,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo(node.getProperty("exoide:fqn").getString(),//
+            types.add(new ShortTypeInfoBean(node.getProperty("exoide:fqn").getString(),//
                (int)node.getProperty("exoide:modifieres").getLong(),//
                node.getProperty("exoide:type").getString()));
          }
@@ -187,7 +188,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo(node.getProperty("exoide:fqn").getString(),//
+            types.add(new ShortTypeInfoBean(node.getProperty("exoide:fqn").getString(),//
                (int)node.getProperty("exoide:modifieres").getLong(),// 
                node.getProperty("exoide:type").getString()));
          }
@@ -234,7 +235,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            types.add(new ShortTypeInfo(node.getProperty("exoide:fqn").getString(), //
+            types.add(new ShortTypeInfoBean(node.getProperty("exoide:fqn").getString(), //
                (int)node.getProperty("exoide:modifieres").getLong(),//
                node.getProperty("exoide:type").getString()));
          }

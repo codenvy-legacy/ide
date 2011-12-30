@@ -46,8 +46,20 @@
       </dependency>
       
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-api</artifactId>
+      </dependency>
+      
+      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+      
+       <dependency>
+         <groupId>org.json</groupId>
+         <artifactId>json</artifactId>
+         <version>1.5</version>
          <scope>test</scope>
       </dependency>
 

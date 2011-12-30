@@ -18,15 +18,12 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services.marshal;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
 import org.exoplatform.ide.editor.api.codeassitant.ObjectProperty;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
@@ -42,6 +39,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Response;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+
 /**
  * @see Unmarshallable
  * Created by The eXo Platform SAS.
@@ -53,40 +56,19 @@ import java.util.Map;
 public class ClassDescriptionUnmarshaller implements Unmarshallable
 {
 
-   private static final String GENERIC_PARAMETER_TYPES = "genericParameterTypes";
-
-   private static final String PARAMETER_TYPES = "parameterTypes";
-
-   private static final String RETURN_TYPE = "returnType";
-
-   private static final String DECLARING_CLASS = "declaringClass";
-
-   private static final String JAVA_TYPE = "type";
-
-   private static final String NAME = "name";
-
-   private static final String MODIFIERS = "modifiers";
 
    private JavaClass classInfo;
 
-   private static String METHODS = "methods";
-
-   private static String DECLARED_METHODS = "declaredMethods";
-
-   private static String CONSTRUCTORS = "constructors";
-
-   private static String DECLARED_CONSTRUCTORS = "declaredConstructors";
-
-   private static String FIELDS = "fields";
-
-   private static String DECLARED_FIELDS = "declaredFields";
+   interface MyFactory extends AutoBeanFactory
+   {
+      AutoBean<TypeInfo> typeInfo();
+   }
 
    /**
     * @param classInfo
     */
    public ClassDescriptionUnmarshaller(JavaClass classInfo)
    {
-      super();
       this.classInfo = classInfo;
    }
 
@@ -98,7 +80,12 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
       try
       {
          if (response.getStatusCode() != HTTPStatus.NO_CONTENT)
-            parseClassDescription(response.getText());
+         {
+            MyFactory myFactory = GWT.create(MyFactory.class);
+            AutoBean<TypeInfo> bean = AutoBeanCodex.decode(myFactory, TypeInfo.class, response.getText());
+            TypeInfo info = bean.as();
+            toJavaClass(info);
+         }
       }
       catch (Exception e)
       {
@@ -106,182 +93,111 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
       }
    }
 
-   private void parseClassDescription(String json)
+   private void toJavaClass(TypeInfo info)
    {
-
-      JSONObject jObject = JSONParser.parseLenient(json).isObject();
-      if (jObject.containsKey(CONSTRUCTORS))
-      {
-         classInfo.getPublicConstructors().addAll(getPublicConstructors(jObject.get(CONSTRUCTORS)));
-      }
-
-      if (jObject.containsKey(FIELDS))
-      {
-         classInfo.getPublicFields().addAll(getPublicFields(jObject.get(FIELDS)));
-      }
-
-      if (jObject.containsKey(METHODS))
-      {
-         classInfo.getPublicMethods().addAll(getPublicMethods(jObject.get(METHODS)));
-         classInfo.getAbstractMethods().addAll(getAbstractMethods(jObject.get(METHODS)));
-      }
-
+      classInfo.getPublicFields().addAll(getPublicFields(info.getFields()));
+      classInfo.getPublicMethods().addAll(getPublicMethods(info.getMethods()));
+      classInfo.getAbstractMethods().addAll(getAbstractMethods(info.getMethods()));
+      classInfo.getPublicConstructors().addAll(getPublicConstructors(info.getMethods()));
    }
 
    /**
-    * @param jsonValue
+    * @param list
     * @return
     */
-   private Collection<? extends Token> getAbstractMethods(JSONValue jsonValue)
+   private Collection<? extends Token> getAbstractMethods(List<MethodInfo> list)
    {
       //TODO filter same methods
       Map<String, Token> methods = new HashMap<String, Token>();
-      if (jsonValue.isArray() != null)
+      for (MethodInfo mi : list)
       {
-         JSONArray methodsArray = jsonValue.isArray();
-         for (int i = 0; i < methodsArray.size(); i++)
+         int modifier = mi.getModifiers();
+         if (ModifierHelper.isAbstract(modifier))
          {
-            JSONObject me = methodsArray.get(i).isObject();
-            int modifier = (int)me.get(MODIFIERS).isNumber().doubleValue();
-            if (ModifierHelper.isAbstract(modifier))
-            {
-               Token token = new TokenImpl(me.get(NAME).isString().stringValue(), TokenType.METHOD);
-               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(me.get(DECLARING_CLASS).isString()
-                  .stringValue()));
-               token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(me.get(RETURN_TYPE).isString()
-                  .stringValue()));
-               token.setProperty(TokenProperties.GENERIC_RETURN_TYPE, new StringProperty(me.get("genericReturnType")
-                  .isString().stringValue()));
-               token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(me.get(PARAMETER_TYPES).isString()
-                  .stringValue()));
-               token.setProperty(TokenProperties.GENERIC_PARAMETER_TYPES,
-                  new StringProperty(me.get(GENERIC_PARAMETER_TYPES).isString().stringValue()));
-               methods.put(me.get(NAME).isString().stringValue()
-                  + me.get(GENERIC_PARAMETER_TYPES).isString().stringValue(), token);
-            }
+            Token token = new TokenImpl(mi.getName(), TokenType.METHOD);
+            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
+            token.setProperty(TokenProperties.GENERIC_RETURN_TYPE, new StringProperty(mi.getReturnType()));
+            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi.getParameterTypes().toArray() : null));
+            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() !=  null ? mi.getExceptionTypes().toArray() : null));
+            methods.put(mi.getName() + mi.getParameterTypes().toArray().toString(), token);
          }
       }
-
       return methods.values();
    }
 
    /**
     * Get all public methods
-    * @param jsonValue
+    * @param list
     * @return {@link List} of {@link TokenExt} that contains all public method of class
     */
-   private List<? extends Token> getPublicMethods(JSONValue jsonValue)
+   private List<? extends Token> getPublicMethods(List<MethodInfo> list)
    {
       List<Token> methods = new ArrayList<Token>();
-      if (jsonValue.isArray() != null)
+      for (MethodInfo mi : list)
       {
-         JSONArray methodsArray = jsonValue.isArray();
-         for (int i = 0; i < methodsArray.size(); i++)
+         int modifier = (int)mi.getModifiers();
+         if (ModifierHelper.isPublic(modifier))
          {
-            JSONObject me = methodsArray.get(i).isObject();
-            int modifier = (int)me.get(MODIFIERS).isNumber().doubleValue();
-            if (ModifierHelper.isPublic(modifier))
-            {
-               Token token = new TokenImpl(me.get(NAME).isString().stringValue(), TokenType.METHOD);
-               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(me.get(DECLARING_CLASS).isString()
-                  .stringValue()));
-               token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(me.get(RETURN_TYPE).isString()
-                  .stringValue()));
-               token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(me.get(PARAMETER_TYPES).isString()
-                  .stringValue()));
-
-               methods.add(token);
-            }
+            Token token = new TokenImpl(mi.getName(), TokenType.METHOD);
+            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
+            token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(mi.getReturnType()));
+            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi.getParameterTypes().toArray() : null));
+            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() !=  null ? mi.getExceptionTypes().toArray() : null));
+            methods.add(token);
          }
       }
-
       return methods;
    }
 
    /**
     * Get all public fields
-    * @param jsonValue
+    * @param list
     * @return {@link List} of {@link TokenExt} that represent public fields of Class
     */
-   private List<? extends Token> getPublicFields(JSONValue jsonValue)
+   private List<? extends Token> getPublicFields(List<FieldInfo> list)
    {
       List<Token> fields = new ArrayList<Token>();
-      if (jsonValue.isArray() != null)
+      for (FieldInfo fi : list)
       {
-         JSONArray fieldsArray = jsonValue.isArray();
-         for (int i = 0; i < fieldsArray.size(); i++)
+         int modifier = fi.getModifiers();
+         if (ModifierHelper.isPublic(modifier))
          {
-            JSONObject fi = fieldsArray.get(i).isObject();
-            int modifier = (int)fi.get(MODIFIERS).isNumber().doubleValue();
-            if (ModifierHelper.isPublic(modifier))
-            {
-               Token token = new TokenImpl(fi.get(NAME).isString().stringValue(), TokenType.FIELD);
-               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(fi.get(DECLARING_CLASS).isString()
-                  .stringValue()));
-               token.setProperty(TokenProperties.ELEMENT_TYPE, new StringProperty(fi.get(JAVA_TYPE).isString()
-                  .stringValue()));
-               fields.add(token);
-            }
+            Token token = new TokenImpl(fi.getName(), TokenType.FIELD);
+            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(fi.getDeclaringClass()));
+            token.setProperty(TokenProperties.ELEMENT_TYPE, new StringProperty(fi.getType()));
+            fields.add(token);
          }
       }
-
       return fields;
    }
 
    /**
     * Get all public constructors 
-    * @param jsonValue
+    * @param list
     * @return {@link List} of {@link TokenExt} that represent Class constructors
     */
-   private List<? extends Token> getPublicConstructors(JSONValue jsonValue)
+   private List<? extends Token> getPublicConstructors(List<MethodInfo> list)
    {
       List<Token> constructors = new ArrayList<Token>();
-
-      if (jsonValue.isArray() != null)
+      for (MethodInfo mi : list)
       {
-         JSONArray con = jsonValue.isArray();
-         for (int i = 0; i < con.size(); i++)
+         int modifier = mi.getModifiers();
+         if (!ModifierHelper.isInterface(modifier))
          {
-            JSONObject c = con.get(i).isObject();
-            int modifier = (int)c.get(MODIFIERS).isNumber().doubleValue();
-            if (!ModifierHelper.isInterface(modifier))
-            {
-               String name = c.get(NAME).isString().stringValue();
-               name = name.substring(name.lastIndexOf('.') + 1);
-               Token token = new TokenImpl(name, TokenType.CONSTRUCTOR);
-               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(c.get(DECLARING_CLASS).isString()
-                  .stringValue()));
-               token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(c.get(PARAMETER_TYPES).isString()
-                  .stringValue()));
-               token.setProperty(TokenProperties.GENERIC_PARAMETER_TYPES,
-                  new StringProperty(c.get(GENERIC_PARAMETER_TYPES).isString().stringValue()));
-               token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES,
-                  new ObjectProperty(getExeptionTypes(c.get("genericExceptionTypes").isArray())));
-
-               constructors.add(token);
-            }
+            String name = mi.getName();
+            name = name.substring(name.lastIndexOf('.') + 1);
+            Token token = new TokenImpl(name, TokenType.CONSTRUCTOR);
+            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
+            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi.getParameterTypes().toArray() : null));
+            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() !=  null ? mi.getExceptionTypes().toArray() : null));
+            constructors.add(token);
          }
       }
-
       return constructors;
    }
-
-   /**
-    * @param array
-    * @return
-    */
-   private String[] getExeptionTypes(JSONArray array)
-   {
-      String[] ex = new String[array.size()];
-      for (int i = 0; i < array.size(); i++)
-      {
-         ex[i] = array.get(i).isString().stringValue();
-      }
-      return ex;
-   }
-
+   
 }

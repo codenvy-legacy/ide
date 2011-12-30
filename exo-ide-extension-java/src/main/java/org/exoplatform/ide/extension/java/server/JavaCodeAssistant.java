@@ -25,9 +25,10 @@ import com.thoughtworks.qdox.model.JavaMethod;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.jvm.JavaType;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderErrorHandler;
 import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderVfs;
 import org.exoplatform.ide.extension.java.server.parser.Util;
@@ -179,7 +180,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          {
             if (file.getId().equals(i.getId()) || ItemType.FILE != i.getItemType())
                continue;
-            classes.add(new ShortTypeInfo(getClassNameOnFileName(i.getName()),0, "CLASS"));
+            classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()),0, "CLASS"));
          }
       }
       return classes;
@@ -237,7 +238,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getByTypeFromProject(org.exoplatform.ide.codeassistant.jvm.JavaType, java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getByTypeFromProject(org.exoplatform.ide.codeassistant.jvm.shared.JavaType, java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
    protected List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId, String vfsId)

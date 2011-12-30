@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.extractors;
 
-import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.JavaType;
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -53,7 +55,7 @@ public class TypeInfoExtractor
     */
    public static TypeInfo extract(Class<?> clazz) throws IncompatibleClassChangeError
    {
-      TypeInfo classDescription = new TypeInfo();
+      TypeInfo classDescription = new TypeInfoBean();
       Constructor<?>[] constructors = clazz.getConstructors();
       List<MethodInfo> cds = new ArrayList<MethodInfo>(); 
       for (int i = 0; i < constructors.length; i++)
@@ -78,7 +80,7 @@ public class TypeInfoExtractor
       List<FieldInfo> fds = new ArrayList<FieldInfo>();
       for (int i = 0; i < fields.length; i++)
       {
-         fds.add(new FieldInfo(fields[i].getName(),//
+         fds.add(new FieldInfoBean(fields[i].getName(),//
             fields[i].getModifiers(),//
             fields[i].getType().getCanonicalName(), //
             fields[i].getDeclaringClass().getCanonicalName()));

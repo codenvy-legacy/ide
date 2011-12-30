@@ -23,8 +23,8 @@ import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.extension.groovy.server.Base;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -99,8 +99,7 @@ public class CodeAssistantTest extends Base
             + "&projectid=" + project.getId() + "&vfsid=" + vfs_id, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
       TypeInfo cd = (TypeInfo)response.getEntity();
-      Assert.assertEquals(methods, cd.getMethods().length);
-      Assert.assertEquals(decMethods, cd.getDeclaredMethods().length);
+      Assert.assertEquals(methods, cd.getMethods().size());
    }
 
    @Test

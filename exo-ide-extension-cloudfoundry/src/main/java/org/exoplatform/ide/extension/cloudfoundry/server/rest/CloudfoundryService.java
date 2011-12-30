@@ -20,12 +20,13 @@ package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
+import org.exoplatform.ide.extension.cloudfoundry.server.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -89,7 +90,7 @@ public class CloudfoundryService
    @Path("info/system")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public SystemInfo systemInfo(@QueryParam("server") String server) throws CloudfoundryException, IOException,
+   public ISystemInfo systemInfo(@QueryParam("server") String server) throws CloudfoundryException, IOException,
       ParsingResponseException, VirtualFileSystemException
    {
       return cloudfoundry.systemInfo(server);

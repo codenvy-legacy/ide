@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.extractors;
 
-import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
+import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -62,7 +63,7 @@ public class MethodInfoExtractor
       {
          genericParameterTypes.add(genericType2String(types[j]));
       }
-      return new MethodInfo(constructor.getName(),// 
+      return new MethodInfoBean(constructor.getName(),// 
          constructor.getModifiers(),//
          genExceptionTypes,//
          genericParameterTypes,//
@@ -93,11 +94,11 @@ public class MethodInfoExtractor
       {
          genericParameterTypes.add(genericType2String(types[j]));
       }
-      return new MethodInfo(method.getName(),//
+      return new MethodInfoBean(method.getName(),//
          method.getModifiers(),//
          genericExceptionTypes,//
          genericParameterTypes,//
-         Collections.<String> emptyList(),
+         Collections.<String> emptyList(), //
          false,//
          genericType2String(method.getGenericReturnType()),//
          method.getDeclaringClass().getCanonicalName());

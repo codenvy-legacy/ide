@@ -21,9 +21,11 @@
 
 <module>
    <inherits name="com.google.gwt.user.User" />
+   <inherits name='com.google.gwt.core.Core'/>
    <inherits name='com.google.gwt.user.Debug' />
    <inherits name='com.google.gwt.xml.XML' />
    <inherits name='com.google.gwt.json.JSON' />
+   <inherits name='com.google.web.bindery.autobean.AutoBean'/>
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    
    <inherits name='org.exoplatform.ide.extension.cloudfoundry.Views' />
