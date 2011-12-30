@@ -20,8 +20,8 @@ package org.exoplatform.ide.codeassistant.storage.lucene;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import test.ClassManager;
+import static test.ClassManager.createIndexForClass;
+import static test.ClassManager.getAllTestClasses;
 
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
@@ -48,12 +48,14 @@ public class SearchTest
    @BeforeClass
    public static void createIndex() throws Exception
    {
-      //luceneInfoStorage = new LuceneInfoStorage(NIOFSDirectory.open(new File("/tmp/SearchTest")));
+      // luceneInfoStorage = new LuceneInfoStorage(NIOFSDirectory.open(new File("/tmp/SearchTest")));
       luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
       writer = new LuceneTypeInfoWriter(luceneInfoStorage);
       storage = new LuceneCodeAssistantStorage(luceneInfoStorage);
 
-      ClassManager.createIndexForClass(writer, ClassManager.getAllTestClasses());
+      createIndexForClass(writer, getAllTestClasses());
+      //add parent
+      createIndexForClass(writer, Object.class);
 
    }
 
