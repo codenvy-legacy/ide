@@ -56,7 +56,7 @@ public class LuceneTypeInfoWriter
       try
       {
          IndexWriter writer =
-            new IndexWriter(indexDirectory, new SimpleAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+            new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
          for (TypeInfo typeInfo : typeInfos)
          {
             writer.addDocument(indexer.createDocument(typeInfo));
