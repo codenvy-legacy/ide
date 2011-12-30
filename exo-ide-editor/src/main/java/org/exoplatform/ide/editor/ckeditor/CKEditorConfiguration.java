@@ -52,7 +52,7 @@ public class CKEditorConfiguration
 
    public enum Toolbar 
    {
-      IDEALL("IDEall"), DEFAULT("IDEall");
+      IDE("IDE"), DEFAULT("IDE");
 
       private String toolbar;
 
@@ -68,7 +68,7 @@ public class CKEditorConfiguration
       }
    }
 
-   public final static Toolbar TOOLBAR = Toolbar.IDEALL;
+   public final static Toolbar TOOLBAR = Toolbar.IDE;
 
    public enum Theme 
    {
@@ -92,7 +92,7 @@ public class CKEditorConfiguration
 
    public enum Skin 
    {
-      IDEALL("ideall"), DEFAULT("ideall");
+      IDE("ide"), DEFAULT("ide");
 
       private String skin;
 
@@ -108,7 +108,7 @@ public class CKEditorConfiguration
       }
    }
 
-   public final static Skin SKIN = Skin.IDEALL; // Skin.V2
+   public final static Skin SKIN = Skin.IDE; // Skin.V2
 
    public final static boolean READ_ONLY = false;
 

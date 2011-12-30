@@ -1,6 +1,6 @@
 // see http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for details
 
-CKEDITOR.config.toolbar_IDEall = [
+CKEDITOR.config.toolbar_IDE = [
     ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Find','Replace','SelectAll','RemoveFormat'],
     ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
     '/',    // it is needed to normal work of "Collapse Toolbar" button
@@ -15,9 +15,9 @@ CKEDITOR.config.minHeight = "100px";
 CKEDITOR.dialog.minHeight = 50;
 CKEDITOR.dialog.minWidth = 50;
 /*
-CKEDITOR.config.toolbar = "IDEall";
+CKEDITOR.config.toolbar = "IDE";
 CKEDITOR.config.theme = "default";
-CKEDITOR.config.skin = "ideall";
+CKEDITOR.config.skin = "ide";
 CKEDITOR.config.language = "en";
 CKEDITOR.config.fullPage = true;   // A full page includes the <html>, <head> and <body> tags. The final output will include the <body> contents.
 */
