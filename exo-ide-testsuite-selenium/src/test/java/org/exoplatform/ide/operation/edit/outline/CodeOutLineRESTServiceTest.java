@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Outline.TokenType;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
@@ -87,7 +88,7 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
       // create initial outline tree map
       outlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("@TestService", 6, false);
-      outlineTreeHelper.addOutlineItem("Dep", 32, false);
+      outlineTreeHelper.addOutlineItem("Dep", 43, false);
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
@@ -101,12 +102,16 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
       outlineTreeHelper.addOutlineItem("@TestService", 6);
       outlineTreeHelper.addOutlineItem("@post1(@String, @String, @String, String) : String", 12);
       outlineTreeHelper.addOutlineItem("@post2(@String, @java.lang.String, @String, java.lang.String) : java.lang.String", 24);
-      outlineTreeHelper.addOutlineItem("Dep", 32);
-      outlineTreeHelper.addOutlineItem("name : String", 34);
-      outlineTreeHelper.addOutlineItem("age : int", 35);
-      outlineTreeHelper.addOutlineItem("addYear() : void", 37);
-      outlineTreeHelper.addOutlineItem("greet(@String) : java.lang.String", 39);
-      outlineTreeHelper.addOutlineItem("address : int", 42, false);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+      
+      outlineTreeHelper.addOutlineItem("TestService(String) : TestService", 31, TokenType.METHOD, "TestService");
+      outlineTreeHelper.addOutlineItem("@TestService(String, HashMap<String,String>) : TestService", 36, false, TokenType.METHOD, "TestService");            
+      
+      outlineTreeHelper.addOutlineItem("Dep", 43);
+      outlineTreeHelper.addOutlineItem("name : String", 45);
+      outlineTreeHelper.addOutlineItem("age : int", 46);
+      outlineTreeHelper.addOutlineItem("addYear() : void", 48);
+      outlineTreeHelper.addOutlineItem("greet(@String) : java.lang.String", 50);
+      outlineTreeHelper.addOutlineItem("address : int", 53, false);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();

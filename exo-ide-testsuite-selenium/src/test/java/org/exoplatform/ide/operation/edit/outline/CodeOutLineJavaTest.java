@@ -99,8 +99,15 @@ public class CodeOutLineJavaTest extends CodeAssistantBaseTest
       outlineTreeHelper.addOutlineItem("@get(@java.lang.List<? extends Tree>) : Collection<HashMap<String,String>>", 38, TokenType.METHOD);
       outlineTreeHelper.addOutlineItem("var1 : List<String>", 39, TokenType.VARIABLE);
       outlineTreeHelper.addOutlineItem("var2 : List<String>", 48, TokenType.VARIABLE);
-      outlineTreeHelper.addOutlineItem("@add(HashMap<String,String>) : HashMap<String,String>", 58, TokenType.METHOD);
-      outlineTreeHelper.addOutlineItem("addVar1 : List<Tree>", 61, false, TokenType.VARIABLE);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+      
+      outlineTreeHelper.addOutlineItem("JavaCodeOutline() : JavaCodeOutline", 55, TokenType.METHOD, "JavaCodeOutline");
+      
+      outlineTreeHelper.addOutlineItem("@add(HashMap<String,String>) : HashMap<String,String>", 60, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("addVar1 : List<Tree>", 63, false, TokenType.VARIABLE);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+            
+      outlineTreeHelper.addOutlineItem("JavaCodeOutline(String) : JavaCodeOutline", 69, TokenType.METHOD, "JavaCodeOutline");
+      outlineTreeHelper.addOutlineItem("@JavaCodeOutline(String, HashMap<String,String>) : JavaCodeOutline", 74, false, TokenType.METHOD, "JavaCodeOutline");      
+      
       
       Thread.sleep(TestConstants.SLEEP * 3);
       

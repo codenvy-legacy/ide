@@ -31,7 +31,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Outline.TokenType;
-import org.openqa.selenium.Keys;
 
 /**
  * This class helps to verify code outline tree grid.
@@ -227,7 +226,7 @@ public class OulineTreeHelper extends BaseTest
    private void checkItemPresent(String itemId)
    {
       if (itemId != null)    
-         assertTrue(IDE.OUTLINE.isItemPresentById(itemId));
+         assertTrue("Looking at outline item with id = " + itemId, IDE.OUTLINE.isItemPresentById(itemId));
    }
 
    /**
@@ -238,7 +237,6 @@ public class OulineTreeHelper extends BaseTest
    {
       // recognize file's line numbers
       String fileContent =IDE.EDITOR.getTextFromCodeEditor(0);
-      System.out.println("fileContent=" + fileContent);
       int fileLineNumbers = fileContent.split("\\r?\\n").length;   
       
       IDE.GOTOLINE.goToLine(1);
@@ -271,7 +269,7 @@ public class OulineTreeHelper extends BaseTest
       assertEquals(itemLabel, IDE.OUTLINE.getItemLabel(itemRowNumber));
       IDE.OUTLINE.selectRow(itemRowNumber);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      assertEquals(fileLineNumber + " : 1", IDE.STATUSBAR.getCursorPosition());      
+      assertEquals("Verify if is selected a line in editor", fileLineNumber + " : 1", IDE.STATUSBAR.getCursorPosition());      
    }
    
    /**
@@ -286,7 +284,7 @@ public class OulineTreeHelper extends BaseTest
       IDE.GOTOLINE.goToLine(fileLineNumber);
       IDE.EDITOR.clickOnEditor(0);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      assertTrue(IDE.OUTLINE.isItemSelected(itemRowNumber));
+      assertTrue("Verifing if is selected an outline item with row number = " + itemRowNumber, IDE.OUTLINE.isItemSelected(itemRowNumber));
    }
    
    /**
