@@ -19,7 +19,8 @@
 
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.core.project.ClasspathProject;
+import org.exoplatform.ide.core.project.Classpath;
+import org.exoplatform.ide.core.project.ClasspathSource;
 import org.exoplatform.ide.core.project.CreateProject;
 import org.exoplatform.ide.core.project.CreateProjectTemplate;
 import org.exoplatform.ide.core.project.OpenProject;
@@ -42,9 +43,11 @@ public class Project extends AbstractTestModule
    
    public OpenProject OPEN;
    
-   public ClasspathProject CLASSPATH = new ClasspathProject();
-   
    public CreateProjectTemplate TEMPLATE = new CreateProjectTemplate();
+
+   public Classpath CLASSPATH;
+
+   public ClasspathSource CLASSPATH_SOURCE;
 
    /**
     * 
@@ -54,5 +57,7 @@ public class Project extends AbstractTestModule
       EXPLORER = PageFactory.initElements(driver(), ProjectExplorer.class);
       CREATE = PageFactory.initElements(driver(), CreateProject.class);
       OPEN = PageFactory.initElements(driver(), OpenProject.class);
+      CLASSPATH = PageFactory.initElements(driver(), Classpath.class);
+      CLASSPATH_SOURCE = PageFactory.initElements(driver(), ClasspathSource.class);
    }
 }

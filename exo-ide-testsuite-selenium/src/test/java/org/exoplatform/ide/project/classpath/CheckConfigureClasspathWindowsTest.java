@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.project.classpath;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
 import org.junit.After;
@@ -45,34 +42,23 @@ import java.io.IOException;
  */
 public class CheckConfigureClasspathWindowsTest extends BaseTest
 {
-
-   private static final String FOLDER_NAME = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-folder";
-
-   private static final String PROJECT_NAME = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-project";
-
-   private static final String CREATED_PROJECT_NAME = CheckConfigureClasspathWindowsTest.class.getSimpleName()
-      + "-created";
-
-   private static final String CLASSPATH_FILE_CONTENT = "{\n\"entries\": [\n]\n}";
-
-   private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
-
-   /**
-    * Error message, that shown, when you try to configure classpath to no project folder.
-    */
-   private static final String ERROR_MSG = "Classpath settings not found.\n Probably you are not in project.";
+   private static final String PROJECT = CheckConfigureClasspathWindowsTest.class.getSimpleName();
+   
+   private static final String PROJECT_2 = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-2";
 
    @Before
    public void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + PROJECT_NAME);
-         VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, WORKSPACE_URL
-            + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
+         //create exo-app project with .groovyclasspath file
+         String projectPath = "src/test/resources/org/exoplatform/ide/project/exo-app.zip";
+         VirtualFileSystemUtils.importZipProject(PROJECT, projectPath);
+         
+         //create default project with no .groovyclasspath file
+         VirtualFileSystemUtils.createDefaultProject(PROJECT_2);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -83,17 +69,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-
-      try
-      {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + CREATED_PROJECT_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT_2);
       }
       catch (IOException e)
       {
@@ -104,228 +81,103 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
    @Test
    public void testConfigureClasspathAndChooseSourceWindows() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT_2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT_2);
+      
+      assertFalse(IDE.MENU.isCommandVisible(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH));
+      
+      IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CLOSE_PROJECT);
 
-      /*
-       * 0. Check, there is no .groovyclasspath file in workspace directory
-       */
-      assertEquals(404, VirtualFileSystemUtils.get(WORKSPACE_URL + ".groovyclasspath").getStatusCode());
-
-      /*
-       * 1. Try to configure classpath for simple folder
-       */
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH, true);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH);
-
-      /*
-       * Error dialog appeared
-       */
-      IDE.WARNING_DIALOG.waitOpened();
-      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(ERROR_MSG));
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
-
-      /*
-       * 2. Try to configure classpath for workspace
-       */
-      IDE.WORKSPACE.selectRootItem();
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH, true);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH);
-
-      /*
-       * Error dialog appeared
-       */
-      IDE.WARNING_DIALOG.waitOpened();
-      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(ERROR_MSG));
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
-
-      /*
-       * 3. Try to configure classpath for project.
-       * Check, that .groovyclasspath in project folder is hidden
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH, true);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH);
-      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT_2);
+      
+      //open project to configure classpath
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH));
+      
+      //call configure classpath form
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.PROJECT.CLASSPATH.waitOpened();
 
       /*
        * "Configure classpath" dialog appeared
        */
-      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
-      IDE.PROJECT.CLASSPATH.checkAddButtonEnabledState(true);
-      IDE.PROJECT.CLASSPATH.checkRemoveButtonEnabledState(false);
-      IDE.PROJECT.CLASSPATH.checkSaveButtonEnabledState(true);
-      IDE.PROJECT.CLASSPATH.checkCancelButtonEnabledState(true);
-
-      /*
-       * Classpath list grid must be empty
-       */
-      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(0);
-
-      /*
-       * 4. Click "Add..." button and check "Choose source path" dialog
+      assertTrue(IDE.PROJECT.CLASSPATH.isSaveButtonEnabled());
+      assertTrue(IDE.PROJECT.CLASSPATH.isCancelButtonEnabled());
+      assertTrue(IDE.PROJECT.CLASSPATH.isAddButtonEnabled());
+      assertFalse(IDE.PROJECT.CLASSPATH.isRemoveButtonEnabled());
+      assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
+      
+      /*PROJECT.
+       * Click "Add..." button and check "Choose source path" dialog
        */
       IDE.PROJECT.CLASSPATH.clickAddButton();
-      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewOpened();
-      IDE.PROJECT.CLASSPATH.checkChooseSourceWindow();
-      /*
-       * Check, that all workspaces are present in list grid
-       */
-      String[] workspaces = {WS_NAME, WS_NAME_2};
-      IDE.PROJECT.CLASSPATH.checkElementsInChooseSourceTreeGrid(workspaces);
-      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(false);
-      IDE.PROJECT.CLASSPATH.checkChooseSourceCancelButtonEnabledState(true);
-
-      /*
-       * 5. Select default workspace. "Ok" button is disabled.
-       */
-      IDE.PROJECT.CLASSPATH.selectItemInChooseSourceTree(WS_NAME);
-      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(false);
-
-      /*
-       * 6. Open default workspace. Select folder. "Ok" button is enabled.
-       */
-      IDE.PROJECT.CLASSPATH.openFolderInChooseSourceTree(WS_NAME);
-
-      IDE.PROJECT.CLASSPATH.selectItemInChooseSourceTree(FOLDER_NAME);
-      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(true);
-
-      IDE.PROJECT.CLASSPATH.clickChooseSourceOkButton();
-
-      /*
-       * "Choose source" window dissapeared.
-       * New item in Configure Classpath list grid appeared.
-       */
-      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewClosed();
-      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(1);
-
-      final String folderPathForClasspath = WS_NAME + "#" + "/" + FOLDER_NAME + "/";
-
-      assertEquals(folderPathForClasspath, IDE.PROJECT.CLASSPATH.getPathByIndex(1));
-
-      /*
-       * 7. Select folder path and check, that remove button is enabled
-       */
-      IDE.PROJECT.CLASSPATH.selectRowInListGrid(1);
-      IDE.PROJECT.CLASSPATH.waitRemoveButtonEnabled(true);
-      IDE.PROJECT.CLASSPATH.checkSaveButtonEnabledState(true);
-
-      /*
-       * 8. Click remove button and check, that element was removed
-       */
+      IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
+      assertFalse(IDE.PROJECT.CLASSPATH_SOURCE.isOkButtonEnabled());
+      assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isCancelButtonEnabled());
+      assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isTreeVisible());
+      assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isPathPresent(PROJECT));
+      assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isPathPresent(PROJECT_2));
+      //select not root item
+      IDE.PROJECT.CLASSPATH_SOURCE.selectItem(PROJECT_2);
+      IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
+      //click ok button
+      IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
+      //"Choose source" window dissapeared.
+      IDE.PROJECT.CLASSPATH_SOURCE.waitClosed();
+      //New item in Configure Classpath list grid appeared.
+      assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
+      assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
+      
+      //Select folder path and check, that remove button is enabled
+      IDE.PROJECT.CLASSPATH.selectPath(WS_NAME + "#/" + PROJECT_2 + "/");
+      assertTrue(IDE.PROJECT.CLASSPATH.isRemoveButtonEnabled());
+      assertTrue(IDE.PROJECT.CLASSPATH.isSaveButtonEnabled());
+      
+      //Click remove button and check, that element was removed
       IDE.PROJECT.CLASSPATH.clickRemoveButton();
-
-      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(0);
-
+      IDE.PROJECT.CLASSPATH.waitPathRemoved(WS_NAME + "#/" + PROJECT_2 + "/");
+      
       /*
-       * 9. Add element to list grid. Than click cancel button 
+       * Add element to list grid. Than click cancel button 
        * to check, that all changes will be canceled.
        */
       IDE.PROJECT.CLASSPATH.clickAddButton();
-      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewOpened();
-      IDE.PROJECT.CLASSPATH.checkChooseSourceWindow();
-
-      IDE.PROJECT.CLASSPATH.openFolderInChooseSourceTree(WS_NAME);
-
-      IDE.PROJECT.CLASSPATH.selectItemInChooseSourceTree(FOLDER_NAME);
-      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(true);
-
-      IDE.PROJECT.CLASSPATH.clickChooseSourceOkButton();
-      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(1);
-
+      IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
+      IDE.PROJECT.CLASSPATH_SOURCE.selectItem(PROJECT_2);
+      IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
+      IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
+      IDE.PROJECT.CLASSPATH_SOURCE.waitClosed();
+      assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
       IDE.PROJECT.CLASSPATH.clickCancelButton();
+      IDE.PROJECT.CLASSPATH.waitClosed();
 
       /*
-       * 10. Open form and check, that it is empty
+       * Open form and check, that only one element is present
        */
-      IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.Project.CONFIGURE_CLASS_PATH);
-      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.PROJECT.CLASSPATH.waitOpened();
+
+      assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
+      assertFalse(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
 
       /*
-       * "Configure classpath" dialog appeared
-       */
-      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
-
-      /*
-       * Classpath list grid must be empty
-       */
-      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(0);
-
-      /*
-       * 11. Add element to list grid. And click save button
+       * Add element to list grid. And click save button
        */
       IDE.PROJECT.CLASSPATH.clickAddButton();
-      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewOpened();
-      IDE.PROJECT.CLASSPATH.checkChooseSourceWindow();
-
-      IDE.PROJECT.CLASSPATH.openFolderInChooseSourceTree(WS_NAME);
-
-      IDE.PROJECT.CLASSPATH.selectItemInChooseSourceTree(FOLDER_NAME);
-      IDE.PROJECT.CLASSPATH.checkChooseSourceOkButtonEnabledState(true);
-
-      IDE.PROJECT.CLASSPATH.clickChooseSourceOkButton();
-      IDE.PROJECT.CLASSPATH.waitForChooseSourceViewClosed();
-      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(1);
-
+      IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
+      IDE.PROJECT.CLASSPATH_SOURCE.selectItem(PROJECT_2);
+      IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
+      IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
+      IDE.PROJECT.CLASSPATH_SOURCE.waitClosed();
+      //New item in Configure Classpath list grid appeared.
+      assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
       IDE.PROJECT.CLASSPATH.clickSaveButton();
-
-      Thread.sleep(1000);
-      /*
-       * Check file .groovyclasspath, that entry was added.
-       */
-      final String expectedContent =
-         "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" + WS_NAME + "#/" + FOLDER_NAME + "/\"}]}";
-      Response response = VirtualFileSystemUtils.get(WORKSPACE_URL + PROJECT_NAME + "/" + ".groovyclasspath");
-
-      assertEquals(expectedContent, response.getData());
-   }
-
-   /**
-    * Check, that Configure classpath window dialog appeared,
-    * when new project created.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testConfigureClasspathAppeared() throws Exception
-   {
-      refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.CLASSPATH.waitClosed();
       
-      //1. Create new project: New -> Project from template
-      //TODO no such functionality : IDE.TEMPLATES.createProjectFromTemplate(Templates.DEFAULT_PROJECT_TEMPLATE_NAME, CREATED_PROJECT_NAME);
-      
-      IDE.PROJECT.CLASSPATH.waitForClasspathDialogOpen();
-      //Check, Configure Classpath window appeared.
-      IDE.PROJECT.CLASSPATH.checkConfigureClasspathDialog();
-
-      //Check, there is project folder in Classpath listgrid
-
-      IDE.PROJECT.CLASSPATH.checkItemsCountInClasspathGrid(1);
-      final String firstResource = IDE.PROJECT.CLASSPATH.getPathByIndex(1);
-      assertEquals(WS_NAME + "#" + "/" + CREATED_PROJECT_NAME + "/", firstResource);
-
-      // 2. Close form.
-      IDE.PROJECT.CLASSPATH.clickCancelButton();
-      IDE.PROJECT.CLASSPATH.waitForClasspathDialogClose();
-
-      // Check new project created.
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + CREATED_PROJECT_NAME + "/");
-
-      // Check .groovyclasspath file
-      final String expectedContent =
-         "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" + WS_NAME + "#/" + CREATED_PROJECT_NAME + "/" + "\"}]}";
-      Response response =
-         VirtualFileSystemUtils.get(WORKSPACE_URL + CREATED_PROJECT_NAME + "/" + ".groovyclasspath");
-
-      assertEquals(expectedContent, response.getData());
+      //Check file .groovyclasspath, that entry was added.
+      Response response = VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + ".groovyclasspath");
+      assertTrue(response.getData().contains(WS_NAME + "#/" + PROJECT_2 + "/"));
    }
-
 }

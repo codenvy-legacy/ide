@@ -18,13 +18,10 @@
  */
 package org.exoplatform.ide.project.classpath;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -38,51 +35,30 @@ import java.io.IOException;
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 14, 2011 $
- *
  */
 public class UseOfClasspathEntriesTest extends BaseTest
 {
-   private static final String FOLDER_NAME = UseOfClasspathEntriesTest.class.getSimpleName() + "-test";
-
-   private static final String PROJECT_NAME = UseOfClasspathEntriesTest.class.getSimpleName() + "-project";
-
-   private static final String EMPLOYEE_FILE_NAME = "Employee.groovy";
-
-   private static final String REST_SERVICE_FILE_NAME = "Sample.grs";
-
-   private static final String CLASSPATH_FILE_CONTENT = "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" + WS_NAME + "#/"
-      + FOLDER_NAME + "/\"}]}";
-
-   private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
-
+   private static final String PROJECT = UseOfClasspathEntriesTest.class.getSimpleName();
+   
+   private static final String PROJECT_2 = UseOfClasspathEntriesTest.class.getSimpleName() + "-2";
+   
+   private static final String FILE_NAME = "Sample.grs";
+      
    @BeforeClass
    public static void setUp()
    {
-      final String filePath = "src/test/resources/org/exoplatform/ide/project/classpath/";
       try
       {
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME);
-         //create structure of folder for package org/exoplatform/sample, 
-         //where will be placed Employee.groovy file
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org");
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org/exoplatform");
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + FOLDER_NAME + "/org/exoplatform/sample");
-         //put Employee.groovy file
-         VirtualFileSystemUtils.put(filePath + "employee.groovy", MimeType.APPLICATION_GROOVY, WORKSPACE_URL
-            + FOLDER_NAME + "/org/exoplatform/sample/" + EMPLOYEE_FILE_NAME);
-
-         VirtualFileSystemUtils.mkcol(WORKSPACE_URL + PROJECT_NAME);
-         //put rest service file
-         VirtualFileSystemUtils.put(filePath + "rest-service.grs", MimeType.GROOVY_SERVICE, WORKSPACE_URL
-            + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME);
-         //put classpath file
-         VirtualFileSystemUtils.put(CLASSPATH_FILE_CONTENT.getBytes(), MimeType.APPLICATION_JSON, WORKSPACE_URL
-            + PROJECT_NAME + "/" + CLASSPATH_FILE_NAME);
+         //create exo-app project with .groovyclasspath file
+         String projectPath = "src/test/resources/org/exoplatform/ide/project/classpath/";
+         VirtualFileSystemUtils.importZipProject(PROJECT, projectPath + "classpath-project.zip");
+         
+         //create default project with no .groovyclasspath file
+         VirtualFileSystemUtils.importZipProject(PROJECT_2, projectPath + "classpath-project-2.zip");
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
-         fail("Can't create project structure");
       }
    }
 
@@ -91,8 +67,8 @@ public class UseOfClasspathEntriesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT_2);
       }
       catch (IOException e)
       {
@@ -103,45 +79,34 @@ public class UseOfClasspathEntriesTest extends BaseTest
    @Test
    public void testUsingResourcesFromClasspath() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      
+      //Open REST Service.
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      
+      IDE.EDITOR.waitTabPresent(1);
+      
+      //Validate REST Service and check, that is was successful.
+      final String validateMsg = IDE.REST_SERVICE.validate(1);
+      assertEquals("[INFO] " + FILE_NAME + " validated successfully.", validateMsg);
 
-      /*
-       * 1. Check, that project folder and folder with resources are present.
-       * Open REST Service. 
-       */
-      IDE.NAVIGATION.assertItemVisible(WS_URL + PROJECT_NAME + "/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
+      //Deploy REST Service.
+      final String deployMsg = IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 2);
+      assertTrue(deployMsg.contains("deployed successfully."));
 
-      IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-      IDE.WORKSPACE.waitForItem(WORKSPACE_URL + PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + PROJECT_NAME + "/"
-         + REST_SERVICE_FILE_NAME, false);
-
-      /*
-       * 2. Validate REST Service and check, that is was successful.
-       */
-      IDE.REST_SERVICE.validate(1);
-
-      /*
-       * 3. Deploy REST Service.
-       */
-      IDE.REST_SERVICE.deploy(PROJECT_NAME + "/" + REST_SERVICE_FILE_NAME, 2);
-
-      /*
-       * 4. Launch REST Service and try to send request.
-       */
+      //Launch REST Service and try to send request.
       IDE.REST_SERVICE.launchRestService();
-      /*
-       * Click Send button.
-       */
+      
+      //Click Send button.
       IDE.REST_SERVICE.sendRequst();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.waitClosed();
+      IDE.OUTPUT.waitForMessageShow(3);
 
-      /*
-       * Check output message.
-       */
+      //Check output message.
       final String msg = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(msg.endsWith("Hello {name} Ivanov"));
    }
