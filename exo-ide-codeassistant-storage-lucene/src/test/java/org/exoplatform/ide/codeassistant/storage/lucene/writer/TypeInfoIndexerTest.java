@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -31,17 +34,20 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
+import org.exoplatform.ide.codeassistant.jvm.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.ShortTypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.TypeInfoExtractor;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.List;
 
 /**
  *
@@ -57,21 +63,23 @@ public class TypeInfoIndexerTest
    @Mock
    private IndexReader reader;
 
-   @Ignore
    @Test
    public void shouldCallPredefinedSetOfFields() throws Exception
    {
       indexer.createDocument(typeInfo);
-      verify(typeInfo).getName();
-      verify(typeInfo).getModifiers();
-      verify(typeInfo).getType();
-      verify(typeInfo).getInterfaces();
-      verify(typeInfo).getSuperClass();
-      //verify(typeInfo).writeExternal(any(ObjectOutput.class));
+      // one for fields + one for externalization
+      verify(typeInfo, times(2)).getName();
+      verify(typeInfo, times(2)).getModifiers();
+      verify(typeInfo, times(2)).getType();
+      verify(typeInfo, times(2)).getInterfaces();
+      verify(typeInfo, times(2)).getSuperClass();
+
+      //only externalization
+      verify(typeInfo).getFields();
+      verify(typeInfo).getMethods();
       verifyNoMoreInteractions(typeInfo);
    }
 
-   @Ignore
    @Test
    public void shouldBeAbleToRestoreShortTypeInfo() throws Exception
    {
@@ -86,7 +94,6 @@ public class TypeInfoIndexerTest
       assertEquals(expected.getName(), actual.getName());
    }
 
-   @Ignore
    @Test
    public void shouldBeAbleToRestoreTypeInfo() throws Exception
    {
@@ -96,7 +103,58 @@ public class TypeInfoIndexerTest
 
       TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);
 
-      assertEquals(expected, actual);
+      assertTypeInfoEquals(expected, actual);
    }
 
+   public static void assertFieldsEqual(List<FieldInfo> expected, List<FieldInfo> actual)
+   {
+      assertNotNull(expected);
+      assertNotNull(actual);
+      assertEquals(expected.size(), actual.size());
+      for (int i = 0; i < expected.size(); i++)
+      {
+         //member
+         assertEquals(expected.get(i).getName(), actual.get(i).getName());
+         assertEquals(expected.get(i).getModifiers(), actual.get(i).getModifiers());
+         //fieldInfo
+         assertEquals(expected.get(i).getDeclaringClass(), actual.get(i).getDeclaringClass());
+         assertEquals(expected.get(i).getType(), actual.get(i).getType());
+
+      }
+   }
+
+   public static void assertMethodsEqual(List<MethodInfo> expected, List<MethodInfo> actual)
+   {
+      assertNotNull(expected);
+      assertNotNull(actual);
+      assertEquals(expected.size(), actual.size());
+      for (int i = 0; i < expected.size(); i++)
+      {
+         //member
+         assertEquals(expected.get(i).getName(), actual.get(i).getName());
+         assertEquals(expected.get(i).getModifiers(), actual.get(i).getModifiers());
+         //methodInfo
+         assertEquals(expected.get(i).getDeclaringClass(), actual.get(i).getDeclaringClass());
+         assertEquals(expected.get(i).isConstructor(), actual.get(i).isConstructor());
+         assertEquals(expected.get(i).getReturnType(), actual.get(i).getReturnType());
+         assertArrayEquals(expected.get(i).getExceptionTypes().toArray(), actual.get(i).getExceptionTypes().toArray());
+         assertArrayEquals(expected.get(i).getParameterNames().toArray(), actual.get(i).getParameterNames().toArray());
+         assertArrayEquals(expected.get(i).getParameterTypes().toArray(), actual.get(i).getParameterTypes().toArray());
+
+      }
+   }
+
+   public static void assertTypeInfoEquals(TypeInfo expected, TypeInfo actual)
+   {
+      //Member
+      assertEquals(expected.getModifiers(), actual.getModifiers());
+      assertEquals(expected.getName(), actual.getName());
+      //Short type info
+      assertEquals(expected.getType(), actual.getType());
+      //TypeInfo
+      assertEquals(expected.getSuperClass(), actual.getSuperClass());
+      assertFieldsEqual(expected.getFields(), actual.getFields());
+      assertMethodsEqual(expected.getMethods(), actual.getMethods());
+
+   }
 }
