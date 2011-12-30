@@ -107,6 +107,7 @@ public class ExternalizationTools
             method.setParameterNames(readStringUTFList(in));
             method.setReturnType(readStringUTF(in));
             method.setConstructor(in.readBoolean());
+            result.add(method);
 
          }
       }
