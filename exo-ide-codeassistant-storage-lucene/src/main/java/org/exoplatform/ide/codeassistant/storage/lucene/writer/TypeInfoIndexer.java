@@ -48,14 +48,15 @@ public class TypeInfoIndexer
       typeInfoDocument.add(new Field(IndexType.JAVA.getIndexFieldName(), IndexType.JAVA.getIndexFieldValue(),
          Store.YES, Index.NOT_ANALYZED));
 
-      typeInfoDocument
-         .add(new Field(TypeInfoIndexFields.CLASS_NAME, typeInfo.getName(), Store.YES, Index.NOT_ANALYZED));
+      String fqn = typeInfo.getName();
+
+      typeInfoDocument.add(new Field(TypeInfoIndexFields.CLASS_NAME, fqn.substring(fqn.lastIndexOf(".") + 1),
+         Store.YES, Index.NOT_ANALYZED));
 
       typeInfoDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()),
          Store.YES, Index.NOT_ANALYZED));
 
-      //      typeInfoDocument.add(new Field(TypeInfoIndexFields.FQN, typeInfo.getQualifiedName(), Store.YES,
-      //         Index.NOT_ANALYZED));
+      typeInfoDocument.add(new Field(TypeInfoIndexFields.FQN, fqn, Store.YES, Index.NOT_ANALYZED));
       typeInfoDocument
          .add(new Field(TypeInfoIndexFields.ENTITY_TYPE, typeInfo.getType(), Store.YES, Index.NOT_ANALYZED));
       typeInfoDocument.add(new Field(TypeInfoIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES,
