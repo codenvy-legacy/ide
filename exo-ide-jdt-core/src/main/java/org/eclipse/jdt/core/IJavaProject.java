@@ -16,17 +16,15 @@
  *******************************************************************************/
 package org.eclipse.jdt.core;
 
-import java.util.Map;
-
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IPath;
-
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.IPackageBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
-import org.eclipse.jdt.core.eval.IEvaluationContext;
+
+import java.util.Map;
 
 /**
  * A Java project represents a view of a project resource in terms of Java
@@ -588,11 +586,11 @@ public interface IJavaProject extends IParent, IJavaElement, IOpenable {
 //	 */
 //	boolean isOnClasspath(IResource resource);
 
-	/**
-	 * Creates a new evaluation context.
-	 * @return a new evaluation context.
-	 */
-	IEvaluationContext newEvaluationContext();
+//	/**
+//	 * Creates a new evaluation context.
+//	 * @return a new evaluation context.
+//	 */
+//	IEvaluationContext newEvaluationContext();
 
 	/**
 	 * Creates and returns a type hierarchy for all types in the given
