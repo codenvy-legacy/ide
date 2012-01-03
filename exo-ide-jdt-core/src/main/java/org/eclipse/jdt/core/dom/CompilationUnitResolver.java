@@ -10,12 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.core.dom;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -32,7 +26,6 @@ import org.eclipse.jdt.internal.compiler.IErrorHandlingPolicy;
 import org.eclipse.jdt.internal.compiler.IProblemFactory;
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
-import org.eclipse.jdt.internal.compiler.batch.FileSystem.Classpath;
 import org.eclipse.jdt.internal.compiler.env.AccessRestriction;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.env.ISourceType;
@@ -48,10 +41,15 @@ import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.internal.compiler.util.HashtableOfObject;
 import org.eclipse.jdt.internal.compiler.util.HashtableOfObjectToInt;
 import org.eclipse.jdt.internal.compiler.util.Messages;
-import org.eclipse.jdt.internal.compiler.util.Util;
 import org.eclipse.jdt.internal.core.CancelableProblemFactory;
 import org.eclipse.jdt.internal.core.util.BindingKeyResolver;
 import org.eclipse.jdt.internal.core.util.CommentRecorderParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 class CompilationUnitResolver extends Compiler
 {
@@ -702,9 +700,10 @@ class CompilationUnitResolver extends Compiler
       {
          if (javaProject == null)
          {
-            Classpath[] allEntries = new Classpath[classpaths.size()];
-            classpaths.toArray(allEntries);
-            environment = new NameEnvironmentWithProgress(allEntries, null, monitor);
+            //TODO use own implementation of INameEnvironmentWithProgress
+//            Classpath[] allEntries = new Classpath[classpaths.size()];
+//            classpaths.toArray(allEntries);
+//            environment = new NameEnvironmentWithProgress(allEntries, null, monitor);
          }
          else
          {

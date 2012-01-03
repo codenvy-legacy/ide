@@ -12,13 +12,10 @@ package org.eclipse.jdt.core;
 
 import org.eclipse.jdt.core.compiler.IScanner;
 import org.eclipse.jdt.core.compiler.ITerminalSymbols;
-import org.eclipse.jdt.core.formatter.CodeFormatter;
-import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.core.util.PublicScanner;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -60,63 +57,63 @@ public class ToolFactory {
 	 */
 	public static final int M_FORMAT_EXISTING = new Integer(1).intValue();
 
-	/**
-	 * Create an instance of the built-in code formatter.
-	 * <p>The given options should at least provide the source level ({@link JavaCore#COMPILER_SOURCE}),
-	 * the  compiler compliance level ({@link JavaCore#COMPILER_COMPLIANCE}) and the target platform
-	 * ({@link JavaCore#COMPILER_CODEGEN_TARGET_PLATFORM}).
-	 * Without these options, it is not possible for the code formatter to know what kind of source it needs to format.
-	 * </p><p>
-	 * Note this is equivalent to <code>createCodeFormatter(options, M_FORMAT_NEW)</code>. Thus some code formatter options
-	 * may be ignored. See @{link {@link #M_FORMAT_NEW} for more details.
-	 * </p>
-	 * @param options - the options map to use for formatting with the default code formatter. Recognized options
-	 * 	are documented on <code>JavaCore#getDefaultOptions()</code>. If set to <code>null</code>, then use
-	 * 	the current settings from <code>JavaCore#getOptions</code>.
-	 * @return an instance of the built-in code formatter
-	 * @see CodeFormatter
-	 * @see JavaCore#getOptions()
-	 * @since 3.0
-	 */
-	public static CodeFormatter createCodeFormatter(Map options){
-		return createCodeFormatter(options, M_FORMAT_NEW);
-	}
-
-	/**
-	 * Create an instance of the built-in code formatter.
-	 * <p>The given options should at least provide the source level ({@link JavaCore#COMPILER_SOURCE}),
-	 * the  compiler compliance level ({@link JavaCore#COMPILER_COMPLIANCE}) and the target platform
-	 * ({@link JavaCore#COMPILER_CODEGEN_TARGET_PLATFORM}).
-	 * Without these options, it is not possible for the code formatter to know what kind of source it needs to format.
-	 * </p>
-	 * <p>The given mode determines what options should be enabled when formatting the code. It can have the following
-	 * values: {@link #M_FORMAT_NEW}, {@link #M_FORMAT_EXISTING}, but other values may be added in the future.
-	 * </p>
-	 *
-	 * @param options the options map to use for formatting with the default code formatter. Recognized options
-	 * 	are documented on <code>JavaCore#getDefaultOptions()</code>. If set to <code>null</code>, then use
-	 * 	the current settings from <code>JavaCore#getOptions</code>.
-	 * @param mode the given mode to modify the given options.
-	 *
-	 * @return an instance of the built-in code formatter
-	 * @see CodeFormatter
-	 * @see JavaCore#getOptions()
-	 * @since 3.3
-	 */
-	public static CodeFormatter createCodeFormatter(Map options, int mode) {
-		if (options == null) options = JavaCore.getOptions();
-		Map currentOptions = new HashMap(options);
-		if (mode == M_FORMAT_NEW) {
-			// disable the option for not formatting comments starting on first column
-			currentOptions.put(DefaultCodeFormatterConstants.FORMATTER_COMMENT_FORMAT_LINE_COMMENT_STARTING_ON_FIRST_COLUMN, DefaultCodeFormatterConstants.TRUE);
-			// disable the option for not indenting comments starting on first column
-			currentOptions.put(DefaultCodeFormatterConstants.FORMATTER_NEVER_INDENT_BLOCK_COMMENTS_ON_FIRST_COLUMN, DefaultCodeFormatterConstants.FALSE);
-			currentOptions.put(DefaultCodeFormatterConstants.FORMATTER_NEVER_INDENT_LINE_COMMENTS_ON_FIRST_COLUMN, DefaultCodeFormatterConstants.FALSE);
-		}
-		//TODO
-//		return new DefaultCodeFormatter(currentOptions);
-		return null;
-	}
+//	/**
+//	 * Create an instance of the built-in code formatter.
+//	 * <p>The given options should at least provide the source level ({@link JavaCore#COMPILER_SOURCE}),
+//	 * the  compiler compliance level ({@link JavaCore#COMPILER_COMPLIANCE}) and the target platform
+//	 * ({@link JavaCore#COMPILER_CODEGEN_TARGET_PLATFORM}).
+//	 * Without these options, it is not possible for the code formatter to know what kind of source it needs to format.
+//	 * </p><p>
+//	 * Note this is equivalent to <code>createCodeFormatter(options, M_FORMAT_NEW)</code>. Thus some code formatter options
+//	 * may be ignored. See @{link {@link #M_FORMAT_NEW} for more details.
+//	 * </p>
+//	 * @param options - the options map to use for formatting with the default code formatter. Recognized options
+//	 * 	are documented on <code>JavaCore#getDefaultOptions()</code>. If set to <code>null</code>, then use
+//	 * 	the current settings from <code>JavaCore#getOptions</code>.
+//	 * @return an instance of the built-in code formatter
+//	 * @see CodeFormatter
+//	 * @see JavaCore#getOptions()
+//	 * @since 3.0
+//	 */
+//	public static CodeFormatter createCodeFormatter(Map options){
+//		return createCodeFormatter(options, M_FORMAT_NEW);
+//	}
+//
+//	/**
+//	 * Create an instance of the built-in code formatter.
+//	 * <p>The given options should at least provide the source level ({@link JavaCore#COMPILER_SOURCE}),
+//	 * the  compiler compliance level ({@link JavaCore#COMPILER_COMPLIANCE}) and the target platform
+//	 * ({@link JavaCore#COMPILER_CODEGEN_TARGET_PLATFORM}).
+//	 * Without these options, it is not possible for the code formatter to know what kind of source it needs to format.
+//	 * </p>
+//	 * <p>The given mode determines what options should be enabled when formatting the code. It can have the following
+//	 * values: {@link #M_FORMAT_NEW}, {@link #M_FORMAT_EXISTING}, but other values may be added in the future.
+//	 * </p>
+//	 *
+//	 * @param options the options map to use for formatting with the default code formatter. Recognized options
+//	 * 	are documented on <code>JavaCore#getDefaultOptions()</code>. If set to <code>null</code>, then use
+//	 * 	the current settings from <code>JavaCore#getOptions</code>.
+//	 * @param mode the given mode to modify the given options.
+//	 *
+//	 * @return an instance of the built-in code formatter
+//	 * @see CodeFormatter
+//	 * @see JavaCore#getOptions()
+//	 * @since 3.3
+//	 */
+//	public static CodeFormatter createCodeFormatter(Map options, int mode) {
+//		if (options == null) options = JavaCore.getOptions();
+//		Map currentOptions = new HashMap(options);
+//		if (mode == M_FORMAT_NEW) {
+//			// disable the option for not formatting comments starting on first column
+//			currentOptions.put(DefaultCodeFormatterConstants.FORMATTER_COMMENT_FORMAT_LINE_COMMENT_STARTING_ON_FIRST_COLUMN, DefaultCodeFormatterConstants.TRUE);
+//			// disable the option for not indenting comments starting on first column
+//			currentOptions.put(DefaultCodeFormatterConstants.FORMATTER_NEVER_INDENT_BLOCK_COMMENTS_ON_FIRST_COLUMN, DefaultCodeFormatterConstants.FALSE);
+//			currentOptions.put(DefaultCodeFormatterConstants.FORMATTER_NEVER_INDENT_LINE_COMMENTS_ON_FIRST_COLUMN, DefaultCodeFormatterConstants.FALSE);
+//		}
+//		//TODO
+////		return new DefaultCodeFormatter(currentOptions);
+//		return null;
+//	}
 
 //	/**
 //	 * Create a classfile bytecode disassembler, able to produce a String representation of a given classfile.
