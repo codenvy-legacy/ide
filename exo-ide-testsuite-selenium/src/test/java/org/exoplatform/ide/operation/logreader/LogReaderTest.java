@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.operation.logreader;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -31,60 +34,43 @@ import org.junit.Test;
 public class LogReaderTest extends BaseTest
 {
 
-   private static final String LOG_READER_VIEW = "//div[@view-id='ideExtensionLogReaderView']";
-
-   private static final String PREV_LOG_BUTTON = "Previous Log";
-
-   private static final String NEX_LOG = "Next Log";
-
    @Test
    public void testLogReaderOpen() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      
+      
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.LOG_READER);
-      waitForElementPresent(LOG_READER_VIEW);
+      IDE.LOG_READER.waitOpened();
 
-      String log = getLogContent();
+      String log = IDE.LOG_READER.getLogContent();
 
-      Assert.assertNotNull(log);
-      Assert.assertFalse(log.isEmpty());
+      assertNotNull(log);
+      assertFalse(log.isEmpty());
    }
 
    @Test
    public void testLogReaderNavigation() throws Exception
    {
-      refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.LOG_READER);
-      waitForElementPresent(LOG_READER_VIEW);
+      IDE.LOG_READER.waitOpened();
 
-      String log = getLogContent();
-      Assert.assertTrue(isButtonEnabled(PREV_LOG_BUTTON));
-      Assert.assertFalse(isButtonEnabled(NEX_LOG));
+      String log = IDE.LOG_READER.getLogContent();
+      assertTrue(IDE.LOG_READER.isPreviousButtonEnabled());
+      assertFalse(IDE.LOG_READER.isNextButtonEnabled());
 
-      clicOnButton(PREV_LOG_BUTTON);
+      IDE.LOG_READER.clickPrevButton();
       IDE.LOADER.waitClosed();
       
-      Assert.assertFalse(log.equals(getLogContent()));
-      log = getLogContent();
-      Assert.assertTrue(isButtonEnabled(NEX_LOG));
+      assertFalse(log.equals(IDE.LOG_READER.getLogContent()));
+      log = IDE.LOG_READER.getLogContent();
+      assertTrue(IDE.LOG_READER.isNextButtonEnabled());
 
-      clicOnButton(NEX_LOG);
-      Assert.assertFalse(log.equals(getLogContent()));
+      IDE.LOG_READER.clickNextButton();
+      assertFalse(log.equals(IDE.LOG_READER.getLogContent()));
    }
 
-   private void clicOnButton(String name)
-   {
-      selenium().click(LOG_READER_VIEW + "//div[@title='" + name + "']");
-   }
-
-   private boolean isButtonEnabled(String name)
-   {
-      return Boolean.valueOf(selenium().getAttribute(LOG_READER_VIEW + "//div[@title='" + name + "']@enabled"));
-   }
-
-   private String getLogContent()
-   {
-      return selenium().getText(LOG_READER_VIEW + "//pre");
-   }
 }
