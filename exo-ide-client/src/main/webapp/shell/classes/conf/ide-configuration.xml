@@ -122,10 +122,7 @@
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
-   </component>
-
+  
    <component>
       <key>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</key>
       <type>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</type>
@@ -212,26 +209,6 @@
       <type>org.exoplatform.ide.extension.gadget.server.rest.RestSecurityTokenGenerator</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
-      <init-params>
-         <object-param>
-            <name>observation.config</name>
-            <object type="org.exoplatform.services.jcr.ext.script.groovy.ObservationListenerConfiguration">
-               <field name="repository">
-                  <string>repository</string>
-               </field>
-               <field name="workspaces">
-                  <collection type="java.util.ArrayList">
-                     <value>
-                        <string>dev-monit</string>
-                     </value>
-                  </collection>
-               </field>
-            </object>
-         </object-param>
-      </init-params>
-   </component>
 
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
