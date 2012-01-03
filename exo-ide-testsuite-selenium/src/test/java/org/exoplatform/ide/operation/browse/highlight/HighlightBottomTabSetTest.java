@@ -24,9 +24,12 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,6 +40,7 @@ import org.junit.Test;
  */
 public class HighlightBottomTabSetTest extends BaseTest
 {
+   private static final String PROJECT = HighlightBottomTabSetTest.class.getSimpleName();
 
    private static String FOLDER_NAME = HighlightBottomTabSetTest.class.getSimpleName();
 
@@ -48,27 +52,33 @@ public class HighlightBottomTabSetTest extends BaseTest
    @Before
    public void setUp()
    {
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html";
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html", MimeType.TEXT_HTML,
-            WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.TEXT_HTML,
+         filePath);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
+      
    }
 
    @Test
    public void testHighlightBottopTabSet() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitTabPresent(1);
+      
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       IDE.PROPERTIES.waitOpened();
 
