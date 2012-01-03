@@ -52,7 +52,7 @@ public class Properties extends AbstractTestModule
          "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Last modified']";
 
       String CONTENT_LENGHT_PROPERTY_LOCATOR =
-         "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Content lenght']";
+         "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Content length']";
 
       String CLOSE_VIEW_BUTTON_LOCATOR = "//div[@button-name='close-tab' and @tab-title='Properties']";
    }

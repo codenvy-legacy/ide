@@ -24,30 +24,26 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-
-// IDE-26 
 public class RESTServiceAnnotationInheritanceTest extends BaseTest
 {
-   private final static String FILE_NAME = "AnnotationInheritance.groovy";
+   private final static String FILE_NAME = "AnnotationInheritance.grs";
 
-   private final static String FOLDER = RESTServiceAnnotationInheritanceTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER + "/";
+   private final static String PROJECT = RESTServiceAnnotationInheritanceTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -56,10 +52,9 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/AnnotationInheritance.groovy";
       try
       {
-         //*********TODO******************
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, "exo:groovyResourceContainer", URL + FILE_NAME);
-         //********************************
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
       catch (IOException e)
       {
@@ -70,17 +65,17 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
    @Test
    public void testAnnotationInheritance() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTPUT.waitForMessageShow(1, 5);
 
       //Call the "Run->Launch REST Service" topmenu command
       IDE.REST_SERVICE.launchRestService();
@@ -89,25 +84,19 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 
       assertParameters();
 
-
       IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance");
-      
       IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
-
       IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
-
-      IDE.REST_SERVICE.typeToPathField(
-         "/testAnnotationInheritance/InnerPath/Ñ‚ÐµÑ�Ñ‚");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.typeToPathField("/testAnnotationInheritance/InnerPath/Ñ‚ÐµÑ�Ñ‚");
 
       assertParameters();
 
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
+      IDE.OUTPUT.waitForMessageShow(2, 10);
       String mess = IDE.OUTPUT.getOutputMessage(2);
-
       assertTrue(mess.contains("PathParam:Ñ‚ÐµÑ�Ñ‚"));
-      
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
    }
 
    /**
@@ -115,18 +104,12 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
     */
    private void assertParameters()
    {
-      assertEquals("POST", IDE.REST_SERVICE.getMethodFieldValue());
-
+      assertEquals("POST", IDE.REST_SERVICE.getMethodValue());
       assertEquals("text/plain", IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
-
-      assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
-
-      assertEquals("", IDE.REST_SERVICE.getQueryParameterName(1));
-
+      assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeValue());
+      assertEquals(0, IDE.REST_SERVICE.getQueryParameterCount());
       IDE.REST_SERVICE.selectHeaderParametersTab();
-
-      assertEquals("", IDE.REST_SERVICE.getHeaderParameterName(1));
-
+      assertEquals(0, IDE.REST_SERVICE.getHeaderParameterCount());
       IDE.REST_SERVICE.selectQueryParametersTab();
    }
 
@@ -135,8 +118,8 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
-         VirtualFileSystemUtils.delete(URL);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

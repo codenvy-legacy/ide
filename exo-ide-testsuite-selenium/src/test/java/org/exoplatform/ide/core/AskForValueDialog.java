@@ -91,7 +91,7 @@ public class AskForValueDialog extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            return view != null && view.isDisplayed();
+            return view != null && view.isDisplayed() && valueField != null && valueField.isDisplayed();
          }
       });
    }

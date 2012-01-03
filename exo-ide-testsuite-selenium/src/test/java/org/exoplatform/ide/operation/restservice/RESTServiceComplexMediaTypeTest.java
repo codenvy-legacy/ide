@@ -19,20 +19,18 @@
 package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -42,13 +40,9 @@ import java.io.IOException;
 public class RESTServiceComplexMediaTypeTest extends BaseTest
 {
 
-   private final static String FILE_NAME = "ComplexMediaType.groovy";
+   private final static String FILE_NAME = "ComplexMediaType.grs";
 
-   private final static String FOLDER_NAME = RESTServiceComplexMediaTypeTest.class.getSimpleName();
-
-   // **************
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
+   private final static String PROJECT = RESTServiceComplexMediaTypeTest.class.getSimpleName();
 
    /**
     * Create REST service for test in test folder.
@@ -60,11 +54,9 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ComplexMediaTypes.groovy";
       try
       {
-         // TODO*******change***************
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
-         // **********************
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
       catch (IOException e)
       {
@@ -75,113 +67,75 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
    @Test
    public void testComplexMediaType() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      // Open REST Service file:
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
 
       // Call the "Run->Launch REST Service" topmenu command
       IDE.REST_SERVICE.launchRestService();
 
-      
+      assertTrue(IDE.REST_SERVICE.isPathPresent("/testMediaTypes"));
+      assertTrue(IDE.REST_SERVICE.isPathPresent("/testMediaTypes/InnerPath"));
 
-      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes");
-      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes/InnerPath");
-
-      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes");
-
-      IDE.REST_SERVICE.sendRequst();
-
-      // Expected 3
-      IDE.REST_SERVICE.waitOpened();
-      
+      IDE.REST_SERVICE.selectPath("/testMediaTypes");
+      IDE.REST_SERVICE.sendRequest();
+      IDE.OUTPUT.waitForMessageShow(2, 5);
 
       // Check received message:
-      String mess = IDE.OUTPUT.getOutputMessage(1);
-
+      String mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
 
       IDE.REST_SERVICE.launchRestService();
-    
+
       // Choose path:
-      
+      IDE.REST_SERVICE.selectPath("/testMediaTypes/InnerPath");
+      assertEquals("POST", IDE.REST_SERVICE.getMethodValue());
 
-      IDE.REST_SERVICE.selectInPathList("/testMediaTypes/InnerPath");
+      assertTrue(IDE.REST_SERVICE.isRequestMediaTypeContainsValues("application/json", "text/plain"));
+      IDE.REST_SERVICE.setRequestMediaTypeValue("text/plain");
 
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals("POST", IDE.REST_SERVICE.getMethodFieldValue());
+      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeValue());
 
-      
+      IDE.REST_SERVICE.setRequestMediaTypeValue("application/json");
+      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeValue());
 
-      IDE.REST_SERVICE.isRequestFieldContainsValues("application/json", "text/plain");
-      
-      IDE.REST_SERVICE.setRequestMediaTypeFieldValue("text/plain");
-
-      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
-
-      IDE.REST_SERVICE.setRequestMediaTypeFieldValue("application/json");
-      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
-
-      IDE.REST_SERVICE.typeToPathField("/testMediaTypes/InnerPath");
-      Thread.sleep(TestConstants.SLEEP);
-
+      IDE.REST_SERVICE.selectPath("/testMediaTypes/InnerPath");
       IDE.REST_SERVICE.selectBodyTab();
-
       IDE.REST_SERVICE.typeToBodyField("{\"value\" : \"value4\"}");
-      
-      
-      
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
 
-      Thread.sleep(TestConstants.SLEEP);
-
+      IDE.OUTPUT.waitForMessageShow(3, 5);
       // Check received message:
-      mess = IDE.OUTPUT.getOutputMessage(2);
-
+      mess = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(mess.contains("Body: value4"));
 
       IDE.REST_SERVICE.launchRestService();
+      IDE.REST_SERVICE.selectPath("/testMediaTypes");
+      IDE.REST_SERVICE.selectPath("/testMediaTypes/InnerPath");
+      assertEquals("POST", IDE.REST_SERVICE.getMethodValue());
+      assertTrue(IDE.REST_SERVICE.isRequestMediaTypeContainsValues("application/json", "text/plain"));
+      IDE.REST_SERVICE.setRequestMediaTypeValue("text/plain");
 
-     
-      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes/InnerPath");
-      IDE.REST_SERVICE.isPathListTextPresent("/testMediaTypes/InnerPath");
-
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals("POST", IDE.REST_SERVICE.getMethodFieldValue());
-
-      IDE.REST_SERVICE.isRequestFieldContainsValues("application/json", "text/plain");
-      IDE.REST_SERVICE.setRequestMediaTypeFieldValue("text/plain");
-
-      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
-
-      IDE.REST_SERVICE.setRequestMediaTypeFieldValue("text/plain");
-
-      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
-
-      IDE.REST_SERVICE.typeToPathField("/testMediaTypes/InnerPath");
+      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeValue());
+      IDE.REST_SERVICE.setRequestMediaTypeValue("text/plain");
+      assertEquals("text/plain", IDE.REST_SERVICE.getResponseMediaTypeValue());
 
       IDE.REST_SERVICE.selectBodyTab();
       IDE.REST_SERVICE.typeToBodyField("{\"value\" : \"value4\"}");
-      
-      Thread.sleep(TestConstants.SLEEP);
 
-      IDE.REST_SERVICE.sendRequst();
-
-      Thread.sleep(TestConstants.SLEEP * 5);
-
+      IDE.REST_SERVICE.sendRequest();
+      IDE.OUTPUT.waitForMessageShow(4, 5);
       // Check received message:
-      mess = IDE.OUTPUT.getOutputMessage(3);
-      System.out.print("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:" + mess + "<<<<<<<<<<<<<" + "\n");
-      assertTrue(mess.contains("Body: value4"));
-      // TODO define more exactly
-      // assertTrue(mess.contains("{\"value\" : \"value4\"}"));
-
-      IDE.EDITOR.closeFile(0);
+      mess = IDE.OUTPUT.getOutputMessage(4);
+      assertTrue(mess.contains("{\"value\" : \"value4\"}"));
    }
 
    /**
@@ -192,8 +146,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

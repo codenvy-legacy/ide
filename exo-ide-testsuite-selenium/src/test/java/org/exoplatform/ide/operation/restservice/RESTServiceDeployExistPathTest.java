@@ -22,10 +22,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,70 +35,72 @@ import java.io.IOException;
  *
  */
 
-//IDE-133
 public class RESTServiceDeployExistPathTest extends BaseTest
 {
 
-   /**
-    * 
-    */
-   private static final String FOLDER_NAME = "Test";
+   private static final String PROJECT = "Test";
 
-   private static final String FIRST_NAME = System.currentTimeMillis() + ".groovy";
+   private static final String FIRST_NAME = System.currentTimeMillis() + ".grs";
 
-   private static final String SECOND_NAME = System.currentTimeMillis() + "copy.groovy";
+   private static final String SECOND_NAME = System.currentTimeMillis() + "copy.grs";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
 
    @Test
    public void testDeployExistPath() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      //TODO*****************change**************change add folder for locked file
-      IDE.NAVIGATION.createFolder(FOLDER_NAME);
-      //*************************************
-      IDE.TOOLBAR.runCommandFromNewPopupMenu("REST Service");
-      //createFileFromToolbar("REST Service");
-      Thread.sleep(TestConstants.SLEEP);
-      Thread.sleep(TestConstants.SLEEP);
-      saveAsUsingToolbarButton(FIRST_NAME);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+      IDE.EDITOR.saveAs(1, FIRST_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FIRST_NAME);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(1, 5);
 
-      saveAsUsingToolbarButton(SECOND_NAME);
+      IDE.EDITOR.saveAs(1, SECOND_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SECOND_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FIRST_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FIRST_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FIRST_NAME);
 
-      IDE.EDITOR.selectTab(0);
-
+      IDE.EDITOR.selectTab(SECOND_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + SECOND_NAME);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.OUTPUT.waitForMessageShow(2, 5);
 
       String mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess.startsWith("[ERROR]"));
-      assertTrue(mess.contains(SECOND_NAME + " deploy failed. Error (400: Bad Request)"));
+      //TODO change when name is ready - now id is displayed.
+      assertTrue(mess.contains(/*SECOND_NAME +*/" deploy failed. Error (400: Bad Request)"));
 
-      //***************fix GOTO static string message****************     
-      //      assertTrue(mess
-      //         .contains("Can't bind script " + SECOND_NAME + ", it is not root resource or root resource with the same URI pattern already registered"));
-
-      IDE.EDITOR.selectTab(1);
-
+      IDE.EDITOR.selectTab(FIRST_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FIRST_NAME);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTPUT.waitForMessageShow(3, 5);
 
-      IDE.EDITOR.selectTab(0);
-
+      IDE.EDITOR.selectTab(SECOND_NAME);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-
+      IDE.OUTPUT.waitForMessageShow(4, 5);
       mess = IDE.OUTPUT.getOutputMessage(4);
-
       assertTrue(mess.contains("[INFO]"));
-
-      assertTrue(mess.contains(SECOND_NAME + " deployed successfully."));
+      assertTrue(mess.contains(/*SECOND_NAME +*/" deployed successfully."));
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
    }
 
@@ -108,9 +109,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FOLDER_NAME + "/" + FIRST_NAME);
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FOLDER_NAME + "/" + SECOND_NAME);
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

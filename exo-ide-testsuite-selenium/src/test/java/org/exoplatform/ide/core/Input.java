@@ -20,10 +20,10 @@ package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -39,6 +39,8 @@ public class Input extends AbstractTestModule
       String SUGGEST_BOX_ID = "exoSuggestPanel";
 
       String COMBOBOX_VALUE_LOCATOR = "//div[@id='" + SUGGEST_BOX_ID + "']//td[contains(., '%s')]";
+
+      String ARROW_SELECTOR = "img[image-id=suggest-image]";
    }
 
    /**
@@ -128,7 +130,7 @@ public class Input extends AbstractTestModule
 
    public void selectComboboxValue(WebElement combobox, String value)
    {
-      combobox.sendKeys(Keys.ARROW_DOWN);
+      driver().findElement(By.cssSelector(Locators.ARROW_SELECTOR)).click();
       waitSuggestBoxShow();
       WebElement item = driver().findElement(By.xpath(String.format(Locators.COMBOBOX_VALUE_LOCATOR, value)));
       item.click();
@@ -137,7 +139,8 @@ public class Input extends AbstractTestModule
 
    public boolean isComboboxValuePresent(WebElement combobox, String value)
    {
-      combobox.sendKeys(Keys.ARROW_DOWN);
+      WebElement arrow = driver().findElement(By.cssSelector(Locators.ARROW_SELECTOR));
+      arrow.click();
       waitSuggestBoxShow();
       try
       {
@@ -150,7 +153,8 @@ public class Input extends AbstractTestModule
       }
       finally
       {
-         //TODO think how to close
+         new Actions(driver()).contextClick(arrow).build().perform();
+         waitSuggestBoxHide();
       }
    }
 

@@ -102,7 +102,6 @@ public class DeleteCurrentLineTest extends BaseTest
       }
    }
 
-   //IDE-151
    @Test
    public void deleteLine() throws Exception
    {

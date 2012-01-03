@@ -96,7 +96,7 @@ public class RESTServiceFilterParametersTest extends BaseTest
       
       IDE.REST_SERVICE.changeHeaderParameterSendCheckBoxState(false);      
 
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
       IDE.OUTPUT.waitOpened();
       IDE.OUTPUT.waitForMessageShow(1);
       String mess = IDE.OUTPUT.getOutputMessage(1);

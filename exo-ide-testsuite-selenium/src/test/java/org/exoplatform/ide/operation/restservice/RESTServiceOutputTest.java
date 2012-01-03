@@ -92,11 +92,11 @@ public class RESTServiceOutputTest extends BaseTest
       checkHeaderParameter(1, "Test-Header1", "string", "", "");
 
       //Step 3
-      IDE.REST_SERVICE.selectInPathList("/overralTest");
+      IDE.REST_SERVICE.selectPath("/overralTest");
       checkFields("/overralTest", "OPTIONS", "", "application/vnd.sun.wadl+xml");
 
       //Step 4
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
 
       //Expected 3
 
@@ -122,7 +122,7 @@ public class RESTServiceOutputTest extends BaseTest
 
       checkHeaderParameter(1, "Test-Header1", "string", "", "test");
       //Step 6
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
       mess = IDE.OUTPUT.getOutputMessage(3);
 
       assertTrue(mess.contains("Param List 1:param1; Test Query Parameter 1: ; Test-Header 1: test; Body:"));
@@ -140,7 +140,7 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.REST_SERVICE.selectBodyTab();
 
       IDE.REST_SERVICE.typeToBodyField("Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�");
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
 
       //Expected 8
       mess = IDE.OUTPUT.getOutputMessage(4);
@@ -154,7 +154,7 @@ public class RESTServiceOutputTest extends BaseTest
 
       IDE.REST_SERVICE.setMethodFieldValue("GET");
       assertEquals("", IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
-      assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
+      assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeValue());
 
       checkQueryParameter(1, "Test Query Parameter 2", "string", "", "");
 
@@ -168,7 +168,7 @@ public class RESTServiceOutputTest extends BaseTest
 
       IDE.REST_SERVICE.typeToQueryParameterValue(1, "value 1");
 
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
 
       //Expected 11
       mess = IDE.OUTPUT.getOutputMessage(5);
@@ -192,9 +192,9 @@ public class RESTServiceOutputTest extends BaseTest
       
       System.out.print("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:"+IDE.REST_SERVICE.getPathFieldValue()+"\n");
       assertEquals(path, IDE.REST_SERVICE.getPathFieldValue());
-      assertEquals(method, IDE.REST_SERVICE.getMethodFieldValue());
+      assertEquals(method, IDE.REST_SERVICE.getMethodValue());
       assertEquals(request, IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
-      assertEquals(response, IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
+      assertEquals(response, IDE.REST_SERVICE.getResponseMediaTypeValue());
    }
 
    private void checkQueryParameter(int parameterIndex, String name, String type, String defaultValue, String value)

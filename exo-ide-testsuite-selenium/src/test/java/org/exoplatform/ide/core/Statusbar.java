@@ -77,6 +77,19 @@ public class Statusbar extends AbstractTestModule
       });
    }
 
+   public void waitCursorPositionAt(final String position)
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver arg0)
+         {
+            return (position.equals(getCursorPosition()));
+         }
+      });
+   }
+
    /**
     * Get navigation status.
     * 

@@ -86,10 +86,10 @@ public class RESTServiceResponseHeadersTest extends BaseTest
 
       IDE.REST_SERVICE.launchRestService();
 
-      IDE.REST_SERVICE.selectInPathList("/test/testgroovy/{name}");
+      IDE.REST_SERVICE.selectPath("/test/testgroovy/{name}");
 
       IDE.REST_SERVICE.typeToPathField("/test/testgroovy/Evgen");
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
 
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       String mess = IDE.OUTPUT.getOutputMessage(2);

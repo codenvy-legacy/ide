@@ -84,9 +84,11 @@ public class RESTService extends AbstractTestModule
 
       String DROP_DOWN_PATH_LIST = "exoSuggestPanel";
 
-      String TABLE_SELECT_PREFIX = "//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div";
+      String TABLE_SELECT_PREFIX = "//table[@id='%s']/tbody/tr[%s]/td[%s]/div";
 
-      String TABLE_VALUE_PREFIX = "//table[@id='%1s']/tbody/tr[%2s]/td[%3s]//div//input";
+      String TABLE_ROW = "table#%s>tbody:first-of-type tr";
+
+      String TABLE_VALUE_PREFIX = "//table[@id='%s']/tbody/tr[%s]/td[%s]//div//input";
 
    }
 
@@ -121,12 +123,6 @@ public class RESTService extends AbstractTestModule
 
    @FindBy(name = Locators.REST_SERVICE_RESPONSE_MEDIATYPE)
    private WebElement restServiceResponseMediaType;
-
-   @FindBy(xpath = Locators.PATH_LIST_OPEN)
-   private WebElement pahtListOpen;
-
-   @FindBy(id = Locators.DROP_DOWN_PATH_LIST)
-   private WebElement dropDownPahtList;
 
    @FindBy(id = Locators.HEADER_TABLE_ID)
    private WebElement headerParametrTabble;
@@ -181,24 +177,6 @@ public class RESTService extends AbstractTestModule
             {
                return true;
             }
-         }
-      });
-   }
-
-   /**
-   * Wait appearance pathlistCombobox
-   * 
-   * 
-   */
-   public void waitPathListOpened() throws InterruptedException
-   {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            return dropDownPahtList != null && dropDownPahtList.isDisplayed();
          }
       });
    }
@@ -376,7 +354,7 @@ public class RESTService extends AbstractTestModule
     * Get Method field value
     * @return Method of REST Service 
     */
-   public String getMethodFieldValue()
+   public String getMethodValue()
    {
       return IDE().INPUT.getValue(restServiceMethod);
    }
@@ -394,7 +372,7 @@ public class RESTService extends AbstractTestModule
     * Get Response Media Type field value
     * @return request media type field value
     */
-   public String getResponseMediaTypeFieldValue()
+   public String getResponseMediaTypeValue()
    {
       return IDE().INPUT.getValue(restServiceResponseMediaType);
 
@@ -452,7 +430,7 @@ public class RESTService extends AbstractTestModule
     * Check is Path suggest panel list contains element with text
     * @param text that Path suggest panel must contains 
     */
-   public boolean isPathListTextPresent(String text)
+   public boolean isPathPresent(String text)
    {
       return IDE().INPUT.isComboboxValuePresent(restServicePath, text);
    }
@@ -461,7 +439,7 @@ public class RESTService extends AbstractTestModule
     * Send request via click on "Send" button
     * @throws Exception 
     */
-   public void sendRequst() throws Exception
+   public void sendRequest() throws Exception
    {
       clickSendButton();
       waitClosed();
@@ -482,16 +460,18 @@ public class RESTService extends AbstractTestModule
     * Check contains element in drop down fields RestService form
     * if drop down in RestService form is contains value return true
     */
-   public boolean isSelectElementContainsValue(WebElement selectElement, String val[])
+   public boolean isSelectElementContainsValues(WebElement selectElement, String val[])
    {
       List<WebElement> allOptions = selectElement.findElements(By.tagName("option"));
 
       boolean contains = false;
-
       for (String v : val)
       {
          for (WebElement option : allOptions)
          {
+            System.out.println("RESTService.isSelectElementContainsValues()VALUE>>>>>" + v);
+            System.out.println("RESTService.isSelectElementContainsValues()OPTION>>>>>" + option.getText());
+            System.out.println("RESTService.isSelectElementContainsValues()EQUALS"+ option.getText().equals(v));
             if (option.getText().equals(v))
             {
                contains = true;
@@ -500,6 +480,7 @@ public class RESTService extends AbstractTestModule
          }
          if (!contains)
          {
+            System.out.println("RESTService.isSelectElementContainsValues()HERE");
             return false;
          }
       }
@@ -510,9 +491,11 @@ public class RESTService extends AbstractTestModule
     * Check is Request media type field has values
     * @param val  Request media type field values
     */
-   public boolean isRequestFieldContainsValues(String... val)
+   public boolean isRequestMediaTypeContainsValues(String... val)
    {
-      return isSelectElementContainsValue(restServiceMethod, val);
+      boolean contains = isSelectElementContainsValues(restServiceRequestMediaType, val);
+      System.out.println("RESTService.isRequestMediaTypeContainsValues()" + contains);
+      return contains;
    }
 
    /**
@@ -530,7 +513,7 @@ public class RESTService extends AbstractTestModule
    * Select specific value in Request Media Type Field.
    * @param value
    */
-   public void setRequestMediaTypeFieldValue(String value)
+   public void setRequestMediaTypeValue(String value)
    {
       selectValueInSelectElement(restServiceRequestMediaType, value);
    }
@@ -608,14 +591,30 @@ public class RESTService extends AbstractTestModule
       return getTableValue(Locators.QUERY_TABLE_ID, parameterIndex, 5);
    }
 
+   public int getQueryParameterCount()
+   {
+      return getTableRowCount(Locators.QUERY_TABLE_ID);
+   }
+
+   protected int getTableRowCount(String tableId)
+   {
+      return driver().findElements(By.cssSelector(String.format(Locators.TABLE_ROW, tableId))).size();
+   }
+
    /**
-    * Get Header parameter name
+    * Get Header parameter name.
+    * 
     * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
     * @return Header parameter name
     */
    public String getHeaderParameterName(int parameterIndex)
    {
       return getTableValue(Locators.HEADER_TABLE_ID, parameterIndex, 2);
+   }
+
+   public int getHeaderParameterCount()
+   {
+      return getTableRowCount(Locators.HEADER_TABLE_ID);
    }
 
    /**
@@ -715,7 +714,7 @@ public class RESTService extends AbstractTestModule
     * @param pathValue
     * @throws Exception
     */
-   public void selectInPathList(String pathValue) throws Exception
+   public void selectPath(String pathValue) throws Exception
    {
       IDE().INPUT.selectComboboxValue(restServicePath, pathValue);
    }

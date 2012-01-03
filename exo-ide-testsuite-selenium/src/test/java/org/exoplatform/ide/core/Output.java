@@ -44,6 +44,8 @@ public class Output extends AbstractTestModule
       String OUTPUT_CONTENT_ID = "ideOutputContent";
 
       String OUTPUT_ROW_BY_INDEX = "//div[@id='" + OUTPUT_CONTENT_ID + "']/div[%d]";
+
+      String OUTPUT_ERROR_BY_INDEX = "//div[@id='" + OUTPUT_CONTENT_ID + "']/div[%d]//span";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -161,8 +163,7 @@ public class Output extends AbstractTestModule
     */
    public void clickOnErrorMessage(int messageNumber)
    {
-      WebElement message = getMessageByIndex(messageNumber);
-      message.click();
+      outputContent.findElement(By.xpath(String.format(Locators.OUTPUT_ERROR_BY_INDEX, messageNumber))).click();
    }
 
    /**

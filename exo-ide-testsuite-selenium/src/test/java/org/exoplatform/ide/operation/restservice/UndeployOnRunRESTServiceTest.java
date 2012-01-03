@@ -101,7 +101,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       //call Run Groovy Service command
       IDE.REST_SERVICE.runRESTServiceInSanbox();
       //close
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //3
       String text = IDE.OUTPUT.getOutputMessage(4);

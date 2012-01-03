@@ -85,7 +85,7 @@ public class RESTServiceGetURLTest extends BaseTest
       IDE.REST_SERVICE.launchRestService();
 
       //IDE.REST_SERVICE.openPathList();
-      IDE.REST_SERVICE.selectInPathList("/testService");
+      IDE.REST_SERVICE.selectPath("/testService");
       IDE.REST_SERVICE.openGetURLForm();
 
       String url = IDE.REST_SERVICE.getUrlFromGetURLForm();
@@ -95,7 +95,7 @@ public class RESTServiceGetURLTest extends BaseTest
       IDE.REST_SERVICE.closeGetURLForm();
 
       
-      IDE.REST_SERVICE.selectInPathList("/testService/Inner/{pathParam}");
+      IDE.REST_SERVICE.selectPath("/testService/Inner/{pathParam}");
 
       IDE.REST_SERVICE.openGetURLForm();
       url = IDE.REST_SERVICE.getUrlFromGetURLForm();
@@ -105,7 +105,7 @@ public class RESTServiceGetURLTest extends BaseTest
       //Close form
       IDE.REST_SERVICE.closeGetURLForm();
       
-      IDE.REST_SERVICE.selectInPathList("/testService/Inner/{param}/node/{paramList: .+}");
+      IDE.REST_SERVICE.selectPath("/testService/Inner/{param}/node/{paramList: .+}");
 
       IDE.REST_SERVICE.openGetURLForm();
       url = IDE.REST_SERVICE.getUrlFromGetURLForm();

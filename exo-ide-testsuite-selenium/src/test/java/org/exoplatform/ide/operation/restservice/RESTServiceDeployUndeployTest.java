@@ -22,10 +22,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,76 +37,80 @@ import java.io.IOException;
 public class RESTServiceDeployUndeployTest extends BaseTest
 {
 
-   private static final String FOLDER_NAME = System.currentTimeMillis() + "RESTService";
+   private static final String PROJECT = RESTServiceDeployUndeployTest.class.getSimpleName();
 
-   private static String FILE_NAME = "DeployUndeployTest.groovy";
+   private static String FILE_NAME = "DeployUndeployTest.grs";
 
-   private final static String FILE_URL = WS_URL + FOLDER_NAME + "/" + FILE_NAME;
-
-   @Test
-   public void testDeployUndeploy() throws Exception
-   {
-      IDE.WORKSPACE.waitForRootItem();
-      //TODO*******************change add folder for locked file
-      IDE.NAVIGATION.createFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      //*****************************
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.EDITOR.closeFile(0);
-
-      System.out.println(FILE_URL);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_URL, false);
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitOpened();
-      
-      assertTrue(IDE.OUTPUT.isOpened());
-
-      String mess = IDE.OUTPUT.getOutputMessage(1);
-
-      assertTrue(mess.contains("[INFO]"));
-      assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      //**********fix TODO static string message 
-      assertTrue(IDE.OUTPUT.getOutputMessage(2).contains(FOLDER_NAME + "/" + FILE_NAME + " undeployed successfully."));
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      mess = IDE.OUTPUT.getOutputMessage(3);
-      assertTrue(mess.contains("[ERROR]"));
-      assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
-
-      //**********fix TODO static string message
-      assertTrue(mess.contains("Can't unbind script " + FOLDER_NAME +"/" + FILE_NAME
-         + ", not bound or has wrong mapping to the resource class"));
-      //****************************************
-      IDE.EDITOR.closeFile(0);
-
-      IDE.NAVIGATION.assertItemVisible(FILE_URL);
-
-   }
-
-   @AfterClass
-   public static void tearDown()
+   @BeforeClass
+   public static void setUp()
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, FILE_URL);
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
          e.printStackTrace();
       }
+   }
+
+   @Test
+   public void testDeployUndeploy() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(1, 5);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
+
+      assertTrue(mess.contains("[INFO]"));
+      assertTrue(mess.contains(/* TODO FILE_NAME +*/" deployed successfully."));
+
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(2, 5);
+
+      assertTrue(IDE.OUTPUT.getOutputMessage(2).contains(
+         /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+
+      IDE.OUTPUT.waitForMessageShow(3, 5);
+      mess = IDE.OUTPUT.getOutputMessage(3);
+      assertTrue(mess.contains("[ERROR]"));
+      assertTrue(mess.contains(/*TODO FILE_NAME +*/" undeploy failed. Error (400: Bad Request)"));
+
+      assertTrue(mess.contains(/*TODO "Can't unbind script " + FOLDER_NAME + "/" + FILE_NAME
+                               +*/", not bound or has wrong mapping to the resource class"));
+      IDE.EDITOR.closeFile(FILE_NAME);
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+   /*   try
+      {
+         //TODO  Utils.undeployService(BASE_URL, REST_CONTEXT, FILE_URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }*/
    }
 
 }

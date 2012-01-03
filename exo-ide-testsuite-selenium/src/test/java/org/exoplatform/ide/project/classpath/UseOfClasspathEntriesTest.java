@@ -102,7 +102,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
       IDE.REST_SERVICE.launchRestService();
       
       //Click Send button.
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
       IDE.REST_SERVICE.waitClosed();
       IDE.OUTPUT.waitForMessageShow(3);
 

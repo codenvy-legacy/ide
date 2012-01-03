@@ -94,16 +94,16 @@ public class RESTServiceOutputErrorTest extends BaseTest
       IDE.REST_SERVICE.launchRestService();
 
       
-      IDE.REST_SERVICE.selectInPathList("/outputError/Inner/{first}/{second}/node/{paramList: .+}");
-      IDE.REST_SERVICE.selectInPathList("/outputError");
+      IDE.REST_SERVICE.selectPath("/outputError/Inner/{first}/{second}/node/{paramList: .+}");
+      IDE.REST_SERVICE.selectPath("/outputError");
 
-      IDE.REST_SERVICE.selectInPathList("/outputError");
+      IDE.REST_SERVICE.selectPath("/outputError");
 
-      assertEquals("OPTIONS", IDE.REST_SERVICE.getMethodFieldValue());
+      assertEquals("OPTIONS", IDE.REST_SERVICE.getMethodValue());
 
       assertEquals("", IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
 
-      assertEquals("application/vnd.sun.wadl+xml", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
+      assertEquals("application/vnd.sun.wadl+xml", IDE.REST_SERVICE.getResponseMediaTypeValue());
 
       assertEquals("",
          (IDE.REST_SERVICE.getQueryParameterName(1)));
@@ -124,12 +124,12 @@ public class RESTServiceOutputErrorTest extends BaseTest
 
    
 
-      IDE.REST_SERVICE.selectInPathList("/outputError/Inner/{first}/{second}/node/{paramList: .+}");
+      IDE.REST_SERVICE.selectPath("/outputError/Inner/{first}/{second}/node/{paramList: .+}");
       IDE.REST_SERVICE.typeToPathField("/outputError/Inner/first/second/node/node1/node2/node3");
 
       IDE.REST_SERVICE.setMethodFieldValue("GET");
 
-      IDE.REST_SERVICE.sendRequst();
+      IDE.REST_SERVICE.sendRequest();
 
       Thread.sleep(TestConstants.SLEEP);
       String mess = IDE.OUTPUT.getOutputMessage(2);

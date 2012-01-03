@@ -22,15 +22,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -40,12 +39,9 @@ import java.io.IOException;
 public class RESTServiceDefaultHTTPParametersTest extends BaseTest
 {
 
-   private final static String FILE_NAME = RESTServiceDefaultHTTPParametersTest.class.getSimpleName();
+   private final static String FILE_NAME = RESTServiceDefaultHTTPParametersTest.class.getSimpleName()+".grs";
 
-   private final static String TEST_FOLDER = "DefaultHTTPParameters";
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
+   private final static String PROJECT = "DefaultHTTPParameters";
 
    @BeforeClass
    public static void setUp()
@@ -54,19 +50,11 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultHTTPParameters.groovy";
       try
       {
-         //**************TODO***********change add folder for locked file
-         VirtualFileSystemUtils.mkcol(URL);
-         //***********************************************************
-
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (InterruptedException e)
       {
          e.printStackTrace();
       }
@@ -75,21 +63,24 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
    @Test
    public void testDefaultHTTPParameters() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
+
       IDE.REST_SERVICE.launchRestService();
       checkParam();
       IDE.REST_SERVICE.setMethodFieldValue("GET");
-
       checkParam();
 
       IDE.REST_SERVICE.closeForm();
-
+      IDE.REST_SERVICE.waitClosed();
    }
 
    /**
@@ -117,8 +108,7 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
