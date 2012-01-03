@@ -225,35 +225,44 @@ public class ASTParser
 
    private List getClasspath() throws IllegalStateException
    {
-      //		Main main = new Main(new PrintWriter(System.out), new PrintWriter(System.err), false/*systemExit*/, null/*options*/, null/*progress*/);
+//      Main main =
+//         new Main(new PrintWriter(System.out), new PrintWriter(System.err), false/*systemExit*/, null/*options*/,
+//            null/*progress*/);
       ArrayList allClasspaths = new ArrayList();
-      //TODO find classpath
-      //		try {
-      //			if ((this.bits & CompilationUnitResolver.INCLUDE_RUNNING_VM_BOOTCLASSPATH) != 0) {
-      //				org.eclipse.jdt.internal.compiler.util.Util.collectRunningVMBootclasspath(allClasspaths);
-      //			}
-      //			if (this.sourcepaths != null) {
-      //				for (int i = 0, max = this.sourcepaths.length; i < max; i++) {
-      //					String encoding = this.sourcepathsEncodings == null ? null : this.sourcepathsEncodings[i];
-      //					main.processPathEntries(
-      //							Main.DEFAULT_SIZE_CLASSPATH,
-      //							allClasspaths, this.sourcepaths[i], encoding, true, false);
-      //				}
-      //			}
-      //			if (this.classpaths != null) {
-      //				for (int i = 0, max = this.classpaths.length; i < max; i++) {
-      //					main.processPathEntries(
-      //							Main.DEFAULT_SIZE_CLASSPATH,
-      //							allClasspaths, this.classpaths[i], null, false, false);
-      //				}
-      //			}
-      //			ArrayList pendingErrors = main.pendingErrors;
-      //			if (pendingErrors != null && pendingErrors.size() != 0) {
-      //				throw new IllegalStateException("invalid environment settings"); //$NON-NLS-1$
-      //			}
-      //		} catch (IllegalArgumentException e) {
-      //			throw new IllegalStateException("invalid environment settings"); //$NON-NLS-1$
-      //		}
+//      //TODO find classpath
+//      try
+//      {
+//         if ((this.bits & CompilationUnitResolver.INCLUDE_RUNNING_VM_BOOTCLASSPATH) != 0)
+//         {
+//            org.eclipse.jdt.internal.compiler.util.Util.collectRunningVMBootclasspath(allClasspaths);
+//         }
+//         if (this.sourcepaths != null)
+//         {
+//            for (int i = 0, max = this.sourcepaths.length; i < max; i++)
+//            {
+//               String encoding = this.sourcepathsEncodings == null ? null : this.sourcepathsEncodings[i];
+//               main.processPathEntries(Main.DEFAULT_SIZE_CLASSPATH, allClasspaths, this.sourcepaths[i], encoding, true,
+//                  false);
+//            }
+//         }
+//         if (this.classpaths != null)
+//         {
+//            for (int i = 0, max = this.classpaths.length; i < max; i++)
+//            {
+//               main.processPathEntries(Main.DEFAULT_SIZE_CLASSPATH, allClasspaths, this.classpaths[i], null, false,
+//                  false);
+//            }
+//         }
+//         ArrayList pendingErrors = main.pendingErrors;
+//         if (pendingErrors != null && pendingErrors.size() != 0)
+//         {
+//            throw new IllegalStateException("invalid environment settings"); //$NON-NLS-1$
+//         }
+//      }
+//      catch (IllegalArgumentException e)
+//      {
+//         throw new IllegalStateException("invalid environment settings"); //$NON-NLS-1$
+//      }
       return allClasspaths;
    }
 
@@ -1197,40 +1206,7 @@ public class ASTParser
                   sourceUnit =
                      new BasicCompilationUnit(sourceUnit.getContents(), sourceUnit.getPackageName(), new String(
                         sourceUnit.getFileName()), this.project);
-               } /*else if (this.typeRoot instanceof IClassFile) {
-                 try {
-                 	String sourceString = this.typeRoot.getSource();
-                 	if (sourceString == null) {
-                 		throw new IllegalStateException();
-                 	}
-                 	PackageFragment packageFragment = (PackageFragment) this.typeRoot.getParent();
-                 	BinaryType type = (BinaryType) this.typeRoot.findPrimaryType();
-                 	IBinaryType binaryType = (IBinaryType) type.getElementInfo();
-                 	// file name is used to recreate the Java element, so it has to be the toplevel .class file name
-                 	char[] fileName = binaryType.getFileName();
-                 	int firstDollar = CharOperation.indexOf('$', fileName);
-                 	if (firstDollar != -1) {
-                 		char[] suffix = SuffixConstants.SUFFIX_class;
-                 		int suffixLength = suffix.length;
-                 		char[] newFileName = new char[firstDollar + suffixLength];
-                 		System.arraycopy(fileName, 0, newFileName, 0, firstDollar);
-                 		System.arraycopy(suffix, 0, newFileName, firstDollar, suffixLength);
-                 		fileName = newFileName;
-                 	}
-                 	sourceUnit = new BasicCompilationUnit(sourceString.toCharArray(), Util.toCharArrays(packageFragment.names), new String(fileName), this.project);
-                 } catch(JavaModelException e) {
-                 	// an error occured accessing the java element
-                 	StringWriter stringWriter = new StringWriter();
-                 	PrintWriter writer = null;
-                 	try {
-                 		writer = new PrintWriter(stringWriter);
-                 		e.printStackTrace(writer);
-                 	} finally {
-                 		if (writer != null) writer.close();
-                 	}
-                 	throw new IllegalStateException(String.valueOf(stringWriter.getBuffer()));
-                 }
-                 }*/
+               }
                else if (this.rawSource != null)
                {
                   needToResolveBindings =
@@ -1266,26 +1242,20 @@ public class ASTParser
                      flags |= ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
                   }
                   //TODO
-                  //						try {
-                  //							 //parse and resolve
-                  //							compilationUnitDeclaration =
-                  //								CompilationUnitResolver.resolve(
-                  //									sourceUnit,
-                  //									this.project,
-                  //									getClasspath(),
-                  //									searcher,
-                  //									this.compilerOptions,
-                  //									flags,
-                  //									monitor);
-                  //						} catch (JavaModelException e) {
-                  //							flags &= ~ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
-                  //							compilationUnitDeclaration = CompilationUnitResolver.parse(
-                  //									sourceUnit,
-                  //									searcher,
-                  //									this.compilerOptions,
-                  //									flags);
-                  //							needToResolveBindings = false;
-                  //						}
+                  try
+                  {
+                     //parse and resolve
+                     compilationUnitDeclaration =
+                        CompilationUnitResolver.resolve(sourceUnit, this.project, getClasspath(), searcher,
+                           this.compilerOptions, flags, monitor);
+                  }
+                  catch (JavaModelException e)
+                  {
+                     flags &= ~ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
+                     compilationUnitDeclaration =
+                        CompilationUnitResolver.parse(sourceUnit, searcher, this.compilerOptions, flags);
+                     needToResolveBindings = false;
+                  }
                }
                else
                {

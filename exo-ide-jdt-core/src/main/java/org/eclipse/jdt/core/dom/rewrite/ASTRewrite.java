@@ -639,18 +639,18 @@ public class ASTRewrite
    public final ASTNode createStringPlaceholder(String code, int nodeType)
    {
       //TODO
-//      if (code == null)
-//      {
-//         throw new IllegalArgumentException();
-//      }
-//      ASTNode placeholder = getNodeStore().newPlaceholderNode(nodeType);
-//      if (placeholder == null)
-//      {
-//         throw new IllegalArgumentException("String placeholder is not supported for type" + nodeType); //$NON-NLS-1$
-//      }
-//
-//      getNodeStore().markAsStringPlaceholder(placeholder, code);
-//      return placeholder;
+      //      if (code == null)
+      //      {
+      //         throw new IllegalArgumentException();
+      //      }
+      //      ASTNode placeholder = getNodeStore().newPlaceholderNode(nodeType);
+      //      if (placeholder == null)
+      //      {
+      //         throw new IllegalArgumentException("String placeholder is not supported for type" + nodeType); //$NON-NLS-1$
+      //      }
+      //
+      //      getNodeStore().markAsStringPlaceholder(placeholder, code);
+      //      return placeholder;
       return null;
    }
 
@@ -685,25 +685,25 @@ public class ASTRewrite
    private ASTNode createTargetNode(ASTNode node, boolean isMove)
    {
       //TODO
-//      if (node == null)
-//      {
-//         throw new IllegalArgumentException();
-//      }
-//      validateIsExistingNode(node);
-//      validateIsCorrectAST(node);
-//      CopySourceInfo info =
-//         getRewriteEventStore().markAsCopySource(node.getParent(), node.getLocationInParent(), node, isMove);
-//
-//      ASTNode placeholder = getNodeStore().newPlaceholderNode(node.getNodeType());
-//      if (placeholder == null)
-//      {
-//         throw new IllegalArgumentException(
-//            "Creating a target node is not supported for nodes of type" + node.getClass().getName()); //$NON-NLS-1$
-//      }
-//      getNodeStore().markAsCopyTarget(placeholder, info);
+      //      if (node == null)
+      //      {
+      //         throw new IllegalArgumentException();
+      //      }
+      //      validateIsExistingNode(node);
+      //      validateIsCorrectAST(node);
+      //      CopySourceInfo info =
+      //         getRewriteEventStore().markAsCopySource(node.getParent(), node.getLocationInParent(), node, isMove);
+      //
+      //      ASTNode placeholder = getNodeStore().newPlaceholderNode(node.getNodeType());
+      //      if (placeholder == null)
+      //      {
+      //         throw new IllegalArgumentException(
+      //            "Creating a target node is not supported for nodes of type" + node.getClass().getName()); //$NON-NLS-1$
+      //      }
+      //      getNodeStore().markAsCopyTarget(placeholder, info);
 
-//      return placeholder;
-      
+      //      return placeholder;
+
       return null;
    }
 
@@ -882,10 +882,10 @@ public class ASTRewrite
       buf.append("Events:\n"); //$NON-NLS-1$
       // be extra careful of uninitialized or mangled instances
       //TODO
-//      if (this.eventStore != null)
-//      {
-//         buf.append(this.eventStore.toString());
-//      }
+      //      if (this.eventStore != null)
+      //      {
+      //         buf.append(this.eventStore.toString());
+      //      }
       return buf.toString();
    }
 }

@@ -3383,7 +3383,9 @@ public final class JavaCore {
 	   Hashtable options = new Hashtable(10);
       // get encoding through resource plugin
     options.put(JavaCore.CORE_ENCODING, JavaCore.getEncoding());
-    
+    options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+    options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+    options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
     return options;
 	}
 

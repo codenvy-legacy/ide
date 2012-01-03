@@ -21,6 +21,7 @@ package org.exoplatform.ide.jdt.core;
 import static org.junit.Assert.*;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -28,6 +29,7 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Test;
@@ -47,12 +49,16 @@ public class ASTParserTest
          IOUtils.toCharArray(Thread.currentThread().getContextClassLoader()
             .getResourceAsStream("CreateJavaClassPresenter.java"));
       ASTParser parser = ASTParser.newParser(AST.JLS3);
+//            parser.setResolveBindings(true);
+      parser.setKind(ASTParser.K_COMPILATION_UNIT);
+      parser.setUnitName("CreateJavaClassPresenter");
       parser.setSource(javaFile);
-      ASTNode createAST = parser.createAST(null);
-      createAST.accept(new methodVisitor());
 
-      //      CompilationUnit unit = (CompilationUnit)createAST;
-      //      unit.getTypeRoot();
+      parser.setEnvironment(null, new String[]{"/my/path"}, new String[]{"UTF-8"}, true);
+      ASTNode ast = parser.createAST(null);
+      
+
+      ast.accept(new methodVisitor());
    }
 
    private static class CalssVisitor extends ASTVisitor
@@ -64,10 +70,10 @@ public class ASTParserTest
       public boolean visit(TypeDeclaration node)
       {
          System.out.println(node.isMemberTypeDeclaration());
-//         if (node.isMemberTypeDeclaration())
-//         {
-            node.accept(new methodVisitor());
-//         }
+         //         if (node.isMemberTypeDeclaration())
+         //         {
+         node.accept(new methodVisitor());
+         //         }
          return super.visit(node);
       }
 
@@ -81,19 +87,18 @@ public class ASTParserTest
       @Override
       public boolean visit(MethodDeclaration node)
       {
-         
+
          System.out.println(node.getModifiers() + " type: " + node.getReturnType2() + " " + node.getName());
-         
-//         for(Object n : node.parameters())
-//         {
-//            SingleVariableDeclaration param = (SingleVariableDeclaration)n;
-//            System.out.print(param.getType() + " " + param.getName());
-//         }
-//         System.out.println();
-//         System.out.println(")");
+
+         //         for(Object n : node.parameters())
+         //         {
+         //            SingleVariableDeclaration param = (SingleVariableDeclaration)n;
+         //            System.out.print(param.getType() + " " + param.getName());
+         //         }
+         //         System.out.println();
+         //         System.out.println(")");
          return false;
       }
-      
-      
+
    }
 }

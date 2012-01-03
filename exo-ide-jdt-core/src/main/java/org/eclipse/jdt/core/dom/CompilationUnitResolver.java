@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.INameEnvironmentWithProgress;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.core.compiler.CharOperation;
@@ -48,6 +49,7 @@ import org.eclipse.jdt.internal.compiler.util.HashtableOfObject;
 import org.eclipse.jdt.internal.compiler.util.HashtableOfObjectToInt;
 import org.eclipse.jdt.internal.compiler.util.Messages;
 import org.eclipse.jdt.internal.compiler.util.Util;
+import org.eclipse.jdt.internal.core.CancelableProblemFactory;
 import org.eclipse.jdt.internal.core.util.BindingKeyResolver;
 import org.eclipse.jdt.internal.core.util.CommentRecorderParser;
 
@@ -159,9 +161,9 @@ class CompilationUnitResolver extends Compiler
       // Need to reparse the entire source of the compilation unit so as to get source positions
       // (case of processing a source that was not known by beginToCompile (e.g. when asking to createBinding))
       //TODO
-//      SourceTypeElementInfo sourceType = (SourceTypeElementInfo)sourceTypes[0];
-//      accept((org.eclipse.jdt.internal.compiler.env.ICompilationUnit)sourceType.getHandle().getCompilationUnit(),
-//         accessRestriction);
+      //      SourceTypeElementInfo sourceType = (SourceTypeElementInfo)sourceTypes[0];
+      //      accept((org.eclipse.jdt.internal.compiler.env.ICompilationUnit)sourceType.getHandle().getCompilationUnit(),
+      //         accessRestriction);
    }
 
    public synchronized void accept(org.eclipse.jdt.internal.compiler.env.ICompilationUnit sourceUnit,
@@ -688,76 +690,75 @@ class CompilationUnitResolver extends Compiler
    }
 
    //TODO
-   //	public static CompilationUnitDeclaration resolve(
-   //			org.eclipse.jdt.internal.compiler.env.ICompilationUnit sourceUnit,
-   //			IJavaProject javaProject,
-   //			List classpaths,
-   //			NodeSearcher nodeSearcher,
-   //			Map options,
-   //			int flags,
-   //			IProgressMonitor monitor) throws JavaModelException {
-   //		CompilationUnitDeclaration unit = null;
-   //		INameEnvironmentWithProgress environment = null;
-   //		CancelableProblemFactory problemFactory = null;
-   //		CompilationUnitResolver resolver = null;
-   //		try {
-   //			if (javaProject == null) {
-   //				Classpath[] allEntries = new Classpath[classpaths.size()];
-   //				classpaths.toArray(allEntries);
-   //				environment = new NameEnvironmentWithProgress(allEntries, null, monitor);
-   //			} else {
-   //				environment = new CancelableNameEnvironment((JavaProject) javaProject, owner, monitor);
-   //			}
-   //			problemFactory = new CancelableProblemFactory(monitor);
-   //			CompilerOptions compilerOptions = getCompilerOptions(options, (flags & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0);
-   //			boolean ignoreMethodBodies = (flags & ICompilationUnit.IGNORE_METHOD_BODIES) != 0;
-   //			compilerOptions.ignoreMethodBodies = ignoreMethodBodies;
-   //			resolver =
-   //				new CompilationUnitResolver(
-   //					environment,
-   //					getHandlingPolicy(),
-   //					compilerOptions,
-   //					getRequestor(),
-   //					problemFactory,
-   //					monitor,
-   //					javaProject != null);
-   //			boolean analyzeAndGenerateCode = !ignoreMethodBodies;
-   //			unit =
-   //				resolver.resolve(
-   //					null, // no existing compilation unit declaration
-   //					sourceUnit,
-   //					nodeSearcher,
-   //					true, // method verification
-   //					analyzeAndGenerateCode, // analyze code
-   //					analyzeAndGenerateCode); // generate code
-   //			if (resolver.hasCompilationAborted) {
-   //				// the bindings could not be resolved due to missing types in name environment
-   //				// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=86541
-   //				CompilationUnitDeclaration unitDeclaration = parse(sourceUnit, nodeSearcher, options, flags);
-   //				final int problemCount = unit.compilationResult.problemCount;
-   //				if (problemCount != 0) {
-   //					unitDeclaration.compilationResult.problems = new CategorizedProblem[problemCount];
-   //					System.arraycopy(unit.compilationResult.problems, 0, unitDeclaration.compilationResult.problems, 0, problemCount);
-   //					unitDeclaration.compilationResult.problemCount = problemCount;
-   //				}
-   //				return unitDeclaration;
-   //			}
-   //			if (NameLookup.VERBOSE && environment instanceof CancelableNameEnvironment) {
-   //				CancelableNameEnvironment cancelableNameEnvironment = (CancelableNameEnvironment) environment;
-   //				System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInSourcePackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInSourcePackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
-   //				System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInBinaryPackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInBinaryPackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
-   //			}
-   //			return unit;
-   //		} finally {
-   //			if (environment != null) {
-   //				// don't hold a reference to this external object
-   //				environment.setMonitor(null);
-   //			}
-   //			if (problemFactory != null) {
-   //				problemFactory.monitor = null; // don't hold a reference to this external object
-   //			}
-   //		}
-   //	}
+   public static CompilationUnitDeclaration resolve(org.eclipse.jdt.internal.compiler.env.ICompilationUnit sourceUnit,
+      IJavaProject javaProject, List classpaths, NodeSearcher nodeSearcher, Map options, int flags,
+      IProgressMonitor monitor) throws JavaModelException
+   {
+      CompilationUnitDeclaration unit = null;
+      INameEnvironmentWithProgress environment = null;
+      CancelableProblemFactory problemFactory = null;
+      CompilationUnitResolver resolver = null;
+      try
+      {
+         if (javaProject == null)
+         {
+            Classpath[] allEntries = new Classpath[classpaths.size()];
+            classpaths.toArray(allEntries);
+            environment = new NameEnvironmentWithProgress(allEntries, null, monitor);
+         }
+         else
+         {
+            //TODO
+            //   				environment = new CancelableNameEnvironment((JavaProject) javaProject, owner, monitor);
+         }
+         problemFactory = new CancelableProblemFactory(monitor);
+         CompilerOptions compilerOptions =
+            getCompilerOptions(options, (flags & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0);
+         boolean ignoreMethodBodies = (flags & ICompilationUnit.IGNORE_METHOD_BODIES) != 0;
+         compilerOptions.ignoreMethodBodies = ignoreMethodBodies;
+         resolver =
+            new CompilationUnitResolver(environment, getHandlingPolicy(), compilerOptions, getRequestor(),
+               problemFactory, monitor, javaProject != null);
+         boolean analyzeAndGenerateCode = !ignoreMethodBodies;
+         unit = resolver.resolve(null, // no existing compilation unit declaration
+            sourceUnit, nodeSearcher, true, // method verification
+            analyzeAndGenerateCode, // analyze code
+            analyzeAndGenerateCode); // generate code
+         if (resolver.hasCompilationAborted)
+         {
+            // the bindings could not be resolved due to missing types in name environment
+            // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=86541
+            CompilationUnitDeclaration unitDeclaration = parse(sourceUnit, nodeSearcher, options, flags);
+            final int problemCount = unit.compilationResult.problemCount;
+            if (problemCount != 0)
+            {
+               unitDeclaration.compilationResult.problems = new CategorizedProblem[problemCount];
+               System.arraycopy(unit.compilationResult.problems, 0, unitDeclaration.compilationResult.problems, 0,
+                  problemCount);
+               unitDeclaration.compilationResult.problemCount = problemCount;
+            }
+            return unitDeclaration;
+         }
+         //   			if (NameLookup.VERBOSE && environment instanceof CancelableNameEnvironment) {
+         //   				CancelableNameEnvironment cancelableNameEnvironment = (CancelableNameEnvironment) environment;
+         //   				System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInSourcePackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInSourcePackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
+         //   				System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInBinaryPackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInBinaryPackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
+         //   			}
+         return unit;
+      }
+      finally
+      {
+         if (environment != null)
+         {
+            // don't hold a reference to this external object
+            environment.setMonitor(null);
+         }
+         if (problemFactory != null)
+         {
+            problemFactory.monitor = null; // don't hold a reference to this external object
+         }
+      }
+   }
 
    public static IBinding[] resolve(final IJavaElement[] elements, int apiLevel, Map compilerOptions,
       IJavaProject javaProject, int flags, IProgressMonitor monitor)
@@ -814,18 +815,18 @@ class CompilationUnitResolver extends Compiler
             for (int i = 0; i < intList.length; i++)
             {
                //TODO
-//               final int index = intList.list[i];
-//               SourceRefElement element = (SourceRefElement)elements[index];
-//               DOMFinder finder = new DOMFinder(ast, element, true/*resolve binding*/);
-//               try
-//               {
-//                  finder.search();
-//               }
-//               catch (JavaModelException e)
-//               {
-//                  throw new IllegalArgumentException(element + " does not exist"); //$NON-NLS-1$
-//               }
-//               this.bindings[index] = finder.foundBinding;
+               //               final int index = intList.list[i];
+               //               SourceRefElement element = (SourceRefElement)elements[index];
+               //               DOMFinder finder = new DOMFinder(ast, element, true/*resolve binding*/);
+               //               try
+               //               {
+               //                  finder.search();
+               //               }
+               //               catch (JavaModelException e)
+               //               {
+               //                  throw new IllegalArgumentException(element + " does not exist"); //$NON-NLS-1$
+               //               }
+               //               this.bindings[index] = finder.foundBinding;
             }
          }
 
@@ -1347,9 +1348,9 @@ class CompilationUnitResolver extends Compiler
             if (analyzeCode)
                unit.analyseCode();
 
-//            // code generation
-//            if (generateCode)
-//               unit.generateCode();
+            //            // code generation
+            //            if (generateCode)
+            //               unit.generateCode();
 
             // finalize problems (suppressWarnings)
             unit.finalizeProblems();
