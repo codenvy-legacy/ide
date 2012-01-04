@@ -24,14 +24,14 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,12 +41,9 @@ import java.io.IOException;
 public class RESTServiceOutputTest extends BaseTest
 {
 
-   private final static String FILE_NAME = "RESTServiceOutputTest.groovy";
+   private final static String FILE_NAME = "RESTServiceOutputTest.grs";
 
-   private final static String TEST_FOLDER = RESTServiceOutputTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
+   private final static String PROJECT = RESTServiceOutputTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -55,10 +52,9 @@ public class RESTServiceOutputTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceOutput.groovy";
       try
       {
-         //TODO***********change************
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
-         //*************************
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
       catch (IOException e)
       {
@@ -69,128 +65,90 @@ public class RESTServiceOutputTest extends BaseTest
    @Test
    public void testOutput() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //TODO***********change************
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      //****************************
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.REST_SERVICE.deploy(TEST_FOLDER + "/" + FILE_NAME, 1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
       IDE.REST_SERVICE.launchRestService();
 
-      //Expect 1
       checkFields("/overralTest/Inner/node/{paramList: .+}", "POST", "text/plain", "application/xml;charset=utf-8");
-
       checkQueryParameter(1, "Test Query Parameter 1", "string", "", "");
-
       IDE.REST_SERVICE.selectHeaderParametersTab();
-
       checkHeaderParameter(1, "Test-Header1", "string", "", "");
 
-      //Step 3
       IDE.REST_SERVICE.selectPath("/overralTest");
       checkFields("/overralTest", "OPTIONS", "", "application/vnd.sun.wadl+xml");
 
-      //Step 4
       IDE.REST_SERVICE.sendRequest();
-
-      //Expected 3
-
+      IDE.OUTPUT.waitForMessageShow(2, 5);
       String mess = IDE.OUTPUT.getOutputMessage(2);
-
       assertTrue(mess
          .contains("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><application xmlns=\"http://research.sun.com/wadl/2006/10\">"));
 
-      //Step 5
       IDE.REST_SERVICE.launchRestService();
-
-      typeToPathField();
-
+      IDE.REST_SERVICE.typeToPathField("/overralTest/Inner/node/param1");
       IDE.REST_SERVICE.selectHeaderParametersTab();
       IDE.REST_SERVICE.typeToHeaderParameterValue(1, "test");
-
       checkFields("/overralTest/Inner/node/param1", "POST", "text/plain", "application/xml;charset=utf-8");
 
       IDE.REST_SERVICE.selectQueryParametersTab();
       checkQueryParameter(1, "Test Query Parameter 1", "string", "", "");
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
-
       checkHeaderParameter(1, "Test-Header1", "string", "", "test");
-      //Step 6
-      IDE.REST_SERVICE.sendRequest();
-      mess = IDE.OUTPUT.getOutputMessage(3);
 
+      IDE.REST_SERVICE.sendRequest();
+      IDE.OUTPUT.waitForMessageShow(3, 5);
+      mess = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(mess.contains("Param List 1:param1; Test Query Parameter 1: ; Test-Header 1: test; Body:"));
 
       IDE.REST_SERVICE.launchRestService();
-
-      //Step 7
-      typeToPathField();
-
+      IDE.REST_SERVICE.typeToPathField("/overralTest/Inner/node/param1");
       IDE.REST_SERVICE.typeToQueryParameterValue(1, "value 1");
-
       IDE.REST_SERVICE.selectHeaderParametersTab();
       IDE.REST_SERVICE.typeToHeaderParameterValue(1, "value 2");
 
       IDE.REST_SERVICE.selectBodyTab();
-
       IDE.REST_SERVICE.typeToBodyField("Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�");
       IDE.REST_SERVICE.sendRequest();
 
-      //Expected 8
+      IDE.OUTPUT.waitForMessageShow(4, 5);
       mess = IDE.OUTPUT.getOutputMessage(4);
-
       assertTrue(mess
          .contains("Param List 1:param1; Test Query Parameter 1: value 1; Test-Header 1: value 2; Body:Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�"));
 
       IDE.REST_SERVICE.launchRestService();
-      //Step 10
       IDE.REST_SERVICE.typeToPathField("/overralTest/Inner/node/param1/param2/param3");
-
       IDE.REST_SERVICE.setMethodFieldValue("GET");
       assertEquals("", IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
       assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeValue());
-
       checkQueryParameter(1, "Test Query Parameter 2", "string", "", "");
-
       IDE.REST_SERVICE.selectHeaderParametersTab();
-
       checkHeaderParameter(1, "Test-Header2", "string", "", "");
-
       IDE.REST_SERVICE.typeToHeaderParameterValue(1, "value 2");
-
       IDE.REST_SERVICE.selectQueryParametersTab();
-
       IDE.REST_SERVICE.typeToQueryParameterValue(1, "value 1");
-
       IDE.REST_SERVICE.sendRequest();
 
-      //Expected 11
+      IDE.OUTPUT.waitForMessageShow(5, 5);
       mess = IDE.OUTPUT.getOutputMessage(5);
-
       assertTrue(mess
          .contains("Param List 2:param1/param2/param3; Test Query Parameter 2: value 1; Test-Header 2: value 2"));
 
-   }
-
-   /**
-    * @throws InterruptedException 
-    * 
-    */
-   private void typeToPathField() throws InterruptedException
-   {
-      IDE.REST_SERVICE.typeToPathField("/overralTest/Inner/node/param1");
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(6, 5);
+      assertTrue(IDE.OUTPUT.getOutputMessage(6).contains(
+      /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
    }
 
    private void checkFields(String path, String method, String request, String response)
    {
-      
-      System.out.print("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:"+IDE.REST_SERVICE.getPathFieldValue()+"\n");
       assertEquals(path, IDE.REST_SERVICE.getPathFieldValue());
       assertEquals(method, IDE.REST_SERVICE.getMethodValue());
       assertEquals(request, IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
@@ -218,8 +176,8 @@ public class RESTServiceOutputTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
-         VirtualFileSystemUtils.delete(URL);
+         //TODO Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

@@ -90,6 +90,8 @@ public class RESTService extends AbstractTestModule
 
       String TABLE_VALUE_PREFIX = "//table[@id='%s']/tbody/tr[%s]/td[%s]//div//input";
 
+      String HEADER_CHECKBOX = "table#" + HEADER_TABLE_ID + " tr:nth-of-type(%s) input[type=checkbox]";
+
    }
 
    // The basic webelements of the launch 
@@ -125,7 +127,7 @@ public class RESTService extends AbstractTestModule
    private WebElement restServiceResponseMediaType;
 
    @FindBy(id = Locators.HEADER_TABLE_ID)
-   private WebElement headerParametrTabble;
+   private WebElement headerParameterTable;
 
    @FindBy(id = Locators.REST_SERVICE_GET_URL_FORM)
    private WebElement getUrlForm;
@@ -469,9 +471,6 @@ public class RESTService extends AbstractTestModule
       {
          for (WebElement option : allOptions)
          {
-            System.out.println("RESTService.isSelectElementContainsValues()VALUE>>>>>" + v);
-            System.out.println("RESTService.isSelectElementContainsValues()OPTION>>>>>" + option.getText());
-            System.out.println("RESTService.isSelectElementContainsValues()EQUALS"+ option.getText().equals(v));
             if (option.getText().equals(v))
             {
                contains = true;
@@ -480,7 +479,6 @@ public class RESTService extends AbstractTestModule
          }
          if (!contains)
          {
-            System.out.println("RESTService.isSelectElementContainsValues()HERE");
             return false;
          }
       }
@@ -494,7 +492,6 @@ public class RESTService extends AbstractTestModule
    public boolean isRequestMediaTypeContainsValues(String... val)
    {
       boolean contains = isSelectElementContainsValues(restServiceRequestMediaType, val);
-      System.out.println("RESTService.isRequestMediaTypeContainsValues()" + contains);
       return contains;
    }
 
@@ -647,27 +644,34 @@ public class RESTService extends AbstractTestModule
       return getTableValue(Locators.HEADER_TABLE_ID, parameterIndex, 5);
    }
 
-   private void changeTableCheckBox(WebElement parameter, boolean check)
+   public void checkHeaderParameter(int index)
    {
-      WebElement checkBox = parameter.findElement(By.tagName("input"));
-      if (check && (!checkBox.isSelected()))
+      WebElement checkbox = driver().findElement(By.cssSelector(String.format(Locators.HEADER_CHECKBOX, index)));
+      if (!checkbox.isSelected())
       {
-         checkBox.click();
-      }
-      else if (!check && (checkBox.isSelected()))
-      {
-         checkBox.click();
+         checkbox.click();
+         //Sometimes first click is necessary for focusing in row.
+         checkbox = driver().findElement(By.cssSelector(String.format(Locators.HEADER_CHECKBOX, index)));
+         if (!checkbox.isSelected())
+         {
+            checkbox.click();
+         }
       }
    }
 
-   /**
-    * Change Header parameter Send check box state  
-    * @param parameterIndex parameter index (Parameter index starts from <b>1</b>)
-    * @param check check box state (checked/ unchecked)
-    */
-   public void changeHeaderParameterSendCheckBoxState(boolean check)
+   public void unCheckHeaderParameter(int index)
    {
-      changeTableCheckBox(headerParametrTabble, check);
+      WebElement checkbox = driver().findElement(By.cssSelector(String.format(Locators.HEADER_CHECKBOX, index)));
+      if (checkbox.isSelected())
+      {
+         checkbox.click();
+         //Sometimes first click is necessary for focusing in row.
+         checkbox = driver().findElement(By.cssSelector(String.format(Locators.HEADER_CHECKBOX, index)));
+         if (checkbox.isSelected())
+         {
+            checkbox.click();
+         }
+      }
    }
 
    /**
@@ -734,14 +738,11 @@ public class RESTService extends AbstractTestModule
       waitValueOpened(tableId, valuePrefix);
       WebElement valueInput = tableId.findElement(By.xpath(valuePrefix + "/div/input"));
       valueInput.sendKeys(valueText);
-      Thread.sleep(3000);
    }
 
    public void typeToPathField(String value) throws InterruptedException
    {
-      restServicePath.clear();
-      restServicePath.sendKeys(value);
-
+      IDE().INPUT.setComboboxValue(restServicePath, value);
    }
 
    /**

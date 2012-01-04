@@ -86,7 +86,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(2, 5);
 
       assertTrue(IDE.OUTPUT.getOutputMessage(2).contains(
-         /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
+      /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
 
       IDE.OUTPUT.waitForMessageShow(3, 5);
@@ -102,7 +102,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-   /*   try
+      try
       {
          //TODO  Utils.undeployService(BASE_URL, REST_CONTEXT, FILE_URL);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
@@ -110,7 +110,7 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       catch (IOException e)
       {
          e.printStackTrace();
-      }*/
+      }
    }
 
 }

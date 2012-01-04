@@ -22,16 +22,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,14 +40,9 @@ import java.io.IOException;
 public class RESTServiceFilterParametersTest extends BaseTest
 {
 
-   private final static String FILE_NAME = "FilterParametersTest.groovy";
+   private final static String FILE_NAME = "FilterParametersTest.grs";
 
-   //TODO*************change*********
-   private final static String TEST_FOLDER = RESTServiceFilterParametersTest.class.getSimpleName();
-
-   //***************************** 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
+   private final static String PROJECT = RESTServiceFilterParametersTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -57,12 +51,9 @@ public class RESTServiceFilterParametersTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultValues.groovy";
       try
       {
-         //TODO*************change*********
-         VirtualFileSystemUtils.mkcol(URL);
-         //*************************  
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE,
-            TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + FILE_NAME);
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
       catch (IOException e)
       {
@@ -73,35 +64,35 @@ public class RESTServiceFilterParametersTest extends BaseTest
    @Test
    public void testFilterParameters() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      //TODO*************change
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      Thread.sleep(TestConstants.SLEEP);
-      //****************************
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      //TODO*************change
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
+
       IDE.REST_SERVICE.launchRestService();
-      //************************
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
       IDE.REST_SERVICE.waitRestServiceTabOpened(1);
-      
-      
-      
-      IDE.REST_SERVICE.changeHeaderParameterSendCheckBoxState(false);      
+
+      IDE.REST_SERVICE.unCheckHeaderParameter(1);
 
       IDE.REST_SERVICE.sendRequest();
       IDE.OUTPUT.waitOpened();
-      IDE.OUTPUT.waitForMessageShow(1);
-      String mess = IDE.OUTPUT.getOutputMessage(1);
+      IDE.OUTPUT.waitForMessageShow(2, 5);
+      String mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess
          .contains("POST PathParam: {pathParam}; POST Test-Header: 3; POST TestQueryParam: false; POST Body:"));
+
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(3, 5);
+      assertTrue(IDE.OUTPUT.getOutputMessage(3).contains(
+      /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
    }
 
    @AfterClass
@@ -109,8 +100,8 @@ public class RESTServiceFilterParametersTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
-         VirtualFileSystemUtils.delete(URL);
+         //TODO   Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

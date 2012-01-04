@@ -22,11 +22,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import java.io.IOException;
 
@@ -40,17 +40,14 @@ public class RESTServiceDeployWrongTest extends BaseTest
 
    private static String FILE_NAME = "DeployWrongTest.grs";
 
-   private final static String TEST_FOLDER = RESTServiceDeployWrongTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   private final static String PROJECT = RESTServiceDeployWrongTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -59,34 +56,30 @@ public class RESTServiceDeployWrongTest extends BaseTest
    }
 
    @Test
-   public void testDeployUndeploy() throws Exception
+   public void testDeployWrong() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      IDE.EDITOR.moveCursorDown(0, 1);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
 
       IDE.EDITOR.typeTextIntoEditor(0, "1");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitOpened();
-      assertTrue(IDE.OUTPUT.isOpened());
+      IDE.OUTPUT.waitForMessageShow(1, 5);
 
       String mess = IDE.OUTPUT.getOutputMessage(1);
-
       assertTrue(mess.startsWith("[ERROR]"));
-      assertTrue(mess.contains(FILE_NAME + " deploy failed. Error (400: Bad Request)"));
-
+      assertTrue(mess.contains(/*TODO FILE_NAME +*/" deploy failed. Error (400: Bad Request)"));
    }
 
    @AfterClass
@@ -94,7 +87,7 @@ public class RESTServiceDeployWrongTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
