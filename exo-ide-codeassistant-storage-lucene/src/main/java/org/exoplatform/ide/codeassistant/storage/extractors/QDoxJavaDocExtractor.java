@@ -105,19 +105,19 @@ public class QDoxJavaDocExtractor
     * 
     * <p>
     * <ul>
-    * <li><b>SimpleName</b> = [a-zA-Z][a-zA-Z0-9_]*</li>
-    * <li><b>Package</b> = SimpleName (.SimpleName)*</li>
-    * <li><b>ClassName</b> = SimpleName | SimpleName$SimpleName</li>
-    * <li><b>ClassFqn</b> = (Package.)* ClassName</li>
-    * <li><b>FieldFqn</b> = (Package.)* ClassName#SimpleName</li>
-    * <li><b>MethodFqn</b> = (Package.)* ClassName#SimpleName(Params)</li>
-    * <li><b>ConstructorFqn</b> = (Package.)* ClassName(Params)</li>
-    * <li><b>Params</b> = empty_string | Param(,Param)*</li>
-    * <li><b>Param</b> = SimpleParam | ObjectParam</li>
-    * <li><b>SimpleParam</b> = void | byte | char | boolean | short | int | long
-    * | float | double</li>
-    * <li><b>ObjectParam</b> = ClassFqn | ClassFqn < Generic > | Generic</li>
-    * <li><b>Generic</b> = GenericBase | GenericBase extends ClassFqn |
+    * <li><b>SimpleName</b> ::= [a-zA-Z][a-zA-Z0-9_]*</li>
+    * <li><b>Package</b> ::= SimpleName (.SimpleName)*</li>
+    * <li><b>ClassName</b> ::= SimpleName | SimpleName$SimpleName</li>
+    * <li><b>ClassFqn</b> ::= (Package.)* ClassName</li>
+    * <li><b>FieldFqn</b> ::= (Package.)* ClassName#SimpleName</li>
+    * <li><b>MethodFqn</b> ::= (Package.)* ClassName#SimpleName(Params)</li>
+    * <li><b>ConstructorFqn</b> ::= (Package.)* ClassName(Params)</li>
+    * <li><b>Params</b> ::= < empty string > | Param(,Param)*</li>
+    * <li><b>Param</b> ::= SimpleParam | ObjectParam</li>
+    * <li><b>SimpleParam</b> ::= void | byte | char | boolean | short | int |
+    * long | float | double</li>
+    * <li><b>ObjectParam</b> ::= ClassFqn | ClassFqn < Generic > | Generic</li>
+    * <li><b>Generic</b> ::= GenericBase | GenericBase extends ClassFqn |
     * GenericBase super ClassFqn</li>
     * <li><b>GenericBase</b> = SimpleName | ?</li>
     * </ul>

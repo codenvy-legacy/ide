@@ -109,7 +109,14 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    {
       List<String> searchResult =
          queryExecutor.executeQuery(new JavaDocExtractor(), IndexType.DOC, eq(JavaDocIndexFields.FQN, fqn), 1, 0);
-      return searchResult.size() == 1 ? searchResult.get(0) : null;
+      if (searchResult.isEmpty())
+      {
+         throw new CodeAssistantException(404, "Not found");
+      }
+      else
+      {
+         return searchResult.get(0);
+      }
    }
 
    /**
