@@ -10,119 +10,140 @@
  *******************************************************************************/
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IJavaElement;
 
 /**
  * This class represents the recovered binding for a variable
  */
-class RecoveredVariableBinding implements IVariableBinding {
+class RecoveredVariableBinding implements IVariableBinding
+{
 
-	private VariableDeclaration variableDeclaration;
-	private BindingResolver resolver;
+   private VariableDeclaration variableDeclaration;
 
-	RecoveredVariableBinding(BindingResolver resolver, VariableDeclaration variableDeclaration) {
-		this.resolver = resolver;
-		this.variableDeclaration = variableDeclaration;
-	}
-	public Object getConstantValue() {
-		return null;
-	}
+   private BindingResolver resolver;
 
-	public ITypeBinding getDeclaringClass() {
-		ASTNode parent = this.variableDeclaration.getParent();
-		while (parent != null && parent.getNodeType() != ASTNode.TYPE_DECLARATION) {
-			parent = parent.getParent();
-		}
-		if (parent != null) {
-			return ((TypeDeclaration) parent).resolveBinding();
-		}
-		return null;
-	}
+   RecoveredVariableBinding(BindingResolver resolver, VariableDeclaration variableDeclaration)
+   {
+      this.resolver = resolver;
+      this.variableDeclaration = variableDeclaration;
+   }
 
-	public IMethodBinding getDeclaringMethod() {
-		ASTNode parent = this.variableDeclaration.getParent();
-		while (parent != null && parent.getNodeType() != ASTNode.METHOD_DECLARATION) {
-			parent = parent.getParent();
-		}
-		if (parent != null) {
-			return ((MethodDeclaration) parent).resolveBinding();
-		}
-		return null;
-	}
+   public Object getConstantValue()
+   {
+      return null;
+   }
 
-	public String getName() {
-		return this.variableDeclaration.getName().getIdentifier();
-	}
+   public ITypeBinding getDeclaringClass()
+   {
+      ASTNode parent = this.variableDeclaration.getParent();
+      while (parent != null && parent.getNodeType() != ASTNode.TYPE_DECLARATION)
+      {
+         parent = parent.getParent();
+      }
+      if (parent != null)
+      {
+         return ((TypeDeclaration)parent).resolveBinding();
+      }
+      return null;
+   }
 
-	public ITypeBinding getType() {
-		return this.resolver.getTypeBinding(this.variableDeclaration);
-	}
+   public IMethodBinding getDeclaringMethod()
+   {
+      ASTNode parent = this.variableDeclaration.getParent();
+      while (parent != null && parent.getNodeType() != ASTNode.METHOD_DECLARATION)
+      {
+         parent = parent.getParent();
+      }
+      if (parent != null)
+      {
+         return ((MethodDeclaration)parent).resolveBinding();
+      }
+      return null;
+   }
 
-	public IVariableBinding getVariableDeclaration() {
-		return this;
-	}
+   public String getName()
+   {
+      return this.variableDeclaration.getName().getIdentifier();
+   }
 
-	public int getVariableId() {
-		return 0;
-	}
+   public ITypeBinding getType()
+   {
+      return this.resolver.getTypeBinding(this.variableDeclaration);
+   }
 
-	public boolean isEnumConstant() {
-		return false;
-	}
+   public IVariableBinding getVariableDeclaration()
+   {
+      return this;
+   }
 
-	public boolean isField() {
-		return this.variableDeclaration.getParent() instanceof FieldDeclaration;
-	}
+   public int getVariableId()
+   {
+      return 0;
+   }
 
-	public boolean isParameter() {
-		return this.variableDeclaration instanceof SingleVariableDeclaration;
-	}
+   public boolean isEnumConstant()
+   {
+      return false;
+   }
 
-	public IAnnotationBinding[] getAnnotations() {
-		return AnnotationBinding.NoAnnotations;
-	}
+   public boolean isField()
+   {
+      return this.variableDeclaration.getParent() instanceof FieldDeclaration;
+   }
 
-	public IJavaElement getJavaElement() {
-		return null;
-	}
+   public boolean isParameter()
+   {
+      return this.variableDeclaration instanceof SingleVariableDeclaration;
+   }
 
-	public String getKey() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("Recovered#"); //$NON-NLS-1$
-		if (this.variableDeclaration != null) {
-			buffer
-				.append("variableDeclaration") //$NON-NLS-1$
-				.append(this.variableDeclaration.getClass())
-				.append(this.variableDeclaration.getName().getIdentifier())
-				.append(this.variableDeclaration.getExtraDimensions());
-		}
-		return String.valueOf(buffer);
-	}
+   public IAnnotationBinding[] getAnnotations()
+   {
+      return AnnotationBinding.NoAnnotations;
+   }
 
-	public int getKind() {
-		return IBinding.VARIABLE;
-	}
+   public String getKey()
+   {
+      StringBuffer buffer = new StringBuffer();
+      buffer.append("Recovered#"); //$NON-NLS-1$
+      if (this.variableDeclaration != null)
+      {
+         buffer.append("variableDeclaration") //$NON-NLS-1$
+            .append(this.variableDeclaration.getClass()).append(this.variableDeclaration.getName().getIdentifier())
+            .append(this.variableDeclaration.getExtraDimensions());
+      }
+      return String.valueOf(buffer);
+   }
 
-	public int getModifiers() {
-		return 0;
-	}
+   public int getKind()
+   {
+      return IBinding.VARIABLE;
+   }
 
-	public boolean isDeprecated() {
-		return false;
-	}
+   public int getModifiers()
+   {
+      return 0;
+   }
 
-	public boolean isEqualTo(IBinding binding) {
-		if (binding.isRecovered() && binding.getKind() == IBinding.VARIABLE) {
-			return getKey().equals(binding.getKey());
-		}
-		return false;
-	}
+   public boolean isDeprecated()
+   {
+      return false;
+   }
 
-	public boolean isRecovered() {
-		return true;
-	}
+   public boolean isEqualTo(IBinding binding)
+   {
+      if (binding.isRecovered() && binding.getKind() == IBinding.VARIABLE)
+      {
+         return getKey().equals(binding.getKey());
+      }
+      return false;
+   }
 
-	public boolean isSynthetic() {
-		return false;
-	}
+   public boolean isRecovered()
+   {
+      return true;
+   }
+
+   public boolean isSynthetic()
+   {
+      return false;
+   }
 }

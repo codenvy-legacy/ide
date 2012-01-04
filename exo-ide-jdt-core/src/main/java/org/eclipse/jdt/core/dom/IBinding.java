@@ -11,8 +11,6 @@
 
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IAnnotation;
-import org.eclipse.jdt.core.IJavaElement;
 
 /**
  * A binding represents a named entity in the Java language. The world of
@@ -185,39 +183,6 @@ public interface IBinding {
 	 * @see IMethodBinding#isDefaultConstructor()
 	 */
 	public boolean isSynthetic();
-
-	/**
-	 * Returns the Java element that corresponds to this binding.
-	 * Returns <code>null</code> if this binding has no corresponding
-	 * Java element.
-	 * <p>
-	 * For array types, this method returns the Java element that corresponds
-	 * to the array's element type. For raw and parameterized types, this method
-	 * returns the Java element of the erasure. For annotations, this method
-	 * returns the Java element of the annotation (i.e. an {@link IAnnotation}).
-	 * </p>
-	 * <p>
-	 * Here are the cases where a <code>null</code> should be expected:
-	 * <ul>
-	 * <li>primitive types, including void</li>
-	 * <li>null type</li>
-	 * <li>wildcard types</li>
-	 * <li>capture types</li>
-	 * <li>array types of any of the above</li>
-	 * <li>the "length" field of an array type</li>
-	 * <li>the default constructor of a source class</li>
-	 * <li>the constructor of an anonymous class</li>
-	 * <li>member value pairs</li>
-	 * </ul>
-	 * For all other kind of type, method, variable, annotation and package bindings,
-	 * this method returns non-<code>null</code>.
-	 * </p>
-	 *
-	 * @return the Java element that corresponds to this binding,
-	 * 		or <code>null</code> if none
-	 * @since 3.1
-	 */
-	public IJavaElement getJavaElement();
 
 	/**
 	 * Returns the key for this binding.

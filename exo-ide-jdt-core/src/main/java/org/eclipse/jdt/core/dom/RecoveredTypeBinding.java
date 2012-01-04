@@ -11,7 +11,6 @@
 
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.internal.compiler.lookup.ArrayBinding;
 import org.eclipse.jdt.internal.compiler.lookup.Binding;
@@ -543,22 +542,6 @@ class RecoveredTypeBinding implements ITypeBinding {
 	 */
 	public IAnnotationBinding[] getAnnotations() {
 		return AnnotationBinding.NoAnnotations;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.dom.IBinding#getJavaElement()
-	 */
-	public IJavaElement getJavaElement() {
-		IPackageBinding packageBinding = getPackage();
-		if (packageBinding != null) {
-			final IJavaElement javaElement = packageBinding.getJavaElement();
-			if (javaElement != null && javaElement.getElementType() == IJavaElement.PACKAGE_FRAGMENT) {
-				// best effort: we don't know if the recovered binding is a binary or source binding, so go with a simple source type
-			   //TODO
-//				return ((PackageFragment) javaElement).getCompilationUnit(getInternalName() + SuffixConstants.SUFFIX_STRING_java).getType(this.getName());
-			}
-		}
-		return null;
 	}
 
 	/* (non-Javadoc)

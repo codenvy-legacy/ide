@@ -11,7 +11,6 @@
 
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
 import org.eclipse.jdt.internal.compiler.lookup.LookupEnvironment;
 import org.eclipse.jdt.internal.compiler.lookup.ParameterizedGenericMethodBinding;
@@ -233,25 +232,6 @@ class MethodBinding implements IMethodBinding {
 		}
 		return this.exceptionTypes = exTypes;
 	}
-
-	public IJavaElement getJavaElement() {
-	   //TODO
-//		JavaElement element = getUnresolvedJavaElement();
-//		if (element == null)
-//			return null;
-//		return element.resolved(this.binding);
-	   return null;
-	}
-
-//	private JavaElement getUnresolvedJavaElement() {
-//		if (!(this.resolver instanceof DefaultBindingResolver)) return null;
-//
-//		DefaultBindingResolver defaultBindingResolver = (DefaultBindingResolver) this.resolver;
-//		if (!defaultBindingResolver.fromJavaProject) return null;
-//		return Util.getUnresolvedJavaElement(
-//				this.binding,
-//				defaultBindingResolver.getBindingsToNodesMap());
-//	}
 
 	/**
 	 * @see IBinding#getKind()

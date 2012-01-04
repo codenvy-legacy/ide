@@ -11,7 +11,6 @@
 
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.internal.compiler.util.Util;
 
@@ -169,30 +168,6 @@ class PackageBinding implements IPackageBinding {
 	 */
 	public boolean isSynthetic() {
 		return false;
-	}
-
-	/*
-	 * @see IBinding#getJavaElement()
-	 */
-	public IJavaElement getJavaElement() {
-	   //TODO
-//		INameEnvironment nameEnvironment = this.binding.environment.nameEnvironment; // a package binding always has a LooupEnvironment set
-//		if (!(nameEnvironment instanceof SearchableEnvironment)) return null;
-//		// this is not true in standalone DOM/AST
-//		NameLookup nameLookup = ((SearchableEnvironment) nameEnvironment).nameLookup;
-//		if (nameLookup == null) return null;
-//		IJavaElement[] pkgs = nameLookup.findPackageFragments(getName(), false/*exact match*/);
-//		if (pkgs == null) return null;
-//		if (pkgs.length == 0) {
-//			// add additional tracing as this should not happen
-//			org.eclipse.jdt.internal.core.util.Util.log(
-//				new Status(
-//						IStatus.WARNING,
-//						JavaCore.PLUGIN_ID,
-//						"Searching for package " + getName() + " returns an empty array")); //$NON-NLS-1$ //$NON-NLS-2$
-			return null;
-//		}
-//		return pkgs[0];
 	}
 
 	/*

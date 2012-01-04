@@ -12,9 +12,6 @@
 package org.eclipse.jdt.core.dom;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.IClassFile;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.internal.compiler.parser.Scanner;
@@ -118,6 +115,21 @@ public final class AST {
 	/*package*/ static final int JLS2_INTERNAL = JLS2;
 	
 	/**
+	 * Constant indicating that a reconcile operation should enable the bindings recovery
+	 * @see ASTParser#setBindingsRecovery(boolean)
+	 * @see IBinding#isRecovered()
+	 * @since 3.3
+	 */
+	public static final int ENABLE_BINDINGS_RECOVERY = 0x04;
+	
+	/**
+	 * Constant indicating that a reconcile operation should enable the statements recovery.
+	 * @see ASTParser#setStatementsRecovery(boolean)
+	 * @since 3.3
+	 */
+	public static final int ENABLE_STATEMENTS_RECOVERY = 0x02;
+	
+	/**
 	 * Constant for indicating the AST API that handles JLS3.
 	 * This API is capable of handling all constructs in the
 	 * Java language as described in the Java Language
@@ -181,55 +193,55 @@ public final class AST {
 		return null;
 	}
 
-	/**
-	 * Internal method.
-	 * <p>
-	 * This method converts the given internal compiler AST for the given source string
-	 * into a compilation unit. This method is not intended to be called by clients.
-	 * </p>
-	 *
- 	 * @param level the API level; one of the LEVEL constants
-	 * @param compilationUnitDeclaration an internal AST node for a compilation unit declaration
-	 * @param options compiler options
-	 * @param workingCopy the working copy that the AST is created from
-	 * @param monitor the progress monitor used to report progress and request cancellation,
-	 *     or <code>null</code> if none
-	 * @param isResolved whether the given compilation unit declaration is resolved
-	 * @return the compilation unit node
-	 * @since 3.4
-	 * @noreference This method is not intended to be referenced by clients.
-	 */
-	public static CompilationUnit convertCompilationUnit(
-		int level,
-		org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration compilationUnitDeclaration,
-		Map options,
-		boolean isResolved,
-		org.exoplatform.ide.jdt.core.CompilationUnit workingCopy,
-		int reconcileFlags,
-		IProgressMonitor monitor) {
-
-		ASTConverter converter = new ASTConverter(options, isResolved, monitor);
-		AST ast = AST.newAST(level);
-		int savedDefaultNodeFlag = ast.getDefaultNodeFlag();
-		ast.setDefaultNodeFlag(ASTNode.ORIGINAL);
-		BindingResolver resolver = null;
-		if (isResolved) {
-			resolver = new DefaultBindingResolver(compilationUnitDeclaration.scope, new DefaultBindingResolver.BindingTables(), false, true);
-			((DefaultBindingResolver) resolver).isRecoveringBindings = (reconcileFlags & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0;
-			ast.setFlag(AST.RESOLVED_BINDINGS);
-		} else {
-			resolver = new BindingResolver();
-		}
-		ast.setFlag(reconcileFlags);
-		ast.setBindingResolver(resolver);
-		converter.setAST(ast);
-
-		CompilationUnit unit = converter.convert(compilationUnitDeclaration, workingCopy.getContents());
-		unit.setLineEndTable(compilationUnitDeclaration.compilationResult.getLineSeparatorPositions());
-		unit.setTypeRoot(workingCopy);
-		ast.setDefaultNodeFlag(savedDefaultNodeFlag);
-		return unit;
-	}
+//	/**
+//	 * Internal method.
+//	 * <p>
+//	 * This method converts the given internal compiler AST for the given source string
+//	 * into a compilation unit. This method is not intended to be called by clients.
+//	 * </p>
+//	 *
+// 	 * @param level the API level; one of the LEVEL constants
+//	 * @param compilationUnitDeclaration an internal AST node for a compilation unit declaration
+//	 * @param options compiler options
+//	 * @param workingCopy the working copy that the AST is created from
+//	 * @param monitor the progress monitor used to report progress and request cancellation,
+//	 *     or <code>null</code> if none
+//	 * @param isResolved whether the given compilation unit declaration is resolved
+//	 * @return the compilation unit node
+//	 * @since 3.4
+//	 * @noreference This method is not intended to be referenced by clients.
+//	 */
+//	public static CompilationUnit convertCompilationUnit(
+//		int level,
+//		org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration compilationUnitDeclaration,
+//		Map options,
+//		boolean isResolved,
+//		org.exoplatform.ide.jdt.core.CompilationUnit workingCopy,
+//		int reconcileFlags,
+//		IProgressMonitor monitor) {
+//
+//		ASTConverter converter = new ASTConverter(options, isResolved, monitor);
+//		AST ast = AST.newAST(level);
+//		int savedDefaultNodeFlag = ast.getDefaultNodeFlag();
+//		ast.setDefaultNodeFlag(ASTNode.ORIGINAL);
+//		BindingResolver resolver = null;
+//		if (isResolved) {
+//			resolver = new DefaultBindingResolver(compilationUnitDeclaration.scope, new DefaultBindingResolver.BindingTables(), false, true);
+//			((DefaultBindingResolver) resolver).isRecoveringBindings = (reconcileFlags & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0;
+//			ast.setFlag(AST.RESOLVED_BINDINGS);
+//		} else {
+//			resolver = new BindingResolver();
+//		}
+//		ast.setFlag(reconcileFlags);
+//		ast.setBindingResolver(resolver);
+//		converter.setAST(ast);
+//
+//		CompilationUnit unit = converter.convert(compilationUnitDeclaration, workingCopy.getContents());
+//		unit.setLineEndTable(compilationUnitDeclaration.compilationResult.getLineSeparatorPositions());
+//		unit.setTypeRoot(workingCopy);
+//		ast.setDefaultNodeFlag(savedDefaultNodeFlag);
+//		return unit;
+//	}
 
 	/**
 	 * Creates a new Java abstract syntax tree
@@ -296,241 +308,241 @@ public final class AST {
 		return (CompilationUnit) result;
 	}
 
-	/**
-	 * Parses the given string as the hypothetical contents of the named
-	 * compilation unit and creates and returns a corresponding abstract syntax tree.
-	 * <p>
-	 * The returned compilation unit node is the root node of a new AST.
-	 * Each node in the subtree carries source range(s) information relating back
-	 * to positions in the given source string (the given source string itself
-	 * is not remembered with the AST).
-	 * The source range usually begins at the first character of the first token
-	 * corresponding to the node; leading whitespace and comments are <b>not</b>
-	 * included. The source range usually extends through the last character of
-	 * the last token corresponding to the node; trailing whitespace and
-	 * comments are <b>not</b> included. There are a handful of exceptions
-	 * (including compilation units and the various body declarations); the
-	 * specification for these node type spells out the details.
-	 * Source ranges nest properly: the source range for a child is always
-	 * within the source range of its parent, and the source ranges of sibling
-	 * nodes never overlap.
-	 * If a syntax error is detected while parsing, the relevant node(s) of the
-	 * tree will be flagged as <code>MALFORMED</code>.
-	 * </p>
-	 * <p>
-	 * If the given project is not <code>null</code>, the various names
-	 * and types appearing in the compilation unit can be resolved to "bindings"
-	 * by calling the <code>resolveBinding</code> methods. These bindings
-	 * draw connections between the different parts of a program, and
-	 * generally afford a more powerful vantage point for clients who wish to
-	 * analyze a program's structure more deeply. These bindings come at a
-	 * considerable cost in both time and space, however, and should not be
-	 * requested frivolously. The additional space is not reclaimed until the
-	 * AST, all its nodes, and all its bindings become garbage. So it is very
-	 * important to not retain any of these objects longer than absolutely
-	 * necessary. Bindings are resolved at the time the AST is created. Subsequent
-	 * modifications to the AST do not affect the bindings returned by
-	 * <code>resolveBinding</code> methods in any way; these methods return the
-	 * same binding as before the AST was modified (including modifications
-	 * that rearrange subtrees by reparenting nodes).
-	 * If the given project is <code>null</code>, the analysis
-	 * does not go beyond parsing and building the tree, and all
-	 * <code>resolveBinding</code> methods return <code>null</code> from the
-	 * outset.
-	 * </p>
-	 * <p>
-	 * The name of the compilation unit must be supplied for resolving bindings.
-	 * This name should be suffixed by a dot ('.') followed by one of the
-	 * {@link JavaCore#getJavaLikeExtensions() Java-like extensions}
-	 * and match the name of the main
-	 * (public) class or interface declared in the source. For example, if the source
-	 * declares a public class named "Foo", the name of the compilation can be
-	 * "Foo.java". For the purposes of resolving bindings, types declared in the
-	 * source string hide types by the same name available through the classpath
-	 * of the given project.
-	 * </p>
-	 *
-	 * @param source the string to be parsed as a Java compilation unit
-	 * @param unitName the name of the compilation unit that would contain the source
-	 *    string, or <code>null</code> if <code>javaProject</code> is also <code>null</code>
-	 * @param project the Java project used to resolve names, or
-	 *    <code>null</code> if bindings are not resolved
-	 * @return the compilation unit node
-	 * @see ASTNode#getFlags()
-	 * @see ASTNode#MALFORMED
-	 * @see ASTNode#getStartPosition()
-	 * @see ASTNode#getLength()
-	 * @since 2.0
-	 * @deprecated Use {@link ASTParser} instead.
-	 */
-	public static CompilationUnit parseCompilationUnit(
-		char[] source,
-		String unitName,
-		IJavaProject project) {
+//	/**
+//	 * Parses the given string as the hypothetical contents of the named
+//	 * compilation unit and creates and returns a corresponding abstract syntax tree.
+//	 * <p>
+//	 * The returned compilation unit node is the root node of a new AST.
+//	 * Each node in the subtree carries source range(s) information relating back
+//	 * to positions in the given source string (the given source string itself
+//	 * is not remembered with the AST).
+//	 * The source range usually begins at the first character of the first token
+//	 * corresponding to the node; leading whitespace and comments are <b>not</b>
+//	 * included. The source range usually extends through the last character of
+//	 * the last token corresponding to the node; trailing whitespace and
+//	 * comments are <b>not</b> included. There are a handful of exceptions
+//	 * (including compilation units and the various body declarations); the
+//	 * specification for these node type spells out the details.
+//	 * Source ranges nest properly: the source range for a child is always
+//	 * within the source range of its parent, and the source ranges of sibling
+//	 * nodes never overlap.
+//	 * If a syntax error is detected while parsing, the relevant node(s) of the
+//	 * tree will be flagged as <code>MALFORMED</code>.
+//	 * </p>
+//	 * <p>
+//	 * If the given project is not <code>null</code>, the various names
+//	 * and types appearing in the compilation unit can be resolved to "bindings"
+//	 * by calling the <code>resolveBinding</code> methods. These bindings
+//	 * draw connections between the different parts of a program, and
+//	 * generally afford a more powerful vantage point for clients who wish to
+//	 * analyze a program's structure more deeply. These bindings come at a
+//	 * considerable cost in both time and space, however, and should not be
+//	 * requested frivolously. The additional space is not reclaimed until the
+//	 * AST, all its nodes, and all its bindings become garbage. So it is very
+//	 * important to not retain any of these objects longer than absolutely
+//	 * necessary. Bindings are resolved at the time the AST is created. Subsequent
+//	 * modifications to the AST do not affect the bindings returned by
+//	 * <code>resolveBinding</code> methods in any way; these methods return the
+//	 * same binding as before the AST was modified (including modifications
+//	 * that rearrange subtrees by reparenting nodes).
+//	 * If the given project is <code>null</code>, the analysis
+//	 * does not go beyond parsing and building the tree, and all
+//	 * <code>resolveBinding</code> methods return <code>null</code> from the
+//	 * outset.
+//	 * </p>
+//	 * <p>
+//	 * The name of the compilation unit must be supplied for resolving bindings.
+//	 * This name should be suffixed by a dot ('.') followed by one of the
+//	 * {@link JavaCore#getJavaLikeExtensions() Java-like extensions}
+//	 * and match the name of the main
+//	 * (public) class or interface declared in the source. For example, if the source
+//	 * declares a public class named "Foo", the name of the compilation can be
+//	 * "Foo.java". For the purposes of resolving bindings, types declared in the
+//	 * source string hide types by the same name available through the classpath
+//	 * of the given project.
+//	 * </p>
+//	 *
+//	 * @param source the string to be parsed as a Java compilation unit
+//	 * @param unitName the name of the compilation unit that would contain the source
+//	 *    string, or <code>null</code> if <code>javaProject</code> is also <code>null</code>
+//	 * @param project the Java project used to resolve names, or
+//	 *    <code>null</code> if bindings are not resolved
+//	 * @return the compilation unit node
+//	 * @see ASTNode#getFlags()
+//	 * @see ASTNode#MALFORMED
+//	 * @see ASTNode#getStartPosition()
+//	 * @see ASTNode#getLength()
+//	 * @since 2.0
+//	 * @deprecated Use {@link ASTParser} instead.
+//	 */
+//	public static CompilationUnit parseCompilationUnit(
+//		char[] source,
+//		String unitName,
+//		IJavaProject project) {
+//
+//		if (source == null) {
+//			throw new IllegalArgumentException();
+//		}
+//		ASTParser astParser = ASTParser.newParser(AST.JLS2);
+//		astParser.setSource(source);
+//		astParser.setUnitName(unitName);
+//		astParser.setProject(project);
+//		astParser.setResolveBindings(project != null);
+//		ASTNode result = astParser.createAST(null);
+//		return (CompilationUnit) result;
+//	}
 
-		if (source == null) {
-			throw new IllegalArgumentException();
-		}
-		ASTParser astParser = ASTParser.newParser(AST.JLS2);
-		astParser.setSource(source);
-		astParser.setUnitName(unitName);
-		astParser.setProject(project);
-		astParser.setResolveBindings(project != null);
-		ASTNode result = astParser.createAST(null);
-		return (CompilationUnit) result;
-	}
-
-	/**
-	 * Parses the source string corresponding to the given Java class file
-	 * element and creates and returns a corresponding abstract syntax tree.
-	 * The source string is obtained from the Java model element using
-	 * <code>IClassFile.getSource()</code>, and is only available for a class
-	 * files with attached source.
-	 * <p>
-	 * The returned compilation unit node is the root node of a new AST.
-	 * Each node in the subtree carries source range(s) information relating back
-	 * to positions in the source string (the source string is not remembered
-	 * with the AST).
-	 * The source range usually begins at the first character of the first token
-	 * corresponding to the node; leading whitespace and comments are <b>not</b>
-	 * included. The source range usually extends through the last character of
-	 * the last token corresponding to the node; trailing whitespace and
-	 * comments are <b>not</b> included. There are a handful of exceptions
-	 * (including compilation units and the various body declarations); the
-	 * specification for these node type spells out the details.
-	 * Source ranges nest properly: the source range for a child is always
-	 * within the source range of its parent, and the source ranges of sibling
-	 * nodes never overlap.
-	 * If a syntax error is detected while parsing, the relevant node(s) of the
-	 * tree will be flagged as <code>MALFORMED</code>.
-	 * </p>
-	 * <p>
-	 * If <code>resolveBindings</code> is <code>true</code>, the various names
-	 * and types appearing in the compilation unit can be resolved to "bindings"
-	 * by calling the <code>resolveBinding</code> methods. These bindings
-	 * draw connections between the different parts of a program, and
-	 * generally afford a more powerful vantage point for clients who wish to
-	 * analyze a program's structure more deeply. These bindings come at a
-	 * considerable cost in both time and space, however, and should not be
-	 * requested frivolously. The additional space is not reclaimed until the
-	 * AST, all its nodes, and all its bindings become garbage. So it is very
-	 * important to not retain any of these objects longer than absolutely
-	 * necessary. Bindings are resolved at the time the AST is created. Subsequent
-	 * modifications to the AST do not affect the bindings returned by
-	 * <code>resolveBinding</code> methods in any way; these methods return the
-	 * same binding as before the AST was modified (including modifications
-	 * that rearrange subtrees by reparenting nodes).
-	 * If <code>resolveBindings</code> is <code>false</code>, the analysis
-	 * does not go beyond parsing and building the tree, and all
-	 * <code>resolveBinding</code> methods return <code>null</code> from the
-	 * outset.
-	 * </p>
-	 *
-	 * @param classFile the Java model class file whose corresponding source code is to be parsed
-	 * @param resolveBindings <code>true</code> if bindings are wanted,
-	 *   and <code>false</code> if bindings are not of interest
-	 * @return the compilation unit node
-	 * @exception IllegalArgumentException if the given Java element does not
-	 * exist or if its source string cannot be obtained
-	 * @see ASTNode#getFlags()
-	 * @see ASTNode#MALFORMED
-	 * @see ASTNode#getStartPosition()
-	 * @see ASTNode#getLength()
-	 * @since 2.1
-	 * @deprecated Use {@link ASTParser} instead.
-	 */
-	public static CompilationUnit parseCompilationUnit(
-		IClassFile classFile,
-		boolean resolveBindings) {
-
-		if (classFile == null) {
-			throw new IllegalArgumentException();
-		}
-		try {
-			ASTParser c = ASTParser.newParser(AST.JLS2);
-			c.setSource(classFile);
-			c.setResolveBindings(resolveBindings);
-			ASTNode result = c.createAST(null);
-			return (CompilationUnit) result;
-		} catch (IllegalStateException e) {
-			// convert ASTParser's complaints into old form
-			throw new IllegalArgumentException();
-		}
-	}
-
-	/**
-	 * Parses the source string of the given Java model compilation unit element
-	 * and creates and returns a corresponding abstract syntax tree. The source
-	 * string is obtained from the Java model element using
-	 * <code>ICompilationUnit.getSource()</code>.
-	 * <p>
-	 * The returned compilation unit node is the root node of a new AST.
-	 * Each node in the subtree carries source range(s) information relating back
-	 * to positions in the source string (the source string is not remembered
-	 * with the AST).
-	 * The source range usually begins at the first character of the first token
-	 * corresponding to the node; leading whitespace and comments are <b>not</b>
-	 * included. The source range usually extends through the last character of
-	 * the last token corresponding to the node; trailing whitespace and
-	 * comments are <b>not</b> included. There are a handful of exceptions
-	 * (including compilation units and the various body declarations); the
-	 * specification for these node type spells out the details.
-	 * Source ranges nest properly: the source range for a child is always
-	 * within the source range of its parent, and the source ranges of sibling
-	 * nodes never overlap.
-	 * If a syntax error is detected while parsing, the relevant node(s) of the
-	 * tree will be flagged as <code>MALFORMED</code>.
-	 * </p>
-	 * <p>
-	 * If <code>resolveBindings</code> is <code>true</code>, the various names
-	 * and types appearing in the compilation unit can be resolved to "bindings"
-	 * by calling the <code>resolveBinding</code> methods. These bindings
-	 * draw connections between the different parts of a program, and
-	 * generally afford a more powerful vantage point for clients who wish to
-	 * analyze a program's structure more deeply. These bindings come at a
-	 * considerable cost in both time and space, however, and should not be
-	 * requested frivolously. The additional space is not reclaimed until the
-	 * AST, all its nodes, and all its bindings become garbage. So it is very
-	 * important to not retain any of these objects longer than absolutely
-	 * necessary. Bindings are resolved at the time the AST is created. Subsequent
-	 * modifications to the AST do not affect the bindings returned by
-	 * <code>resolveBinding</code> methods in any way; these methods return the
-	 * same binding as before the AST was modified (including modifications
-	 * that rearrange subtrees by reparenting nodes).
-	 * If <code>resolveBindings</code> is <code>false</code>, the analysis
-	 * does not go beyond parsing and building the tree, and all
-	 * <code>resolveBinding</code> methods return <code>null</code> from the
-	 * outset.
-	 * </p>
-	 *
-	 * @param unit the Java model compilation unit whose source code is to be parsed
-	 * @param resolveBindings <code>true</code> if bindings are wanted,
-	 *   and <code>false</code> if bindings are not of interest
-	 * @return the compilation unit node
-	 * @exception IllegalArgumentException if the given Java element does not
-	 * exist or if its source string cannot be obtained
-	 * @see ASTNode#getFlags()
-	 * @see ASTNode#MALFORMED
-	 * @see ASTNode#getStartPosition()
-	 * @see ASTNode#getLength()
-	 * @since 2.0
-	 * @deprecated Use {@link ASTParser} instead.
-	 */
-	public static CompilationUnit parseCompilationUnit(
-		ICompilationUnit unit,
-		boolean resolveBindings) {
-
-		try {
-			ASTParser c = ASTParser.newParser(AST.JLS2);
-			c.setSource(unit);
-			c.setResolveBindings(resolveBindings);
-			ASTNode result = c.createAST(null);
-			return (CompilationUnit) result;
-		} catch (IllegalStateException e) {
-			// convert ASTParser's complaints into old form
-			throw new IllegalArgumentException();
-		}
-	}
+//	/**
+//	 * Parses the source string corresponding to the given Java class file
+//	 * element and creates and returns a corresponding abstract syntax tree.
+//	 * The source string is obtained from the Java model element using
+//	 * <code>IClassFile.getSource()</code>, and is only available for a class
+//	 * files with attached source.
+//	 * <p>
+//	 * The returned compilation unit node is the root node of a new AST.
+//	 * Each node in the subtree carries source range(s) information relating back
+//	 * to positions in the source string (the source string is not remembered
+//	 * with the AST).
+//	 * The source range usually begins at the first character of the first token
+//	 * corresponding to the node; leading whitespace and comments are <b>not</b>
+//	 * included. The source range usually extends through the last character of
+//	 * the last token corresponding to the node; trailing whitespace and
+//	 * comments are <b>not</b> included. There are a handful of exceptions
+//	 * (including compilation units and the various body declarations); the
+//	 * specification for these node type spells out the details.
+//	 * Source ranges nest properly: the source range for a child is always
+//	 * within the source range of its parent, and the source ranges of sibling
+//	 * nodes never overlap.
+//	 * If a syntax error is detected while parsing, the relevant node(s) of the
+//	 * tree will be flagged as <code>MALFORMED</code>.
+//	 * </p>
+//	 * <p>
+//	 * If <code>resolveBindings</code> is <code>true</code>, the various names
+//	 * and types appearing in the compilation unit can be resolved to "bindings"
+//	 * by calling the <code>resolveBinding</code> methods. These bindings
+//	 * draw connections between the different parts of a program, and
+//	 * generally afford a more powerful vantage point for clients who wish to
+//	 * analyze a program's structure more deeply. These bindings come at a
+//	 * considerable cost in both time and space, however, and should not be
+//	 * requested frivolously. The additional space is not reclaimed until the
+//	 * AST, all its nodes, and all its bindings become garbage. So it is very
+//	 * important to not retain any of these objects longer than absolutely
+//	 * necessary. Bindings are resolved at the time the AST is created. Subsequent
+//	 * modifications to the AST do not affect the bindings returned by
+//	 * <code>resolveBinding</code> methods in any way; these methods return the
+//	 * same binding as before the AST was modified (including modifications
+//	 * that rearrange subtrees by reparenting nodes).
+//	 * If <code>resolveBindings</code> is <code>false</code>, the analysis
+//	 * does not go beyond parsing and building the tree, and all
+//	 * <code>resolveBinding</code> methods return <code>null</code> from the
+//	 * outset.
+//	 * </p>
+//	 *
+//	 * @param classFile the Java model class file whose corresponding source code is to be parsed
+//	 * @param resolveBindings <code>true</code> if bindings are wanted,
+//	 *   and <code>false</code> if bindings are not of interest
+//	 * @return the compilation unit node
+//	 * @exception IllegalArgumentException if the given Java element does not
+//	 * exist or if its source string cannot be obtained
+//	 * @see ASTNode#getFlags()
+//	 * @see ASTNode#MALFORMED
+//	 * @see ASTNode#getStartPosition()
+//	 * @see ASTNode#getLength()
+//	 * @since 2.1
+//	 * @deprecated Use {@link ASTParser} instead.
+//	 */
+//	public static CompilationUnit parseCompilationUnit(
+//		IClassFile classFile,
+//		boolean resolveBindings) {
+//
+//		if (classFile == null) {
+//			throw new IllegalArgumentException();
+//		}
+//		try {
+//			ASTParser c = ASTParser.newParser(AST.JLS2);
+//			c.setSource(classFile);
+//			c.setResolveBindings(resolveBindings);
+//			ASTNode result = c.createAST(null);
+//			return (CompilationUnit) result;
+//		} catch (IllegalStateException e) {
+//			// convert ASTParser's complaints into old form
+//			throw new IllegalArgumentException();
+//		}
+//	}
+//
+//	/**
+//	 * Parses the source string of the given Java model compilation unit element
+//	 * and creates and returns a corresponding abstract syntax tree. The source
+//	 * string is obtained from the Java model element using
+//	 * <code>ICompilationUnit.getSource()</code>.
+//	 * <p>
+//	 * The returned compilation unit node is the root node of a new AST.
+//	 * Each node in the subtree carries source range(s) information relating back
+//	 * to positions in the source string (the source string is not remembered
+//	 * with the AST).
+//	 * The source range usually begins at the first character of the first token
+//	 * corresponding to the node; leading whitespace and comments are <b>not</b>
+//	 * included. The source range usually extends through the last character of
+//	 * the last token corresponding to the node; trailing whitespace and
+//	 * comments are <b>not</b> included. There are a handful of exceptions
+//	 * (including compilation units and the various body declarations); the
+//	 * specification for these node type spells out the details.
+//	 * Source ranges nest properly: the source range for a child is always
+//	 * within the source range of its parent, and the source ranges of sibling
+//	 * nodes never overlap.
+//	 * If a syntax error is detected while parsing, the relevant node(s) of the
+//	 * tree will be flagged as <code>MALFORMED</code>.
+//	 * </p>
+//	 * <p>
+//	 * If <code>resolveBindings</code> is <code>true</code>, the various names
+//	 * and types appearing in the compilation unit can be resolved to "bindings"
+//	 * by calling the <code>resolveBinding</code> methods. These bindings
+//	 * draw connections between the different parts of a program, and
+//	 * generally afford a more powerful vantage point for clients who wish to
+//	 * analyze a program's structure more deeply. These bindings come at a
+//	 * considerable cost in both time and space, however, and should not be
+//	 * requested frivolously. The additional space is not reclaimed until the
+//	 * AST, all its nodes, and all its bindings become garbage. So it is very
+//	 * important to not retain any of these objects longer than absolutely
+//	 * necessary. Bindings are resolved at the time the AST is created. Subsequent
+//	 * modifications to the AST do not affect the bindings returned by
+//	 * <code>resolveBinding</code> methods in any way; these methods return the
+//	 * same binding as before the AST was modified (including modifications
+//	 * that rearrange subtrees by reparenting nodes).
+//	 * If <code>resolveBindings</code> is <code>false</code>, the analysis
+//	 * does not go beyond parsing and building the tree, and all
+//	 * <code>resolveBinding</code> methods return <code>null</code> from the
+//	 * outset.
+//	 * </p>
+//	 *
+//	 * @param unit the Java model compilation unit whose source code is to be parsed
+//	 * @param resolveBindings <code>true</code> if bindings are wanted,
+//	 *   and <code>false</code> if bindings are not of interest
+//	 * @return the compilation unit node
+//	 * @exception IllegalArgumentException if the given Java element does not
+//	 * exist or if its source string cannot be obtained
+//	 * @see ASTNode#getFlags()
+//	 * @see ASTNode#MALFORMED
+//	 * @see ASTNode#getStartPosition()
+//	 * @see ASTNode#getLength()
+//	 * @since 2.0
+//	 * @deprecated Use {@link ASTParser} instead.
+//	 */
+//	public static CompilationUnit parseCompilationUnit(
+//		ICompilationUnit unit,
+//		boolean resolveBindings) {
+//
+//		try {
+//			ASTParser c = ASTParser.newParser(AST.JLS2);
+//			c.setSource(unit);
+//			c.setResolveBindings(resolveBindings);
+//			ASTNode result = c.createAST(null);
+//			return (CompilationUnit) result;
+//		} catch (IllegalStateException e) {
+//			// convert ASTParser's complaints into old form
+//			throw new IllegalArgumentException();
+//		}
+//	}
 
 	/**
 	 * Level of AST API supported by this AST.
@@ -837,7 +849,7 @@ public final class AST {
 	 * @since 3.3
 	 */
 	public boolean hasBindingsRecovery() {
-		return (this.bits & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0;
+		return (this.bits & ENABLE_BINDINGS_RECOVERY) != 0;
 	}
 
 	/**
@@ -857,7 +869,7 @@ public final class AST {
 	 * @since 3.3
 	 */
 	public boolean hasStatementsRecovery() {
-		return (this.bits & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0;
+		return (this.bits & ENABLE_STATEMENTS_RECOVERY) != 0;
 	}
 
 	/* (omit javadoc for this method)

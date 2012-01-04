@@ -11,17 +11,14 @@
 
 package org.eclipse.jdt.core.dom;
 
+import org.eclipse.jdt.core.compiler.IProblem;
+import org.eclipse.jdt.internal.compiler.parser.Scanner;
+import org.eclipse.jdt.internal.compiler.util.Util;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.ITypeRoot;
-import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.internal.compiler.parser.Scanner;
-import org.eclipse.jdt.internal.compiler.util.Util;
 
 /**
  * Java compilation unit AST node type. This is the type of the root of an AST.
@@ -122,12 +119,6 @@ public class CompilationUnit extends ASTNode {
 	 * @since 3.0
 	 */
 	private DefaultCommentMapper commentMapper = null;
-
-	/**
-	 * The Java type root (an <code>org.eclipse.jdt.core.ICompilationUnit</code> or an <code>org.eclipse.jdt.core.IClassFile</code>)
-	 * this compilation unit was created from, or <code>null</code> if it was not created from a Java type root.
-	 */
-	private ITypeRoot typeRoot = null;
 
 	/**
 	 * The list of import declarations in textual order order;
@@ -490,18 +481,6 @@ public class CompilationUnit extends ASTNode {
 	}
 
 	/**
-	 * The Java element (an <code>org.eclipse.jdt.core.ICompilationUnit</code> or an <code>org.eclipse.jdt.core.IClassFile</code>)
-	 * this compilation unit was created from, or <code>null</code> if it was not created from a Java element.
-	 *
-	 * @return the Java element this compilation unit was created from, or <code>null</code> if none
-	 * @since 3.1
-	 * @see #getTypeRoot()
-	 */
-	public IJavaElement getJavaElement() {
-		return this.typeRoot;
-	}
-
-	/**
 	 * Returns the list of messages reported by the compiler during the parsing
 	 * or the type checking of this compilation unit. This list might be a subset of
 	 * errors detected and reported by a Java compiler.
@@ -629,17 +608,6 @@ public class CompilationUnit extends ASTNode {
 	 */
 	public Object getStatementsRecoveryData() {
 		return this.statementsRecoveryData;
-	}
-	
-	/**
-	 * The Java type root (a {@link org.eclipse.jdt.core.ICompilationUnit compilation unit} or a {@link org.eclipse.jdt.core.IClassFile class file})
-	 * this compilation unit was created from, or <code>null</code> if it was not created from a Java type root.
-	 *
-	 * @return the Java type root this compilation unit was created from, or <code>null</code> if none
-	 * @since 3.3
-	 */
-	public ITypeRoot getTypeRoot() {
-		return this.typeRoot;
 	}
 
 	/**
@@ -961,16 +929,6 @@ public class CompilationUnit extends ASTNode {
 			// protect the list from further modification
 			this.optionalCommentList = Collections.unmodifiableList(commentList);
 		}
-	}
-
-	/**
-	 * Sets the Java type root (a {@link org.eclipse.jdt.core.ICompilationUnit compilation unit} or a {@link org.eclipse.jdt.core.IClassFile class file})
-	 * this compilation unit was created from, or <code>null</code> if it was not created from a Java type root.
-	 *
-	 * @param typeRoot the Java type root this compilation unit was created from
-	 */
-	void setTypeRoot(ITypeRoot typeRoot) {
-		this.typeRoot = typeRoot;
 	}
 
 	/**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 
 /**
  * An AST requestor handles ASTs for compilation units passed to
@@ -44,21 +44,6 @@ public abstract class ASTRequestor {
 	 * Creates a new instance.
 	 */
 	protected ASTRequestor() {
-		// do nothing
-	}
-
-	/**
-	 * Accepts an AST corresponding to the compilation unit.
-	 * That is, <code>ast</code> is an AST for <code>source</code>.
-	 * <p>
-	 * The default implementation of this method does nothing.
-	 * Clients should override to process the resulting AST.
-	 * </p>
-	 *
-	 * @param source the compilation unit the ast is coming from
-	 * @param ast the requested abtract syntax tree
-	 */
-	public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
 		// do nothing
 	}
 

@@ -11,7 +11,6 @@
 
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.internal.compiler.ast.StringLiteral;
 import org.eclipse.jdt.internal.compiler.ast.Wildcard;
@@ -1258,14 +1257,4 @@ class TypeBinding implements ITypeBinding {
 	public String toString() {
 		return this.binding.toString();
 	}
-
-   /**
-    * @see org.eclipse.jdt.core.dom.IBinding#getJavaElement()
-    */
-   @Override
-   public IJavaElement getJavaElement()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
 }

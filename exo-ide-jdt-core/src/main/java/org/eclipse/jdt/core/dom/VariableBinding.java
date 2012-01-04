@@ -11,12 +11,9 @@
 
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.util.IModifierConstants;
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.Initializer;
-import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.internal.compiler.impl.Constant;
 import org.eclipse.jdt.internal.compiler.impl.ReferenceContext;
@@ -25,7 +22,6 @@ import org.eclipse.jdt.internal.compiler.lookup.FieldBinding;
 import org.eclipse.jdt.internal.compiler.lookup.LocalVariableBinding;
 import org.eclipse.jdt.internal.compiler.lookup.TagBits;
 import org.eclipse.jdt.internal.compiler.lookup.TypeIds;
-import org.eclipse.jdt.internal.core.util.Util;
 
 /**
  * Internal implementation of variable bindings.
@@ -156,18 +152,6 @@ class VariableBinding implements IVariableBinding {
 			}
 		}
 		return null;
-	}
-
-	/*
-	 * @see IBinding#getJavaElement()
-	 */
-	public IJavaElement getJavaElement() {
-	   //TODO
-//		JavaElement element = getUnresolvedJavaElement();
-//		if (element == null)
-//			return null;
-//		return element.resolved(this.binding);
-	   return null;
 	}
 
 	/*

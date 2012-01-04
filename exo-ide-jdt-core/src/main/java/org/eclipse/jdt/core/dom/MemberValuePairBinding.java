@@ -14,7 +14,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.compiler.impl.Constant;
 import org.eclipse.jdt.internal.compiler.lookup.ElementValuePair;
 import org.eclipse.jdt.internal.compiler.lookup.MethodBinding;
@@ -101,10 +100,6 @@ class MemberValuePairBinding implements IMemberValuePairBinding {
 
 	public IAnnotationBinding[] getAnnotations() {
 		return AnnotationBinding.NoAnnotations;
-	}
-
-	public IJavaElement getJavaElement() {
-		return null;
 	}
 
 	public String getKey() {

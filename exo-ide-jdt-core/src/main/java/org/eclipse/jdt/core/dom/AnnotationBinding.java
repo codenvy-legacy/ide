@@ -13,10 +13,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.core.dom;
 
-import org.eclipse.jdt.core.IAnnotatable;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.internal.compiler.lookup.ElementValuePair;
 import org.eclipse.jdt.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding;
@@ -100,55 +96,55 @@ class AnnotationBinding implements IAnnotationBinding {
 		return allPairs;
 	}
 
-	public IJavaElement getJavaElement() {
-		if (!(this.bindingResolver instanceof DefaultBindingResolver)) return null;
-		ASTNode node = (ASTNode) ((DefaultBindingResolver) this.bindingResolver).bindingsToAstNodes.get(this);
-		if (!(node instanceof Annotation)) return null;
-		ASTNode parent = node.getParent();
-		IJavaElement parentElement = null;
-		switch (parent.getNodeType()) {
-		case ASTNode.PACKAGE_DECLARATION:
-			IJavaElement cu = ((CompilationUnit) parent.getParent()).getJavaElement();
-			if (cu instanceof ICompilationUnit) {
-				String pkgName = ((PackageDeclaration) parent).getName().getFullyQualifiedName();
-				parentElement =  ((ICompilationUnit) cu).getPackageDeclaration(pkgName);
-			}
-			break;
-		case ASTNode.ENUM_DECLARATION:
-		case ASTNode.TYPE_DECLARATION:
-		case ASTNode.ANNOTATION_TYPE_DECLARATION:
-			parentElement = ((AbstractTypeDeclaration) parent).resolveBinding().getJavaElement();
-			break;
-		case ASTNode.FIELD_DECLARATION:
-			VariableDeclarationFragment fragment = (VariableDeclarationFragment) ((FieldDeclaration) parent).fragments().get(0);
-			IVariableBinding variableBinding = fragment.resolveBinding();
-			if (variableBinding == null) {
-				return null;
-			}
-			parentElement = variableBinding.getJavaElement();
-			break;
-		case ASTNode.METHOD_DECLARATION:
-				IMethodBinding methodBinding = ((MethodDeclaration) parent).resolveBinding();
-				if (methodBinding == null) return null;
-				parentElement = methodBinding.getJavaElement();
-			break;
-		case ASTNode.VARIABLE_DECLARATION_STATEMENT:
-			fragment = (VariableDeclarationFragment) ((VariableDeclarationStatement) parent).fragments().get(0);
-			variableBinding = fragment.resolveBinding();
-			if (variableBinding == null) {
-				return null;
-			}
-			parentElement = variableBinding.getJavaElement();
-			break;
-		default:
-			return null;
-		}
-		if (! (parentElement instanceof IAnnotatable)) return null;
-		if ((parentElement instanceof IMember) && ((IMember) parentElement).isBinary()) {
-			return ((IAnnotatable) parentElement).getAnnotation(getAnnotationType().getQualifiedName());
-		}
-		return ((IAnnotatable) parentElement).getAnnotation(getName());
-	}
+//	public IJavaElement getJavaElement() {
+//		if (!(this.bindingResolver instanceof DefaultBindingResolver)) return null;
+//		ASTNode node = (ASTNode) ((DefaultBindingResolver) this.bindingResolver).bindingsToAstNodes.get(this);
+//		if (!(node instanceof Annotation)) return null;
+//		ASTNode parent = node.getParent();
+//		IJavaElement parentElement = null;
+//		switch (parent.getNodeType()) {
+//		case ASTNode.PACKAGE_DECLARATION:
+//			IJavaElement cu = ((CompilationUnit) parent.getParent()).getJavaElement();
+//			if (cu instanceof ICompilationUnit) {
+//				String pkgName = ((PackageDeclaration) parent).getName().getFullyQualifiedName();
+//				parentElement =  ((ICompilationUnit) cu).getPackageDeclaration(pkgName);
+//			}
+//			break;
+//		case ASTNode.ENUM_DECLARATION:
+//		case ASTNode.TYPE_DECLARATION:
+//		case ASTNode.ANNOTATION_TYPE_DECLARATION:
+//			parentElement = ((AbstractTypeDeclaration) parent).resolveBinding().getJavaElement();
+//			break;
+//		case ASTNode.FIELD_DECLARATION:
+//			VariableDeclarationFragment fragment = (VariableDeclarationFragment) ((FieldDeclaration) parent).fragments().get(0);
+//			IVariableBinding variableBinding = fragment.resolveBinding();
+//			if (variableBinding == null) {
+//				return null;
+//			}
+//			parentElement = variableBinding.getJavaElement();
+//			break;
+//		case ASTNode.METHOD_DECLARATION:
+//				IMethodBinding methodBinding = ((MethodDeclaration) parent).resolveBinding();
+//				if (methodBinding == null) return null;
+//				parentElement = methodBinding.getJavaElement();
+//			break;
+//		case ASTNode.VARIABLE_DECLARATION_STATEMENT:
+//			fragment = (VariableDeclarationFragment) ((VariableDeclarationStatement) parent).fragments().get(0);
+//			variableBinding = fragment.resolveBinding();
+//			if (variableBinding == null) {
+//				return null;
+//			}
+//			parentElement = variableBinding.getJavaElement();
+//			break;
+//		default:
+//			return null;
+//		}
+//		if (! (parentElement instanceof IAnnotatable)) return null;
+//		if ((parentElement instanceof IMember) && ((IMember) parentElement).isBinary()) {
+//			return ((IAnnotatable) parentElement).getAnnotation(getAnnotationType().getQualifiedName());
+//		}
+//		return ((IAnnotatable) parentElement).getAnnotation(getName());
+//	}
 
 	public String getKey() {
 		if (this.key == null) {
