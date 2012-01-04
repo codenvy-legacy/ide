@@ -72,11 +72,7 @@ public class CodeAssistantStorageGenerator
       CodeAssistantStorageGenerator codeAssistantStorageGenerator = new CodeAssistantStorageGenerator();
       codeAssistantStorageGenerator.resolveArgs(args);
       codeAssistantStorageGenerator.writeClassInfosInStorage();
-      /*
-       * TODO: Uncomment this when QDoxJavaDocExtractor will be finished
-       * 
-       * codeAssistantStorageGenerator.writeJavaDocsInStorage();
-      */
+      codeAssistantStorageGenerator.writeJavaDocsInStorage();
    }
 
    private void resolveArgs(String[] args)

@@ -18,16 +18,45 @@
  */
 package org.exoplatform.ide.codeassistant.storage.extractors;
 
+import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class which extract java docs from sources.
+ */
 public class QDoxJavaDocExtractor
 {
 
    /**
     * <p>
-    * Method gets InputStream of jar file, and return Map of javaDocs.
+    * Method gets InputStream of <code>zip</code> file with <code>.java</code>
+    * sources, and return Map of javaDocs for classes from all sources of zip.
+    * </p>
+    * 
+    * For more details of result format see {@link #extractSource(InputStream)}
+    * 
+    * @param sourceZipStream
+    *           stream of jar file with sources
+    * @return map with key - member's fqn, and value - javaDoc comment
+    */
+   public static Map<String, String> extractZip(InputStream sourceZipStream)
+   {
+      // TODO to be continued...
+      return new HashMap<String, String>();
+   }
+
+   /**
+    * <p>
+    * Method gets InputStream of <code>.java</code> file, and return Map of
+    * javaDocs for classes from this source.
     * </p>
     * <ul>
     * <li>Key of a result map is fqn of member (class, field, constructor,
@@ -57,40 +86,144 @@ public class QDoxJavaDocExtractor
     * java.lang.HashMap(int,float), java.lang.HashMap(int)
     * </ul>
     * 
-    * TODO update with default format definition
-    * <a>http://www.w3.org/TR/REC-xml-names/#NT-QName</a>
     * <p>
     * <ul>
-    * <li><b>SIMPLE_NAME</b> = [a-zA-Z][a-zA-Z0-9_]*</li>
-    * <li><b>PACKAGE</b> = SIMPLE_NAME(.SIMPLE_NAME)*</li>
-    * <li><b>CLASS_NAME</b> = SIMPLE_NAME | SIMPLE_NAME$SIMPLE_NAME</li>
-    * <li><b>CLASS_FQN</b> = (PACKAGE.)*CLASS_NAME</li>
-    * <li><b>FIELD_FQN</b> = (PACKAGE.)*CLASS_NAME#SIMPLE_NAME</li>
-    * <li><b>METHOD_FQN</b> = (PACKAGE.)*CLASS_NAME#SIMPLE_NAME(PARAMS)</li>
-    * <li><b>CONSTRUCTOR_FQN</b> = (PACKAGE.)*CLASS_NAME(PARAMS)</li>
-    * <li><b>PARAMS</b> = empty string | PARAM(,PARAM)*</li>
-    * <li><b>PARAM</b> = SIMPLE_PARAM | OBJECT_PARAM</li>
-    * <li><b>SIMPLE_PARAM</b> = void | byte | char | boolean | short | int |
-    * long | float | double</li>
-    * <li><b>OBJECT_PARAM</b> = CLASS_FQN | CLASS_FQN < GENERIC > | GENERIC</li>
-    * <li><b>GENERIC</b> = GENERIC_BASE | GENERIC_BASE extends CLASS_FQN</li>
-    * <li><b>GENERIC_BASE</b> = SIMPLE_NAME | ?</li>
+    * <li><b>SimpleName</b> = [a-zA-Z][a-zA-Z0-9_]*</li>
+    * <li><b>Package</b> = SimpleName (.SimpleName)*</li>
+    * <li><b>ClassName</b> = SimpleName | SimpleName$SimpleName</li>
+    * <li><b>ClassFqn</b> = (Package.)* ClassName</li>
+    * <li><b>FieldFqn</b> = (Package.)* ClassName#SimpleName</li>
+    * <li><b>MethodFqn</b> = (Package.)* ClassName#SimpleName(Params)</li>
+    * <li><b>ConstructorFqn</b> = (Package.)* ClassName(Params)</li>
+    * <li><b>Params</b> = empty_string | Param(,Param)*</li>
+    * <li><b>Param</b> = SimpleParam | ObjectParam</li>
+    * <li><b>SimpleParam</b> = void | byte | char | boolean | short | int | long
+    * | float | double</li>
+    * <li><b>ObjectParam</b> = ClassFqn | ClassFqn < Generic > | Generic</li>
+    * <li><b>Generic</b> = GenericBase | GenericBase extends ClassFqn |
+    * GenericBase super ClassFqn</li>
+    * <li><b>GenericBase</b> = SimpleName | ?</li>
     * </ul>
     * </p>
     * 
+    * <p>
+    * 
+    * </p>
+    * Examples:
+    * <ul>
+    * <li>java.lang.Integer</li>
+    * <li>java.util.HashMap$KeySet</li>
+    * <li>java.lang.Integer#MAX_VALUE</li>
+    * <li>java.lang.Integer(int)</li>
+    * <li>java.lang.Integer(java.lang.Integer)</li>
+    * <li>java.lang.Integer#valueOf(java.lang.String,int)</li>
+    * <li>java.util.HashMap#put(K,V)</li>
+    * <li>java.util.Collections#sort(java.util.List<T>,java.util.Comparator<?
+    * super T>)</li>
+    * </ul>
     * <p>
     * If member not contains java doc, then result will not contains it's member
     * fqn.
     * </p>
     * 
     * @param sourceZipStream
-    *           stream of jar file with sources
-    * @return map with key - member fqn, and value - javaDoc comment
+    *           stream of <code>.java</code> file
+    * @return map with key - member's fqn, and value - javaDoc comment
     */
-   public static Map<String, String> extract(InputStream sourceZipStream)
+   public static Map<String, String> extractSource(InputStream sourceStream)
    {
-      // TODO to be continued...
-      return new HashMap<String, String>();
+      Map<String, String> javaDocs = new HashMap<String, String>();
+
+      JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
+      javaDocBuilder.addSource(new InputStreamReader(sourceStream));
+
+      for (JavaClass currentClass : javaDocBuilder.getClasses())
+      {
+         if (currentClass.getComment() != null)
+         {
+            javaDocs.put(getFqnForClass(currentClass), currentClass.getComment());
+         }
+
+         for (JavaField currentField : currentClass.getFields())
+         {
+            if (currentField.getComment() != null)
+            {
+               javaDocs.put(getFqnForField(currentField), currentField.getComment());
+            }
+         }
+         for (JavaMethod currentMethod : currentClass.getMethods())
+         {
+            if (currentMethod.getComment() != null)
+            {
+               javaDocs.put(getFqnForMethod(currentMethod), currentMethod.getComment());
+            }
+         }
+      }
+
+      return javaDocs;
    }
 
+   /**
+    * Method returns fqn of some class in specified format
+    * 
+    * @param javaClass
+    * @return
+    * @see #extractSource(InputStream)
+    */
+   private static String getFqnForClass(JavaClass javaClass)
+   {
+      return javaClass.getFullyQualifiedName();
+   }
+
+   /**
+    * Method returns fqn of some field in specified format
+    * 
+    * @param javaField
+    * @return
+    * @see #extractSource(InputStream)
+    */
+   private static String getFqnForField(JavaField javaField)
+   {
+      StringBuilder fqnBuilder = new StringBuilder();
+      String prefix = javaField.getParentClass().getFullyQualifiedName();
+      fqnBuilder.append(prefix);
+      fqnBuilder.append("#");
+
+      fqnBuilder.append(javaField.getName());
+      return fqnBuilder.toString();
+   }
+
+   /**
+    * Method returns fqn of some method in specified format
+    * 
+    * @param javaMethod
+    * @return
+    * @see #extractSource(InputStream)
+    */
+   private static String getFqnForMethod(JavaMethod javaMethod)
+   {
+      StringBuilder fqnBuilder = new StringBuilder();
+      String prefix = javaMethod.getParentClass().getFullyQualifiedName();
+      fqnBuilder.append(prefix);
+
+      if (!javaMethod.isConstructor())
+      {
+         fqnBuilder.append("#");
+         fqnBuilder.append(javaMethod.getName());
+      }
+
+      fqnBuilder.append("(");
+      boolean isFirst = true;
+      for (JavaParameter parameter : javaMethod.getParameters())
+      {
+         if (!isFirst)
+         {
+            fqnBuilder.append(",");
+         }
+         fqnBuilder.append(parameter.getType().getGenericValue());
+         isFirst = false;
+      }
+      fqnBuilder.append(")");
+      return fqnBuilder.toString();
+   }
 }

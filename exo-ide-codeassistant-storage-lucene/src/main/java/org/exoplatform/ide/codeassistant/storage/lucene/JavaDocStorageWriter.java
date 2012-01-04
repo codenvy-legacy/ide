@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-
 import org.exoplatform.ide.codeassistant.storage.extractors.QDoxJavaDocExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneJavaDocWriter;
 
@@ -34,7 +33,8 @@ import java.util.Map;
 public class JavaDocStorageWriter
 {
 
-   public static void writeJarsToIndex(String pathToIndex, List<String> sourceJars) throws IOException, SaveTypeInfoIndexException
+   public static void writeJarsToIndex(String pathToIndex, List<String> sourceJars) throws IOException,
+      SaveTypeInfoIndexException
    {
       LuceneInfoStorage luceneInfoStorage = null;
       try
@@ -45,7 +45,7 @@ public class JavaDocStorageWriter
          for (String jar : sourceJars)
          {
             File jarFile = new File(jar);
-            Map<String, String> javaDocs = QDoxJavaDocExtractor.extract(new FileInputStream(jarFile));
+            Map<String, String> javaDocs = QDoxJavaDocExtractor.extractZip(new FileInputStream(jarFile));
             writer.addJavaDocs(javaDocs);
          }
       }

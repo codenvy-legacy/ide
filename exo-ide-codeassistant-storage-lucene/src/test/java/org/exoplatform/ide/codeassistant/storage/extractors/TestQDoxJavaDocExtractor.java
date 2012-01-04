@@ -20,7 +20,6 @@ package org.exoplatform.ide.codeassistant.storage.extractors;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -28,7 +27,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Map;
 
-@Ignore
 public class TestQDoxJavaDocExtractor
 {
 
@@ -38,13 +36,14 @@ public class TestQDoxJavaDocExtractor
    public static void extractJavaDocs() throws FileNotFoundException
    {
       javaDocs =
-         QDoxJavaDocExtractor.extract(new FileInputStream(new File("src/test/java/test/javadoc/JavaDocClass.java")));
+         QDoxJavaDocExtractor.extractSource(new FileInputStream(
+            new File("src/test/java/test/javadoc/JavaDocClass.java")));
    }
 
    @Test
    public void checkTotalCountOfMembersWithJavaDocs()
    {
-      Assert.assertEquals(13, javaDocs.size());
+      Assert.assertEquals(16, javaDocs.size());
    }
 
    @Test
@@ -64,16 +63,26 @@ public class TestQDoxJavaDocExtractor
 
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics"));
       Assert.assertEquals("Class with generics", javaDocs.get("test.javadoc.ClassWithGenerics"));
+
    }
 
    @Test
-   public void checkJavaDocClassMembers()
+   public void checkFieldsWithJavaDocs()
    {
       Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass#fieldWithoutJavaDoc"));
 
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#field"));
       Assert.assertEquals("Field java doc", javaDocs.get("test.javadoc.JavaDocClass#field"));
 
+      Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass#fieldWithoutJavaDoc"));
+
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#genericField"));
+      Assert.assertEquals("Field with generics", javaDocs.get("test.javadoc.ClassWithGenerics#genericField"));
+   }
+
+   @Test
+   public void checkMethodsWithJavaDocs()
+   {
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass(int,java.lang.Integer)"));
       Assert.assertEquals("Constructor java doc with parameters",
          javaDocs.get("test.javadoc.JavaDocClass(int,java.lang.Integer)"));
@@ -99,33 +108,23 @@ public class TestQDoxJavaDocExtractor
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass"));
       Assert.assertEquals("Private class with java doc", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass"));
 
-      Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass$ClassWithoutJavadoc"));
-   }
-
-   @Test
-   public void checkPrivateClassMembers()
-   {
-      Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass#fieldWithoutJavaDoc"));
-
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass()"));
       Assert.assertEquals("Constructor of private class", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass()"));
 
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass#method()"));
       Assert.assertEquals("Method of private class", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass#method()"));
-   }
 
-   @Test
-   public void checkClassWithGenerics()
-   {
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#genericField"));
-      Assert.assertEquals("Field with generics", javaDocs.get("test.javadoc.ClassWithGenerics#genericField"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$ClassWithoutJavadoc#method()"));
+      Assert.assertEquals("Method with java docs in uncommented class",
+         javaDocs.get("test.javadoc.JavaDocClass$ClassWithoutJavadoc#method()"));
 
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method(T)"));
-      Assert.assertEquals("Field with generics", javaDocs.get("test.javadoc.ClassWithGenerics#method(T)"));
+      Assert.assertEquals("Method with generics", javaDocs.get("test.javadoc.ClassWithGenerics#method(T)"));
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass#method(List<? extends Number>)"));
-      Assert.assertEquals("Method of private class",
-         javaDocs.get("test.javadoc.JavaDocClass$PrivateClass#method(List<? extends Number>)"));
+      Assert.assertTrue(javaDocs
+         .containsKey("test.javadoc.ClassWithGenerics#method(java.util.List<? extends java.lang.Number>)"));
+      Assert.assertEquals("Method with list as parameter",
+         javaDocs.get("test.javadoc.ClassWithGenerics#method(java.util.List<? extends java.lang.Number>)"));
    }
 
 }

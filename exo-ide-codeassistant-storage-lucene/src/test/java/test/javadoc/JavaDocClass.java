@@ -104,6 +104,14 @@ public class JavaDocClass
 
    private class ClassWithoutJavadoc
    {
+      
+      /**
+       * Method with java docs in uncommented class
+       */
+      public void method()
+      {
+      }
+      
    }
 
 }

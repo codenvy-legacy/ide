@@ -28,9 +28,9 @@
       </dependency>
 
       <dependency>
-         <groupId>qdox</groupId>
-         <artifactId>qdox</artifactId>
-         <version>1.6.1</version>
+	 <groupId>com.thoughtworks.qdox</groupId>
+	 <artifactId>qdox</artifactId>
+	 <version>1.11</version>
       </dependency>
 
       <dependency>
