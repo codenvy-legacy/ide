@@ -47,7 +47,7 @@ public class Perspective extends AbstractTestModule
 
    private interface Locators
    {
-      String CLOSE_BUTTON_SELECTOR = "div.tabTitleCloseButton[tab-title=%s]";
+      String CLOSE_BUTTON_SELECTOR = "div.tabTitleCloseButton[tab-title='%s']";
 
       String PANEL_MAXIMIZED_ATTRIBUTE = "panel-maximized";
 

@@ -23,7 +23,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -61,7 +60,10 @@ public class FindReplace extends AbstractTestModule
       String CASE_SENSITIVE_FIELD_ID = "ideFindReplaceTextFormCaseSensitiveField";
 
       String FIND_RESULT_LABEL_ID = "ideFindReplaceTextFormFindResult";
+      
    }
+   
+   private static final String VIEW_TITLE = "Find/Replace";
 
    public static final String NOT_FOUND_RESULT = "String not found.";
 
@@ -109,8 +111,65 @@ public class FindReplace extends AbstractTestModule
          {
             try
             {
-               WebElement view = input.findElement(By.xpath(Locators.VIEW_LOCATOR));
-               return (view != null && view.isDisplayed());
+               return view != null && view.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+   
+   public void waitCloseButtonAppeared() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement closeButton = IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE);
+               return closeButton != null && closeButton.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+   
+   public void waitFindButtonAppeared() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return findButton != null && findButton.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+   
+   public void waitFindFieldAppeared() throws Exception
+   {
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return findField != null && findField.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -134,8 +193,7 @@ public class FindReplace extends AbstractTestModule
          {
             try
             {
-               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
-               return false;
+               return view == null || !view.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -143,6 +201,11 @@ public class FindReplace extends AbstractTestModule
             }
          }
       });
+   }
+   
+   public void closeView()
+   {
+      IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE).click();
    }
 
    /**
