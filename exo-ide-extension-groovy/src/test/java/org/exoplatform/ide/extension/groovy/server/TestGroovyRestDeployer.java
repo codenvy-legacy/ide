@@ -29,19 +29,28 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.MembershipEntry;
-import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.picocontainer.ComponentAdapter;
+
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Provider;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
+
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by The eXo Platform SAS.
@@ -73,9 +82,14 @@ public class TestGroovyRestDeployer extends Base
       devSecurityContext = new DummySecurityContext(new MockPrincipal("dev"), devRoles);
 
       Provider provider = (Provider)container.getComponentInstance("RestfulContainerProvider");
-      Assert.assertNotNull(provider);
+      assertNotNull(provider);
       restfulContainer = (ConcurrentPicoContainer)provider.get();
-      Assert.assertNotNull(container);
+      assertNotNull(container);
+
+      // Register cleaner in container. It checks resources one time per second.
+      ComponentCleaner cleaner = new ComponentCleaner(restfulContainer, 1, TimeUnit.SECONDS);
+      cleaner.start();
+      restfulContainer.registerComponentInstance("cleaner", cleaner);
    }
 
    @Test
@@ -100,11 +114,11 @@ public class TestGroovyRestDeployer extends Base
 
       int before = restfulContainer.getComponentAdapters().size();
       ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(204, response.getStatus());
+      assertEquals(204, response.getStatus());
 
       // Check is resource deployed or not.
       int after = restfulContainer.getComponentAdapters().size();
-      Assert.assertEquals(before + 1, after);
+      assertEquals(before + 1, after);
    }
 
    @Test
@@ -131,11 +145,11 @@ public class TestGroovyRestDeployer extends Base
       int before = restfulContainer.getComponentAdapters().size();
 
       ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(204, response.getStatus());
+      assertEquals(204, response.getStatus());
 
       // Check is resource deployed or not.
       int after = restfulContainer.getComponentAdapters().size();
-      Assert.assertEquals(before + 1, after);
+      assertEquals(before + 1, after);
 
       before = after;
       path = "/ide/groovy/undeploy" //
@@ -143,11 +157,11 @@ public class TestGroovyRestDeployer extends Base
          + "&id=" + script.getId();
 
       response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(204, response.getStatus());
+      assertEquals(204, response.getStatus());
 
       // Resource must be removed.
       after = restfulContainer.getComponentAdapters().size();
-      Assert.assertEquals(before - 1, after);
+      assertEquals(before - 1, after);
    }
 
    @Test
@@ -177,7 +191,7 @@ public class TestGroovyRestDeployer extends Base
       in.close();
 
       ContainerResponse response = launcher.service("POST", path, "", headers, data, null, ctx);
-      Assert.assertEquals(204, response.getStatus());
+      assertEquals(204, response.getStatus());
    }
 
    @Test
@@ -204,11 +218,11 @@ public class TestGroovyRestDeployer extends Base
       int before = restfulContainer.getComponentAdapters().size();
 
       ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(204, response.getStatus());
+      assertEquals(204, response.getStatus());
 
       // Check is resource deployed or not.
       int after = restfulContainer.getComponentAdapters().size();
-      Assert.assertEquals(before + 1, after);
+      assertEquals(before + 1, after);
 
       before = after;
 
@@ -229,11 +243,11 @@ public class TestGroovyRestDeployer extends Base
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId();
       response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(403, response.getStatus());
+      assertEquals(403, response.getStatus());
 
       // Resources must be untouched.
       after = restfulContainer.getComponentAdapters().size();
-      Assert.assertEquals(before, after);
+      assertEquals(before, after);
    }
 
    @Test
@@ -259,10 +273,10 @@ public class TestGroovyRestDeployer extends Base
       int before = restfulContainer.getComponentAdapters().size();
 
       ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(403, response.getStatus());
+      assertEquals(403, response.getStatus());
 
       int after = restfulContainer.getComponentAdapters().size();
-      Assert.assertEquals(before, after);
+      assertEquals(before, after);
    }
 
    @Test
@@ -288,11 +302,11 @@ public class TestGroovyRestDeployer extends Base
       int before = restfulContainer.getComponentAdapters().size();
 
       ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(204, response.getStatus());
+      assertEquals(204, response.getStatus());
 
       // Check is resource deployed or not.
       int after = restfulContainer.getComponentAdapters().size();
-      Assert.assertEquals(before + 1, after);
+      assertEquals(before + 1, after);
    }
 
    @Test
@@ -318,14 +332,14 @@ public class TestGroovyRestDeployer extends Base
       int before = restfulContainer.getComponentAdapters().size();
 
       ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(204, response.getStatus());
+      assertEquals(204, response.getStatus());
 
       int after = restfulContainer.getComponentAdapters().size();
-      Assert.assertEquals(before + 1, after);
+      assertEquals(before + 1, after);
 
       response = launcher.service("GET", "/test-groovy/groovy1/developers", "", headers, null, null, ctx);
-      Assert.assertEquals(200, response.getStatus());
-      Assert.assertEquals("Hello from groovy to developers", response.getEntity());
+      assertEquals(200, response.getStatus());
+      assertEquals("Hello from groovy to developers", response.getEntity());
 
       // Check access resource as different user (not who deploys resource).
       EnvironmentContext ctx1 = new EnvironmentContext();
@@ -340,7 +354,7 @@ public class TestGroovyRestDeployer extends Base
          )
       );
       response = launcher.service("GET", "/test-groovy/groovy1/root", "", headers, null, null, ctx1);
-      Assert.assertEquals(404, response.getStatus());
+      assertEquals(404, response.getStatus());
    }
 
    @Test
@@ -363,15 +377,41 @@ public class TestGroovyRestDeployer extends Base
          + "&id=" + script.getId() //
          + "&projectid=" + testRoot.getId();
       ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      Assert.assertEquals(403, response.getStatus());
+      assertEquals(403, response.getStatus());
+   }
+
+   @Test
+   public void resourceCleanerTest() throws Exception
+   {
+      GroovyComponentKey key = GroovyComponentKey.make("dev-monit", "some/resource");
+      String userId = ConversationState.getCurrent().getIdentity().getUserId();
+      long expired = System.currentTimeMillis() + 3000; // Alive time 3 seconds.
+      key.setAttribute("ide.developer.id", userId);
+      key.setAttribute("ide.expiration.date", expired);
+      restfulContainer.registerComponentImplementation(key, CleanerTestResource.class);
+      assertNotNull(restfulContainer.getComponentAdapter(key));
+      Thread.sleep(2000); // wait 2 seconds
+      assertNotNull(restfulContainer.getComponentAdapter(key)); // resource accessible
+      Thread.sleep(3000); // wait 3 seconds more
+      assertNull(restfulContainer.getComponentAdapter(key)); // must be removed
+   }
+
+   @Path("cleaner-test")
+   public static class CleanerTestResource
+   {
+      @GET
+      public void m()
+      {
+      }
    }
 
    @After
    public void tearDown() throws Exception
    {
-      ComponentAdapter[] componentAdapters =
-         (ComponentAdapter[])restfulContainer.getComponentAdapters().toArray(new ComponentAdapter[0]);
-      for (Object c : componentAdapters)
+      ComponentCleaner cleaner = (ComponentCleaner)restfulContainer.getComponentInstance("cleaner");
+      cleaner.stop();
+      Collection<ComponentAdapter> componentAdapters = restfulContainer.getComponentAdapters();
+      for (Object c : componentAdapters.toArray(new ComponentAdapter[componentAdapters.size()]))
       {
          restfulContainer.unregisterComponent(((ComponentAdapter)c).getComponentKey());
       }

@@ -53,8 +53,9 @@ public class GroovyClassPathHelper
       InputStream classPathStream = null;
       try
       {
+         classPathStream = vfs.getContent(project.createPath(".groovyclasspath"), null).getStream();
          JsonParser jsonParser = new JsonParser();
-         jsonParser.parse(vfs.getContent(project.createPath(".groovyclasspath"), null).getStream());
+         jsonParser.parse(classPathStream);
          JsonValue jsonValue = jsonParser.getJsonObject();
          GroovyClassPath classPath = ObjectBuilder.createObject(GroovyClassPath.class, jsonValue);
          return classPath;
