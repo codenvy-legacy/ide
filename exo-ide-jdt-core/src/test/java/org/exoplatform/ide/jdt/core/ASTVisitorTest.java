@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,19 +18,14 @@
  */
 package org.exoplatform.ide.jdt.core;
 
-import static org.junit.Assert.*;
 import static org.fest.assertions.Assertions.*;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,12 +34,11 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 34360 2009-07-22 23:58:59Z evgen $
+ * @version ${Id}:  Jan 4, 2012 2:50:05 PM evgen $
  *
  */
-public class ASTParserTest
+public class ASTVisitorTest
 {
-
    private CompilationUnit unit;
 
    @Before
@@ -64,43 +58,49 @@ public class ASTParserTest
    }
 
    @Test
-   public void parseUnit() throws Exception
+   public void typeDeclarationVisitor() throws Exception
    {
-      assertThat(unit.types()).isNotEmpty().hasSize(1);
+      TypeDeclarationVisitor visitor = new TypeDeclarationVisitor();
+      unit.accept(visitor);
+      assertThat(visitor.typeCount).isEqualTo(2);
+   }
+   
+   @Test
+   public void methodDeclarationVisitor() throws Exception
+   {
+      MethodDeclarationVisitor visitor = new MethodDeclarationVisitor();
+      TypeDeclaration type = (TypeDeclaration)unit.types().get(0);
+      type.getTypes()[0].accept(visitor);
+      assertThat(visitor.methodCount).isEqualTo(19);
    }
 
-   @Test
-   public void pareseClass() throws Exception
+   private static class MethodDeclarationVisitor extends ASTVisitor
    {
-      TypeDeclaration td = (TypeDeclaration)unit.types().get(0);
-      assertThat(td.getName().getFullyQualifiedName()).isEqualTo("CreateJavaClassPresenter");
+      private int methodCount;
+
+      /**
+       * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MethodDeclaration)
+       */
+      @Override
+      public boolean visit(MethodDeclaration node)
+      {
+         methodCount++;
+         return super.visit(node);
+      }
    }
 
-   @Test
-   public void parseInnerType() throws Exception
+   private static class TypeDeclarationVisitor extends ASTVisitor
    {
-      TypeDeclaration td = (TypeDeclaration)unit.types().get(0);
-      assertThat(td.getTypes()).hasSize(1);
-      TypeDeclaration innerType = td.getTypes()[0];
-      assertThat(innerType.getName().getFullyQualifiedName()).isEqualTo("Display");
-   }
-   
-   @Test
-   public void innerTypeMethods() throws Exception
-   {
-      TypeDeclaration td = (TypeDeclaration)unit.types().get(0);
-      TypeDeclaration innerType = td.getTypes()[0];
-      assertThat(innerType.getMethods()).hasSize(19);
-   }
-   
-   @Test
-   public void innerTypeFields() throws Exception
-   {
-      TypeDeclaration td = (TypeDeclaration)unit.types().get(0);
-      TypeDeclaration innerType = td.getTypes()[0];
-      assertThat(innerType.getFields()).hasSize(1);
-   }
-   
-   
+      private int typeCount;
 
+      /**
+      * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TypeDeclaration)
+      */
+      @Override
+      public boolean visit(TypeDeclaration node)
+      {
+         typeCount++;
+         return super.visit(node);
+      }
+   }
 }

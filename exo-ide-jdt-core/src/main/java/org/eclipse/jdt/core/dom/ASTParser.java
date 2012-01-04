@@ -1240,7 +1240,6 @@ public class ASTParser
                   {
                      flags |= ICompilationUnit.ENABLE_BINDINGS_RECOVERY;
                   }
-                  //TODO
                   try
                   {
                      //parse and resolve
