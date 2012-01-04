@@ -24,10 +24,15 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Class which extract java docs from sources.
@@ -46,11 +51,23 @@ public class QDoxJavaDocExtractor
     * @param sourceZipStream
     *           stream of jar file with sources
     * @return map with key - member's fqn, and value - javaDoc comment
+    * @throws IOException
     */
-   public static Map<String, String> extractZip(InputStream sourceZipStream)
+   public static Map<String, String> extractZip(InputStream sourceZipStream) throws IOException
    {
-      // TODO to be continued...
-      return new HashMap<String, String>();
+      HashMap<String, String> result = new HashMap<String, String>();
+      ZipInputStream zip = new ZipInputStream(sourceZipStream);
+      ZipEntry entry = zip.getNextEntry();
+      while (entry != null)
+      {
+         if (entry.getName().endsWith(".java"))
+         {
+            // extract sources without closing stream
+            result.putAll(extractSource(zip, false));
+         }
+         entry = zip.getNextEntry();
+      }
+      return result;
    }
 
    /**
@@ -126,6 +143,9 @@ public class QDoxJavaDocExtractor
     * fqn.
     * </p>
     * 
+    * WARNING: This method closes input stream!!! If you need no close stream,
+    * use method {@link #extractSource(InputStream, boolean)}
+    * 
     * @param sourceZipStream
     *           stream of <code>.java</code> file
     * @return map with key - member's fqn, and value - javaDoc comment
@@ -135,6 +155,7 @@ public class QDoxJavaDocExtractor
       Map<String, String> javaDocs = new HashMap<String, String>();
 
       JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
+      // here will be closed sourceStream
       javaDocBuilder.addSource(new InputStreamReader(sourceStream));
 
       for (JavaClass currentClass : javaDocBuilder.getClasses())
@@ -161,6 +182,41 @@ public class QDoxJavaDocExtractor
       }
 
       return javaDocs;
+   }
+
+   /**
+    * <p>
+    * This method useful if you didn't want to close stream after parsing,
+    * because original {@link #extractSource(InputStream)} method closes stream.
+    * </p>
+    * 
+    * @param stream
+    * @param isCloseStream
+    *           to close or not to close stream
+    * @return
+    * @throws IOException
+    */
+   public static Map<String, String> extractSource(InputStream stream, boolean isCloseStream) throws IOException
+   {
+      InputStream sourceStream;
+      if (isCloseStream)
+      {
+         sourceStream = stream;
+      }
+      else
+      {
+         // copy stream
+         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+         int length = 0;
+         byte[] buf = new byte[1024];
+         while (length >= 0)
+         {
+            bout.write(buf, 0, length);
+            length = stream.read(buf);
+         }
+         sourceStream = new ByteArrayInputStream(bout.toByteArray());
+      }
+      return extractSource(sourceStream);
    }
 
    /**

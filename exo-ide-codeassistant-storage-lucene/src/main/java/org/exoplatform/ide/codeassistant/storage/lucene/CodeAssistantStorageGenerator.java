@@ -55,13 +55,13 @@ public class CodeAssistantStorageGenerator
 
    private static final String DEFAULT_JAR_FILES_LIST = "codeassistant/jar-files.txt";
 
-   private static final String DEFAULT_SOURCE_JAR_FILES_LIST = "codeassistant/source-jar-files.txt";
+   private static final String DEFAULT_SOURCE_ARCHIVE_FILES_LIST = "codeassistant/source-jar-files.txt";
 
    private static String indexDirectory = DEFAULT_INDEX_DIRECTORY;
 
    private static String jarFilesList = DEFAULT_JAR_FILES_LIST;
 
-   private static String sourceJarFilesList = DEFAULT_SOURCE_JAR_FILES_LIST;
+   private static String sourceArchiveFilesList = DEFAULT_SOURCE_ARCHIVE_FILES_LIST;
 
    private CodeAssistantStorageGenerator()
    {
@@ -85,17 +85,18 @@ public class CodeAssistantStorageGenerator
       {
          indexDirectory = args[0];
       }
-      if (args.length == 2)
+      if (args.length >= 2)
       {
          jarFilesList = args[1];
       }
       if (args.length == 3)
       {
-         sourceJarFilesList = args[2];
+         sourceArchiveFilesList = args[2];
       }
 
       LOG.info("Index will be created in " + indexDirectory + " directory\n");
       LOG.info("Jar files list will be read from " + jarFilesList + " file\n");
+      LOG.info("Source archives list will be read from " + sourceArchiveFilesList + " file\n");
    }
 
    private void writeClassInfosInStorage()
@@ -115,7 +116,7 @@ public class CodeAssistantStorageGenerator
    {
       try
       {
-         List<String> jars = getJarFilesList(sourceJarFilesList);
+         List<String> jars = getJarFilesList(sourceArchiveFilesList);
          JavaDocStorageWriter.writeJarsToIndex(indexDirectory, jars);
       }
       catch (IOException e)
@@ -137,8 +138,12 @@ public class CodeAssistantStorageGenerator
       String nextLine = null;
       while ((nextLine = br.readLine()) != null)
       {
-         String pathToJar = Deserializer.resolveVariables(nextLine);
-         list.add(pathToJar);
+         nextLine = nextLine.trim();
+         if (!nextLine.isEmpty() && !nextLine.startsWith("#"))
+         {
+            String pathToJar = Deserializer.resolveVariables(nextLine);
+            list.add(pathToJar);
+         }
       }
 
       return list;
@@ -160,5 +165,5 @@ public class CodeAssistantStorageGenerator
       }
       return reader;
    }
-
+   
 }

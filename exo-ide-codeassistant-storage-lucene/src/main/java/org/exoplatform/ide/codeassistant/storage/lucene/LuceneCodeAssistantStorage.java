@@ -85,8 +85,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    @Override
    public String getClassJavaDoc(String fqn) throws CodeAssistantException
    {
-      return queryExecutor.executeQuery(new JavaDocExtractor(), IndexType.DOC, eq(JavaDocIndexFields.FQN, fqn),
-         1, 0).get(0);
+      return getMemberJavaDoc(fqn);
    }
 
    /**
@@ -108,8 +107,9 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    @Override
    public String getMemberJavaDoc(String fqn) throws CodeAssistantException
    {
-      return queryExecutor.executeQuery(new JavaDocExtractor(), IndexType.DOC, eq(JavaDocIndexFields.FQN, fqn),
-         1, 0).get(0);
+      List<String> searchResult =
+         queryExecutor.executeQuery(new JavaDocExtractor(), IndexType.DOC, eq(JavaDocIndexFields.FQN, fqn), 1, 0);
+      return searchResult.size() == 1 ? searchResult.get(0) : null;
    }
 
    /**
