@@ -55,9 +55,13 @@ public class CodeAssistantStorageGenerator
 
    private static final String DEFAULT_JAR_FILES_LIST = "codeassistant/jar-files.txt";
 
+   private static final String DEFAULT_SOURCE_JAR_FILES_LIST = "codeassistant/source-jar-files.txt";
+
    private static String indexDirectory = DEFAULT_INDEX_DIRECTORY;
 
    private static String jarFilesList = DEFAULT_JAR_FILES_LIST;
+
+   private static String sourceJarFilesList = DEFAULT_SOURCE_JAR_FILES_LIST;
 
    private CodeAssistantStorageGenerator()
    {
@@ -68,6 +72,11 @@ public class CodeAssistantStorageGenerator
       CodeAssistantStorageGenerator codeAssistantStorageGenerator = new CodeAssistantStorageGenerator();
       codeAssistantStorageGenerator.resolveArgs(args);
       codeAssistantStorageGenerator.writeClassInfosInStorage();
+      /*
+       * TODO: Uncomment this when QDoxJavaDocExtractor will be finished
+       * 
+       * codeAssistantStorageGenerator.writeJavaDocsInStorage();
+      */
    }
 
    private void resolveArgs(String[] args)
@@ -84,6 +93,10 @@ public class CodeAssistantStorageGenerator
       {
          jarFilesList = args[1];
       }
+      if (args.length == 3)
+      {
+         sourceJarFilesList = args[2];
+      }
 
       LOG.info("Index will be created in " + indexDirectory + " directory\n");
       LOG.info("Jar files list will be read from " + jarFilesList + " file\n");
@@ -93,7 +106,7 @@ public class CodeAssistantStorageGenerator
    {
       try
       {
-         List<String> jars = getJarFilesList();
+         List<String> jars = getJarFilesList(jarFilesList);
          ClassesInfoStorageWriter.writeJarsToIndex(indexDirectory, jars);
       }
       catch (IOException e)
@@ -102,9 +115,26 @@ public class CodeAssistantStorageGenerator
       }
    }
 
-   private List<String> getJarFilesList() throws IOException
+   private void writeJavaDocsInStorage()
    {
-      Reader reader = getJarFileReader();
+      try
+      {
+         List<String> jars = getJarFilesList(sourceJarFilesList);
+         JavaDocStorageWriter.writeJarsToIndex(indexDirectory, jars);
+      }
+      catch (IOException e)
+      {
+         LOG.error("Error while writing java docs to lucene storage!", e);
+      }
+      catch (SaveTypeInfoIndexException e)
+      {
+         LOG.error("Error while writing java docs to lucene storage!", e);
+      }
+   }
+
+   private List<String> getJarFilesList(String jarFilesList) throws IOException
+   {
+      Reader reader = getJarFileReader(jarFilesList);
       BufferedReader br = new BufferedReader(reader);
 
       List<String> list = new ArrayList<String>();
@@ -118,7 +148,7 @@ public class CodeAssistantStorageGenerator
       return list;
    }
 
-   private Reader getJarFileReader() throws FileNotFoundException
+   private Reader getJarFileReader(String jarFilesList) throws FileNotFoundException
    {
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
       InputStream io = contextClassLoader.getResourceAsStream(jarFilesList);

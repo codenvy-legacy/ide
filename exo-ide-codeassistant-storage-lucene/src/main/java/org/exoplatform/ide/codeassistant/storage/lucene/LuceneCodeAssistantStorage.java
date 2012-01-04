@@ -28,6 +28,7 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.JavaDocExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneQueryExecutor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.ShortTypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.TypeInfoExtractor;
@@ -84,8 +85,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    @Override
    public String getClassJavaDoc(String fqn) throws CodeAssistantException
    {
-      LOG.error("Method getMemberJavaDoc not implemented");
-      throw new RuntimeException("Not implemented");
+      return queryExecutor.executeQuery(new JavaDocExtractor(), IndexType.DOC, eq(JavaDocIndexFields.FQN, fqn),
+         1, 0).get(0);
    }
 
    /**
@@ -107,8 +108,8 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    @Override
    public String getMemberJavaDoc(String fqn) throws CodeAssistantException
    {
-      LOG.error("Method getMemberJavaDoc not implemented");
-      throw new RuntimeException("Not implemented");
+      return queryExecutor.executeQuery(new JavaDocExtractor(), IndexType.DOC, eq(JavaDocIndexFields.FQN, fqn),
+         1, 0).get(0);
    }
 
    /**
