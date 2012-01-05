@@ -19,20 +19,20 @@
 package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.operation.restservice.RESTServiceDefaultHTTPParametersTest;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,13 +43,9 @@ import java.io.IOException;
  */
 public class RestServicesDiscoveryTest extends BaseTest
 {
+   private static final String PROJECT = RestServicesDiscoveryTest.class.getSimpleName();
 
    private final static String FILE_NAME = "Rest.grs";
-
-   private final static String TEST_FOLDER = RESTServiceDefaultHTTPParametersTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -58,19 +54,24 @@ public class RestServicesDiscoveryTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/miscellaneous/rest_service_discovery.groovy";
       try
       {
-         //**************TODO***********change add folder for locked file
-         VirtualFileSystemUtils.mkcol(URL);
-         //***********************************************************
-
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-         Utils.deployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
-      catch (InterruptedException e)
+   }
+   
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
       {
          e.printStackTrace();
       }
@@ -79,80 +80,47 @@ public class RestServicesDiscoveryTest extends BaseTest
    @Test
    public void testRestServicesDiscovery() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      Thread.sleep(2000);
+      
+      //open file
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      
+      IDE.EDITOR.waitTabPresent(1);
+      //deploy rest service
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(1, 5);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
 
-      //run resservicediscovery 
+      assertTrue(mess.contains("[INFO]"));
+      assertTrue(mess.contains(/* TODO FILE_NAME +*/" deployed successfully."));
+
+      //run rest service discovery command 
       IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
-      waitForElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]");
-      //check discovery form
-      assertTrue(selenium().isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]"));
-      assertTrue(selenium().isElementPresent("exoRestServicesDiscoveryOkButton"));
-      //open node "ide"
-      openNode(Utils.md5old("/ide"));
-      //wait node
-      waitForElementPresent(Utils.md5old("/ide/application"));
-      //open next node
-      openNode(Utils.md5old("/ide/application"));
-      //wait
-      waitForElementPresent(Utils.md5old("/ide/application/java/"));
-      //open next node
-      openNode(Utils.md5old("/ide/application/java/"));
-      waitForElementPresent("//div[@id=" + "'" + Utils.md5old("/ide/application/java/") + "'" + "]"
-         + "//td/div[text()=\"OPTIONS\"]");
-      //click on "Options" node
-      selenium().clickAt(
-         "//div[@id=" + "'" + Utils.md5old("/ide/application/java/") + "'" + "]" + "//td/div[text()=\"OPTIONS\"]",
-         "0,0");
+      IDE.REST_SERVICE_DISCOVERY.waitOpened();
+      IDE.REST_SERVICE_DISCOVERY.waitOkButtonAppeared();
+      IDE.REST_SERVICE_DISCOVERY.waitForItem("/aa");
+      IDE.REST_SERVICE_DISCOVERY.clickOpenCloseButton("/aa");
+      IDE.REST_SERVICE_DISCOVERY.waitForItem("/aa/testService11");
+      IDE.REST_SERVICE_DISCOVERY.clickOpenCloseButton("/aa/testService11");
+      final String optionsId = IDE.REST_SERVICE_DISCOVERY.getItemId("/aa/testService11") + ":OPTIONS";
+      IDE.REST_SERVICE_DISCOVERY.waitForItemById(optionsId);
+      IDE.REST_SERVICE_DISCOVERY.selectItemById(optionsId);
+      
+      //check elements on opened form
+      assertTrue(IDE.REST_SERVICE_DISCOVERY.isMethodFieldPresent());
+      assertTrue(IDE.REST_SERVICE_DISCOVERY.isRequestFieldPresent());
+      assertTrue(IDE.REST_SERVICE_DISCOVERY.isParametersTablePresent());
+      assertFalse(IDE.REST_SERVICE_DISCOVERY.isRequestFieldEnabled());
+      assertEquals("/aa/testService11/", IDE.REST_SERVICE_DISCOVERY.getTextFromMethodField());
+      assertEquals("n/a", IDE.REST_SERVICE_DISCOVERY.getTextFromRequestField());
 
-      //check elements on opened form 
-      validateFormAftrerOpenNode();
-
-      selenium().click("exoRestServicesDiscoveryOkButton");
-
-   }
-
-   private void validateFormAftrerOpenNode() throws Exception
-   {
-
-      //last element waiting and check values of elements of the form
-      waitForElementPresent("//input[@name=\"ideResponseType\"]");
-      assertEquals("Path", selenium().getText("//span[text()=\"Path\"]"));
-      assertEquals("Request media type", selenium().getText("//span[text()=\"Request media type\"]"));
-      assertEquals("Response media type", selenium().getText("//span[text()=\"Response media type\"]"));
-
-      assertEquals("/ide/application/java/", selenium().getValue("//input[@name=\"ideMethodPathField\"]"));
-      assertEquals("n/a", selenium().getValue("//input[@name=\"ideRequestType\"]"));
-      assertEquals("application/vnd.sun.wadl+xml", selenium().getValue("//input[@name=\"ideResponseType\"]"));
-   }
-
-   private void openNode(String id)
-   {
-      String locator = "//div[@id='" + id + "']/table/tbody/tr/td[1]/img";
-      selenium().clickAt(locator, "0");
-   }
-
-   /**
-    * click the item node
-    * @param rowID
-    * @throws Exception
-    */
-   protected void selectNode(String rowID) throws Exception
-   {
-      selenium().clickAt(rowID, "0");
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
-         VirtualFileSystemUtils.delete(URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+      IDE.REST_SERVICE_DISCOVERY.clickOkButton();
+      IDE.REST_SERVICE_DISCOVERY.waitClosed();
    }
 
 }

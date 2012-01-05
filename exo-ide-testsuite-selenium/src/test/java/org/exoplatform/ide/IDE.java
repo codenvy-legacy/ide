@@ -47,6 +47,7 @@ import org.exoplatform.ide.core.PreviewNodeType;
 import org.exoplatform.ide.core.Project;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
+import org.exoplatform.ide.core.RESTServiceDiscovery;
 import org.exoplatform.ide.core.Rename;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.exoplatform.ide.core.Search;
@@ -167,6 +168,8 @@ public class IDE
    public Login LOGIN;
    
    public LogReader LOG_READER;
+   
+   public RESTServiceDiscovery REST_SERVICE_DISCOVERY;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -212,6 +215,7 @@ public class IDE
       REST_SERVICE = PageFactory.initElements(driver, RESTService.class);
       LOGIN = PageFactory.initElements(driver, Login.class);
       LOG_READER = PageFactory.initElements(driver, LogReader.class);
+      REST_SERVICE_DISCOVERY = PageFactory.initElements(driver, RESTServiceDiscovery.class);
    }
 
    public Selenium getSelenium()
