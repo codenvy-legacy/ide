@@ -101,7 +101,7 @@ public class RestDataObjectService
          SourceFile[] fromClassPath = GroovyClassPathHelper.getSourceFiles(classPath);
          files = new SourceFile[fromClassPath.length + 1];
          files[0] = new SourceFile(URI.create("ide+vfs:/" + vfsid + "#" + id).toURL());
-         System.arraycopy(fromClassPath, 0, files, 1, files.length);
+         System.arraycopy(fromClassPath, 0, files, 1, fromClassPath.length);
       }
       else
       {
