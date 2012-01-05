@@ -11,7 +11,7 @@
  *     Stephan Herrmann  - Contribution for bug 236385
  *     Stephan Herrmann  - Contribution for bug 295551
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.impl;
+package org.eclipse.jdt.client.internal.compiler.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
@@ -19,13 +19,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.Compiler;
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
-import org.eclipse.jdt.internal.compiler.problem.ProblemSeverities;
-import org.eclipse.jdt.internal.compiler.util.Util;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.Compiler;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public class CompilerOptions {
 

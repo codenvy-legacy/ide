@@ -8,10 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.flow;
+package org.eclipse.jdt.client.internal.compiler.flow;
 
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.ast.SubRoutineStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.SubRoutineStatement;
 
 /**
  * Reflects the context of code analysis, keeping track of enclosing

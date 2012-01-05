@@ -9,9 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.jdt.internal.compiler.impl;
+package org.eclipse.jdt.client.internal.compiler.impl;
 
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 
 /**
  * Represent a set of irritant flags. Irritants are organized in up to 8 group

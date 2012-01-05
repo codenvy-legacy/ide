@@ -11,12 +11,12 @@
  *     				bug 292478 - Report potentially null across variable assignment
  *     				bug 332637 - Dead Code detection removing code that isn't dead
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.flow;
+package org.eclipse.jdt.client.internal.compiler.flow;
 
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.ast.IfStatement;
-import org.eclipse.jdt.internal.compiler.lookup.FieldBinding;
-import org.eclipse.jdt.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.IfStatement;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 
 public abstract class FlowInfo {
 

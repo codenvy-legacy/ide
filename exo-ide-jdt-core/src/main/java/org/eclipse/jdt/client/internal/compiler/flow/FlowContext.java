@@ -9,32 +9,33 @@
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann - Contribution for bug 358827 - [1.7] exception analysis for t-w-r spoils null analysis
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.flow;
+package org.eclipse.jdt.client.internal.compiler.flow;
 
 import java.util.ArrayList;
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.ast.Expression;
-import org.eclipse.jdt.internal.compiler.ast.LabeledStatement;
-import org.eclipse.jdt.internal.compiler.ast.Reference;
-import org.eclipse.jdt.internal.compiler.ast.SingleNameReference;
-import org.eclipse.jdt.internal.compiler.ast.SubRoutineStatement;
-import org.eclipse.jdt.internal.compiler.ast.ThrowStatement;
-import org.eclipse.jdt.internal.compiler.ast.TryStatement;
-import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.codegen.BranchLabel;
-import org.eclipse.jdt.internal.compiler.lookup.Binding;
-import org.eclipse.jdt.internal.compiler.lookup.BlockScope;
-import org.eclipse.jdt.internal.compiler.lookup.CatchParameterBinding;
-import org.eclipse.jdt.internal.compiler.lookup.LocalVariableBinding;
-import org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding;
-import org.eclipse.jdt.internal.compiler.lookup.Scope;
-import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
-import org.eclipse.jdt.internal.compiler.lookup.TypeConstants;
-import org.eclipse.jdt.internal.compiler.lookup.TypeIds;
-import org.eclipse.jdt.internal.compiler.lookup.VariableBinding;
+
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.LabeledStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.Reference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SubRoutineStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.ThrowStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.TryStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.CatchParameterBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
 
 /**
  * Reflects the context of code analysis, keeping track of enclosing

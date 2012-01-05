@@ -9,9 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann <stephan@cs.tu-berlin.de> - Contribution for bug 320170   
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.flow;
+package org.eclipse.jdt.client.internal.compiler.flow;
 
-import org.eclipse.jdt.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 
 /**
  * A degenerate form of UnconditionalFlowInfo explicitly meant to capture

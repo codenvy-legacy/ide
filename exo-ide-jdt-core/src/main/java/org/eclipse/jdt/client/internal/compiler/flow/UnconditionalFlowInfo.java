@@ -14,14 +14,14 @@
  *     						bug 332637 - Dead Code detection removing code that isn't dead
  *     						bug 341499 - [compiler][null] allocate extra bits in all methods of UnconditionalFlowInfo
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.flow;
+package org.eclipse.jdt.client.internal.compiler.flow;
 
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
-import org.eclipse.jdt.internal.compiler.lookup.FieldBinding;
-import org.eclipse.jdt.internal.compiler.lookup.LocalVariableBinding;
-import org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding;
-import org.eclipse.jdt.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 
 /**
  * Record initialization status during definite assignment analysis

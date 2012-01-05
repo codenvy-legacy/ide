@@ -8,12 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.impl;
+package org.eclipse.jdt.client.internal.compiler.impl;
 
-import org.eclipse.jdt.internal.compiler.ast.OperatorIds;
-import org.eclipse.jdt.internal.compiler.lookup.TypeIds;
-import org.eclipse.jdt.internal.compiler.problem.ShouldNotImplement;
-import org.eclipse.jdt.internal.compiler.util.Messages;
+import org.eclipse.jdt.client.internal.compiler.ast.OperatorIds;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.problem.ShouldNotImplement;
+import org.eclipse.jdt.client.internal.compiler.util.Messages;
 
 public abstract class Constant implements TypeIds, OperatorIds {
 

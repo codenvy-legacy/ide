@@ -8,13 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.impl;
+package org.eclipse.jdt.client.internal.compiler.impl;
 
-import org.eclipse.jdt.internal.compiler.env.AccessRestriction;
-import org.eclipse.jdt.internal.compiler.env.IBinaryType;
-import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
-import org.eclipse.jdt.internal.compiler.env.ISourceType;
-import org.eclipse.jdt.internal.compiler.lookup.PackageBinding;
+import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.env.ISourceType;
+import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
 
 public interface ITypeRequestor {
 

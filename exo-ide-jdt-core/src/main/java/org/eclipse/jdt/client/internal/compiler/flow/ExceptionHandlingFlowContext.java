@@ -8,26 +8,26 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.flow;
+package org.eclipse.jdt.client.internal.compiler.flow;
 
 import java.util.ArrayList;
 
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.ast.Argument;
-import org.eclipse.jdt.internal.compiler.ast.UnionTypeReference;
-import org.eclipse.jdt.internal.compiler.ast.SubRoutineStatement;
-import org.eclipse.jdt.internal.compiler.ast.TryStatement;
-import org.eclipse.jdt.internal.compiler.ast.TypeReference;
-import org.eclipse.jdt.internal.compiler.codegen.ObjectCache;
-import org.eclipse.jdt.internal.compiler.lookup.BlockScope;
-import org.eclipse.jdt.internal.compiler.lookup.CatchParameterBinding;
-import org.eclipse.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
-import org.eclipse.jdt.internal.compiler.lookup.MethodScope;
-import org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding;
-import org.eclipse.jdt.internal.compiler.lookup.Scope;
-import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
-import org.eclipse.jdt.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Argument;
+import org.eclipse.jdt.client.internal.compiler.ast.SubRoutineStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.TryStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.UnionTypeReference;
+import org.eclipse.jdt.client.internal.compiler.codegen.ObjectCache;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.CatchParameterBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 /**
  * Reflects the context of code analysis, keeping track of enclosing
@@ -287,7 +287,7 @@ public void recordReturnFrom(UnconditionalFlowInfo flowInfo) {
  * only once (in case parented with true InsideSubRoutineFlowContext).
  * Standard management of subroutines need to also operate on intermediate
  * exception handlers.
- * @see org.eclipse.jdt.internal.compiler.flow.FlowContext#subroutine()
+ * @see org.eclipse.jdt.client.internal.compiler.flow.FlowContext#subroutine()
  */
 public SubRoutineStatement subroutine() {
 	if (this.associatedNode instanceof SubRoutineStatement) {

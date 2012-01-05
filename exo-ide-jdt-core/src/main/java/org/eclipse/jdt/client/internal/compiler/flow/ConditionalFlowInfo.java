@@ -9,10 +9,10 @@
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann - Contribution for bug 332637 - Dead Code detection removing code that isn't dead
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.flow;
+package org.eclipse.jdt.client.internal.compiler.flow;
 
-import org.eclipse.jdt.internal.compiler.lookup.FieldBinding;
-import org.eclipse.jdt.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 
 /**
  * Record conditional initialization status during definite assignment analysis

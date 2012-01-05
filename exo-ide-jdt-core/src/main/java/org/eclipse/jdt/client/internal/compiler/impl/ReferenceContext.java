@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.impl;
+package org.eclipse.jdt.client.internal.compiler.impl;
 
 /*
  * Implementors are valid compilation contexts from which we can
@@ -16,8 +16,8 @@ package org.eclipse.jdt.internal.compiler.impl;
  *	For example: method, type or compilation unit.
  */
 
-import org.eclipse.jdt.core.compiler.CategorizedProblem;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 
 public interface ReferenceContext {
 
