@@ -25,6 +25,16 @@
    <component>
       <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
    </component>
+   
+   <component>
+      <key>RestfulContainerProvider</key>
+      <type>org.everrest.exoplatform.container.RestfulContainerProvider</type>
+   </component>
+
+   <component>
+      <key>everrest</key>
+      <type>org.everrest.exoplatform.container.RestfulContainer</type>
+   </component>
 
    <component>
       <key>org.everrest.core.RequestHandler</key>

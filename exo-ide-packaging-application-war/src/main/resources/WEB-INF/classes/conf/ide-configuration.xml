@@ -34,8 +34,12 @@
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
 
+    <component>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
+   </component>
+   
    <component>
-     <type>org.exoplatform.ide.groovy.JcrGroovyCompiler</type>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
    </component>
 
    <component>
