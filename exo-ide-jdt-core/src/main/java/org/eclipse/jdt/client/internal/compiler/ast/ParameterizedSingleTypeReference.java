@@ -9,13 +9,13 @@
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann - Contribution for Bug 342671 - ClassCastException: org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding cannot be cast to org.eclipse.jdt.internal.compiler.lookup.ArrayBinding
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
-import org.eclipse.jdt.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
 /**
  * Syntactic representation of a reference to a generic type.
@@ -44,7 +44,7 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference {
 		}
 	}
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#copyDims(int)
+	 * @see org.eclipse.jdt.client.internal.compiler.ast.TypeReference#copyDims(int)
 	 */
 	public TypeReference copyDims(int dim) {
 		return new ParameterizedSingleTypeReference(this.token, this.typeArguments, dim, (((long)this.sourceStart)<<32)+this.sourceEnd);
@@ -77,7 +77,7 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference {
 		return new char[][]{ name };
 	}
 	/**
-     * @see org.eclipse.jdt.internal.compiler.ast.ArrayQualifiedTypeReference#getTypeBinding(org.eclipse.jdt.internal.compiler.lookup.Scope)
+     * @see org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference#getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.Scope)
      */
     protected TypeBinding getTypeBinding(Scope scope) {
         return null; // not supported here - combined with resolveType(...)

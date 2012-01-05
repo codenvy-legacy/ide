@@ -9,30 +9,30 @@
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann  - Contribution for bug 295551
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.core.compiler.CategorizedProblem;
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
-import org.eclipse.jdt.internal.compiler.impl.IrritantSet;
-import org.eclipse.jdt.internal.compiler.impl.ReferenceContext;
-import org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope;
-import org.eclipse.jdt.internal.compiler.lookup.ImportBinding;
-import org.eclipse.jdt.internal.compiler.lookup.LocalTypeBinding;
-import org.eclipse.jdt.internal.compiler.lookup.MethodScope;
-import org.eclipse.jdt.internal.compiler.lookup.TypeConstants;
-import org.eclipse.jdt.internal.compiler.lookup.TypeIds;
-import org.eclipse.jdt.internal.compiler.parser.NLSTag;
-import org.eclipse.jdt.internal.compiler.problem.AbortCompilationUnit;
-import org.eclipse.jdt.internal.compiler.problem.AbortMethod;
-import org.eclipse.jdt.internal.compiler.problem.AbortType;
-import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.internal.compiler.problem.ProblemSeverities;
-import org.eclipse.jdt.internal.compiler.util.HashSetOfInt;
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.CompilationResult;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.impl.IrritantSet;
+import org.eclipse.jdt.client.internal.compiler.impl.ReferenceContext;
+import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ImportBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.parser.NLSTag;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortMethod;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortType;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
+import org.eclipse.jdt.client.internal.compiler.util.HashSetOfInt;
 
 import java.util.Arrays;
 import java.util.Comparator;

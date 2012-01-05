@@ -9,10 +9,10 @@
  *     IBM Corporation - initial API and implementation
  *     Perry James - nullStatus method improvement (165346)
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.internal.compiler.flow.FlowInfo;
-import org.eclipse.jdt.internal.compiler.util.Util;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public abstract class OperatorExpression extends Expression implements OperatorIds {
 

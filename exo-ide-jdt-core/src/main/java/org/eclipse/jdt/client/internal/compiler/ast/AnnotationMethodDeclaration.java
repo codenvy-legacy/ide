@@ -8,13 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
-import org.eclipse.jdt.internal.compiler.lookup.ClassScope;
-import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
-import org.eclipse.jdt.internal.compiler.parser.Parser;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.CompilationResult;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.parser.Parser;
 
 public class AnnotationMethodDeclaration extends MethodDeclaration
 {
@@ -164,7 +164,7 @@ public class AnnotationMethodDeclaration extends MethodDeclaration
                new MemberValuePair(this.selector, this.sourceStart, this.sourceEnd, this.defaultValue);
             pair.binding = this.binding;
             pair.resolveTypeExpecting(this.scope, returnTypeBinding);
-            this.binding.setDefaultValue(org.eclipse.jdt.internal.compiler.lookup.ElementValuePair
+            this.binding.setDefaultValue(org.eclipse.jdt.client.internal.compiler.lookup.ElementValuePair
                .getValue(this.defaultValue));
          }
          else

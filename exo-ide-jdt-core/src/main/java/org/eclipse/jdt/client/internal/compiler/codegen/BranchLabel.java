@@ -8,12 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.codegen;
+package org.eclipse.jdt.client.internal.compiler.codegen;
 
 import java.util.Arrays;
 
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 
 public class BranchLabel extends Label
 {
@@ -317,7 +317,7 @@ public class BranchLabel extends Label
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.codegen.Label#place()
+    * @see org.eclipse.jdt.client.internal.compiler.codegen.Label#place()
     */
    @Override
    public void place()

@@ -14,10 +14,10 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
 public class MarkerAnnotation extends Annotation {
 
@@ -28,7 +28,7 @@ public class MarkerAnnotation extends Annotation {
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.ast.Annotation#memberValuePairs()
+	 * @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs()
 	 */
 	public MemberValuePair[] memberValuePairs() {
 		return NoValuePairs;

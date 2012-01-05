@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
 public abstract class NameReference extends Reference implements InvocationSite {
 

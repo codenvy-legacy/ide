@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.codegen;
+package org.eclipse.jdt.client.internal.compiler.codegen;
 
 public class ObjectCache {
 	public Object keyTable[];

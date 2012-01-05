@@ -11,17 +11,17 @@
  *     						bug 236385 - [compiler] Warn for potential programming problem if an object is created but not used
  *     						bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.codegen.*;
-import org.eclipse.jdt.internal.compiler.flow.*;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
-import org.eclipse.jdt.internal.compiler.lookup.*;
-import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.internal.compiler.problem.ProblemSeverities;
+import org.eclipse.jdt.client.core.compiler.IProblem;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.codegen.*;
+import org.eclipse.jdt.client.internal.compiler.flow.*;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 
 public class AllocationExpression extends Expression implements InvocationSite
 {
@@ -189,7 +189,7 @@ public class AllocationExpression extends Expression implements InvocationSite
 //   }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#genericTypeArguments()
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
     */
    public TypeBinding[] genericTypeArguments()
    {
@@ -611,7 +611,7 @@ public class AllocationExpression extends Expression implements InvocationSite
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.internal.compiler.lookup.TypeBinding)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
     */
    public void setExpectedType(TypeBinding expectedType)
    {
@@ -619,7 +619,7 @@ public class AllocationExpression extends Expression implements InvocationSite
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#expectedType()
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType()
     */
    public TypeBinding expectedType()
    {

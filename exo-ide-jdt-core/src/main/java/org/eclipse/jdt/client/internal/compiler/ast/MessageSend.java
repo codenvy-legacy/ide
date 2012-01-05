@@ -10,34 +10,34 @@
  *     Nick Teryaev - fix for bug (https://bugs.eclipse.org/bugs/show_bug.cgi?id=40752)
  *     Stephan Herrmann - Contribution for bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.flow.FlowContext;
-import org.eclipse.jdt.internal.compiler.flow.FlowInfo;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
-import org.eclipse.jdt.internal.compiler.impl.ReferenceContext;
-import org.eclipse.jdt.internal.compiler.lookup.Binding;
-import org.eclipse.jdt.internal.compiler.lookup.BlockScope;
-import org.eclipse.jdt.internal.compiler.lookup.ExtraCompilerModifiers;
-import org.eclipse.jdt.internal.compiler.lookup.InvocationSite;
-import org.eclipse.jdt.internal.compiler.lookup.MethodBinding;
-import org.eclipse.jdt.internal.compiler.lookup.MissingTypeBinding;
-import org.eclipse.jdt.internal.compiler.lookup.PolymorphicMethodBinding;
-import org.eclipse.jdt.internal.compiler.lookup.ProblemMethodBinding;
-import org.eclipse.jdt.internal.compiler.lookup.ProblemReasons;
-import org.eclipse.jdt.internal.compiler.lookup.ProblemReferenceBinding;
-import org.eclipse.jdt.internal.compiler.lookup.RawTypeBinding;
-import org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding;
-import org.eclipse.jdt.internal.compiler.lookup.Scope;
-import org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding;
-import org.eclipse.jdt.internal.compiler.lookup.TagBits;
-import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
-import org.eclipse.jdt.internal.compiler.lookup.TypeIds;
-import org.eclipse.jdt.internal.compiler.problem.ProblemSeverities;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.impl.ReferenceContext;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MissingTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.PolymorphicMethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemMethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReasons;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.RawTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 
 public class MessageSend extends Expression implements InvocationSite
 {
@@ -118,7 +118,7 @@ public class MessageSend extends Expression implements InvocationSite
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ast.Expression#computeConversion(org.eclipse.jdt.internal.compiler.lookup.Scope, org.eclipse.jdt.internal.compiler.lookup.TypeBinding, org.eclipse.jdt.internal.compiler.lookup.TypeBinding)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#computeConversion(org.eclipse.jdt.client.internal.compiler.lookup.Scope, org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding, org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
     */
    public void computeConversion(Scope scope, TypeBinding runtimeTimeType, TypeBinding compileTimeType)
    {
@@ -253,7 +253,7 @@ public class MessageSend extends Expression implements InvocationSite
 //   }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#genericTypeArguments()
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
     */
    public TypeBinding[] genericTypeArguments()
    {
@@ -328,7 +328,7 @@ public class MessageSend extends Expression implements InvocationSite
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ast.Expression#postConversionType(Scope)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope)
     */
    public TypeBinding postConversionType(Scope scope)
    {
@@ -718,7 +718,7 @@ public class MessageSend extends Expression implements InvocationSite
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.internal.compiler.lookup.TypeBinding)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
     */
    public void setExpectedType(TypeBinding expectedType)
    {

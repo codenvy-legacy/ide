@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.internal.compiler.codegen.ExceptionLabel;
+import org.eclipse.jdt.client.internal.compiler.codegen.ExceptionLabel;
 
 /**
  * Extra behavior for statements which are generating subroutines

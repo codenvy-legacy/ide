@@ -12,14 +12,14 @@
  *     						bug 292478 - Report potentially null across variable assignment
  *     						bug 335093 - [compiler][null] minimal hook for future null annotation support
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.impl.*;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.codegen.*;
-import org.eclipse.jdt.internal.compiler.flow.*;
-import org.eclipse.jdt.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.codegen.*;
+import org.eclipse.jdt.client.internal.compiler.flow.*;
+import org.eclipse.jdt.client.internal.compiler.impl.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
 public class LocalDeclaration extends AbstractVariableDeclaration
 {
@@ -172,7 +172,7 @@ public class LocalDeclaration extends AbstractVariableDeclaration
 //   }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration#getKind()
+    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
     */
    public int getKind()
    {

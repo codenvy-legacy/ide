@@ -8,14 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.lookup.*;
-import org.eclipse.jdt.internal.compiler.parser.JavadocTagConstants;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.parser.JavadocTagConstants;
 
 /**
  * Node representing a structured Javadoc comment
@@ -111,7 +111,7 @@ public class Javadoc extends ASTNode {
 		if (this.seeReferences != null) {
 			length = this.seeReferences.length;
 			for (int i=0; i<length; i++) {
-				org.eclipse.jdt.internal.compiler.ast.Expression expression = this.seeReferences[i];
+				org.eclipse.jdt.client.internal.compiler.ast.Expression expression = this.seeReferences[i];
 				if (expression.sourceStart==start) {
 					return expression;
 				} else if (expression instanceof JavadocAllocationExpression) {

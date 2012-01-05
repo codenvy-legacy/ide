@@ -9,12 +9,12 @@
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann - Contribution for bug 335093 - [compiler][null] minimal hook for future null annotation support
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.ast;
+package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.internal.compiler.codegen.*;
-import org.eclipse.jdt.internal.compiler.flow.*;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
-import org.eclipse.jdt.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.codegen.*;
+import org.eclipse.jdt.client.internal.compiler.flow.*;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
 public abstract class Statement extends ASTNode
 {
@@ -190,7 +190,7 @@ public abstract class Statement extends ASTNode
       return expressionType.isBaseType() // narrowing then boxing ?
          && !targetType.isBaseType()
          && !targetType.isTypeVariable()
-         && scope.compilerOptions().sourceLevel >= org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.JDK1_5 // autoboxing
+         && scope.compilerOptions().sourceLevel >= org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants.JDK1_5 // autoboxing
          && expression.isConstantValueOfTypeAssignableToType(expressionType,
             scope.environment().computeBoxingType(targetType));
    }
@@ -236,9 +236,9 @@ public abstract class Statement extends ASTNode
    }
 
    /** 
-    * Implementation of {@link org.eclipse.jdt.internal.compiler.lookup.InvocationSite#expectedType}
+    * Implementation of {@link org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType}
     * suitable at this level. Subclasses should override as necessary.
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#expectedType()
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType()
     */
    public TypeBinding expectedType()
    {
