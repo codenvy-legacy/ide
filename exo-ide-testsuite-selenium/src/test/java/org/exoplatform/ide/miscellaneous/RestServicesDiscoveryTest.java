@@ -84,7 +84,6 @@ public class RestServicesDiscoveryTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      Thread.sleep(2000);
       
       //open file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
