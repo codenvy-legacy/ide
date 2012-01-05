@@ -8,14 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.core.util;
+package org.eclipse.jdt.client.internal.core.util;
 
 import java.util.ArrayList;
 
-import org.eclipse.jdt.core.Signature;
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.Wildcard;
-import org.eclipse.jdt.internal.compiler.codegen.ConstantPool;
+import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
+import org.eclipse.jdt.client.internal.compiler.codegen.ConstantPool;
 
 /*
  * Converts a binding key into a signature

@@ -8,15 +8,15 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.core.util;
+package org.eclipse.jdt.client.internal.core.util;
 
-import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.parser.Parser;
-import org.eclipse.jdt.internal.compiler.parser.Scanner;
-import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.internal.compiler.problem.ProblemSeverities;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.parser.Parser;
+import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 
 /**
  * Internal parser used for parsing source to create DOM AST nodes.
@@ -149,8 +149,8 @@ public class CommentRecorderParser extends Parser {
 			while (index<lastCommentIndex && (immediateCommentEnd = -this.scanner.commentStops[index+1])  > 0){ // only tolerating non-javadoc comments (non-javadoc comment end positions are negative)
 				// is there any line break until the end of the immediate comment ? (thus only tolerating line comment)
 				immediateCommentEnd--; // comment end in one char too far
-				if (org.eclipse.jdt.internal.compiler.util.Util.getLineNumber(position, this.scanner.lineEnds, 0, this.scanner.linePtr)
-						!= org.eclipse.jdt.internal.compiler.util.Util.getLineNumber(immediateCommentEnd, this.scanner.lineEnds, 0, this.scanner.linePtr)) break;
+				if (org.eclipse.jdt.client.internal.compiler.util.Util.getLineNumber(position, this.scanner.lineEnds, 0, this.scanner.linePtr)
+						!= org.eclipse.jdt.client.internal.compiler.util.Util.getLineNumber(immediateCommentEnd, this.scanner.lineEnds, 0, this.scanner.linePtr)) break;
 				position = immediateCommentEnd;
 				validCount--; // flush this comment
 				index++;

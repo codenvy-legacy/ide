@@ -8,18 +8,18 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.core.util;
+package org.eclipse.jdt.client.internal.core.util;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.core.compiler.IScanner;
-import org.eclipse.jdt.core.compiler.ITerminalSymbols;
-import org.eclipse.jdt.core.compiler.InvalidInputException;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.parser.NLSTag;
-import org.eclipse.jdt.internal.compiler.parser.ScannerHelper;
-import org.eclipse.jdt.internal.compiler.parser.TerminalTokens;
-import org.eclipse.jdt.internal.compiler.util.Util;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.compiler.IScanner;
+import org.eclipse.jdt.client.core.compiler.ITerminalSymbols;
+import org.eclipse.jdt.client.core.compiler.InvalidInputException;
+import org.eclipse.jdt.client.internal.compiler.CompilationResult;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.parser.NLSTag;
+import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
+import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public class PublicScanner implements IScanner, ITerminalSymbols {
 

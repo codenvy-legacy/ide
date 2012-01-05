@@ -8,23 +8,23 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.core.util;
+package org.eclipse.jdt.client.internal.core.util;
 
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.jdt.core.compiler.CategorizedProblem;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
-import org.eclipse.jdt.internal.compiler.DefaultErrorHandlingPolicies;
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.ConstructorDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.Expression;
-import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
-import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
-import org.exoplatform.ide.jdt.compiler.batch.CompilationUnit;
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.client.internal.compiler.CompilationResult;
+import org.eclipse.jdt.client.internal.compiler.DefaultErrorHandlingPolicies;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
+import org.exoplatform.ide.jdt.client.compiler.batch.CompilationUnit;
 
 /**
  * Utility class to parse different code snippets
@@ -132,7 +132,7 @@ public class CodeSnippetParsingUtil {
 		//fill the methods bodies in order for the code to be generated
 		//real parse of the method....
 		parser.scanner.setSource(compilationResult);
-		org.eclipse.jdt.internal.compiler.ast.TypeDeclaration[] types = compilationUnitDeclaration.types;
+		org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration[] types = compilationUnitDeclaration.types;
 		if (types != null) {
 			for (int i = 0, length = types.length; i < length; i++) {
 				types[i].parseMethods(parser, compilationUnitDeclaration);

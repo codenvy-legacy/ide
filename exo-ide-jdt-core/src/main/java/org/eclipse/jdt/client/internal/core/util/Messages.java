@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.core.util;
+package org.eclipse.jdt.client.internal.core.util;
 
 import java.text.MessageFormat;
 

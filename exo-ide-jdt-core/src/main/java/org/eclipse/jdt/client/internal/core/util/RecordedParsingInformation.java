@@ -8,10 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.core.util;
+package org.eclipse.jdt.client.internal.core.util;
 
-import org.eclipse.jdt.core.compiler.CategorizedProblem;
-import org.eclipse.jdt.internal.compiler.CompilationResult;
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 
 /**
  * Use to keep track of recorded information during the parsing like comment positions,
