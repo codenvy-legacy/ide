@@ -179,7 +179,7 @@ public class GroovyScriptService
                .entity("Can't unbind script " + fileId + ", not bound or has wrong mapping to the resource class. ") //
                .type(MediaType.TEXT_PLAIN).build());
       }
-      if (ConversationState.getCurrent().getIdentity().getUserId().equals(
+      if (!ConversationState.getCurrent().getIdentity().getUserId().equals(
          ((GroovyComponentKey)component.getComponentKey()).getAttribute("ide.developer.id")))
       {
          throw new WebApplicationException( //
