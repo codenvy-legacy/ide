@@ -138,7 +138,14 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    {
       TreeItem node = new TreeItem(createTreeNodeWidget(new Image(icon), rs.getPath()));
       node.setUserObject(rs);
-      node.getElement().setId(Utils.md5(rs.getFullPath()));
+      String path = rs.getFullPath();
+      //note: agreement: to calculate the id of tree item
+      //check, that path doesn't end on /
+      if (path.endsWith("/"))
+      {
+         path = path.substring(0, path.length() - 1);
+      }
+      node.getElement().setId(Utils.md5(path));
       return node;
    }
 
@@ -164,7 +171,12 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
 
             TreeItem newNode = new TreeItem(createTreeNodeWidget(new Image(Images.RestService.RESOURCE), title));
             newNode.setUserObject(r);
-            newNode.getElement().setId(Utils.md5(r.getPath()));
+            String path = r.getPath();
+            if (path.endsWith("/"))
+            {
+               path = path.substring(0, path.length() - 1);
+            }
+            newNode.getElement().setId(Utils.md5(path));
             parentNode.addItem(newNode);
 
             if (r.getMethodOrResource() != null && !r.getMethodOrResource().isEmpty())
@@ -192,7 +204,12 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
             }
             TreeItem newNode = new TreeItem(createTreeNodeWidget(new Image(Images.RestService.METHOD), m.getName()));
             newNode.setUserObject(m);
-            newNode.getElement().setId(Utils.md5(m.getHref()) + ":" + m.getName());
+            String path = m.getHref();
+            if (path.endsWith("/"))
+            {
+               path = path.substring(0, path.length() - 1);
+            }
+            newNode.getElement().setId(Utils.md5(path) + ":" + m.getName());
             parentNode.addItem(newNode);
          }
 
