@@ -124,7 +124,7 @@ public class ConvertibleProperty extends StringProperty
       }
       if (stringConstr != null)
       {
-         Object a = (O[])Array.newInstance(componentType, aValue.length);
+         Object a = Array.newInstance(componentType, aValue.length);
          for (int i = 0; i < aValue.length; i++)
          {
             try
@@ -169,7 +169,7 @@ public class ConvertibleProperty extends StringProperty
       }
       if (valueOf != null)
       {
-         Object a = (O[])Array.newInstance(componentType, aValue.length);
+         Object a = Array.newInstance(componentType, aValue.length);
          for (int i = 0; i < aValue.length; i++)
          {
             try

@@ -21,11 +21,11 @@ package org.exoplatform.ide.vfs.server;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -36,7 +36,7 @@ import javax.ws.rs.ext.Providers;
 
 /**
  * Add Cache-Control response header. For write JSON content use JSON provider embedded in REST framework if any.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -44,27 +44,13 @@ import javax.ws.rs.ext.Providers;
 @Produces({MediaType.APPLICATION_JSON})
 public class NoCacheJsonWriter<T> implements MessageBodyWriter<T>
 {
+   @Context
    private Providers providers;
+
    @SuppressWarnings("rawtypes")
    private MessageBodyWriter writer;
 
-   public NoCacheJsonWriter()
-   {
-      // FIXME : Find a batter way then use EverRest embedded provider directly.
-      // Injection and instance of javax.ws.rs.ext.Providers by @Context annotation does not work.
-      // The problem is current MessageBodyWriter registered in Providers itself so when we try find 
-      // writer we met current writer and got StackOverflowError as result. 
-      try
-      {
-         Class<?> provider = Class.forName("org.everrest.core.impl.ProviderBinder");
-         Method method = provider.getMethod("getInstance");
-         providers = (Providers)method.invoke(null);
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException(e.getMessage(), e);
-      }
-   }
+   private static ThreadLocal<MessageBodyWriter> writerContext = new ThreadLocal<MessageBodyWriter>();
 
    /**
     * @see javax.ws.rs.ext.MessageBodyWriter#isWriteable(java.lang.Class, java.lang.reflect.Type,
@@ -74,15 +60,25 @@ public class NoCacheJsonWriter<T> implements MessageBodyWriter<T>
    @Override
    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType)
    {
-      if (providers != null)
+      if (null != writerContext.get())
       {
-         writer = providers.getMessageBodyWriter(type, genericType, annotations, mediaType);
-         if (writer != null && writer.isWriteable(type, genericType, annotations, mediaType))
+         // Avoid recursively check the same type of writer in current thread.
+         // It forces JAX-RS framework look embedded JSON writer if any.
+         // If we got such writer then use it for writing body.
+         return false;
+      }
+      else
+      {
+         try
          {
-            return true;
+            writerContext.set(this);
+            return null != (writer = providers.getMessageBodyWriter(type, genericType, annotations, mediaType));
+         }
+         finally
+         {
+            writerContext.remove();
          }
       }
-      return false;
    }
 
    /**
@@ -103,16 +99,17 @@ public class NoCacheJsonWriter<T> implements MessageBodyWriter<T>
    @SuppressWarnings("unchecked")
    @Override
    public void writeTo(T t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-      MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException,
+                       MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException,
       WebApplicationException
    {
       if (writer == null)
       {
          // Be sure writer available.
-         String message =
-            "Not found writer for " + type + " and MIME type " + httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
-         throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity(message)
-            .type(MediaType.TEXT_PLAIN).build());
+         throw new WebApplicationException(Response
+            .status(Response.Status.NOT_ACCEPTABLE)
+            .entity("Not found writer for " + type + " and MIME type " + httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE))
+            .type(MediaType.TEXT_PLAIN)
+            .build());
       }
 
       // Add Cache-Control before start write body.
