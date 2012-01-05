@@ -8,13 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.parser.diagnose;
+package org.eclipse.jdt.client.internal.compiler.parser.diagnose;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.core.compiler.InvalidInputException;
-import org.eclipse.jdt.internal.compiler.parser.Scanner;
-import org.eclipse.jdt.internal.compiler.parser.TerminalTokens;
-import org.eclipse.jdt.internal.compiler.util.Util;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.compiler.InvalidInputException;
+import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
+import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public class LexStream implements TerminalTokens {
 	public static final int IS_AFTER_JUMP = 1;

@@ -8,12 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.problem;
+package org.eclipse.jdt.client.internal.compiler.problem;
 
-import org.eclipse.jdt.core.compiler.CategorizedProblem;
-import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.internal.compiler.util.Messages;
-import org.eclipse.jdt.internal.compiler.util.Util;
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.client.core.compiler.IProblem;
+import org.eclipse.jdt.client.internal.compiler.util.Messages;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public class DefaultProblem extends CategorizedProblem {
 	private char[] fileName;
@@ -115,7 +115,7 @@ public String[] getArguments() {
 	return this.arguments;
 }
 /**
- * @see org.eclipse.jdt.core.compiler.CategorizedProblem#getCategoryID()
+ * @see org.eclipse.jdt.client.core.compiler.CategorizedProblem#getCategoryID()
  */
 public int getCategoryID() {
 	return ProblemReporter.getProblemCategory(this.severity, this.id);
@@ -123,7 +123,7 @@ public int getCategoryID() {
 
 /**
  * Answer the type of problem.
- * @see org.eclipse.jdt.core.compiler.IProblem#getID()
+ * @see org.eclipse.jdt.client.core.compiler.IProblem#getID()
  * @return int
  */
 public int getID() {
@@ -176,7 +176,7 @@ public String getInternalCategoryMessage() {
 
 /**
  * Returns the marker type associated to this problem.
- * @see org.eclipse.jdt.core.compiler.CategorizedProblem#getMarkerType()
+ * @see org.eclipse.jdt.client.core.compiler.CategorizedProblem#getMarkerType()
  */
 public String getMarkerType() {
 	return this.id == IProblem.Task

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.problem;
+package org.eclipse.jdt.client.internal.compiler.problem;
 
 public interface ProblemSeverities {
 

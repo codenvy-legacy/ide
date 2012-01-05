@@ -8,18 +8,17 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.problem;
+package org.eclipse.jdt.client.internal.compiler.problem;
 
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.jdt.core.compiler.*;
-import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.internal.compiler.IProblemFactory;
-import org.eclipse.jdt.internal.compiler.util.HashtableOfInt;
-import org.eclipse.jdt.internal.compiler.util.Util;
+import org.eclipse.jdt.client.core.compiler.*;
+import org.eclipse.jdt.client.internal.compiler.IProblemFactory;
+import org.eclipse.jdt.client.internal.compiler.util.HashtableOfInt;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public class DefaultProblemFactory implements IProblemFactory {
 
@@ -212,7 +211,7 @@ public final String localizedMessage(CategorizedProblem problem) {
  */
 public static HashtableOfInt loadMessageTemplates(Locale loc) {
 	ResourceBundle bundle = null;
-	String bundleName = "org.eclipse.jdt.internal.compiler.problem.messages"; //$NON-NLS-1$
+	String bundleName = "org.eclipse.jdt.client.internal.compiler.problem.messages"; //$NON-NLS-1$
 	try {
 		bundle = ResourceBundle.getBundle(bundleName, loc);
 	} catch(MissingResourceException e) {
