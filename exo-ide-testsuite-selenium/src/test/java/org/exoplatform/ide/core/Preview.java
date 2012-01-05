@@ -208,6 +208,27 @@ public class Preview extends AbstractTestModule
          }
       });
    }
+   
+   public void waitForCloseButton()
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+         {
+
+            @Override
+            public Boolean apply(WebDriver input)
+            {
+               try
+               {
+                  WebElement closeButton = IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE);
+                  return closeButton != null && closeButton.isDisplayed() && closeButton.isEnabled();
+               }
+               catch (NoSuchElementException e)
+               {
+                  return false;
+               }
+            }
+         });
+   }
 
    /**
     * Returns opened state of HTML preview view.

@@ -25,11 +25,13 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Test for preview of groovy template.
@@ -41,12 +43,9 @@ import java.io.IOException;
 public class GroovyTemplatePreviewTest extends BaseTest
 {
 
+   private static final String PROJECT = GroovyTemplatePreviewTest.class.getSimpleName();
+   
    private final static String FILE_NAME = "GroovyTemplatePreviewTest.gtmpl";
-
-   private final static String TEST_FOLDER = GroovyTemplatePreviewTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
 
    private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"
       + " import org.exoplatform.services.security.ConversationState\n "
@@ -60,8 +59,22 @@ public class GroovyTemplatePreviewTest extends BaseTest
 
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(GTMPL.getBytes(), MimeType.GROOVY_TEMPLATE, URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFile(link, FILE_NAME, MimeType.GROOVY_TEMPLATE, GTMPL);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -72,18 +85,24 @@ public class GroovyTemplatePreviewTest extends BaseTest
    @Test
    public void testGtmplPreview() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      
       //open file
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(0);
-
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitTabPresent(1);
+      
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
       IDE.PREVIEW.waitGtmplPreviewOpened();
       IDE.PREVIEW.selectPreviewIFrame();
       assertTrue(selenium().isTextPresent("root"));
       IDE.selectMainFrame();
+      //XXX Switch frames doesn't work with Google Chrome WebDriver without sleep.
+      //Issue - http://code.google.com/p/selenium/issues/detail?id=1969
+      Thread.sleep(500);
       
       //close preview tab and open again
       IDE.PREVIEW.closeView();
@@ -94,19 +113,6 @@ public class GroovyTemplatePreviewTest extends BaseTest
       IDE.PREVIEW.selectPreviewIFrame();
       assertTrue(selenium().isTextPresent("root"));
       IDE.selectMainFrame();
-   }
-
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(URL);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
    }
 
 }
