@@ -20,13 +20,13 @@ package org.exoplatform.ide.jdt.core;
 
 import static org.fest.assertions.Assertions.*;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.ASTParser;
+import org.eclipse.jdt.client.core.dom.ASTVisitor;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -79,7 +79,7 @@ public class ASTVisitorTest
       private int methodCount;
 
       /**
-       * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MethodDeclaration)
+       * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.MethodDeclaration)
        */
       @Override
       public boolean visit(MethodDeclaration node)
@@ -94,7 +94,7 @@ public class ASTVisitorTest
       private int typeCount;
 
       /**
-      * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TypeDeclaration)
+      * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration)
       */
       @Override
       public boolean visit(TypeDeclaration node)
