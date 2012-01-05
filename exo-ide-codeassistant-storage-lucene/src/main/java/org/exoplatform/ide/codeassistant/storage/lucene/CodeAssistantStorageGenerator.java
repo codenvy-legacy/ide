@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,83 +56,44 @@ public class CodeAssistantStorageGenerator
 
    private static final String DEFAULT_SOURCE_ARCHIVE_FILES_LIST = "codeassistant/source-jar-files.txt";
 
-   private static String indexDirectory = DEFAULT_INDEX_DIRECTORY;
+   private final DataStorageWriter storageWriter;
 
-   private static String jarFilesList = DEFAULT_JAR_FILES_LIST;
+   private final String indexDirectory;
 
-   private static String sourceArchiveFilesList = DEFAULT_SOURCE_ARCHIVE_FILES_LIST;
+   private final String jarFilesList;
 
-   private CodeAssistantStorageGenerator()
+   private final String sourceArchiveFilesList;
+
+   public CodeAssistantStorageGenerator(String indexDirectory, String jarFilesList, String sourceArchiveFilesList)
    {
+      this.indexDirectory = indexDirectory;
+      this.jarFilesList = jarFilesList;
+      this.sourceArchiveFilesList = sourceArchiveFilesList;
+      this.storageWriter = new DataStorageWriter(indexDirectory);
    }
 
-   public static void main(String[] args)
+   private void writeDataToStorage() throws IOException, SaveDataIndexException
    {
-      CodeAssistantStorageGenerator codeAssistantStorageGenerator = new CodeAssistantStorageGenerator();
-      codeAssistantStorageGenerator.resolveArgs(args);
-      codeAssistantStorageGenerator.writeClassInfosInStorage();
-      codeAssistantStorageGenerator.writeJavaDocsInStorage();
-   }
-
-   private void resolveArgs(String[] args)
-   {
-      if (args.length == 0)
-      {
-         LOG.info("Arguments list wasn't specified, will be used default values");
-      }
-      else if (args.length >= 1)
-      {
-         indexDirectory = args[0];
-      }
-      if (args.length >= 2)
-      {
-         jarFilesList = args[1];
-      }
-      if (args.length == 3)
-      {
-         sourceArchiveFilesList = args[2];
-      }
-
-      LOG.info("Index will be created in " + indexDirectory + " directory\n");
-      LOG.info("Jar files list will be read from " + jarFilesList + " file\n");
-      LOG.info("Source archives list will be read from " + sourceArchiveFilesList + " file\n");
-   }
-
-   private void writeClassInfosInStorage()
-   {
-      try
-      {
-         List<String> jars = getJarFilesList(jarFilesList);
-         ClassesInfoStorageWriter.writeJarsToIndex(indexDirectory, jars);
-      }
-      catch (IOException e)
-      {
-         throw new RuntimeException(e.getLocalizedMessage(), e);
-      }
-   }
-
-   private void writeJavaDocsInStorage()
-   {
-      try
-      {
-         List<String> jars = getJarFilesList(sourceArchiveFilesList);
-         JavaDocStorageWriter.writeJarsToIndex(indexDirectory, jars);
-      }
-      catch (IOException e)
-      {
-         LOG.error("Error while writing java docs to lucene storage!", e);
-      }
-      catch (SaveTypeInfoIndexException e)
-      {
-         LOG.error("Error while writing java docs to lucene storage!", e);
-      }
+      storageWriter.writeBinaryJarsToIndex(getJarFilesList(jarFilesList));
+      storageWriter.writeSourceJarsToIndex(getJarFilesList(sourceArchiveFilesList));
    }
 
    private List<String> getJarFilesList(String jarFilesList) throws IOException
    {
-      Reader reader = getJarFileReader(jarFilesList);
-      BufferedReader br = new BufferedReader(reader);
+      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+      InputStream io = contextClassLoader.getResourceAsStream(jarFilesList);
 
+      Reader reader = null;
+      if (io != null)
+      {
+         reader = new InputStreamReader(io);
+      }
+      else
+      {
+         reader = new FileReader(new File(jarFilesList));
+      }
+
+      BufferedReader br = new BufferedReader(reader);
       List<String> list = new ArrayList<String>();
       String nextLine = null;
       while ((nextLine = br.readLine()) != null)
@@ -149,21 +109,46 @@ public class CodeAssistantStorageGenerator
       return list;
    }
 
-   private Reader getJarFileReader(String jarFilesList) throws FileNotFoundException
+   public static void main(String[] args)
    {
-      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-      InputStream io = contextClassLoader.getResourceAsStream(jarFilesList);
+      String indexDirectory = DEFAULT_INDEX_DIRECTORY;
+      if (args.length == 0)
+      {
+         LOG.info("Arguments list wasn't specified, will be used default values");
+      }
+      else if (args.length >= 1)
+      {
+         indexDirectory = args[0];
+      }
+      String jarFilesList = DEFAULT_JAR_FILES_LIST;
+      if (args.length >= 2)
+      {
+         jarFilesList = args[1];
+      }
+      String sourceArchiveFilesList = DEFAULT_SOURCE_ARCHIVE_FILES_LIST;
+      if (args.length == 3)
+      {
+         sourceArchiveFilesList = args[2];
+      }
 
-      Reader reader = null;
-      if (io != null)
+      LOG.info("Index will be created in " + indexDirectory + " directory\n");
+      LOG.info("Jar files list will be read from " + jarFilesList + " file\n");
+      LOG.info("Source archives list will be read from " + sourceArchiveFilesList + " file\n");
+
+      CodeAssistantStorageGenerator codeAssistantStorageGenerator =
+         new CodeAssistantStorageGenerator(indexDirectory, jarFilesList, sourceArchiveFilesList);
+      try
       {
-         reader = new InputStreamReader(io);
+         codeAssistantStorageGenerator.writeDataToStorage();
       }
-      else
+      catch (IOException e)
       {
-         reader = new FileReader(new File(jarFilesList));
+         LOG.error("Error while writing data to lucene storage!", e);
       }
-      return reader;
+      catch (SaveDataIndexException e)
+      {
+         LOG.error("Error while writing data to lucene storage!", e);
+      }
    }
-   
+
 }

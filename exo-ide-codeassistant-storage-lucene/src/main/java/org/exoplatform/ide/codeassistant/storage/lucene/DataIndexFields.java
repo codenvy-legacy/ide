@@ -19,13 +19,25 @@
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
 /**
- * Keep all field names in javaDoc lucene Document
+ * Keep all field names in lucene Document
  */
-public final class JavaDocIndexFields
+public final class DataIndexFields
 {
+   public static final String MODIFIERS = "modifiers";
 
+   //TODO check usage
+   public static final String CLASS_NAME = "class-name";
+
+   //TODO check usage
    public static final String FQN = "fqn";
 
-   public static final String DOC = "doc";
+   public static final String ENTITY_TYPE = "entity-type";
 
+   public static final String SUPERCLASS = "superclass";
+
+   public static final String INTERFACES = "interfaces";
+
+   public static final String TYPE_INFO = "type-info";
+   
+   public static final String JAVA_DOC = "doc";
 }

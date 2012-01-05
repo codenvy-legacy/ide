@@ -28,7 +28,7 @@ import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
-import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -59,8 +59,8 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
    public TypeInfo getValue(IndexReader reader, int doc) throws IOException
    {
 
-      Document document = reader.document(doc, new MapFieldSelector(new String[]{TypeInfoIndexFields.TYPE_INFO}));
-      byte[] contentField = document.getBinaryValue(TypeInfoIndexFields.TYPE_INFO);
+      Document document = reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.TYPE_INFO}));
+      byte[] contentField = document.getBinaryValue(DataIndexFields.TYPE_INFO);
       TypeInfo result = ExternalizationTools.readExternal(new ByteArrayInputStream(contentField));
       if (result.getSuperClass().isEmpty() && result.getInterfaces().isEmpty())
       {

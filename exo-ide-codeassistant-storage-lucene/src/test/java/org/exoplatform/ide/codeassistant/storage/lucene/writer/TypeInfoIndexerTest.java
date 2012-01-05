@@ -56,7 +56,7 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class TypeInfoIndexerTest
 {
-   private final TypeInfoIndexer indexer = new TypeInfoIndexer();
+   private final DataIndexer indexer = new DataIndexer();
 
    @Mock(answer = Answers.RETURNS_SMART_NULLS)
    private TypeInfoBean typeInfo;
@@ -70,7 +70,7 @@ public class TypeInfoIndexerTest
    @Test
    public void shouldCallPredefinedSetOfFields() throws Exception
    {
-      indexer.createDocument(typeInfo);
+      indexer.createTypeInfoDocument(typeInfo);
       // one for fields + one for externalization
       verify(typeInfo, times(2)).getName();
       verify(typeInfo, times(2)).getModifiers();
@@ -88,7 +88,7 @@ public class TypeInfoIndexerTest
    public void shouldBeAbleToRestoreShortTypeInfo() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
-      Document document = indexer.createDocument(expected);
+      Document document = indexer.createTypeInfoDocument(expected);
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
       ShortTypeInfo actual = new ShortTypeInfoExtractor().getValue(reader, 5);
@@ -102,7 +102,7 @@ public class TypeInfoIndexerTest
    public void shouldBeAbleToRestoreTypeInfo() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
-      Document document = indexer.createDocument(expected);
+      Document document = indexer.createTypeInfoDocument(expected);
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
       TypeInfo actual = new TypeInfoExtractor(luceneCodeAssistantStorage).getValue(reader, 5);

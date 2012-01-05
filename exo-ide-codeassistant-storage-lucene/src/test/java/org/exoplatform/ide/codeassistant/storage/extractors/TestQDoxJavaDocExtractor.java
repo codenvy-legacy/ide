@@ -81,7 +81,7 @@ public class TestQDoxJavaDocExtractor
    }
 
    @Test
-   public void checkMethodsWithJavaDocs()
+   public void checkMethodsFromJavaDocClass()
    {
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass(int,java.lang.Integer)"));
       Assert.assertEquals("Constructor java doc with parameters",
@@ -104,7 +104,11 @@ public class TestQDoxJavaDocExtractor
          javaDocs.get("test.javadoc.JavaDocClass#method(int,java.lang.Double)"));
 
       Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass#methodWithoutJavaDocs(java.lang.Object)"));
+   }
 
+   @Test
+   public void checkMethodsFromInnerClasses()
+   {
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass"));
       Assert.assertEquals("Private class with java doc", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass"));
 
@@ -117,7 +121,11 @@ public class TestQDoxJavaDocExtractor
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$ClassWithoutJavadoc#method()"));
       Assert.assertEquals("Method with java docs in uncommented class",
          javaDocs.get("test.javadoc.JavaDocClass$ClassWithoutJavadoc#method()"));
+   }
 
+   @Test
+   public void checkMethodsFromClassWithGenerics()
+   {
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method(T)"));
       Assert.assertEquals("Method with generics", javaDocs.get("test.javadoc.ClassWithGenerics#method(T)"));
 

@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.JavaDocIndexer;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.DataIndexer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -65,7 +65,7 @@ public class JavaDocExtractorTest
       final String fqn = "org.exoplatform.ide.codeassistant.test";
       final String doc = "test javadoc";
 
-      Document luceneDocument = new JavaDocIndexer().createDocument(fqn, doc);
+      Document luceneDocument = new DataIndexer().createJavaDocDocument(fqn, doc);
 
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 

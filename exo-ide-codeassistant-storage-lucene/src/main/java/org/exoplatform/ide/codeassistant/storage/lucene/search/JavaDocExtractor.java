@@ -22,7 +22,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
-import org.exoplatform.ide.codeassistant.storage.lucene.JavaDocIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 
 import java.io.IOException;
 
@@ -42,9 +42,9 @@ public class JavaDocExtractor implements ContentExtractor<String>
    {
       Document document =
          reader.document(doc,
-            new MapFieldSelector(new String[]{JavaDocIndexFields.FQN, JavaDocIndexFields.DOC}));
+            new MapFieldSelector(new String[]{DataIndexFields.FQN, DataIndexFields.JAVA_DOC}));
 
-      return document.get(JavaDocIndexFields.DOC);
+      return document.get(DataIndexFields.JAVA_DOC);
 
    }
 }

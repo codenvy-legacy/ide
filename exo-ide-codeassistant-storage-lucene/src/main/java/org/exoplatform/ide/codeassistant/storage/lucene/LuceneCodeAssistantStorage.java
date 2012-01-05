@@ -63,7 +63,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    {
 
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
-         and(eqJavaType(JavaType.ANNOTATION), prefix(TypeInfoIndexFields.CLASS_NAME, prefix)), DEFAULT_RESULT_LIMIT, 0);
+         and(eqJavaType(JavaType.ANNOTATION), prefix(DataIndexFields.CLASS_NAME, prefix)), DEFAULT_RESULT_LIMIT, 0);
 
    }
 
@@ -75,7 +75,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    public List<ShortTypeInfo> getClasses(String prefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
-         and(eqJavaType(JavaType.CLASS), prefix(TypeInfoIndexFields.CLASS_NAME, prefix)), DEFAULT_RESULT_LIMIT, 0);
+         and(eqJavaType(JavaType.CLASS), prefix(DataIndexFields.CLASS_NAME, prefix)), DEFAULT_RESULT_LIMIT, 0);
    }
 
    /**
@@ -96,7 +96,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    public List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
-         and(eqJavaType(JavaType.INTERFACE), prefix(TypeInfoIndexFields.CLASS_NAME, prefix)), DEFAULT_RESULT_LIMIT, 0);
+         and(eqJavaType(JavaType.INTERFACE), prefix(DataIndexFields.CLASS_NAME, prefix)), DEFAULT_RESULT_LIMIT, 0);
 
    }
 
@@ -108,7 +108,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    public String getMemberJavaDoc(String fqn) throws CodeAssistantException
    {
       List<String> searchResult =
-         queryExecutor.executeQuery(new JavaDocExtractor(), IndexType.DOC, eq(JavaDocIndexFields.FQN, fqn), 1, 0);
+         queryExecutor.executeQuery(new JavaDocExtractor(), IndexType.DOC, eq(DataIndexFields.FQN, fqn), 1, 0);
       if (searchResult.isEmpty())
       {
          throw new CodeAssistantException(404, "Not found");
@@ -129,7 +129,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
 
       List<TypeInfo> searchResult =
          queryExecutor
-            .executeQuery(new TypeInfoExtractor(this), IndexType.JAVA, eq(TypeInfoIndexFields.FQN, fqn), 1, 0);
+            .executeQuery(new TypeInfoExtractor(this), IndexType.JAVA, eq(DataIndexFields.FQN, fqn), 1, 0);
       return searchResult.size() == 1 ? searchResult.get(0) : null;
 
    }
@@ -142,7 +142,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    public List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
-         prefix(TypeInfoIndexFields.FQN, fqnPrefix), DEFAULT_RESULT_LIMIT, 0);
+         prefix(DataIndexFields.FQN, fqnPrefix), DEFAULT_RESULT_LIMIT, 0);
    }
 
    /**
@@ -154,7 +154,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    {
 
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
-         prefix(TypeInfoIndexFields.CLASS_NAME, namePrefix), DEFAULT_RESULT_LIMIT, 0);
+         prefix(DataIndexFields.CLASS_NAME, namePrefix), DEFAULT_RESULT_LIMIT, 0);
    }
 
 }

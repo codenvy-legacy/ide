@@ -38,8 +38,8 @@ import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.TypeInfoIndexer;
+import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.DataIndexer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -63,7 +63,7 @@ public class ShortTypeInfoExtractorTest
 
       Document luceneDocument = new Document();
       //add minimal set of field to be able to call method  extractor.getValue
-      luceneDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
+      luceneDocument.add(new Field(DataIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
       extractor.getValue(reader, 5);
@@ -77,7 +77,7 @@ public class ShortTypeInfoExtractorTest
    public void shouldReconstructShortTypeInfo() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
-      Document luceneDocument = new TypeInfoIndexer().createDocument(expected);
+      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected);
 
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
@@ -93,7 +93,7 @@ public class ShortTypeInfoExtractorTest
    {
       Document luceneDocument = new Document();
       //add minimal set of field to be able to call method  extractor.getValue
-      luceneDocument.add(new Field(TypeInfoIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
+      luceneDocument.add(new Field(DataIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
       extractor.getValue(reader, 5);
@@ -101,13 +101,13 @@ public class ShortTypeInfoExtractorTest
       ArgumentCaptor<FieldSelector> model = ArgumentCaptor.forClass(FieldSelector.class);
       verify(reader).document(eq(5), model.capture());
 
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(TypeInfoIndexFields.MODIFIERS));
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(TypeInfoIndexFields.CLASS_NAME));
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(TypeInfoIndexFields.FQN));
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(TypeInfoIndexFields.ENTITY_TYPE));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(TypeInfoIndexFields.SUPERCLASS));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(TypeInfoIndexFields.INTERFACES));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(TypeInfoIndexFields.INTERFACES));
+      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.MODIFIERS));
+      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.CLASS_NAME));
+      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.FQN));
+      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.ENTITY_TYPE));
+      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.SUPERCLASS));
+      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
+      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
 
    }
 

@@ -21,14 +21,15 @@ package org.exoplatform.ide.codeassistant.storage.lucene;
 import static org.exoplatform.ide.codeassistant.asm.ClassParser.OBJECT_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static test.ClassManager.createIndexForClass;
-import static test.ClassManager.getAllTestClasses;
+
+import test.ClassManager;
 
 import org.apache.lucene.store.RAMDirectory;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class SearchTest
 
    private static LuceneCodeAssistantStorage storage;
 
-   private static LuceneTypeInfoWriter writer;
+   private static LuceneDataWriter writer;
 
    private static LuceneInfoStorage luceneInfoStorage;
 
@@ -51,13 +52,15 @@ public class SearchTest
    {
       // luceneInfoStorage = new LuceneInfoStorage(NIOFSDirectory.open(new File("/tmp/SearchTest")));
       luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
-      writer = new LuceneTypeInfoWriter(luceneInfoStorage);
+      writer = new LuceneDataWriter(luceneInfoStorage);
       storage = new LuceneCodeAssistantStorage(luceneInfoStorage);
 
-      createIndexForClass(writer, getAllTestClasses());
+      ClassManager.createIndexForClass(writer, ClassManager.getAllTestClasses());
       //add parent
-      createIndexForClass(writer, Object.class);
+      ClassManager.createIndexForClass(writer, Object.class);
 
+      // add java doc index
+      ClassManager.createIndexForSources(writer, "src/test/java/test/javadoc/JavaDocClass.java");
    }
 
    @Test
@@ -165,4 +168,44 @@ public class SearchTest
       assertEquals(0, typeInfos.size());
    }
 
+   @Test
+   public void testSearchClassJavaDoc() throws CodeAssistantException
+   {
+      String javaDoc = storage.getClassJavaDoc("test.javadoc.ClassWithGenerics");
+      assertEquals("Class with generics", javaDoc);
+   }
+
+   @Test
+   public void testSearchInnerClassJavaDoc() throws CodeAssistantException
+   {
+      String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass$PrivateClass");
+      assertEquals("Private class with java doc", javaDoc);
+   }
+
+   @Test(expected = CodeAssistantException.class)
+   public void testSearchUncommentedClassJavaDoc() throws CodeAssistantException
+   {
+      storage.getClassJavaDoc("test.javadoc.JavaDocClass$ClassWithoutJavadoc");
+   }
+
+   @Test
+   public void testSearchFieldJavaDoc() throws CodeAssistantException
+   {
+      String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass#field");
+      assertEquals("Field java doc", javaDoc);
+   }
+
+   @Test
+   public void testSearchMethodJavaDoc() throws CodeAssistantException
+   {
+      String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass#method(int,java.lang.Double)");
+      assertEquals("Method with primitive and object params", javaDoc);
+   }
+
+   @Test
+   public void testSearchConstructorJavaDoc() throws CodeAssistantException
+   {
+      String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass(int,java.lang.Integer)");
+      assertEquals("Constructor java doc with parameters", javaDoc);
+   }
 }

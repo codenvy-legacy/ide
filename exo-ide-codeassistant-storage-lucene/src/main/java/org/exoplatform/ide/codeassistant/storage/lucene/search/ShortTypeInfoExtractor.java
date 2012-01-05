@@ -24,7 +24,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 
 import java.io.IOException;
 
@@ -45,13 +45,13 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
    public ShortTypeInfo getValue(IndexReader reader, int doc) throws IOException
    {
       Document document =
-         reader.document(doc, new MapFieldSelector(new String[]{TypeInfoIndexFields.MODIFIERS,
-            TypeInfoIndexFields.CLASS_NAME, TypeInfoIndexFields.FQN, TypeInfoIndexFields.ENTITY_TYPE}));
+         reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.MODIFIERS,
+            DataIndexFields.CLASS_NAME, DataIndexFields.FQN, DataIndexFields.ENTITY_TYPE}));
 
-      int modifier = Integer.valueOf(document.get(TypeInfoIndexFields.MODIFIERS));
+      int modifier = Integer.valueOf(document.get(DataIndexFields.MODIFIERS));
 
-      return new ShortTypeInfoBean(document.get(TypeInfoIndexFields.FQN), modifier,
-         document.get(TypeInfoIndexFields.ENTITY_TYPE));
+      return new ShortTypeInfoBean(document.get(DataIndexFields.FQN), modifier,
+         document.get(DataIndexFields.ENTITY_TYPE));
 
    }
 }

@@ -19,23 +19,14 @@
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
 /**
- * Keep all field names in lucene Document
+ * Exception which indicates errors on saving TypeInfo in Lucene Index
  */
-public final class TypeInfoIndexFields
+public class SaveDataIndexException extends Exception
 {
-   public static final String MODIFIERS = "modifiers";
+   private static final long serialVersionUID = 1L;
 
-   //TODO check usage
-   public static final String CLASS_NAME = "class-name";
-
-   //TODO check usage
-   public static final String FQN = "fqn";
-
-   public static final String ENTITY_TYPE = "entity-type";
-
-   public static final String SUPERCLASS = "superclass";
-
-   public static final String INTERFACES = "interfaces";
-
-   public static final String TYPE_INFO = "type-info";
+   public SaveDataIndexException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

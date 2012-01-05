@@ -104,14 +104,14 @@ public class JavaDocClass
 
    private class ClassWithoutJavadoc
    {
-      
+
       /**
        * Method with java docs in uncommented class
        */
       public void method()
       {
       }
-      
+
    }
 
 }
@@ -142,7 +142,7 @@ class ClassWithGenerics<T extends Number>
    {
       return null;
    }
-   
+
    /**
     * Method with list as parameter
     */

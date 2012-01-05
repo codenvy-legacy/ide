@@ -40,13 +40,14 @@ public class TestCodeAssistantStorageCreator
       + FILE_SEPARATOR + "rt.jar";
 
    @Test
-   public void testClassStorageCreation() throws IOException, CodeAssistantException
+   public void testClassStorageCreation() throws IOException, CodeAssistantException, SaveDataIndexException
    {
       List<String> jars = new ArrayList<String>();
       jars.add(PATH_TO_RT_JAR);
       String pathToIndex = "target/index";
 
-      ClassesInfoStorageWriter.writeJarsToIndex(pathToIndex, jars);
+      DataStorageWriter storageWriter = new DataStorageWriter(pathToIndex);
+      storageWriter.writeBinaryJarsToIndex(jars);
 
       LuceneInfoStorage luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
       LuceneCodeAssistantStorage storage = new LuceneCodeAssistantStorage(luceneInfoStorage);

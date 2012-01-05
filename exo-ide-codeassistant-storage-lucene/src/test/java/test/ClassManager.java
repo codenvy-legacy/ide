@@ -32,12 +32,16 @@ import test.interfaces.ETestInterface2;
 
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.lucene.SaveTypeInfoIndexException;
-import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneTypeInfoWriter;
+import org.exoplatform.ide.codeassistant.storage.extractors.QDoxJavaDocExtractor;
+import org.exoplatform.ide.codeassistant.storage.lucene.SaveDataIndexException;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Test classes enumerator
@@ -64,10 +68,10 @@ public class ClassManager
     * @param className
     *           TODO
     * @throws IOException
-    * @throws SaveTypeInfoIndexException
+    * @throws SaveDataIndexException
     */
-   public static void createIndexForClass(LuceneTypeInfoWriter typeWriter, Class<?>... classesToIndex)
-      throws IOException, SaveTypeInfoIndexException
+   public static void createIndexForClass(LuceneDataWriter typeWriter, Class<?>... classesToIndex) throws IOException,
+      SaveDataIndexException
    {
 
       List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
@@ -79,4 +83,17 @@ public class ClassManager
 
       typeWriter.addTypeInfo(typeInfos);
    }
+
+   public static void createIndexForSources(LuceneDataWriter dataWriter, String... sources) throws IOException,
+      SaveDataIndexException
+   {
+      Map<String, String> javaDocs = new HashMap<String, String>();
+      for (String source : sources)
+      {
+         javaDocs.putAll(QDoxJavaDocExtractor.extractSource(new FileInputStream(source)));
+      }
+
+      dataWriter.addJavaDocs(javaDocs);
+   }
+
 }

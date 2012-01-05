@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
-import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 import org.junit.Test;
 
 /**
@@ -71,7 +71,7 @@ public class SearchByFieldConstraintTest
    {
       LuceneSearchConstraint constraint = eqJavaType(JavaType.ANNOTATION);
       TermQuery query = (TermQuery)constraint.getQuery();
-      assertEquals(TypeInfoIndexFields.ENTITY_TYPE, query.getTerm().field());
+      assertEquals(DataIndexFields.ENTITY_TYPE, query.getTerm().field());
       assertEquals(JavaType.ANNOTATION.toString(), query.getTerm().text());
    }
 

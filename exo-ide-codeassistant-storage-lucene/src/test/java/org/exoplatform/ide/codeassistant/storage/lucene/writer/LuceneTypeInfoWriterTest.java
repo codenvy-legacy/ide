@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class LuceneTypeInfoWriterTest
 {
-   private LuceneTypeInfoWriter writer;
+   private LuceneDataWriter writer;
 
    private LuceneInfoStorage luceneInfoStorage;
 
@@ -47,7 +47,7 @@ public class LuceneTypeInfoWriterTest
    public void createIndex() throws Exception
    {
       luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
-      writer = new LuceneTypeInfoWriter(luceneInfoStorage);
+      writer = new LuceneDataWriter(luceneInfoStorage);
    }
 
    @Test

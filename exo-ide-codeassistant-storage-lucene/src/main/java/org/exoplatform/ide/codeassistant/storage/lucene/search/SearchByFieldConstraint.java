@@ -23,7 +23,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
-import org.exoplatform.ide.codeassistant.storage.lucene.TypeInfoIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 
 /**
  * 
@@ -59,7 +59,7 @@ public class SearchByFieldConstraint implements LuceneSearchConstraint
 
    public static LuceneSearchConstraint eqJavaType(JavaType type)
    {
-      return new SearchByFieldConstraint(TypeInfoIndexFields.ENTITY_TYPE, type.toString());
+      return new SearchByFieldConstraint(DataIndexFields.ENTITY_TYPE, type.toString());
    }
 
    /**
