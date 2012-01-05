@@ -99,8 +99,8 @@ public class ExternalizationTools
             // Member
             method.setModifiers(in.readInt());
             method.setName(readStringUTF(in));
+            
             //Field
-
             method.setDeclaringClass(readStringUTF(in));
             method.setExceptionTypes(readStringUTFList(in));
             method.setParameterTypes(readStringUTFList(in));
@@ -125,7 +125,7 @@ public class ExternalizationTools
       else
       {
          byte[] bytes = new byte[length];
-         in.read(bytes);
+         in.readFully(bytes);
 
          result = new String(bytes, DEFAULT_ENCODING);
       }
@@ -178,7 +178,7 @@ public class ExternalizationTools
             }
             else if (element instanceof MethodInfo)
             {
-               //MethodInfo
+               //MethodInfe
                writeStringUTF(((MethodInfo)element).getDeclaringClass(), out);
                writeStringUTFList(((MethodInfo)element).getExceptionTypes(), out);
                writeStringUTFList(((MethodInfo)element).getParameterTypes(), out);

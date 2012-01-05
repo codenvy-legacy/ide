@@ -27,12 +27,12 @@ import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
-import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Create TypeInfo from lucene document.
@@ -98,11 +98,27 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
    {
       if (ancestor != null)
       {
-         List<FieldInfo> fields = recipient.getFields();
+         /*
+          * @see below, like methods
+          */
+         ArrayList<FieldInfo> fields = new ArrayList<FieldInfo>();
+         fields.addAll(recipient.getFields());
+         // List<FieldInfo> fields = recipient.getFields();
          fields.addAll(ancestor.getFields());
          recipient.setFields(fields);
 
-         List<MethodInfo> methods = recipient.getMethods();
+         /*
+          * Here you can't add new methods to list received from recipient.getMethods() by two reasons:
+          * 1) List received from getMethods() may be private storage for methods, but not copy of its.
+          *    So, if you add methods in this list, new methods will be added to private list of methods too,
+          *    and line recipient.setMethods(methods) will do nothing.
+          * 2) List which returns getMethods() may be immutable, and it is true now.
+          *    Because if recipient class hasn't method, TypeInfoBean class returns immutable Collections$EmptyList instance.
+          */
+         ArrayList<MethodInfo> methods = new ArrayList<MethodInfo>();
+         methods.addAll(recipient.getMethods());
+         // List<MethodInfo> methods = recipient.getMethods();
+
          methods.addAll(ancestor.getMethods());
          recipient.setMethods(methods);
       }

@@ -92,21 +92,27 @@ public class CodeAssistantStorageGenerator
       {
          reader = new FileReader(new File(jarFilesList));
       }
-
       BufferedReader br = new BufferedReader(reader);
-      List<String> list = new ArrayList<String>();
-      String nextLine = null;
-      while ((nextLine = br.readLine()) != null)
+      try
       {
-         nextLine = nextLine.trim();
-         if (!nextLine.isEmpty() && !nextLine.startsWith("#"))
+         List<String> list = new ArrayList<String>();
+         String nextLine = null;
+         while ((nextLine = br.readLine()) != null)
          {
-            String pathToJar = Deserializer.resolveVariables(nextLine);
-            list.add(pathToJar);
+            nextLine = nextLine.trim();
+            if (!nextLine.isEmpty() && !nextLine.startsWith("#"))
+            {
+               String pathToJar = Deserializer.resolveVariables(nextLine);
+               list.add(pathToJar);
+            }
          }
-      }
+         return list;
 
-      return list;
+      }
+      finally
+      {
+         br.close();
+      }
    }
 
    public static void main(String[] args)

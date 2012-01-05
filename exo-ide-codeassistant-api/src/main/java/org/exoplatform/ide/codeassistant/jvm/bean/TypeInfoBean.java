@@ -102,7 +102,12 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
       }
       else
       {
-         this.fields = fields;
+         /*
+          * Block modifications of private list outside this class. Because this list returns by getXXX method.
+          * If list is empty, then getXXX method returns unmodifiable Collections#emptyList(), so if list isn't empty
+          * its must return unmodifiable list too.
+          */
+         this.fields = Collections.unmodifiableList(fields);
       }
    }
 
@@ -118,7 +123,12 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
       }
       else
       {
-         this.interfaces = interfaces;
+         /*
+          * Block modifications of private list outside this class. Because this list returns by getXXX method.
+          * If list is empty, then getXXX method returns unmodifiable Collections#emptyList(), so if list isn't empty
+          * its must return unmodifiable list too.
+          */
+         this.interfaces = Collections.unmodifiableList(interfaces);
       }
    }
 
@@ -128,7 +138,12 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    @Override
    public void setMethods(List<MethodInfo> methods)
    {
-      this.methods = methods;
+      /*
+       * Block modifications of private list outside this class. Because this list returns by getXXX method.
+       * If list is empty, then getXXX method returns unmodifiable Collections#emptyList(), so if list isn't empty
+       * its must return unmodifiable list too.
+       */
+      this.methods = Collections.unmodifiableList(methods);
    }
 
    /**

@@ -208,7 +208,7 @@ public class TestExternalizationTools
       ExternalizationTools.readStringUTF(in);
 
       verify(in, times(1)).readInt();
-      verify(in, times(1)).read((byte[])any());
+      verify(in, times(1)).readFully((byte[])any());
       verify(in, never()).readObject();
    }
 
@@ -221,7 +221,7 @@ public class TestExternalizationTools
       ExternalizationTools.readStringUTFList(in);
 
       verify(in, atLeastOnce()).readInt();
-      verify(in, atLeastOnce()).read((byte[])any());
+      verify(in, atLeastOnce()).readFully((byte[])any());
       verify(in, never()).readObject();
    }
 
