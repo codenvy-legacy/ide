@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 
 public class SyntheticFieldBinding extends FieldBinding {
 

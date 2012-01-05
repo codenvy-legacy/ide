@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 public class UnresolvedReferenceBinding extends ReferenceBinding {
 

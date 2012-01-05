@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 /**
  * Denote a raw type, i.e. a generic type referenced without any type arguments.
@@ -70,7 +70,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding {
    	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.ParameterizedTypeBinding#createParameterizedMethod(org.eclipse.jdt.internal.compiler.lookup.MethodBinding)
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedTypeBinding#createParameterizedMethod(org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding)
 	 */
 	public ParameterizedMethodBinding createParameterizedMethod(MethodBinding originalMethod) {
 		if (originalMethod.typeVariables == Binding.NO_TYPE_VARIABLES || originalMethod.isStatic()) {
@@ -84,7 +84,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding {
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#debugName()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName()
 	 */
 	public String debugName() {
 	    StringBuffer nameBuffer = new StringBuffer(10);
@@ -170,7 +170,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding {
 		this.arguments = typeArguments;
 	}
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.Binding#readableName()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#readableName()
 	 */
 	public char[] readableName() /*java.lang.Object,  p.X<T> */ {
 	    char[] readableName;
@@ -183,7 +183,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding {
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.Binding#shortReadableName()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName()
 	 */
 	public char[] shortReadableName() /*Object*/ {
 	    char[] shortReadableName;

@@ -8,18 +8,18 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import java.util.List;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
-import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
-import org.eclipse.jdt.internal.compiler.ast.Argument;
-import org.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.codegen.ConstantPool;
-import org.eclipse.jdt.internal.compiler.util.Util;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Argument;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.codegen.ConstantPool;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public class MethodBinding extends Binding {
 
@@ -175,7 +175,7 @@ MethodBinding asRawMethod(LookupEnvironment env) {
 				for (int s = 0; s < superLength; s++)
 					rawOtherBounds[s] = env.convertToRawType(itsSuperinterfaces[s], false);
 			}
-			arguments[i] = env.createWildcard(null, 0, rawFirstBound, rawOtherBounds, org.eclipse.jdt.internal.compiler.ast.Wildcard.EXTENDS);
+			arguments[i] = env.createWildcard(null, 0, rawFirstBound, rawOtherBounds, org.eclipse.jdt.client.internal.compiler.ast.Wildcard.EXTENDS);
 		}
 	}
 	return env.createParameterizedGenericMethod(this, arguments);
@@ -512,7 +512,7 @@ public AnnotationBinding[] getAnnotations() {
 /**
  * Compute the tagbits for standard annotations. For source types, these could require
  * lazily resolving corresponding annotation nodes, in case of forward references.
- * @see org.eclipse.jdt.internal.compiler.lookup.Binding#getAnnotationTagBits()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#getAnnotationTagBits()
  */
 public long getAnnotationTagBits() {
 	MethodBinding originalMethod = original();
@@ -822,7 +822,7 @@ protected final void setSelector(char[] selector) {
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.Binding#shortReadableName()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName()
  */
 public char[] shortReadableName() {
 	StringBuffer buffer = new StringBuffer(this.parameters.length + 1 * 20);

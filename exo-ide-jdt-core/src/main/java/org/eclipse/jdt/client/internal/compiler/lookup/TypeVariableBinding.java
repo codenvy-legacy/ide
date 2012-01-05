@@ -9,11 +9,11 @@
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann <stephan@cs.tu-berlin.de> - Contribution for bug 282152 - [1.5][compiler] Generics code rejected by Eclipse but accepted by javac
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.Wildcard;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 
 /**
  * Binding for a type parameter, held by source/binary type or method.
@@ -168,7 +168,7 @@ public class TypeVariableBinding extends ReferenceBinding {
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#canBeInstantiated()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#canBeInstantiated()
 	 */
 	public boolean canBeInstantiated() {
 		return false;
@@ -254,7 +254,7 @@ public class TypeVariableBinding extends ReferenceBinding {
 	    return this.superclass.constantPoolName(); // java/lang/Object
 	}
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#debugName()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName()
 	 */
 	public String debugName() {
 	    return new String(this.sourceName);
@@ -396,7 +396,7 @@ public class TypeVariableBinding extends ReferenceBinding {
 	}
 
 	/**
-     * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#readableName()
+     * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#readableName()
      */
     public char[] readableName() {
         return this.sourceName;
@@ -433,7 +433,7 @@ public class TypeVariableBinding extends ReferenceBinding {
 		return this;
 	}
 	/**
-     * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#shortReadableName()
+     * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName()
      */
     public char[] shortReadableName() {
         return readableName();

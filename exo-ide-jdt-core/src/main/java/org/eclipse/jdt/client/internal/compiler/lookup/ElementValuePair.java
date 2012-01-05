@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 
 public class ElementValuePair {
 	char[] name;
@@ -81,7 +81,7 @@ public MethodBinding getMethodBinding() {
 
 /**
  * Return {@link TypeBinding} for member value of type {@link java.lang.Class}
- * Return {@link org.eclipse.jdt.internal.compiler.impl.Constant} for member of primitive type or String
+ * Return {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for member of primitive type or String
  * Return {@link FieldBinding} for enum constant
  * Return {@link AnnotationBinding} for annotation instance
  * Return <code>Object[]</code> for member value of array type.

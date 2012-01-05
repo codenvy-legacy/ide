@@ -8,16 +8,16 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import java.util.ArrayList;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.env.*;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
-import org.eclipse.jdt.internal.compiler.problem.AbortCompilation;
-import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.env.*;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
+import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
 
 /*
 Not all fields defined by this type are initialized when it is created.
@@ -187,7 +187,7 @@ public BinaryTypeBinding(PackageBinding packageBinding, IBinaryType binaryType, 
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#availableMethods()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#availableMethods()
  */
 public FieldBinding[] availableFields() {
 	if ((this.tagBits & TagBits.AreFieldsComplete) != 0)
@@ -241,7 +241,7 @@ private TypeVariableBinding[] addMethodTypeVariables(TypeVariableBinding[] metho
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#availableMethods()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#availableMethods()
  */
 public MethodBinding[] availableMethods() {
 	if ((this.tagBits & TagBits.AreMethodsComplete) != 0)
@@ -776,7 +776,7 @@ private MethodBinding findMethod(char[] methodDescriptor, char[][][] missingType
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#genericTypeSignature()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#genericTypeSignature()
  */
 public char[] genericTypeSignature() {
 	return computeGenericTypeSignature(this.typeVariables);

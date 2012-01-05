@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 public final class BaseTypeBinding extends TypeBinding {
 
@@ -163,14 +163,14 @@ public final class BaseTypeBinding extends TypeBinding {
 	
 	/**
 	 * T_null is acting as an unchecked exception
-	 * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#isUncheckedException(boolean)
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isUncheckedException(boolean)
 	 */
 	public boolean isUncheckedException(boolean includeSupertype) {
 		return this == TypeBinding.NULL;
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.Binding#kind()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#kind()
 	 */
 	public int kind() {
 		return Binding.BASE_TYPE;

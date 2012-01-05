@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.ast.Wildcard;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 
 /**
  * Binding denoting a generic method after type parameter substitutions got performed.
@@ -368,7 +368,7 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.Substitution#environment()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#environment()
 	 */
 	public LookupEnvironment environment() {
 		return this.environment;
@@ -528,14 +528,14 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.Substitution#isRawSubstitution()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#isRawSubstitution()
 	 */
 	public boolean isRawSubstitution() {
 		return this.isRaw;
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.Substitution#substitute(org.eclipse.jdt.internal.compiler.lookup.TypeVariableBinding)
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#substitute(org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding)
 	 */
 	public TypeBinding substitute(TypeVariableBinding originalVariable) {
         TypeVariableBinding[] variables = this.originalMethod.typeVariables;
@@ -547,7 +547,7 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
 	    return originalVariable;
 	}
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.MethodBinding#tiebreakMethod()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding#tiebreakMethod()
 	 */
 	public MethodBinding tiebreakMethod() {
 		if (this.tiebreakMethod == null)

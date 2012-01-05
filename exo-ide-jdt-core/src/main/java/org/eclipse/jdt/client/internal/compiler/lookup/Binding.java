@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 
 public abstract class Binding {
 
@@ -70,7 +70,7 @@ public abstract class Binding {
 	/**
 	 * Compute the tagbits for standard annotations. For source types, these could require
 	 * lazily resolving corresponding annotation nodes, in case of forward references.
-	 * @see org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding#getAnnotationTagBits()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding#getAnnotationTagBits()
 	 */
 	public long getAnnotationTagBits() {
 		return 0;
@@ -79,7 +79,7 @@ public abstract class Binding {
 	/**
 	 * Compute the tag bits for @Deprecated annotations, avoiding resolving
 	 * entire annotation if not necessary.
-	 * @see org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding#initializeDeprecatedAnnotationTagBits()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding#initializeDeprecatedAnnotationTagBits()
 	 */
 	public void initializeDeprecatedAnnotationTagBits() {
 		// empty block

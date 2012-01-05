@@ -8,15 +8,15 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import java.util.Arrays;
 import java.util.Comparator;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.MethodDeclaration;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
 
 /*
 Not all fields defined by this type (& its subclasses) are initialized when it is created.
@@ -781,7 +781,7 @@ public AnnotationBinding[] getAnnotations() {
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.Binding#getAnnotationTagBits()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#getAnnotationTagBits()
  */
 public long getAnnotationTagBits() {
 	return this.tagBits;
@@ -806,7 +806,7 @@ public FieldBinding getField(char[] fieldName, boolean needResolve) {
 	return null;
 }
 /**
- * @see org.eclipse.jdt.internal.compiler.env.IDependent#getFileName()
+ * @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName()
  */
 public char[] getFileName() {
 	return this.fileName;
@@ -1207,7 +1207,7 @@ public boolean isSuperclassOf(ReferenceBinding otherType) {
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#isThrowable()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isThrowable()
  */
 public boolean isThrowable() {
 	ReferenceBinding current = this;
@@ -1229,7 +1229,7 @@ public boolean isThrowable() {
  * but rather check in type IDs so as to avoid some eager class loading for JCL writers.
  * When 'includeSupertype' is true, answers true if the given type can be a supertype of some unchecked exception
  * type (i.e. Throwable or Exception).
- * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#isUncheckedException(boolean)
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isUncheckedException(boolean)
  */
 public boolean isUncheckedException(boolean includeSupertype) {
 	switch (this.id) {

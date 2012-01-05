@@ -9,12 +9,12 @@
  *     IBM Corporation - initial API and implementation
  *      Stephen Herrmann <stephan@cs.tu-berlin.de> -  Contribution for bug 317046
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import java.util.List;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.Wildcard;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 
 /*
  * Not all fields defined by this type (& its subclasses) are initialized when it is created.

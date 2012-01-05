@@ -8,13 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import java.util.List;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.Wildcard;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 
 /*
  * A wildcard acts as an argument for parameterized types, allowing to
@@ -80,7 +80,7 @@ public class WildcardBinding extends ReferenceBinding {
 	    }
     }
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#canBeInstantiated()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#canBeInstantiated()
 	 */
 	public boolean canBeInstantiated() {
 		// cannot be asked per construction
@@ -88,7 +88,7 @@ public class WildcardBinding extends ReferenceBinding {
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
 	 */
 	public List collectMissingTypes(List missingTypes) {
 		if ((this.tagBits & TagBits.HasMissingType) != 0) {
@@ -366,14 +366,14 @@ public class WildcardBinding extends ReferenceBinding {
 
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#constantPoolName()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#constantPoolName()
 	 */
 	public char[] constantPoolName() {
 		return erasure().constantPoolName();
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#debugName()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName()
 	 */
 	public String debugName() {
 	    return toString();
@@ -439,7 +439,7 @@ public class WildcardBinding extends ReferenceBinding {
 	}
 
 	/**
-     * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#isSuperclassOf(org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding)
+     * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#isSuperclassOf(org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding)
      */
     public boolean isSuperclassOf(ReferenceBinding otherType) {
         if (this.boundKind == Wildcard.SUPER) {
@@ -553,7 +553,7 @@ public class WildcardBinding extends ReferenceBinding {
     }
 
     /**
-     * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#signature()
+     * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#signature()
      */
     public char[] signature() {
      	// should not be called directly on a wildcard; signature should only be asked on

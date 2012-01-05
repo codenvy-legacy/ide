@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.ast.Annotation;
+import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
 
 /**
  * Represents JSR 175 Annotation instances in the type-system.

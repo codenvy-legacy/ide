@@ -8,13 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 
 public class MissingTypeBinding extends BinaryTypeBinding {
 
@@ -42,7 +42,7 @@ public MissingTypeBinding(PackageBinding packageBinding, char[][] compoundName, 
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
  */
 public List collectMissingTypes(List missingTypes) {
 	if (missingTypes == null) {
@@ -56,7 +56,7 @@ public List collectMissingTypes(List missingTypes) {
 
 /**
  * Missing binary type will answer <code>false</code> to #isValidBinding()
- * @see org.eclipse.jdt.internal.compiler.lookup.Binding#problemId()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#problemId()
  */
 public int problemId() {
 	return ProblemReasons.NotFound;

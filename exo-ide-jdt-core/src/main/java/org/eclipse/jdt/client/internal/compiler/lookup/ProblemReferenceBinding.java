@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import java.lang.reflect.Field;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 public class ProblemReferenceBinding extends ReferenceBinding {
 	ReferenceBinding closestMatch;
@@ -27,14 +27,14 @@ public ProblemReferenceBinding(char[][] compoundName, ReferenceBinding closestMa
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#closestMatch()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#closestMatch()
  */
 public TypeBinding closestMatch() {
 	return this.closestMatch;
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#closestMatch()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#closestMatch()
  */
 public ReferenceBinding closestReferenceMatch() {
 	return this.closestMatch;
@@ -71,7 +71,7 @@ public static String problemReasonString(int problemReason) {
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#shortReadableName()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName()
  */
 public char[] shortReadableName() {
 	return readableName();

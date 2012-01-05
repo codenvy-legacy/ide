@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 /**
  * Specific local variable location used to:
@@ -21,8 +21,8 @@ package org.eclipse.jdt.internal.compiler.lookup;
  * the user arguments.
  */
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 
 public class SyntheticArgumentBinding extends LocalVariableBinding {
 

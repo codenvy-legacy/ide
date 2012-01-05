@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.ast.Wildcard;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 
 /**
  * Binding denoting a method after type parameter substitutions got performed.

@@ -8,13 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import java.util.List;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 
 public final class ArrayBinding extends TypeBinding {
 	// creation and initialization of the length field
@@ -50,7 +50,7 @@ public TypeBinding closestMatch() {
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
  */
 public List collectMissingTypes(List missingTypes) {
 	if ((this.tagBits & TagBits.HasMissingType) != 0) {
@@ -132,7 +132,7 @@ public TypeBinding elementsType() {
 	return this.environment.createArrayType(this.leafComponentType, this.dimensions - 1);
 }
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#erasure()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#erasure()
  */
 public TypeBinding erasure() {
     TypeBinding erasedType = this.leafComponentType.erasure();

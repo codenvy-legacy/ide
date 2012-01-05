@@ -9,14 +9,14 @@
  *     IBM Corporation - initial API and implementation
  *     Benjamin Muskalla - Contribution for bug 239066
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.ast.*;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.internal.compiler.util.HashtableOfObject;
-import org.eclipse.jdt.internal.compiler.util.SimpleSet;
+import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
+import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
+import org.eclipse.jdt.client.internal.compiler.util.SimpleSet;
 
 public class MethodVerifier {
 	SourceTypeBinding type;
@@ -745,7 +745,7 @@ MethodBinding computeSubstituteMethod(MethodBinding inheritedMethod, MethodBindi
 }
 
 boolean couldMethodOverride(MethodBinding method, MethodBinding inheritedMethod) {
-	if (!org.eclipse.jdt.core.compiler.CharOperation.equals(method.selector, inheritedMethod.selector))
+	if (!org.eclipse.jdt.client.core.compiler.CharOperation.equals(method.selector, inheritedMethod.selector))
 		return false;
 	if (method == inheritedMethod || method.isStatic() || inheritedMethod.isStatic())
 		return false;
@@ -868,7 +868,7 @@ boolean isInterfaceMethodImplemented(MethodBinding inheritedMethod, MethodBindin
 }
 
 public boolean isMethodSubsignature(MethodBinding method, MethodBinding inheritedMethod) {
-	return org.eclipse.jdt.core.compiler.CharOperation.equals(method.selector, inheritedMethod.selector)
+	return org.eclipse.jdt.client.core.compiler.CharOperation.equals(method.selector, inheritedMethod.selector)
 		&& isParameterSubsignature(method, inheritedMethod);
 }
 

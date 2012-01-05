@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 
 public class SourceTypeCollisionException extends RuntimeException {
 	private static final long serialVersionUID = 4798247636899127380L;

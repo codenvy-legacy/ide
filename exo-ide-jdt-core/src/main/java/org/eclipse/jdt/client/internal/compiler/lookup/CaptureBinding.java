@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.internal.compiler.ast.Wildcard;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 
 public class CaptureBinding extends TypeVariableBinding {
 
@@ -189,7 +189,7 @@ public class CaptureBinding extends TypeVariableBinding {
 	}
 
 	/**
-	 * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#isCapture()
+	 * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isCapture()
 	 */
 	public boolean isCapture() {
 		return true;

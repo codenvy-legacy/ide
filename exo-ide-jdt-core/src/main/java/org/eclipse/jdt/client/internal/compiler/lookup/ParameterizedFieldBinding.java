@@ -8,10 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 
 /**
  * Binding denoting a field after type substitution got performed.
@@ -40,21 +40,21 @@ public ParameterizedFieldBinding(ParameterizedTypeBinding parameterizedDeclaring
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.VariableBinding#constant()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant()
  */
 public Constant constant() {
 	return this.originalField.constant();
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.FieldBinding#original()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding#original()
  */
 public FieldBinding original() {
 	return this.originalField.original();
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.VariableBinding#constant()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant()
  */
 public void setConstant(Constant constant) {
 	this.originalField.setConstant(constant);

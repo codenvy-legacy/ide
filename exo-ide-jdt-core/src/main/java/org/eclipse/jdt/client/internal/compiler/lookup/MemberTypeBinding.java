@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.internal.compiler.lookup;
+package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 public final class MemberTypeBinding extends NestedTypeBinding {
 public MemberTypeBinding(char[][] compoundName, ClassScope scope, SourceTypeBinding enclosingType) {
@@ -35,7 +35,7 @@ public char[] constantPoolName() /* java/lang/Object */ {
 }
 
 /**
- * @see org.eclipse.jdt.internal.compiler.lookup.Binding#initializeDeprecatedAnnotationTagBits()
+ * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#initializeDeprecatedAnnotationTagBits()
  */
 public void initializeDeprecatedAnnotationTagBits() {
 	if ((this.tagBits & TagBits.DeprecatedAnnotationResolved) == 0) {
