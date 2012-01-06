@@ -166,7 +166,12 @@ public class JarsCollector
 
          for (Map.Entry<Object, Object> e : attributes.entrySet())
          {
-            jar.getAttributes().add(new Attribute((String)e.getKey(), (String)e.getValue()));
+            Object key = e.getKey();
+            if (key != null)
+            {
+               Object value = e.getValue();
+               jar.getAttributes().add(new Attribute(key.toString(), value != null ? value.toString() : null));
+            }
          }
       }
       return jar;
