@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.autocompletion.groovy;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
@@ -27,11 +28,8 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 16, 2010 10:46:04 AM evgen $
- *
  */
 public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
 {
@@ -51,14 +49,14 @@ public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\n@");
 
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementNotPresent("hello(String):String");
-      IDE.CODEASSISTANT.checkElementPresent("Deprecated");
-      IDE.CODEASSISTANT.checkElementPresent("Documented");
-      IDE.CODEASSISTANT.checkElementPresent("Inherited");
-      IDE.CODEASSISTANT.checkElementPresent("Override");
-      IDE.CODEASSISTANT.checkElementPresent("Retention");
-      IDE.CODEASSISTANT.checkElementPresent("SuppressWarnings");
-      IDE.CODEASSISTANT.checkElementPresent("Target");
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("hello(String):String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Deprecated"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Documented"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Inherited"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Override"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Retention"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("SuppressWarnings"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Target"));
       
       IDE.CODEASSISTANT.typeToInput("Over");
       IDE.CODEASSISTANT.insertSelectedItem();

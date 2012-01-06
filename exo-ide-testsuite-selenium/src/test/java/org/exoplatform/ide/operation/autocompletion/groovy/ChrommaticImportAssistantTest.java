@@ -34,7 +34,6 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ChrommaticImportAssistant Jan 24, 2011 5:42:31 PM evgen $
- *
  */
 public class ChrommaticImportAssistantTest extends CodeAssistantBaseTest
 {

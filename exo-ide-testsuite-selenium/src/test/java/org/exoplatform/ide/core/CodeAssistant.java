@@ -41,32 +41,34 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class CodeAssistant extends AbstractTestModule
 {
 
-   private interface Locators
-   {
-      /**
-       * XPath autocompletion panel locator.
-       */
-      String PANEL_ID = "exo-ide-autocomplete-panel";
+   /**
+    * XPath autocompletion panel locator.
+    */
+   private static final String PANEL_ID = "exo-ide-autocomplete-panel";
 
-      String PANEL = "//table[@id='exo-ide-autocomplete-panel']";
+   private static final String PANEL = "//table[@id='exo-ide-autocomplete-panel']";
+   
+   private static final String SUBSTITUTE_ELEMENT = PANEL + "//div[text()='%s']";
 
-      /**
-       * Xpath autocompletion input locator.
-       */
-      String INPUT = "exo-ide-autocomplete-edit";
+   /**
+    * Xpath autocompletion input locator.
+    */
+   private static final String INPUT = "exo-ide-autocomplete-edit";
 
-      String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
+   private static final String JAVADOC_DIV = "exo-ide-autocomplete-doc-panel";
 
-      String IMPORT_PANEL_ID = "ideAssistImportDeclarationForm";
-   }
+   private static final String IMPORT_PANEL_ID = "ideAssistImportDeclarationForm";
 
-   @FindBy(id = Locators.INPUT)
+   @FindBy(xpath = PANEL)
+   private WebElement panel;
+   
+   @FindBy(id = INPUT)
    private WebElement input;
 
-   @FindBy(id = Locators.JAVADOC_DIV)
+   @FindBy(id = JAVADOC_DIV)
    private WebElement doc;
 
-   @FindBy(id = Locators.IMPORT_PANEL_ID)
+   @FindBy(id = IMPORT_PANEL_ID)
    private WebElement importPanel;
 
    /**
@@ -79,6 +81,7 @@ public class CodeAssistant extends AbstractTestModule
    {
       input.sendKeys(text);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      
    }
 
    /**
@@ -102,12 +105,25 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void checkElementPresent(String elementTitle)
    {
-      assertTrue(selenium().isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
+      assertTrue(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
+   }
+   
+   public boolean isElementPresent(String elementTitle)
+   {
+      try
+      {
+         WebElement element = panel.findElement(By.xpath(String.format(SUBSTITUTE_ELEMENT, elementTitle)));
+         return element != null && element.isDisplayed();
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
    }
 
    public void checkElementNotPresent(String elementTitle)
    {
-      assertFalse(selenium().isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
+      assertFalse(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
    }
 
    /**
@@ -145,7 +161,7 @@ public class CodeAssistant extends AbstractTestModule
          {
             try
             {
-               input.findElement(By.id(Locators.PANEL_ID));
+               input.findElement(By.id(PANEL_ID));
                return false;
             }
             catch (NoSuchElementException e)
@@ -181,7 +197,7 @@ public class CodeAssistant extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver d)
          {
-            return d.findElement(By.id(Locators.PANEL_ID)) != null;
+            return d.findElement(By.id(PANEL_ID)) != null;
          }
       });
    }
@@ -206,7 +222,7 @@ public class CodeAssistant extends AbstractTestModule
 
    public void checkDocFormPresent()
    {
-      assertTrue(selenium().isElementPresent(Locators.JAVADOC_DIV));
+      assertTrue(selenium().isElementPresent(JAVADOC_DIV));
    }
 
    public void clickOnLineNumer(int num)
