@@ -12,7 +12,6 @@ package org.eclipse.jdt.client.internal.compiler;
 
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.core.compiler.*;
 import org.eclipse.jdt.client.internal.compiler.ast.*;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
@@ -23,6 +22,7 @@ import org.eclipse.jdt.client.internal.compiler.problem.*;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObjectToInt;
 import org.eclipse.jdt.client.internal.core.util.CommentRecorderParser;
 import org.eclipse.jdt.client.internal.core.util.Messages;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 /**
  * A source element parser extracts structural and reference information

@@ -11,10 +11,10 @@
 
 package org.eclipse.jdt.client.core.dom;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 import java.util.ArrayList;
 import java.util.List;

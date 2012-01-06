@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 /**
  * The name environment provides a callback API that the compiler

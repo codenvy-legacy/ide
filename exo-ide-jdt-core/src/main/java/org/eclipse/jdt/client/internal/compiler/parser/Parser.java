@@ -11,21 +11,99 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.parser;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.AND_AND_Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.AllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
+import org.eclipse.jdt.client.internal.compiler.ast.AnnotationMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Argument;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayAllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayInitializer;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.AssertStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.Assignment;
+import org.eclipse.jdt.client.internal.compiler.ast.BinaryExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.Block;
+import org.eclipse.jdt.client.internal.compiler.ast.BreakStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.CaseStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.CastExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.CharLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.ClassLiteralAccess;
+import org.eclipse.jdt.client.internal.compiler.ast.CombinedBinaryExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.CompoundAssignment;
+import org.eclipse.jdt.client.internal.compiler.ast.ConditionalExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ContinueStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.DoStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.DoubleLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.EmptyStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.EqualExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.ExplicitConstructorCall;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.FalseLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldReference;
+import org.eclipse.jdt.client.internal.compiler.ast.FloatLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.ForStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.ForeachStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.IfStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Initializer;
+import org.eclipse.jdt.client.internal.compiler.ast.InstanceOfExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.IntLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.Javadoc;
+import org.eclipse.jdt.client.internal.compiler.ast.LabeledStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.LocalDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.LongLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.MarkerAnnotation;
+import org.eclipse.jdt.client.internal.compiler.ast.MemberValuePair;
+import org.eclipse.jdt.client.internal.compiler.ast.MessageSend;
+import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.NameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.NormalAnnotation;
+import org.eclipse.jdt.client.internal.compiler.ast.NullLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.OR_OR_Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.OperatorIds;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.PostfixExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.PrefixExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedAllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedSuperReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedThisReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Reference;
+import org.eclipse.jdt.client.internal.compiler.ast.ReturnStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleMemberAnnotation;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Statement;
+import org.eclipse.jdt.client.internal.compiler.ast.StringLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.SuperReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SwitchStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.SynchronizedStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.ThisReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ThrowStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.TrueLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.TryStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeParameter;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.UnaryExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.UnionTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.WhileStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
@@ -43,6 +121,23 @@ import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 import org.eclipse.jdt.client.internal.compiler.util.Messages;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 public class Parser implements ParserBasicInformation, TerminalTokens, OperatorIds, TypeIds
 {
@@ -832,6 +927,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          if (i == length)
             break;
       }
+      
       return longs;
    }
 
@@ -888,6 +984,35 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             result[i] = name[i];
          }
       }
+      try
+      {
+         File f = new File(filename);
+         FileOutputStream os = new FileOutputStream(f);
+         StringBuilder b = new StringBuilder();
+         b.append("[");
+         for(String s : result)
+         {
+            if(s == null)
+            {
+               b.append("null,");
+            }
+            else
+            b.append("\"").append(s).append("\",");
+         }
+         b.deleteCharAt(b.length() - 1).append("]");
+         os.write(b.toString().getBytes());
+      }
+      catch (FileNotFoundException e)
+      {
+         e.printStackTrace();
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      
+      
+      
       return result;
    }
 
@@ -935,9 +1060,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          if (i == length)
             break;
       }
-//      File file = new File(filename);
-//      FileInputStream inputStream = new FileInputStream(file);
-//      return IOUtils.toString(inputStream, "UTF-8").toCharArray();
+      
       return chars;
    }
 

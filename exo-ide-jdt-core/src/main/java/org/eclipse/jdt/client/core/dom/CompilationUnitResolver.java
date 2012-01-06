@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.core.INameEnvironmentWithProgress;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
@@ -35,10 +34,10 @@ import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
-import org.eclipse.jdt.client.internal.compiler.util.Messages;
 import org.eclipse.jdt.client.internal.core.CancelableProblemFactory;
 import org.eclipse.jdt.client.internal.core.util.BindingKeyResolver;
 import org.eclipse.jdt.client.internal.core.util.CommentRecorderParser;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -203,11 +202,6 @@ class CompilationUnitResolver extends Compiler
             new CompilationResult(sourceUnit, index++, maxUnits, this.options.maxProblemsPerUnit);
          try
          {
-            if (this.options.verbose)
-            {
-               this.out.println(Messages.bind(Messages.compilation_request, new String[]{String.valueOf(index++ + 1),
-                  String.valueOf(maxUnits), new String(sourceUnit.getFileName())}));
-            }
             // diet parsing for large collection of units
             if (this.totalUnits < this.parseThreshold)
             {
@@ -486,8 +480,8 @@ class CompilationUnitResolver extends Compiler
                // go to the next unit
                continue;
             }
-            org.exoplatform.ide.jdt.client.compiler.batch.CompilationUnit compilationUnit =
-               new org.exoplatform.ide.jdt.client.compiler.batch.CompilationUnit(contents, sourceUnits[i], encoding);
+            org.eclipse.jdt.client.compiler.batch.CompilationUnit compilationUnit =
+               new org.eclipse.jdt.client.compiler.batch.CompilationUnit(contents, sourceUnits[i], encoding);
             org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit sourceUnit = compilationUnit;
             CompilationResult compilationResult =
                new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
@@ -1076,7 +1070,7 @@ class CompilationUnitResolver extends Compiler
                continue;
             }
             sourceUnits[count++] =
-               new org.exoplatform.ide.jdt.client.compiler.batch.CompilationUnit(contents, sourceUnitPath, encoding);
+               new org.eclipse.jdt.client.compiler.batch.CompilationUnit(contents, sourceUnitPath, encoding);
          }
          beginToCompile(sourceUnits, bindingKeys);
          // process all units (some more could be injected in the loop by the lookup environment)

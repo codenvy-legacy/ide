@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.runtime.OperationCanceledException;
 
 
 public class CancelableProblemFactory extends DefaultProblemFactory {

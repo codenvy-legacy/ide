@@ -79,7 +79,7 @@
          </testResource>
       </testResources>
       <sourceDirectory>src/main/java</sourceDirectory>
-      <outputDirectory>target/classes</outputDirectory>
+      <outputDirectory>target/war/WEB-INF/classes</outputDirectory>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -93,5 +93,54 @@
          </plugin>
       </plugins>
    </build>
-
+   <profiles>
+      <profile>
+         <id>shell</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-resources-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-prod-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                           <outputDirectory>target/war/</outputDirectory>
+                           <resources>
+                              <resource>
+                                 <directory>src/main/webapp/</directory>
+                                 <filtering>true</filtering>
+                              </resource>
+                           </resources>
+                           <nonFilteredFileExtensions>
+                              <nonFilteredFileExtension>zip</nonFilteredFileExtension>
+                           </nonFilteredFileExtensions>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>gwt-maven-plugin</artifactId>
+                  <version>${gwt.maven.plugin.version}</version>
+                  <configuration>
+                     <runTarget>org.eclipse.jdt.IdeJdt/JdtTest.html</runTarget>
+                     <logLevel>INFO</logLevel>
+                     <hostedWebapp>${basedir}/target/war</hostedWebapp>
+                     <skipTests>${gwt.test.skip}</skipTests>
+                     <bindAddress>0.0.0.0</bindAddress>
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m</extraJvmArgs>
+                  </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
 </project>

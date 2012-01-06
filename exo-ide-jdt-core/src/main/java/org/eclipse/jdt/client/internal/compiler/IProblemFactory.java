@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler;
 
-import java.util.Locale;
-
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 
 /*
@@ -59,8 +57,6 @@ public interface IProblemFactory {
 		int endPosition,
 		int lineNumber,
 		int columnNumber);
-
-	Locale getLocale();
 
 	String getLocalizedMessage(int problemId, String[] messageArguments);
 

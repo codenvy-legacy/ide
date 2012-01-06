@@ -92,7 +92,6 @@ import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.core.util.Util;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -3087,8 +3086,8 @@ public final class JavaCore {
 	 *
 	 * @return a table of all known configurable options with their default values
 	 */
-	public static Hashtable getDefaultOptions(){
-	   Hashtable defaultOptions = new Hashtable(10);
+	public static HashMap<String, String> getDefaultOptions(){
+	   HashMap<String, String> defaultOptions = new HashMap<String, String>(10);
 	     // get encoding through resource plugin
       defaultOptions.put(JavaCore.CORE_ENCODING, JavaCore.getEncoding());
       
@@ -3379,8 +3378,8 @@ public final class JavaCore {
 	 * @see #getDefaultOptions()
 	 * @see JavaCorePreferenceInitializer for changing default settings
 	 */
-	public static Hashtable getOptions() {
-	   Hashtable options = new Hashtable(10);
+	public static HashMap<String, String> getOptions() {
+	   HashMap<String, String> options = new HashMap<String, String>(10);
       // get encoding through resource plugin
     options.put(JavaCore.CORE_ENCODING, JavaCore.getEncoding());
     options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);

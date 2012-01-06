@@ -1909,11 +1909,12 @@ public abstract class ASTNode {
 			// inserting new child would create a cycle
 			throw new IllegalArgumentException();
 		}
-		Class childClass = newChild.getClass();
-		if (nodeType != null && !nodeType.isAssignableFrom(childClass)) {
-			// new child is not of the right type
-			throw new ClassCastException();
-		}
+		//TODO find solution for GWT emulation of 'isAssignableFrom' method
+//		Class childClass = newChild.getClass();
+//		if (nodeType != null && !nodeType.isAssignableFrom(childClass)) {
+//			// new child is not of the right type
+//			throw new ClassCastException();
+//		}
 		if ((newChild.typeAndFlags & PROTECT) != 0) {
 			// new child node is protected => cannot be parented
 			throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$

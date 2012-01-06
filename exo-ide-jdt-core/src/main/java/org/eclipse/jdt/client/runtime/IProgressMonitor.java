@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.core.runtime;
+package org.eclipse.jdt.client.runtime;
 
 /**
  * The <code>IProgressMonitor</code> interface is implemented

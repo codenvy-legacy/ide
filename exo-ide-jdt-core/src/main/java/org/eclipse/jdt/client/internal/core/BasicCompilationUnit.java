@@ -13,10 +13,6 @@ package org.eclipse.jdt.client.internal.core;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
-
-import java.io.File;
-import java.io.IOException;
-
 /**
  * A basic implementation of <code>ICompilationUnit</code>
  * for use in the <code>SourceMapper</code>.
@@ -81,16 +77,7 @@ public class BasicCompilationUnit implements ICompilationUnit
    {
       if (this.contents != null)
          return this.contents; // answer the cached source
-
-      // otherwise retrieve it
-      try
-      {
-         return Util.getFileCharContent(new File(new String(this.fileName)), this.encoding);
-      }
-      catch (IOException e)
-      {
-         // could not read file: returns an empty array
-      }
+      
       return CharOperation.NO_CHAR;
    }
 

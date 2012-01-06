@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.core.runtime;
+package org.eclipse.jdt.client.runtime;
 
 /**
  * <code>AssertionFailedException</code> is a runtime exception thrown

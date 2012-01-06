@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.core.runtime;
+package org.eclipse.jdt.client.runtime;
 
 /**
  * This exception is thrown to blow out of a long-running method 

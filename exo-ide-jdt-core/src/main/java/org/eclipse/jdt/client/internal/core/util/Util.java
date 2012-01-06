@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.util;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.ASTNode;
@@ -28,6 +27,7 @@ import org.eclipse.jdt.client.internal.compiler.ast.UnionTypeReference;
 import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
+import org.eclipse.jdt.client.runtime.Assert;
 
 import java.io.PrintStream;
 import java.util.ArrayList;

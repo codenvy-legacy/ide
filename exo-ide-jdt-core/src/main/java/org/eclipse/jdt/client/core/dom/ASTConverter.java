@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
@@ -52,6 +51,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScanner;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.core.util.Util;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 /**
  * Internal class for converting internal compiler ASTs into public ASTs.

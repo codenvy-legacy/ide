@@ -13,6 +13,7 @@ package org.eclipse.jdt.client.internal.core.util;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 import org.eclipse.jdt.client.internal.compiler.DefaultErrorHandlingPolicies;
@@ -24,7 +25,6 @@ import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
-import org.exoplatform.ide.jdt.client.compiler.batch.CompilationUnit;
 
 /**
  * Utility class to parse different code snippets

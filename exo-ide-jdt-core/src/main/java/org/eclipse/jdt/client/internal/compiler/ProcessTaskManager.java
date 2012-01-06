@@ -126,14 +126,6 @@ public void run() {
 
 			try {
 				this.compiler.reportProgress(Messages.bind(Messages.compilation_processing, new String(this.unitToProcess.getFileName())));
-				if (this.compiler.options.verbose)
-					this.compiler.out.println(
-						Messages.bind(Messages.compilation_process,
-						new String[] {
-							String.valueOf(index + 1),
-							String.valueOf(this.compiler.totalUnits),
-							new String(this.unitToProcess.getFileName())
-						}));
 				this.compiler.process(this.unitToProcess, index);
 			} finally {
 				if (this.unitToProcess != null)

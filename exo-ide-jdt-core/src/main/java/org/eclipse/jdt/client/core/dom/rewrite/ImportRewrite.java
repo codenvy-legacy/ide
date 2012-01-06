@@ -11,7 +11,6 @@
 
 package org.eclipse.jdt.client.core.dom.rewrite;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.AST;
@@ -25,6 +24,7 @@ import org.eclipse.jdt.client.core.dom.ParameterizedType;
 import org.eclipse.jdt.client.core.dom.PrimitiveType;
 import org.eclipse.jdt.client.core.dom.Type;
 import org.eclipse.jdt.client.core.dom.WildcardType;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
