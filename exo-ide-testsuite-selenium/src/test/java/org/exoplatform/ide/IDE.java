@@ -26,6 +26,7 @@ import org.exoplatform.ide.core.AskForValueDialog;
 import org.exoplatform.ide.core.AvailableDependencies;
 import org.exoplatform.ide.core.Button;
 import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.core.CustomizeToolbar;
 import org.exoplatform.ide.core.Delete;
 import org.exoplatform.ide.core.DeployNodeType;
 import org.exoplatform.ide.core.Editor;
@@ -169,6 +170,8 @@ public class IDE
    
    public LogReader LOG_READER;
    
+   public CustomizeToolbar CUSTOMIZE_TOOLBAR = new CustomizeToolbar();
+   
    public RESTServiceDiscovery REST_SERVICE_DISCOVERY;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
@@ -215,6 +218,7 @@ public class IDE
       REST_SERVICE = PageFactory.initElements(driver, RESTService.class);
       LOGIN = PageFactory.initElements(driver, Login.class);
       LOG_READER = PageFactory.initElements(driver, LogReader.class);
+      CUSTOMIZE_TOOLBAR= PageFactory.initElements(driver, CustomizeToolbar.class);
       REST_SERVICE_DISCOVERY = PageFactory.initElements(driver, RESTServiceDiscovery.class);
    }
 
