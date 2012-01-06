@@ -24,13 +24,18 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.operation.folder.DeleteSeveralFoldersSimultaneously;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.internal.seleniumemulation.GetCookie;
 
 import java.io.IOException;
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,9 +47,11 @@ import java.util.List;
 public class CookiesTest extends BaseTest
 {
 
+   private final static String PROJECT = CookiesTest.class.getSimpleName();
+
    private final static String FILE_NAME = "zxcvjnklzxbvlczkxbvlkbnlsf";
 
-   private final static String TEST_FOLDER = CookiesTest.class.getSimpleName();
+   private final static String TEST_FOLDER = "Test";
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + TEST_FOLDER + "/";
@@ -54,10 +61,13 @@ public class CookiesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + TEST_FOLDER);
+
          VirtualFileSystemUtils.put(
             "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
-            MimeType.GROOVY_SERVICE, URL + FILE_NAME);
+            MimeType.GROOVY_SERVICE, WS_URL + PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -68,28 +78,31 @@ public class CookiesTest extends BaseTest
    @Test
    public void testCookies() throws Exception
    {
-      //wait
-      IDE.WORKSPACE.waitForRootItem();
-      //select
-      IDE.WORKSPACE.selectRootItem();
-      //refresh
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(TEST_FOLDER);
-      //select and open file
-      IDE.WORKSPACE.selectItem(TEST_FOLDER);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(TEST_FOLDER + "/" + FILE_NAME);
-      IDE.WORKSPACE.doubleClickOnFile(TEST_FOLDER + "/" + FILE_NAME);
 
-      //Chek cookies
-      String[] cookies = selenium().getCookie().split("; ");
+      //goto ide, open project, folder in project and test-file
+      IDE.PROJECT.EXPLORER.waitOpened();
 
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER);
+
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
+
+      //get all cookies and split string. Add substrins in string array
+      String[] cookies = driver.manage().getCookies().toString().split("; ");
+
+      //check cookies is not empty
       assertTrue(cookies.length > 0);
 
+      //Chek value cookies
       List<Boolean> listUserCookies = new ArrayList<Boolean>();
       for (int i = 0; i < cookies.length; i++)
       {
-         if (cookies[i].startsWith("eXo-IDE-" + USER_NAME))
+         if (cookies[i].startsWith("domain=" + SELENIUM_HOST + ", eXo-IDE-" + USER_NAME))
          {
             listUserCookies.add(true);
          }
@@ -103,7 +116,7 @@ public class CookiesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
