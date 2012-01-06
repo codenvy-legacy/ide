@@ -45,6 +45,7 @@ import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.PreviewNodeType;
+import org.exoplatform.ide.core.ProgressBar;
 import org.exoplatform.ide.core.Project;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
@@ -173,6 +174,8 @@ public class IDE
    public CustomizeToolbar CUSTOMIZE_TOOLBAR = new CustomizeToolbar();
    
    public RESTServiceDiscovery REST_SERVICE_DISCOVERY;
+   
+   public ProgressBar PROGRESS_BAR;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -220,6 +223,7 @@ public class IDE
       LOG_READER = PageFactory.initElements(driver, LogReader.class);
       CUSTOMIZE_TOOLBAR= PageFactory.initElements(driver, CustomizeToolbar.class);
       REST_SERVICE_DISCOVERY = PageFactory.initElements(driver, RESTServiceDiscovery.class);
+      PROGRESS_BAR = PageFactory.initElements(driver, ProgressBar.class);
    }
 
    public Selenium getSelenium()

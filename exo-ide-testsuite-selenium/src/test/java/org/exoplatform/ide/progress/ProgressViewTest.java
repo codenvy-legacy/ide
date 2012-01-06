@@ -18,13 +18,16 @@
  */
 package org.exoplatform.ide.progress;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -33,23 +36,15 @@ import org.junit.Test;
  */
 public class ProgressViewTest extends BaseTest
 {
-   private static final String ID_CONTROL = "//div[@control-id='__request-notification-control']";
-
-   private static final String ID_VIEW = "//div[@view-id='ideRequestNotificationView']";
-
-   private static final String TEST_FOLDER = ProgressViewTest.class.getSimpleName();
-
-   private static final String REPOSITORY = "progress-repo";
-
-   private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/progress/progress-repo.zip";
+   private static final String PROJECT = ProgressViewTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL + TEST_FOLDER + "/");
+         String projectPath = "src/test/resources/org/exoplatform/ide/progress/progress-repo.zip";
+         VirtualFileSystemUtils.importZipProject(PROJECT, projectPath);
       }
       catch (Exception e)
       {
@@ -62,9 +57,9 @@ public class ProgressViewTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
-      catch (Exception e)
+      catch (IOException e)
       {
          e.printStackTrace();
       }
@@ -73,21 +68,25 @@ public class ProgressViewTest extends BaseTest
    @Test
    public void testProgress() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      
+      IDE.MENU.waitForMenuItemPresent(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitOpened();
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
       IDE.GIT.INIT_REPOSITORY.waitClosed();
 
-      Assert.assertTrue(selenium().isElementPresent(ID_CONTROL));
-      Assert.assertTrue(selenium().isVisible(ID_CONTROL));
+      IDE.PROGRESS_BAR.waitProgressBarControl();
 
-      selenium().click(ID_CONTROL);
-      waitForElementPresent(ID_VIEW);
+      IDE.PROGRESS_BAR.clickProgressBarControl();
+      IDE.PROGRESS_BAR.waitProgressBarView();
 
-      String text = selenium().getText(ID_VIEW);
-      Assert.assertTrue(text.contains("Initializing " + TEST_FOLDER + " repository."));
+      String text = IDE.PROGRESS_BAR.getViewText();
+      
+      assertTrue(text.contains("Initializing "));
    }
 }
