@@ -13,9 +13,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -1217,12 +1214,7 @@ public class CompilerOptions {
 				this.defaultEncoding = null;
 				String stringValue = (String) optionValue;
 				if (stringValue.length() > 0){
-					try {
-						new InputStreamReader(new ByteArrayInputStream(new byte[0]), stringValue);
 						this.defaultEncoding = stringValue;
-					} catch(UnsupportedEncodingException e){
-						// ignore unsupported encoding
-					}
 				}
 			}
 		}

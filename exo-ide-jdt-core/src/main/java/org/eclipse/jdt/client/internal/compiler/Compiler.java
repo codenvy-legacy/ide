@@ -663,7 +663,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       }
       if (this.parser.readManager != null)
       {
-         this.parser.readManager.shutdown();
+//         this.parser.readManager.shutdown();
          this.parser.readManager = null;
       }
       // binding resolution

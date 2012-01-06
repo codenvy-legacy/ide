@@ -2,6 +2,10 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.4.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.4.0/distro-source/core/src/gwt-module.dtd">
 <module>
    <inherits name="com.google.gwt.user.User" />
+   <inherits name="com.google.gwt.http.HTTP" />
+      <!-- IDE Client Framework -->
+   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+   
    <source path="client" />
    <entry-point class="org.eclipse.jdt.client.JdtTest" />
 </module>

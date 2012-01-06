@@ -11,7 +11,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.parser;
 
-import org.apache.commons.io.IOUtils;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
+
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
@@ -122,18 +128,7 @@ import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 import org.eclipse.jdt.client.internal.compiler.util.Messages;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -141,6 +136,84 @@ import java.util.ResourceBundle;
 
 public class Parser implements ParserBasicInformation, TerminalTokens, OperatorIds, TypeIds
 {
+
+   private interface ParserResources extends ClientBundle
+   {
+      @Source("org/eclipse/jdt/client/internal/parser/parser1.rsc")
+      TextResource parser1();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser2.rsc")
+      TextResource parser2();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser3.rsc")
+      TextResource parser3();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser4.rsc")
+      TextResource parser4();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser5.rsc")
+      TextResource parser5();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser6.rsc")
+      TextResource parser6();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser7.rsc")
+      TextResource parser7();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser8.rsc")
+      TextResource parser8();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser9.rsc")
+      TextResource parser9();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser10.rsc")
+      TextResource parser10();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser11.rsc")
+      TextResource parser11();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser12.rsc")
+      TextResource parser12();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser13.rsc")
+      TextResource parser13();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser14.rsc")
+      TextResource parser14();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser15.rsc")
+      TextResource parser15();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser16.rsc")
+      TextResource parser16();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser17.rsc")
+      TextResource parser17();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser18.rsc")
+      TextResource parser18();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser19.rsc")
+      TextResource parser19();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser20.rsc")
+      TextResource parser20();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser21.rsc")
+      TextResource parser21();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser22.rsc")
+      TextResource parser22();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser23.rsc")
+      TextResource parser23();
+
+      @Source("org/eclipse/jdt/client/internal/parser/parser24.rsc")
+      TextResource parser24();
+
+      @Source("org/eclipse/jdt/client/internal/parser/readableNames")
+      TextResource readebleNames();
+   }
 
    protected static final int THIS_CALL = ExplicitConstructorCall.This;
 
@@ -167,10 +240,6 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    private static final boolean DEBUG_AUTOMATON = false;
 
-   private static final String EOF_TOKEN = "$eof"; //$NON-NLS-1$
-
-   private static final String ERROR_TOKEN = "$error"; //$NON-NLS-1$
-
    //expression stack
    protected final static int ExpressionStackIncrement = 100;
 
@@ -179,8 +248,6 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    private final static String FILEPREFIX = "parser"; //$NON-NLS-1$
 
    public static char in_symb[] = null;
-
-   private static final String INVALID_CHARACTER = "Invalid Character"; //$NON-NLS-1$
 
    public static char lhs[] = null;
 
@@ -191,11 +258,6 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    public static char nasr[] = null;
 
    public static char non_terminal_index[] = null;
-
-   private final static String READABLE_NAMES_FILE = "readableNames"; //$NON-NLS-1$
-
-   private final static String READABLE_NAMES_FILE_NAME =
-      "org.eclipse.jdt.client.internal.compiler.parser." + READABLE_NAMES_FILE; //$NON-NLS-1$
 
    public static String readableName[] = null;
 
@@ -238,20 +300,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public static char terminal_index[] = null;
 
-   private static final String UNEXPECTED_EOF = "Unexpected End Of File"; //$NON-NLS-1$
-
    public static boolean VERBOSE_RECOVERY = false;
 
    static
    {
-      try
-      {
-         initTables();
-      }
-      catch (java.io.IOException ex)
-      {
-         throw new ExceptionInInitializerError(ex.getMessage());
-      }
+      initTables();
    }
 
    public static int asi(int state)
@@ -263,481 +316,6 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    public final static short base_check(int i)
    {
       return check_table[i - (NUM_RULES + 1)];
-   }
-
-   private final static void buildFile(String filename, List listToDump)
-   {
-      BufferedWriter writer = null;
-      try
-      {
-         writer = new BufferedWriter(new FileWriter(filename));
-         for (Iterator iterator = listToDump.iterator(); iterator.hasNext();)
-         {
-            writer.write(String.valueOf(iterator.next()));
-         }
-         writer.flush();
-      }
-      catch (IOException e)
-      {
-         // ignore
-      }
-      finally
-      {
-         if (writer != null)
-         {
-            try
-            {
-               writer.close();
-            }
-            catch (IOException e1)
-            {
-               // ignore
-            }
-         }
-      }
-      System.out.println(filename + " creation complete"); //$NON-NLS-1$
-   }
-
-   private static void buildFileForCompliance(String file, int length, String[] tokens)
-   {
-
-      byte[] result = new byte[length * 8];
-
-      for (int i = 0; i < tokens.length; i = i + 3)
-      {
-         if ("2".equals(tokens[i])) { //$NON-NLS-1$
-            int index = Integer.parseInt(tokens[i + 1]);
-            String token = tokens[i + 2].trim();
-            long compliance = 0;
-            if ("1.4".equals(token)) { //$NON-NLS-1$
-               compliance = ClassFileConstants.JDK1_4;
-            }
-            else if ("1.5".equals(token)) { //$NON-NLS-1$
-               compliance = ClassFileConstants.JDK1_5;
-            }
-            else if ("recovery".equals(token)) { //$NON-NLS-1$
-               compliance = ClassFileConstants.JDK_DEFERRED;
-            }
-
-            int j = index * 8;
-            result[j] = (byte)(compliance >>> 56);
-            result[j + 1] = (byte)(compliance >>> 48);
-            result[j + 2] = (byte)(compliance >>> 40);
-            result[j + 3] = (byte)(compliance >>> 32);
-            result[j + 4] = (byte)(compliance >>> 24);
-            result[j + 5] = (byte)(compliance >>> 16);
-            result[j + 6] = (byte)(compliance >>> 8);
-            result[j + 7] = (byte)(compliance);
-         }
-      }
-
-      buildFileForTable(file, result);
-   }
-
-   private final static String[] buildFileForName(String filename, String contents)
-   {
-      String[] result = new String[contents.length()];
-      result[0] = null;
-      int resultCount = 1;
-
-      StringBuffer buffer = new StringBuffer();
-
-      int start = contents.indexOf("name[]"); //$NON-NLS-1$
-      start = contents.indexOf('\"', start);
-      int end = contents.indexOf("};", start); //$NON-NLS-1$
-
-      contents = contents.substring(start, end);
-
-      boolean addLineSeparator = false;
-      int tokenStart = -1;
-      StringBuffer currentToken = new StringBuffer();
-      for (int i = 0; i < contents.length(); i++)
-      {
-         char c = contents.charAt(i);
-         if (c == '\"')
-         {
-            if (tokenStart == -1)
-            {
-               tokenStart = i + 1;
-            }
-            else
-            {
-               if (addLineSeparator)
-               {
-                  buffer.append('\n');
-                  result[resultCount++] = currentToken.toString();
-                  currentToken = new StringBuffer();
-               }
-               String token = contents.substring(tokenStart, i);
-               if (token.equals(ERROR_TOKEN))
-               {
-                  token = INVALID_CHARACTER;
-               }
-               else if (token.equals(EOF_TOKEN))
-               {
-                  token = UNEXPECTED_EOF;
-               }
-               buffer.append(token);
-               currentToken.append(token);
-               addLineSeparator = true;
-               tokenStart = -1;
-            }
-         }
-         if (tokenStart == -1 && c == '+')
-         {
-            addLineSeparator = false;
-         }
-      }
-      if (currentToken.length() > 0)
-      {
-         result[resultCount++] = currentToken.toString();
-      }
-
-      buildFileForTable(filename, buffer.toString().toCharArray());
-
-      System.arraycopy(result, 0, result = new String[resultCount], 0, resultCount);
-      return result;
-   }
-
-   private static void buildFileForReadableName(String file, char[] newLhs, char[] newNonTerminalIndex,
-      String[] newName, String[] tokens)
-   {
-
-      ArrayList entries = new ArrayList();
-
-      boolean[] alreadyAdded = new boolean[newName.length];
-
-      for (int i = 0; i < tokens.length; i = i + 3)
-      {
-         if ("1".equals(tokens[i])) { //$NON-NLS-1$
-            int index = newNonTerminalIndex[newLhs[Integer.parseInt(tokens[i + 1])]];
-            StringBuffer buffer = new StringBuffer();
-            if (!alreadyAdded[index])
-            {
-               alreadyAdded[index] = true;
-               buffer.append(newName[index]);
-               buffer.append('=');
-               buffer.append(tokens[i + 2].trim());
-               buffer.append('\n');
-               entries.add(String.valueOf(buffer));
-            }
-         }
-      }
-      int i = 1;
-      while (!INVALID_CHARACTER.equals(newName[i]))
-         i++;
-      i++;
-      for (; i < alreadyAdded.length; i++)
-      {
-         if (!alreadyAdded[i])
-         {
-            System.out.println(newName[i] + " has no readable name"); //$NON-NLS-1$
-         }
-      }
-      Collections.sort(entries);
-      buildFile(file, entries);
-   }
-
-   private final static void buildFileForTable(String filename, byte[] bytes)
-   {
-      java.io.FileOutputStream stream = null;
-      try
-      {
-         stream = new java.io.FileOutputStream(filename);
-         stream.write(bytes);
-      }
-      catch (IOException e)
-      {
-         // ignore
-      }
-      finally
-      {
-         if (stream != null)
-         {
-            try
-            {
-               stream.close();
-            }
-            catch (IOException e)
-            {
-               // ignore
-            }
-         }
-      }
-      System.out.println(filename + " creation complete"); //$NON-NLS-1$
-   }
-
-   private final static void buildFileForTable(String filename, char[] chars)
-   {
-      byte[] bytes = new byte[chars.length * 2];
-      for (int i = 0; i < chars.length; i++)
-      {
-         bytes[2 * i] = (byte)(chars[i] >>> 8);
-         bytes[2 * i + 1] = (byte)(chars[i] & 0xFF);
-      }
-
-      java.io.FileOutputStream stream = null;
-      try
-      {
-         stream = new java.io.FileOutputStream(filename);
-         stream.write(bytes);
-      }
-      catch (IOException e)
-      {
-         // ignore
-      }
-      finally
-      {
-         if (stream != null)
-         {
-            try
-            {
-               stream.close();
-            }
-            catch (IOException e)
-            {
-               // ignore
-            }
-         }
-      }
-      System.out.println(filename + " creation complete"); //$NON-NLS-1$
-   }
-
-   private final static byte[] buildFileOfByteFor(String filename, String tag, String[] tokens)
-   {
-
-      //transform the String tokens into chars before dumping then into file
-
-      int i = 0;
-      //read upto the tag
-      while (!tokens[i++].equals(tag))
-      {/*empty*/
-      }
-      //read upto the }
-
-      byte[] bytes = new byte[tokens.length]; //can't be bigger
-      int ic = 0;
-      String token;
-      while (!(token = tokens[i++]).equals("}")) { //$NON-NLS-1$
-         int c = Integer.parseInt(token);
-         bytes[ic++] = (byte)c;
-      }
-
-      //resize
-      System.arraycopy(bytes, 0, bytes = new byte[ic], 0, ic);
-
-      buildFileForTable(filename, bytes);
-      return bytes;
-   }
-
-   private final static char[] buildFileOfIntFor(String filename, String tag, String[] tokens)
-   {
-
-      //transform the String tokens into chars before dumping then into file
-
-      int i = 0;
-      //read upto the tag
-      while (!tokens[i++].equals(tag))
-      {/*empty*/
-      }
-      //read upto the }
-
-      char[] chars = new char[tokens.length]; //can't be bigger
-      int ic = 0;
-      String token;
-      while (!(token = tokens[i++]).equals("}")) { //$NON-NLS-1$
-         int c = Integer.parseInt(token);
-         chars[ic++] = (char)c;
-      }
-
-      //resize
-      System.arraycopy(chars, 0, chars = new char[ic], 0, ic);
-
-      buildFileForTable(filename, chars);
-      return chars;
-   }
-
-   private final static void buildFileOfShortFor(String filename, String tag, String[] tokens)
-   {
-
-      //transform the String tokens into chars before dumping then into file
-
-      int i = 0;
-      //read upto the tag
-      while (!tokens[i++].equals(tag))
-      {/*empty*/
-      }
-      //read upto the }
-
-      char[] chars = new char[tokens.length]; //can't be bigger
-      int ic = 0;
-      String token;
-      while (!(token = tokens[i++]).equals("}")) { //$NON-NLS-1$
-         int c = Integer.parseInt(token);
-         chars[ic++] = (char)(c + 32768);
-      }
-
-      //resize
-      System.arraycopy(chars, 0, chars = new char[ic], 0, ic);
-
-      buildFileForTable(filename, chars);
-   }
-
-   private static void buildFilesForRecoveryTemplates(String indexFilename, String templatesFilename,
-      char[] newTerminalIndex, char[] newNonTerminalIndex, String[] newName, char[] newLhs, String[] tokens)
-   {
-
-      int[] newReverse = computeReverseTable(newTerminalIndex, newNonTerminalIndex, newName);
-
-      char[] newRecoveyTemplatesIndex = new char[newNonTerminalIndex.length];
-      char[] newRecoveyTemplates = new char[newNonTerminalIndex.length];
-      int newRecoveyTemplatesPtr = 0;
-
-      for (int i = 0; i < tokens.length; i = i + 3)
-      {
-         if ("3".equals(tokens[i])) { //$NON-NLS-1$
-            int length = newRecoveyTemplates.length;
-            if (length == newRecoveyTemplatesPtr + 1)
-            {
-               System.arraycopy(newRecoveyTemplates, 0, newRecoveyTemplates = new char[length * 2], 0, length);
-            }
-            newRecoveyTemplates[newRecoveyTemplatesPtr++] = 0;
-
-            int index = newLhs[Integer.parseInt(tokens[i + 1])];
-
-            newRecoveyTemplatesIndex[index] = (char)newRecoveyTemplatesPtr;
-
-            String token = tokens[i + 2].trim();
-            java.util.StringTokenizer st = new java.util.StringTokenizer(token, " "); //$NON-NLS-1$
-            String[] terminalNames = new String[st.countTokens()];
-            int t = 0;
-            while (st.hasMoreTokens())
-            {
-               terminalNames[t++] = st.nextToken();
-            }
-
-            for (int j = 0; j < terminalNames.length; j++)
-            {
-               int symbol = getSymbol(terminalNames[j], newName, newReverse);
-               if (symbol > -1)
-               {
-                  length = newRecoveyTemplates.length;
-                  if (length == newRecoveyTemplatesPtr + 1)
-                  {
-                     System.arraycopy(newRecoveyTemplates, 0, newRecoveyTemplates = new char[length * 2], 0, length);
-                  }
-                  newRecoveyTemplates[newRecoveyTemplatesPtr++] = (char)symbol;
-               }
-            }
-         }
-      }
-      newRecoveyTemplates[newRecoveyTemplatesPtr++] = 0;
-      System.arraycopy(newRecoveyTemplates, 0, newRecoveyTemplates = new char[newRecoveyTemplatesPtr], 0,
-         newRecoveyTemplatesPtr);
-
-      buildFileForTable(indexFilename, newRecoveyTemplatesIndex);
-      buildFileForTable(templatesFilename, newRecoveyTemplates);
-   }
-
-   private static void buildFilesForStatementsRecoveryFilter(String filename, char[] newNonTerminalIndex,
-      char[] newLhs, String[] tokens)
-   {
-
-      char[] newStatementsRecoveryFilter = new char[newNonTerminalIndex.length];
-
-      for (int i = 0; i < tokens.length; i = i + 3)
-      {
-         if ("4".equals(tokens[i])) { //$NON-NLS-1$
-            int index = newLhs[Integer.parseInt(tokens[i + 1])];
-
-            newStatementsRecoveryFilter[index] = 1;
-         }
-      }
-      buildFileForTable(filename, newStatementsRecoveryFilter);
-   }
-
-   public final static void buildFilesFromLPG(String dataFilename, String dataFilename2)
-   {
-
-      //RUN THIS METHOD TO GENERATE PARSER*.RSC FILES
-
-      //build from the lpg javadcl.java files that represents the parser tables
-      //lhs check_table asb asr symbol_index
-
-      //[org.eclipse.jdt.internal.compiler.parser.Parser.buildFilesFromLPG("d:/leapfrog/grammar/javadcl.java")]
-      char[] contents = CharOperation.NO_CHAR;
-      try
-      {
-         contents = Util.getFileCharContent(new File(dataFilename), null);
-      }
-      catch (IOException ex)
-      {
-         System.out.println(Messages.parser_incorrectPath);
-         return;
-      }
-      java.util.StringTokenizer st = new java.util.StringTokenizer(new String(contents), " \t\n\r[]={,;"); //$NON-NLS-1$
-      String[] tokens = new String[st.countTokens()];
-      int j = 0;
-      while (st.hasMoreTokens())
-      {
-         tokens[j++] = st.nextToken();
-      }
-      final String prefix = FILEPREFIX;
-      int i = 0;
-
-      char[] newLhs = buildFileOfIntFor(prefix + (++i) + ".rsc", "lhs", tokens); //$NON-NLS-1$ //$NON-NLS-2$
-      buildFileOfShortFor(prefix + (++i) + ".rsc", "check_table", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "asb", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "asr", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "nasb", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "nasr", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      char[] newTerminalIndex = buildFileOfIntFor(prefix + (++i) + ".rsc", "terminal_index", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      char[] newNonTerminalIndex = buildFileOfIntFor(prefix + (++i) + ".rsc", "non_terminal_index", tokens); //$NON-NLS-1$ //$NON-NLS-2$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "term_action", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "scope_prefix", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "scope_suffix", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "scope_lhs", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "scope_state_set", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "scope_rhs", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "scope_state", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfIntFor(prefix + (++i) + ".rsc", "in_symb", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-
-      byte[] newRhs = buildFileOfByteFor(prefix + (++i) + ".rsc", "rhs", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfByteFor(prefix + (++i) + ".rsc", "term_check", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-      buildFileOfByteFor(prefix + (++i) + ".rsc", "scope_la", tokens); //$NON-NLS-2$ //$NON-NLS-1$
-
-      String[] newName = buildFileForName(prefix + (++i) + ".rsc", new String(contents)); //$NON-NLS-1$
-
-      contents = CharOperation.NO_CHAR;
-      try
-      {
-         contents = Util.getFileCharContent(new File(dataFilename2), null);
-      }
-      catch (IOException ex)
-      {
-         System.out.println(Messages.parser_incorrectPath);
-         return;
-      }
-      st = new java.util.StringTokenizer(new String(contents), "\t\n\r#"); //$NON-NLS-1$
-      tokens = new String[st.countTokens()];
-      j = 0;
-      while (st.hasMoreTokens())
-      {
-         tokens[j++] = st.nextToken();
-      }
-
-      buildFileForCompliance(prefix + (++i) + ".rsc", newRhs.length, tokens);//$NON-NLS-1$
-      buildFileForReadableName(READABLE_NAMES_FILE + ".properties", newLhs, newNonTerminalIndex, newName, tokens);//$NON-NLS-1$
-
-      buildFilesForRecoveryTemplates(prefix + (++i) + ".rsc", //$NON-NLS-1$
-         prefix + (++i) + ".rsc", //$NON-NLS-1$
-         newTerminalIndex, newNonTerminalIndex, newName, newLhs, tokens);
-
-      buildFilesForStatementsRecoveryFilter(prefix + (++i) + ".rsc", //$NON-NLS-1$
-         newNonTerminalIndex, newLhs, tokens);
-
-      System.out.println(Messages.parser_moveFiles);
    }
 
    protected static int[] computeReverseTable(char[] newTerminalIndex, char[] newNonTerminalIndex, String[] newName)
@@ -768,69 +346,85 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       return newReverseTable;
    }
 
-   private static int getSymbol(String terminalName, String[] newName, int[] newReverse)
-   {
-      for (int j = 0; j < newName.length; j++)
-      {
-         if (terminalName.equals(newName[j]))
-         {
-            return newReverse[j];
-         }
-      }
-      return -1;
-   }
-
    public static int in_symbol(int state)
    {
       return in_symb[original_state(state)];
    }
 
-   public final static void initTables() throws java.io.IOException
+   public final static void initTables()
    {
 
-      final String prefix = FILEPREFIX;
-      int i = 0;
-      lhs = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      char[] chars = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      ParserResources resources = GWT.create(ParserResources.class);
+
+      lhs = resources.parser1().getText().toCharArray();// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      char[] chars = resources.parser2().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
       check_table = new short[chars.length];
       for (int c = chars.length; c-- > 0;)
       {
          check_table[c] = (short)(chars[c] - 32768);
       }
-      asb = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      asr = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      nasb = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      nasr = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      terminal_index = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      non_terminal_index = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      term_action = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      asb = resources.parser3().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      asr = resources.parser4().getText().toCharArray();// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      nasb = resources.parser5().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      nasr = resources.parser6().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      terminal_index = resources.parser7().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      non_terminal_index = resources.parser8().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      term_action = resources.parser9().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-      scope_prefix = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_suffix = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_lhs = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_state_set = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_rhs = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_state = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      in_symb = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_prefix = resources.parser10().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_suffix = resources.parser11().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_lhs = resources.parser12().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_state_set = resources.parser13().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_rhs = resources.parser14().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_state = resources.parser15().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      in_symb = resources.parser16().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-      rhs = readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      term_check = readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_la = readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      rhs = resources.parser17().getText().getBytes(); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      term_check = resources.parser18().getText().getBytes(); // readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_la = resources.parser19().getText().getBytes(); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-      name = readNameTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      name = readNameTable(resources.parser20().getText().toCharArray()); //$NON-NLS-1$
 
-      rules_compliance = readLongTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-
-      readableName = readReadableNameTable(READABLE_NAMES_FILE_NAME);
+      rules_compliance = parseJsonLongArray(resources.parser21().getText()); //readLongTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      readableName = parseJsonArray(resources.readebleNames().getText()); //readReadableNameTable(READABLE_NAMES_FILE_NAME);
 
       reverse_index = computeReverseTable(terminal_index, non_terminal_index, name);
 
-      recovery_templates_index = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      recovery_templates = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      recovery_templates_index = resources.parser22().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      recovery_templates = resources.parser23().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-      statements_recovery_filter = readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      statements_recovery_filter = resources.parser24().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
       base_action = lhs;
+   }
+
+   private static long[] parseJsonLongArray(String json)
+   {
+      JSONValue value = JSONParser.parseLenient(json);
+      if (value.isArray() == null)
+         throw new IllegalArgumentException("'json' parameter must represent a JSON array");
+      JSONArray array = value.isArray();
+      long result[] = new long[array.size()];
+      for (int i = 0; i < array.size(); i++)
+      {
+         result[i] = (long)array.get(i).isNumber().doubleValue();
+      }
+      return result;
+   }
+
+   private static String[] parseJsonArray(String json)
+   {
+      JSONValue value = JSONParser.parseLenient(json);
+      if (value.isArray() == null)
+         throw new IllegalArgumentException("'json' parameter must represent a JSON array");
+      JSONArray array = value.isArray();
+      String result[] = new String[array.size()];
+      for (int i = 0; i < array.size(); i++)
+      {
+         result[i] = array.get(i).isNull() != null ? array.get(i).isString().stringValue() : null;
+      }
+
+      return result;
    }
 
    public static int nasi(int state)
@@ -848,92 +442,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       return -base_check(state);
    }
 
-   protected static byte[] readByteTable(String filename) throws java.io.IOException
+   protected static String[] readNameTable(char[] contents)
    {
-
-      //files are located at Parser.class directory
-
-      InputStream stream = Parser.class.getResourceAsStream(filename);
-      if (stream == null)
-      {
-         throw new java.io.IOException(Messages.bind(Messages.parser_missingFile, filename));
-      }
-      byte[] bytes = null;
-      try
-      {
-         stream = new BufferedInputStream(stream);
-         bytes = Util.getInputStreamAsByteArray(stream, -1);
-      }
-      finally
-      {
-         try
-         {
-            stream.close();
-         }
-         catch (IOException e)
-         {
-            // ignore
-         }
-      }
-      return bytes;
-   }
-
-   protected static long[] readLongTable(String filename) throws java.io.IOException
-   {
-
-      //files are located at Parser.class directory
-
-      InputStream stream = Parser.class.getResourceAsStream(filename);
-      if (stream == null)
-      {
-         throw new java.io.IOException(Messages.bind(Messages.parser_missingFile, filename));
-      }
-      byte[] bytes = null;
-      try
-      {
-         stream = new BufferedInputStream(stream);
-         bytes = Util.getInputStreamAsByteArray(stream, -1);
-      }
-      finally
-      {
-         try
-         {
-            stream.close();
-         }
-         catch (IOException e)
-         {
-            // ignore
-         }
-      }
-
-      //minimal integrity check (even size expected)
-      int length = bytes.length;
-      if (length % 8 != 0)
-         throw new java.io.IOException(Messages.bind(Messages.parser_corruptedFile, filename));
-
-      // convert bytes into longs
-      long[] longs = new long[length / 8];
-      int i = 0;
-      int longIndex = 0;
-
-      while (true)
-      {
-         longs[longIndex++] =
-            (((long)(bytes[i++] & 0xFF)) << 56) + (((long)(bytes[i++] & 0xFF)) << 48)
-               + (((long)(bytes[i++] & 0xFF)) << 40) + (((long)(bytes[i++] & 0xFF)) << 32)
-               + (((long)(bytes[i++] & 0xFF)) << 24) + (((long)(bytes[i++] & 0xFF)) << 16)
-               + (((long)(bytes[i++] & 0xFF)) << 8) + (bytes[i++] & 0xFF);
-
-         if (i == length)
-            break;
-      }
-      
-      return longs;
-   }
-
-   protected static String[] readNameTable(String filename) throws java.io.IOException
-   {
-      char[] contents = readTable(filename);
       char[][] nameAsChar = CharOperation.splitOn('\n', contents);
 
       String[] result = new String[nameAsChar.length + 1];
@@ -944,124 +454,6 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       }
 
       return result;
-   }
-
-   protected static String[] readReadableNameTable(String filename)
-   {
-      String[] result = new String[name.length];
-
-      ResourceBundle bundle;
-      try
-      {
-         bundle = ResourceBundle.getBundle(filename, Locale.getDefault());
-      }
-      catch (MissingResourceException e)
-      {
-         System.out
-            .println("Missing resource : " + filename.replace('.', '/') + ".properties for locale " + Locale.getDefault()); //$NON-NLS-1$//$NON-NLS-2$
-         throw e;
-      }
-      for (int i = 0; i < NT_OFFSET + 1; i++)
-      {
-         result[i] = name[i];
-      }
-      for (int i = NT_OFFSET; i < name.length; i++)
-      {
-         try
-         {
-            String n = bundle.getString(name[i]);
-            if (n != null && n.length() > 0)
-            {
-               result[i] = n;
-            }
-            else
-            {
-               result[i] = name[i];
-            }
-         }
-         catch (MissingResourceException e)
-         {
-            result[i] = name[i];
-         }
-      }
-      try
-      {
-         File f = new File(filename);
-         FileOutputStream os = new FileOutputStream(f);
-         StringBuilder b = new StringBuilder();
-         b.append("[");
-         for(String s : result)
-         {
-            if(s == null)
-            {
-               b.append("null,");
-            }
-            else
-            b.append("\"").append(s).append("\",");
-         }
-         b.deleteCharAt(b.length() - 1).append("]");
-         os.write(b.toString().getBytes());
-      }
-      catch (FileNotFoundException e)
-      {
-         e.printStackTrace();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      
-      
-      
-      return result;
-   }
-
-   protected static char[] readTable(String filename) throws java.io.IOException
-   {
-
-      //files are located at Parser.class directory
-
-      InputStream stream = Parser.class.getResourceAsStream(filename);
-      if (stream == null)
-      {
-         throw new java.io.IOException(Messages.bind(Messages.parser_missingFile, filename));
-      }
-      byte[] bytes = null;
-      try
-      {
-         stream = new BufferedInputStream(stream);
-         bytes = Util.getInputStreamAsByteArray(stream, -1);
-      }
-      finally
-      {
-         try
-         {
-            stream.close();
-         }
-         catch (IOException e)
-         {
-            // ignore
-         }
-      }
-
-      //minimal integrity check (even size expected)
-      int length = bytes.length;
-      if ((length & 1) != 0)
-         throw new java.io.IOException(Messages.bind(Messages.parser_corruptedFile, filename));
-
-      // convert bytes into chars
-      char[] chars = new char[length / 2];
-      int i = 0;
-      int charIndex = 0;
-
-      while (true)
-      {
-         chars[charIndex++] = (char)(((bytes[i++] & 0xFF) << 8) + (bytes[i++] & 0xFF));
-         if (i == length)
-            break;
-      }
-      
-      return chars;
    }
 
    public static int tAction(int state, int sym)
@@ -11287,7 +10679,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          int immediateCommentEnd = -this.scanner.commentStops[index + 1]; //non-javadoc comment end positions are negative
          if (immediateCommentEnd > 0)
          { // only tolerating non-javadoc comments
-            // is there any line break until the end of the immediate comment ? (thus only tolerating line comment)
+           // is there any line break until the end of the immediate comment ? (thus only tolerating line comment)
             immediateCommentEnd--; // comment end in one char too far
             if (Util.getLineNumber(position, this.scanner.lineEnds, 0, this.scanner.linePtr) == Util.getLineNumber(
                immediateCommentEnd, this.scanner.lineEnds, 0, this.scanner.linePtr))
@@ -13698,7 +13090,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       if (isDietParse)
       {
          TypeDeclaration[] types = this.compilationUnit.types;
-         int[][] intervalToSkip = org.eclipse.jdt.client.internal.compiler.parser.diagnose.RangeUtil.computeDietRange(types);
+         int[][] intervalToSkip =
+            org.eclipse.jdt.client.internal.compiler.parser.diagnose.RangeUtil.computeDietRange(types);
          DiagnoseParser diagnoseParser =
             new DiagnoseParser(this, oldFirstToken, start, end, intervalToSkip[0], intervalToSkip[1],
                intervalToSkip[2], this.options);
