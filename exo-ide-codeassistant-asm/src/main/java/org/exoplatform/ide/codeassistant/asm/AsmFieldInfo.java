@@ -62,7 +62,7 @@ public class AsmFieldInfo extends AsmMember implements FieldInfo
    @Override
    public void setDeclaringClass(String declaringClass)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -71,7 +71,7 @@ public class AsmFieldInfo extends AsmMember implements FieldInfo
    @Override
    public void setType(String type)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
 }

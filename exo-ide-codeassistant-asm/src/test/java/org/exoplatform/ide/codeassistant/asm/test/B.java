@@ -26,14 +26,14 @@ import java.util.List;
 */
 public class B extends A implements I
 {
-   
+
    public List<Boolean> booleans;
-   
+
    private final Collection<Double> doubles;
-   
+
    public B() throws ClassFormatError, ClassNotFoundException
    {
-      doubles =  new ArrayList<Double>();
+      doubles = new ArrayList<Double>();
    }
 
    public B(List<Boolean> booleans, Collection<Double> doubles) throws ClassFormatError, ClassNotFoundException
@@ -41,8 +41,7 @@ public class B extends A implements I
       this.booleans = booleans;
       this.doubles = doubles;
    }
-   
-   
+
    /**
     * @param s
     * @param ss
@@ -53,9 +52,11 @@ public class B extends A implements I
     */
    public A createA(String s, List<String> ss, Class<?> clazz) throws ClassFormatError, ClassNotFoundException
    {
-      return new A(){};
+      return new A()
+      {
+      };
    }
-   
+
    public Collection<Double> getDoubles()
    {
       return doubles;
@@ -65,11 +66,15 @@ public class B extends A implements I
    {
       return null;
    }
-   
+
    public String[] getName(Long[] longs)
    {
       return null;
    }
-   
+
+   public <T extends Number, InputStream> T genericMethod(T number)
+   {
+      return null;
+   }
 
 }

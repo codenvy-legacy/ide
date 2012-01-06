@@ -112,25 +112,28 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
          TraceSignatureVisitor v = new TraceSignatureVisitor(methodNode.access);
          reader.accept(v);
          String declaration = v.getDeclaration();
-         if (declaration.length() > 2)
+         String methodParams = declaration.substring(declaration.indexOf('('), declaration.length());
+         if (methodParams.length() > 2)
          {
             //(java.lang.String, java.lang.Integer, java.util.List<java.lang.String>)
             // cut braces, and split on ', '
-            return Arrays.asList(declaration.substring(1, declaration.length() - 1).split(", "));
+            return Arrays.asList(methodParams.substring(1, methodParams.length() - 1).split(", "));
          }
          else
          {
             return Collections.emptyList();
          }
       }
-
-      Type[] types = Type.getArgumentTypes(methodNode.desc);
-      List<String> result = new ArrayList<String>(types.length);
-      for (Type type : types)
+      else
       {
-         result.add(type.getClassName());
+         Type[] types = Type.getArgumentTypes(methodNode.desc);
+         List<String> result = new ArrayList<String>(types.length);
+         for (Type type : types)
+         {
+            result.add(type.getClassName());
+         }
+         return result;
       }
-      return result;
    }
 
    /**
@@ -139,7 +142,17 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public String getReturnType()
    {
-      return Type.getReturnType(methodNode.desc).getClassName();
+      if (methodNode.signature != null)
+      {
+         SignatureReader reader = new SignatureReader(methodNode.signature);
+         TraceSignatureVisitor v = new TraceSignatureVisitor(methodNode.access);
+         reader.accept(v);
+         return v.getReturnType();
+      }
+      else
+      {
+         return Type.getReturnType(methodNode.desc).getClassName();
+      }
    }
 
    /**
@@ -157,7 +170,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public void setConstructor(boolean isConstructor)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -166,7 +179,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public void setDeclaringClass(String declaringClass)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -175,7 +188,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public void setExceptionTypes(List<String> exceptionTypes)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -184,7 +197,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public void setParameterNames(List<String> parameterNames)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -193,7 +206,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public void setParameterTypes(List<String> parameterTypes)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -202,7 +215,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    @Override
    public void setReturnType(String returnType)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
 }

@@ -22,6 +22,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertArrayEquals;
 
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
+
 import org.exoplatform.ide.codeassistant.asm.test.A;
 import org.exoplatform.ide.codeassistant.asm.test.B;
 import org.exoplatform.ide.codeassistant.asm.test.E;
@@ -36,6 +39,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -65,7 +69,7 @@ public class ClassInfoExtractorTest
    }
 
    @Test
-   public void testExctractClass() throws ClassFormatError, ClassNotFoundException, IOException
+   public void testExtractClass() throws ClassFormatError, ClassNotFoundException, IOException
    {
       TypeInfo cd = ClassParser.parse(A.class);
       assertEquals(9, cd.getMethods().size());
@@ -128,19 +132,20 @@ public class ClassInfoExtractorTest
    }
 
    @Test
-   public void testExctractMethod() throws IOException
+   public void testExtractMethod() throws IOException
    {
       TypeInfo cd = ClassParser.parse(B.class);
       List<MethodInfo> mds = cd.getMethods();
       Method[] methods = B.class.getDeclaredMethods();
       for (Method method : methods)
       {
-         MethodInfo md = getMethodInfo(mds, method.getName());
+         MethodInfo md = getMethodInfo(mds, method);
          if (md == null)
          {
             fail();
          }
          assertEquals(method.getModifiers(), md.getModifiers());
+         assertEquals(typeToString(method.getGenericReturnType()), md.getReturnType());
       }
    }
 
@@ -149,18 +154,53 @@ public class ClassInfoExtractorTest
    {
       TypeInfo en = ClassParser.parse(E.class);
       assertEquals(JavaType.ENUM.name(), en.getType());
+      assertEquals(3, en.getFields().size());
       assertEquals("ONE", en.getFields().get(0).getName());
+      assertEquals("TWO", en.getFields().get(1).getName());
+      assertEquals("THREE", en.getFields().get(2).getName());
    }
 
-   private MethodInfo getMethodInfo(List<MethodInfo> mds, String name)
+   private MethodInfo getMethodInfo(List<MethodInfo> mds, Method method)
    {
       for (MethodInfo md : mds)
       {
-         if (md.getName().equals(name))
+         if (md.getName().equals(method.getName())
+            && md.getParameterTypes().size() == method.getGenericParameterTypes().length)
          {
-            return md;
+            Type[] types = method.getGenericParameterTypes();
+            boolean z = true;
+            for (int i = 0; i < types.length; i++)
+            {
+               if (!md.getParameterTypes().get(i).equals(typeToString(types[i])))
+               {
+                  z = false;
+                  break;
+               }
+            }
+            if (z)
+            {
+               return md;
+            }
          }
       }
       return null;
    }
+
+   public String typeToString(Type type)
+   {
+      if (type instanceof Class<?>)
+      {
+         return ((Class<?>)type).getCanonicalName();
+      }
+      if (type instanceof ParameterizedTypeImpl)
+      {
+         return type.toString();
+      }
+      if (type instanceof TypeVariableImpl)
+      {
+         return type.toString();
+      }
+      return null;
+   }
+
 }

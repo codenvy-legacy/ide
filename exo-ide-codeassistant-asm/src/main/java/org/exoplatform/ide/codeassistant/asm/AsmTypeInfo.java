@@ -34,6 +34,13 @@ import java.util.List;
  */
 public class AsmTypeInfo extends AsmMember implements TypeInfo
 {
+
+   /**
+    * This constant got from {@list Modifier}. See {@list Modifier} sources to
+    * understand why this constant not in public access.
+    */
+   public static final int SYNTHETIC = 0x00001000;
+
    private final ClassNode classNode;
 
    public AsmTypeInfo(ClassNode classNode)
@@ -51,7 +58,11 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
       List<FieldInfo> result = new ArrayList<FieldInfo>(classNode.fields.size());
       for (Object node : classNode.fields)
       {
-         result.add(new AsmFieldInfo((FieldNode)node, this));
+         AsmFieldInfo fieldInfo = new AsmFieldInfo((FieldNode)node, this);
+         if ((fieldInfo.getModifiers() & SYNTHETIC) == 0)
+         {
+            result.add(fieldInfo);
+         }
       }
       return result;
    }
@@ -79,7 +90,11 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
       List<MethodInfo> result = new ArrayList<MethodInfo>(classNode.methods.size());
       for (Object node : classNode.methods)
       {
-         result.add(new AsmMethodInfo((MethodNode)node, this));
+         AsmMethodInfo methodInfo = new AsmMethodInfo((MethodNode)node, this);
+         if ((methodInfo.getModifiers() & SYNTHETIC) == 0)
+         {
+         result.add(methodInfo);
+         }
       }
       return result;
    }
@@ -108,7 +123,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
    @Override
    public void setFields(List<FieldInfo> fields)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -117,7 +132,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
    @Override
    public void setInterfaces(List<String> interfaces)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
 
    }
 
@@ -127,7 +142,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
    @Override
    public void setMethods(List<MethodInfo> methods)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -136,7 +151,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
    @Override
    public void setSuperClass(String superClass)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -145,7 +160,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
    @Override
    public void setType(String type)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
 }

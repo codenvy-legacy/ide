@@ -66,7 +66,7 @@ public class AsmMember implements Member
    @Override
    public void setModifiers(int modifiers)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    /**
@@ -75,7 +75,7 @@ public class AsmMember implements Member
    @Override
    public void setName(String name)
    {
-      throw new RuntimeException("Set not supported");
+      throw new UnsupportedOperationException("Set not supported");
    }
 
    public static String classNameFromType(String type)
