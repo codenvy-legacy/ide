@@ -102,7 +102,6 @@ public class ShortTypeInfoExtractorTest
       verify(reader).document(eq(5), model.capture());
 
       assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.MODIFIERS));
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.CLASS_NAME));
       assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.FQN));
       assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.ENTITY_TYPE));
       assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.SUPERCLASS));

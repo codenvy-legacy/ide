@@ -42,7 +42,7 @@ public class JavaDocExtractor implements ContentExtractor<String>
    {
       Document document =
          reader.document(doc,
-            new MapFieldSelector(new String[]{DataIndexFields.FQN, DataIndexFields.JAVA_DOC}));
+            new MapFieldSelector(new String[]{DataIndexFields.JAVA_DOC}));
 
       return document.get(DataIndexFields.JAVA_DOC);
 

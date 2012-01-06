@@ -98,26 +98,13 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
    {
       if (ancestor != null)
       {
-         /*
-          * @see below, like methods
-          */
          ArrayList<FieldInfo> fields = new ArrayList<FieldInfo>();
          fields.addAll(recipient.getFields());
-         // List<FieldInfo> fields = recipient.getFields();
          fields.addAll(ancestor.getFields());
          recipient.setFields(fields);
 
-         /*
-          * Here you can't add new methods to list received from recipient.getMethods() by two reasons:
-          * 1) List received from getMethods() may be private storage for methods, but not copy of its.
-          *    So, if you add methods in this list, new methods will be added to private list of methods too,
-          *    and line recipient.setMethods(methods) will do nothing.
-          * 2) List which returns getMethods() may be immutable, and it is true now.
-          *    Because if recipient class hasn't method, TypeInfoBean class returns immutable Collections$EmptyList instance.
-          */
          ArrayList<MethodInfo> methods = new ArrayList<MethodInfo>();
          methods.addAll(recipient.getMethods());
-         // List<MethodInfo> methods = recipient.getMethods();
 
          methods.addAll(ancestor.getMethods());
          recipient.setMethods(methods);

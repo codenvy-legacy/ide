@@ -45,8 +45,8 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
    public ShortTypeInfo getValue(IndexReader reader, int doc) throws IOException
    {
       Document document =
-         reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.MODIFIERS,
-            DataIndexFields.CLASS_NAME, DataIndexFields.FQN, DataIndexFields.ENTITY_TYPE}));
+         reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.MODIFIERS, DataIndexFields.FQN,
+            DataIndexFields.ENTITY_TYPE}));
 
       int modifier = Integer.valueOf(document.get(DataIndexFields.MODIFIERS));
 

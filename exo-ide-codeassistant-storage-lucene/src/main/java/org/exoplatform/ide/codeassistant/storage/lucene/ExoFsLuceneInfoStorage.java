@@ -21,6 +21,7 @@ package org.exoplatform.ide.codeassistant.storage.lucene;
 import org.exoplatform.container.configuration.ConfigurationException;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
+import org.picocontainer.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ import java.io.IOException;
 /**
  * FsLuceneInfoStorage to be able to configure over eXo configuration
  */
-public class ExoFsLuceneInfoStorage extends LuceneInfoStorage
+public class ExoFsLuceneInfoStorage extends LuceneInfoStorage implements Startable
 {
 
    private static final Logger LOG = LoggerFactory.getLogger(ExoFsLuceneInfoStorage.class);
@@ -57,6 +58,17 @@ public class ExoFsLuceneInfoStorage extends LuceneInfoStorage
    public ExoFsLuceneInfoStorage(InitParams params) throws IOException, ConfigurationException
    {
       super(extractStoragePath(params));
+   }
+
+   @Override
+   public void start()
+   {
+   }
+
+   @Override
+   public void stop()
+   {
+      this.closeIndexes();
    }
 
 }

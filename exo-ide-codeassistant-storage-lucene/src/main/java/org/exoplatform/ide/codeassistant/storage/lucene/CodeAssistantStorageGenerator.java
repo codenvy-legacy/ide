@@ -58,15 +58,12 @@ public class CodeAssistantStorageGenerator
 
    private final DataStorageWriter storageWriter;
 
-   private final String indexDirectory;
-
    private final String jarFilesList;
 
    private final String sourceArchiveFilesList;
 
    public CodeAssistantStorageGenerator(String indexDirectory, String jarFilesList, String sourceArchiveFilesList)
    {
-      this.indexDirectory = indexDirectory;
       this.jarFilesList = jarFilesList;
       this.sourceArchiveFilesList = sourceArchiveFilesList;
       this.storageWriter = new DataStorageWriter(indexDirectory);

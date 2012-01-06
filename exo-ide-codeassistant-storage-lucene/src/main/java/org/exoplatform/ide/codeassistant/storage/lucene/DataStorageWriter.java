@@ -29,6 +29,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for storing classes info and java docs info to lucene storage
+ */
 public class DataStorageWriter
 {
 
@@ -39,6 +42,13 @@ public class DataStorageWriter
       this.pathToIndex = pathToIndex;
    }
 
+   /**
+    * Method add all classes from jars to lucene index
+    * 
+    * @param jars
+    * @throws IOException
+    * @throws SaveDataIndexException
+    */
    public void writeBinaryJarsToIndex(List<String> jars) throws IOException, SaveDataIndexException
    {
       LuceneInfoStorage luceneInfoStorage = null;
@@ -63,6 +73,13 @@ public class DataStorageWriter
       }
    }
 
+   /**
+    * Method adds all java doc comments from source archives to lucene index
+    * 
+    * @param sourceJars
+    * @throws IOException
+    * @throws SaveDataIndexException
+    */
    public void writeSourceJarsToIndex(List<String> sourceJars) throws IOException, SaveDataIndexException
    {
       LuceneInfoStorage luceneInfoStorage = null;

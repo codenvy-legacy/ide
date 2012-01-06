@@ -168,11 +168,6 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       }
       else
       {
-         /*
-          * Block modifications of private list outside this class. Because this list returns by getXXX method.
-          * If list is empty, then getXXX method returns unmodifiable Collections#emptyList(), so if list isn't empty
-          * its must return unmodifiable list too.
-          */
          this.exceptionTypes = Collections.unmodifiableList(exceptionTypes);
       }
    }
@@ -189,11 +184,6 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       }
       else
       {
-         /*
-          * Block modifications of private list outside this class. Because this list returns by getXXX method.
-          * If list is empty, then getXXX method returns unmodifiable Collections#emptyList(), so if list isn't empty
-          * its must return unmodifiable list too.
-          */
          this.parameterNames = Collections.unmodifiableList(parameterNames);
       }
 
@@ -212,11 +202,6 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       }
       else
       {
-         /*
-          * Block modifications of private list outside this class. Because this list returns by getXXX method.
-          * If list is empty, then getXXX method returns unmodifiable Collections#emptyList(), so if list isn't empty
-          * its must return unmodifiable list too.
-          */
          this.parameterTypes = Collections.unmodifiableList(parameterTypes);
       }
    }
