@@ -61,7 +61,7 @@
          <groupId>ch.qos.logback</groupId>
          <artifactId>logback-classic</artifactId>
          <version>0.9.20</version>
-         <scope>test</scope>
+         <!--scope>test</scope-->
       </dependency>
 
 
@@ -72,4 +72,40 @@
       </dependency>
 
    </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+               <archive>
+                  <manifest>
+                     <addClasspath>true</addClasspath>
+                     <classpathPrefix>libs/</classpathPrefix>
+                     <mainClass>org.exoplatform.ide.codeassistant.storage.lucene.CodeAssistantStorageGenerator</mainClass>
+                  </manifest>
+               </archive>
+            </configuration>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>copy-dependencies-jar</id>
+                  <phase>install</phase>
+                  <goals>
+                     <goal>copy-dependencies</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>target/libs</outputDirectory>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+
 </project>

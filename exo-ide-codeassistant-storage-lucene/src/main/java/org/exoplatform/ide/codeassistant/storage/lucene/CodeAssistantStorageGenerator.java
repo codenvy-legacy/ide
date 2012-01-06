@@ -134,9 +134,9 @@ public class CodeAssistantStorageGenerator
          sourceArchiveFilesList = args[2];
       }
 
-      LOG.info("Index will be created in " + indexDirectory + " directory\n");
-      LOG.info("Jar files list will be read from " + jarFilesList + " file\n");
-      LOG.info("Source archives list will be read from " + sourceArchiveFilesList + " file\n");
+      LOG.info("Index will be created in " + indexDirectory + " directory");
+      LOG.info("Jar files list will be read from " + jarFilesList + " file");
+      LOG.info("Source archives list will be read from " + sourceArchiveFilesList + " file");
 
       CodeAssistantStorageGenerator codeAssistantStorageGenerator =
          new CodeAssistantStorageGenerator(indexDirectory, jarFilesList, sourceArchiveFilesList);
