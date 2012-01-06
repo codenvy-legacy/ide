@@ -72,8 +72,8 @@ public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
        * sort(List):void
        * sort(List, Comparator):void
        */
-      IDE.CODEASSISTANT.checkElementPresent("sort(List):void");
-      IDE.CODEASSISTANT.checkElementPresent("sort(List, Comparator):void");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(List):void"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(List, Comparator):void"));
 
       /*
        * 6. Select sort(List, Comparator):void element
