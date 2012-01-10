@@ -72,13 +72,13 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
             @Override
             protected void onSuccess(String result)
             {
-               undeploySuccess(result);
+               undeploySuccess(activeFile.getPath());
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               undeployFail(exception, this.getResult());
+               undeployFail(exception, activeFile.getPath());
             }
          });
    }
@@ -91,10 +91,24 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
       //      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
    }
 
-   private void undeployFail(Throwable exc, String href)
+   private void undeployFail(Throwable exc, String path)
    {
-      IDE.fireEvent(new ExceptionThrownEvent(exc));
-      GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(href);
+      if (exc instanceof ServerException)
+      {
+         ServerException exception = (ServerException)exc;
+         String outputContent = "<b>" + URL.decodePathSegment(path) + "</b> undeploy failed.&nbsp;";
+         outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+         if (!exception.getMessage().equals(""))
+         {
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+         }
+      }
+      else
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(exc));
+      }
+
+      GroovyUndeployResultReceivedEvent event = new GroovyUndeployResultReceivedEvent(path);
       event.setException(exc);
       IDE.fireEvent(event);
    }
@@ -112,13 +126,13 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
             @Override
             protected void onSuccess(String result)
             {
-               undeploySuccess(result);
+               undeploySuccess(activeFile.getPath());
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               undeployFail(exception, this.getResult());
+               undeployFail(exception, activeFile.getPath());
             }
          });
    }

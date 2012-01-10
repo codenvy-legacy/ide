@@ -56,7 +56,7 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
 {
 
    private FileModel activeFile;
-   
+
    private ProjectModel currentProject;
 
    public DeployGroovyCommandHandler()
@@ -78,24 +78,25 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
-      if (activeFile == null || currentProject == null) {
+      if (activeFile == null || currentProject == null)
+      {
          Dialogs.getInstance().showError("Could not deploy Groovy Service.");
          return;
       }
-      
+
       GroovyService.getInstance().deploy(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
          currentProject.getId(), new AsyncRequestCallback<String>()
          {
             @Override
             protected void onSuccess(String result)
             {
-               deploySuccess(result);
+               deploySuccess(activeFile.getPath());
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               deployFailure(this.getResult(), exception);
+               deployFailure(activeFile.getPath(), exception);
             }
          });
    }
@@ -107,13 +108,13 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
       IDE.fireEvent(new GroovyDeployResultReceivedEvent(href));
    }
 
-   private void deployFailure(String href, Throwable exception)
+   private void deployFailure(String path, Throwable exception)
    {
       if (exception instanceof ServerException)
       {
          ServerException serverException = (ServerException)exception;
 
-         String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> deploy failed.&nbsp;";
+         String outputContent = "<b>" + URL.decodePathSegment(path) + "</b> deploy failed.&nbsp;";
          outputContent +=
             "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText() + "</i>)";
          if (!serverException.getMessage().equals(""))
@@ -127,8 +128,8 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
       {
          IDE.fireEvent(new ExceptionThrownEvent(exception));
       }
-      
-      GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(href);
+
+      GroovyDeployResultReceivedEvent event = new GroovyDeployResultReceivedEvent(path);
       event.setException(exception);
       IDE.fireEvent(event);
    }
@@ -138,24 +139,25 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScriptSandbox(DeployGroovyScriptSandboxEvent event)
    {
-      if (activeFile == null || currentProject == null) {
+      if (activeFile == null || currentProject == null)
+      {
          Dialogs.getInstance().showError("Could not deploy Groovy Service.");
          return;
-      }      
-      
+      }
+
       GroovyService.getInstance().deploySandbox(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
          currentProject.getId(), new AsyncRequestCallback<String>()
          {
             @Override
             protected void onSuccess(String result)
             {
-               deploySuccess(result);
+               deploySuccess(activeFile.getPath());
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               deployFailure(this.getResult(), exception);
+               deployFailure(activeFile.getPath(), exception);
             }
          });
    }

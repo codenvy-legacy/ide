@@ -99,7 +99,7 @@ public class RunGroovyServiceCommand extends SimpleControl implements IDEControl
       if (MimeType.GROOVY_SERVICE.equals(activeFile.getMimeType()))
       {
          setVisible(true);
-         boolean enabled = activeFile.isPersisted() && isProjectExplorerVisible;
+         boolean enabled = isProjectExplorerVisible;
          setEnabled(enabled);
       }
       else
