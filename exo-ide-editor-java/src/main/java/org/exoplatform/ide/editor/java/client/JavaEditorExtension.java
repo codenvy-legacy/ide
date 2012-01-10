@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -48,6 +47,7 @@ import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaOutlineItemCreator;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaParser;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
+import org.exoplatform.ide.editor.java.client.create.NewJavaClassControl;
 
 import java.util.List;
 
@@ -82,9 +82,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Java Class", "Java Class", "Create Java Class", JavaClientBundle.INSTANCE
-            .newClassWizz(), JavaClientBundle.INSTANCE.newClassWizzDisabled(), new CreateJavaClassEvent()));
+      IDE.getInstance().addControl(new NewJavaClassControl());
 
       JavaClientBundle.INSTANCE.css().ensureInjected();
 

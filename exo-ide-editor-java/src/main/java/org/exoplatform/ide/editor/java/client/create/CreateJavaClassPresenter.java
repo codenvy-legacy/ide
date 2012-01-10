@@ -421,7 +421,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          }
       });
 
-      if (selectedItem != null)
+      if (selectedItem != null && currentProject != null)
       {
          sourcePath =
             currentProject.hasProperty("sourceFolder") ? (String)currentProject.getPropertyValue("sourceFolder")
