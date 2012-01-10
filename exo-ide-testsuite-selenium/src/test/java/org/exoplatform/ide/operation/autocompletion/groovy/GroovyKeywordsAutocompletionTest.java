@@ -27,11 +27,8 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 16, 2010 3:54:57 PM evgen $
- *
  */
 //IDE-492
 public class GroovyKeywordsAutocompletionTest extends CodeAssistantBaseTest
@@ -54,10 +51,10 @@ public class GroovyKeywordsAutocompletionTest extends CodeAssistantBaseTest
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nn");
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("name:String");
-      IDE.CODEASSISTANT.checkElementPresent("native");
-      IDE.CODEASSISTANT.checkElementPresent("new");
-      IDE.CODEASSISTANT.checkElementPresent("null");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("name:String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("native"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("new"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("null"));
 
       IDE.CODEASSISTANT.moveCursorDown(3);
 
