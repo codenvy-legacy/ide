@@ -31,6 +31,7 @@ import org.eclipse.jdt.client.runtime.Assert;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -199,6 +200,17 @@ public class Util
             return -1;
       }
       return i;
+   }
+   
+   /**
+    * Simple replacement for clone() method for GWT 
+    * @param array
+    * @return cloned array
+    */
+   @SuppressWarnings("unchecked")
+   public static <T> T[] clone(T[] array)
+   {
+      return (T[])Arrays.asList(array).toArray();
    }
 
    /**
@@ -3571,6 +3583,17 @@ public class Util
          start++;
       }
       return start;
+   }
+
+   /**
+    * @param get_PLUS
+    * @return
+    */
+   public static int[] clone(int[] array)
+   {
+      int result[] = new int[array.length];
+      System.arraycopy(array, 0, result, 0, array.length);
+      return result;
    }
 
    //	/*

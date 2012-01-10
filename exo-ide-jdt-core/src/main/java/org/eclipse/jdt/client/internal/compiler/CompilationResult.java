@@ -30,23 +30,21 @@ package org.eclipse.jdt.client.internal.compiler;
  * specific fields and methods which were referenced, but does contain their
  * declaring types and any other types used to locate such fields or methods.
  */
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.compiler.impl.ReferenceContext;
-import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScannerData;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class CompilationResult {
 
@@ -64,7 +62,7 @@ public class CompilationResult {
 	public boolean hasAnnotations = false;
 	public int lineSeparatorPositions[];
 	public RecoveryScannerData recoveryScannerData;
-	public Map compiledTypes = new Hashtable(11);
+	public Map compiledTypes = new HashMap(11);
 	public int unitIndex, totalUnitsKnown;
 	public boolean hasBeenAccepted = false;
 	public char[] fileName;

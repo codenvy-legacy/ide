@@ -15,127 +15,156 @@ package org.eclipse.jdt.client.internal.compiler.util;
  * and values are Objects. It also uses linear probing to resolve collisions
  * rather than a linked list of hash table entries.
  */
-public final class SimpleSet implements Cloneable {
+public final class SimpleSet implements Cloneable
+{
 
-// to avoid using Enumerations, walk the individual values skipping nulls
-public Object[] values;
-public int elementSize; // number of elements in the table
-public int threshold;
+   // to avoid using Enumerations, walk the individual values skipping nulls
+   public Object[] values;
 
-public SimpleSet() {
-	this(13);
-}
+   public int elementSize; // number of elements in the table
 
-public SimpleSet(int size) {
-	if (size < 3) size = 3;
-	this.elementSize = 0;
-	this.threshold = size + 1; // size is the expected number of elements
-	this.values = new Object[2 * size + 1];
-}
+   public int threshold;
 
-public Object add(Object object) {
-	int length = this.values.length;
-	int index = (object.hashCode() & 0x7FFFFFFF) % length;
-	Object current;
-	while ((current = this.values[index]) != null) {
-		if (current.equals(object)) return this.values[index] = object;
-		if (++index == length) index = 0;
-	}
-	this.values[index] = object;
+   public SimpleSet()
+   {
+      this(13);
+   }
 
-	// assumes the threshold is never equal to the size of the table
-	if (++this.elementSize > this.threshold) rehash();
-	return object;
-}
+   public SimpleSet(int size)
+   {
+      if (size < 3)
+         size = 3;
+      this.elementSize = 0;
+      this.threshold = size + 1; // size is the expected number of elements
+      this.values = new Object[2 * size + 1];
+   }
 
-public Object addIfNotIncluded(Object object) {
-	int length = this.values.length;
-	int index = (object.hashCode() & 0x7FFFFFFF) % length;
-	Object current;
-	while ((current = this.values[index]) != null) {
-		if (current.equals(object)) return null; // already existed
-		if (++index == length) index = 0;
-	}
-	this.values[index] = object;
+   public Object add(Object object)
+   {
+      int length = this.values.length;
+      int index = (object.hashCode() & 0x7FFFFFFF) % length;
+      Object current;
+      while ((current = this.values[index]) != null)
+      {
+         if (current.equals(object))
+            return this.values[index] = object;
+         if (++index == length)
+            index = 0;
+      }
+      this.values[index] = object;
 
-	// assumes the threshold is never equal to the size of the table
-	if (++this.elementSize > this.threshold) rehash();
-	return object;
-}
+      // assumes the threshold is never equal to the size of the table
+      if (++this.elementSize > this.threshold)
+         rehash();
+      return object;
+   }
 
-public void asArray(Object[] copy) {
-	if (this.elementSize != copy.length)
-		throw new IllegalArgumentException();
-	int index = this.elementSize;
-	for (int i = 0, l = this.values.length; i < l && index > 0; i++)
-		if (this.values[i] != null)
-			copy[--index] = this.values[i];
-}
+   public Object addIfNotIncluded(Object object)
+   {
+      int length = this.values.length;
+      int index = (object.hashCode() & 0x7FFFFFFF) % length;
+      Object current;
+      while ((current = this.values[index]) != null)
+      {
+         if (current.equals(object))
+            return null; // already existed
+         if (++index == length)
+            index = 0;
+      }
+      this.values[index] = object;
 
-public void clear() {
-	for (int i = this.values.length; --i >= 0;)
-		this.values[i] = null;
-	this.elementSize = 0;
-}
+      // assumes the threshold is never equal to the size of the table
+      if (++this.elementSize > this.threshold)
+         rehash();
+      return object;
+   }
 
-public Object clone() throws CloneNotSupportedException {
-	SimpleSet result = (SimpleSet) super.clone();
-	result.elementSize = this.elementSize;
-	result.threshold = this.threshold;
+   public void asArray(Object[] copy)
+   {
+      if (this.elementSize != copy.length)
+         throw new IllegalArgumentException();
+      int index = this.elementSize;
+      for (int i = 0, l = this.values.length; i < l && index > 0; i++)
+         if (this.values[i] != null)
+            copy[--index] = this.values[i];
+   }
 
-	int length = this.values.length;
-	result.values = new Object[length];
-	System.arraycopy(this.values, 0, result.values, 0, length);
-	return result;
-}
+   public void clear()
+   {
+      for (int i = this.values.length; --i >= 0;)
+         this.values[i] = null;
+      this.elementSize = 0;
+   }
 
-public boolean includes(Object object) {
-	int length = this.values.length;
-	int index = (object.hashCode() & 0x7FFFFFFF) % length;
-	Object current;
-	while ((current = this.values[index]) != null) {
-		if (current.equals(object)) return true;
-		if (++index == length) index = 0;
-	}
-	return false;
-}
+   public Object clone()
+   {
+      SimpleSet result = new SimpleSet();
+      result.elementSize = this.elementSize;
+      result.threshold = this.threshold;
 
-public Object remove(Object object) {
-	int length = this.values.length;
-	int index = (object.hashCode() & 0x7FFFFFFF) % length;
-	Object current;
-	while ((current = this.values[index]) != null) {
-		if (current.equals(object)) {
-			this.elementSize--;
-			Object oldValue = this.values[index];
-			this.values[index] = null;
-			if (this.values[index + 1 == length ? 0 : index + 1] != null)
-				rehash(); // only needed if a possible collision existed
-			return oldValue;
-		}
-		if (++index == length) index = 0;
-	}
-	return null;
-}
+      int length = this.values.length;
+      result.values = new Object[length];
+      System.arraycopy(this.values, 0, result.values, 0, length);
+      return result;
+   }
 
-private void rehash() {
-	SimpleSet newSet = new SimpleSet(this.elementSize * 2); // double the number of expected elements
-	Object current;
-	for (int i = this.values.length; --i >= 0;)
-		if ((current = this.values[i]) != null)
-			newSet.add(current);
+   public boolean includes(Object object)
+   {
+      int length = this.values.length;
+      int index = (object.hashCode() & 0x7FFFFFFF) % length;
+      Object current;
+      while ((current = this.values[index]) != null)
+      {
+         if (current.equals(object))
+            return true;
+         if (++index == length)
+            index = 0;
+      }
+      return false;
+   }
 
-	this.values = newSet.values;
-	this.elementSize = newSet.elementSize;
-	this.threshold = newSet.threshold;
-}
+   public Object remove(Object object)
+   {
+      int length = this.values.length;
+      int index = (object.hashCode() & 0x7FFFFFFF) % length;
+      Object current;
+      while ((current = this.values[index]) != null)
+      {
+         if (current.equals(object))
+         {
+            this.elementSize--;
+            Object oldValue = this.values[index];
+            this.values[index] = null;
+            if (this.values[index + 1 == length ? 0 : index + 1] != null)
+               rehash(); // only needed if a possible collision existed
+            return oldValue;
+         }
+         if (++index == length)
+            index = 0;
+      }
+      return null;
+   }
 
-public String toString() {
-	String s = ""; //$NON-NLS-1$
-	Object object;
-	for (int i = 0, l = this.values.length; i < l; i++)
-		if ((object = this.values[i]) != null)
-			s += object.toString() + "\n"; //$NON-NLS-1$
-	return s;
-}
+   private void rehash()
+   {
+      SimpleSet newSet = new SimpleSet(this.elementSize * 2); // double the number of expected elements
+      Object current;
+      for (int i = this.values.length; --i >= 0;)
+         if ((current = this.values[i]) != null)
+            newSet.add(current);
+
+      this.values = newSet.values;
+      this.elementSize = newSet.elementSize;
+      this.threshold = newSet.threshold;
+   }
+
+   public String toString()
+   {
+      String s = ""; //$NON-NLS-1$
+      Object object;
+      for (int i = 0, l = this.values.length; i < l; i++)
+         if ((object = this.values[i]) != null)
+            s += object.toString() + "\n"; //$NON-NLS-1$
+      return s;
+   }
 }

@@ -11,16 +11,32 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler;
 
-import org.eclipse.jdt.client.core.compiler.*;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.env.*;
-import org.eclipse.jdt.client.internal.compiler.impl.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
-import org.eclipse.jdt.client.internal.compiler.parser.*;
-import org.eclipse.jdt.client.internal.compiler.problem.*;
-import org.eclipse.jdt.client.internal.compiler.util.*;
-
-import java.util.Arrays;
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.client.core.compiler.CompilationProgress;
+import org.eclipse.jdt.client.core.compiler.IProblem;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
+import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
+import org.eclipse.jdt.client.internal.compiler.env.ISourceType;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerStats;
+import org.eclipse.jdt.client.internal.compiler.impl.ITypeRequestor;
+import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;
+import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeCollisionException;
+import org.eclipse.jdt.client.internal.compiler.parser.Parser;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblem;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
+import org.eclipse.jdt.client.internal.compiler.util.Messages;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public class Compiler implements ITypeRequestor, ProblemSeverities
 {
@@ -314,12 +330,6 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       }
    }
 
-   @SuppressWarnings("unchecked")
-   public static <T> T[] clone(T[] array)
-   {
-      return (T[])Arrays.asList(array).toArray();
-   }
-
    /**
     * General API
     * -> compile each of supplied files
@@ -341,7 +351,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
          }
          else
          {
-            ICompilationUnit[] originalUnits = (ICompilationUnit[])clone(sourceUnits); // remember source units in case a source type collision occurs
+            ICompilationUnit[] originalUnits = org.eclipse.jdt.client.internal.core.util.Util.clone(sourceUnits); // remember source units in case a source type collision occurs
             try
             {
                beginToCompile(sourceUnits);
@@ -757,7 +767,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
          newClassFilesSize = newClassFiles.length;
          if (newUnitSize != 0)
          {
-            ICompilationUnit[] newProcessedUnits = clone(newUnits); // remember new units in case a source type collision occurs
+            ICompilationUnit[] newProcessedUnits = org.eclipse.jdt.client.internal.core.util.Util.clone(newUnits); // remember new units in case a source type collision occurs
             try
             {
                this.lookupEnvironment.isProcessingAnnotations = true;
@@ -790,7 +800,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       newUnitSize = newUnits.length;
       if (newUnitSize != 0)
       {
-         ICompilationUnit[] newProcessedUnits = clone(newUnits); // remember new units in case a source type collision occurs
+         ICompilationUnit[] newProcessedUnits = org.eclipse.jdt.client.internal.core.util.Util.clone(newUnits); // remember new units in case a source type collision occurs
          try
          {
             this.lookupEnvironment.isProcessingAnnotations = true;

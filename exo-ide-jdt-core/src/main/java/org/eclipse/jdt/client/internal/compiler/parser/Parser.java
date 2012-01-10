@@ -137,7 +137,7 @@ import java.util.ResourceBundle;
 public class Parser implements ParserBasicInformation, TerminalTokens, OperatorIds, TypeIds
 {
 
-   private interface ParserResources extends ClientBundle
+   protected interface ParserResources extends ClientBundle
    {
       @Source("org/eclipse/jdt/client/internal/parser/parser1.rsc")
       TextResource parser1();
@@ -421,7 +421,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       String result[] = new String[array.size()];
       for (int i = 0; i < array.size(); i++)
       {
-         result[i] = array.get(i).isNull() != null ? array.get(i).isString().stringValue() : null;
+         result[i] = array.get(i).isNull() == null ? array.get(i).isString().stringValue() : null;
       }
 
       return result;
