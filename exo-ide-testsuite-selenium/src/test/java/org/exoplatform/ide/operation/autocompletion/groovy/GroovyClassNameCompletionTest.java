@@ -54,8 +54,8 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
       //open autocomplete form
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("Collections");
-      IDE.CODEASSISTANT.checkElementPresent("Collection");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Collections"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Collection"));
 
       IDE.CODEASSISTANT.moveCursorDown(1);
 
