@@ -22,11 +22,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import java.io.IOException;
 
@@ -38,58 +38,16 @@ import java.io.IOException;
 public class RESTServiceRuntimeErrorTest extends BaseTest
 {
 
-   private static final String FOLDER_NAME = "RuntimeError";
-   
-   private static final String FILE_NAME = "RESTServiceRuntimeErrorTest.groovy";
+   private static final String PROJECT = "RuntimeError";
 
-   @Test
-   public void testDeployUndeploy() throws Exception
+   private static final String FILE_NAME = "RESTServiceRuntimeErrorTest.grs";
+
+   @Before
+   public void beforeTest()
    {
-      IDE.WORKSPACE.waitForRootItem();
-      
-      IDE.NAVIGATION.createFolder(FOLDER_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      for (int i = 0; i < 10; i++)
-      {
-         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      }
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-
-      IDE.EDITOR.typeTextIntoEditor(0, " / 0");
-
-      saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.REST_SERVICE.launchRestService();
-      
-      IDE.REST_SERVICE.selectPath("/helloworld/{name}");
-
-      IDE.REST_SERVICE.setMethodFieldValue("GET");
-
-      IDE.REST_SERVICE.sendRequest();
-
-      IDE.OUTPUT.waitForMessageShow(2);
-
-      String mess = IDE.OUTPUT.getOutputMessage(2);
-      assertTrue(mess
-         .startsWith("[ERROR]"));
-      assertTrue(mess.contains("helloworld/{name} 500 Internal Server Error"));
-   }
-   
-   @AfterClass
-   public static void tearDown()
-   {
-      String url = BASE_URL +  REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" +FOLDER_NAME+"/"+ FILE_NAME;
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, url);
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -97,4 +55,52 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
       }
    }
 
+   @Test
+   public void testRunTimeError() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+
+      IDE.EDITOR.moveCursorDown(0, 10);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, " / 0");
+      IDE.EDITOR.waitFileContentModificationMark(FILE_NAME);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+
+      IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
+
+      IDE.REST_SERVICE.launchRestService();
+      IDE.REST_SERVICE.selectPath("/helloworld/{name}");
+      IDE.REST_SERVICE.setMethodFieldValue("GET");
+      IDE.REST_SERVICE.sendRequest();
+
+      IDE.OUTPUT.waitForMessageShow(2, 5);
+
+      String mess = IDE.OUTPUT.getOutputMessage(2);
+      assertTrue(mess.startsWith("[ERROR]"));
+      assertTrue(mess.contains("500 Internal Server Error"));
+   }
+
+   @After
+   public void afterTest() throws Exception
+   {
+      try
+      {
+         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
 }

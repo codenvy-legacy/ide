@@ -114,19 +114,14 @@ public class RESTServiceOutputErrorTest extends BaseTest
 
       String mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess.contains("First Param:first; Second Param:second; Param List:node1/node2/node3"));
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForMessageShow(3, 5);
-      assertTrue(IDE.OUTPUT.getOutputMessage(3).contains(
-      /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws Exception
    {
       try
       {
-         // Utils.undeployService(BASE_URL, REST_CONTEXT, url);
+         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)

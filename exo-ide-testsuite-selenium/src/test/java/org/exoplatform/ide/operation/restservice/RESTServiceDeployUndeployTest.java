@@ -23,8 +23,8 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -41,8 +41,8 @@ public class RESTServiceDeployUndeployTest extends BaseTest
 
    private static String FILE_NAME = "DeployUndeployTest.grs";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
       try
       {
@@ -80,31 +80,28 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       String mess = IDE.OUTPUT.getOutputMessage(1);
 
       assertTrue(mess.contains("[INFO]"));
-      assertTrue(mess.contains(/* TODO FILE_NAME +*/" deployed successfully."));
+      assertTrue(mess.contains("/" + PROJECT + "/" + FILE_NAME + " deployed successfully."));
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       IDE.OUTPUT.waitForMessageShow(2, 5);
 
-      assertTrue(IDE.OUTPUT.getOutputMessage(2).contains(
-      /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
+      assertTrue(IDE.OUTPUT.getOutputMessage(2).contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."));
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
 
       IDE.OUTPUT.waitForMessageShow(3, 5);
       mess = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(mess.contains("[ERROR]"));
-      assertTrue(mess.contains(/*TODO FILE_NAME +*/" undeploy failed. Error (400: Bad Request)"));
+      assertTrue(mess.contains("/" + PROJECT + "/" + FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
 
       assertTrue(mess.contains(/*TODO "Can't unbind script " + FOLDER_NAME + "/" + FILE_NAME
                                +*/", not bound or has wrong mapping to the resource class"));
-      IDE.EDITOR.closeFile(FILE_NAME);
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest() throws Exception
    {
       try
       {
-         //TODO  Utils.undeployService(BASE_URL, REST_CONTEXT, FILE_URL);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)

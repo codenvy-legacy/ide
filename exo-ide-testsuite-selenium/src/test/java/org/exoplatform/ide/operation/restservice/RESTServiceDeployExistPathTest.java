@@ -87,8 +87,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
 
       String mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess.startsWith("[ERROR]"));
-      //TODO change when name is ready - now id is displayed.
-      assertTrue(mess.contains(/*SECOND_NAME +*/" deploy failed. Error (400: Bad Request)"));
+      assertTrue(mess.contains("/" + PROJECT + "/" + SECOND_NAME + " deploy failed."));
 
       IDE.EDITOR.selectTab(FIRST_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FIRST_NAME);
@@ -100,7 +99,7 @@ public class RESTServiceDeployExistPathTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(4, 5);
       mess = IDE.OUTPUT.getOutputMessage(4);
       assertTrue(mess.contains("[INFO]"));
-      assertTrue(mess.contains(/*SECOND_NAME +*/" deployed successfully."));
+      assertTrue(mess.contains("/" + PROJECT + "/" + SECOND_NAME + " deployed successfully."));
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
    }
 

@@ -18,16 +18,18 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -40,10 +42,7 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
 {
    private final static String FILE_NAME = "VaditionCorrectTest.groovy";
 
-   private final static String FOLDER = RESTServiceVaditionCorrectTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER + "/";
+   private final static String PROJECT = RESTServiceVaditionCorrectTest.class.getSimpleName();
 
    private static final String VALID_SCRIPT = "// simple groovy script\n" + "import javax.ws.rs.Path\n"
       + "import javax.ws.rs.GET\n" + "import javax.ws.rs.PathParam\n \n" + "@Path(\"/\")\n"
@@ -53,12 +52,11 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(VALID_SCRIPT.getBytes(), MimeType.GROOVY_SERVICE,
-            TestConstants.NodeTypes.EXO_GROOVY_RESOURCE_CONTAINER, URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFile(link, FILE_NAME, MimeType.GROOVY_SERVICE, VALID_SCRIPT);
       }
       catch (IOException e)
       {
@@ -69,17 +67,17 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
    @Test
    public void testValidaton() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.REST_SERVICE.validate(1);
+      String message = IDE.REST_SERVICE.validate(1);
+      assertTrue(message.contains(FILE_NAME + " validated successfully."));
    }
 
    @AfterClass
@@ -87,7 +85,7 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

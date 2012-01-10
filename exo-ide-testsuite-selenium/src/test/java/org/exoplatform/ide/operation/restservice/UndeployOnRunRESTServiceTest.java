@@ -22,15 +22,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,26 +41,25 @@ import java.io.IOException;
 public class UndeployOnRunRESTServiceTest extends BaseTest
 {
 
-   private final static String FOLDER_NAME = UndeployOnRunRESTServiceTest.class.getSimpleName();
+   private final static String PROJECT = UndeployOnRunRESTServiceTest.class.getSimpleName();
 
-   private final static String SIMPLE_FILE_NAME = "RestServiceExample.groovy";
+   private final static String SIMPLE_FILE_NAME = "RestServiceExample.grs";
 
-   private final static String FILE_NAME = "kjfdshglksfdghldsfbg.groovy";
+   private final static String FILE_NAME = "kjfdshglksfdghldsfbg.grs";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
-
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
 
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/";
-
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath + SIMPLE_FILE_NAME, MimeType.GROOVY_SERVICE, URL + SIMPLE_FILE_NAME);
-         VirtualFileSystemUtils.put(filePath + SIMPLE_FILE_NAME, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, SIMPLE_FILE_NAME, MimeType.GROOVY_SERVICE, filePath
+            + SIMPLE_FILE_NAME);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath
+            + SIMPLE_FILE_NAME);
       }
       catch (IOException e)
       {
@@ -69,14 +67,14 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest()
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + SIMPLE_FILE_NAME);
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
-         VirtualFileSystemUtils.delete(URL);
+         /*       Utils.undeployService(BASE_URL, REST_CONTEXT, URL + SIMPLE_FILE_NAME);
+                Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);*/
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -87,56 +85,49 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
    @Test
    public void testUndeployOnRunRestService() throws Exception
    {
-      //open file
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SIMPLE_FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.WORKSPACE.waitForItem(URL + SIMPLE_FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + SIMPLE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + SIMPLE_FILE_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + SIMPLE_FILE_NAME, false);
-
-      //call Run Groovy Service command
       IDE.REST_SERVICE.runRESTServiceInSanbox();
-      //close
-      IDE.REST_SERVICE.sendRequest();
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //3
-      String text = IDE.OUTPUT.getOutputMessage(4);
-      assertTrue(text.endsWith(SIMPLE_FILE_NAME + " undeployed successfully."));
 
-      IDE.EDITOR.closeFile(0);
+      IDE.REST_SERVICE.sendRequest();
+      IDE.REST_SERVICE.waitClosed();
+
+      IDE.OUTPUT.waitForMessageShow(4, 5);
+      String text = IDE.OUTPUT.getOutputMessage(4);
+      assertTrue(text.endsWith("/" + PROJECT + "/" + SIMPLE_FILE_NAME + " undeployed successfully."));
+
+      IDE.EDITOR.closeFile(SIMPLE_FILE_NAME);
    }
 
    @Test
    public void testUndeloyOnCancel() throws Exception
    {
-      selenium().refresh();
-      selenium().waitForPageToLoad("30000");
-      IDE.WORKSPACE.waitForRootItem();
-      //open file
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-
-      //call Run Groovy Service command
       IDE.REST_SERVICE.runRESTServiceInSanbox();
-      //close
       IDE.REST_SERVICE.closeForm();
+      IDE.REST_SERVICE.waitClosed();
 
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //3
+      IDE.OUTPUT.waitForMessageShow(3, 5);
       String text = IDE.OUTPUT.getOutputMessage(3);
-      assertTrue(text.endsWith(FILE_NAME + " undeployed successfully."));
+      assertTrue(text.endsWith("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."));
 
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(FILE_NAME);
    }
 
 }

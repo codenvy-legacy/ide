@@ -26,8 +26,8 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,8 +45,8 @@ public class RESTServiceOutputTest extends BaseTest
 
    private final static String PROJECT = RESTServiceOutputTest.class.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
 
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceOutput.groovy";
@@ -140,11 +140,6 @@ public class RESTServiceOutputTest extends BaseTest
       mess = IDE.OUTPUT.getOutputMessage(5);
       assertTrue(mess
          .contains("Param List 2:param1/param2/param3; Test Query Parameter 2: value 1; Test-Header 2: value 2"));
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForMessageShow(6, 5);
-      assertTrue(IDE.OUTPUT.getOutputMessage(6).contains(
-      /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
    }
 
    private void checkFields(String path, String method, String request, String response)
@@ -171,12 +166,12 @@ public class RESTServiceOutputTest extends BaseTest
       assertEquals(value, IDE.REST_SERVICE.getHeaderParameterValue(parameterIndex));
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest() throws Exception
    {
       try
       {
-         //TODO Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)

@@ -21,37 +21,67 @@ package org.exoplatform.ide.operation.restservice;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-//IDE-25
 public class RESTServiceVaditionWrongTest extends BaseTest
 {
+   private final static String PROJECT = RESTServiceAnnotationInheritanceTest.class.getSimpleName();
 
-   @Test
-   public void testValidaton() throws Exception
+   @BeforeClass
+   public static void setUp()
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-
-      IDE.EDITOR.typeTextIntoEditor(0, "1");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
-      IDE.OUTPUT.waitOpened();
-      IDE.OUTPUT.waitForMessageShow(1);
-      String mess = IDE.OUTPUT.getOutputMessage(1);
-      assertTrue(mess.contains("[ERROR] Untitled file.grs validation failed. Error (400: Bad Request)"));
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
    }
 
+   @Test
+   public void testValidation() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.DOWN.toString() + Keys.END);
+      IDE.EDITOR.typeTextIntoEditor(0, "123\n5");
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
+      IDE.OUTPUT.waitOpened();
+      IDE.OUTPUT.waitForMessageShow(1, 5);
+      String mess = IDE.OUTPUT.getOutputMessage(1);
+      assertTrue(mess.contains("[ERROR] Untitled file.grs validation failed."));
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
 }

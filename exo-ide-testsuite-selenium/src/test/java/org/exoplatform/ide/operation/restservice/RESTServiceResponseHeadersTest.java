@@ -25,13 +25,14 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,12 +42,9 @@ import java.io.IOException;
 public class RESTServiceResponseHeadersTest extends BaseTest
 {
 
-   private final static String FILE_NAME = "ResponseHeaders.groovy";
+   private final static String FILE_NAME = "ResponseHeaders.grs";
 
-   private final static String FOLDER_NAME = RESTServiceResponseHeadersTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
+   private final static String PROJECT = RESTServiceResponseHeadersTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -55,34 +53,34 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ResponseHeaders.groovy";
       try
       {
-         //TODO***************change******************
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GROOVY_SERVICE, URL + FILE_NAME);
-         //**********************************
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
       catch (IOException e)
       {
          e.printStackTrace();
       }
+
    }
 
    @Test
    public void testResponseHeaders() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitOpened();
+      IDE.OUTPUT.waitForMessageShow(1, 5);
 
-      assertEquals("[INFO] " + BASE_URL + "IDE/rest/private/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-         + FOLDER_NAME + "/" + FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessage(1));
+      assertEquals("[INFO] " + "/" + PROJECT + "/" + FILE_NAME + " deployed successfully.",
+         IDE.OUTPUT.getOutputMessage(1));
 
       IDE.REST_SERVICE.launchRestService();
 
@@ -99,6 +97,10 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       assertTrue(mess.contains("Content-Type : */*"));
       assertTrue(mess.contains("- -Text - - - - - - - - -"));
       assertTrue(mess.contains("Hello Evgen"));
+
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(3, 5);
+      assertTrue(IDE.OUTPUT.getOutputMessage(3).contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."));
    }
 
    @AfterClass
@@ -106,8 +108,8 @@ public class RESTServiceResponseHeadersTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
-         VirtualFileSystemUtils.delete(URL);
+         //TODO Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

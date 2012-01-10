@@ -19,23 +19,22 @@
 package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.SaveFileUtils;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -50,28 +49,24 @@ public class RunRestServiceCommandTest extends BaseTest
 
    private final static String FILE_FOR_CHANGE_CONTENT_NAME = "RestServiceChangeContent.grs";
 
-   private final static String NEW_FILE_NAME = "NewRestService";
+   private final static String NEW_FILE_NAME = "NewRestService.grs";
 
-   private final static String FOLDER_NAME = RunRestServiceCommandTest.class.getSimpleName();
+   private final static String PROJECT = RunRestServiceCommandTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
-
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
-
       final String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/";
-
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath + "RestServiceExample.groovy", MimeType.GROOVY_SERVICE, URL
-            + SIMPLE_FILE_NAME);
-         VirtualFileSystemUtils.put(filePath + "RestServiceValidationWrongExample.groovy", MimeType.GROOVY_SERVICE, URL
-            + NON_VALID_FILE_NAME);
-         VirtualFileSystemUtils.put(filePath + "RestServiceChangeContent.groovy", MimeType.GROOVY_SERVICE, URL
-            + FILE_FOR_CHANGE_CONTENT_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, SIMPLE_FILE_NAME, MimeType.GROOVY_SERVICE, filePath
+            + "RestServiceExample.grs");
+         VirtualFileSystemUtils.createFileFromLocal(link, NON_VALID_FILE_NAME, MimeType.GROOVY_SERVICE, filePath
+            + "RestServiceValidationWrongExample.groovy");
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_FOR_CHANGE_CONTENT_NAME, MimeType.GROOVY_SERVICE,
+            filePath + "RestServiceChangeContent.groovy");
       }
       catch (IOException e)
       {
@@ -79,16 +74,16 @@ public class RunRestServiceCommandTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterMethod()
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + NEW_FILE_NAME);
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + NON_VALID_FILE_NAME);
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_FOR_CHANGE_CONTENT_NAME);
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + SIMPLE_FILE_NAME);
-         VirtualFileSystemUtils.delete(URL);
+         /*  Utils.undeployService(BASE_URL, REST_CONTEXT, URL + NEW_FILE_NAME);
+           Utils.undeployService(BASE_URL, REST_CONTEXT, URL + NON_VALID_FILE_NAME);
+           Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_FOR_CHANGE_CONTENT_NAME);
+           Utils.undeployService(BASE_URL, REST_CONTEXT, URL + SIMPLE_FILE_NAME);*/
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -99,123 +94,87 @@ public class RunRestServiceCommandTest extends BaseTest
    @Test
    public void testSavedFileRunRestService() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      
-      //---- 1 -----------------
-      //open file
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.WORKSPACE.waitForItem(URL + SIMPLE_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SIMPLE_FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + SIMPLE_FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + SIMPLE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + SIMPLE_FILE_NAME);
 
-      //---- 2 -----------------
-      //check Run Groovy Service button and menu
       assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE));
 
-      //---- 3 -----------------
-      //call Run Groovy Service command
       IDE.REST_SERVICE.runRESTServiceInSanbox();
 
-      //---- 4 -----------------
-      //close
       IDE.REST_SERVICE.closeForm();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.REST_SERVICE.waitClosed();
 
-      //---- 5 -----------------
-      //check messages
       assertEquals("[INFO] " + SIMPLE_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessage(1));
-      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-         + FOLDER_NAME + "/" + SIMPLE_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessage(2));
-
-      //---- 6 -----------------
-      //check, that hanlders removed, and after validation and deploying 
-      //Launt Rest Service form doesn't appear
+      assertEquals("[INFO] " + "/" + PROJECT + "/" + SIMPLE_FILE_NAME + " deployed successfully.",
+         IDE.OUTPUT.getOutputMessage(2));
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      //check Launch Rest Service form doesn't appear
-      IDE.REST_SERVICE.isFormNotOpened();
+      assertFalse(IDE.REST_SERVICE.isFormOpened());
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.OUTPUT.waitForMessageShow(3, 5);
 
-      //check Launch Rest Service form doesn't appear
-      IDE.REST_SERVICE.isFormNotOpened();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.UNDEPLOY_GROOVY_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(4, 5);
 
+      assertFalse(IDE.REST_SERVICE.isFormOpened());
    }
 
    @Test
    public void testRunGroovyServiceWithNonValidFile() throws Exception
    {
-      selenium().refresh();
-      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      IDE.WORKSPACE.waitForRootItem();
-      //---- 1 -----------------
-      //open file
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.WORKSPACE.waitForItem(URL + NON_VALID_FILE_NAME);
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_VALID_FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + NON_VALID_FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_VALID_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_VALID_FILE_NAME);
 
-      //---- 2 -----------------
-      //check Run Groovy Service button and menu
       assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE));
 
-      //---- 3 -----------------
-      //call Run Groovy Service command
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       IDE.OUTPUT.waitOpened();
-      IDE.OUTPUT.waitForMessageShow(1);
-      //---- 4 -----------------
-      //check that validation fails message appears.
-      String msg = IDE.OUTPUT.getOutputMessage(1);
-      assertTrue(msg.contains("[ERROR] " + NON_VALID_FILE_NAME + " validation failed. Error (400: Bad Request)"));
+      IDE.OUTPUT.waitForMessageShow(1, 5);
 
-      //---- 5 -----------------
-      //fix file
-      IDE.EDITOR.clickOnEditor(0);
+      String msg = IDE.OUTPUT.getOutputMessage(1);
+      assertTrue(msg.contains("[ERROR] " + NON_VALID_FILE_NAME + " validation failed."));
 
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitFileContentModificationMark(NON_VALID_FILE_NAME);
 
-      //---- 6 -----------------
-      //validate file and check, that Launch Rest Service form doesn't appear
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.OUTPUT.waitForMessageShow(2, 5);
 
-      //---- 7 -----------------
-      //check messages
       assertEquals("[INFO] " + NON_VALID_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessage(2));
-
-      //check Launch Rest Service form doesn't appear
-      IDE.REST_SERVICE.isFormNotOpened();
-
+      assertFalse(IDE.REST_SERVICE.isFormOpened());
    }
 
    @Test
    public void testRunGroovyServiceWithChangedFile() throws Exception
    {
-      selenium().refresh();
-      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      IDE.WORKSPACE.waitForRootItem();
-      //---- 1 -----------------
-      //open file
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      IDE.WORKSPACE.waitForItem(URL + FILE_FOR_CHANGE_CONTENT_NAME);
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_FOR_CHANGE_CONTENT_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_FOR_CHANGE_CONTENT_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_FOR_CHANGE_CONTENT_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_FOR_CHANGE_CONTENT_NAME);
 
       //---- 2 -----------------
       //type some text
@@ -224,85 +183,54 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 3 -----------------
       //check Run Groovy Service button and menu
       assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE));
 
       //---- 4 -----------------
-      //call Run Groovy Service command
       IDE.REST_SERVICE.runRESTServiceInSanbox();
 
       //---- 5 -----------------
-      //close
       IDE.REST_SERVICE.closeForm();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.REST_SERVICE.waitClosed();
 
       //---- 6 -----------------
       //check messages
       assertEquals("[INFO] " + FILE_FOR_CHANGE_CONTENT_NAME + " validated successfully.",
          IDE.OUTPUT.getOutputMessage(1));
-      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-         + FOLDER_NAME + "/" + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
+      assertEquals("[INFO] " + "/" + PROJECT + "/" + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
          IDE.OUTPUT.getOutputMessage(2));
-
    }
 
    @Test
    public void testRunGroovyServiceWithNewFile() throws Exception
    {
-      selenium().refresh();
-      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      IDE.WORKSPACE.waitForRootItem();
-      //---- 1 -----------------
-      //open file
-      IDE.WORKSPACE.selectItem(WS_URL);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-      IDE.WORKSPACE.selectItem(URL);
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
 
-      //---- 2 -----------------
-      //check Run Groovy Service button and menu
       assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE, true);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.RUN_GROOVY_SERVICE));
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.RUN_GROOVY_SERVICE));
 
-      //---- 3 -----------------
-      //call Run Groovy Service command
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
-      Thread.sleep(TestConstants.SLEEP);
 
-      //---- 5 -----------------
-      //save as dialog appears
-      SaveFileUtils.checkSaveAsDialogAndSave(NEW_FILE_NAME, true);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.ASK_FOR_VALUE_DIALOG.waitOpened();
+      IDE.ASK_FOR_VALUE_DIALOG.setValue(NEW_FILE_NAME);
+      IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NEW_FILE_NAME);
 
-      //check Launch Rest Service form appears
-      IDE.REST_SERVICE.isFormNotOpened();
+      IDE.REST_SERVICE.waitOpened();
 
-      //---- 6 -----------------
-      //close
       IDE.REST_SERVICE.closeForm();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.REST_SERVICE.waitClosed();
 
-      //---- 7 -----------------
-      //check messages
       assertEquals("[INFO] " + NEW_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessage(1));
-      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
-         + FOLDER_NAME + "/" + NEW_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessage(2));
-
+      assertTrue(IDE.OUTPUT.getOutputMessage(2).contains(NEW_FILE_NAME + " deployed successfully."));
    }
-
-   @After
-   public void afterMethod() throws Exception
-   {
-    //TODO this block should be remove after fix problem in issue IDE-804. File does not should be modified  
-      if (IDE.EDITOR.isFileContentChanged(0)){
-       
-       IDE.EDITOR.closeTabIgnoringChanges(0);
-      }
-      else
-        IDE.EDITOR.closeFile(0);    
-   }
-
 }

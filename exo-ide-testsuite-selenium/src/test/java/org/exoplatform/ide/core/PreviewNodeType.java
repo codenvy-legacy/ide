@@ -214,7 +214,7 @@ public class PreviewNodeType extends AbstractTestModule
       new Select(nodeTypeField).selectByValue(format);
    }
 
-   public String getGeneratedNodeType()
+   public String getGeneratedNodeType() throws InterruptedException
    {
       //FIXME Switch frames doesn't work with Google Chrome WebDriver.
       //Issue - http://code.google.com/p/selenium/issues/detail?id=1969

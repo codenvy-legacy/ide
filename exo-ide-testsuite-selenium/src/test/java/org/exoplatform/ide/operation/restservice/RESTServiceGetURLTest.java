@@ -110,8 +110,7 @@ public class RESTServiceGetURLTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       IDE.OUTPUT.waitForMessageShow(2, 5);
-      assertTrue(IDE.OUTPUT.getOutputMessage(2).contains(
-      /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
+      assertTrue(IDE.OUTPUT.getOutputMessage(2).contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."));
    }
 
    @AfterClass

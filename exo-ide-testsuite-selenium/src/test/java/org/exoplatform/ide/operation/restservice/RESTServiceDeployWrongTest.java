@@ -67,19 +67,22 @@ public class RESTServiceDeployWrongTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
 
-      IDE.EDITOR.moveCursorDown(0, 1);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
-
-      IDE.EDITOR.typeTextIntoEditor(0, "1");
       IDE.EDITOR.saveAs(1, FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+
+      IDE.EDITOR.moveCursorDown(0, 1);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, "1");
+      IDE.EDITOR.waitFileContentModificationMark(FILE_NAME);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       IDE.OUTPUT.waitForMessageShow(1, 5);
 
       String mess = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(mess.startsWith("[ERROR]"));
-      assertTrue(mess.contains(/*TODO FILE_NAME +*/" deploy failed. Error (400: Bad Request)"));
+      assertTrue(mess.contains("/" + PROJECT + "/" + FILE_NAME + " deploy failed."));
    }
 
    @AfterClass

@@ -29,7 +29,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({RESTServicePropertyTest.class, RESTServiceOutputErrorTest.class, RESTServiceVaditionWrongTest.class,
-   RESTServiceRuntimeErrorTest.class, RESTServiceSaveAutoloadPropertyTest.class, RESTServiceResponseHeadersTest.class,
+   RESTServiceRuntimeErrorTest.class, /*RESTServiceSaveAutoloadPropertyTest.class, */RESTServiceResponseHeadersTest.class,
    RESTServiceVaditionCorrectTest.class, RESTServiceAnnotationInheritanceTest.class, RESTServiceGetURLTest.class,
    RESTServiceDeployWrongTest.class, RESTServiceDeployUndeployTest.class,
    RESTServiceFilterParametersTest.class, RESTServiceComplexMediaTypeTest.class, RESTServiceDeployExistPathTest.class,

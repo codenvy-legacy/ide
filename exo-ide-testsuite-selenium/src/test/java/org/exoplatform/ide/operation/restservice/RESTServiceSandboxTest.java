@@ -22,8 +22,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -41,20 +39,14 @@ public class RESTServiceSandboxTest extends BaseTest
 
    private static String FILE_NAME = RESTServiceSandboxTest.class.getSimpleName() + ".grs";
 
-   private static String TEST_FOLDER = RESTServiceSandboxTest.class.getSimpleName();
+   private static String PROJECT = RESTServiceSandboxTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
-   /**
-    * Create test folder.
-    */
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -67,43 +59,44 @@ public class RESTServiceSandboxTest extends BaseTest
     * and undeploy from sandbox.
     */
    @Test
-   public void testDeployUndeploy() throws Exception
+   public void testSandbox() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
-      //Create REST Service file and save it:
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      saveAsUsingToolbarButton(FILE_NAME);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       //Deploy service to sandbox:
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_SANDBOX);
-      IDE.OUTPUT.waitOpened();
+      IDE.OUTPUT.waitForMessageShow(1, 5);
 
       //Check deploy request:
       String mess = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(mess.contains("[INFO]"));
-      assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
+      assertTrue(mess.contains("/" + PROJECT + "/" + FILE_NAME + " deployed successfully."));
 
       //Undeploy service from sandbox:
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
-      IDE.OUTPUT.waitForMessageShow(2);
+      IDE.OUTPUT.waitForMessageShow(2, 5);
 
       //Check undeploy request:
       mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess.contains("[INFO]"));
-      assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
+      assertTrue(mess.contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."));
 
       //Try undeploy undeployed service:
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_SANDBOX);
-      IDE.OUTPUT.waitForMessageShow(3);
+      IDE.OUTPUT.waitForMessageShow(3, 5);
 
       mess = IDE.OUTPUT.getOutputMessage(3);
       assertTrue(mess.contains("[ERROR]"));
-      assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
-
-      IDE.EDITOR.closeFile(0);
+      assertTrue(mess.contains("/" + PROJECT + "/" + FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
    }
 
    /**
@@ -114,8 +107,7 @@ public class RESTServiceSandboxTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + TEST_FOLDER + "/" + FILE_NAME);
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

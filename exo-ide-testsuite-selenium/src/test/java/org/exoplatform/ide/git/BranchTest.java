@@ -301,6 +301,9 @@ public class BranchTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.LOADER.waitClosed();
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.LOADER.waitClosed();
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FIRST_BRANCH_FILE);
       assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + SECOND_BRANCH_FILE));
 

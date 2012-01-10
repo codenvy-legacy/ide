@@ -78,7 +78,6 @@ public class RESTServiceFilterParametersTest extends BaseTest
       IDE.REST_SERVICE.launchRestService();
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
-      IDE.REST_SERVICE.waitRestServiceTabOpened(1);
 
       IDE.REST_SERVICE.unCheckHeaderParameter(1);
 
@@ -88,19 +87,14 @@ public class RESTServiceFilterParametersTest extends BaseTest
       String mess = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(mess
          .contains("POST PathParam: {pathParam}; POST Test-Header: 3; POST TestQueryParam: false; POST Body:"));
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForMessageShow(3, 5);
-      assertTrue(IDE.OUTPUT.getOutputMessage(3).contains(
-      /*TODO PROJECT + "/" + FILE_NAME +*/" undeployed successfully."));
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws Exception
    {
       try
       {
-         //TODO   Utils.undeployService(BASE_URL, REST_CONTEXT, URL);
+         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)

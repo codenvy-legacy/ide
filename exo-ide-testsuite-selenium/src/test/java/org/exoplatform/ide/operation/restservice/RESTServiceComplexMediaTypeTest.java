@@ -23,10 +23,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -47,8 +48,8 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
    /**
     * Create REST service for test in test folder.
     */
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
 
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ComplexMediaTypes.groovy";
@@ -140,12 +141,14 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
 
    /**
     * Clear test results.
+    * @throws Exception 
     */
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest() throws Exception
    {
       try
       {
+         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)

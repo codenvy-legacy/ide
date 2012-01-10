@@ -70,11 +70,14 @@ public class RESTService extends AbstractTestModule
 
       String HEADER_TABLE_ID = "ideGroovyServiceHeaderTable";
 
-      String TABS_LOCATOR =
-         "//div[@id='ideGroovyServiceTabSet']//div[@class='gwt-TabLayoutPanelTabs']//div[@class='gwt-TabLayoutPanelTab GGUO0GHH' and @tab-bar-index=%1s]";
+      String TAB_SET_ID = "ideGroovyServiceTabSet";
 
-      String CHECK_SELECTED_TABS_LOCATORS =
-         "//div[@id='ideGroovyServiceTabSet']//div[@class=\"gwt-TabLayoutPanelTab GGUO0GHH gwt-TabLayoutPanelTab-selected\"and @tab-bar-index=%1s]";
+      String TAB_LOCATOR = "//div[@id='" + TAB_SET_ID + "']//td[@class='tabTitleText' and contains(text(), '%s')]";
+
+      String SELECTED_TAB_LOCATOR =
+         "//div[@id='"
+            + TAB_SET_ID
+            + "']//div[contains(@class, 'gwt-TabLayoutPanelTab-selected')]//td[@class='tabTitleText' and contains(text(), '%s')]";
 
       String SEND_REQUEST_BUTTON = "ideGroovyServiceSend";
 
@@ -187,7 +190,7 @@ public class RESTService extends AbstractTestModule
     * Wait appearance selected tab
    * @throws InterruptedException
    */
-   public void waitRestServiceTabOpened(final int tabIndex) throws InterruptedException
+   public void waitTabOpened(final String title) throws InterruptedException
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
@@ -197,10 +200,8 @@ public class RESTService extends AbstractTestModule
          {
             try
             {
-               WebElement viewTab =
-                  input.findElement(By.xpath(String.format(Locators.CHECK_SELECTED_TABS_LOCATORS, tabIndex)));
+               WebElement viewTab = input.findElement(By.xpath(String.format(Locators.SELECTED_TAB_LOCATOR, title)));
                return (viewTab != null && viewTab.isDisplayed());
-
             }
             catch (Exception e)
             {
@@ -386,15 +387,15 @@ public class RESTService extends AbstractTestModule
     * check selected tab
     * numbering begins with zero
     */
-   private void clickOnTab(int tabIndex)
+   private void clickOnTab(String title)
    {
 
-      WebElement tab = driver().findElement(By.xpath(String.format(Locators.TABS_LOCATOR, tabIndex)));
+      WebElement tab = driver().findElement(By.xpath(String.format(Locators.TAB_LOCATOR, title)));
       tab.click();
 
       try
       {
-         waitRestServiceTabOpened(tabIndex);
+         waitTabOpened(title);
       }
       catch (Exception e)
       {
@@ -409,7 +410,7 @@ public class RESTService extends AbstractTestModule
     */
    public void selectQueryParametersTab()
    {
-      clickOnTab(0);
+      clickOnTab("Query Parameter");
    }
 
    /**
@@ -417,7 +418,7 @@ public class RESTService extends AbstractTestModule
     */
    public void selectHeaderParametersTab()
    {
-      clickOnTab(1);
+      clickOnTab("Header Parameter");
    }
 
    /**
@@ -425,7 +426,7 @@ public class RESTService extends AbstractTestModule
     */
    public void selectBodyTab()
    {
-      clickOnTab(2);
+      clickOnTab("Body");
    }
 
    /**
@@ -788,38 +789,23 @@ public class RESTService extends AbstractTestModule
 
    /**
     * @return false if REST service form is closed
-    * return false if REST service form is open
-    */
-   public boolean isFormNotOpened()
-   {
-
-      try
-      {
-         if (restServiceForm != null && restServiceForm.isDisplayed())
-            ;
-         return false;
-      }
-      catch (Exception e)
-      {
-         return true;
-      }
-
-   }
-
-   /**
-    * @return false if REST service form is closed
     * return true if REST service form is open
     */
    public boolean isFormOpened()
    {
-
-      return (restServiceForm != null && restServiceForm.isDisplayed() && restServicePath != null
-         && restServicePath.isDisplayed() && restServiceMethod != null && restServiceMethod.isDisplayed()
-         && restServiceRequestMediaType != null && restServiceRequestMediaType.isDisplayed()
-         && restServiceResponseMediaType != null && restServiceResponseMediaType.isDisplayed() && queryTable != null
-         && getUrlButton != null && getUrlButton.isDisplayed() && sendButton != null && sendButton.isDisplayed()
-         && cancelButton != null && cancelButton.isDisplayed());
-
+      try
+      {
+         return (restServiceForm != null && restServiceForm.isDisplayed() && restServicePath != null
+            && restServicePath.isDisplayed() && restServiceMethod != null && restServiceMethod.isDisplayed()
+            && restServiceRequestMediaType != null && restServiceRequestMediaType.isDisplayed()
+            && restServiceResponseMediaType != null && restServiceResponseMediaType.isDisplayed() && queryTable != null
+            && getUrlButton != null && getUrlButton.isDisplayed() && sendButton != null && sendButton.isDisplayed()
+            && cancelButton != null && cancelButton.isDisplayed());
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
    }
 
 }

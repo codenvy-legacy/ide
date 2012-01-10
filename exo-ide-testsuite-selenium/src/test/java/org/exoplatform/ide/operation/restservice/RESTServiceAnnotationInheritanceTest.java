@@ -24,11 +24,10 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,8 +44,8 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 
    private final static String PROJECT = RESTServiceAnnotationInheritanceTest.class.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
 
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/AnnotationInheritance.groovy";
@@ -113,12 +112,12 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       IDE.REST_SERVICE.selectQueryParametersTab();
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest() throws Exception
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, WS_URL + PROJECT);
+         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)

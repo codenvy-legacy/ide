@@ -124,10 +124,8 @@ public class Editor extends AbstractTestModule
     */
    public void selectTab(int tabIndex) throws Exception
    {
-      WebElement tab =
-         editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR + "//span",
-            tabIndex)));
-      tab.click();
+      editor.findElement(
+         By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR + "//span", tabIndex))).click();
       //TODO replace with wait for condition
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
