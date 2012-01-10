@@ -224,7 +224,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       final String remote = display.getRemoteValue().getValue();
       String localBranch = display.getLocalBranchesValue().getValue();
       String remoteBranch = display.getRemoteBranchesValue().getValue();
-
+      IDE.getInstance().closeView(display.asView().getId());
       try
       {
          GitClientService.getInstance().push(vfs.getId(), project, new String[]{localBranch + ":" + remoteBranch},
@@ -249,7 +249,6 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
          e.printStackTrace();
          handleError(e);
       }
-      IDE.getInstance().closeView(display.asView().getId());
    }
 
    private void handleError(Throwable t)

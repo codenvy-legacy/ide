@@ -264,6 +264,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
          (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      IDE.getInstance().closeView(display.asView().getId());
       try
       {
          GitClientService.getInstance().pull(vfs.getId(), project, refs, remoteName, new AsyncRequestCallback<String>()
@@ -272,7 +273,6 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
             @Override
             protected void onSuccess(String result)
             {
-               IDE.getInstance().closeView(display.asView().getId());
                IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
                IDE.fireEvent(new RefreshBrowserEvent());
             }
