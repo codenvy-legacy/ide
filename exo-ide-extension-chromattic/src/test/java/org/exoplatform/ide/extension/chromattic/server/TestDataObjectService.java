@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.chromattic.server;
 import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,8 @@ import org.w3c.dom.Document;
 
 import java.io.ByteArrayInputStream;
 
+import javax.jcr.Repository;
+import javax.jcr.Session;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -48,7 +51,7 @@ public class TestDataObjectService extends BaseTest
 {
    /** . */
    private static final String DATA_OBJECT_BODY =
-      "@org.chromattic.api.annotations.PrimaryType(name=\"nt:unstructured\")\n"
+      "@org.chromattic.api.annotations.PrimaryType(name=\"exo:testNodeType\")\n"
          + "class DataObject {\n"
          + "@org.chromattic.api.annotations.Property(name = \"a\")"
          + "String a\n"
@@ -57,7 +60,7 @@ public class TestDataObjectService extends BaseTest
    private static final String ntd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
       "<!--Node type generation prototype-->" +
       "<nodeTypes xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\" xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\">" +
-      "<nodeType name=\"nt:unst\" isMixin=\"false\" hasOrderableChildNodes=\"false\">" +
+      "<nodeType name=\"exo:testNodeType\" isMixin=\"false\" hasOrderableChildNodes=\"false\">" +
       "<supertypes>" +
       "<supertype>nt:base</supertype>" +
       "<supertype>mix:referenceable</supertype>" +
@@ -158,5 +161,10 @@ public class TestDataObjectService extends BaseTest
          null,
          null);
       assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+      RepositoryService repositoryService =
+         (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      Repository repository = repositoryService.getCurrentRepository();
+      Session session = repository.login("ws");
+      session.getWorkspace().getNodeTypeManager().getNodeType("exo:testNodeType");
    }
 }

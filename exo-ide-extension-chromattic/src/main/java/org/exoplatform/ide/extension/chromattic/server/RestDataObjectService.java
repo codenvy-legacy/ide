@@ -128,7 +128,7 @@ public class RestDataObjectService
             model.add(new SourceFile(all[i]));
          }
       }
-      return new DataObjectCompiler(compiler, model.toArray(new SourceFile[model.size()])).generateSchema(format);
+      return new DataObjectCompiler(compiler, src, model.toArray(new SourceFile[model.size()])).generateSchema(format);
    }
 
    @POST

@@ -29,6 +29,7 @@ import org.chromattic.metamodel.typegen.NodeTypeSerializer;
 import org.chromattic.metamodel.typegen.SchemaBuilder;
 import org.chromattic.metamodel.typegen.XMLNodeTypeSerializer;
 import org.everrest.groovy.SourceFile;
+import org.everrest.groovy.SourceFolder;
 import org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler;
 import org.reflext.api.ClassTypeInfo;
 import org.reflext.api.TypeResolver;
@@ -53,33 +54,38 @@ public class DataObjectCompiler
    private final IDEGroovyCompiler compiler;
 
    /** . */
-   private final SourceFile[] sources;
+   private final SourceFile[] srcFiles;
+
+   private final SourceFolder[] srcFolders;
 
    /** . */
    private Class[] classes;
 
    /**
-    * Create a new do compiler with the provided JCR compiler.
+    * Create a new do compiler with the provided Groovy compiler.
     *
     * @param compiler the compiler to use
-    * @param sources the compilation source
+    * @param srcFolders the folders that contains groovy source files
+    * @param srcFiles the source files
     * @throws DataObjectException anything that would prevent the compilation of data object
     * @throws NullPointerException if any argument is null
     */
    public DataObjectCompiler(
       IDEGroovyCompiler compiler,
-      SourceFile[] sources) throws NullPointerException, IllegalArgumentException, DataObjectException
+      SourceFolder[] srcFolders,
+      SourceFile[] srcFiles) throws NullPointerException, IllegalArgumentException, DataObjectException
    {
       if (compiler == null)
       {
-         throw new NullPointerException();
+         throw new NullPointerException("Compiler may noy be null. ");
       }
-      if (sources == null)
+      if (srcFiles == null)
       {
          throw new NullPointerException("No null source accepted");
       }
 
-      this.sources = sources;
+      this.srcFolders = srcFolders;
+      this.srcFiles = srcFiles;
       this.compiler = compiler;
       this.classes = null;
    }
@@ -87,13 +93,14 @@ public class DataObjectCompiler
    /**
     * Create a new do compiler.
     *
-    * @param sources the compilation source
+    * @param srcFolders the folders that contains groovy source files
+    * @param srcFiles the compilation source
     * @throws DataObjectException anything that would prevent the compilation of data object
     * @throws NullPointerException if any argument is null
     */
-   public DataObjectCompiler(SourceFile[] sources) throws DataObjectException
+   public DataObjectCompiler(SourceFolder[] srcFolders, SourceFile[] srcFiles) throws DataObjectException
    {
-      this(new IDEGroovyCompiler(), sources);
+      this(new IDEGroovyCompiler(), srcFolders, srcFiles);
    }
 
    /**
@@ -199,7 +206,7 @@ public class DataObjectCompiler
       {
          if (clazz.isAnnotationPresent(PrimaryType.class) || clazz.isAnnotationPresent(MixinType.class))
          {
-            doClasses.put(sources[i++].getPath().getRef(), clazz);
+            doClasses.put(srcFiles[i++].getPath().getRef(), clazz);
          }
       }
       return doClasses;
@@ -221,7 +228,7 @@ public class DataObjectCompiler
       {
          try
          {
-            return compiler.compile(sources);
+            return compiler.compile(srcFolders, srcFiles);
          }
          catch (IOException e)
          {
