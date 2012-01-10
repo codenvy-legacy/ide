@@ -38,6 +38,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for delete application operation.
@@ -165,8 +166,19 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    private void deleteApplication()
    {
       boolean isDeleteServices = display.getDeleteServicesCheckbox().getValue();
-      CloudFoundryClientService.getInstance().deleteApplication(null, null, appName, null, isDeleteServices,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), deleteAppLoggedInHandler, null)
+      String projectId = null;
+      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+      {
+         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         if (project != null && project.getPropertyValue("cloudfoundry-application") != null
+            && appName.equals((String)project.getPropertyValue("cloudfoundry-application")))
+         {
+            projectId = project.getId();
+         }
+      }
+
+      CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, null,
+         isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), deleteAppLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
