@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.delete;
 
-import java.util.Map;
-
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -33,6 +30,8 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import java.util.Map;
 
 /**
  * Presenter for deleting application from CloudBees.
@@ -67,7 +66,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
       {
          String appId = event.getAppId();
          String appTitle = event.getAppTitle() != null ? event.getAppTitle() : appId;
-         askForDelete(null, null, appId, appTitle);
+         askForDelete(appId, appTitle);
       }
       else if (makeSelectionCheck())
       {
@@ -97,8 +96,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             {
                String appId = result.get("id");
                String appTitle = result.get("title");
-               final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-               askForDelete(project, vfs.getId(), appId, appTitle);
+               askForDelete(appId, appTitle);
             }
          });
    }
@@ -108,10 +106,11 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     * 
     * @param gitWorkDir
     */
-   protected void askForDelete(final ProjectModel project, final String vfsId, final String appId, final String appTitle)
+   protected void askForDelete(final String appId, final String appTitle)
    {
       Dialogs.getInstance().ask(CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
-         CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(appTitle), new BooleanValueReceivedHandler()
+         CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(appTitle),
+         new BooleanValueReceivedHandler()
          {
 
             @Override
@@ -119,22 +118,32 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             {
                if (value != null && value)
                {
-                  doDelete(project, vfsId, appId, appTitle);
+                  doDelete(appId, appTitle);
                }
             }
          });
    }
 
-   protected void doDelete(final ProjectModel project, final String vfsId, final String appId, final String appTitle)
+   protected void doDelete(final String appId, final String appTitle)
    {
-      final String projectId = project != null ? project.getId() : null;
-      CloudBeesClientService.getInstance().deleteApplication(appId, vfsId, projectId,
+      String projectId = null;
+      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+      {
+         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         if (project != null && project.getPropertyValue("cloudbees-application") != null
+            && appId.equals((String)project.getPropertyValue("cloudbees-application")))
+         {
+            projectId = project.getId();
+         }
+      }
+
+      CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
          new CloudBeesAsyncRequestCallback<String>(IDE.eventBus(), new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()
             {
-               doDelete(project, vfsId, appId, appTitle);
+               doDelete(appId, appTitle);
             }
          }, null)
          {
@@ -143,11 +152,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             {
                IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appTitle),
                   Type.INFO));
-               IDE.fireEvent(new ApplicationDeletedEvent(vfsId, projectId));
-               if (project != null)
-               {
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-               }
+               IDE.fireEvent(new ApplicationDeletedEvent(appId));
             }
          });
    }

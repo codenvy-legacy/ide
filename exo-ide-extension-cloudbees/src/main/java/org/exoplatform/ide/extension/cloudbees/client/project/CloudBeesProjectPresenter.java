@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -237,10 +238,14 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
    @Override
    public void onApplicationDeleted(ApplicationDeletedEvent event)
    {
-      if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
-         && openedProject != null && openedProject.getId().equals(event.getProjectId()))
+      if (event.getApplicationId() != null && openedProject != null
+         && event.getApplicationId().equals((String)openedProject.getPropertyValue("cloudbees-application")))
       {
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+         IDE.fireEvent(new RefreshBrowserEvent(openedProject));
       }
    }
 }
