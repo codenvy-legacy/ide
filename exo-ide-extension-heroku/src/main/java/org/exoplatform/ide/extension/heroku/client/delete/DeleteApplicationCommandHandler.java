@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.heroku.client.delete;
 
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -103,7 +104,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -149,15 +150,13 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
                   IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(),
                      Type.INFO));
                   IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), project.getId()));
-                  System.out
-                     .println("DeleteApplicationCommandHandler.doDelete(...).new HerokuAsyncRequestCallback() {...}.onSuccess()");
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
             });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

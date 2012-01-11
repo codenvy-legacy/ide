@@ -182,7 +182,6 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       catch (RequestException e)
       {
          paasCallback.onDeploy(false);
-         e.printStackTrace();
       }
 
    }
@@ -280,7 +279,6 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -308,7 +306,6 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                   String errorMessage =
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                         : GitExtension.MESSAGES.initFailed();
@@ -318,7 +315,6 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          String errorMessage =
             (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
                .initFailed();

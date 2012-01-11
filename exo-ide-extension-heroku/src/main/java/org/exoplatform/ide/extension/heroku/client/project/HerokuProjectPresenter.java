@@ -245,7 +245,6 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
 

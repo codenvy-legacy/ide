@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.heroku.client.key;
 
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -86,7 +87,7 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -131,7 +132,7 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

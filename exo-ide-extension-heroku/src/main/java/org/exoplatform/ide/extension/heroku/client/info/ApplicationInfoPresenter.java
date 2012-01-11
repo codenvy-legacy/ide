@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -174,8 +175,6 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                @Override
                protected void onSuccess(List<Property> properties)
                {
-                  System.out
-                     .println("ApplicationInfoPresenter.getApplicationInfo().new HerokuAsyncRequestCallback() {...}.onSuccess()");
                   if (display == null)
                   {
                      display = GWT.create(Display.class);
@@ -198,7 +197,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

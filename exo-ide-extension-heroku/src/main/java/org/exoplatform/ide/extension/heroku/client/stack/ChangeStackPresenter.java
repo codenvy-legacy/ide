@@ -26,6 +26,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -166,7 +167,7 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -211,7 +212,7 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

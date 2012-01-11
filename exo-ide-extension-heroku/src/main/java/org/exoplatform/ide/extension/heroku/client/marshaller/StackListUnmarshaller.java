@@ -74,7 +74,6 @@ public class StackListUnmarshaller implements Unmarshallable<List<Stack>>, Const
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException(HerokuExtension.LOCALIZATION_CONSTANT.stackListUnmarshalFailed());
       }
    }

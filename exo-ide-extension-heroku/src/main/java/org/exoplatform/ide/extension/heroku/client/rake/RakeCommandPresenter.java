@@ -28,6 +28,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -232,7 +233,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -258,7 +259,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

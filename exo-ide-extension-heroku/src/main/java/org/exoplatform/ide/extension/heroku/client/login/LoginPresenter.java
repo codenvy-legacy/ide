@@ -157,7 +157,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
                }
                catch (RequestException e)
                {
-                  e.printStackTrace();
                }
             }
             else
@@ -195,7 +194,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
                }
                catch (RequestException e)
                {
-                  e.printStackTrace();
                }
             }
             else
@@ -291,7 +289,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
       catch (RequestException e)
       {
          IDE.fireEvent(new LoggedInEvent(true));
-         e.printStackTrace();
       }
    }
 

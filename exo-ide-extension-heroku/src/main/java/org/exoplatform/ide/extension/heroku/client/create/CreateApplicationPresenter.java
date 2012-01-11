@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -205,7 +206,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

@@ -58,7 +58,6 @@ public class RakeResultUnmarshaller implements Unmarshallable<RakeCommandResult>
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException(e.getMessage());
       }
    }
