@@ -385,14 +385,12 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                   Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
                }
             });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
       }
    }
@@ -426,7 +424,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          Dialogs.getInstance().showError(GroovyExtension.LOCALIZATION_CONSTANT.classpathCreationError());
       }
    }
@@ -462,7 +459,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
@@ -496,7 +492,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }

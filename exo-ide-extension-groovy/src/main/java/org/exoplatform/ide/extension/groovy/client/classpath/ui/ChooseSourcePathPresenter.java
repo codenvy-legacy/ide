@@ -253,7 +253,6 @@ public class ChooseSourcePathPresenter
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }

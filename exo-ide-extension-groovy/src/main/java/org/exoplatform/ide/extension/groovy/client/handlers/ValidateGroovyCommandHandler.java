@@ -67,7 +67,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
     * Is need to go to position in active file.
     */
    private boolean isGoToPosition;
-   
+
    private boolean goToPositionAfterOpen;
 
    /**
@@ -148,64 +148,66 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
-      GroovyService.getInstance().validate(activeFile, VirtualFileSystem.getInstance().getInfo().getId(), new AsyncRequestCallback<FileModel>()
-      {
-         
-         @Override
-         protected void onSuccess(FileModel result)
+      GroovyService.getInstance().validate(activeFile, VirtualFileSystem.getInstance().getInfo().getId(),
+         new AsyncRequestCallback<FileModel>()
          {
-            String outputContent = "<b>" + result.getName() + "</b> validated successfully.";
-            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-            IDE.fireEvent(new GroovyValidateResultReceivedEvent(result.getName(), result.getId()));
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
+
+            @Override
+            protected void onSuccess(FileModel result)
             {
-               ServerException serverException = (ServerException)exception;
+               String outputContent = "<b>" + result.getName() + "</b> validated successfully.";
+               IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+               IDE.fireEvent(new GroovyValidateResultReceivedEvent(result.getName(), result.getId()));
+            }
 
-               String outputContent = "<b>" + this.getResult().getName() + "</b> validation failed.&nbsp;";
-               outputContent +=
-                  "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText()
-                     + "</i>)";
-
-               if (!serverException.getMessage().equals(""))
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
                {
-                  outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+                  ServerException serverException = (ServerException)exception;
+
+                  String outputContent = "<b>" + this.getResult().getName() + "</b> validation failed.&nbsp;";
+                  outputContent +=
+                     "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText()
+                        + "</i>)";
+
+                  if (!serverException.getMessage().equals(""))
+                  {
+                     outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+                  }
+
+                  findLineNumberAndColNumberOfError(exception.getMessage());
+
+                  outputContent =
+                     "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
+                        + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
+                        + this.getResult().getId() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent
+                        + "</span>";
+
+                  IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
                }
-
-               findLineNumberAndColNumberOfError(exception.getMessage());
-
-               outputContent =
-                  "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
-                     + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
-                     + this.getResult().getId() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
-
-               IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+               else
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+               GroovyValidateResultReceivedEvent event =
+                  new GroovyValidateResultReceivedEvent(this.getResult().getName(), this.getResult().getId());
+               event.setException(exception);
+               IDE.fireEvent(event);
             }
-            else
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-            GroovyValidateResultReceivedEvent event =
-               new GroovyValidateResultReceivedEvent(this.getResult().getName(), this.getResult().getId());
-            event.setException(exception);
-            IDE.fireEvent(event);
-         }
-      });
+         });
    }
 
    private native void initGoToErrorFunction() /*-{
-     var instance = this;       
-     var goToErrorFunction = function(lineNumber, columnNumber, fileHref, contentType) {
-     instance.@org.exoplatform.ide.extension.groovy.client.handlers.ValidateGroovyCommandHandler::goToError(Ljava/lang/String;II)(
-     fileHref, lineNumber, columnNumber);
-     };
-     
-     $wnd.groovyGoToErrorFunction = goToErrorFunction;
-     }-*/;
+                                               var instance = this;       
+                                               var goToErrorFunction = function(lineNumber, columnNumber, fileHref, contentType) {
+                                               instance.@org.exoplatform.ide.extension.groovy.client.handlers.ValidateGroovyCommandHandler::goToError(Ljava/lang/String;II)(
+                                               fileHref, lineNumber, columnNumber);
+                                               };
+                                               
+                                               $wnd.groovyGoToErrorFunction = goToErrorFunction;
+                                               }-*/;
 
    public void goToError(String fileHref, int lineNumber, int columnNumber)
    {
@@ -257,7 +259,6 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

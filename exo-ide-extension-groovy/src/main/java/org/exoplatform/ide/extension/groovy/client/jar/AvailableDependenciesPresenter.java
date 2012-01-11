@@ -163,7 +163,6 @@ public class AvailableDependenciesPresenter implements ShowAvailableDependencies
          @Override
          protected void onFailure(Throwable exception)
          {
-            exception.printStackTrace();
             String message = "Can't get list of JAR packages.";
             fireEvent(new ExceptionThrownEvent(message));
          }
