@@ -52,12 +52,9 @@ public class DavFSMounter
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
       catch (InterruptedException e)
       {
-         e.printStackTrace();
-
       }
       return false;
    }
@@ -110,7 +107,7 @@ public class DavFSMounter
          {
             Files.write((userName + "\n" + password).getBytes(), passFile);
             LOG.info("shouldBindDirectory");
-            
+
             StringBuilder executeCommand = new StringBuilder();
             executeCommand.append(mountCommand);
             executeCommand.append(webdavserver).append(" ");

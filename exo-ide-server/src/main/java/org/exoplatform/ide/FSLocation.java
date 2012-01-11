@@ -69,7 +69,6 @@ public class FSLocation
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
          repoName="repository";
       }
       String localPath = getRootPath();

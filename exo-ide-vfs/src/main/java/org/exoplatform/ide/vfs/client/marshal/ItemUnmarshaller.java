@@ -101,7 +101,6 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException("Can't parse item.");
       }
    }

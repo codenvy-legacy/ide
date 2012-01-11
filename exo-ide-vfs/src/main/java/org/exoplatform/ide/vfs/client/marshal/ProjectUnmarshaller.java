@@ -54,8 +54,6 @@ public class ProjectUnmarshaller implements Unmarshallable<ProjectModel>
       }
       catch (Exception exc)
       {
-         exc.printStackTrace();
-
          String message = "Can't parse item "+response.getText();
          throw new UnmarshallerException(message);
       }

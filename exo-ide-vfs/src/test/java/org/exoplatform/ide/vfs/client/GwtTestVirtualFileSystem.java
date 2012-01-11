@@ -163,7 +163,6 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
             @Override
             protected void onFailure(Throwable exception)
             {
-               exception.printStackTrace();
                fail();
             }
          });
@@ -193,7 +192,6 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
             @Override
             protected void onFailure(Throwable exception)
             {
-               exception.printStackTrace();
                fail();
             }
          });

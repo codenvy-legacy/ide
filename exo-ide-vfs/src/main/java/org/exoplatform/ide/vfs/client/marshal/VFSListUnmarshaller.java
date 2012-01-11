@@ -68,7 +68,6 @@ public class VFSListUnmarshaller implements Unmarshallable<List<VirtualFileSyste
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException("Can't parse the list of virtual file systems.");
       }
    }

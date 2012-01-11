@@ -140,8 +140,6 @@ public class IDEConfigurationService
       }
       catch (Exception e)
       {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
          throw new WebApplicationException(e);
       }
 

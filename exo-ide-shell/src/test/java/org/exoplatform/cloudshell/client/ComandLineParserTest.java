@@ -66,8 +66,7 @@ public class ComandLineParserTest
          url = commands[0].split("=")[0];
       }
       String body = "{\"message\":\"" + line.getOptionValue("m") + "\",\"all\":" + line.getOptionValue("a") + "\"}";
-      
-      System.out.println("Url : " + url.split(";")[0] + "\nMethod : " + url.split(";")[1] + "\nBody : " +  body);
+
    }
    
    @Test

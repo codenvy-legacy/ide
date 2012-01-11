@@ -106,7 +106,6 @@ public class MockVFS implements VirtualFileSystem
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
       File newFile = createFile(parentId, name, mediaType, len);
       return newFile;
@@ -238,7 +237,6 @@ public class MockVFS implements VirtualFileSystem
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
       return new VirtualFileSystemInfo();
    }

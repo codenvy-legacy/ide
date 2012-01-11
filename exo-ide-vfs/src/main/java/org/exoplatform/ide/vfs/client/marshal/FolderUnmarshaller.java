@@ -54,8 +54,6 @@ public class FolderUnmarshaller implements Unmarshallable<FolderModel>
       }
       catch (Exception exc)
       {
-         exc.printStackTrace();
-
          String message = "Can't parse item "+response.getText();
          throw new UnmarshallerException(message);
       }

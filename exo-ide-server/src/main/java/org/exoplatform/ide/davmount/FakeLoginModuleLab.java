@@ -89,12 +89,10 @@ public class FakeLoginModuleLab extends TomcatLoginModule
       }
       catch (UnsupportedCallbackException e)
       {
-         e.printStackTrace();
          throw new LoginException(e.getMessage());
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new LoginException(e.getMessage());
       }
       return true;

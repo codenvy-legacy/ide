@@ -62,7 +62,6 @@ public class JenkinsJobUnmarshaller implements Unmarshallable
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException("Can't parse Jenkins Job");
       }
    }

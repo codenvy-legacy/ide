@@ -78,7 +78,6 @@ public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
       }
       catch (Exception exc)
       {
-         exc.printStackTrace();
          String message = "Can't parse folder content at <b>" + "id" + "</b>! ";
          throw new UnmarshallerException(message);
       }

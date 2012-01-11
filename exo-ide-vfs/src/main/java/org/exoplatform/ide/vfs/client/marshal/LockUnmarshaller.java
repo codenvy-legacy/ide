@@ -54,7 +54,6 @@ public class LockUnmarshaller implements Unmarshallable<LockToken>
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException("Can't parse lock token");
       }
 

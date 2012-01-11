@@ -171,7 +171,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -430,7 +429,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                   String errorMessage =
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                         : GitExtension.MESSAGES.initFailed();
@@ -440,7 +438,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          String errorMessage =
             (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
                .initFailed();
