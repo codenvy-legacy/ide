@@ -19,6 +19,7 @@
 package org.exoplatform.ide.codeassistant.storage.extractors;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -53,7 +54,7 @@ public class QDoxJavaDocExtractor
     * @return map with key - member's fqn, and value - javaDoc comment
     * @throws IOException
     */
-   public static Map<String, String> extractZip(InputStream sourceZipStream) throws IOException
+   public Map<String, String> extractZip(InputStream sourceZipStream) throws IOException
    {
       HashMap<String, String> result = new HashMap<String, String>();
       ZipInputStream zip = new ZipInputStream(sourceZipStream);
@@ -150,7 +151,7 @@ public class QDoxJavaDocExtractor
     *           stream of <code>.java</code> file
     * @return map with key - member's fqn, and value - javaDoc comment
     */
-   public static Map<String, String> extractSource(InputStream sourceStream)
+   public Map<String, String> extractSource(InputStream sourceStream)
    {
       Map<String, String> javaDocs = new HashMap<String, String>();
 
@@ -160,23 +161,29 @@ public class QDoxJavaDocExtractor
 
       for (JavaClass currentClass : javaDocBuilder.getClasses())
       {
-         if (currentClass.getComment() != null)
+         DocletTag[] classTags = currentClass.getTags();
+         String classComment = getCommentWithTags(currentClass.getComment(), classTags);
+         if (classComment != null)
          {
-            javaDocs.put(getFqnForClass(currentClass), currentClass.getComment());
+            javaDocs.put(getFqnForClass(currentClass), classComment);
          }
 
          for (JavaField currentField : currentClass.getFields())
          {
-            if (currentField.getComment() != null)
+            DocletTag[] fieldTags = currentField.getTags();
+            String fieldComment = getCommentWithTags(currentField.getComment(), fieldTags);
+            if (fieldComment != null)
             {
-               javaDocs.put(getFqnForField(currentField), currentField.getComment());
+               javaDocs.put(getFqnForField(currentField), fieldComment);
             }
          }
          for (JavaMethod currentMethod : currentClass.getMethods())
          {
-            if (currentMethod.getComment() != null)
+            DocletTag[] methodTags = currentMethod.getTags();
+            String methodComment = getCommentWithTags(currentMethod.getComment(), methodTags);
+            if (methodComment != null)
             {
-               javaDocs.put(getFqnForMethod(currentMethod), currentMethod.getComment());
+               javaDocs.put(getFqnForMethod(currentMethod), methodComment);
             }
          }
       }
@@ -196,7 +203,7 @@ public class QDoxJavaDocExtractor
     * @return
     * @throws IOException
     */
-   public static Map<String, String> extractSource(InputStream stream, boolean isCloseStream) throws IOException
+   public Map<String, String> extractSource(InputStream stream, boolean isCloseStream) throws IOException
    {
       InputStream sourceStream;
       if (isCloseStream)
@@ -226,7 +233,7 @@ public class QDoxJavaDocExtractor
     * @return
     * @see #extractSource(InputStream)
     */
-   private static String getFqnForClass(JavaClass javaClass)
+   private String getFqnForClass(JavaClass javaClass)
    {
       return javaClass.getFullyQualifiedName();
    }
@@ -238,7 +245,7 @@ public class QDoxJavaDocExtractor
     * @return
     * @see #extractSource(InputStream)
     */
-   private static String getFqnForField(JavaField javaField)
+   private String getFqnForField(JavaField javaField)
    {
       StringBuilder fqnBuilder = new StringBuilder();
       String prefix = javaField.getParentClass().getFullyQualifiedName();
@@ -256,7 +263,7 @@ public class QDoxJavaDocExtractor
     * @return
     * @see #extractSource(InputStream)
     */
-   private static String getFqnForMethod(JavaMethod javaMethod)
+   private String getFqnForMethod(JavaMethod javaMethod)
    {
       StringBuilder fqnBuilder = new StringBuilder();
       String prefix = javaMethod.getParentClass().getFullyQualifiedName();
@@ -282,4 +289,31 @@ public class QDoxJavaDocExtractor
       fqnBuilder.append(")");
       return fqnBuilder.toString();
    }
+
+   /**
+    * This method add to comment string all doclet tags.
+    * 
+    * @param comment
+    * @param tags
+    * @return javadoc comment with unresolved tags
+    */
+   private String getCommentWithTags(String comment, DocletTag[] tags)
+   {
+      if (comment == null && (tags == null || tags.length == 0))
+      {
+         return null;
+      }
+      StringBuilder commentBuilder = new StringBuilder();
+      commentBuilder.append(comment);
+      for (DocletTag tag : tags)
+      {
+         commentBuilder.append("\n");
+         commentBuilder.append("@");
+         commentBuilder.append(tag.getName());
+         commentBuilder.append(" ");
+         commentBuilder.append(tag.getValue());
+      }
+      return commentBuilder.toString().trim();
+   }
+
 }

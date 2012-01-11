@@ -90,7 +90,8 @@ public class ClassManager
       Map<String, String> javaDocs = new HashMap<String, String>();
       for (String source : sources)
       {
-         javaDocs.putAll(QDoxJavaDocExtractor.extractSource(new FileInputStream(source)));
+         QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
+         javaDocs.putAll(javaDocExtractor.extractSource(new FileInputStream(source)));
       }
 
       dataWriter.addJavaDocs(javaDocs);

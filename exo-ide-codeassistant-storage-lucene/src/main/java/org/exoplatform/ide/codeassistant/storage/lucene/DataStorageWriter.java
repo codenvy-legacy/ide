@@ -88,10 +88,11 @@ public class DataStorageWriter
          luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
          LuceneDataWriter writer = new LuceneDataWriter(luceneInfoStorage);
 
+         QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
          for (String jar : sourceJars)
          {
             File jarFile = new File(jar);
-            Map<String, String> javaDocs = QDoxJavaDocExtractor.extractZip(new FileInputStream(jarFile));
+            Map<String, String> javaDocs = javaDocExtractor.extractZip(new FileInputStream(jarFile));
             writer.addJavaDocs(javaDocs);
          }
       }

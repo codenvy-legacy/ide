@@ -192,7 +192,7 @@ public class SearchTest
    public void testSearchFieldJavaDoc() throws CodeAssistantException
    {
       String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass#field");
-      assertEquals("Field java doc", javaDoc);
+      assertEquals("Field java doc\n@author Test field doclets", javaDoc);
    }
 
    @Test

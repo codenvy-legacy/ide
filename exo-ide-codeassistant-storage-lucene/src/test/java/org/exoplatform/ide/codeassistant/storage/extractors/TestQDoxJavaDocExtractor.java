@@ -35,22 +35,21 @@ public class TestQDoxJavaDocExtractor
    @BeforeClass
    public static void extractJavaDocs() throws FileNotFoundException
    {
-      javaDocs =
-         QDoxJavaDocExtractor.extractSource(new FileInputStream(
-            new File("src/test/java/test/javadoc/JavaDocClass.java")));
+      QDoxJavaDocExtractor extractor = new QDoxJavaDocExtractor();
+      javaDocs = extractor.extractSource(new FileInputStream(new File("src/test/java/test/javadoc/JavaDocClass.java")));
    }
 
    @Test
    public void checkTotalCountOfMembersWithJavaDocs()
    {
-      Assert.assertEquals(16, javaDocs.size());
+      Assert.assertEquals(17, javaDocs.size());
    }
 
    @Test
    public void checkClassesWithJavaDocs()
    {
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass"));
-      Assert.assertEquals("<p>\nClass java doc<br>\nwith tags and<br>\nfew lines.\n</p>",
+      Assert.assertEquals("<p>\nClass java doc<br>\nwith tags and<br>\nfew lines.\n</p>\n@author Test class doclets",
          javaDocs.get("test.javadoc.JavaDocClass"));
 
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass"));
@@ -72,7 +71,8 @@ public class TestQDoxJavaDocExtractor
       Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass#fieldWithoutJavaDoc"));
 
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#field"));
-      Assert.assertEquals("Field java doc", javaDocs.get("test.javadoc.JavaDocClass#field"));
+      Assert
+         .assertEquals("Field java doc\n@author Test field doclets", javaDocs.get("test.javadoc.JavaDocClass#field"));
 
       Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass#fieldWithoutJavaDoc"));
 
@@ -131,8 +131,13 @@ public class TestQDoxJavaDocExtractor
 
       Assert.assertTrue(javaDocs
          .containsKey("test.javadoc.ClassWithGenerics#method(java.util.List<? extends java.lang.Number>)"));
-      Assert.assertEquals("Method with list as parameter",
+      Assert.assertEquals("Method with list as parameter {@link asdf}",
          javaDocs.get("test.javadoc.ClassWithGenerics#method(java.util.List<? extends java.lang.Number>)"));
+
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method()"));
+      Assert.assertEquals(
+         "Begin\n@see PrivateClass asdf Middle\n@see ClassWithGenerics#method(List)\n@author Author End",
+         javaDocs.get("test.javadoc.ClassWithGenerics#method()"));
    }
 
 }

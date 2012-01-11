@@ -26,6 +26,7 @@ import java.util.List;
  * with tags and<br>
  * few lines.
  * </p>
+ * @author Test class doclets
  */
 public class JavaDocClass
 {
@@ -34,6 +35,7 @@ public class JavaDocClass
 
    /**
     * Field java doc
+    * @author Test field doclets
     */
    public String field;
 
@@ -144,11 +146,22 @@ class ClassWithGenerics<T extends Number>
    }
 
    /**
-    * Method with list as parameter
+    * Method with list as parameter {@link asdf}
     */
    public T method(List<? extends Number> p1)
    {
       return null;
+   }
+
+   /**
+    * Begin
+    * 
+    * @see PrivateClass asdf Middle
+    * @see ClassWithGenerics#method(List)
+    * @author Author End
+    */
+   public void method()
+   {
    }
 
 }
