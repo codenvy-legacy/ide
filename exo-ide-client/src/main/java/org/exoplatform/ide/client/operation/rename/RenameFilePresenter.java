@@ -286,7 +286,6 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                   IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
                }
@@ -294,14 +293,12 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
       }
       catch (Exception e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
-         e.printStackTrace();
       }
 
    }

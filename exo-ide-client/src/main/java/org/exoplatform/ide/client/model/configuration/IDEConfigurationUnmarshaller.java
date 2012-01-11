@@ -153,7 +153,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException(IDE.ERRORS_CONSTANT.configurationCantParseApplicationSettings());
       }
    }

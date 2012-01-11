@@ -181,7 +181,6 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
       }
    }

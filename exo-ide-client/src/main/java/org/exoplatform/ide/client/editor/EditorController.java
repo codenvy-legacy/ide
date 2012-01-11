@@ -212,10 +212,12 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    public void onEditorFocusReceived(EditorFocusReceivedEvent event)
    {
-      try {
-         editorsViews.get(activeFile.getId()).activate();         
-      } catch (Exception e) {
-         e.printStackTrace();
+      try
+      {
+         editorsViews.get(activeFile.getId()).activate();
+      }
+      catch (Exception e)
+      {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
@@ -318,8 +320,8 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       if (!file.isPersisted())
       {
          closeFileAfterSaving = true;
-         IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.EXTENDED,
-            new EditorCloseFileEvent(file, true), null));
+         IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.EXTENDED, new EditorCloseFileEvent(
+            file, true), null));
       }
       else
       {
@@ -484,16 +486,16 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          {
             file.setPath(event.getSourceHref());
          }
-         if(event.getSourceHref() == null)
+         if (event.getSourceHref() == null)
          {
-           closeFile(file);
+            closeFile(file);
          }
          else
          {
-           //closing file Saved "As" ...
-           FileModel oldFile=new FileModel(event.getFile());
-           oldFile.setId(event.getSourceHref());
-           closeFile(oldFile);
+            //closing file Saved "As" ...
+            FileModel oldFile = new FileModel(event.getFile());
+            oldFile.setId(event.getSourceHref());
+            closeFile(oldFile);
          }
          closeFileAfterSaving = false;
       }
@@ -517,15 +519,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          oldFileEditorView.setFile(savedFile);
          editorsViews.put(savedFile.getId(), oldFileEditorView);
          updateTabTitle(savedFile);
-
-         try
-         {
-            oldFileEditorView.setIcon(new Image(ImageUtil.getIcon(savedFile.getMimeType())));
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-         }
+         oldFileEditorView.setIcon(new Image(ImageUtil.getIcon(savedFile.getMimeType())));
          // call activeFileChanged event after the SaveFileAs operation
          if (!savedFile.getId().equals(activeFile.getId()) && isAfterSaveAs)
          {
@@ -556,20 +550,13 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       editorsViews.remove(oldFile.getId());
       editorsViews.put(newFile.getId(), oldFileEditorView);
 
-      try
-      {
-         oldFileEditorView.setIcon(new Image(ImageUtil.getIcon(newFile)));
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      oldFileEditorView.setIcon(new Image(ImageUtil.getIcon(newFile)));
       IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
       oldFileEditorView.setContent(newFile.getContent());
 
       updateTabTitle(newFile);
       oldFileEditorView.setFile(newFile);
-      
+
    }
 
    /**
@@ -711,7 +698,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
                }
                catch (Exception e)
                {
-                  e.printStackTrace();
                }
             }
          };
@@ -761,7 +747,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       }
       catch (EditorNotFoundException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
       return null;
    }

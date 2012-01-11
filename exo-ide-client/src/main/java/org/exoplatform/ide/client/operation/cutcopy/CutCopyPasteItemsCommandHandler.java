@@ -223,7 +223,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name."));
       }
@@ -286,7 +285,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
                            }
                            catch (RequestException e)
                            {
-                              e.printStackTrace();
                               IDE.fireEvent(new ExceptionThrownEvent(e));
                            }
                         }
@@ -329,7 +327,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
-         e.printStackTrace();
       }
    }
 
@@ -439,7 +436,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       //      }
       //      catch (RequestException e)
       //      {
-      //         e.printStackTrace();
       //         eventBus.fireEvent(new ExceptionThrownEvent(e));
       //      }
       if (itemsToCut.size() != 0)

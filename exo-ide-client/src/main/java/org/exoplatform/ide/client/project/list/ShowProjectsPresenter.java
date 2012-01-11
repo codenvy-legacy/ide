@@ -249,7 +249,6 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
       }
    }

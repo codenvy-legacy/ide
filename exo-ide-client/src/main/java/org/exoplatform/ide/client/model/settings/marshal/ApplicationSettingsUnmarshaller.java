@@ -86,7 +86,6 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
       }
       catch (Exception exc)
       {
-         exc.printStackTrace();
          throw new UnmarshallerException(ERROR_MESSAGE);
       }
    }

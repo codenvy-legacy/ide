@@ -85,7 +85,6 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
             IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG)); 
          } 
          

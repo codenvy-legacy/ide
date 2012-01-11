@@ -90,20 +90,10 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
    {
       if (display != null && !selectedItems.isEmpty())
       {
-         //         System.out.println("> selected items > " + selectedItems);
          Item item = selectedItems.get(0);
-
-         //         System.out.println("item > " + item);
-         //         Iterator<String> iter = item.getLinkRelations().iterator();
-         //         while (iter.hasNext()) {
-         //            String rel = iter.next();
-         //            System.out.println("relation > " + rel);
-         //         }
-
          Link link = item.getLinkByRelation(Link.REL_CONTENT_BY_PATH);
          if (link != null)
          {
-            //String url = item.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
             String url = link.getHref();
             display.getURLField().setValue(url);
          }

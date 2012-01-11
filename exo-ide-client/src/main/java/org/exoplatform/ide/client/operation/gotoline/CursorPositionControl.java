@@ -134,7 +134,6 @@ public class CursorPositionControl extends StatusTextControl implements IDEContr
          }
          catch (Throwable e)
          {
-            e.printStackTrace();
          }
       }
    };

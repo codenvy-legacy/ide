@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.edit;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -105,7 +107,7 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
    }
@@ -153,9 +155,8 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
          }
-
       }
       else
       {
@@ -183,7 +184,7 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
             }
             catch (RequestException e)
             {
-               e.printStackTrace();
+               IDE.fireEvent(new ExceptionThrownEvent(e));
             }
          }
       }
@@ -206,17 +207,15 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-
-   
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)

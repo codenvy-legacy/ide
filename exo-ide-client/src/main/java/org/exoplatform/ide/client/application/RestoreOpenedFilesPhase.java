@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Timer;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
@@ -155,14 +156,12 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     //exception.printStackTrace();
                   }
                });
 
          }
          catch (Exception e)
          {
-            e.printStackTrace();
          }
       }
 
@@ -266,7 +265,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                   catch (RequestException e)
                   {
                      eventBus.fireEvent(new ExceptionThrownEvent(e));
-                     e.printStackTrace();
                   }
                }
 
@@ -275,7 +273,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       catch (RequestException e)
       {
          eventBus.fireEvent(new ExceptionThrownEvent(e));
-         e.printStackTrace();
       }
    }
 
@@ -319,7 +316,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       }
       catch (EditorNotFoundException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

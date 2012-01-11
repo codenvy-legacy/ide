@@ -103,7 +103,6 @@ public class OutputPresenter implements OutputHandler, ViewClosedHandler, ShowOu
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

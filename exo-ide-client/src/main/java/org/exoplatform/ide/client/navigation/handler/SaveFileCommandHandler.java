@@ -98,7 +98,6 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
             IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
          }
          return;
@@ -145,7 +144,6 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }

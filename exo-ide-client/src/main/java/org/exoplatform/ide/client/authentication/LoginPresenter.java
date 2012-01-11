@@ -18,23 +18,6 @@
  */
 package org.exoplatform.ide.client.authentication;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.util.Log;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -50,6 +33,22 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.util.Log;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -173,7 +172,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
             }
             catch (Exception e)
             {
-               e.printStackTrace();
+               Log.info("Exception > " + e.getMessage());
             }
          }
       });
@@ -200,7 +199,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
                }
                catch (Exception e)
                {
-                  e.printStackTrace();
+                  Log.info("Exception > " + e.getMessage());
                }
             }
          }
@@ -287,7 +286,6 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
          Dialogs.getInstance().showError("Can not log in!");
 
          Log.info("Exception > " + e.getMessage());
-         e.printStackTrace();
       }
    }
 
@@ -327,9 +325,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       catch (Exception e)
       {
          Dialogs.getInstance().showError("Can not log in!");
-
          Log.info("Exception > " + e.getMessage());
-         e.printStackTrace();
       }
    }
 

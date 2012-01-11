@@ -85,7 +85,6 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
             }
             catch (Throwable exc)
             {
-               exc.printStackTrace();
             }
          }
 
@@ -105,7 +104,6 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
             }
             catch (Throwable exc)
             {
-               exc.printStackTrace();
             }
          }
 

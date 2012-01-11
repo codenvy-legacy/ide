@@ -410,11 +410,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
-
                   itemToSelect = null;
                   foldersToRefresh.clear();
-                  exception.printStackTrace();
                   IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
                   IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
                }
@@ -428,7 +425,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -912,7 +909,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   foldersToRefresh.clear();
                   itemToSelect = null;
 
-                  exception.printStackTrace();
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
@@ -920,7 +916,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }

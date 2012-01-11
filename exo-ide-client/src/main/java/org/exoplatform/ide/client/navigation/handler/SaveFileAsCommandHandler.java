@@ -221,27 +221,8 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
-      //      saveContent(newFile, null, new FileContentSaveCallback()
-      //      {
-      //         @Override
-      //         protected void onSuccess(FileData result)
-      //         {
-      //            File file = result.getFile();
-      //            
-      //            if (file.isPropertiesChanged())
-      //            {
-      //               saveFileProperties(file, lockTokens.get(file.getHref()));
-      //            }
-      //            else
-      //            {
-      //               getProperties(file);
-      //            }            
-      //         }
-      //      });
-
    }
 
    //   private void saveFileProperties(FileModel file, String lockToken)

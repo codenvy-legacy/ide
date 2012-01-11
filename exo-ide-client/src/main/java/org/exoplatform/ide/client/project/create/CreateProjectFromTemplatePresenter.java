@@ -311,7 +311,6 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
       }
@@ -428,7 +427,6 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
             loader.hide();
             IDE.fireEvent(new ExceptionThrownEvent(e));
          }
@@ -554,13 +552,11 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                }
             });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
 

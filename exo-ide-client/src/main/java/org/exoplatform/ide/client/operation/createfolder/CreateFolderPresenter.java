@@ -153,7 +153,6 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
       }

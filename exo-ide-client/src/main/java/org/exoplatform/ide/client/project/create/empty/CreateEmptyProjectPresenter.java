@@ -158,7 +158,7 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

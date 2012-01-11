@@ -181,14 +181,12 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }

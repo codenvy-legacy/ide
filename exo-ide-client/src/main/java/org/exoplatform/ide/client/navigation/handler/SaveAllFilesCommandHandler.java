@@ -95,14 +95,12 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
             @Override
             protected void onFailure(Throwable exception)
             {
-               exception.printStackTrace();
                IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
             }
          });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
       }
 

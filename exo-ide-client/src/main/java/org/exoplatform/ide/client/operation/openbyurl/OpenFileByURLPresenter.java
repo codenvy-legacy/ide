@@ -192,7 +192,6 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
                }
                catch (Exception e)
                {
-                  e.printStackTrace();
                }
             }
          }

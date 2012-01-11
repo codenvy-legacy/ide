@@ -19,6 +19,7 @@
 
 package org.exoplatform.ide.client.application;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -42,12 +43,13 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 public class VirtualFileSystemSwitcher implements SwitchVFSHandler, ConfigurationReceivedSuccessfullyHandler
 {
-   
+
    private String vfsBaseUrl;
-   
+
    private String vfsId;
-   
-   public VirtualFileSystemSwitcher() {
+
+   public VirtualFileSystemSwitcher()
+   {
       IDE.addHandler(SwitchVFSEvent.TYPE, this);
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
@@ -55,22 +57,23 @@ public class VirtualFileSystemSwitcher implements SwitchVFSHandler, Configuratio
    @Override
    public void onSwitchVFS(SwitchVFSEvent event)
    {
-      if (vfsId != null) {         
+      if (vfsId != null)
+      {
          IDE.fireEvent(new VfsChangedEvent(null));
       }
 
       vfsId = event.getVfsID();
-      String workspaceUrl =
-         (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + vfsId : vfsBaseUrl + "/" + vfsId;
+      String workspaceUrl = (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + vfsId : vfsBaseUrl + "/" + vfsId;
 
-      try {
+      try
+      {
          new VirtualFileSystem(workspaceUrl, new GWTLoader()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
             new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
             @Override
             protected void onSuccess(VirtualFileSystemInfo result)
             {
-               IDE.fireEvent(new VfsChangedEvent(result));               
+               IDE.fireEvent(new VfsChangedEvent(result));
             }
 
             @Override
@@ -78,10 +81,12 @@ public class VirtualFileSystemSwitcher implements SwitchVFSHandler, Configuratio
             {
                Dialogs.getInstance().showError("Workspace " + vfsId + " not found.");
             }
-         });               
-         
-      } catch (Exception e) {
-         e.printStackTrace();
+         });
+
+      }
+      catch (Exception e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

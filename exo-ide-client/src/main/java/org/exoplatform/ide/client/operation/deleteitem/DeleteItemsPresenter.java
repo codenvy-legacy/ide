@@ -330,7 +330,6 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
             IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
          }
       }
@@ -400,7 +399,6 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e, DELETE_FILE_FAILURE_MESSAGE));
       }
    }

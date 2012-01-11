@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.application;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -110,7 +111,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                }
                catch (Exception e)
                {
-                  e.printStackTrace();
+                  IDE.fireEvent(new ExceptionThrownEvent(e));
                }
             }
          });

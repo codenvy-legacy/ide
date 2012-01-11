@@ -260,13 +260,11 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
       catch (Exception e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
-         e.printStackTrace();
       }
    }
 

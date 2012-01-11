@@ -250,7 +250,6 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          loader.hide();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }

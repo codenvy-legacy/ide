@@ -206,14 +206,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       display.selectItem(rootFolder.getId());
       selectedItems = display.getSelectedItems();
 
-      try
-      {
-         onRefreshBrowser(new RefreshBrowserEvent());
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      onRefreshBrowser(new RefreshBrowserEvent());
    }
 
    /**
@@ -371,7 +364,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
                {
                   itemToSelect = null;
                   foldersToRefresh.clear();
-                  exception.printStackTrace();
                   IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
                   IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
                }
@@ -412,7 +404,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -424,7 +415,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       List<Item> children =
          (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
             .getChildren().getItems();
-//      removeSystemItemsFromView(children);
+      //      removeSystemItemsFromView(children);
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);

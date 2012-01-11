@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.commons.wadl.IllegalWADLException;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
@@ -74,7 +75,7 @@ import com.google.gwt.user.client.ui.HasValue;
 public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler,
    ViewClosedHandler
 {
-   
+
    public interface Display extends IsView
    {
 
@@ -410,7 +411,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
@@ -435,7 +435,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info("Exception>" + e.getMessage());
       }
    }
 

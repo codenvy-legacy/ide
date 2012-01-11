@@ -142,7 +142,6 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
@@ -150,7 +149,6 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
@@ -339,7 +337,6 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             @Override
             protected void onFailure(Throwable exception)
             {
-               exception.printStackTrace();
                IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
          });
@@ -347,7 +344,6 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
 
