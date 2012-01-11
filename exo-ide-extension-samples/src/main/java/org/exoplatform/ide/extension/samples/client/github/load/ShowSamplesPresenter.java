@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client.github.load;
 
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,6 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -83,7 +82,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       ListGridItem<ProjectData> getSamplesListGrid();
 
       List<ProjectData> getSelectedItems();
-      
+
       HasValue<String> getProjectNameField();
 
       void enableNextButton(boolean enable);
@@ -264,7 +263,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during creating project"));
       }
    }
 
@@ -299,7 +298,6 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          handleError(e);
       }
    }

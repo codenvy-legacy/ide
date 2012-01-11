@@ -388,13 +388,11 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                }
             });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -426,7 +424,6 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
@@ -466,7 +463,6 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
 
@@ -503,7 +499,6 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
@@ -601,14 +596,12 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
                protected void onFailure(Throwable exception)
                {
                   foldersToRefresh.clear();
-                  exception.printStackTrace();
                }
 
             });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -682,7 +675,6 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
 

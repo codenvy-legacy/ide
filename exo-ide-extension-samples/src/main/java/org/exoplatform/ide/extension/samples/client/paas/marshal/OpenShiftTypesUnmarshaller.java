@@ -68,7 +68,6 @@ public class OpenShiftTypesUnmarshaller implements Unmarshallable
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException("Can't parse application types on OpenShitf.");
       }
    }

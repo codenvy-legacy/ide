@@ -614,7 +614,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during creating project"));
       }
    }
 
@@ -680,7 +680,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   //                  {
                   //                     deployToOpenShift();
                   //                  }
-                  else 
+                  else
                   {
                      checkIsMavenProject(project);
                   }
@@ -695,7 +695,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          handleError(e);
       }
    }
@@ -725,7 +724,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                         return;
                      }
                   }
-                  
+
                   if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
                   {
 
@@ -736,7 +735,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   {
                      deployToPaas();
                   }
-                  
+
                }
 
                @Override
@@ -749,7 +748,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
