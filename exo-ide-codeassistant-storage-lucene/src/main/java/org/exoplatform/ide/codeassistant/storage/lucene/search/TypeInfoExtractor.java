@@ -21,7 +21,6 @@ package org.exoplatform.ide.codeassistant.storage.lucene.search;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
-import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
@@ -43,6 +42,12 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
    private final LuceneCodeAssistantStorage luceneCodeAssistantStorage;
 
    private final static String OBJECT_NAME = "java.lang.Object";
+
+   /**
+    * This constant used for caching TypeInfo of java.lang.Object class. It will
+    * be initialized in first query
+    */
+   private static TypeInfo OBJECT_TYPE = null;
 
    /**
     * @param luceneCodeAssistantStorage
@@ -74,7 +79,11 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
             {
                if (OBJECT_NAME.equals(result.getSuperClass()))
                {
-                  mergeType(result, ClassParser.OBJECT_TYPE);
+                  if (OBJECT_TYPE == null)
+                  {
+                     OBJECT_TYPE = luceneCodeAssistantStorage.getTypeByFqn(result.getSuperClass());
+                  }
+                  mergeType(result, OBJECT_TYPE);
                }
                else
                {
