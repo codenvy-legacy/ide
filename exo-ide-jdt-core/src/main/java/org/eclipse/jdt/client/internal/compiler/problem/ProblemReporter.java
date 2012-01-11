@@ -4780,7 +4780,7 @@ public class ProblemReporter extends ProblemHandler
 
    public void needImplementation(ASTNode location)
    {
-      this.abortDueToInternalError(Messages.abort_missingCode, location);
+      this.abortDueToInternalError(Messages.instance.abort_missingCode(), location);
    }
 
    public void needToEmulateFieldAccess(FieldBinding field, ASTNode location, boolean isReadAccess)
@@ -5414,19 +5414,19 @@ public class ProblemReporter extends ProblemHandler
       String[] arguments;
       if (this.referenceContext instanceof ConstructorDeclaration)
       {
-         arguments = new String[]{Messages.parser_endOfConstructor};
+         arguments = new String[]{Messages.instance.parser_endOfConstructor()};
       }
       else if (this.referenceContext instanceof MethodDeclaration)
       {
-         arguments = new String[]{Messages.parser_endOfMethod};
+         arguments = new String[]{Messages.instance.parser_endOfMethod()};
       }
       else if (this.referenceContext instanceof TypeDeclaration)
       {
-         arguments = new String[]{Messages.parser_endOfInitializer};
+         arguments = new String[]{Messages.instance.parser_endOfInitializer()};
       }
       else
       {
-         arguments = new String[]{Messages.parser_endOfFile};
+         arguments = new String[]{Messages.instance.parser_endOfFile()};
       }
       this.handle(IProblem.ParsingErrorUnexpectedEOF, arguments, arguments, start, end);
    }

@@ -18,19 +18,13 @@
  */
 package org.exoplatform.ide.jdt.core;
 
-import static org.junit.Assert.*;
-import static org.fest.assertions.Assertions.*;
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
-import org.eclipse.jdt.client.core.dom.ASTVisitor;
-import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.core.dom.MethodDeclaration;
-import org.eclipse.jdt.client.core.dom.SimpleName;
-import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.junit.Before;
 import org.junit.Test;

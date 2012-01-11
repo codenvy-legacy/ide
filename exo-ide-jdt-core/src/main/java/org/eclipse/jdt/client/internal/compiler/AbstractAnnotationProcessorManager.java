@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler;
 
-import java.io.PrintWriter;
-
 import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
@@ -38,19 +36,6 @@ public abstract class AbstractAnnotationProcessorManager {
 	 */
 	public abstract void configureFromPlatform(Compiler compiler, Object compilationUnitLocator, Object javaProject);
 
-	/**
-	 * Set the print writer for the standard output.
-	 *
-	 * @param out the given print writer for output
-	 */
-	public abstract void setOut(PrintWriter out);
-
-	/**
-	 * Set the print writer for the standard error.
-	 *
-	 * @param err the given print writer for error
-	 */
-	public abstract void setErr(PrintWriter err);
 
 	/**
 	 * Return the new units created in the last round.

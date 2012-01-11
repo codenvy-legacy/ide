@@ -596,11 +596,12 @@ public class ASTRewrite
 
    private void validateIsPropertyOfNode(StructuralPropertyDescriptor property, ASTNode node)
    {
-      if (!property.getNodeClass().isInstance(node))
-      {
-         String message = property.getId() + " is not a property of type " + node.getClass().getName(); //$NON-NLS-1$
-         throw new IllegalArgumentException(message);
-      }
+      //TODO find way to use 'instanceof' iperator for this if
+//      if (!property.getNodeClass().isInstance(node))
+//      {
+//         String message = property.getId() + " is not a property of type " + node.getClass().getName(); //$NON-NLS-1$
+//         throw new IllegalArgumentException(message);
+//      }
    }
 
    private void validatePropertyType(StructuralPropertyDescriptor prop, Object node)

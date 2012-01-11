@@ -29,7 +29,6 @@ import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.client.runtime.Assert;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -2988,25 +2987,25 @@ public class Util
       Assert.isTrue(isValidTypeSignature(sig, allowVoid));
    }
 
-   public static void verbose(String log)
-   {
-      verbose(log, System.out);
-   }
-
-   public static synchronized void verbose(String log, PrintStream printStream)
-   {
-      int start = 0;
-      do
-      {
-         int end = log.indexOf('\n', start);
-         printStream.print(Thread.currentThread());
-         printStream.print(" "); //$NON-NLS-1$
-         printStream.print(log.substring(start, end == -1 ? log.length() : end + 1));
-         start = end + 1;
-      }
-      while (start != 0);
-      printStream.println();
-   }
+//   public static void verbose(String log)
+//   {
+//      verbose(log, System.out);
+//   }
+//
+//   public static synchronized void verbose(String log, PrintStream printStream)
+//   {
+//      int start = 0;
+//      do
+//      {
+//         int end = log.indexOf('\n', start);
+//         printStream.print(Thread.currentThread());
+//         printStream.print(" "); //$NON-NLS-1$
+//         printStream.print(log.substring(start, end == -1 ? log.length() : end + 1));
+//         start = end + 1;
+//      }
+//      while (start != 0);
+//      printStream.println();
+//   }
 
    /**
     * Returns true if the given name ends with one of the known java like extension.

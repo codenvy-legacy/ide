@@ -21,8 +21,6 @@ package org.eclipse.jdt.client.compiler.batch;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 
-import java.io.File;
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 34360 2009-07-22 23:58:59Z evgen $
@@ -68,7 +66,7 @@ public class CompilationUnit implements ICompilationUnit
       }
 
       this.fileName = fileNameCharArray;
-      int start = CharOperation.lastIndexOf(File.separatorChar, fileNameCharArray) + 1;
+      int start = CharOperation.lastIndexOf('/', fileNameCharArray) + 1;
 
       int end = CharOperation.lastIndexOf('.', fileNameCharArray);
       if (end == -1)

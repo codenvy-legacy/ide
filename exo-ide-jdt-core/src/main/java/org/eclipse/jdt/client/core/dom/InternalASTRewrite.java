@@ -9,15 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.core.dom.SimplePropertyDescriptor;
-import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
-import org.eclipse.jdt.client.core.dom.rewrite.TargetSourceRangeComputer;
-import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScannerData;
+import java.util.HashMap;
 
 /**
  * Internal class: not intended to be used by client.
@@ -30,7 +22,7 @@ class InternalASTRewrite extends NodeEventHandler {
 
 //	protected final RewriteEventStore eventStore;
 //	protected final NodeInfoStore nodeStore;
-	protected final Hashtable clonedNodes;
+	protected final HashMap<ASTNode, ASTNode> clonedNodes;
 
 	int cloneDepth = 0;
 
@@ -42,7 +34,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		this.root = root;
 //		this.eventStore = new RewriteEventStore();
 //		this.nodeStore = new NodeInfoStore(root.getAST());
-		this.clonedNodes = new Hashtable();
+		this.clonedNodes = new HashMap<ASTNode, ASTNode>();
 	}
 
 //	/** TODO
@@ -213,7 +205,7 @@ class InternalASTRewrite extends NodeEventHandler {
 				this.clonedNodes.put(clone, node);
 			} else {
 				// node can be a cloned node
-				Object original = this.clonedNodes.get(node);
+				ASTNode original = this.clonedNodes.get(node);
 				if(original != null) {
 					this.clonedNodes.put(clone, original);
 				}

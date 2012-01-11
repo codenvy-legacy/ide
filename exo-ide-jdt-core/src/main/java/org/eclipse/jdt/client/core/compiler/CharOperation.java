@@ -708,7 +708,12 @@ public final class CharOperation
       var pat = /[\p{L}\p{N}\p{Sc}_]/;
       return ch.match(pat);
    }-*/;
-
+   
+   public static native boolean isJavaIdentifierStart(char ch)/*-{
+      var pat = /[\p{L}_\p{Sc}]/;
+      return ch.match(pat);
+   }-*/;
+   
 
    /**
     * Returns the char arrays as an array of Strings

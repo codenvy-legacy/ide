@@ -65,10 +65,10 @@ public String errorReportSource(char[] unitSource) {
 	if ((this.startPosition > this.endPosition)
 		|| ((this.startPosition < 0) && (this.endPosition < 0))
 		|| unitSource.length == 0)
-		return Messages.problem_noSourceInformation;
+		return Messages.instance.problem_noSourceInformation();
 
 	StringBuffer errorBuffer = new StringBuffer();
-	errorBuffer.append(' ').append(Messages.bind(Messages.problem_atLine, String.valueOf(this.line)));
+	errorBuffer.append(' ').append(Messages.instance.problem_atLine(String.valueOf(this.line)));
 	errorBuffer.append(Util.LINE_SEPARATOR);
 	errorBuffer.append('\t');
 

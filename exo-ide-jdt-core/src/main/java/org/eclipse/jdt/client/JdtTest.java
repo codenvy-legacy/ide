@@ -18,6 +18,10 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.user.client.ui.Label;
+
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
 import com.google.gwt.core.client.GWT;
 
 import com.google.gwt.resources.client.TextResource;
@@ -27,6 +31,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 
 import com.google.gwt.core.client.EntryPoint;
 
@@ -57,6 +63,9 @@ public class JdtTest implements EntryPoint
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName("Display");
       ASTNode ast = parser.createAST(null);
+      CompilationUnit unit  = (CompilationUnit)ast;
+      TypeDeclaration type = (TypeDeclaration)unit.types().get(0);
+      RootLayoutPanel.get().add(new Label(type.getName().getFullyQualifiedName()));
    }
 
 }

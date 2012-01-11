@@ -23,13 +23,12 @@ public abstract class Constant implements TypeIds, OperatorIds
 
    public boolean booleanValue()
    {
-      throw new ShouldNotImplement(Messages.bind(Messages.constant_cannotCastedInto,
-         new String[]{typeName(), "boolean"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotCastedInto(typeName(), "boolean")); //$NON-NLS-1$
    }
 
    public byte byteValue()
    {
-      throw new ShouldNotImplement(Messages.bind(Messages.constant_cannotCastedInto, new String[]{typeName(), "byte"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotCastedInto(typeName(), "byte")); //$NON-NLS-1$
    }
 
    public final Constant castTo(int conversionToTargetType)
@@ -258,7 +257,7 @@ public abstract class Constant implements TypeIds, OperatorIds
 
    public char charValue()
    {
-      throw new ShouldNotImplement(Messages.bind(Messages.constant_cannotCastedInto, new String[]{typeName(), "char"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotCastedInto(typeName(), "char")); //$NON-NLS-1$
    }
 
    public static final Constant computeConstantOperation(Constant cst, int id, int operator)
@@ -2366,13 +2365,12 @@ public abstract class Constant implements TypeIds, OperatorIds
 
    public double doubleValue()
    {
-      throw new ShouldNotImplement(
-         Messages.bind(Messages.constant_cannotCastedInto, new String[]{typeName(), "double"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotCastedInto(typeName(), "double")); //$NON-NLS-1$
    }
 
    public float floatValue()
    {
-      throw new ShouldNotImplement(Messages.bind(Messages.constant_cannotCastedInto, new String[]{typeName(), "float"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotCastedInto(typeName(), "float")); //$NON-NLS-1$
    }
 
    /**
@@ -2413,24 +2411,22 @@ public abstract class Constant implements TypeIds, OperatorIds
 
    public int intValue()
    {
-      throw new ShouldNotImplement(Messages.bind(Messages.constant_cannotCastedInto, new String[]{typeName(), "int"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotCastedInto(typeName(), "int")); //$NON-NLS-1$
    }
 
    public long longValue()
    {
-      throw new ShouldNotImplement(Messages.bind(Messages.constant_cannotCastedInto, new String[]{typeName(), "long"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotCastedInto(typeName(), "long")); //$NON-NLS-1$
    }
 
    public short shortValue()
    {
-      throw new ShouldNotImplement(
-         Messages.bind(Messages.constant_cannotConvertedTo, new String[]{typeName(), "short"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotConvertedTo(typeName(), "short")); //$NON-NLS-1$
    }
 
    public String stringValue()
    {
-      throw new ShouldNotImplement(Messages.bind(Messages.constant_cannotConvertedTo,
-         new String[]{typeName(), "String"})); //$NON-NLS-1$
+      throw new ShouldNotImplement(Messages.instance.constant_cannotConvertedTo(typeName(), "String")); //$NON-NLS-1$
    }
 
    public String toString()

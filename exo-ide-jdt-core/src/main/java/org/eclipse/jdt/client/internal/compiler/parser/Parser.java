@@ -20,6 +20,7 @@ import com.google.gwt.resources.client.TextResource;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
+import org.eclipse.jdt.client.core.util.JSONUtil;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 import org.eclipse.jdt.client.internal.compiler.ast.AND_AND_Expression;
@@ -130,9 +131,6 @@ import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 public class Parser implements ParserBasicInformation, TerminalTokens, OperatorIds, TypeIds
 {
@@ -244,8 +242,6 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected final static int ExpressionStackIncrement = 100;
 
    protected final static int GenericsStackIncrement = 10;
-
-   private final static String FILEPREFIX = "parser"; //$NON-NLS-1$
 
    public static char in_symb[] = null;
 
@@ -385,7 +381,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
       name = readNameTable(resources.parser20().getText().toCharArray()); //$NON-NLS-1$
 
-      rules_compliance = parseJsonLongArray(resources.parser21().getText()); //readLongTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      rules_compliance = JSONUtil.parseJsonAsLongArray(resources.parser21().getText()); //readLongTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
       readableName = parseJsonArray(resources.readebleNames().getText()); //readReadableNameTable(READABLE_NAMES_FILE_NAME);
 
       reverse_index = computeReverseTable(terminal_index, non_terminal_index, name);
@@ -396,20 +392,6 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       statements_recovery_filter = resources.parser24().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
       base_action = lhs;
-   }
-
-   private static long[] parseJsonLongArray(String json)
-   {
-      JSONValue value = JSONParser.parseLenient(json);
-      if (value.isArray() == null)
-         throw new IllegalArgumentException("'json' parameter must represent a JSON array");
-      JSONArray array = value.isArray();
-      long result[] = new long[array.size()];
-      for (int i = 0; i < array.size(); i++)
-      {
-         result[i] = (long)array.get(i).isNumber().doubleValue();
-      }
-      return result;
    }
 
    private static String[] parseJsonArray(String json)
@@ -10609,7 +10591,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       {
          if (VERBOSE_RECOVERY)
          {
-            System.out.print(Messages.parser_syntaxRecovery);
+            System.out.print(Messages.instance.parser_syntaxRecovery());
             System.out.println("--------------------------"); //$NON-NLS-1$
             System.out.println(this.compilationUnit);
             System.out.println("----------------------------------"); //$NON-NLS-1$
@@ -10620,7 +10602,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       {
          if (this.diet & VERBOSE_RECOVERY)
          {
-            System.out.print(Messages.parser_regularParse);
+            System.out.print(Messages.instance.parser_regularParse());
             System.out.println("--------------------------"); //$NON-NLS-1$
             System.out.println(this.compilationUnit);
             System.out.println("----------------------------------"); //$NON-NLS-1$

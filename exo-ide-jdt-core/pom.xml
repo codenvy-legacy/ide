@@ -79,6 +79,7 @@
          </testResource>
       </testResources>
       <sourceDirectory>src/main/java</sourceDirectory>
+      <testSourceDirectory>src/test/java</testSourceDirectory>
       <outputDirectory>target/war/WEB-INF/classes</outputDirectory>
       <plugins>
          <plugin>
