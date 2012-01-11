@@ -199,7 +199,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          String errorMessage =
             (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
                .cloneFailed();

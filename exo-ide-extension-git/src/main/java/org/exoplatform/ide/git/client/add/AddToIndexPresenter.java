@@ -204,7 +204,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          handleError(e);
       }
 

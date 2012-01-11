@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.client.commit;
 
 import java.util.Date;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -64,7 +65,7 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getCommitButton();
-      
+
       /**
        * Get cancel button handler.
        * 
@@ -90,7 +91,7 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
        * Give focus to message field.
        */
       void focusInMessageField();
-      
+
       /**
        * Get all field.
        * 
@@ -177,39 +178,40 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       String message = display.getMessage().getValue();
       boolean all = display.getAllField().getValue();
-      
+
       Revision revision = new Revision(null, message, 0, null);
       try
       {
-         GitClientService.getInstance().commit(vfs.getId(), project, message, all, new AsyncRequestCallback<Revision>(new RevisionUnmarshaller(revision))
-         {
-            @Override
-            protected void onSuccess(Revision result)
+         GitClientService.getInstance().commit(vfs.getId(), project, message, all,
+            new AsyncRequestCallback<Revision>(new RevisionUnmarshaller(revision))
             {
-               DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
-               String date = formatter.format(new Date(result.getCommitTime()));
-               String message = GitExtension.MESSAGES.commitMessage(result.getId(), date);
-               message +=
-                  (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
-                     .getName().length() > 0) ? " " +GitExtension.MESSAGES.commitUser(result.getCommitter().getName()) : "";
-               IDE.fireEvent(new OutputEvent(message, Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent());
-            }
+               @Override
+               protected void onSuccess(Revision result)
+               {
+                  DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+                  String date = formatter.format(new Date(result.getCommitTime()));
+                  String message = GitExtension.MESSAGES.commitMessage(result.getId(), date);
+                  message +=
+                     (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
+                        .getName().length() > 0) ? " "
+                        + GitExtension.MESSAGES.commitUser(result.getCommitter().getName()) : "";
+                  IDE.fireEvent(new OutputEvent(message, Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent());
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                     : GitExtension.MESSAGES.commitFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                        : GitExtension.MESSAGES.commitFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
       }
       catch (RequestException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
       IDE.getInstance().closeView(display.asView().getId());
    }

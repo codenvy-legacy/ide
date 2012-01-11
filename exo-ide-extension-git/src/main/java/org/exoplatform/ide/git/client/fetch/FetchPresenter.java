@@ -243,7 +243,6 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          handleError(e, remoteUrl);
       }
       IDE.getInstance().closeView(display.asView().getId());

@@ -80,7 +80,6 @@ public class MergeUnmarshaller implements Unmarshallable, Constants
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException(GitExtension.MESSAGES.mergeUnmarshallerFailed());
       }
    }

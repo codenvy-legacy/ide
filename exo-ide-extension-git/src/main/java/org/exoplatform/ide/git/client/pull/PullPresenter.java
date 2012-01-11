@@ -286,7 +286,6 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          handleError(e, remoteUrl);
       }
    }

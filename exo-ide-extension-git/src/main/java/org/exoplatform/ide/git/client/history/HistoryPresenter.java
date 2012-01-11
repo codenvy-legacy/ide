@@ -320,7 +320,6 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
          @Override
          protected void onFailure(Throwable exception)
          {
-            exception.printStackTrace();
             nothingToDisplay(null);
             String errorMessage =
                (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();

@@ -246,7 +246,6 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          handleError(e);
       }
    }
