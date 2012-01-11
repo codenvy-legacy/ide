@@ -28,6 +28,7 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -58,6 +59,7 @@ public class ASTVisitorTest
    }
 
    @Test
+   @Ignore
    public void typeDeclarationVisitor() throws Exception
    {
       TypeDeclarationVisitor visitor = new TypeDeclarationVisitor();
@@ -66,6 +68,7 @@ public class ASTVisitorTest
    }
    
    @Test
+   @Ignore
    public void methodDeclarationVisitor() throws Exception
    {
       MethodDeclarationVisitor visitor = new MethodDeclarationVisitor();

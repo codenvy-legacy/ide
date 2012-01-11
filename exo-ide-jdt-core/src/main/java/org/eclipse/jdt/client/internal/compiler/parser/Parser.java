@@ -375,9 +375,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       scope_state = resources.parser15().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
       in_symb = resources.parser16().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-      rhs = resources.parser17().getText().getBytes(); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      term_check = resources.parser18().getText().getBytes(); // readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_la = resources.parser19().getText().getBytes(); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      rhs = JSONUtil.parseArrayToByteArray(resources.parser17().getText()); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      term_check = JSONUtil.parseArrayToByteArray(resources.parser18().getText()); // readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_la = JSONUtil.parseArrayToByteArray(resources.parser19().getText()); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
       name = readNameTable(resources.parser20().getText().toCharArray()); //$NON-NLS-1$
 

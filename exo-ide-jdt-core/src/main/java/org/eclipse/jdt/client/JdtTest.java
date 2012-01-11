@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.user.client.ui.FlexTable;
+
 import com.google.gwt.user.client.ui.Label;
 
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -47,7 +49,7 @@ public class JdtTest implements EntryPoint
    public interface Data extends ClientBundle
    {
       
-      @Source("org/eclipse/jdt/client/Display.java")
+      @Source("org/eclipse/jdt/client/TypeDeclaration.txt")
       TextResource content();
    }
    
@@ -62,7 +64,11 @@ public class JdtTest implements EntryPoint
       parser.setSource(d.content().getText().toCharArray());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName("Display");
+      FlexTable table = new FlexTable();
+      RootLayoutPanel.get().add(table);
+      table.setWidget(0, 0, new Label(System.currentTimeMillis() + ""));
       ASTNode ast = parser.createAST(null);
+      table.setWidget(0, 1, new Label(System.currentTimeMillis() + ""));
       CompilationUnit unit  = (CompilationUnit)ast;
       TypeDeclaration type = (TypeDeclaration)unit.types().get(0);
       RootLayoutPanel.get().add(new Label(type.getName().getFullyQualifiedName()));

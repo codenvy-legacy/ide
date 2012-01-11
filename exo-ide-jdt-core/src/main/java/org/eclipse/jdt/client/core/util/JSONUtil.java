@@ -54,4 +54,22 @@ public class JSONUtil
       }
       return result;
    }
+
+   public static byte[] parseArrayToByteArray(String json)
+   {
+      JSONValue value = JSONParser.parseLenient(json);
+      if (value.isArray() == null)
+         throw new IllegalArgumentException("'json' parameter must represent a JSON array");
+      return jsonArrayToByteArray(value.isArray());
+   }
+
+   public static byte[] jsonArrayToByteArray(JSONArray array)
+   {
+      byte[] result = new byte[array.size()];
+      for (int i = 0; i < array.size(); i++)
+      {
+         result[i] = Byte.valueOf(array.get(i).isString().stringValue());
+      }
+      return result;
+   }
 }

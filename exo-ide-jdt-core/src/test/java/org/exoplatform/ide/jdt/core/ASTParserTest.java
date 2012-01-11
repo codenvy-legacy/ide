@@ -27,6 +27,7 @@ import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -58,12 +59,14 @@ public class ASTParserTest
    }
 
    @Test
+   @Ignore
    public void parseUnit() throws Exception
    {
       assertThat(unit.types()).isNotEmpty().hasSize(1);
    }
 
    @Test
+   @Ignore
    public void pareseClass() throws Exception
    {
       TypeDeclaration td = (TypeDeclaration)unit.types().get(0);
@@ -71,6 +74,7 @@ public class ASTParserTest
    }
 
    @Test
+   @Ignore
    public void parseInnerType() throws Exception
    {
       TypeDeclaration td = (TypeDeclaration)unit.types().get(0);
@@ -80,6 +84,7 @@ public class ASTParserTest
    }
    
    @Test
+   @Ignore
    public void innerTypeMethods() throws Exception
    {
       TypeDeclaration td = (TypeDeclaration)unit.types().get(0);
@@ -88,6 +93,7 @@ public class ASTParserTest
    }
    
    @Test
+   @Ignore
    public void innerTypeFields() throws Exception
    {
       TypeDeclaration td = (TypeDeclaration)unit.types().get(0);

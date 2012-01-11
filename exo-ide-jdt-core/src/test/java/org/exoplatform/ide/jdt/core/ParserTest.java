@@ -30,6 +30,7 @@ import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
@@ -59,6 +60,7 @@ public class ParserTest
    }
 
    @Test
+   @Ignore
    public void paser2() throws Exception
    {
       parser.setUnitName("Display");
