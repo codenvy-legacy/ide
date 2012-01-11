@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.testframework.server.openshift;
 
+import org.exoplatform.ide.testframework.server.FSLocation;
+import org.exoplatform.ide.testframework.server.git.MockGitRepoService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,9 +38,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
-import org.exoplatform.ide.testframework.server.FSLocation;
-import org.exoplatform.ide.testframework.server.git.MockGitRepoService;
 
 /**
  * Created by The eXo Platform SAS .
@@ -86,9 +86,6 @@ public class MockExpressService
       throws ExpressException, Exception
    {
       ns = namespace;
-      System.out.println("MockExpressService.createDomain()");
-      System.out.println("namespace > " + namespace);
-
    }
 
    /**
@@ -124,10 +121,6 @@ public class MockExpressService
          workingDirectory = workingDirectory.substring(0, workingDirectory.length() - 1);
       }
 
-      System.out.println("MockExpressService.createApplication()");
-      System.out.println("name > " + appInfo.getName());
-      System.out.println("working directory > " + workingDirectory);
-
       applicationsByWorkDir.put(workingDirectory, appInfo);
       applicationsByName.put(applicationName, appInfo);
       workingDirectories.put(applicationName, workingDirectory);
@@ -146,10 +139,6 @@ public class MockExpressService
    public AppInfo applicationInfo(@QueryParam("app") String app, @QueryParam("workdir") FSLocation workDir,
       @Context UriInfo uriInfo) throws Exception
    {
-      System.out.println("MockExpressService.applicationInfo()");
-      System.out.println("app > " + app);
-      System.out.println("workDir > " + (workDir == null ? workDir : workDir.getURL()));
-
       if (app != null && !app.isEmpty() && applicationsByName.containsKey(app))
       {
          return applicationsByName.get(app);
@@ -179,7 +168,6 @@ public class MockExpressService
       }
 
       url = url.substring(0, url.lastIndexOf("/"));
-      System.out.println("NEXT SEARCH URL [" + url + "]");
       return getAppByWorkDir(url);
    }
 
@@ -188,8 +176,6 @@ public class MockExpressService
    @Produces(MediaType.APPLICATION_JSON)
    public Set<String> applicationTypes() throws Exception
    {
-      System.out.println("MockExpressService.applicationTypes()");
-
       Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
          "php-5.3", //
          //"wsgi-3.2.1", //
@@ -219,10 +205,6 @@ public class MockExpressService
    public void destroyApplication(@QueryParam("app") String app, @QueryParam("workdir") FSLocation workDir,
       @Context UriInfo uriInfo) throws Exception
    {
-      System.out.println("MockExpressService.destroyApplication(>>>>>>>>>>>>>>>>>>>>>>)");
-      System.out.println("APP > " + app);
-      System.out.println("WORKDIR > " + (workDir == null ? workDir : workDir.getURL()));
-
       AppInfo appToDelete = null;
       if (app != null && !app.isEmpty() && applicationsByName.containsKey(app))
       {
@@ -233,10 +215,7 @@ public class MockExpressService
          appToDelete = getAppByWorkDir(workDir.getURL());
       }
 
-      System.out.println("APPLICATION TO DELETE > " + appToDelete);
-
       String workingDirectory = workingDirectories.get(appToDelete.getName());
-      System.out.println("WORKING DIRECTORY > " + workingDirectory);
 
       applicationsByWorkDir.remove(workingDirectory);
       applicationsByName.remove(appToDelete.getName());
@@ -248,25 +227,17 @@ public class MockExpressService
    @Consumes(MediaType.APPLICATION_JSON)
    public void login(Map<String, String> credentials) throws ExpressException, Exception
    {
-      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-      System.out.println(">>> Request to LOGIN");
-
       Iterator<String> keyIter = credentials.keySet().iterator();
       while (keyIter.hasNext())
       {
          String k = keyIter.next();
          String v = credentials.get(k);
-         System.out.println(">>>    Credentials [" + k + "] [" + v + "]");
       }
-
-      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
    }
    
    @POST
    @Path("reset")
    public void resetMockExpressService() {
-      System.out.println("MockExpressService.resetMockExpressService()");
-      
       ns = "";
       applicationsByWorkDir = new HashMap<String, AppInfo>();
       applicationsByName = new HashMap<String, AppInfo>();

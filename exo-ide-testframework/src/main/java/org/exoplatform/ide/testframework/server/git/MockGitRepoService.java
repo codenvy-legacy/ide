@@ -60,14 +60,6 @@ public class MockGitRepoService
    @Produces(MediaType.TEXT_PLAIN)
    public String getWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location) throws Exception
    {
-      System.out.println();
-      System.out.println();
-      System.out.println("****************************************************************");
-      System.out.println("* get git working directory for > " + location);
-      System.out.println("****************************************************************");
-      System.out.println();
-      System.out.println();
-
       return location + ".git";
    }
 
@@ -76,14 +68,6 @@ public class MockGitRepoService
     */
    public void addGitDirectory(String dir)
    {
-      System.out.println();
-      System.out.println();
-      System.out.println("****************************************************************");
-      System.out.println("* add git directory > " + dir);
-      System.out.println("****************************************************************");
-      System.out.println();
-      System.out.println();
-
       gitDirectories.add(dir);
    }
 
@@ -91,7 +75,6 @@ public class MockGitRepoService
    @Path("reset")
    public void resetMockGitService()
    {
-      System.out.println("MockGitRepoService.resetMockGitService()");
       gitDirectories = new ArrayList<String>();
    }
 

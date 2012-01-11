@@ -84,7 +84,6 @@ public class MockCloudfoundryService
       while (ki.hasNext()) {
          String k = ki.next();
          String v = credentials.get(k);
-         System.out.println("KEY [" + k + "] VALUES [" + v + "]");
       }
 
       logins.add(credentials);

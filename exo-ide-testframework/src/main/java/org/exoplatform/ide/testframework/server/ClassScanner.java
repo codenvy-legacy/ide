@@ -113,7 +113,6 @@ public class ClassScanner
          }
          catch (Exception e)
          {
-            e.printStackTrace();
          }
       }
 

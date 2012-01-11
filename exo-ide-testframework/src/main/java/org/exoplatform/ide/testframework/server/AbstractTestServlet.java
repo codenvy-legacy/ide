@@ -69,9 +69,7 @@ public abstract class AbstractTestServlet extends HttpServlet
          }
          catch (Exception e)
          {
-            e.printStackTrace();
          }
-
       }
    }
 
