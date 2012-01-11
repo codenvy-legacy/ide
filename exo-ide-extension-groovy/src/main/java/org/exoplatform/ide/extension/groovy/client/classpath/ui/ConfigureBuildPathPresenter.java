@@ -579,7 +579,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      //TODO  check changes here:
       vfsInfo = event.getVfsInfo();
    }
 

@@ -120,6 +120,7 @@ public class ChooseSourcePathPresenter
 
       display.enableOkButtonState(false);
       display.getItemsTree().setValue(vfs.getRoot());
+      getFolderContent(vfs.getRoot());
    }
 
    /**
