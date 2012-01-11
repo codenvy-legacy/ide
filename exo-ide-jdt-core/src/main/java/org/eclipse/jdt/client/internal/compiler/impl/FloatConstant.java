@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.impl;
 
+import org.eclipse.jdt.client.core.util.MathUtil;
+
 public class FloatConstant extends Constant {
 
 	float value;
@@ -63,7 +65,7 @@ public class FloatConstant extends Constant {
 	}
 
 	public int hashCode() {
-		return Float.floatToIntBits(this.value);
+		return (int)MathUtil.floatToIntBits(this.value);
 	}
 
 	public boolean equals(Object obj) {
@@ -77,6 +79,6 @@ public class FloatConstant extends Constant {
 			return false;
 		}
 		FloatConstant other = (FloatConstant) obj;
-		return Float.floatToIntBits(this.value) == Float.floatToIntBits(other.value);
+		return MathUtil.floatToIntBits(this.value) == MathUtil.floatToIntBits(other.value);
 	}
 }

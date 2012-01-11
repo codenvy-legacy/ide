@@ -25,7 +25,8 @@ package org.eclipse.jdt.client.core.util;
  */
 public class MathUtil
 {
-
+   static final double LN2 = Math.log(2);
+   
    public static long floatToIntBits(float f)
    {
       // Check for +0 or -0
@@ -37,6 +38,22 @@ public class MathUtil
       {
          return doubleToLongBitsImpl(f);
       }
+   }
+
+   public static float intBitsToFloat(int i)
+   {
+      int exponent = (i >>> 23) & 255;
+    int significand = i & 0x007fffff;
+    float result;
+    if (exponent == 0) {
+      result = (float) (Math.exp((-126 - 23) * LN2) * significand);
+    } else if (exponent == 255) {
+      result = significand == 0 ? Float.POSITIVE_INFINITY : Float.NaN;
+    } else {
+      result = (float) (Math.exp((exponent - 127 - 23) * LN2) * (0x00800000 | significand));
+    }
+    
+    return (i & 0x80000000) == 0 ? result : -result;
    }
 
    public static long doubleToLongBits(double d)

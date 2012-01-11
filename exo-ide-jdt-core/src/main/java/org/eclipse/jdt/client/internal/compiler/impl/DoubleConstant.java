@@ -10,76 +10,96 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.impl;
 
-public class DoubleConstant extends Constant {
+import org.eclipse.jdt.client.core.util.MathUtil;
 
-	private double value;
+public class DoubleConstant extends Constant
+{
 
-	public static Constant fromValue(double value) {
-		return new DoubleConstant(value);
-	}
+   private double value;
 
-	private DoubleConstant(double value) {
-		this.value = value;
-	}
+   public static Constant fromValue(double value)
+   {
+      return new DoubleConstant(value);
+   }
 
-	public byte byteValue() {
-		return (byte) this.value;
-	}
+   private DoubleConstant(double value)
+   {
+      this.value = value;
+   }
 
-	public char charValue() {
-		return (char) this.value;
-	}
+   public byte byteValue()
+   {
+      return (byte)this.value;
+   }
 
-	public double doubleValue() {
-		return this.value;
-	}
+   public char charValue()
+   {
+      return (char)this.value;
+   }
 
-	public float floatValue() {
-		return (float) this.value;
-	}
+   public double doubleValue()
+   {
+      return this.value;
+   }
 
-	public int intValue() {
-		return (int) this.value;
-	}
+   public float floatValue()
+   {
+      return (float)this.value;
+   }
 
-	public long longValue() {
-		return (long) this.value;
-	}
+   public int intValue()
+   {
+      return (int)this.value;
+   }
 
-	public short shortValue() {
-		return (short) this.value;
-	}
+   public long longValue()
+   {
+      return (long)this.value;
+   }
 
-	public String stringValue() {
-		return String.valueOf(this.value);
-	}
+   public short shortValue()
+   {
+      return (short)this.value;
+   }
 
-	public String toString() {
-		if (this == NotAConstant)
-			return "(Constant) NotAConstant"; //$NON-NLS-1$
-		return "(double)" + this.value;  //$NON-NLS-1$
-	}
+   public String stringValue()
+   {
+      return String.valueOf(this.value);
+   }
 
-	public int typeID() {
-		return T_double;
-	}
+   public String toString()
+   {
+      if (this == NotAConstant)
+         return "(Constant) NotAConstant"; //$NON-NLS-1$
+      return "(double)" + this.value; //$NON-NLS-1$
+   }
 
-	public int hashCode() {
-		long temp = Double.doubleToLongBits(this.value);
-		return (int) (temp ^ (temp >>> 32));
-	}
+   public int typeID()
+   {
+      return T_double;
+   }
 
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		DoubleConstant other = (DoubleConstant) obj;
-		return Double.doubleToLongBits(this.value) == Double.doubleToLongBits(other.value);
-	}
+   public int hashCode()
+   {
+      long temp = MathUtil.doubleToLongBits(this.value);
+      return (int)(temp ^ (temp >>> 32));
+   }
+
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      DoubleConstant other = (DoubleConstant)obj;
+      return MathUtil.doubleToLongBits(this.value) == MathUtil.doubleToLongBits(other.value);
+   }
 }
