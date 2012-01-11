@@ -711,6 +711,8 @@
       <module>exo-ide-editor-php</module>
       <module>exo-ide-editor-xml</module>
 
+      <module>exo-ide-jdt-core</module>
+
       <module>exo-ide-extension-gadget-gatein</module>
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
