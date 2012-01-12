@@ -27,7 +27,7 @@ import org.eclipse.jdt.client.core.dom.TypeDeclaration;
  * @version $Id: 34360 2009-07-22 23:58:59Z evgen $
  *
  */
-public class ASTParserTest extends ParserBaseTestGwt
+public class ASTParserTestGwt extends ParserBaseTestGwt
 {
 
    public void testParseUnit() throws Exception
