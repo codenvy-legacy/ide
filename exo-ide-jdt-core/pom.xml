@@ -138,6 +138,7 @@
                      <skipTests>${gwt.test.skip}</skipTests>
                      <bindAddress>0.0.0.0</bindAddress>
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m</extraJvmArgs>
+                     <compileReport>true</compileReport>
                   </configuration>
                </plugin>
             </plugins>

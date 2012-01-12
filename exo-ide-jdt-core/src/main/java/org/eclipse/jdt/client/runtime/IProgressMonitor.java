@@ -46,10 +46,6 @@ package org.eclipse.jdt.client.runtime;
  */
 public interface IProgressMonitor {
 
-	/** Constant indicating an unknown amount of work.
-	 */
-	public final static int UNKNOWN = -1;
-
 	/**
 	 * Notifies that the main task is beginning.  This must only be called once
 	 * on a given progress monitor instance.

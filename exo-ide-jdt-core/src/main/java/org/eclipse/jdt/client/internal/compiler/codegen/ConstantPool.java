@@ -10,29 +10,24 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.codegen;
 
-import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
-import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
-import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
-import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
-import org.eclipse.jdt.client.internal.compiler.util.Util;
 /**
  * This type is used to store all the constant pool entries.
  */
 public class ConstantPool implements ClassFileConstants, TypeIds {
-	public static final int DOUBLE_INITIAL_SIZE = 5;
-	public static final int FLOAT_INITIAL_SIZE = 3;
-	public static final int INT_INITIAL_SIZE = 248;
-	public static final int LONG_INITIAL_SIZE = 5;
-	public static final int UTF8_INITIAL_SIZE = 778;
-	public static final int STRING_INITIAL_SIZE = 761;
-	public static final int METHODS_AND_FIELDS_INITIAL_SIZE = 450;
-	public static final int CLASS_INITIAL_SIZE = 86;
-	public static final int NAMEANDTYPE_INITIAL_SIZE = 272;
-	public static final int CONSTANTPOOL_INITIAL_SIZE = 2000;
-	public static final int CONSTANTPOOL_GROW_SIZE = 6000;
+// TODO Remove unused code found by UCDetector
+// 	public static final int DOUBLE_INITIAL_SIZE = 5;
+//	public static final int FLOAT_INITIAL_SIZE = 3;
+//	public static final int INT_INITIAL_SIZE = 248;
+//	public static final int LONG_INITIAL_SIZE = 5;
+//	public static final int UTF8_INITIAL_SIZE = 778;
+//	public static final int STRING_INITIAL_SIZE = 761;
+//	public static final int METHODS_AND_FIELDS_INITIAL_SIZE = 450;
+//	public static final int CLASS_INITIAL_SIZE = 86;
+//	public static final int NAMEANDTYPE_INITIAL_SIZE = 272;
+//	public static final int CONSTANTPOOL_INITIAL_SIZE = 2000;
+//	public static final int CONSTANTPOOL_GROW_SIZE = 6000;
 //	protected DoubleCache doubleCache;
 //	protected FloatCache floatCache;
 //	protected IntegerCache intCache;
@@ -41,219 +36,219 @@ public class ConstantPool implements ClassFileConstants, TypeIds {
 //	protected CharArrayCache stringCache;
 //	protected HashtableOfObject methodsAndFieldsCache;
 //	protected CharArrayCache classCache;
-	protected HashtableOfObject nameAndTypeCacheForFieldsAndMethods;
-	public byte[] poolContent;
-	public int currentIndex = 1;
-	public int currentOffset;
-	public int[] offsets;
+//	protected HashtableOfObject nameAndTypeCacheForFieldsAndMethods;
+//	public byte[] poolContent;
+//	public int currentIndex = 1;
+//	public int currentOffset;
+//	public int[] offsets;
 
 //	public ClassFile classFile;
-	public static final char[] Append = "append".toCharArray(); //$NON-NLS-1$
-	public static final char[] ARRAY_NEWINSTANCE_NAME = "newInstance".toCharArray(); //$NON-NLS-1$
-	public static final char[] ARRAY_NEWINSTANCE_SIGNATURE = "(Ljava/lang/Class;[I)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ArrayCopy = "arraycopy".toCharArray(); //$NON-NLS-1$
-	public static final char[] ArrayCopySignature = "(Ljava/lang/Object;ILjava/lang/Object;II)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] ArrayJavaLangClassConstantPoolName = "[Ljava/lang/Class;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ArrayJavaLangObjectConstantPoolName = "[Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
-	public static final char[] booleanBooleanSignature = "(Z)Ljava/lang/Boolean;".toCharArray(); //$NON-NLS-1$
-	public static final char[] BooleanConstrSignature = "(Z)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] BOOLEANVALUE_BOOLEAN_METHOD_NAME = "booleanValue".toCharArray(); //$NON-NLS-1$
-	public static final char[] BOOLEANVALUE_BOOLEAN_METHOD_SIGNATURE = "()Z".toCharArray(); //$NON-NLS-1$
-	public static final char[] byteByteSignature = "(B)Ljava/lang/Byte;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ByteConstrSignature = "(B)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] BYTEVALUE_BYTE_METHOD_NAME = "byteValue".toCharArray(); //$NON-NLS-1$
-	public static final char[] BYTEVALUE_BYTE_METHOD_SIGNATURE = "()B".toCharArray(); //$NON-NLS-1$
-	public static final char[] charCharacterSignature = "(C)Ljava/lang/Character;".toCharArray(); //$NON-NLS-1$
-	public static final char[] CharConstrSignature = "(C)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] CHARVALUE_CHARACTER_METHOD_NAME = "charValue".toCharArray(); //$NON-NLS-1$
-	public static final char[] CHARVALUE_CHARACTER_METHOD_SIGNATURE = "()C".toCharArray(); //$NON-NLS-1$
-	public static final char[] Clinit = "<clinit>".toCharArray(); //$NON-NLS-1$
-	public static final char[] DefaultConstructorSignature = "()V".toCharArray(); //$NON-NLS-1$
-	public static final char[] ClinitSignature = DefaultConstructorSignature;
+//	public static final char[] Append = "append".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ARRAY_NEWINSTANCE_NAME = "newInstance".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ARRAY_NEWINSTANCE_SIGNATURE = "(Ljava/lang/Class;[I)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ArrayCopy = "arraycopy".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ArrayCopySignature = "(Ljava/lang/Object;ILjava/lang/Object;II)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ArrayJavaLangClassConstantPoolName = "[Ljava/lang/Class;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ArrayJavaLangObjectConstantPoolName = "[Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] booleanBooleanSignature = "(Z)Ljava/lang/Boolean;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] BooleanConstrSignature = "(Z)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] BOOLEANVALUE_BOOLEAN_METHOD_NAME = "booleanValue".toCharArray(); //$NON-NLS-1$
+//	public static final char[] BOOLEANVALUE_BOOLEAN_METHOD_SIGNATURE = "()Z".toCharArray(); //$NON-NLS-1$
+//	public static final char[] byteByteSignature = "(B)Ljava/lang/Byte;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ByteConstrSignature = "(B)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] BYTEVALUE_BYTE_METHOD_NAME = "byteValue".toCharArray(); //$NON-NLS-1$
+//	public static final char[] BYTEVALUE_BYTE_METHOD_SIGNATURE = "()B".toCharArray(); //$NON-NLS-1$
+//	public static final char[] charCharacterSignature = "(C)Ljava/lang/Character;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] CharConstrSignature = "(C)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] CHARVALUE_CHARACTER_METHOD_NAME = "charValue".toCharArray(); //$NON-NLS-1$
+//	public static final char[] CHARVALUE_CHARACTER_METHOD_SIGNATURE = "()C".toCharArray(); //$NON-NLS-1$
+//	public static final char[] Clinit = "<clinit>".toCharArray(); //$NON-NLS-1$
+//	public static final char[] DefaultConstructorSignature = "()V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ClinitSignature = DefaultConstructorSignature;
 	public static final char[] Close = "close".toCharArray(); //$NON-NLS-1$
-	public static final char[] CloseSignature = "()V".toCharArray(); //$NON-NLS-1$
-	public static final char[] DesiredAssertionStatus = "desiredAssertionStatus".toCharArray(); //$NON-NLS-1$
-	public static final char[] DesiredAssertionStatusSignature = "()Z".toCharArray(); //$NON-NLS-1$
-	public static final char[] DoubleConstrSignature = "(D)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] doubleDoubleSignature = "(D)Ljava/lang/Double;".toCharArray(); //$NON-NLS-1$
-	public static final char[] DOUBLEVALUE_DOUBLE_METHOD_NAME = "doubleValue".toCharArray(); //$NON-NLS-1$
-	public static final char[] DOUBLEVALUE_DOUBLE_METHOD_SIGNATURE = "()D".toCharArray(); //$NON-NLS-1$
-	public static final char[] Exit = "exit".toCharArray(); //$NON-NLS-1$
-	public static final char[] ExitIntSignature = "(I)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] FloatConstrSignature = "(F)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] floatFloatSignature = "(F)Ljava/lang/Float;".toCharArray(); //$NON-NLS-1$
-	public static final char[] FLOATVALUE_FLOAT_METHOD_NAME = "floatValue".toCharArray(); //$NON-NLS-1$
-	public static final char[] FLOATVALUE_FLOAT_METHOD_SIGNATURE = "()F".toCharArray(); //$NON-NLS-1$
-	public static final char[] ForName = "forName".toCharArray(); //$NON-NLS-1$
-	public static final char[] ForNameSignature = "(Ljava/lang/String;)Ljava/lang/Class;".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_BOOLEAN_METHOD_NAME = "getBoolean".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_BOOLEAN_METHOD_SIGNATURE = "(Ljava/lang/Object;)Z".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_BYTE_METHOD_NAME = "getByte".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_BYTE_METHOD_SIGNATURE = "(Ljava/lang/Object;)B".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_CHAR_METHOD_NAME = "getChar".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_CHAR_METHOD_SIGNATURE = "(Ljava/lang/Object;)C".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_DOUBLE_METHOD_NAME = "getDouble".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_DOUBLE_METHOD_SIGNATURE = "(Ljava/lang/Object;)D".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_FLOAT_METHOD_NAME = "getFloat".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_FLOAT_METHOD_SIGNATURE = "(Ljava/lang/Object;)F".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_INT_METHOD_NAME = "getInt".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_INT_METHOD_SIGNATURE = "(Ljava/lang/Object;)I".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_LONG_METHOD_NAME = "getLong".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_LONG_METHOD_SIGNATURE = "(Ljava/lang/Object;)J".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_OBJECT_METHOD_NAME = "get".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_OBJECT_METHOD_SIGNATURE = "(Ljava/lang/Object;)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_SHORT_METHOD_NAME = "getShort".toCharArray(); //$NON-NLS-1$
-	public static final char[] GET_SHORT_METHOD_SIGNATURE = "(Ljava/lang/Object;)S".toCharArray(); //$NON-NLS-1$
-	public static final char[] GetClass = "getClass".toCharArray(); //$NON-NLS-1$
-	public static final char[] GetClassSignature = "()Ljava/lang/Class;".toCharArray(); //$NON-NLS-1$
-	public static final char[] GetComponentType = "getComponentType".toCharArray(); //$NON-NLS-1$
-	public static final char[] GetComponentTypeSignature = GetClassSignature;
-	public static final char[] GetConstructor = "getConstructor".toCharArray(); //$NON-NLS-1$
-	public static final char[] GetConstructorSignature = "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;".toCharArray(); //$NON-NLS-1$
-	public static final char[] GETDECLAREDCONSTRUCTOR_NAME = "getDeclaredConstructor".toCharArray(); //$NON-NLS-1$
-	public static final char[] GETDECLAREDCONSTRUCTOR_SIGNATURE = "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] CloseSignature = "()V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] DesiredAssertionStatus = "desiredAssertionStatus".toCharArray(); //$NON-NLS-1$
+//	public static final char[] DesiredAssertionStatusSignature = "()Z".toCharArray(); //$NON-NLS-1$
+//	public static final char[] DoubleConstrSignature = "(D)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] doubleDoubleSignature = "(D)Ljava/lang/Double;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] DOUBLEVALUE_DOUBLE_METHOD_NAME = "doubleValue".toCharArray(); //$NON-NLS-1$
+//	public static final char[] DOUBLEVALUE_DOUBLE_METHOD_SIGNATURE = "()D".toCharArray(); //$NON-NLS-1$
+//	public static final char[] Exit = "exit".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ExitIntSignature = "(I)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] FloatConstrSignature = "(F)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] floatFloatSignature = "(F)Ljava/lang/Float;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] FLOATVALUE_FLOAT_METHOD_NAME = "floatValue".toCharArray(); //$NON-NLS-1$
+//	public static final char[] FLOATVALUE_FLOAT_METHOD_SIGNATURE = "()F".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ForName = "forName".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ForNameSignature = "(Ljava/lang/String;)Ljava/lang/Class;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_BOOLEAN_METHOD_NAME = "getBoolean".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_BOOLEAN_METHOD_SIGNATURE = "(Ljava/lang/Object;)Z".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_BYTE_METHOD_NAME = "getByte".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_BYTE_METHOD_SIGNATURE = "(Ljava/lang/Object;)B".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_CHAR_METHOD_NAME = "getChar".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_CHAR_METHOD_SIGNATURE = "(Ljava/lang/Object;)C".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_DOUBLE_METHOD_NAME = "getDouble".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_DOUBLE_METHOD_SIGNATURE = "(Ljava/lang/Object;)D".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_FLOAT_METHOD_NAME = "getFloat".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_FLOAT_METHOD_SIGNATURE = "(Ljava/lang/Object;)F".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_INT_METHOD_NAME = "getInt".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_INT_METHOD_SIGNATURE = "(Ljava/lang/Object;)I".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_LONG_METHOD_NAME = "getLong".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_LONG_METHOD_SIGNATURE = "(Ljava/lang/Object;)J".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_OBJECT_METHOD_NAME = "get".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_OBJECT_METHOD_SIGNATURE = "(Ljava/lang/Object;)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_SHORT_METHOD_NAME = "getShort".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GET_SHORT_METHOD_SIGNATURE = "(Ljava/lang/Object;)S".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GetClass = "getClass".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GetClassSignature = "()Ljava/lang/Class;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GetComponentType = "getComponentType".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GetComponentTypeSignature = GetClassSignature;
+//	public static final char[] GetConstructor = "getConstructor".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GetConstructorSignature = "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GETDECLAREDCONSTRUCTOR_NAME = "getDeclaredConstructor".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GETDECLAREDCONSTRUCTOR_SIGNATURE = "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;".toCharArray(); //$NON-NLS-1$
 	// predefined methods constant names
-	public static final char[] GETDECLAREDFIELD_NAME = "getDeclaredField".toCharArray(); //$NON-NLS-1$
-	public static final char[] GETDECLAREDFIELD_SIGNATURE = "(Ljava/lang/String;)Ljava/lang/reflect/Field;".toCharArray(); //$NON-NLS-1$
-	public static final char[] GETDECLAREDMETHOD_NAME = "getDeclaredMethod".toCharArray(); //$NON-NLS-1$
-	public static final char[] GETDECLAREDMETHOD_SIGNATURE = "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;".toCharArray(); //$NON-NLS-1$
-	public static final char[] GetMessage = "getMessage".toCharArray(); //$NON-NLS-1$
-	public static final char[] GetMessageSignature = "()Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] HasNext = "hasNext".toCharArray();//$NON-NLS-1$
-	public static final char[] HasNextSignature = "()Z".toCharArray();//$NON-NLS-1$
-	public static final char[] Init = "<init>".toCharArray(); //$NON-NLS-1$
-	public static final char[] IntConstrSignature = "(I)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] ITERATOR_NAME = "iterator".toCharArray(); //$NON-NLS-1$
-	public static final char[] ITERATOR_SIGNATURE = "()Ljava/util/Iterator;".toCharArray(); //$NON-NLS-1$
-	public static final char[] Intern = "intern".toCharArray(); //$NON-NLS-1$
-	public static final char[] InternSignature = GetMessageSignature;
-	public static final char[] IntIntegerSignature = "(I)Ljava/lang/Integer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] INTVALUE_INTEGER_METHOD_NAME = "intValue".toCharArray(); //$NON-NLS-1$
-	public static final char[] INTVALUE_INTEGER_METHOD_SIGNATURE = "()I".toCharArray(); //$NON-NLS-1$
-	public static final char[] INVOKE_METHOD_METHOD_NAME = "invoke".toCharArray(); //$NON-NLS-1$
-	public static final char[] INVOKE_METHOD_METHOD_SIGNATURE = "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
-	public static final char[][] JAVA_LANG_REFLECT_ACCESSIBLEOBJECT = new char[][] {TypeConstants.JAVA, TypeConstants.LANG, TypeConstants.REFLECT, "AccessibleObject".toCharArray()}; //$NON-NLS-1$
-	public static final char[][] JAVA_LANG_REFLECT_ARRAY = new char[][] {TypeConstants.JAVA, TypeConstants.LANG, TypeConstants.REFLECT, "Array".toCharArray()}; //$NON-NLS-1$
-	// predefined type constant names
-	public static final char[] JavaIoPrintStreamSignature = "Ljava/io/PrintStream;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangAssertionErrorConstantPoolName = "java/lang/AssertionError".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangBooleanConstantPoolName = "java/lang/Boolean".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangByteConstantPoolName = "java/lang/Byte".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangCharacterConstantPoolName = "java/lang/Character".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangClassConstantPoolName = "java/lang/Class".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangClassNotFoundExceptionConstantPoolName = "java/lang/ClassNotFoundException".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangClassSignature = "Ljava/lang/Class;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangDoubleConstantPoolName = "java/lang/Double".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangEnumConstantPoolName = "java/lang/Enum".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangErrorConstantPoolName = "java/lang/Error".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangExceptionConstantPoolName = "java/lang/Exception".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangFloatConstantPoolName = "java/lang/Float".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangIntegerConstantPoolName = "java/lang/Integer".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangLongConstantPoolName = "java/lang/Long".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangNoClassDefFoundErrorConstantPoolName = "java/lang/NoClassDefFoundError".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangNoSuchFieldErrorConstantPoolName = "java/lang/NoSuchFieldError".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangObjectConstantPoolName = "java/lang/Object".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVALANGREFLECTACCESSIBLEOBJECT_CONSTANTPOOLNAME = "java/lang/reflect/AccessibleObject".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVALANGREFLECTARRAY_CONSTANTPOOLNAME = "java/lang/reflect/Array".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangReflectConstructorConstantPoolName = "java/lang/reflect/Constructor".toCharArray();   //$NON-NLS-1$
-	public static final char[] JavaLangReflectConstructorNewInstanceSignature = "([Ljava/lang/Object;)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVALANGREFLECTFIELD_CONSTANTPOOLNAME = "java/lang/reflect/Field".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVALANGREFLECTMETHOD_CONSTANTPOOLNAME = "java/lang/reflect/Method".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangShortConstantPoolName = "java/lang/Short".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangStringBufferConstantPoolName = "java/lang/StringBuffer".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangStringBuilderConstantPoolName = "java/lang/StringBuilder".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangStringConstantPoolName = "java/lang/String".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GETDECLAREDFIELD_NAME = "getDeclaredField".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GETDECLAREDFIELD_SIGNATURE = "(Ljava/lang/String;)Ljava/lang/reflect/Field;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GETDECLAREDMETHOD_NAME = "getDeclaredMethod".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GETDECLAREDMETHOD_SIGNATURE = "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GetMessage = "getMessage".toCharArray(); //$NON-NLS-1$
+//	public static final char[] GetMessageSignature = "()Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] HasNext = "hasNext".toCharArray();//$NON-NLS-1$
+//	public static final char[] HasNextSignature = "()Z".toCharArray();//$NON-NLS-1$
+//	public static final char[] Init = "<init>".toCharArray(); //$NON-NLS-1$
+//	public static final char[] IntConstrSignature = "(I)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ITERATOR_NAME = "iterator".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ITERATOR_SIGNATURE = "()Ljava/util/Iterator;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] Intern = "intern".toCharArray(); //$NON-NLS-1$
+//	public static final char[] InternSignature = GetMessageSignature;
+//	public static final char[] IntIntegerSignature = "(I)Ljava/lang/Integer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] INTVALUE_INTEGER_METHOD_NAME = "intValue".toCharArray(); //$NON-NLS-1$
+//	public static final char[] INTVALUE_INTEGER_METHOD_SIGNATURE = "()I".toCharArray(); //$NON-NLS-1$
+//	public static final char[] INVOKE_METHOD_METHOD_NAME = "invoke".toCharArray(); //$NON-NLS-1$
+//	public static final char[] INVOKE_METHOD_METHOD_SIGNATURE = "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
+//	public static final char[][] JAVA_LANG_REFLECT_ACCESSIBLEOBJECT = new char[][] {TypeConstants.JAVA, TypeConstants.LANG, TypeConstants.REFLECT, "AccessibleObject".toCharArray()}; //$NON-NLS-1$
+//	public static final char[][] JAVA_LANG_REFLECT_ARRAY = new char[][] {TypeConstants.JAVA, TypeConstants.LANG, TypeConstants.REFLECT, "Array".toCharArray()}; //$NON-NLS-1$
+//	// predefined type constant names
+//	public static final char[] JavaIoPrintStreamSignature = "Ljava/io/PrintStream;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangAssertionErrorConstantPoolName = "java/lang/AssertionError".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangBooleanConstantPoolName = "java/lang/Boolean".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangByteConstantPoolName = "java/lang/Byte".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangCharacterConstantPoolName = "java/lang/Character".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangClassConstantPoolName = "java/lang/Class".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangClassNotFoundExceptionConstantPoolName = "java/lang/ClassNotFoundException".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangClassSignature = "Ljava/lang/Class;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangDoubleConstantPoolName = "java/lang/Double".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangEnumConstantPoolName = "java/lang/Enum".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangErrorConstantPoolName = "java/lang/Error".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangExceptionConstantPoolName = "java/lang/Exception".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangFloatConstantPoolName = "java/lang/Float".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangIntegerConstantPoolName = "java/lang/Integer".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangLongConstantPoolName = "java/lang/Long".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangNoClassDefFoundErrorConstantPoolName = "java/lang/NoClassDefFoundError".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangNoSuchFieldErrorConstantPoolName = "java/lang/NoSuchFieldError".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangObjectConstantPoolName = "java/lang/Object".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVALANGREFLECTACCESSIBLEOBJECT_CONSTANTPOOLNAME = "java/lang/reflect/AccessibleObject".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVALANGREFLECTARRAY_CONSTANTPOOLNAME = "java/lang/reflect/Array".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangReflectConstructorConstantPoolName = "java/lang/reflect/Constructor".toCharArray();   //$NON-NLS-1$
+//	public static final char[] JavaLangReflectConstructorNewInstanceSignature = "([Ljava/lang/Object;)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVALANGREFLECTFIELD_CONSTANTPOOLNAME = "java/lang/reflect/Field".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVALANGREFLECTMETHOD_CONSTANTPOOLNAME = "java/lang/reflect/Method".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangShortConstantPoolName = "java/lang/Short".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangStringBufferConstantPoolName = "java/lang/StringBuffer".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangStringBuilderConstantPoolName = "java/lang/StringBuilder".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangStringConstantPoolName = "java/lang/String".toCharArray(); //$NON-NLS-1$
 	public static final char[] JavaLangStringSignature = "Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangObjectSignature = "Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangSystemConstantPoolName = "java/lang/System".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangThrowableConstantPoolName = "java/lang/Throwable".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaLangVoidConstantPoolName = "java/lang/Void".toCharArray(); //$NON-NLS-1$
-	public static final char[] JavaUtilIteratorConstantPoolName = "java/util/Iterator".toCharArray(); //$NON-NLS-1$
-	public static final char[] LongConstrSignature = "(J)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] longLongSignature = "(J)Ljava/lang/Long;".toCharArray(); //$NON-NLS-1$
-	public static final char[] LONGVALUE_LONG_METHOD_NAME = "longValue".toCharArray(); //$NON-NLS-1$
-	public static final char[] LONGVALUE_LONG_METHOD_SIGNATURE = "()J".toCharArray(); //$NON-NLS-1$
-	public static final char[] NewInstance = "newInstance".toCharArray(); //$NON-NLS-1$
-	public static final char[] NewInstanceSignature = "(Ljava/lang/Class;[I)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
-	public static final char[] Next = "next".toCharArray();//$NON-NLS-1$
-	public static final char[] NextSignature = "()Ljava/lang/Object;".toCharArray();//$NON-NLS-1$
-	public static final char[] ObjectConstrSignature = "(Ljava/lang/Object;)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangObjectSignature = "Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangSystemConstantPoolName = "java/lang/System".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangThrowableConstantPoolName = "java/lang/Throwable".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaLangVoidConstantPoolName = "java/lang/Void".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JavaUtilIteratorConstantPoolName = "java/util/Iterator".toCharArray(); //$NON-NLS-1$
+//	public static final char[] LongConstrSignature = "(J)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] longLongSignature = "(J)Ljava/lang/Long;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] LONGVALUE_LONG_METHOD_NAME = "longValue".toCharArray(); //$NON-NLS-1$
+//	public static final char[] LONGVALUE_LONG_METHOD_SIGNATURE = "()J".toCharArray(); //$NON-NLS-1$
+//	public static final char[] NewInstance = "newInstance".toCharArray(); //$NON-NLS-1$
+//	public static final char[] NewInstanceSignature = "(Ljava/lang/Class;[I)Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] Next = "next".toCharArray();//$NON-NLS-1$
+//	public static final char[] NextSignature = "()Ljava/lang/Object;".toCharArray();//$NON-NLS-1$
+//	public static final char[] ObjectConstrSignature = "(Ljava/lang/Object;)V".toCharArray(); //$NON-NLS-1$
 	public static final char[] ObjectSignature = "Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
-	public static final char[] Ordinal = "ordinal".toCharArray(); //$NON-NLS-1$
-	public static final char[] OrdinalSignature = "()I".toCharArray(); //$NON-NLS-1$
-	public static final char[] Out = "out".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_BOOLEAN_METHOD_NAME = "setBoolean".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_BOOLEAN_METHOD_SIGNATURE = "(Ljava/lang/Object;Z)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_BYTE_METHOD_NAME = "setByte".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_BYTE_METHOD_SIGNATURE = "(Ljava/lang/Object;B)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_CHAR_METHOD_NAME = "setChar".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_CHAR_METHOD_SIGNATURE = "(Ljava/lang/Object;C)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_DOUBLE_METHOD_NAME = "setDouble".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_DOUBLE_METHOD_SIGNATURE = "(Ljava/lang/Object;D)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_FLOAT_METHOD_NAME = "setFloat".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_FLOAT_METHOD_SIGNATURE = "(Ljava/lang/Object;F)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_INT_METHOD_NAME = "setInt".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_INT_METHOD_SIGNATURE = "(Ljava/lang/Object;I)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_LONG_METHOD_NAME = "setLong".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_LONG_METHOD_SIGNATURE = "(Ljava/lang/Object;J)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_OBJECT_METHOD_NAME = "set".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_OBJECT_METHOD_SIGNATURE = "(Ljava/lang/Object;Ljava/lang/Object;)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_SHORT_METHOD_NAME = "setShort".toCharArray(); //$NON-NLS-1$
-	public static final char[] SET_SHORT_METHOD_SIGNATURE = "(Ljava/lang/Object;S)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] SETACCESSIBLE_NAME = "setAccessible".toCharArray(); //$NON-NLS-1$
-	public static final char[] SETACCESSIBLE_SIGNATURE = "(Z)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] ShortConstrSignature = "(S)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] shortShortSignature = "(S)Ljava/lang/Short;".toCharArray(); //$NON-NLS-1$
-	public static final char[] SHORTVALUE_SHORT_METHOD_NAME = "shortValue".toCharArray(); //$NON-NLS-1$
-	public static final char[] SHORTVALUE_SHORT_METHOD_SIGNATURE = "()S".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBufferAppendBooleanSignature = "(Z)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBufferAppendCharSignature = "(C)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBufferAppendDoubleSignature = "(D)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBufferAppendFloatSignature = "(F)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBufferAppendIntSignature = "(I)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBufferAppendLongSignature = "(J)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBufferAppendObjectSignature = "(Ljava/lang/Object;)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBufferAppendStringSignature = "(Ljava/lang/String;)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBuilderAppendBooleanSignature = "(Z)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBuilderAppendCharSignature = "(C)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBuilderAppendDoubleSignature = "(D)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBuilderAppendFloatSignature = "(F)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBuilderAppendIntSignature = "(I)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBuilderAppendLongSignature = "(J)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBuilderAppendObjectSignature = "(Ljava/lang/Object;)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringBuilderAppendStringSignature = "(Ljava/lang/String;)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
-	public static final char[] StringConstructorSignature = "(Ljava/lang/String;)V".toCharArray(); //$NON-NLS-1$
-	public static final char[] This = "this".toCharArray(); //$NON-NLS-1$
-	public static final char[] ToString = "toString".toCharArray(); //$NON-NLS-1$
-	public static final char[] ToStringSignature = GetMessageSignature;
-	public static final char[] TYPE = "TYPE".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOf = "valueOf".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOfBooleanSignature = "(Z)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOfCharSignature = "(C)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOfDoubleSignature = "(D)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOfFloatSignature = "(F)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOfIntSignature = "(I)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOfLongSignature = "(J)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOfObjectSignature = "(Ljava/lang/Object;)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
-	public static final char[] ValueOfStringClassSignature = "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVA_LANG_ANNOTATION_DOCUMENTED = "Ljava/lang/annotation/Documented;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVA_LANG_ANNOTATION_ELEMENTTYPE = "Ljava/lang/annotation/ElementType;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVA_LANG_ANNOTATION_RETENTION = "Ljava/lang/annotation/Retention;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVA_LANG_ANNOTATION_RETENTIONPOLICY = "Ljava/lang/annotation/RetentionPolicy;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVA_LANG_ANNOTATION_TARGET = "Ljava/lang/annotation/Target;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVA_LANG_DEPRECATED = "Ljava/lang/Deprecated;".toCharArray(); //$NON-NLS-1$
-	public static final char[] JAVA_LANG_ANNOTATION_INHERITED = "Ljava/lang/annotation/Inherited;".toCharArray(); //$NON-NLS-1$
-	// java 7  java.lang.SafeVarargs
-	public static final char[] JAVA_LANG_SAFEVARARGS = "Ljava/lang/SafeVarargs;".toCharArray(); //$NON-NLS-1$
-	// java 7 java.lang.invoke.MethodHandle.invokeExact(..)/invokeGeneric(..)
-	public static final char[] JAVA_LANG_INVOKE_METHODHANDLE_POLYMORPHICSIGNATURE = "Ljava/lang/invoke/MethodHandle$PolymorphicSignature;".toCharArray(); //$NON-NLS-1$
-
-	public static final char[] HashCode = "hashCode".toCharArray(); //$NON-NLS-1$
-	public static final char[] HashCodeSignature = "()I".toCharArray(); //$NON-NLS-1$; 
-	public static final char[] Equals = "equals".toCharArray(); //$NON-NLS-1$
-	public static final char[] EqualsSignature = "(Ljava/lang/Object;)Z".toCharArray(); //$NON-NLS-1$; 
-	public static final char[] AddSuppressed = "addSuppressed".toCharArray(); //$NON-NLS-1$;
-	public static final char[] AddSuppressedSignature = "(Ljava/lang/Throwable;)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] Ordinal = "ordinal".toCharArray(); //$NON-NLS-1$
+//	public static final char[] OrdinalSignature = "()I".toCharArray(); //$NON-NLS-1$
+//	public static final char[] Out = "out".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_BOOLEAN_METHOD_NAME = "setBoolean".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_BOOLEAN_METHOD_SIGNATURE = "(Ljava/lang/Object;Z)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_BYTE_METHOD_NAME = "setByte".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_BYTE_METHOD_SIGNATURE = "(Ljava/lang/Object;B)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_CHAR_METHOD_NAME = "setChar".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_CHAR_METHOD_SIGNATURE = "(Ljava/lang/Object;C)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_DOUBLE_METHOD_NAME = "setDouble".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_DOUBLE_METHOD_SIGNATURE = "(Ljava/lang/Object;D)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_FLOAT_METHOD_NAME = "setFloat".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_FLOAT_METHOD_SIGNATURE = "(Ljava/lang/Object;F)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_INT_METHOD_NAME = "setInt".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_INT_METHOD_SIGNATURE = "(Ljava/lang/Object;I)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_LONG_METHOD_NAME = "setLong".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_LONG_METHOD_SIGNATURE = "(Ljava/lang/Object;J)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_OBJECT_METHOD_NAME = "set".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_OBJECT_METHOD_SIGNATURE = "(Ljava/lang/Object;Ljava/lang/Object;)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_SHORT_METHOD_NAME = "setShort".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SET_SHORT_METHOD_SIGNATURE = "(Ljava/lang/Object;S)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SETACCESSIBLE_NAME = "setAccessible".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SETACCESSIBLE_SIGNATURE = "(Z)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ShortConstrSignature = "(S)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] shortShortSignature = "(S)Ljava/lang/Short;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SHORTVALUE_SHORT_METHOD_NAME = "shortValue".toCharArray(); //$NON-NLS-1$
+//	public static final char[] SHORTVALUE_SHORT_METHOD_SIGNATURE = "()S".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBufferAppendBooleanSignature = "(Z)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBufferAppendCharSignature = "(C)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBufferAppendDoubleSignature = "(D)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBufferAppendFloatSignature = "(F)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBufferAppendIntSignature = "(I)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBufferAppendLongSignature = "(J)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBufferAppendObjectSignature = "(Ljava/lang/Object;)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBufferAppendStringSignature = "(Ljava/lang/String;)Ljava/lang/StringBuffer;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBuilderAppendBooleanSignature = "(Z)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBuilderAppendCharSignature = "(C)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBuilderAppendDoubleSignature = "(D)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBuilderAppendFloatSignature = "(F)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBuilderAppendIntSignature = "(I)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBuilderAppendLongSignature = "(J)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBuilderAppendObjectSignature = "(Ljava/lang/Object;)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringBuilderAppendStringSignature = "(Ljava/lang/String;)Ljava/lang/StringBuilder;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] StringConstructorSignature = "(Ljava/lang/String;)V".toCharArray(); //$NON-NLS-1$
+//	public static final char[] This = "this".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ToString = "toString".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ToStringSignature = GetMessageSignature;
+//	public static final char[] TYPE = "TYPE".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOf = "valueOf".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOfBooleanSignature = "(Z)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOfCharSignature = "(C)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOfDoubleSignature = "(D)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOfFloatSignature = "(F)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOfIntSignature = "(I)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOfLongSignature = "(J)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOfObjectSignature = "(Ljava/lang/Object;)Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] ValueOfStringClassSignature = "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVA_LANG_ANNOTATION_DOCUMENTED = "Ljava/lang/annotation/Documented;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVA_LANG_ANNOTATION_ELEMENTTYPE = "Ljava/lang/annotation/ElementType;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVA_LANG_ANNOTATION_RETENTION = "Ljava/lang/annotation/Retention;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVA_LANG_ANNOTATION_RETENTIONPOLICY = "Ljava/lang/annotation/RetentionPolicy;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVA_LANG_ANNOTATION_TARGET = "Ljava/lang/annotation/Target;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVA_LANG_DEPRECATED = "Ljava/lang/Deprecated;".toCharArray(); //$NON-NLS-1$
+//	public static final char[] JAVA_LANG_ANNOTATION_INHERITED = "Ljava/lang/annotation/Inherited;".toCharArray(); //$NON-NLS-1$
+//	// java 7  java.lang.SafeVarargs
+//	public static final char[] JAVA_LANG_SAFEVARARGS = "Ljava/lang/SafeVarargs;".toCharArray(); //$NON-NLS-1$
+//	// java 7 java.lang.invoke.MethodHandle.invokeExact(..)/invokeGeneric(..)
+//	public static final char[] JAVA_LANG_INVOKE_METHODHANDLE_POLYMORPHICSIGNATURE = "Ljava/lang/invoke/MethodHandle$PolymorphicSignature;".toCharArray(); //$NON-NLS-1$
+//
+//	public static final char[] HashCode = "hashCode".toCharArray(); //$NON-NLS-1$
+//	public static final char[] HashCodeSignature = "()I".toCharArray(); //$NON-NLS-1$; 
+//	public static final char[] Equals = "equals".toCharArray(); //$NON-NLS-1$
+//	public static final char[] EqualsSignature = "(Ljava/lang/Object;)Z".toCharArray(); //$NON-NLS-1$; 
+//	public static final char[] AddSuppressed = "addSuppressed".toCharArray(); //$NON-NLS-1$;
+//	public static final char[] AddSuppressedSignature = "(Ljava/lang/Throwable;)V".toCharArray(); //$NON-NLS-1$
 	/**
 //	 * ConstantPool constructor comment.
 //	 */
@@ -273,13 +268,13 @@ public class ConstantPool implements ClassFileConstants, TypeIds {
 //		this.currentIndex = 1;
 //		this.classFile = givenClassFile;
 //	}
-	/**
-	 * Return the content of the receiver
-	 */
-	public byte[] dumpBytes() {
-		System.arraycopy(this.poolContent, 0, (this.poolContent = new byte[this.currentOffset]), 0, this.currentOffset);
-		return this.poolContent;
-	}
+//	/**
+//	 * Return the content of the receiver
+//	 */
+//	public byte[] dumpBytes() {
+//		System.arraycopy(this.poolContent, 0, (this.poolContent = new byte[this.currentOffset]), 0, this.currentOffset);
+//		return this.poolContent;
+//	}
 //	public int literalIndex(byte[] utf8encoding, char[] stringCharArray) {
 //		int index;
 //		if ((index = this.UTF8Cache.putIfAbsent(stringCharArray, this.currentIndex)) < 0) {
