@@ -50,7 +50,6 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
       }
       catch (Exception exc)
       {
-         exc.printStackTrace();
          String message = "Can't parse gadget meta data at <b>" + metadata.getTitle() + "</b>";
          throw new UnmarshallerException(message);
       }

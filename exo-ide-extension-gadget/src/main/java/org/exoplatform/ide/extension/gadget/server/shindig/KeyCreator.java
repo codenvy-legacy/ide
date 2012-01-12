@@ -38,9 +38,9 @@ import java.security.SecureRandom;
  */
 public class KeyCreator
 {
-   
+
    public static Log log = ExoLogger.getLogger("org.exoplatform.ide.shindig.KeyCreator");
-      
+
    public static void createKeyFile()
    {
       File keyFile = new File(getKeyFilePath());
@@ -70,7 +70,6 @@ public class KeyCreator
             }
             catch (IOException e)
             {
-               e.printStackTrace();
             }
          }
       }
@@ -83,33 +82,36 @@ public class KeyCreator
          log.info("Found key file " + keyFile.getAbsolutePath() + " for gadgets security");
       }
    }
-   
-   
-   public static String getKeyFilePath(){
-//      /*
-//       * For now uses "gatein.gadgets.securityTokenKeyFile" variable according to IDE-951.
-//       */
-//      String keyFilePath = System.getProperty("gatein.gadgets.securityTokenKeyFile");
-//      log.info("Path to key file > " + keyFilePath);
-//      return keyFilePath;
-      
+
+   public static String getKeyFilePath()
+   {
+      //      /*
+      //       * For now uses "gatein.gadgets.securityTokenKeyFile" variable according to IDE-951.
+      //       */
+      //      String keyFilePath = System.getProperty("gatein.gadgets.securityTokenKeyFile");
+      //      log.info("Path to key file > " + keyFilePath);
+      //      return keyFilePath;
+
       J2EEServerInfo info = new J2EEServerInfo();
       String confPath = info.getExoConfigurationDirectory();
       File keyFile = null;
-      
-      if (confPath != null) {
+
+      if (confPath != null)
+      {
          File confDir = new File(confPath);
-         if (confDir != null && confDir.exists() && confDir.isDirectory()) {
+         if (confDir != null && confDir.exists() && confDir.isDirectory())
+         {
             keyFile = new File(confDir, "key.txt");
          }
       }
 
-      if (keyFile == null) {
+      if (keyFile == null)
+      {
          keyFile = new File("key.txt");
       }
-      
+
       return keyFile.getAbsolutePath();
-  }
+   }
 
    /**
     * Generate a key of 32 bytes encoded in base64. The generation is based on
