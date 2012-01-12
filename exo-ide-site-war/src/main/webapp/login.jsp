@@ -95,7 +95,7 @@ function registerNewUser() {
 	<tr align="center" valign="top">
 		<td>
 
-			<form id="loginForm" method="POST" action='<%=response.encodeURL("j_security_check")%>'>
+			<form id="loginFormId" method="POST" action='<%=response.encodeURL("j_security_check")%>'>
 				<table border="0" cellspacing="5">
 
 			<tr>
@@ -113,7 +113,7 @@ function registerNewUser() {
 			</tr>
 
 			<tr>
-				<td align="right"><input type="submit" value="Log In"></td>
+				<td align="right"><input type="submit" value="Log In" class="Button"/></td>
 				<td align="left"><input type="reset" value="Reset"></td>
 			</tr>
 
