@@ -29,14 +29,14 @@ public interface CodeAssistantCss extends CssResource
 {
 
    @ClassName("exo-autocomplete-panel")
-   String panelStyle(); 
-   
+   String panelStyle();
+
    @ClassName("exo-autocomplete-description")
    String description();
-   
+
    @ClassName("exo-autocomplete-list")
    String listStyle();
-   
+
    @ClassName("exo-autocomplete-edit")
-   String edit();  
+   String edit();
 }

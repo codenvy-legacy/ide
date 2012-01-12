@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.editor.api.codeassitant.ui;
 
-
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -60,38 +59,33 @@ public abstract class TokenWidget extends Composite implements HasClickHandlers,
    {
       return token;
    }
-   
-   
+
    /**
     * @return name of token
     */
    public abstract String getTokenName();
-   
-   
+
    /**
     * @return String that will inserted in editor 
     */
    public abstract String getTokenValue();
-   
-   
+
    /**
     * Get token description.
     * It's may be javadoc, template content etc. 
     * @return {@link Widget} with description 
     */
    public abstract Widget getTokenDecription();
-   
+
    /**
     *  Calls when user select this {@link Widget} 
     */
    public abstract void setSelectedStyle();
 
-
    /**
     * Calls when clear selection or mouse blur this {@link Widget}
     */
    public abstract void setDefaultStyle();
-
 
    /**
     * @see com.google.gwt.event.dom.client.HasClickHandlers#addClickHandler(com.google.gwt.event.dom.client.ClickHandler)

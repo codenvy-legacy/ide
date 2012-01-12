@@ -31,8 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorFocusReceivedEvent extends GwtEvent<EditorFocusReceivedHandler>
 {
 
-   public static final GwtEvent.Type<EditorFocusReceivedHandler> TYPE =
-      new GwtEvent.Type<EditorFocusReceivedHandler>();
+   public static final GwtEvent.Type<EditorFocusReceivedHandler> TYPE = new GwtEvent.Type<EditorFocusReceivedHandler>();
 
    private String editorId;
 

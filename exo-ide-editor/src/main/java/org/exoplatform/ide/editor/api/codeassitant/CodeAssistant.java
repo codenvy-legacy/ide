@@ -81,8 +81,8 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
     * @param currentToken if cursor pleased before dot(i.e. autocompletion called for method or property), 
     * contains token with information of type of variable
     */
-   public abstract void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY,
-      List<Token> tokenList, String lineMimeType, Token currentToken);
+   public abstract void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
+      String lineMimeType, Token currentToken);
 
    /**
     * Create and show {@link AutocompletionForm}
@@ -204,7 +204,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
     * @return JavaScriptObject that you can cast to an Overlay Type
     */
    protected native JavaScriptObject parseJson(String json) /*-{
-		return eval('(' + json + ')');
-   }-*/;
+                                                            return eval('(' + json + ')');
+                                                            }-*/;
 
 }

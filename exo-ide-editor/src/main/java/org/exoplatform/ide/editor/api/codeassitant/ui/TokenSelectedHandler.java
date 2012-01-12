@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.editor.api.codeassitant.ui;
 
-
 /**
  * Created by The eXo Platform SAS.
  *

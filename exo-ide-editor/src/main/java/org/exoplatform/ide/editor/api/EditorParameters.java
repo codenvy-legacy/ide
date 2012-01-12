@@ -33,22 +33,22 @@ public interface EditorParameters
     * Key for {@link CodeMirrorConfiguration} object
     */
    String CONFIGURATION = "configuration";
-   
+
    /**
     * Key for {@link Boolean}, set editor in read only mode
     */
    String IS_READ_ONLY = "is_read_only";
-   
+
    /**
     * Key for {@link Boolean}, set show/hide line numbers
     */
    String IS_SHOW_LINE_NUMER = "is_show_line_number";
-   
+
    /**
     * Key for {@link List} of hot keys
     */
    String HOT_KEY_LIST = "hot_key_list";
-   
+
    /**
     * Key for content mime type
     */

@@ -24,7 +24,7 @@ package org.exoplatform.ide.editor.api;
  *
  */
 public enum EditorCapability {
-   
+
    /**
     * Editor supports code indentation
     */
@@ -59,7 +59,7 @@ public enum EditorCapability {
     * Editor and opened file type support outline feature
     */
    CAN_BE_OUTLINED,
-   
+
    /**
     * Editor and opened file type support validation feature
     */

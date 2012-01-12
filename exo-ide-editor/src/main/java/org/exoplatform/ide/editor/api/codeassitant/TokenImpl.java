@@ -38,11 +38,10 @@ public class TokenImpl implements Token
    private String name;
 
    private TokenType type;
-   
+
    public TokenImpl()
    {
    }
-  
 
    /**
     * @param name
@@ -64,9 +63,9 @@ public class TokenImpl implements Token
 
    public void setName(String name)
    {
-      this.name = name;      
+      this.name = name;
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#getType()
     */
@@ -80,7 +79,6 @@ public class TokenImpl implements Token
       this.type = type;
    }
 
-   
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.Token#getPropertiesKeys()
     */

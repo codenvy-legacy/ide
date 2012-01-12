@@ -28,5 +28,5 @@ import com.google.gwt.resources.client.CssResource;
 public interface CodeMirrorCss extends CssResource
 {
    @ClassName("exo-code-error-mark")
-   String codeErrorMarkStyle();   
+   String codeErrorMarkStyle();
 }

@@ -173,7 +173,7 @@ public class ModifierHelper
     */
    public static boolean isAbstract(int mod)
    {
-     return (mod & ABSTRACT) != 0;
+      return (mod & ABSTRACT) != 0;
    }
 
    /**
@@ -257,8 +257,7 @@ public class ModifierHelper
          return sb.toString().substring(0, len - 1);
       return "";
    }
-   
-   
+
    /**
     * Return int from {@link String}.
     * This methods need for convert JSON format number to int 
@@ -267,7 +266,7 @@ public class ModifierHelper
     */
    public static int getIntFromString(String modifiers)
    {
-     return (int) Double.parseDouble(modifiers);
+      return (int)Double.parseDouble(modifiers);
    }
 
    /**
@@ -342,10 +341,10 @@ public class ModifierHelper
     */
    public static final int STRICT = 0x00000800;
 
-//   static final int SYNTHETIC = 0x00001000;
-//
-//   static boolean isSynthetic(int mod)
-//   {
-//      return (mod & SYNTHETIC) != 0;
-//   }
+   //   static final int SYNTHETIC = 0x00001000;
+   //
+   //   static boolean isSynthetic(int mod)
+   //   {
+   //      return (mod & SYNTHETIC) != 0;
+   //   }
 }

@@ -27,22 +27,22 @@ package org.exoplatform.ide.editor.api.codeassitant;
 */
 public abstract class TokenProperty
 {
-   
+
    /**
     * @return instance of {@link StringProperty} or <code>null</code>
     */
    public abstract StringProperty isStringProperty();
-   
+
    /**
     * @return instance of {@link NumericProperty} or <code>null</code>
     */
    public abstract NumericProperty isNumericProperty();
-   
+
    /**
     * @return instance of {@link ArrayProperty} or <code>null</code>
     */
    public abstract ArrayProperty isArrayProperty();
-   
+
    /**
     * @return instance of {@link ObjectProperty} or <code>null</code>
     */

@@ -34,7 +34,6 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 public class DefaultCodeAssistant extends CodeAssistant
 {
 
-
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
@@ -42,7 +41,7 @@ public class DefaultCodeAssistant extends CodeAssistant
    public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
       String fileMimeType)
    {
-      
+
    }
 
    /**
@@ -52,7 +51,7 @@ public class DefaultCodeAssistant extends CodeAssistant
    public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
       String lineMimeType, Token currentToken)
    {
-      
+
    }
 
 }

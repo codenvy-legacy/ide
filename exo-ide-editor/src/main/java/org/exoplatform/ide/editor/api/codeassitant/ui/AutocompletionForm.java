@@ -71,9 +71,9 @@ import com.google.gwt.user.client.ui.Widget;
 public class AutocompletionForm extends Composite implements ChangeHandler, ResizeHandler
 {
    private static final String PANEL_ID = "exo-ide-autocomplete-panel";
-   
+
    private static final String INPUT_ID = "exo-ide-autocomplete-edit";
-   
+
    private static final String DOC_ID = "exo-ide-autocomplete-doc-panel";
 
    private AbsolutePanel absolutePanel;
@@ -306,8 +306,8 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
    }
 
    private native void scroll(Element scroll, int pos)/*-{
-		scroll.scrollTop = scroll.scrollTop + pos;
-   }-*/;
+                                                      scroll.scrollTop = scroll.scrollTop + pos;
+                                                      }-*/;
 
    private void selectWidget(int i)
    {

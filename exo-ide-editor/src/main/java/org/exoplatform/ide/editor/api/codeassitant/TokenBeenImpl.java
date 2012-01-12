@@ -21,7 +21,6 @@ package org.exoplatform.ide.editor.api.codeassitant;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
@@ -30,7 +29,7 @@ import java.util.List;
 public class TokenBeenImpl extends TokenImpl
 {
 
-   public TokenBeenImpl() 
+   public TokenBeenImpl()
    {
    }
 
@@ -40,7 +39,6 @@ public class TokenBeenImpl extends TokenImpl
       setType(type);
    }
 
-   
    public TokenBeenImpl(String name, TokenType type, int lineNumber)
    {
       this(name, type);
@@ -72,8 +70,9 @@ public class TokenBeenImpl extends TokenImpl
       this(name, type, lineNumber, mimeType, elementType, modifiers);
       setFqn(fqn);
    }
-   
-   public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType, String initializationStatement)
+
+   public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
+      String initializationStatement)
    {
       this(name, type, lineNumber, mimeType, elementType);
       setInitializationStatement(initializationStatement);
@@ -84,9 +83,8 @@ public class TokenBeenImpl extends TokenImpl
     */
    public String getShortDescription()
    {
-      return  hasProperty(TokenProperties.SHORT_DESCRIPTION)
-         ? ((StringProperty) getProperty(TokenProperties.SHORT_DESCRIPTION)).stringValue() 
-         : null;
+      return hasProperty(TokenProperties.SHORT_DESCRIPTION)
+         ? ((StringProperty)getProperty(TokenProperties.SHORT_DESCRIPTION)).stringValue() : null;
    }
 
    /**
@@ -94,9 +92,8 @@ public class TokenBeenImpl extends TokenImpl
     */
    public String getCode()
    {
-      return  hasProperty(TokenProperties.CODE) 
-         ? ((StringProperty) getProperty(TokenProperties.CODE)).stringValue() 
-         : null; 
+      return hasProperty(TokenProperties.CODE) ? ((StringProperty)getProperty(TokenProperties.CODE)).stringValue()
+         : null;
    }
 
    /**
@@ -104,16 +101,14 @@ public class TokenBeenImpl extends TokenImpl
     */
    public String getFullDescription()
    {
-      return  hasProperty(TokenProperties.FULL_DESCRIPTION) 
-         ? ((StringProperty) getProperty(TokenProperties.FULL_DESCRIPTION)).stringValue() 
-         : null; 
+      return hasProperty(TokenProperties.FULL_DESCRIPTION)
+         ? ((StringProperty)getProperty(TokenProperties.FULL_DESCRIPTION)).stringValue() : null;
    }
 
    public int getLineNumber()
    {
-      return hasProperty(TokenProperties.LINE_NUMBER) 
-         ? ((NumericProperty)getProperty(TokenProperties.LINE_NUMBER)).numericValue().intValue() 
-         : 0;
+      return hasProperty(TokenProperties.LINE_NUMBER) ? ((NumericProperty)getProperty(TokenProperties.LINE_NUMBER))
+         .numericValue().intValue() : 0;
    }
 
    public void setLastLineNumber(int lastLineNumber)
@@ -126,23 +121,20 @@ public class TokenBeenImpl extends TokenImpl
     */
    public int getLastLineNumber()
    {
-      return  hasProperty(TokenProperties.LAST_LINE_NUMBER) 
-         ? ((NumericProperty) getProperty(TokenProperties.LAST_LINE_NUMBER)).numericValue().intValue() 
-         : 0; 
+      return hasProperty(TokenProperties.LAST_LINE_NUMBER)
+         ? ((NumericProperty)getProperty(TokenProperties.LAST_LINE_NUMBER)).numericValue().intValue() : 0;
    }
-   
+
    public List<TokenBeenImpl> getSubTokenList()
    {
-      return  hasProperty(TokenProperties.SUB_TOKEN_LIST) 
-         ? (List<TokenBeenImpl>)((ArrayProperty) getProperty(TokenProperties.SUB_TOKEN_LIST)).arrayValue() 
-         : null;
+      return hasProperty(TokenProperties.SUB_TOKEN_LIST)
+         ? (List<TokenBeenImpl>)((ArrayProperty)getProperty(TokenProperties.SUB_TOKEN_LIST)).arrayValue() : null;
    }
 
    public String getMimeType()
    {
-      return  hasProperty(TokenProperties.MIME_TYPE) 
-         ? ((StringProperty) getProperty(TokenProperties.MIME_TYPE)).stringValue() 
-         : null; 
+      return hasProperty(TokenProperties.MIME_TYPE) ? ((StringProperty)getProperty(TokenProperties.MIME_TYPE))
+         .stringValue() : null;
    }
 
    /**
@@ -176,9 +168,8 @@ public class TokenBeenImpl extends TokenImpl
 
    public TokenBeenImpl getParentToken()
    {
-      return  hasProperty(TokenProperties.PARENT_TOKEN)
-      ? (TokenBeenImpl)((ObjectProperty) getProperty(TokenProperties.PARENT_TOKEN)).objectValue() 
-      : null;
+      return hasProperty(TokenProperties.PARENT_TOKEN)
+         ? (TokenBeenImpl)((ObjectProperty)getProperty(TokenProperties.PARENT_TOKEN)).objectValue() : null;
    }
 
    /**
@@ -212,9 +203,8 @@ public class TokenBeenImpl extends TokenImpl
 
    public String getElementType()
    {
-      return hasProperty(TokenProperties.ELEMENT_TYPE) 
-         ? ((StringProperty) getProperty(TokenProperties.ELEMENT_TYPE)).stringValue()
-         : null;      
+      return hasProperty(TokenProperties.ELEMENT_TYPE) ? ((StringProperty)getProperty(TokenProperties.ELEMENT_TYPE))
+         .stringValue() : null;
    }
 
    public void setFqn(String fqn)
@@ -224,19 +214,16 @@ public class TokenBeenImpl extends TokenImpl
 
    public String getFqn()
    {
-      return hasProperty(TokenProperties.FQN) 
-         ? ((StringProperty) getProperty(TokenProperties.FQN)).stringValue() 
-         : null;
+      return hasProperty(TokenProperties.FQN) ? ((StringProperty)getProperty(TokenProperties.FQN)).stringValue() : null;
    }
 
    public List<Modifier> getModifiers()
    {
-      return  hasProperty(TokenProperties.MODIFIERS) 
-         ? (List<Modifier>)((ObjectProperty) getProperty(TokenProperties.MODIFIERS)).objectValue() 
-         : null; 
+      return hasProperty(TokenProperties.MODIFIERS)
+         ? (List<Modifier>)((ObjectProperty)getProperty(TokenProperties.MODIFIERS)).objectValue() : null;
    }
-   
-   public void setModifiers(List<Modifier> modifiers) 
+
+   public void setModifiers(List<Modifier> modifiers)
    {
       setProperty(TokenProperties.MODIFIERS, new ObjectProperty(modifiers));
    }
@@ -255,9 +242,8 @@ public class TokenBeenImpl extends TokenImpl
 
    public List<TokenBeenImpl> getAnnotations()
    {
-      return  hasProperty(TokenProperties.ANNOTATIONS) 
-         ? (List<TokenBeenImpl>)((ArrayProperty) getProperty(TokenProperties.ANNOTATIONS)).arrayValue() 
-         : null; 
+      return hasProperty(TokenProperties.ANNOTATIONS)
+         ? (List<TokenBeenImpl>)((ArrayProperty)getProperty(TokenProperties.ANNOTATIONS)).arrayValue() : null;
    }
 
    public void setAnnotations(List<TokenBeenImpl> annotations)
@@ -279,9 +265,8 @@ public class TokenBeenImpl extends TokenImpl
 
    public List<TokenBeenImpl> getParameters()
    {
-      return  hasProperty(TokenProperties.PARAMETERS) 
-         ? (List<TokenBeenImpl>)((ArrayProperty) getProperty(TokenProperties.PARAMETERS)).arrayValue() 
-         : null; 
+      return hasProperty(TokenProperties.PARAMETERS)
+         ? (List<TokenBeenImpl>)((ArrayProperty)getProperty(TokenProperties.PARAMETERS)).arrayValue() : null;
    }
 
    public void setParameters(List<TokenBeenImpl> parameters)
@@ -297,18 +282,16 @@ public class TokenBeenImpl extends TokenImpl
    {
       setProperty(TokenProperties.INITIALIZATION_STATEMENT, new StringProperty(initializationStatement));
    }
-   
+
    /**
     * @return Statement used to initialize variable, like "widget.createDiv()" in statement "var a = widget.createDiv('test');"
     */
    public String getInitializationStatement()
    {
-      return hasProperty(TokenProperties.INITIALIZATION_STATEMENT) 
-             ? ((StringProperty) getProperty(TokenProperties.INITIALIZATION_STATEMENT)).stringValue() 
-             : null;
+      return hasProperty(TokenProperties.INITIALIZATION_STATEMENT)
+         ? ((StringProperty)getProperty(TokenProperties.INITIALIZATION_STATEMENT)).stringValue() : null;
    }
-   
-   
+
    /**
     * Adds subToken into the last sub token subTokenList
     * @param token
@@ -334,7 +317,7 @@ public class TokenBeenImpl extends TokenImpl
 
       lastSubToken.updateTypeOfLastSubToken(newType);
    }
-   
+
    public void updateTypeOfLastSubToken(TokenType newType)
    {
       if (getSubTokenList() == null || getSubTokenList().size() == 0)
@@ -344,7 +327,7 @@ public class TokenBeenImpl extends TokenImpl
 
       lastSubToken.setType(newType);
    }
-   
+
    /**
     * Set token.elementType += elementType  
     * @param elementType
@@ -365,7 +348,7 @@ public class TokenBeenImpl extends TokenImpl
          lastSubToken.setElementType(lastSubToken.getElementType() + elementType);
       }
    }
-   
+
    public void addSubToken(TokenBeenImpl subToken)
    {
       if (this.getSubTokenList() == null)
@@ -436,5 +419,5 @@ public class TokenBeenImpl extends TokenImpl
          getLastAnnotationToken().setName(getLastAnnotationToken().getName().concat(string)); // update last  annotation token
       }
    }
-   
+
 }

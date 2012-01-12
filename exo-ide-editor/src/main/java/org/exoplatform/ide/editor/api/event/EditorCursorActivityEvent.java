@@ -31,12 +31,13 @@ import com.google.gwt.event.shared.GwtEvent;
 public class EditorCursorActivityEvent extends GwtEvent<EditorCursorActivityHandler>
 {
 
-   public static final GwtEvent.Type<EditorCursorActivityHandler> TYPE = new GwtEvent.Type<EditorCursorActivityHandler>();
+   public static final GwtEvent.Type<EditorCursorActivityHandler> TYPE =
+      new GwtEvent.Type<EditorCursorActivityHandler>();
 
    private String editorId;
-   
-   private int row = 0;  
-   
+
+   private int row = 0;
+
    private int column = 0;
 
    public EditorCursorActivityEvent(String editorId)
@@ -60,12 +61,12 @@ public class EditorCursorActivityEvent extends GwtEvent<EditorCursorActivityHand
    {
       return column;
    }
-   
+
    public int getRow()
    {
       return row;
    }
-   
+
    @Override
    protected void dispatch(EditorCursorActivityHandler handler)
    {

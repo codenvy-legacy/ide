@@ -33,9 +33,10 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public abstract class AutocompleteHelper
 {
-   
-   public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType);
-   
+
+   public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
+      List<? extends Token> tokenList, String currentLineMimeType);
+
    /**
     * 
     * @param node
@@ -46,13 +47,13 @@ public abstract class AutocompleteHelper
    {
       String nodeContent;
       String nodeType;
-      
+
       String statement = "";
-      
-      while (node != null && ! Node.getName(node).equals("BR"))
-      {         
+
+      while (node != null && !Node.getName(node).equals("BR"))
+      {
          // pass nodes after the cursor
-         if (Node.getNodePositionInLine(node) >= cursorPosition) 
+         if (Node.getNodePositionInLine(node) >= cursorPosition)
          {
             // get previous token
             node = Node.getPrevious(node);
@@ -61,26 +62,23 @@ public abstract class AutocompleteHelper
          {
             nodeContent = Node.getContent(node);
             nodeType = Node.getType(node);
-   
-            if ((!isVariable(nodeType) && !isPoint(nodeType, nodeContent.trim()))  // filter part with non-variable and non-point symbols, not ". " symbol
-                   || (
-                         nodeContent.indexOf(" ") != -1  // filter nodes like "String " in sentence "String name._", or like ". " in sentence ". String_", or like ". _" in sentence like "String. _", or like "ch " in sentence like "name.ch _"  
-                         && (statement.length() > 0  // filter nodes like "name ._" or "name. ch._"
-                               || (Node.getNodePositionInLine(node) + nodeContent.length()) <= cursorPosition  // filter nodes like "name. _" or "name.ch _"
-                             ) 
-                      ) 
-               )   
+
+            if ((!isVariable(nodeType) && !isPoint(nodeType, nodeContent.trim())) // filter part with non-variable and non-point symbols, not ". " symbol
+               || (nodeContent.indexOf(" ") != -1 // filter nodes like "String " in sentence "String name._", or like ". " in sentence ". String_", or like ". _" in sentence like "String. _", or like "ch " in sentence like "name.ch _"  
+               && (statement.length() > 0 // filter nodes like "name ._" or "name. ch._"
+               || (Node.getNodePositionInLine(node) + nodeContent.length()) <= cursorPosition // filter nodes like "name. _" or "name.ch _"
+               )))
             {
                break;
             }
-   
+
             statement = nodeContent + statement;
-            
+
             // get previous token
             node = Node.getPrevious(node);
          }
-      }      
-      
+      }
+
       if (statement.lastIndexOf(".") == -1)
       {
          // return "" for statement like "name_"
@@ -104,23 +102,22 @@ public abstract class AutocompleteHelper
     * @see org.exoplatform.ide.editor.codemirror.AutocompleteHelper#isVariable(java.lang.String)
     */
    public abstract boolean isPoint(String nodeType, String nodeContent);
-  
+
    public static TokenBeenImpl nearestToken;
-   
+
    public static void searchNearestToken(int targetLineNumber, TokenBeenImpl currentToken)
    {
       // test if this is function and it ended not before target line
-      if (TokenType.FUNCTION.equals(currentToken.getType()) 
-               // test is Container Ended Before The CurrentLine
-               && (targetLineNumber >= currentToken.getLastLineNumber()))
+      if (TokenType.FUNCTION.equals(currentToken.getType())
+      // test is Container Ended Before The CurrentLine
+         && (targetLineNumber >= currentToken.getLastLineNumber()))
       {
          return;
       }
-    
+
       // search nearest token among the sub token
       List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
 
-         
       if (subTokenList != null && subTokenList.size() != 0)
       {
          for (TokenBeenImpl token : subTokenList)
@@ -140,39 +137,38 @@ public abstract class AutocompleteHelper
       {
          nearestToken = currentToken;
       }
-   }   
-   
-   public static TokenBeenImpl searchGenericTokenAmongMethodVariables(String nodeContent, TokenBeenImpl nearestToken, TokenBeenImpl methodToken)
+   }
+
+   public static TokenBeenImpl searchGenericTokenAmongMethodVariables(String nodeContent, TokenBeenImpl nearestToken,
+      TokenBeenImpl methodToken)
    {
-      for (TokenBeenImpl subtoken: methodToken.getSubTokenList())
+      for (TokenBeenImpl subtoken : methodToken.getSubTokenList())
       {
-         if (TokenType.VARIABLE.equals(subtoken.getType())
-                && nodeContent.equals(subtoken.getName()))
+         if (TokenType.VARIABLE.equals(subtoken.getType()) && nodeContent.equals(subtoken.getName()))
          {
             return subtoken;
          }
-         
+
          // test if this is last node before target node
          if (subtoken.equals(nearestToken))
          {
-           return null;
+            return null;
          }
       }
-      
+
       return null;
    }
-   
+
    public static TokenBeenImpl searchGenericTokenAmongProperties(String nodeContent, TokenBeenImpl classToken)
    {
-      for (TokenBeenImpl subtoken: classToken.getSubTokenList())
+      for (TokenBeenImpl subtoken : classToken.getSubTokenList())
       {
-         if (TokenType.PROPERTY.equals(subtoken.getType())
-                && nodeContent.equals(subtoken.getName()))
+         if (TokenType.PROPERTY.equals(subtoken.getType()) && nodeContent.equals(subtoken.getName()))
          {
             return subtoken;
          }
       }
-   
+
       return null;
    }
 
@@ -180,42 +176,41 @@ public abstract class AutocompleteHelper
    {
       if (parameters == null)
          return null;
-      
-      for (TokenBeenImpl parameter: parameters)
+
+      for (TokenBeenImpl parameter : parameters)
       {
          if (nodeContent.equals(parameter.getName()))
          {
             return parameter;
          }
       }
-   
+
       return null;
    }
 
-
    public static TokenBeenImpl searchGenericTokenAmongVariables(String nodeContent, TokenBeenImpl parentToken)
    {
-      for (TokenBeenImpl subtoken: parentToken.getSubTokenList())
+      for (TokenBeenImpl subtoken : parentToken.getSubTokenList())
       {
-         if (TokenType.VARIABLE.equals(subtoken.getType())
-              && nodeContent.equals(subtoken.getName()))
+         if (TokenType.VARIABLE.equals(subtoken.getType()) && nodeContent.equals(subtoken.getName()))
          {
             return subtoken;
          }
-         
+
          // test if this is last node before target node
          if (subtoken.equals(nearestToken))
          {
-           return null;
+            return null;
          }
       }
-   
+
       return null;
    }
 
    TokenBeenImpl possibleContainerToken;
-   int nearestTokenLineNumber;   
-   
+
+   int nearestTokenLineNumber;
+
    /**
     * Recognize container token of line with lineNumber.  
     * @param targetLineNumber
@@ -226,10 +221,10 @@ public abstract class AutocompleteHelper
    {
       if (tokenList == null || tokenList.size() == 0)
          return null;
-   
+
       possibleContainerToken = null;
       nearestTokenLineNumber = 0;
-   
+
       for (TokenBeenImpl token : tokenList)
       {
          // break if token is started at the line after the targetLine, that is Container Token After The CurrentLine
@@ -237,32 +232,33 @@ public abstract class AutocompleteHelper
          {
             break;
          }
-         
+
          // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber), that is Current Line After The Container Token 
          else if (targetLineNumber >= token.getLastLineNumber())
          {
             continue;
          }
-         
-         else if (isPossibleContainerTokenType(token)) 
+
+         else if (isPossibleContainerTokenType(token))
          {
             searchContainerToken(targetLineNumber, token);
          }
       }
-   
+
       return possibleContainerToken;
    }
 
    public boolean isPossibleContainerTokenType(TokenBeenImpl token)
    {
-      return TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType());
+      return TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType())
+         || TokenType.INTERFACE.equals(token.getType());
    }
 
    void searchContainerToken(int targetLineNumber, TokenBeenImpl currentToken)
    {
       // search appropriate token among the sub token
       List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
-   
+
       if (subTokenList != null && subTokenList.size() != 0)
       {
          for (TokenBeenImpl token : subTokenList)
@@ -272,20 +268,20 @@ public abstract class AutocompleteHelper
             {
                break;
             }
-            
+
             // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber), that is CurrentLine After The Container Token 
             else if (targetLineNumber >= token.getLastLineNumber())
             {
                continue;
             }
-            
-            else if (isPossibleContainerTokenType(token)) 
+
+            else if (isPossibleContainerTokenType(token))
             {
                searchContainerToken(targetLineNumber, token);
             }
          }
       }
-   
+
       int currentTokenLineNumber = currentToken.getLineNumber();
       if ((currentTokenLineNumber <= targetLineNumber) && (currentTokenLineNumber >= nearestTokenLineNumber) // taking in mind the last token among them in the line
       )

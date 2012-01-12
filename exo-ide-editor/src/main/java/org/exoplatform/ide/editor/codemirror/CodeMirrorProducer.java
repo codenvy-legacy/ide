@@ -35,9 +35,9 @@ import java.util.Map;
  */
 public class CodeMirrorProducer extends EditorProducer
 {
-   
+
    private Map<String, Object> params = new HashMap<String, Object>();
-   
+
    /**
     * @param mimeType
     * @param description
@@ -49,8 +49,9 @@ public class CodeMirrorProducer extends EditorProducer
       super(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.MIME_TYPE, mimeType);
    }
-   
-   public CodeMirrorProducer(String mimeType, String description, String ext, ImageResource icon, boolean isDefault, CodeMirrorConfiguration configuration)
+
+   public CodeMirrorProducer(String mimeType, String description, String ext, ImageResource icon, boolean isDefault,
+      CodeMirrorConfiguration configuration)
    {
       this(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.CONFIGURATION, configuration);
@@ -65,6 +66,5 @@ public class CodeMirrorProducer extends EditorProducer
       params.putAll(this.params);
       return new CodeMirror(content, params, eventBus);
    }
-   
 
 }

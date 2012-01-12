@@ -41,14 +41,14 @@ public abstract class CodeValidator
     * @return
     */
    public abstract List<CodeLine> getCodeErrorList(List<? extends Token> tokenList);
-   
+
    /**
     * Get import statement "import <fqn>;" in the appropriate place of file
     * @param tokenList
     * @param fqn
     */
    public abstract CodeLine getImportStatement(List<? extends Token> tokenList, String fqn);
-     
+
    /**
     * Returns list of code error in line with lineNumber
     * @param lineNumber
@@ -57,18 +57,18 @@ public abstract class CodeValidator
    public static List<CodeLine> getCodeErrorList(int lineNumber, List<CodeLine> codeErrors)
    {
       List<CodeLine> lineCodeErrorList = new ArrayList<CodeLine>();
-      
-      for (CodeLine codeError: codeErrors)
+
+      for (CodeLine codeError : codeErrors)
       {
          if (codeError.getLineNumber() == lineNumber)
-         {            
+         {
             lineCodeErrorList.add(codeError);
          }
       }
 
       return lineCodeErrorList;
    }
-   
+
    /**
     * Get text summary of registered errors from the lineCodeErrorList within the line 
     * @param lineCodeErrorList
@@ -77,20 +77,21 @@ public abstract class CodeValidator
    public static String getErrorSummary(List<CodeLine> lineCodeErrorList)
    {
       StringBuffer errorSummary = new StringBuffer();
-      
-      for (CodeLine codeError: lineCodeErrorList)
+
+      for (CodeLine codeError : lineCodeErrorList)
       {
-         switch(codeError.getType()) {
-            case TYPE_ERROR:
+         switch (codeError.getType())
+         {
+            case TYPE_ERROR :
                errorSummary.append("'").append(codeError.getLineContent()).append("' cannot be resolved to a type; ");
                break;
-               
-            default:
+
+            default :
          }
       }
       return errorSummary.toString();
    }
-   
+
    /**
     * 
     * @param lineNumber
@@ -98,10 +99,10 @@ public abstract class CodeValidator
     */
    public static boolean isExistedCodeError(int lineNumber, List<CodeLine> lineCodeErrorList)
    {
-      for (CodeLine codeError: lineCodeErrorList)
+      for (CodeLine codeError : lineCodeErrorList)
       {
          if (codeError.getLineNumber() == lineNumber)
-         {            
+         {
             return true;
          }
       }
@@ -116,42 +117,43 @@ public abstract class CodeValidator
     * @param mimeType
     * @return
     */
-   public static List<? extends Token> extractCode(List<TokenBeenImpl> tokenList, List<TokenBeenImpl> code, String mimeType)
+   public static List<? extends Token> extractCode(List<TokenBeenImpl> tokenList, List<TokenBeenImpl> code,
+      String mimeType)
    {
       for (TokenBeenImpl token : tokenList)
       {
-         analizeToken(token, code, mimeType);  // update groovyCode
+         analizeToken(token, code, mimeType); // update groovyCode
       }
-      
+
       return code;
    }
 
    private static void analizeToken(TokenBeenImpl currentToken, List<TokenBeenImpl> code, String mimeType)
    {
-      if (currentToken == null) 
+      if (currentToken == null)
       {
          return;
       }
-   
+
       if (mimeType.equals(currentToken.getMimeType()))
       {
          if (MimeType.APPLICATION_GROOVY.equals(mimeType) && TokenType.GROOVY_TAG.equals(currentToken.getType()) // add subtokens of Groovy Template "<%" tag
-               || MimeType.APPLICATION_JAVA.equals(mimeType) && TokenType.JSP_TAG.equals(currentToken.getType())  // add subtokens of JSP file "<%" tag
-               || MimeType.APPLICATION_JAVASCRIPT.equals(mimeType) && TokenType.TAG.equals(currentToken.getType())  // add subtokens of "<script>"
-            )
+            || MimeType.APPLICATION_JAVA.equals(mimeType) && TokenType.JSP_TAG.equals(currentToken.getType()) // add subtokens of JSP file "<%" tag
+            || MimeType.APPLICATION_JAVASCRIPT.equals(mimeType) && TokenType.TAG.equals(currentToken.getType()) // add subtokens of "<script>"
+         )
          {
             if (currentToken.getSubTokenList() != null)
             {
                code.addAll(currentToken.getSubTokenList());
             }
          }
-         
+
          else
          {
             code.add(currentToken);
          }
       }
-      
+
       else
       {
          // search target token among subtokens

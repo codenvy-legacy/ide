@@ -34,7 +34,7 @@ public class EditorInitializedEvent extends GwtEvent<EditorInitializedHandler>
    public static final GwtEvent.Type<EditorInitializedHandler> TYPE = new GwtEvent.Type<EditorInitializedHandler>();
 
    private String editorId;
-   
+
    public EditorInitializedEvent(String editorId)
    {
       this.editorId = editorId;

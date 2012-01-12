@@ -30,8 +30,7 @@ import com.google.gwt.core.client.GWT;
 public class CKEditorConfiguration
 {
 
-   public enum Language 
-   {
+   public enum Language {
       ENGLISH("en"), FRENCH("fr"), RUSSIAN("ru"), UKRAINIAN("uk"), VIETNAMESE("vi"), DEFAULT("en");
 
       private String language;
@@ -50,8 +49,7 @@ public class CKEditorConfiguration
 
    public final static Language LANGUAGE = Language.DEFAULT;
 
-   public enum Toolbar 
-   {
+   public enum Toolbar {
       IDE("IDE"), DEFAULT("IDE");
 
       private String toolbar;
@@ -70,8 +68,7 @@ public class CKEditorConfiguration
 
    public final static Toolbar TOOLBAR = Toolbar.IDE;
 
-   public enum Theme 
-   {
+   public enum Theme {
       DEFAULT("default");
 
       private String theme;
@@ -90,8 +87,7 @@ public class CKEditorConfiguration
 
    public final static Theme THEME = Theme.DEFAULT;
 
-   public enum Skin 
-   {
+   public enum Skin {
       IDE("ide"), DEFAULT("ide");
 
       private String skin;
@@ -116,8 +112,7 @@ public class CKEditorConfiguration
 
    public final static String BASE_PATH = GWT.getModuleBaseURL() + "ckeditor/";
 
-   public enum StartupMode 
-   {
+   public enum StartupMode {
       WYSIWYG("wysiwyg"), SOURCE("source");
 
       private String startupMode;

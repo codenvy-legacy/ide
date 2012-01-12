@@ -39,9 +39,9 @@ public class EditorTokenListPreparedEvent extends GwtEvent<EditorTokenListPrepar
       new GwtEvent.Type<EditorTokenListPreparedHandler>();
 
    private String editorId;
-   
-   private List<? extends Token> tokenList; 
-   
+
+   private List<? extends Token> tokenList;
+
    public EditorTokenListPreparedEvent(String editorId, List<? extends Token> tokenList)
    {
       this.editorId = editorId;
@@ -52,12 +52,12 @@ public class EditorTokenListPreparedEvent extends GwtEvent<EditorTokenListPrepar
    {
       return editorId;
    }
-   
+
    public List<? extends Token> getTokenList()
    {
       return tokenList;
    }
-   
+
    @Override
    protected void dispatch(EditorTokenListPreparedHandler handler)
    {

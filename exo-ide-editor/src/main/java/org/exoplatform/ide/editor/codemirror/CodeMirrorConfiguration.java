@@ -56,9 +56,9 @@ public class CodeMirrorConfiguration
    private CodeAssistant codeAssistant;
 
    private boolean canHaveSeveralMimeTypes = false;
-   
+
    private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
-   
+
    /**
     * Preset configuration of plain text
     */
@@ -66,8 +66,8 @@ public class CodeMirrorConfiguration
    {
       this.codeParsers = "['parsexml.js']";
       this.codeStyles = "['" + PATH + "css/xmlcolors.css']";
-   } 
-   
+   }
+
    public String getCodeParsers()
    {
       return codeParsers;
@@ -83,7 +83,7 @@ public class CodeMirrorConfiguration
       this.codeParsers = codeParsers;
       return this;
    }
-   
+
    public String getCodeStyles()
    {
       return codeStyles;
@@ -99,7 +99,7 @@ public class CodeMirrorConfiguration
       this.codeStyles = codeStyles;
       return this;
    }
-   
+
    public boolean canBeOutlined()
    {
       return canBeOutlined;
@@ -110,32 +110,29 @@ public class CodeMirrorConfiguration
       this.canBeOutlined = canBeOutlined;
       return this;
    }
-   
+
    public boolean canBeAutocompleted()
    {
-      return this.parser != null  
-               && this.codeAssistant != null;
+      return this.parser != null && this.codeAssistant != null;
    }
 
-//   public CodeMirrorConfiguration setCanBeAutocompleted(boolean canBeAutocompleted)
-//   {
-//      this.canBeAutocompleted = canBeAutocompleted;
-//      return this;
-//   }
-   
+   //   public CodeMirrorConfiguration setCanBeAutocompleted(boolean canBeAutocompleted)
+   //   {
+   //      this.canBeAutocompleted = canBeAutocompleted;
+   //      return this;
+   //   }
+
    public boolean canBeValidated()
    {
-      return this.parser != null
-               && this.codeValidator != null
-               && this.codeAssistant != null;
+      return this.parser != null && this.codeValidator != null && this.codeAssistant != null;
    }
 
-//   public CodeMirrorConfiguration setCanBeValidated(boolean canBeValidated)
-//   {
-//      this.canBeValidated = canBeValidated;
-//      return this;
-//   }
-   
+   //   public CodeMirrorConfiguration setCanBeValidated(boolean canBeValidated)
+   //   {
+   //      this.canBeValidated = canBeValidated;
+   //      return this;
+   //   }
+
    public Parser getParser()
    {
       return parser;
@@ -146,7 +143,7 @@ public class CodeMirrorConfiguration
       this.parser = parser;
       return this;
    }
-   
+
    public CodeValidator getCodeValidator()
    {
       return codeValidator;
@@ -157,7 +154,7 @@ public class CodeMirrorConfiguration
       this.codeValidator = codeValidator;
       return this;
    }
-   
+
    public AutocompleteHelper getAutocompleteHelper()
    {
       return autocompleteHelper;
@@ -168,7 +165,7 @@ public class CodeMirrorConfiguration
       this.autocompleteHelper = autocompleteHelper;
       return this;
    }
-   
+
    public boolean canHaveSeveralMimeTypes()
    {
       return canHaveSeveralMimeTypes;
@@ -179,7 +176,7 @@ public class CodeMirrorConfiguration
       this.canHaveSeveralMimeTypes = canHaveSeveralMimeTypes;
       return this;
    }
-   
+
    /**
     * @return the textWrapping
     */
@@ -187,13 +184,13 @@ public class CodeMirrorConfiguration
    {
       return isTextWrapping;
    }
-   
+
    public CodeMirrorConfiguration setIsTextWrapping(boolean isTextWrapping)
    {
       this.isTextWrapping = isTextWrapping;
       return this;
    }
-   
+
    /**
     * @return the continuousScanning
     */
@@ -207,7 +204,7 @@ public class CodeMirrorConfiguration
       this.continuousScanning = continuousScanning;
       return this;
    }
-   
+
    /**
     * @return the jsDirectory
     */
@@ -215,7 +212,7 @@ public class CodeMirrorConfiguration
    {
       return jsDirectory;
    }
-   
+
    public CodeMirrorConfiguration setJsDirectory(String jsDirectory)
    {
       this.jsDirectory = jsDirectory;
@@ -235,7 +232,7 @@ public class CodeMirrorConfiguration
       this.codeAssistant = codeAssistant;
       return this;
    }
-   
+
    public CodeMirrorConfiguration setCodeErrorMarkStyle(String codeErrorMarkStyle)
    {
       this.codeErrorMarkStyle = codeErrorMarkStyle;

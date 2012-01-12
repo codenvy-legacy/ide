@@ -68,7 +68,7 @@ public interface Token
     * @param property value
     */
    void setProperty(String name, TokenProperty property);
-   
+
    /**
     * Check is token has property
     * @param name of property

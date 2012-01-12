@@ -31,7 +31,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
  */
 public interface TokenWidgetFactory
 {
-   
+
    /**
     * Create new {@link TokenWidget} for token.
     * @param token

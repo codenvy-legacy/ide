@@ -34,7 +34,7 @@ public class EditorHotKeyCalledEvent extends GwtEvent<EditorHotKeyCalledHandler>
    public static final GwtEvent.Type<EditorHotKeyCalledHandler> TYPE = new GwtEvent.Type<EditorHotKeyCalledHandler>();
 
    private String hotKey;
-   
+
    public EditorHotKeyCalledEvent(String hotKey)
    {
       this.hotKey = hotKey;
@@ -44,7 +44,7 @@ public class EditorHotKeyCalledEvent extends GwtEvent<EditorHotKeyCalledHandler>
    {
       return hotKey;
    }
-   
+
    @Override
    protected void dispatch(EditorHotKeyCalledHandler handler)
    {

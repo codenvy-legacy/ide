@@ -26,33 +26,32 @@ package org.exoplatform.ide.editor.api.codeassitant;
  *
  */
 public enum TokenType {
-   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION, 
+   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,
    /** Property type for JSON */
    PROPERTY,
-   
+
    /**
     * HTML or XML tag.
     */
    TAG,
-   
+
    /**
     * HTML or XML attribute; 
     */
-   ATTRIBUTE,
-   CDATA,
+   ATTRIBUTE, CDATA,
 
    /** Property type for JavaScript */
-   BLOCK, 
-   
+   BLOCK,
+
    /** Property type for Groovy code */
    GROOVY_TAG, PACKAGE, IMPORT, PARAMETER, TYPE,
-   
+
    /** Property type for Java code */
    JSP_TAG,
-   
+
    /** Property type for Ruby code **/
    ROOT, MODULE, LOCAL_VARIABLE, GLOBAL_VARIABLE, CLASS_VARIABLE, INSTANCE_VARIABLE, CONSTANT,
-   
+
    /** Propperty type for Php code **/
    PHP_TAG, CLASS_CONSTANT, NAMESPACE;
 }

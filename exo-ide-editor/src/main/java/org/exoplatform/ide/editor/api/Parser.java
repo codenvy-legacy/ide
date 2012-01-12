@@ -31,9 +31,9 @@ import com.google.gwt.event.shared.HandlerManager;
  *
  */
 public abstract class Parser
-{   
+{
    public abstract List<? extends Token> getTokenList(String editorId, JavaScriptObject editor, HandlerManager eventBus);
-   
+
    public abstract void getTokenListInBackground(String editorId, JavaScriptObject editor, HandlerManager eventBus);
 
    public abstract void stopParsing();

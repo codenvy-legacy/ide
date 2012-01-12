@@ -33,7 +33,7 @@ public interface CodeMirrorClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/public/bundle/codemirror.css")
    CodeMirrorCss css();
-   
+
    @Source("org/exoplatform/ide/editor/public/bundle/images/code-error-mark.png")
-   ImageResource codeErrorMark();   
+   ImageResource codeErrorMark();
 }

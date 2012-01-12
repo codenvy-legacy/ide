@@ -62,7 +62,7 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
 {
 
    private static final String ID = "ideAssistImportDeclarationForm";
-   
+
    private AbsolutePanel lockLayer;
 
    private AbsolutePanel absolutePanel;
@@ -84,14 +84,14 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
    private HandlerRegistration keyboardManagerRegistration;
 
    private TokenWidgetFactory factory;
-   
+
    private HandlerRegistration resizeHandler;
 
    public AssistImportDeclarationForm(int left, int top, List<Token> items, TokenWidgetFactory factory,
       AssistImportDeclarationHandler handler)
    {
       absolutePanel = new AbsolutePanel();
-      
+
       this.handler = handler;
       this.factory = factory;
       initWidget(absolutePanel);
@@ -117,7 +117,7 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
 
       keyboardManager = new CodeAssistantFormKeyboardManager();
       keyboardManagerRegistration = Event.addNativePreviewHandler(keyboardManager);
-      
+
       resizeHandler = Window.addResizeHandler(this);
 
       FocusPanel focusPanel = new FocusPanel();
@@ -292,7 +292,7 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
 
    }
 
-   protected class MousHandler implements ClickHandler,  DoubleClickHandler
+   protected class MousHandler implements ClickHandler, DoubleClickHandler
    {
 
       /**

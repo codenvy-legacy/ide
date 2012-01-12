@@ -180,22 +180,22 @@ public abstract class Editor extends AbsolutePanel
     * @return {@link List} of {@link Token}
     */
    public abstract void getTokenListInBackground();
-   
+
    /**
     * Replaces current line content and set, in this line, cursor position
     */
    public abstract void replaceTextAtCurrentLine(String line, int cursorPosition);
-   
+
    /**
     * Verify if there any such fqn among the default packages of import statements  and insert import statement like "import <fqn>;" in the appropriate place of file 
     * @param fqn
     */
    public abstract void insertImportStatement(String fqn);
-   
+
    /**
     * Get content of the line.
     * @param line number of line. <b>Must be larger 0 and less the file line count</b>
     * @return String content of line
     */
-   public abstract String getLineContent(int line); 
+   public abstract String getLineContent(int line);
 }

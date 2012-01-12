@@ -25,36 +25,35 @@ package org.exoplatform.ide.editor.api;
  */
 public class CodeLine
 {
-   CodeType type; 
-   
-   String lineContent; 
-   
-   int lineNumber; 
-   
+   CodeType type;
+
+   String lineContent;
+
+   int lineNumber;
+
    public CodeLine(CodeType type, String lineContent, int lineNumber)
    {
       this.type = type;
       this.lineContent = lineContent;
       this.lineNumber = lineNumber;
    }
-   
+
    public CodeType getType()
    {
       return type;
    }
-   
+
    public String getLineContent()
    {
       return lineContent;
    }
-   
+
    public int getLineNumber()
    {
       return lineNumber;
    }
-   
-   public enum CodeType 
-   {
+
+   public enum CodeType {
       TYPE_ERROR, IMPORT_STATEMENT;
    }
 }
