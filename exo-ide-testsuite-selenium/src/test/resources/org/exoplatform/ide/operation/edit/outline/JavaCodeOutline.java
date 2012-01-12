@@ -52,10 +52,12 @@ public class JavaCodeOutline extends DrawableRect {
      return col;
   }
 
+  public JavaCodeOutline() {}    
+    
   @POST
   @Path("add-product")
   @Produces("application/json")
-  public HashMap<String,String> add(HashMap<String,String> map) {
+  public HashMap<String,String> add(HashMap<String,String> map) throws Exception {
      addProduct(map)
      
      List<Tree> addVar1;  
@@ -63,4 +65,16 @@ public class JavaCodeOutline extends DrawableRect {
      
      return map;
   }
+
+  public JavaCodeOutline(String property) {
+     this.property = property;     
+  }
+
+  @Listener
+  protected JavaCodeOutline(String property, HashMap<String,String> map) throws java.lang.Exception
+  {
+     this.map = map;     
+     this.border = border;     
+  }
+
 }

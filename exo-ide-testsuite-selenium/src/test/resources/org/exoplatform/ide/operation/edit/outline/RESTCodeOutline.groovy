@@ -24,8 +24,19 @@ public class TestService {
   public java.lang.String post2(@PathParam("pathParam") String pathParam,
     @HeaderParam("Test-Header2") java.lang.String testHeader,
     @QueryParam("Test Query Parameter 2") String testQueryParam,
-    java.lang.String body) {
+    java.lang.String body) throws Exception {
       return "PathParam 2:" + pathParam + "; Test Query Parameter 2: " + testQueryParam + "; Test-Header2: " + testHeader + "; Body: " + body;
+  }
+  
+  public TestService(String property) {
+     this.property = property;     
+  }
+
+  @Listener
+  protected TestService(String property, HashMap<String,String> map) throws java.lang.Exception
+  {
+     this.map = map;     
+     this.border = border;     
   }
 }
 
