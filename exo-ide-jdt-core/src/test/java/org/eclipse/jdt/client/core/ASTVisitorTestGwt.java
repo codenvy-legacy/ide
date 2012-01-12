@@ -16,65 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.jdt.core;
+package org.eclipse.jdt.client.core;
 
-import static org.fest.assertions.Assertions.*;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.jdt.client.core.dom.AST;
-import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.ASTParser;
+
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
-import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}:  Jan 4, 2012 2:50:05 PM evgen $
  *
  */
-public class ASTVisitorTest
+public class ASTVisitorTestGwt extends ParserBaseTestGwt
 {
-   private CompilationUnit unit;
 
-   @Before
-   public void parseFile() throws IOException
-   {
-      char[] javaFile =
-         IOUtils.toCharArray(Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream("CreateJavaClassPresenter.java"));
-      ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setKind(ASTParser.K_COMPILATION_UNIT);
-      parser.setUnitName("CreateJavaClassPresenter");
-      parser.setSource(javaFile);
-
-      parser.setEnvironment(null, new String[]{"/my/path"}, new String[]{"UTF-8"}, true);
-      ASTNode ast = parser.createAST(null);
-      unit = (CompilationUnit)ast;
-   }
-
-   @Test
-   @Ignore
-   public void typeDeclarationVisitor() throws Exception
+   public void testTypeDeclarationVisitor() throws Exception
    {
       TypeDeclarationVisitor visitor = new TypeDeclarationVisitor();
       unit.accept(visitor);
-      assertThat(visitor.typeCount).isEqualTo(2);
+      assertEquals(2, visitor.typeCount);
+      
    }
 
-   @Test
-   @Ignore
-   public void methodDeclarationVisitor() throws Exception
+   public void testMethodDeclarationVisitor() throws Exception
    {
       MethodDeclarationVisitor visitor = new MethodDeclarationVisitor();
       TypeDeclaration type = (TypeDeclaration)unit.types().get(0);
       type.getTypes()[0].accept(visitor);
-      assertThat(visitor.methodCount).isEqualTo(19);
+      assertEquals(19, visitor.methodCount);
    }
 
    private static class MethodDeclarationVisitor extends ASTVisitor

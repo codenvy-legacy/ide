@@ -19,12 +19,12 @@
       <!-- dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-servlet</artifactId>
-      </dependency>
+      </dependency> -->
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
          <scope>test</scope>
-      </dependency -->
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -91,6 +91,29 @@
                   <exclude>**/*Gwt*</exclude>
                </excludes>
             </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <configuration>
+               <module>org.eclipse.jdt.IdeJdt</module>
+               <logLevel>ERROR</logLevel>
+               <skipTests>false</skipTests>
+               <forkMode>never</forkMode>
+               <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
+               <productionMode>false</productionMode>
+               <testTimeOut>500</testTimeOut>
+               <mode>htmlunit</mode>
+               <htmlunit>FF3</htmlunit>
+               <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss35m</extraJvmArgs>
+            </configuration>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>test</goal>
+                  </goals>
+               </execution>
+            </executions>
          </plugin>
       </plugins>
    </build>

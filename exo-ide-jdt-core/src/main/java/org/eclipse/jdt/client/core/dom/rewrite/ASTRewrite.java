@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom.rewrite;
 
+import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
@@ -154,53 +155,57 @@ public class ASTRewrite
    //		return this.nodeStore;
    //	}
 
-   //	/** TODO
-   //	 * Converts all modifications recorded by this rewriter
-   //	 * into an object representing the corresponding text
-   //	 * edits to the given document containing the original source
-   //	 * code. The document itself is not modified.
-   //	 * <p>
-   //	 * For nodes in the original that are being replaced or deleted,
-   //	 * this rewriter computes the adjusted source ranges
-   //	 * by calling {@link TargetSourceRangeComputer#computeSourceRange(ASTNode) getExtendedSourceRangeComputer().computeSourceRange(node)}.
-   //	 * </p>
-   //	 * <p>
-   //	 * Calling this methods does not discard the modifications
-   //	 * on record. Subsequence modifications are added to the ones
-   //	 * already on record. If this method is called again later,
-   //	 * the resulting text edit object will accurately reflect
-   //	 * the net cumulative effect of all those changes.
-   //	 * </p>
-   //	 *
-   //	 * @param document original document containing source code
-   //	 * @param options the table of formatter options
-   //	 * (key type: <code>String</code>; value type: <code>String</code>);
-   //	 * or <code>null</code> to use the standard global options
-   //	 * {@link JavaCore#getOptions() JavaCore.getOptions()}
-   //	 * @return text edit object describing the changes to the
-   //	 * document corresponding to the changes recorded by this rewriter
-   //	 * @throws IllegalArgumentException An <code>IllegalArgumentException</code>
-   //	 * is thrown if the document passed does not correspond to the AST that is rewritten.
-   //	 */
-   //	public TextEdit rewriteAST(IDocument document, Map options) throws IllegalArgumentException {
-   //		if (document == null) {
-   //			throw new IllegalArgumentException();
-   //		}
-   //
-   //		ASTNode rootNode= getRootNode();
-   //		if (rootNode == null) {
-   //			return new MultiTextEdit(); // no changes
-   //		}
-   //
-   //		char[] content= document.get().toCharArray();
-   //		LineInformation lineInfo= LineInformation.create(document);
-   //		String lineDelim= TextUtilities.getDefaultLineDelimiter(document);
-   //
-   //		ASTNode astRoot= rootNode.getRoot();
-   //		List commentNodes= astRoot instanceof CompilationUnit ? ((CompilationUnit) astRoot).getCommentList() : null;
-   //		Map currentOptions = options == null ? JavaCore.getOptions() : options;
-   //		return internalRewriteAST(content, lineInfo, lineDelim, commentNodes, currentOptions, rootNode, (RecoveryScannerData)((CompilationUnit) astRoot).getStatementsRecoveryData());
-   //	}
+//   /** TODO
+//    * Converts all modifications recorded by this rewriter
+//    * into an object representing the corresponding text
+//    * edits to the given document containing the original source
+//    * code. The document itself is not modified.
+//    * <p>
+//    * For nodes in the original that are being replaced or deleted,
+//    * this rewriter computes the adjusted source ranges
+//    * by calling {@link TargetSourceRangeComputer#computeSourceRange(ASTNode) getExtendedSourceRangeComputer().computeSourceRange(node)}.
+//    * </p>
+//    * <p>
+//    * Calling this methods does not discard the modifications
+//    * on record. Subsequence modifications are added to the ones
+//    * already on record. If this method is called again later,
+//    * the resulting text edit object will accurately reflect
+//    * the net cumulative effect of all those changes.
+//    * </p>
+//    *
+//    * @param document original document containing source code
+//    * @param options the table of formatter options
+//    * (key type: <code>String</code>; value type: <code>String</code>);
+//    * or <code>null</code> to use the standard global options
+//    * {@link JavaCore#getOptions() JavaCore.getOptions()}
+//    * @return text edit object describing the changes to the
+//    * document corresponding to the changes recorded by this rewriter
+//    * @throws IllegalArgumentException An <code>IllegalArgumentException</code>
+//    * is thrown if the document passed does not correspond to the AST that is rewritten.
+//    */
+//   public TextEdit rewriteAST(IDocument document, Map<String, String> options) throws IllegalArgumentException
+//   {
+//      if (document == null)
+//      {
+//         throw new IllegalArgumentException();
+//      }
+//
+//      ASTNode rootNode = getRootNode();
+//      if (rootNode == null)
+//      {
+//         return new MultiTextEdit(); // no changes
+//      }
+//
+//      char[] content = document.get().toCharArray();
+//      LineInformation lineInfo = LineInformation.create(document);
+//      String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
+//
+//      ASTNode astRoot = rootNode.getRoot();
+//      List commentNodes = astRoot instanceof CompilationUnit ? ((CompilationUnit)astRoot).getCommentList() : null;
+//      Map currentOptions = options == null ? JavaCore.getOptions() : options;
+//      return internalRewriteAST(content, lineInfo, lineDelim, commentNodes, currentOptions, rootNode,
+//         (RecoveryScannerData)((CompilationUnit)astRoot).getStatementsRecoveryData());
+//   }
 
    //	/** TODO
    //	 * Converts all modifications recorded by this rewriter into an object representing the the corresponding text
