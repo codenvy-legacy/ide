@@ -81,13 +81,13 @@ public interface GitClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/git/images/controls/initRepo_Disabled.png")
    ImageResource initRepoDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/deleteRepo.png")
    ImageResource deleteRepo();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/merge.png")
    ImageResource merge();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/merge_Disabled.png")
    ImageResource mergeDisabled();
 
@@ -132,13 +132,13 @@ public interface GitClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/git/images/history/arrows.png")
    ImageResource arrows();
-   
+
    @Source("org/exoplatform/ide/git/images/history/history.png")
    ImageResource history();
-   
+
    @Source("org/exoplatform/ide/git/images/history/history_Disabled.png")
    ImageResource historyDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/history/project_level.png")
    ImageResource projectLevel();
 
@@ -150,22 +150,22 @@ public interface GitClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/git/images/history/resource_level_Disabled.png")
    ImageResource resourceLevelDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/history/diff_index.png")
    ImageResource diffIndex();
-   
+
    @Source("org/exoplatform/ide/git/images/history/diff_index_Disabled.png")
    ImageResource diffIndexDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/history/diff_working_dir.png")
    ImageResource diffWorkTree();
-   
+
    @Source("org/exoplatform/ide/git/images/history/diff_working_dir_Disabled.png")
    ImageResource diffWorTreeDisabled();
-   
+
    @Source("org/exoplatform/ide/git/images/history/diff_prev_version.png")
    ImageResource diffPrevVersion();
-   
+
    @Source("org/exoplatform/ide/git/images/history/diff_prev_version_Disabled.png")
    ImageResource diffPrevVersionDisabled();
 
@@ -216,19 +216,19 @@ public interface GitClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/git/images/controls/revert.png")
    ImageResource revert();
-   
+
    @Source("org/exoplatform/ide/git/images/branch/branch.png")
    ImageResource branch();
-   
+
    @Source("org/exoplatform/ide/git/images/branch/local_branches.png")
    ImageResource localBanches();
-   
+
    @Source("org/exoplatform/ide/git/images/branch/remote_branches.png")
    ImageResource remoteBranches();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/repository.png")
    ImageResource projectReadOnlyGitUrl();
-   
+
    @Source("org/exoplatform/ide/git/images/controls/repository_Disabled.png")
    ImageResource projectReadOnlyGitUrlDisabled();
 }

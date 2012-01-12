@@ -99,8 +99,9 @@ public abstract class GitClientService
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void fetch(String vfsId, ProjectModel project, String remote, String[] refspec, boolean removeDeletedRefs,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void fetch(String vfsId, ProjectModel project, String remote, String[] refspec,
+      boolean removeDeletedRefs, org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Get the list of the branches.
@@ -150,8 +151,8 @@ public abstract class GitClientService
     * @param createNew if <code>true</code> then create a new branch
     * @param callback callback
     */
-   public abstract void branchCheckout(String vfsId, String projectid, String name, String startPoint, boolean createNew,
-      AsyncRequestCallback<String> callback);
+   public abstract void branchCheckout(String vfsId, String projectid, String name, String startPoint,
+      boolean createNew, AsyncRequestCallback<String> callback);
 
    /**
     * Get the list of remote repositories for pointed by <code>workDir</code> parameter one.
@@ -337,7 +338,8 @@ public abstract class GitClientService
     * @param isTextFormat if <code>true</code> the loq response will be in text format
     * @param callback callback
     */
-   public abstract void log(String vfsId, String projectid, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback);
+   public abstract void log(String vfsId, String projectid, boolean isTextFormat,
+      AsyncRequestCallback<LogResponse> callback);
 
    /**
     * Merge the pointed commit with current HEAD.
@@ -397,7 +399,7 @@ public abstract class GitClientService
     */
    @Deprecated
    public abstract void getWorkDir(String vfsId, String projectid, AsyncRequestCallback<WorkDirResponse> callback);
-   
+
    /**
     * Get the Git ReadOnly Url
     * for the pointed item's location.
@@ -407,7 +409,9 @@ public abstract class GitClientService
     * @param callback
     * @throws RequestException 
     */
-   public abstract void getGitReadOnlyUrl(String vfsId, String projectid, org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+   public abstract void getGitReadOnlyUrl(String vfsId, String projectid,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException;
 
    /**
     * Get the Git work directory (where ".git" folder is located) 

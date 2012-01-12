@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.client;
 
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
 import org.exoplatform.ide.git.shared.Remote;
@@ -38,9 +37,9 @@ public class RemoteListUnmarshallerGwtTest extends BaseGwtTest
     * Test remote list response unmarshaller.
     */
    public void testLogResponseUnmarshaller()
-   {  
+   {
       java.util.List<Remote> remotes = new ArrayList<Remote>();
-      
+
       RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(remotes);
       try
       {

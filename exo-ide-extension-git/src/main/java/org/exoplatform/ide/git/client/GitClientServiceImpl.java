@@ -133,7 +133,7 @@ public class GitClientServiceImpl extends GitClientService
    public static final String STATUS = "/ide/git/status";
 
    public static final String WORKDIR = "/ide/git-repo/workdir";
-   
+
    public static final String RO_URL = "/ide/git/read-only-url";
 
    public static final String PUSH = "/ide/git/push";
@@ -692,11 +692,13 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    @Override
-   public void getGitReadOnlyUrl(String vfsId, String projectid, org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   public void getGitReadOnlyUrl(String vfsId, String projectid,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
    {
-         String url = restServiceContext + RO_URL;
-         url += "?vfsid=" + vfsId + "&projectid=" + projectid;
-         org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      String url = restServiceContext + RO_URL;
+      url += "?vfsid=" + vfsId + "&projectid=" + projectid;
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
-   
+
 }

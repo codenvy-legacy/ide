@@ -37,8 +37,8 @@ public class StatusResponseUnmarshallerGwtTest extends BaseGwtTest
     */
    public void testStatusResponseUnmarshaller()
    {
-     StatusResponse statusResponse = new StatusResponse();
-     StatusResponseUnmarshaller unmarshaller = new StatusResponseUnmarshaller(statusResponse, false);
+      StatusResponse statusResponse = new StatusResponse();
+      StatusResponseUnmarshaller unmarshaller = new StatusResponseUnmarshaller(statusResponse, false);
       try
       {
          unmarshaller.unmarshal(new MockResponse(STATUS_RESPONSE));
@@ -47,12 +47,12 @@ public class StatusResponseUnmarshallerGwtTest extends BaseGwtTest
       {
          fail(e.getMessage());
       }
-      
+
       assertNotNull(statusResponse.getUntracked());
       assertEquals(2, statusResponse.getUntracked().size());
       assertEquals(1, statusResponse.getChangedNotUpdated().size());
       assertEquals(1, statusResponse.getChangedNotCommited().size());
-      
+
       assertEquals("file.xml", statusResponse.getChangedNotCommited().get(0).getPath());
       assertEquals("testPullFromRemote.xml", statusResponse.getChangedNotUpdated().get(0).getPath());
       assertEquals("file.html", statusResponse.getUntracked().get(0).getPath());

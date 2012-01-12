@@ -60,7 +60,7 @@ public class GitControlsFormatter implements ControlsFormatter
       controlIdsOrder.add("Git/Remote/Remotes...");
       controlIdsOrder.add("Git/Show History...");
       controlIdsOrder.add("Git/Status");
-      
+
    }
 
    /**

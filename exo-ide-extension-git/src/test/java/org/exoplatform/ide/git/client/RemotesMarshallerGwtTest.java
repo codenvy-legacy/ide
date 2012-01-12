@@ -66,7 +66,7 @@ public class RemotesMarshallerGwtTest extends BaseGwtTest
       RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
 
       String json = marshaller.marshal();
-      
+
       assertNotNull(json);
 
       JSONObject jsonObject = new JSONObject(build(json));

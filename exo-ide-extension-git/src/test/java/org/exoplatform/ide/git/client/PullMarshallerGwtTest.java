@@ -48,7 +48,7 @@ public class PullMarshallerGwtTest extends BaseGwtTest
       JSONObject jsonObject = new JSONObject(build(json));
       assertTrue(jsonObject.containsKey(Constants.REMOTE));
       assertEquals(remote, jsonObject.get(Constants.REMOTE).isString().stringValue());
-      
+
       assertTrue(jsonObject.containsKey(Constants.REF_SPEC));
       assertEquals(refspec, jsonObject.get(Constants.REF_SPEC).isString().stringValue());
    }

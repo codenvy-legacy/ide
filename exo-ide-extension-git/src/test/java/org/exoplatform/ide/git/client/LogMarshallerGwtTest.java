@@ -42,7 +42,7 @@ public class LogMarshallerGwtTest extends BaseGwtTest
       assertNotNull(json);
 
       JSONObject jsonObject = new JSONObject(build(json));
-      
+
       assertNotNull(jsonObject);
    }
 }

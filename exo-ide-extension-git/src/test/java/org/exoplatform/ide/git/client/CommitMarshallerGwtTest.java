@@ -51,7 +51,7 @@ public class CommitMarshallerGwtTest extends BaseGwtTest
       assertTrue(jsonObject.containsKey(Constants.ALL));
       assertTrue(jsonObject.get(Constants.ALL).isBoolean().booleanValue());
    }
-   
+
    /**
     * Test commit request marshaller.
     */
@@ -61,7 +61,7 @@ public class CommitMarshallerGwtTest extends BaseGwtTest
 
       CommitRequest commitRequest = new CommitRequest();
       commitRequest.setMessage(message);
-      
+
       CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
       String json = marshaller.marshal();
 

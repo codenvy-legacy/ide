@@ -39,11 +39,11 @@ public class FetchMarshallerGwtTest extends BaseGwtTest
       String remote = "origin";
       String refsSpec1 = "refs/heads/featured:refs/remotes/origin/featured";
       String refsSpec2 = "refs/heads/test:refs/remotes/origin/test";
-      
+
       FetchRequest fetchRequest = new FetchRequest(new String[]{refsSpec1, refsSpec2}, remote, true, 0);
       FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
       String json = marshaller.marshal();
-      
+
       assertNotNull(json);
 
       JSONObject jsonObject = new JSONObject(build(json));
@@ -54,7 +54,7 @@ public class FetchMarshallerGwtTest extends BaseGwtTest
 
       assertTrue(jsonObject.containsKey(Constants.REMOTE));
       assertEquals(remote, jsonObject.get(Constants.REMOTE).isString().stringValue());
-      
+
       assertTrue(jsonObject.containsKey(Constants.REMOVE_DELETED_REFS));
       assertTrue(jsonObject.get(Constants.REMOVE_DELETED_REFS).isBoolean().booleanValue());
    }
