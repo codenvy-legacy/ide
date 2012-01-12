@@ -172,12 +172,6 @@ class FileData extends ItemData
       try
       {
          String type = node.getProperty("jcr:content/jcr:mimeType").getString();
-         String resolvedMimeType = JcrFileSystem.Resolver.INSTANCE.resolver.getMimeType(getName());
-         //String defaultMimeType = JcrFileSystem.Resolver.INSTANCE.resolver.getDefaultMimeType();
-         if (/*!resolvedMimeType.equals(defaultMimeType) && */!resolvedMimeType.equals(type))
-         {
-            type = resolvedMimeType;
-         }
          try
          {
             String encoding = node.getProperty("jcr:content/jcr:encoding").getString();

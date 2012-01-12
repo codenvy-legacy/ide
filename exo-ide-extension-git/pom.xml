@@ -16,7 +16,6 @@
       <dependency>
          <groupId>com.jcraft</groupId>
          <artifactId>jsch</artifactId>
-         <version>0.1.44-1</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -29,13 +28,6 @@
       <dependency>
          <groupId>org.eclipse.jgit</groupId>
          <artifactId>org.eclipse.jgit</artifactId>
-         <version>0.10.1</version>
-         <exclusions>
-            <exclusion>
-               <groupId>com.jcraft</groupId>
-               <artifactId>jsch</artifactId>
-            </exclusion>
-         </exclusions>
       </dependency>
       <dependency>
          <groupId>junit</groupId>

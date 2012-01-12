@@ -23,7 +23,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import org.eclipse.jgit.transport.OpenSshConfig;
-import org.eclipse.jgit.transport.SshConfigSessionFactory;
+import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.util.FS;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
@@ -40,7 +40,7 @@ import java.io.IOException;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class IdeSshSessionFactory extends SshConfigSessionFactory implements Startable
+public class IdeSshSessionFactory extends JschConfigSessionFactory implements Startable
 {
    private SshKeyProvider keyProvider;
 
@@ -59,7 +59,7 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
    }
 
    /**
-    * @see org.eclipse.jgit.transport.SshConfigSessionFactory#configure(org.eclipse.jgit.transport.OpenSshConfig.Host,
+    * @see org.eclipse.jgit.transport.JschConfigSessionFactory#configure(org.eclipse.jgit.transport.OpenSshConfig.Host,
     *      com.jcraft.jsch.Session)
     */
    @Override
@@ -68,7 +68,7 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
    }
 
    /**
-    * @see org.eclipse.jgit.transport.SshConfigSessionFactory#getJSch(org.eclipse.jgit.transport.OpenSshConfig.Host,
+    * @see org.eclipse.jgit.transport.JschConfigSessionFactory#getJSch(org.eclipse.jgit.transport.OpenSshConfig.Host,
     *      org.eclipse.jgit.util.FS)
     */
    @Override

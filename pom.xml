@@ -45,6 +45,8 @@
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
       <tomcat.version>6.0.32</tomcat.version>
       <gwt.test.skip>true</gwt.test.skip>
+      <jgit.version>1.2.0.201112221803-r</jgit.version>
+      <jsch.version>0.1.44-1</jsch.version>
    </properties>
 
 
@@ -495,6 +497,21 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.http.server</artifactId>
+            <version>${jgit.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.kernel</groupId>
