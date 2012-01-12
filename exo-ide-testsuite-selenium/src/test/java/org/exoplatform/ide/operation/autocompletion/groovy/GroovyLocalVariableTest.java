@@ -51,7 +51,6 @@ public class GroovyLocalVariableTest extends CodeAssistantBaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -79,7 +79,6 @@ public abstract class ParsingLockTokensInIETest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
    

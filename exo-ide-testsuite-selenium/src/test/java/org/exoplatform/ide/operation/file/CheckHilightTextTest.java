@@ -70,7 +70,6 @@ public class CheckHilightTextTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -83,7 +82,6 @@ public class CheckHilightTextTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -797,7 +795,6 @@ public class CheckHilightTextTest extends BaseTest
       catch (Exception e)
       {
          // TODO Auto-generated catch block
-         e.printStackTrace();
       }
       // hilight in string 1
       assertTrue(selenium()

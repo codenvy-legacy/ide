@@ -50,7 +50,6 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -106,7 +105,6 @@ public class RESTServiceDeployUndeployTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -59,7 +59,6 @@ public class CodeOutlineXmlTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -72,7 +71,6 @@ public class CodeOutlineXmlTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -61,7 +61,6 @@ public class SearchLoadFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

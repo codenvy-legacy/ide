@@ -59,7 +59,6 @@ public class OpenGadgetLocalFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -105,7 +104,6 @@ public class OpenGadgetLocalFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

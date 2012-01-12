@@ -70,7 +70,6 @@ public class CodeOutlineJavaScriptTest extends CodeAssistantBaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

@@ -82,7 +82,6 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

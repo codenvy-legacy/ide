@@ -18,14 +18,12 @@
  */
 package org.exoplatform.ide.operation.autocompletion.jsp;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -57,7 +55,6 @@ public class JspTagsTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail("Can't create test folder");
       }
    }
@@ -107,7 +104,6 @@ public class JspTagsTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 }

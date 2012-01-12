@@ -60,7 +60,6 @@ public class CodeOutLineJavaTest extends CodeAssistantBaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

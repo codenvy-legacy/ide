@@ -73,7 +73,6 @@ public class HighlightCurrentLineTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

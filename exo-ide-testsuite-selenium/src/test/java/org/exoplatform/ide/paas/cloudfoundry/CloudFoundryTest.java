@@ -56,11 +56,9 @@ public abstract class CloudFoundryTest extends BaseTest
          URL url = new URL(logoutURL);
          connection = Utils.getConnection(url);
          connection.setRequestMethod("POST");
-         System.out.println("STATUS > " + connection.getResponseCode());
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
       finally
       {
@@ -73,20 +71,14 @@ public abstract class CloudFoundryTest extends BaseTest
 
    public void uploadResource(String resource, String destination)
    {
-      System.out.println("REQUEST TO UPLOAD RESOURCE!");
-      System.out.println("RESOURCE [" + resource + "]");
-      System.out.println("DESTINATION [" + destination + "]");
-
       try
       {
          File f = new File("src/test/resources/org/exoplatform/ide/paas/cloudfoundry/java-spring-project.zip");
 
          //FIXME there is no upload service. Use import zip feature of VFS
          String postURL = BASE_URL + REST_CONTEXT + "/ide/upload/folder/";
-         System.out.println("> POST [" + postURL + "]");
 
          PostMethod filePost = new PostMethod(postURL);
-         //System.out.println("LOCATION [" + WS_URL + TEST_FOLDER + "/java-spring-project.zip" + "]");
          //String location = "http://localhost:8080/rest/private/ide/upload/folder/";
          String location = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + destination;
 
@@ -111,14 +103,9 @@ public abstract class CloudFoundryTest extends BaseTest
             defaultcreds);
 
          int status = client.executeMethod(filePost);
-         System.out.println("\r\n\r\n\r\nUPLOAD ZIP STATUS > " + status + "\r\n\r\n\r\n");
-         System.out.println("MESSAGE > " + filePost.getStatusText());
-         System.out.println("BODY > " + filePost.getResponseBodyAsString());
-
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
 
    }

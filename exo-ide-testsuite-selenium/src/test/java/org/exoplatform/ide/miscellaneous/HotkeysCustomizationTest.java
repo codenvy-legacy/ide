@@ -56,7 +56,6 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -70,7 +69,6 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

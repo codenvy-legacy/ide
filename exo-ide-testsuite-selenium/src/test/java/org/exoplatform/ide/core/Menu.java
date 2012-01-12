@@ -264,7 +264,6 @@ public class Menu extends AbstractTestModule
       }
       catch (NoSuchElementException e)
       {
-         e.printStackTrace();
          return false;
       }
       finally

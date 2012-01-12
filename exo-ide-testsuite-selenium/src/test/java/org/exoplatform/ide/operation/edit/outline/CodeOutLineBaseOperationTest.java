@@ -57,7 +57,6 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -70,7 +69,6 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

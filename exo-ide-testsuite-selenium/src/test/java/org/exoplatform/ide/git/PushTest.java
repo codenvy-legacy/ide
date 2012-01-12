@@ -62,7 +62,6 @@ public class PushTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -77,7 +76,6 @@ public class PushTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

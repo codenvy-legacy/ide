@@ -70,7 +70,6 @@ public class RestoreVersionTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

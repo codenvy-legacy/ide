@@ -58,7 +58,6 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

@@ -62,7 +62,6 @@ public class ResetToCommitTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -75,7 +74,6 @@ public class ResetToCommitTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -77,7 +77,6 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -90,7 +89,6 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

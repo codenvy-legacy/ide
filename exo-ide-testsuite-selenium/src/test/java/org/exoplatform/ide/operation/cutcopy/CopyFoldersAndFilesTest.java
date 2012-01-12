@@ -88,7 +88,6 @@ public class CopyFoldersAndFilesTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

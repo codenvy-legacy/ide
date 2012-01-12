@@ -59,7 +59,6 @@ public class CodeOutLineGroovyTest extends CodeAssistantBaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

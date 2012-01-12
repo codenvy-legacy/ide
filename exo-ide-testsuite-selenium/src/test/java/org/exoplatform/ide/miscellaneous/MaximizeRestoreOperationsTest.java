@@ -34,7 +34,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Editor;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -52,27 +51,33 @@ import java.io.IOException;
 public class MaximizeRestoreOperationsTest extends BaseTest
 {
    private final static String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
-   private final static String EXOTOOLBAR_SHOW_PROPIRTIES_LOCATOR= "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + "Show Properties" + "\"]";
-   
+
+   private final static String EXOTOOLBAR_SHOW_PROPIRTIES_LOCATOR =
+      "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + "Show Properties" + "\"]";
+
    private final static String FILE_NAME = "file-" + MaximizeRestoreOperationsTest.class.getSimpleName();
-   
+
    private final static String FOLDER_NAME = MaximizeRestoreOperationsTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
-            + WS_NAME + "/" + FOLDER_NAME + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
+
    private Number operationPanelNormalWidth;
+
    private Number operationPanelNormalHeight;
-   
+
    private Number contentPanelNormalWidth;
+
    private Number contentPanelNormalHeight;
-   
+
    private Number navigationPanelNormalWidth;
+
    private Number navigationPanelNormalHeight;
-   
+
    private Number codeHelperPanelNormalWidth;
+
    private Number codeHelperPanelNormalHeight;
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -80,15 +85,13 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
-         
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FILE_NAME);
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -98,10 +101,9 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
-   
+
    //IDE-97:One-click maximize/restore for editor and actions view
 
    @Ignore
@@ -111,35 +113,35 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //prepare file
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.selectItem(URL) ;
+      IDE.WORKSPACE.selectItem(URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);     
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium().isElementPresent(PROPERTIES_FORM_LOCATOR));
-      
+
       //---- 1 -----------------
       //Create, save and open new file in the content panel. 
       //Click on "Show Properties" button to open "Properties" Tab.
-     // clickOnToolbarCommandShowProperties(ToolbarCommands.View.SHOW_PROPERTIES);
+      // clickOnToolbarCommandShowProperties(ToolbarCommands.View.SHOW_PROPERTIES);
       selenium().click(EXOTOOLBAR_SHOW_PROPIRTIES_LOCATOR);
       waitForElementPresent(PROPERTIES_FORM_LOCATOR);
       //store width and height of elements in default perspective
       operationPanelNormalWidth = selenium().getElementWidth(OPERATION_PANEL_LOCATOR);
       operationPanelNormalHeight = selenium().getElementHeight(OPERATION_PANEL_LOCATOR);
-      
-   //   contentPanelNormalWidth = selenium().getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR);
-   //   contentPanelNormalHeight =  selenium().getElementHeight(Editor.Locators.EDITOR_TABSET_LOCATOR);
-      
+
+      //   contentPanelNormalWidth = selenium().getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR);
+      //   contentPanelNormalHeight =  selenium().getElementHeight(Editor.Locators.EDITOR_TABSET_LOCATOR);
+
       navigationPanelNormalWidth = selenium().getElementWidth(NAVIGATION_PANEL_LOCATOR);
       navigationPanelNormalHeight = selenium().getElementHeight(NAVIGATION_PANEL_LOCATOR);
-      
+
       //there is new file opened in the file tab of Content Panel. 
       //There is Properties Tab opened in the bottom part of Content Panel. 
       IDE.EDITOR.checkCodeEditorOpened(0);
-      
+
       //check, properties tab appeared
       assertTrue(selenium().isVisible(Locators.OperationForm.PROPERTIES_TAB_LOCATOR));
-      
+
       //---- 2 -----------------
       //Click on "Maximize" button at the header of Properties Tab.
       clickMaximizeInOperationsPanel();
@@ -148,7 +150,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkOperationsPanelMaximized();
       checkContentPanelVisibility(false);
       checkNavigationPanelVisibility(false);
-      
+
       //---- 3 -----------------
       //Click on "Restore" button at the header of Properties Tab.
       clickMinimizeInOperationsPanel();
@@ -158,7 +160,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkContentPanelVisibility(true);
       checkNavigationPanelRestored();
       checkNavigationPanelVisibility(true);
-      
+
       //---- 4 -----------------
       //Click on "Maximize" button at the header of Content Panel.
       clickMaximizeInContentPanel();
@@ -167,9 +169,9 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkContentPanelMaximized();
       checkNavigationPanelVisibility(false);
       checkOperationsPanelVisibility(false);
-      
+
       //TODO: no delimeters at the left and bottom side of gadget window.
-      
+
       //---- 5 -----------------
       //Click on "Restore" button at the header of Content Panel.
       clickMinimizeInContentPanel();
@@ -179,7 +181,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkNavigationPanelVisibility(true);
       checkOperationsPanelRestored();
       checkOperationsPanelVisibility(true);
-      
+
       //---- 6 -----------------
       //Click on "Maximize" button at the header of Content Panel again.
       clickMaximizeInContentPanel();
@@ -189,12 +191,12 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkNavigationPanelVisibility(false);
       checkOperationsPanelVisibility(false);
       //TODO: no delimeters at the left and bottom side of gadget window.
-      
+
       //---- 7 -----------------
       //Click on "Show Properties" button.
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //there is Properties Tab under the file tab and with horizontal delimeter between them, 
       //and "Workspace" panel at the left side.
       checkContentPanelRestored();
@@ -202,19 +204,19 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkOperationsPanelVisibility(true);
       checkNavigationPanelRestored();
       checkNavigationPanelVisibility(true);
-      
+
       //---- 8 -----------------
       //Click on "Maximize" button at the header of Properties Tab.
       clickMaximizeInOperationsPanel();
-      
+
       //---- 9 -----------------
       //Click on "File->Search" topmenu item and then click on 
       //"Search" button within the "Search" dialog window.
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SEARCH);
-      
+
       selenium().click("scLocator=//IButton[ID=\"ideSearchFormSearchButton\"]/");
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //there is Properties Tab under the file tab and gadget should display 
       //Search Tab at the left side with search results.
       checkNavigationPanelRestored();
@@ -223,35 +225,37 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkContentPanelVisibility(true);
       checkOperationsPanelRestored();
       checkOperationsPanelVisibility(true);
-      assertTrue(selenium().isElementPresent("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=SearchResultPanel]"));
+      assertTrue(selenium()
+         .isElementPresent("scLocator=//TabSet[ID=\"ideNavigationTabSet\"]/tab[ID=SearchResultPanel]"));
       checkSearchTabSelected();
-      
+
       //---- 10 -----------------
       //Click on Show Outline Panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
       //check code helper panel visible
       assertTrue(selenium().isElementPresent(CODE_HELPER_PANEL_LOCATOR));
-      
+
       operationPanelNormalWidth = selenium().getElementWidth(OPERATION_PANEL_LOCATOR);
- //     contentPanelNormalWidth = selenium().getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR);
+      //     contentPanelNormalWidth = selenium().getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR);
       codeHelperPanelNormalWidth = selenium().getElementWidth(CODE_HELPER_PANEL_LOCATOR);
       codeHelperPanelNormalHeight = selenium().getElementHeight(CODE_HELPER_PANEL_LOCATOR);
-      
-//      checkCodeHelperPanelVisibility(true);
-      
+
+      //      checkCodeHelperPanelVisibility(true);
+
       //---- 11 -----------------
       //click maximize in CodeHelpder Panel (near Outline tab)
       clickMaximizeInCodeHelperPanel();
-      
+
       //check outline tab is maximized
       checkCodeHelperPanelMaximized();
       checkNavigationPanelVisibility(false);
       //check vertical layout (contains content panel and operations panel) is hidden
-      assertTrue(selenium().isElementPresent(VERTICAL_SPLIT_LAYOUT_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
-//      checkContentPanelVisibility(false);
-//      checkOperationsPanelVisibility(false);
-      
+      assertTrue(selenium()
+         .isElementPresent(VERTICAL_SPLIT_LAYOUT_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
+      //      checkContentPanelVisibility(false);
+      //      checkOperationsPanelVisibility(false);
+
       //---- 12 -----------------
       //click minimize near outline tab
       clickMinimizeInCodeHelperPanel();
@@ -263,7 +267,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkContentPanelVisibility(true);
       checkOperationsPanelRestored();
       checkOperationsPanelVisibility(true);
-      
+
       //close outline
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.HIDE_OUTLINE);
 
@@ -271,7 +275,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       //select Workspace tab
       selectWorkspaceTab();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       //---- 14 -----------------
       //click maximize in content panel
       clickMaximizeInContentPanel();
@@ -280,35 +284,35 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkNavigationPanelVisibility(false);
       checkOperationsPanelVisibility(false);
       checkCodeHelperPanelVisibility(false);
-      
+
       //---- 15 -----------------
       //click Show Outline button
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //outline panel is visible, content panel is visible.
       //Other panels are hidden
       checkContentPanelVisibility(true);
       checkCodeHelperPanelVisibility(true);
       checkNavigationPanelVisibility(false);
       checkOperationsPanelVisibility(false);
-      
+
       //---- 16 -----------------
       //open new xml file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //check content panel is visible, outline is visible,
       //other panels are hidden
       checkContentPanelVisibility(true);
       checkCodeHelperPanelVisibility(true);
       checkNavigationPanelVisibility(false);
       checkOperationsPanelVisibility(false);
-      
+
       //---- 15 -----------------
       //click restore near content panel
       clickMinimizeInContentPanel();
-      
+
       //check, that perspective restored
       checkNavigationPanelRestored();
       checkNavigationPanelVisibility(true);
@@ -318,41 +322,40 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       checkOperationsPanelVisibility(true);
       checkCodeHelperPanelRestored();
       checkCodeHelperPanelVisibility(true);
-      
-      
+
       //---- 16 -----------------
       //Close and remove created file.
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
-     IDE.EDITOR.closeTabIgnoringChanges(1);
-      
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+
       Thread.sleep(TestConstants.SLEEP);
    }
-   
+
    private void checkSearchTabSelected()
    {
-      assertTrue(selenium().isElementPresent(NAVIGATION_PANEL_LOCATOR
-         + "//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), 'Search')]"));
-      assertTrue(selenium().isElementPresent(NAVIGATION_PANEL_LOCATOR
-         + "//td[@class='tabTitle']/span[contains(text(), 'Workspace')]"));
+      assertTrue(selenium().isElementPresent(
+         NAVIGATION_PANEL_LOCATOR + "//td[contains(@class, 'tabTitleSelected')]/span[contains(text(), 'Search')]"));
+      assertTrue(selenium().isElementPresent(
+         NAVIGATION_PANEL_LOCATOR + "//td[@class='tabTitle']/span[contains(text(), 'Workspace')]"));
    }
-   
+
    private void checkContentPanelMaximized()
    {
       //TODO
-   /*   assertEquals(selenium().getElementWidth(MAIN_FORM_LOCATOR).intValue(),
-         selenium().getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR).intValue() + 5);
-      //1 pixel - it is height of delimeter
-      assertEquals(selenium().getElementHeight(MAIN_FORM_LOCATOR).intValue(),
-         selenium().getElementHeight(Editor.Locators.EDITOR_TABSET_LOCATOR).intValue() + 1);
-*/
+      /*   assertEquals(selenium().getElementWidth(MAIN_FORM_LOCATOR).intValue(),
+            selenium().getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR).intValue() + 5);
+         //1 pixel - it is height of delimeter
+         assertEquals(selenium().getElementHeight(MAIN_FORM_LOCATOR).intValue(),
+            selenium().getElementHeight(Editor.Locators.EDITOR_TABSET_LOCATOR).intValue() + 1);
+      */
    }
-   
+
    private void checkContentPanelRestored()
    {
       /*assertEquals(contentPanelNormalWidth, selenium().getElementWidth(Editor.Locators.EDITOR_TABSET_LOCATOR));
       assertEquals(contentPanelNormalHeight, selenium().getElementHeight(Editor.Locators.EDITOR_TABSET_LOCATOR));*/
    }
-   
+
    private void checkOperationsPanelMaximized()
    {
       final Number operationWidth = selenium().getElementWidth(OPERATION_PANEL_LOCATOR);
@@ -361,13 +364,13 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       assertEquals(selenium().getElementWidth(MAIN_FORM_LOCATOR).intValue(), operationWidth.intValue() + 5);
       assertEquals(selenium().getElementHeight(MAIN_FORM_LOCATOR), operationHeight);
    }
-   
+
    private void checkOperationsPanelRestored()
    {
       assertEquals(operationPanelNormalWidth, selenium().getElementWidth(OPERATION_PANEL_LOCATOR));
       assertEquals(operationPanelNormalHeight, selenium().getElementHeight(OPERATION_PANEL_LOCATOR));
    }
-   
+
    private void checkOperationsPanelVisibility(boolean isVisible)
    {
       if (isVisible)
@@ -381,113 +384,118 @@ public class MaximizeRestoreOperationsTest extends BaseTest
          assertFalse(selenium().isElementPresent(OPERATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
       }
    }
-   
+
    private void checkNavigationPanelRestored()
    {
       assertEquals(navigationPanelNormalWidth, selenium().getElementWidth(NAVIGATION_PANEL_LOCATOR));
       assertEquals(navigationPanelNormalHeight, selenium().getElementHeight(NAVIGATION_PANEL_LOCATOR));
    }
-   
+
    private void checkNavigationPanelVisibility(boolean isVisible)
    {
       if (isVisible)
       {
-         assertTrue(selenium().isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
-         assertFalse(selenium().isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
+         assertTrue(selenium()
+            .isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
+         assertFalse(selenium()
+            .isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
       }
       else
       {
          assertTrue(selenium().isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
-         assertFalse(selenium().isElementPresent(NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
+         assertFalse(selenium().isElementPresent(
+            NAVIGATION_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
       }
    }
-   
+
    private void checkContentPanelVisibility(boolean isVisible)
    {
-     /* if (isVisible)
-      {
-         assertTrue(selenium().isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
-         assertFalse(selenium().isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
-      }
-      else
-      {
-         
-         assertTrue(selenium().isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
-         assertFalse(selenium().isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
-      }*/
+      /* if (isVisible)
+       {
+          assertTrue(selenium().isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
+          assertFalse(selenium().isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
+       }
+       else
+       {
+          
+          assertTrue(selenium().isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: hidden;')]"));
+          assertFalse(selenium().isElementPresent(Editor.Locators.EDITOR_TABSET_LOCATOR + "[contains(@style, 'visibility: inherit;')]"));
+       }*/
    }
-   
+
    private void checkCodeHelperPanelMaximized()
    {
       //TODO
-      assertEquals(selenium().getElementWidth(MAIN_FORM_LOCATOR).intValue(), 
+      assertEquals(selenium().getElementWidth(MAIN_FORM_LOCATOR).intValue(),
          selenium().getElementWidth(CODE_HELPER_PANEL_LOCATOR).intValue() + 5);
-      assertEquals(selenium().getElementHeight(MAIN_FORM_LOCATOR), selenium().getElementHeight(CODE_HELPER_PANEL_LOCATOR));
+      assertEquals(selenium().getElementHeight(MAIN_FORM_LOCATOR),
+         selenium().getElementHeight(CODE_HELPER_PANEL_LOCATOR));
    }
-   
+
    private void checkCodeHelperPanelRestored()
    {
       assertEquals(codeHelperPanelNormalWidth, selenium().getElementWidth(CODE_HELPER_PANEL_LOCATOR));
       assertEquals(codeHelperPanelNormalHeight, selenium().getElementHeight(CODE_HELPER_PANEL_LOCATOR));
    }
-   
+
    private void checkCodeHelperPanelVisibility(boolean isVisible)
    {
       if (isVisible)
       {
-         assertTrue(selenium().isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
-         assertFalse(selenium().isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
+         assertTrue(selenium()
+            .isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
+         assertFalse(selenium()
+            .isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
       }
       else
       {
          assertTrue(selenium().isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: hidden')]"));
-         assertFalse(selenium().isElementPresent(CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
+         assertFalse(selenium().isElementPresent(
+            CODE_HELPER_PANEL_LOCATOR + "[contains(@style, 'visibility: inherit')]"));
       }
    }
-   
+
    private void clickMaximizeInOperationsPanel() throws Exception
    {
       selenium().mouseDownAt(OPERATION_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       selenium().mouseUpAt(OPERATION_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
-   
+
    private void clickMinimizeInOperationsPanel() throws Exception
    {
       selenium().mouseDownAt(OPERATION_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       selenium().mouseUpAt(OPERATION_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
-   
+
    private void clickMaximizeInContentPanel() throws Exception
    {
-  //    selenium().mouseDownAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
-   //   selenium().mouseUpAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
+      //    selenium().mouseDownAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
+      //   selenium().mouseUpAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
-   
+
    private void clickMinimizeInContentPanel() throws Exception
    {
- //     selenium().mouseDownAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
-  //    selenium().mouseUpAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
+      //     selenium().mouseDownAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
+      //    selenium().mouseUpAt(Editor.Locators.EDITOR_TABSET_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
-   
+
    private void clickMaximizeInCodeHelperPanel() throws Exception
    {
       selenium().mouseDownAt(CODE_HELPER_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       selenium().mouseUpAt(CODE_HELPER_PANEL_LOCATOR + "//img[contains(@src, 'maximize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
-   
+
    private void clickMinimizeInCodeHelperPanel() throws Exception
    {
       selenium().mouseDownAt(CODE_HELPER_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       selenium().mouseUpAt(CODE_HELPER_PANEL_LOCATOR + "//img[contains(@src, 'minimize')]", "2,2");
       Thread.sleep(TestConstants.SLEEP);
    }
-   
-
 
    public void clickOnToolbarCommandShowProperties(String buttonTitle) throws Exception
    {
@@ -498,9 +506,10 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       String hoverLocator =
-         "//div[@class=\"exoIconButtonPanelOver\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + "Hide Properties" + "\"]";
-//      selenium().mouseDownAt(hoverLocator, "");
-//      selenium().mouseUpAt(hoverLocator, "");
+         "//div[@class=\"exoIconButtonPanelOver\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + "Hide Properties"
+            + "\"]";
+      //      selenium().mouseDownAt(hoverLocator, "");
+      //      selenium().mouseUpAt(hoverLocator, "");
       selenium().clickAt(hoverLocator, "1,1");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 

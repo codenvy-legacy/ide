@@ -58,7 +58,6 @@ public class CodeOutLineChromatticTest extends CodeAssistantBaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

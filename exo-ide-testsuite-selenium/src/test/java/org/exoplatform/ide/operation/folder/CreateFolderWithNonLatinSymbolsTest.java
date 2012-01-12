@@ -76,7 +76,6 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

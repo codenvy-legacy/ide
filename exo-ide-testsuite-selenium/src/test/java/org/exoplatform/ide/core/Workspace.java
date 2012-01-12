@@ -132,9 +132,7 @@ public class Workspace extends AbstractTestModule
    public void clickOpenIconOfFolder(String folderHref) throws Exception
    {
       waitForItem(folderHref);
-      System.out.println("Click on Open Icon > " + folderHref);
       String locator = "//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img";
-      System.out.println("Locator [" + locator + "]");
 
       selenium().clickAt(locator, "1,1");
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);

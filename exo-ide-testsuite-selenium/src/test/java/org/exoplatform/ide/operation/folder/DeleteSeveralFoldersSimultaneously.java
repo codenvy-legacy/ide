@@ -69,7 +69,6 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -143,7 +142,6 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

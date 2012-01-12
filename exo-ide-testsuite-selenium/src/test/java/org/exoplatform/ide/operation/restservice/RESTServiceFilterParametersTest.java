@@ -57,7 +57,6 @@ public class RESTServiceFilterParametersTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -99,7 +98,6 @@ public class RESTServiceFilterParametersTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

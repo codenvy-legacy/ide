@@ -53,7 +53,6 @@ public class UploadToFolderWithSpacesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -96,7 +95,6 @@ public class UploadToFolderWithSpacesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

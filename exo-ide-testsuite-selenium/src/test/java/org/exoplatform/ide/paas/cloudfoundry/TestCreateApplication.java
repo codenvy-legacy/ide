@@ -21,6 +21,7 @@ package org.exoplatform.ide.paas.cloudfoundry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.MenuCommands;
@@ -62,7 +63,6 @@ public class TestCreateApplication extends CloudFoundryTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -75,7 +75,6 @@ public class TestCreateApplication extends CloudFoundryTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -175,7 +174,6 @@ public class TestCreateApplication extends CloudFoundryTest
       
       IDE.OUTPUT.waitForMessageShow(1, 30000);
       String mes2 = IDE.OUTPUT.getOutputMessage(1);
-      System.out.println("ORIGINAL MESSAGE [" + mes2 + "]");
       Assert.assertTrue(mes2.equals("[INFO] Logged in CloudFoundry successfully."));
       
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");

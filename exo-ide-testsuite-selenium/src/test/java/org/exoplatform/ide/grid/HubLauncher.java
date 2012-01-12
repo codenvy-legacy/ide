@@ -68,7 +68,6 @@ public class HubLauncher
             }
             catch (Exception e)
             {
-               e.printStackTrace();
             }
          };
       };
@@ -76,7 +75,6 @@ public class HubLauncher
       thread.start();
       
       waitForHubService();
-      System.out.println("Selenium Hub has started at port " + HUB_PORT);
    }
 
    /**

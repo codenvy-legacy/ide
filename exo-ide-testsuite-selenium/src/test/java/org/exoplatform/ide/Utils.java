@@ -162,7 +162,6 @@ public class Utils
       }
       catch (NoSuchAlgorithmException e)
       {
-         e.printStackTrace();
          fail();
       }
       return "";
@@ -193,7 +192,6 @@ public class Utils
       }
       catch (NoSuchAlgorithmException e)
       {
-         e.printStackTrace();
          fail();
       }
       return "";
@@ -221,11 +219,9 @@ public class Utils
       }
       catch (MalformedURLException e)
       {
-         e.printStackTrace();
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
       finally
       {
@@ -259,15 +255,13 @@ public class Utils
             reader.close();
          }
          in.close();
-         return !sb.toString().contains("loginForm");
+         return !sb.toString().contains("loginFormId");
       }
       catch (MalformedURLException e)
       {
-         e.printStackTrace();
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
       finally
       {

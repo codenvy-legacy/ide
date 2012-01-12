@@ -54,7 +54,6 @@ public class UpdateInstancesTest extends CloudFoundryTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -67,29 +66,31 @@ public class UpdateInstancesTest extends CloudFoundryTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
-   }   
-   
+   }
+
    @Test
-   public void testUpdateInstances() throws Exception {
+   public void testUpdateInstances() throws Exception
+   {
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.NAVIGATION.createFolder(TEST_FOLDER);
       uploadResource("src/test/resources/org/exoplatform/ide/paas/cloudfoundry/java-spring-project.zip", REPO_NAME
          + "/" + WS_NAME + "/" + TEST_FOLDER + "/java-spring-project.zip");
-      
+
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      
+
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      if (IDE.OUTPUT.isOpened()) {         
+      if (IDE.OUTPUT.isOpened())
+      {
          IDE.OUTPUT.clickClearButton();
       }
-      
-      IDE.MENU.runCommand(MenuCommands.PaaS.PAAS, MenuCommands.PaaS.CloudFoundry.CLOUDFOUNDRY, MenuCommands.PaaS.CloudFoundry.UPDATE_INSTANCES);
+
+      IDE.MENU.runCommand(MenuCommands.PaaS.PAAS, MenuCommands.PaaS.CloudFoundry.CLOUDFOUNDRY,
+         MenuCommands.PaaS.CloudFoundry.UPDATE_INSTANCES);
 
       /*
       Uncomment AskForValue dialog using for version 1.2.0-M4 
@@ -101,9 +102,10 @@ public class UpdateInstancesTest extends CloudFoundryTest
       IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       */
-      
+
       waitForElementPresent("exoAskForValueDialog");
-      IDE.INPUT.typeToElement(driver.findElement(By.xpath("//div[@id='exoAskForValueDialog']//input[@name='valueField']")), "5", true);
+      IDE.INPUT.typeToElement(
+         driver.findElement(By.xpath("//div[@id='exoAskForValueDialog']//input[@name='valueField']")), "5", true);
       selenium().click("OkButton");
       waitForElementNotPresent("exoAskForValueDialog");
       Thread.sleep(1000);

@@ -41,9 +41,10 @@ public class UploadingHtmlFileTest extends BaseTest
    private static final String FOLDER_NAME = UploadingHtmlFileTest.class.getSimpleName();
 
    private static String HTML_NAME = "Example.html";
-   
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
-   
+
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME;
+
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
 
    @BeforeClass
@@ -55,21 +56,20 @@ public class UploadingHtmlFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testUploadingHtml() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      
+
       IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + HTML_NAME, false);
       IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.checkCodeEditorOpened(0);
 
-      String text =IDE.EDITOR.getTextFromCodeEditor(0);
+      String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
 
       String fileContent = getFileContent(FILE_PATH);
@@ -80,7 +80,7 @@ public class UploadingHtmlFileTest extends BaseTest
       IDE.PROPERTIES.waitOpened();
       assertEquals(MimeType.TEXT_HTML, IDE.PROPERTIES.getContentType());
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -90,8 +90,7 @@ public class UploadingHtmlFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
-   
+
 }

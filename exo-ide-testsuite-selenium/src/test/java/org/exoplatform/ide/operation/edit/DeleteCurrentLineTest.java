@@ -85,7 +85,6 @@ public class DeleteCurrentLineTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -98,7 +97,6 @@ public class DeleteCurrentLineTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

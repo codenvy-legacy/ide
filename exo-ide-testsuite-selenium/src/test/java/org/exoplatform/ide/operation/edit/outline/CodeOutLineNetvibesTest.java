@@ -59,7 +59,6 @@ public class CodeOutLineNetvibesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -73,7 +72,6 @@ public class CodeOutLineNetvibesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

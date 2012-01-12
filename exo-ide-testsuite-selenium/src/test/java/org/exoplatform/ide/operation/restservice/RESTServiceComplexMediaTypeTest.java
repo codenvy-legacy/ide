@@ -61,7 +61,6 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -153,7 +152,6 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

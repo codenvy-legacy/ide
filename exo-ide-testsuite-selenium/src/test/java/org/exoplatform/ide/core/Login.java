@@ -41,7 +41,9 @@ public class Login extends AbstractTestModule
    
    private static final String PASSWORD = "j_password";
    
-   private static final String LOGIN_VALUE = "//input[@value='Log In']";
+   //private static final String LOGIN_VALUE = "//input[@value='Log In']";
+   
+   private static final String LOGIN_BUTTON = "//a[@class='Button' and text()='Login']";
    
    @FindBy(xpath = LOGOUT_LOCATOR)
    private WebElement logout;
@@ -52,7 +54,7 @@ public class Login extends AbstractTestModule
    @FindBy(name = PASSWORD)
    private WebElement password;
    
-   @FindBy(xpath = LOGIN_VALUE)
+   @FindBy(xpath = LOGIN_BUTTON)
    private WebElement login;
    
    public void logout()

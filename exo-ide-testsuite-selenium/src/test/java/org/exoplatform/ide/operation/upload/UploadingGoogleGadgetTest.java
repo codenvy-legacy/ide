@@ -59,7 +59,6 @@ public class UploadingGoogleGadgetTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -96,7 +95,6 @@ public class UploadingGoogleGadgetTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

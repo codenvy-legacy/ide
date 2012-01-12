@@ -63,7 +63,6 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -78,7 +77,6 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

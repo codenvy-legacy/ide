@@ -48,7 +48,6 @@ public class RESTServiceVaditionWrongTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -81,7 +80,6 @@ public class RESTServiceVaditionWrongTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

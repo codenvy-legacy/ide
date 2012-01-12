@@ -61,7 +61,6 @@ public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail("Can't create project structure");
       }
    }

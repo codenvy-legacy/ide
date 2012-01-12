@@ -57,7 +57,6 @@ public class InitRepositoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -71,7 +70,6 @@ public class InitRepositoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

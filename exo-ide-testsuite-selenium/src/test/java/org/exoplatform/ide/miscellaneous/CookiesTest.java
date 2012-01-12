@@ -22,20 +22,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.operation.folder.DeleteSeveralFoldersSimultaneously;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.internal.seleniumemulation.GetCookie;
 
 import java.io.IOException;
-import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS .
@@ -71,7 +65,6 @@ public class CookiesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -120,7 +113,6 @@ public class CookiesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

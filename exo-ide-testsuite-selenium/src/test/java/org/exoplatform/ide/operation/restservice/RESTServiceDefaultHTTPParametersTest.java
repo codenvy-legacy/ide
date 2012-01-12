@@ -57,7 +57,6 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -114,7 +113,6 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

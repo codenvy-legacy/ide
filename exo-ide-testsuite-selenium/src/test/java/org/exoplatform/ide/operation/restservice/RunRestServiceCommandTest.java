@@ -70,7 +70,6 @@ public class RunRestServiceCommandTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -87,7 +86,6 @@ public class RunRestServiceCommandTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

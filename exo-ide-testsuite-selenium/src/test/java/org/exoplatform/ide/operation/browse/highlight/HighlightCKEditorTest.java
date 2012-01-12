@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -58,7 +58,6 @@ public class HighlightCKEditorTest extends BaseTest {
 							MimeType.TEXT_HTML, URL + FOLDER_NAME + "/"
 									+ FILE_NAME);
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -102,7 +101,6 @@ public class HighlightCKEditorTest extends BaseTest {
 		try {
 			VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

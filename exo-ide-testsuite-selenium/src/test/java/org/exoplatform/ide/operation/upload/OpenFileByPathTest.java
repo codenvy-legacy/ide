@@ -73,7 +73,6 @@ public class OpenFileByPathTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -182,7 +181,6 @@ public class OpenFileByPathTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

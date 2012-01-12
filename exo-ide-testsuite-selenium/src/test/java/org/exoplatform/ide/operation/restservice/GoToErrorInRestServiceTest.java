@@ -65,7 +65,6 @@ public class GoToErrorInRestServiceTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -297,7 +296,6 @@ public class GoToErrorInRestServiceTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -89,7 +89,6 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

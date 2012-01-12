@@ -60,10 +60,9 @@ public class RestServicesDiscoveryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -73,7 +72,6 @@ public class RestServicesDiscoveryTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -84,11 +82,11 @@ public class RestServicesDiscoveryTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      
+
       //open file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-      
+
       IDE.EDITOR.waitTabPresent(1);
       //deploy rest service
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
@@ -109,7 +107,7 @@ public class RestServicesDiscoveryTest extends BaseTest
       final String optionsId = IDE.REST_SERVICE_DISCOVERY.getItemId("/aa/testService11") + ":OPTIONS";
       IDE.REST_SERVICE_DISCOVERY.waitForItemById(optionsId);
       IDE.REST_SERVICE_DISCOVERY.selectItemById(optionsId);
-      
+
       //check elements on opened form
       assertTrue(IDE.REST_SERVICE_DISCOVERY.isMethodFieldPresent());
       assertTrue(IDE.REST_SERVICE_DISCOVERY.isRequestFieldPresent());

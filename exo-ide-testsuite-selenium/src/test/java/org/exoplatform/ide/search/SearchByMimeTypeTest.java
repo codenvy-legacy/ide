@@ -68,7 +68,6 @@ public class SearchByMimeTypeTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

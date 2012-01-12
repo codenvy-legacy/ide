@@ -74,7 +74,6 @@ public class NavigateVersionsTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -93,7 +92,6 @@ public class NavigateVersionsTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -52,7 +52,6 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
 
       IDE.UPLOAD.setMimeType("text/");

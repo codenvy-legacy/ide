@@ -64,7 +64,6 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -392,7 +391,6 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

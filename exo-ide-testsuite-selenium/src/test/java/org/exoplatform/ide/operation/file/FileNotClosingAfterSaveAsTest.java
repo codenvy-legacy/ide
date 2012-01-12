@@ -80,7 +80,6 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

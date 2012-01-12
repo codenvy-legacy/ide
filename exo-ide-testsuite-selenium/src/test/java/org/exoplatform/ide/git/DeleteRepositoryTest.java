@@ -54,7 +54,6 @@ public class DeleteRepositoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -67,7 +66,6 @@ public class DeleteRepositoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -53,7 +53,6 @@ public class RESTServiceDeployExistPathTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -112,7 +111,6 @@ public class RESTServiceDeployExistPathTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

@@ -66,7 +66,6 @@ public class CopyFileTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -79,7 +78,6 @@ public class CopyFileTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

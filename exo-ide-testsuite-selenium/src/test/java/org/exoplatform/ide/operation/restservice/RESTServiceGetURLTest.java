@@ -56,7 +56,6 @@ public class RESTServiceGetURLTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -118,12 +117,11 @@ public class RESTServiceGetURLTest extends BaseTest
    {
       try
       {
-         //     Utils.undeployService(BASE_URL, REST_CONTEXT, url);
+         //TODO     Utils.undeployService(BASE_URL, REST_CONTEXT, url);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

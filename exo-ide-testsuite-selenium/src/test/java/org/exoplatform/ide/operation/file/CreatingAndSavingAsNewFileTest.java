@@ -72,7 +72,6 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

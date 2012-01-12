@@ -42,24 +42,17 @@ public class DeleteFolderTest extends BaseTest
 
    private final static String FOLDER_NAME_MENU = "deleteFolderMenuTest";
 
-   private final static String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
-      + WS_NAME + "/" + PROJECT + "/" + FOLDER_NAME_TOOLBAR;
-
-   private final static String URL_MENU = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
-      + WS_NAME + "/" + PROJECT + "/" + FOLDER_NAME_MENU;
-
    @BeforeClass
    public static void setUp()
    {
       try
       {
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         VirtualFileSystemUtils.mkcol(URL_TOOLBAR);
-         VirtualFileSystemUtils.mkcol(URL_MENU);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME_TOOLBAR);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME_MENU);
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -85,8 +78,9 @@ public class DeleteFolderTest extends BaseTest
       IDE.DELETE.clickOkButton();
       IDE.DELETE.waitClosed();
 
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FOLDER_NAME_TOOLBAR);
       Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER_NAME_TOOLBAR));
-      assertEquals(404, VirtualFileSystemUtils.get(URL_TOOLBAR).getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_NAME_TOOLBAR).getStatusCode());
    }
 
    /**
@@ -98,9 +92,6 @@ public class DeleteFolderTest extends BaseTest
    public void testDeleteFolderFromMainMenu() throws Exception
    {
       selenium.refresh();
-      
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
@@ -112,9 +103,10 @@ public class DeleteFolderTest extends BaseTest
       IDE.DELETE.waitOpened();
       IDE.DELETE.clickOkButton();
       IDE.DELETE.waitClosed();
-
+      
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FOLDER_NAME_MENU);
       Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER_NAME_MENU));
-      assertEquals(404, VirtualFileSystemUtils.get(URL_MENU).getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_NAME_MENU).getStatusCode());
    }
 
    @AfterClass
@@ -126,7 +118,6 @@ public class DeleteFolderTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 }

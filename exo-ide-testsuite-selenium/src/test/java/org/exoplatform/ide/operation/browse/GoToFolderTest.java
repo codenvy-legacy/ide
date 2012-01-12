@@ -60,7 +60,6 @@ public class GoToFolderTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -74,7 +73,6 @@ public class GoToFolderTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

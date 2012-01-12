@@ -53,7 +53,6 @@ public class RESTServicePropertyTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -65,11 +64,10 @@ public class RESTServicePropertyTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
-      
-      
+
       assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES));
       assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD));
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE));
@@ -79,7 +77,7 @@ public class RESTServicePropertyTest extends BaseTest
 
       IDE.EDITOR.saveAs(1, FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      
+
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES));
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD));
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE));
@@ -90,7 +88,7 @@ public class RESTServicePropertyTest extends BaseTest
       IDE.PROPERTIES.openProperties();
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
       assertEquals(FILE_NAME, IDE.PROPERTIES.getDisplayName());
-      
+
       IDE.EDITOR.closeFile(FILE_NAME);
    }
 
@@ -103,7 +101,6 @@ public class RESTServicePropertyTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

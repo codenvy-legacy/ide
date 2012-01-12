@@ -65,7 +65,6 @@ public class GroovyTemplatePreviewTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -78,7 +77,6 @@ public class GroovyTemplatePreviewTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

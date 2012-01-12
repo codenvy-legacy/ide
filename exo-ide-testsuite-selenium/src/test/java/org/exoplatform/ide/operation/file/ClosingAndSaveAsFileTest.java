@@ -53,7 +53,6 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

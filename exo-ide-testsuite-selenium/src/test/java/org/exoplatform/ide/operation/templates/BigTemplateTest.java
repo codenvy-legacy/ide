@@ -62,7 +62,6 @@ public class BigTemplateTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -119,7 +118,6 @@ public class BigTemplateTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

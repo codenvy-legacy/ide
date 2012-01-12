@@ -61,7 +61,6 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -75,7 +74,6 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
    

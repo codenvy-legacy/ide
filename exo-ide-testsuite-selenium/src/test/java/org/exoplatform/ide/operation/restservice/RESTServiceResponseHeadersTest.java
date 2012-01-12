@@ -59,7 +59,6 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
 
    }
@@ -113,7 +112,6 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

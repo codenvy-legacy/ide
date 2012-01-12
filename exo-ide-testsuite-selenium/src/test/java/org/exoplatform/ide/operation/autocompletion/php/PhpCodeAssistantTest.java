@@ -54,7 +54,6 @@ public class PhpCodeAssistantTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail("Can't create test folder");
       }
    }
@@ -82,7 +81,7 @@ public class PhpCodeAssistantTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("$HTTP_SERVER_VARS");
       IDE.CODEASSISTANT.closeForm();
    }
-   
+
    @Test
    public void testPhpObjectThis() throws Exception
    {
@@ -94,7 +93,7 @@ public class PhpCodeAssistantTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("sf2()");
       IDE.CODEASSISTANT.closeForm();
    }
-   
+
    @Test
    public void testPhpClassSelf() throws Exception
    {
@@ -105,7 +104,7 @@ public class PhpCodeAssistantTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("f2($a)");
       IDE.CODEASSISTANT.closeForm();
    }
-   
+
    @Test
    public void testPhpVariableClass() throws Exception
    {
@@ -115,7 +114,7 @@ public class PhpCodeAssistantTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("f2($a)");
       IDE.CODEASSISTANT.closeForm();
    }
-   
+
    @Test
    public void testPhpVarStaticClass() throws Exception
    {
@@ -127,7 +126,7 @@ public class PhpCodeAssistantTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("sf2()");
       IDE.CODEASSISTANT.closeForm();
    }
-   
+
    @Test
    public void testPhpStaticClass() throws Exception
    {
@@ -139,7 +138,7 @@ public class PhpCodeAssistantTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("sf2()");
       IDE.CODEASSISTANT.closeForm();
    }
-   
+
    @Test
    public void testPhpRootConstAndVars() throws Exception
    {
@@ -151,16 +150,15 @@ public class PhpCodeAssistantTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("SimpleClass1");
       IDE.CODEASSISTANT.closeForm();
    }
-   
-   
+
    @After
    public void afterTest() throws Exception
    {
-     IDE.CODEASSISTANT.closeForm();
-     IDE.EDITOR.closeFile(0);
-     
+      IDE.CODEASSISTANT.closeForm();
+      IDE.EDITOR.closeFile(0);
+
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -170,7 +168,6 @@ public class PhpCodeAssistantTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

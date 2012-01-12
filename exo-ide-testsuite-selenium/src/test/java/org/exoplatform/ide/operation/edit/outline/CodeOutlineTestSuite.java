@@ -18,11 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import org.exoplatform.ide.operation.edit.outline.CodeOutLineGroovyTemplateTest;
-import org.exoplatform.ide.operation.edit.outline.CodeOutLineHtmlTest;
-import org.exoplatform.ide.operation.edit.outline.CodeOutlineGoogleGadgetTest;
-import org.exoplatform.ide.operation.edit.outline.CodeOutlineJavaScriptTest;
-import org.exoplatform.ide.operation.edit.outline.CodeOutlineXmlTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

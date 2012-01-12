@@ -45,7 +45,8 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 
    private static final String TEST_FOLDER_TO_DELETE = StoreOpenedFilesHistoryTest.class.getSimpleName() + "-to Delete";
 
-   private static String SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2 + "/";
+   private static String SECOND_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME_2 + "/";
 
    private static final String TEXT_FILE = "Text File";
 
@@ -53,9 +54,11 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 
    private static final String GADGET_FILE = "Gadget File";
 
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2 + "/";
-   
-   private static final String CK_EDITOR_FRAME_LOCATOR = "//div[@panel-id='editor' and @tab-index='1']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2
+      + "/";
+
+   private static final String CK_EDITOR_FRAME_LOCATOR =
+      "//div[@panel-id='editor' and @tab-index='1']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
 
    @Before
    public void setUp()
@@ -67,7 +70,6 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail("Can't create folders");
       }
    }
@@ -81,7 +83,6 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
 
       try
@@ -90,7 +91,6 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
 
       deleteCookies();
@@ -117,7 +117,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 
       //create txt file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      
+
       saveAsUsingToolbarButton(TEXT_FILE);
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
@@ -145,18 +145,18 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.WORKSPACE.doubleClickOnFile(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      
+
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.WORKSPACE.doubleClickOnFile(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      
+
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.WORKSPACE.doubleClickOnFile(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
       IDE.EDITOR.clickDesignButton();
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      
+
       IDE.EDITOR.checkCkEditorOpened(2);
 
       //delete Test Folder to Delete from server
@@ -166,7 +166,6 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
 
       selenium().open("http://www.google.com.ua/");
@@ -179,7 +178,6 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       waitForElementPresent(CK_EDITOR_FRAME_LOCATOR);
 
-      
       IDE.EDITOR.checkCkEditorOpened(1);
 
       checkOpenedFilesHistory();

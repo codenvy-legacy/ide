@@ -58,7 +58,6 @@ public class OpenLockedFileTest extends LockFileAbstract
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -71,7 +70,6 @@ public class OpenLockedFileTest extends LockFileAbstract
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

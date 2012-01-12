@@ -59,7 +59,6 @@ public class LockFileTest extends LockFileAbstract
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -73,7 +72,6 @@ public class LockFileTest extends LockFileAbstract
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -253,7 +251,6 @@ public class LockFileTest extends LockFileAbstract
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail("Can't put file to webdav");
       }
    }

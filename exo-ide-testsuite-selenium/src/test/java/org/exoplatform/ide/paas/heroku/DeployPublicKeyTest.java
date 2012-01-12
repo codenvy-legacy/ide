@@ -53,7 +53,6 @@ private static final String TEST_FOLDER = DeployPublicKeyTest.class.getSimpleNam
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -67,7 +66,6 @@ private static final String TEST_FOLDER = DeployPublicKeyTest.class.getSimpleNam
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

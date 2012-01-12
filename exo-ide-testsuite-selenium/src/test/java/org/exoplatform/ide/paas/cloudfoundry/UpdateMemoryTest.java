@@ -40,7 +40,7 @@ import org.openqa.selenium.By;
 
 public class UpdateMemoryTest extends CloudFoundryTest
 {
-   
+
    private static final String TEST_FOLDER = "cloudfoundry-test-update-memory-" + System.currentTimeMillis();
 
    private static final String PROJECT_NAME = "java-spring-project";
@@ -54,7 +54,6 @@ public class UpdateMemoryTest extends CloudFoundryTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -67,7 +66,6 @@ public class UpdateMemoryTest extends CloudFoundryTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -79,19 +77,21 @@ public class UpdateMemoryTest extends CloudFoundryTest
       IDE.NAVIGATION.createFolder(TEST_FOLDER);
       uploadResource("src/test/resources/org/exoplatform/ide/paas/cloudfoundry/java-spring-project.zip", REPO_NAME
          + "/" + WS_NAME + "/" + TEST_FOLDER + "/java-spring-project.zip");
-      
+
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      
+
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      if (IDE.OUTPUT.isOpened()) {         
+      if (IDE.OUTPUT.isOpened())
+      {
          IDE.OUTPUT.clickClearButton();
       }
-      
-      IDE.MENU.runCommand(MenuCommands.PaaS.PAAS, MenuCommands.PaaS.CloudFoundry.CLOUDFOUNDRY, MenuCommands.PaaS.CloudFoundry.UPDATE_MEMORY);
-      
+
+      IDE.MENU.runCommand(MenuCommands.PaaS.PAAS, MenuCommands.PaaS.CloudFoundry.CLOUDFOUNDRY,
+         MenuCommands.PaaS.CloudFoundry.UPDATE_MEMORY);
+
       /*
       Uncomment AskForValue dialog using for version 1.2.0-M4 
       */
@@ -102,9 +102,10 @@ public class UpdateMemoryTest extends CloudFoundryTest
       IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       */
-      
+
       waitForElementPresent("exoAskForValueDialog");
-      IDE.INPUT.typeToElement(driver.findElement(By.xpath("//div[@id='exoAskForValueDialog']//input[@name='valueField']")), "789", true);
+      IDE.INPUT.typeToElement(
+         driver.findElement(By.xpath("//div[@id='exoAskForValueDialog']//input[@name='valueField']")), "789", true);
       selenium().click("OkButton");
       waitForElementNotPresent("exoAskForValueDialog");
       Thread.sleep(1000);

@@ -58,7 +58,6 @@ public class UploadingZippedFolderTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -71,7 +70,6 @@ public class UploadingZippedFolderTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

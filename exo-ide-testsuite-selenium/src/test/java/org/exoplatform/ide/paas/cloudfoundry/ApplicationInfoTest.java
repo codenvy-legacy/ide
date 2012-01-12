@@ -21,7 +21,6 @@ package org.exoplatform.ide.paas.cloudfoundry;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.paas.cloudfoundry.core.CloudFoundry;
@@ -47,16 +46,12 @@ public class ApplicationInfoTest extends CloudFoundryTest
    @Before
    public void setUp() throws Exception
    {
-      System.out.println("REST WORKSPACE URL [" + BaseTest.REST_WORKSPACE_URL + "]");
-      System.out.println("IDE WORKSPACE URL [" + BaseTest.IDE_WORKSPACE_URL + "]");
-
       try
       {
          resetMockService();
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -69,7 +64,6 @@ public class ApplicationInfoTest extends CloudFoundryTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

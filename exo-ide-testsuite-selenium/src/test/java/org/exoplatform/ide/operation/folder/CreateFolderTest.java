@@ -85,7 +85,6 @@ public class CreateFolderTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

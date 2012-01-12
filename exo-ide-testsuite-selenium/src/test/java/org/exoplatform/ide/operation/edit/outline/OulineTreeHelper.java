@@ -21,16 +21,16 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Outline;
+import org.exoplatform.ide.core.Outline.TokenType;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Outline;
-import org.exoplatform.ide.core.Outline.TokenType;
 
 /**
  * This class helps to verify code outline tree grid.
@@ -198,8 +198,6 @@ public class OulineTreeHelper extends BaseTest
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
          
-         System.out.println(">>> test outline item from outline panel: item row = " + item.getKey() + ", item label = '" + outlineItem.getLabel() + "', file line number = " + outlineItem.getFileLineNumber());
-         
          checkItemPresent(outlineItem.getId());
          checkOutlineItemFromOutlinePanel(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());
       }
@@ -210,8 +208,6 @@ public class OulineTreeHelper extends BaseTest
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
          
-         System.out.println(">>> test outline item from file: item row = " + item.getKey() + ", item label = '" + outlineItem.getLabel() + "', file line number = " + outlineItem.getFileLineNumber());
-
          if (outlineItem.isCheckItemFromFile())
          {
             checkOutlineItemFromFile(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());  

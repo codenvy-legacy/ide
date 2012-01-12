@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.GoToLine;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +56,6 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -71,7 +69,6 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

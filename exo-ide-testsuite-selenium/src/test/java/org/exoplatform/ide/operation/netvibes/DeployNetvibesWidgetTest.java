@@ -102,7 +102,6 @@ public class DeployNetvibesWidgetTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -410,7 +409,6 @@ public class DeployNetvibesWidgetTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

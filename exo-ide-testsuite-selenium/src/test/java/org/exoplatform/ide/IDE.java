@@ -179,9 +179,6 @@ public class IDE
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
-      System.out.println("\r\n\r\n\r\n\r\n" + "Initializing IDE ( Selenium )\r\n" + "Workspace URL > " + workspaceURL
-         + "\r\n\r\n\r\n");
-
       this.selenium = selenium;
       this.workspaceURL = workspaceURL;
       this.driver = driver;

@@ -21,6 +21,7 @@ package org.exoplatform.ide.git;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import junit.framework.Assert;
 
 import org.exoplatform.ide.BaseTest;
@@ -62,7 +63,6 @@ public class BranchTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -76,7 +76,6 @@ public class BranchTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

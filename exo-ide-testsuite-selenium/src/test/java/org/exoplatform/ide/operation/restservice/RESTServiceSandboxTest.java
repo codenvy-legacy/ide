@@ -50,7 +50,6 @@ public class RESTServiceSandboxTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -111,7 +110,6 @@ public class RESTServiceSandboxTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

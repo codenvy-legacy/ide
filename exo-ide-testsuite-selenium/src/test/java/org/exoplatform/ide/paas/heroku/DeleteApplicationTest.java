@@ -35,19 +35,19 @@ import org.junit.Test;
  */
 public class DeleteApplicationTest extends BaseTest
 {
-   
+
    private static final String TEST_FOLDER = DeleteApplicationTest.class.getSimpleName();
+
    @Before
    public void setUp() throws Exception
    {
       try
       {
-        System.out.println(VirtualFileSystemUtils.upoadZipFolder(
-            "src/test/resources/org/exoplatform/ide/paas/heroku/DeleteApplicationTest.zip", WS_URL) + "\n\n\n\n\n\n\n\n\n\n");
+         VirtualFileSystemUtils.upoadZipFolder(
+            "src/test/resources/org/exoplatform/ide/paas/heroku/DeleteApplicationTest.zip", WS_URL);
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -61,28 +61,25 @@ public class DeleteApplicationTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testDeleteApplication() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      
+
       IDE.HEROKU.CREATE_APP.createApplication(TEST_FOLDER);
       IDE.HEROKU.DELETE_APP.callDeleteApplication();
       IDE.ASK_DIALOG.waitOpened();
       assertEquals("Delete application from Heroku", IDE.ASK_DIALOG.getQuestion());
       IDE.ASK_DIALOG.clickYes();
       IDE.ASK_DIALOG.waitClosed();
-      
+
       IDE.OUTPUT.waitForMessageShow(3);
       String text = IDE.OUTPUT.getOutputMessage(3);
       assertEquals(Messages.DELETED, text);
-      
-      
-      
+
    }
 }

@@ -63,7 +63,6 @@ public class ViewVersionListTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -76,7 +75,6 @@ public class ViewVersionListTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

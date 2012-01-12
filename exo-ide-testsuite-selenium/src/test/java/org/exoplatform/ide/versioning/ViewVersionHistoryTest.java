@@ -70,7 +70,6 @@ public class ViewVersionHistoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -439,7 +438,6 @@ public class ViewVersionHistoryTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 }

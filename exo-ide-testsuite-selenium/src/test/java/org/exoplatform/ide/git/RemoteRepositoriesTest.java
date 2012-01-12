@@ -60,7 +60,6 @@ public class RemoteRepositoriesTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -73,7 +72,6 @@ public class RemoteRepositoriesTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -52,7 +52,6 @@ public class UserInfoTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
 
       try
@@ -61,7 +60,6 @@ public class UserInfoTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -74,7 +72,6 @@ public class UserInfoTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -133,7 +130,7 @@ public class UserInfoTest extends BaseTest
       {
          IDE.OUTPUT.clickClearButton();
       }
-      
+
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.createFolder("application-1");
 

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -51,12 +50,11 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + FOLDER_NAME + "/" + FILE_NAME;
 
-   
    /**
     * Test added to Ignore, because at the moment the autoload function dosen't work in IDE.
     * @throws Exception
     */
-   
+
    @Ignore
    @Test
    public void testAutoload() throws Exception
@@ -88,7 +86,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
 
-//      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "/// test comment 1\n");
+      //      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "/// test comment 1\n");
       IDE.EDITOR.typeTextIntoEditor(0, "/// test comment 1\n");
 
       saveCurrentFile();
@@ -106,7 +104,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);
       IDE.EDITOR.checkCodeEditorOpened(0);
-      
+
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
 
       mess = IDE.OUTPUT.getOutputMessage(2);
@@ -125,8 +123,7 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
-   
+
 }

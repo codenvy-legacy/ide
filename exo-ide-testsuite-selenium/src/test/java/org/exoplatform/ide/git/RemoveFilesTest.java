@@ -61,7 +61,6 @@ public class RemoveFilesTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -74,7 +73,6 @@ public class RemoveFilesTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

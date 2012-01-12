@@ -57,7 +57,6 @@ public class RESTServiceOutputErrorTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -126,7 +125,6 @@ public class RESTServiceOutputErrorTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

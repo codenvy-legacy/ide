@@ -58,7 +58,6 @@ public class RenameClosedFileTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -71,7 +70,6 @@ public class RenameClosedFileTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

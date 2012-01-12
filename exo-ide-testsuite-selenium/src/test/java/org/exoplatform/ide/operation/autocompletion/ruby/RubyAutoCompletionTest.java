@@ -52,7 +52,6 @@ public class RubyAutoCompletionTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail("Can't create test folder");
       }
    }
@@ -66,10 +65,9 @@ public class RubyAutoCompletionTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testRubyAutocompletion() throws Exception
    {
@@ -107,7 +105,6 @@ public class RubyAutoCompletionTest extends BaseTest
 
       goToLine(32);
 
-      
       IDE.EDITOR.typeTextIntoEditor(0, "M");
       //this method fix problem of returning cursor in codeeditor before character "M"
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());

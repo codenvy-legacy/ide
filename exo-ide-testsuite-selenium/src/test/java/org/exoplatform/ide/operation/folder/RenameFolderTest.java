@@ -54,7 +54,6 @@ public class RenameFolderTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -90,7 +89,6 @@ public class RenameFolderTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

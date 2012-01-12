@@ -58,7 +58,6 @@ public class OpenHtmlLocalFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -104,7 +103,6 @@ public class OpenHtmlLocalFileTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

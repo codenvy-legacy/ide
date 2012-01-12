@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.core.Editor;
 import org.junit.Test;
 
 /**

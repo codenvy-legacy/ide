@@ -97,7 +97,6 @@ public class NetvibesDocumentationTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

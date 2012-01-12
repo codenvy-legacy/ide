@@ -54,7 +54,6 @@ public class RakeConsoleTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -68,7 +67,6 @@ public class RakeConsoleTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

@@ -211,7 +211,6 @@ public abstract class BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -233,15 +232,6 @@ public abstract class BaseTest
    {
       selenium().clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url") + "')]", "1,1");
       selenium().waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
-   }
-
-   protected static void standaloneLogin(String userName, String password) throws Exception
-   {
-      waitForElementPresent("//input[@name='j_username']");
-      selenium().type("//input[@name='j_username']", userName);
-      selenium().type("//input[@name='j_password']", password);
-      selenium().click("//input[@value='Log In']");
-      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
    private void loginInPortal() throws Exception
@@ -436,7 +426,6 @@ public abstract class BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
          assertTrue(false);
       }
 
@@ -559,97 +548,6 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
-   /* protected static void cleanDefaultWorkspace()
-    {
-       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
-    }*/
-
-   /* protected static void cleanRepository(String repositoryUrl)
-    {
-       HTTPConnection connection;
-       URL url;
-       try
-       {
-          url = new URL(BASE_URL + repositoryUrl);
-          connection = Utils.getConnection(url);
-          HTTPResponse response = connection.PropfindAllprop(BASE_URL + repositoryUrl, 1);
-          ByteArrayInputStream inputStream = new ByteArrayInputStream(response.getData());
-          Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
-          NodeList nodeList = document.getElementsByTagName("D:href");
-          for (int i = 0; i < nodeList.getLength(); i++)
-          {
-             Node node = nodeList.item(i);
-             String href = node.getFirstChild().getNodeValue();
-             if (!href.equals(repositoryUrl))
-             {
-                connection = Utils.getConnection(url);
-                response = connection.Delete(href);
-             }
-
-          }
-       }
-       catch (MalformedURLException e)
-       {
-          e.printStackTrace();
-       }
-       catch (ProtocolNotSuppException e)
-       {
-          e.printStackTrace();
-       }
-       catch (IOException e)
-       {
-          e.printStackTrace();
-       }
-       catch (ModuleException e)
-       {
-          e.printStackTrace();
-       }
-       catch (SAXException e)
-       {
-          e.printStackTrace();
-       }
-       catch (ParserConfigurationException e)
-       {
-          e.printStackTrace();
-       }
-       catch (FactoryConfigurationError e)
-       {
-          e.printStackTrace();
-       }
-    }*/
-
-   /* TODO protected static void cleanRegistry()
-   {
-      HttpURLConnection connection;
-      URL url;
-      try
-      {
-         url = new URL(BASE_URL);
-         connection = Utils.getConnection(url);
-         HTTPResponse response = connection.Delete(BASE_URL + "rest/private/registry/repository/exo:users/root/IDE");
-         System.out.println("cleanRegistry " + response.getStatusCode());
-         connection = Utils.getConnection(url);
-         response = connection.Delete(BASE_URL + "rest/private/registry/repository/exo:applications/IDE");
-         System.out.println("cleanRegistry " + response.getStatusCode());
-      }
-      catch (MalformedURLException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ProtocolNotSuppException e)
-      {
-         e.printStackTrace();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-   }
-   */
    @AfterClass
    public static void killFireFox()
    {
@@ -663,7 +561,6 @@ public abstract class BaseTest
       //      }
       //      catch (IOException e)
       //      {
-      //         e.printStackTrace();
       //      }
    }
 
@@ -890,7 +787,6 @@ public abstract class BaseTest
 
       while (true)
       {
-         System.out.println("BaseTest.waitForElementPresent()" + selenium());
          if (selenium().isElementPresent(locator))
          {
             break;
@@ -962,15 +858,12 @@ public abstract class BaseTest
       }
       catch (WebDriverException e)
       {
-         e.printStackTrace();
       }
       catch (FileNotFoundException e)
       {
-         e.printStackTrace();
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

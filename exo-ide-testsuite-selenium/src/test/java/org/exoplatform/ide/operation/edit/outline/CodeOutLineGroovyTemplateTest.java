@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.edit.outline;
 
 import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
@@ -58,7 +59,6 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -71,7 +71,6 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

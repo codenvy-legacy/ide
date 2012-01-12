@@ -53,7 +53,6 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -72,7 +71,6 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

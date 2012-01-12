@@ -57,7 +57,6 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -122,7 +121,6 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 }

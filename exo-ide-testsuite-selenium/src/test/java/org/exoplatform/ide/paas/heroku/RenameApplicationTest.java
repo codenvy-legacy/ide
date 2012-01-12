@@ -19,6 +19,7 @@
 package org.exoplatform.ide.paas.heroku;
 
 import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.paas.heroku.core.Heroku;
@@ -54,7 +55,6 @@ public class RenameApplicationTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -68,7 +68,6 @@ public class RenameApplicationTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

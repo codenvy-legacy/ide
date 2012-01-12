@@ -53,7 +53,6 @@ public class ImportStatementInsertionTest extends CodeAssistantBaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

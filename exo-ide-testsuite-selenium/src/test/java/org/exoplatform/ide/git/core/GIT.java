@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.git.core;
 
+import com.thoughtworks.selenium.Selenium;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-
-import com.thoughtworks.selenium.Selenium;
 
 /**
  * Git extension test module.

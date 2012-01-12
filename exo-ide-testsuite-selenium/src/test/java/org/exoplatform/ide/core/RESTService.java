@@ -399,10 +399,7 @@ public class RESTService extends AbstractTestModule
       }
       catch (Exception e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
       }
-
    }
 
    /**

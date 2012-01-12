@@ -85,7 +85,6 @@ public class CreateProject extends AbstractTestModule
             }
             catch (Exception e)
             {
-               e.printStackTrace();
                return false;
             }
          }
@@ -112,7 +111,6 @@ public class CreateProject extends AbstractTestModule
             }
             catch (Exception e)
             {
-               e.printStackTrace();
                return true;
             }
          }
@@ -154,7 +152,7 @@ public class CreateProject extends AbstractTestModule
     */
    public void createProject(String name) throws Exception
    {
-      IDE().MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.NEW, MenuCommands.Project.EMPTY_PROJECT);
+      IDE().MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.NEW, MenuCommands.Project.CREATE_PROJECT);
       waitOpened();
       setProjectName(name);
       clickCreateButton();

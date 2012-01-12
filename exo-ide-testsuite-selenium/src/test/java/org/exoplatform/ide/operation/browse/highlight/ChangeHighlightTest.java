@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.everrest.core.PerRequestObjectFactory;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -39,9 +38,9 @@ import org.junit.Test;
 public class ChangeHighlightTest extends BaseTest
 {
    private static String PROJECT = ChangeHighlightTest.class.getSimpleName();
-   
+
    private static String FILE_NAME = "gadget";
-      
+
    @Before
    public void setUp() throws Exception
    {
@@ -60,8 +59,8 @@ public class ChangeHighlightTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
       assertTrue(IDE.EDITOR.isActive(0));
-      assertFalse(IDE.PROJECT.EXPLORER.isActive());    
-      
+      assertFalse(IDE.PROJECT.EXPLORER.isActive());
+
       //Close file:
       IDE.EDITOR.closeTabIgnoringChanges(1);
       IDE.EDITOR.waitTabNotPresent(1);
@@ -69,15 +68,15 @@ public class ChangeHighlightTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       assertTrue(IDE.PROJECT.EXPLORER.isActive());
-      
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
       IDE.EDITOR.saveAs(1, FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      
+
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       IDE.PREVIEW.waitGadgetPreviewOpened();
-      
+
       assertTrue(IDE.PREVIEW.isGadgetPreviewOpened());
       assertTrue(IDE.PREVIEW.isGadgetPreviewActive());
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
@@ -94,7 +93,6 @@ public class ChangeHighlightTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

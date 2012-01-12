@@ -53,7 +53,6 @@ public class ApplicationInfoTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -67,7 +66,6 @@ public class ApplicationInfoTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

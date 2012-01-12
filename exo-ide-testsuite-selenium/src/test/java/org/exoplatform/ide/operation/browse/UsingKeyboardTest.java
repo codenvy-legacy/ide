@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -32,8 +31,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -64,7 +61,6 @@ public class UsingKeyboardTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

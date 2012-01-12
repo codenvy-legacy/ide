@@ -74,7 +74,6 @@ public class CreateFileFromTemplateTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    
@@ -87,7 +86,6 @@ public class CreateFileFromTemplateTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
    

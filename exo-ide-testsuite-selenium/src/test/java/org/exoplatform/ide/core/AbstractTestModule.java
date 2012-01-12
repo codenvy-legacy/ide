@@ -21,11 +21,11 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.thoughtworks.selenium.Selenium;
+
 import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.WebDriver;
-
-import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS .

@@ -46,7 +46,6 @@ public class CreateApplicationTest extends BaseTest {
 		try {
 			VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -55,7 +54,6 @@ public class CreateApplicationTest extends BaseTest {
 		try {
 			VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

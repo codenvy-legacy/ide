@@ -53,7 +53,6 @@ public class LocksByUserTest extends LockFileAbstract
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -66,7 +65,6 @@ public class LocksByUserTest extends LockFileAbstract
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -75,7 +73,7 @@ public class LocksByUserTest extends LockFileAbstract
    {
       //fix for run tests where new session starts after 7 testcases passed  
       logout();
-      standaloneLogin(TestConstants.Users.ROOT, TestConstants.Users.ROOT_PASS);
+      IDE.LOGIN.standaloneLogin(TestConstants.Users.ROOT, TestConstants.Users.ROOT_PASS);
       
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
@@ -94,7 +92,7 @@ public class LocksByUserTest extends LockFileAbstract
 
       //----- 4 --------
       //login under another user
-      standaloneLogin(TestConstants.Users.DEV, TestConstants.Users.DEV_PASS);
+      IDE.LOGIN.standaloneLogin(TestConstants.Users.DEV, TestConstants.Users.DEV_PASS);
       IDE.WORKSPACE.waitForRootItem();
 
       //----- 5 --------

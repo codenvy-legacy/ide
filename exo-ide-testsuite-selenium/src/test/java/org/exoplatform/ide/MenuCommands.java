@@ -295,6 +295,8 @@ public interface MenuCommands
       String CLOSE_PROJECT = "Close";
 
       String EMPTY_PROJECT = "Empty Project...";
+      
+      String CREATE_PROJECT = "Create Project...";
 
       String FROM_TEMPLATE = "From Template...";
       

@@ -62,7 +62,6 @@ public class CommitTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

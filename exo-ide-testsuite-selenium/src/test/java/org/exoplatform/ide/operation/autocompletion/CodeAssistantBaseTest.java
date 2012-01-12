@@ -52,7 +52,6 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
          Assert.fail(e.getMessage());
       }
 

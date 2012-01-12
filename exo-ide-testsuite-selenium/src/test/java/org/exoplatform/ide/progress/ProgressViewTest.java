@@ -48,7 +48,6 @@ public class ProgressViewTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -61,7 +60,6 @@ public class ProgressViewTest extends BaseTest
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
    }
 

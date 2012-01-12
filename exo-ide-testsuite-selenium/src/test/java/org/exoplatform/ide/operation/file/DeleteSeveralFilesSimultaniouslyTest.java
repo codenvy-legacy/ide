@@ -64,7 +64,6 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -80,7 +79,6 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

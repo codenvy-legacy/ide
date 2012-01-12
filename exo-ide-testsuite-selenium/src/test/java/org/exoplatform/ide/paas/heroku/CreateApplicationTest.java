@@ -50,7 +50,6 @@ public class CreateApplicationTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -64,7 +63,6 @@ public class CreateApplicationTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

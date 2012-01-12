@@ -25,7 +25,6 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Templates;
 import org.junit.After;
 
 /**
@@ -113,11 +112,9 @@ public abstract class AbstractHotkeysTest extends BaseTest
       for (int rowNumber = 1; rowNumber <= NUMBER_OF_COMMANDS; rowNumber++)
       {
          locator = "//table[@id='ideCustomizeHotKeysListGrid']/tbody/tr[" + rowNumber + "]/td";
-         System.out.println(locator);
          if (selenium().isElementPresent(locator))
          {
             String text = selenium().getText(locator);
-            System.out.println(text);
             if (text.equals(name))
             {
                return locator;

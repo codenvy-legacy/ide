@@ -52,7 +52,6 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
@@ -210,7 +209,6 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
