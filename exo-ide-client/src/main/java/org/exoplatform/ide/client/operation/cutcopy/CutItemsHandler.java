@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.EventHandler;
 */
 public interface CutItemsHandler extends EventHandler
 {
-   
+
    void onCutItems(CutItemsEvent event);
-   
+
 }

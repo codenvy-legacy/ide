@@ -42,7 +42,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ShowProjectsView extends ViewImpl implements org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display
+public class ShowProjectsView extends ViewImpl implements
+   org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display
 {
 
    private static ShowProjectsViewUiBinder uiBinder = GWT.create(ShowProjectsViewUiBinder.class);
@@ -50,11 +51,11 @@ public class ShowProjectsView extends ViewImpl implements org.exoplatform.ide.cl
    interface ShowProjectsViewUiBinder extends UiBinder<Widget, ShowProjectsView>
    {
    }
-   
+
    public static final String ID = "ideShowProjectsView";
-   
+
    public static final String TITLE = "Projects";
-   
+
    /**
     * Initial width of this view
     */
@@ -64,13 +65,13 @@ public class ShowProjectsView extends ViewImpl implements org.exoplatform.ide.cl
     * Initial height of this view
     */
    private static final int HEIGHT = 280;
-   
+
    @UiField
    ProjectsListGrid projectsListGrid;
-   
+
    @UiField
    ImageButton openButton;
-   
+
    @UiField
    ImageButton cancelButton;
 

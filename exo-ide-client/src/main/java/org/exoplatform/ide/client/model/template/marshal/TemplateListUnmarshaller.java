@@ -47,7 +47,7 @@ import java.util.List;
 
 public class TemplateListUnmarshaller implements Unmarshallable, Const
 {
-   
+
    private static final String CANT_PARSE_TEMPLATE = IDE.ERRORS_CONSTANT.templateCantParseTemplate();
 
    private TemplateList templateList;
@@ -65,10 +65,9 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
    {
       try
       {
-         if(response.getText().isEmpty() || 
-                  response.getStatusCode() == HTTPStatus.NOT_FOUND) 
+         if (response.getText().isEmpty() || response.getStatusCode() == HTTPStatus.NOT_FOUND)
             return;
-         
+
          Document dom = XMLParser.parse(response.getText());
          Node templatesNode = dom.getElementsByTagName(TEMPLATES).item(0);
 
@@ -90,9 +89,9 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
    {
       Node node = getChildNode(templateNode, TEMPLATE);
       Node templateTypeNode = getChildNode(node, TEMPLATE_TYPE);
-      
+
       String templateType = templateTypeNode.getChildNodes().item(0).getNodeValue();
-      
+
       if (Const.TemplateType.FILE.equals(templateType))
       {
          parseFileTemplate(templateNode);
@@ -135,32 +134,32 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
    {
       String nodeName = templateNode.getNodeName();
       Node node = getChildNode(templateNode, TEMPLATE);
-      
+
       Node nameNode = getChildNode(node, NAME);
       String name = javaScriptDecodeURIComponent(nameNode.getChildNodes().item(0).getNodeValue());
-      
+
       Node classpathNode = getChildNode(node, CLASSPATH);
-      
+
       Node descriptionNode = getChildNode(node, DESCRIPTION);
       String description = "";
       if (descriptionNode.getChildNodes().getLength() != 0)
       {
          description = javaScriptDecodeURIComponent(descriptionNode.getChildNodes().item(0).getNodeValue());
       }
-      
+
       ProjectTemplate template = new ProjectTemplate(name, description, nodeName, null);
-      
-      if (classpathNode != null) 
+
+      if (classpathNode != null)
       {
          String classpath = javaScriptDecodeURIComponent(classpathNode.getChildNodes().item(0).getNodeValue());
          template.setClassPathLocation(classpath);
       }
-      
+
       appendProjectChildren(template, getChildNode(node, ITEMS));
 
       templateList.getTemplates().add(template);
    }
-   
+
    private void appendProjectChildren(FolderTemplate container, Node itemsNode)
    {
       if (itemsNode == null)
@@ -168,11 +167,11 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
          return;
       }
       List<Template> children = new ArrayList<Template>();
-      
+
       for (int i = 0; i < itemsNode.getChildNodes().getLength(); i++)
       {
          Node itemNode = itemsNode.getChildNodes().item(i);
-         
+
          if (FILE.equals(itemNode.getNodeName()))
          {
             Node fileTemplateNameNode = getChildNode(itemNode, TEMPLATE_FILE_NAME);
@@ -195,13 +194,13 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
             appendProjectChildren(folder, getChildNode(itemNode, ITEMS));
          }
       }
-      
+
       if (children.size() > 0)
       {
          container.setChildren(children);
       }
    }
-   
+
    private Node getChildNode(Node node, String name)
    {
       for (int i = 0; i < node.getChildNodes().getLength(); i++)

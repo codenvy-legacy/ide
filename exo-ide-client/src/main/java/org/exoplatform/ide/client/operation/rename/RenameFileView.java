@@ -63,28 +63,28 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
    private static final String MIME_TYPE_FIELD = "ideRenameItemFormMimeTypeField";
 
    private static final String TITLE = IDE.NAVIGATION_CONSTANT.renameItemTitle();
-   
+
    private static final String WARNING_MSG_STYLE = "exo-rename-warning-msg";
-   
+
    @UiField
    TextInput nameField;
-   
+
    @UiField
    ComboBoxField mimeTypesField;
-   
+
    @UiField
    ImageButton renameButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    Label warningLabel;
-   
+
    interface RenameFileViewUiBinder extends UiBinder<Widget, RenameFileView>
    {
    }
-   
+
    private static RenameFileViewUiBinder uiBinder = GWT.create(RenameFileViewUiBinder.class);
 
    public RenameFileView()
@@ -92,7 +92,7 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      
+
       nameField.setName(RENAME_FIELD);
       mimeTypesField.setName(MIME_TYPE_FIELD);
       renameButton.setButtonId(RENAME_BUTTON_ID);

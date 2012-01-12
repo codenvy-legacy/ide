@@ -29,9 +29,9 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class CreateEmptyProjectEvent extends GwtEvent<CreateEmptyProjectHandler>
 {
-   
+
    public static final GwtEvent.Type<CreateEmptyProjectHandler> TYPE = new GwtEvent.Type<CreateEmptyProjectHandler>();
-   
+
    @Override
    protected void dispatch(CreateEmptyProjectHandler handler)
    {

@@ -62,7 +62,8 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class NavigatorStatusControl extends StatusTextControl implements IDEControl, ItemsSelectedHandler,
-   VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler, ViewActivatedHandler, ViewOpenedHandler, ViewClosedHandler
+   VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler, ViewActivatedHandler, ViewOpenedHandler,
+   ViewClosedHandler
 {
 
    private class StatusMessage
@@ -74,7 +75,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       {
          ImageResource imageResource =
             item.getId().equals(root.getId()) ? IDEImageBundle.INSTANCE.workspace() : IDEImageBundle.INSTANCE.folder();
-            String path = vfsInfo.getId() + ("/".equals(item.getPath()) ? "" : item.getPath());
+         String path = vfsInfo.getId() + ("/".equals(item.getPath()) ? "" : item.getPath());
          html = tuneMessage(getPathReadable(path), ImageHelper.getImageHTML(imageResource));
       }
 
@@ -92,21 +93,24 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
          path = project.getName() + (path.isEmpty() ? "" : path);
          html = tuneMessage(getPathReadable(path), ImageHelper.getImageHTML(projectImage));
       }
-      
-      private String getPathReadable(String path) {
-         if (path == null || path.isEmpty()) {
+
+      private String getPathReadable(String path)
+      {
+         if (path == null || path.isEmpty())
+         {
             return "";
          }
-         
-         String []parts = path.split("/");
+
+         String[] parts = path.split("/");
          path = "";
-         for (String part : parts) {
+         for (String part : parts)
+         {
             path += (path.isEmpty() ? part : " / " + part);
          }
-         
+
          return path;
       }
-      
+
       /**
        * @param originalStatusMessage
        * @param icon
@@ -121,7 +125,9 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
                + Images.BLANK
                + "\" style=\"width:1px; height:1px;\"></td>"
                + "<td style=\"width:16px; height:20px; vertical-align:middle; \">"
-               + "<div style=\"width:16px; height:16px; margin-top:2px;\">" + iconHTML + "</div>"
+               + "<div style=\"width:16px; height:16px; margin-top:2px;\">"
+               + iconHTML
+               + "</div>"
                + "</td>"
                + "<td style=\"width:3px;\"><img src=\""
                + Images.BLANK
@@ -129,7 +135,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
                + "<td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; line-height:20px; \"><nobr>"
                + "&nbsp;" + originalStatusMessage + "</nobr></td>" + "</tr>" + "</table>";
          return table;
-      }      
+      }
 
       public String getHtml()
       {
@@ -167,13 +173,13 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
-      
+
       IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      
+
       setEnabled(true);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
@@ -194,17 +200,18 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    {
       currentOpenedProject = event.getProject();
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
     */
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (!openedViews.contains(event.getView().getId())) {
+      if (!openedViews.contains(event.getView().getId()))
+      {
          return;
       }
-      
+
       if (vfsInfo == null || currentActiveView == null || event.getSelectedItems().size() == 0)
       {
          setText("");
@@ -212,19 +219,21 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
          return;
       }
 
-      if (event.getView() instanceof ProjectExplorerDisplay) {
+      if (event.getView() instanceof ProjectExplorerDisplay)
+      {
          setText(new StatusMessage(currentOpenedProject, event.getSelectedItems().get(0)).getHtml());
          setVisible(true);
          return;
       }
-      
-      if (event.getView() instanceof NavigatorDisplay) {
+
+      if (event.getView() instanceof NavigatorDisplay)
+      {
          setText(new StatusMessage(vfsInfo.getRoot(), event.getSelectedItems().get(0)).getHtml());
          setVisible(true);
          return;
       }
-      
-      setVisible(false);      
+
+      setVisible(false);
    }
 
    @Override
@@ -236,7 +245,8 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (!openedViews.contains(event.getView().getId())) {
+      if (!openedViews.contains(event.getView().getId()))
+      {
          openedViews.add(event.getView().getId());
       }
    }
@@ -244,7 +254,8 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (openedViews.contains(event.getView().getId())) {
+      if (openedViews.contains(event.getView().getId()))
+      {
          openedViews.remove(event.getView().getId());
       }
    }

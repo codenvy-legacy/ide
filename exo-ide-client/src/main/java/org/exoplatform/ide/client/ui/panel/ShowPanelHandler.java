@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ShowPanelHandler extends EventHandler
 {
-   
+
    void onShowPanel(ShowPanelEvent event);
 
 }

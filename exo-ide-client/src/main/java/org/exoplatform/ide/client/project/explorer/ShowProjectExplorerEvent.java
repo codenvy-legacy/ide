@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class ShowProjectExplorerEvent extends GwtEvent<ShowProjectExplorerHandler>
 {
-   
+
    public static final GwtEvent.Type<ShowProjectExplorerHandler> TYPE = new GwtEvent.Type<ShowProjectExplorerHandler>();
 
    @Override

@@ -31,5 +31,5 @@ public interface HasShowPanelHandler
 {
 
    HandlerRegistration addShowPanelHandler(ShowPanelHandler showPanelHandler);
-   
+
 }

@@ -44,13 +44,13 @@ import org.exoplatform.ide.client.template.ui.TemplateListGrid;
 
 public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFromTemplatePresenter.Display
 {
-   
+
    private static final String ID = "ideCreateFileFromTemplateForm";
-   
+
    private static final int WIDTH = 550;
 
    private static final int HEIGHT = 300;
-   
+
    private static final String TITLE = IDE.TEMPLATE_CONSTANT.createFileFromTemplateFormTitle();
 
    private static CreateFileFromTemplateViewUiBinder uiBinder = GWT.create(CreateFileFromTemplateViewUiBinder.class);
@@ -58,19 +58,19 @@ public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFr
    interface CreateFileFromTemplateViewUiBinder extends UiBinder<Widget, CreateFileFromTemplateView>
    {
    }
-   
+
    @UiField
    TemplateListGrid<FileTemplate> fileTemplateListGrid;
-   
+
    @UiField
    TextInput fileNameField;
-   
+
    @UiField
    ImageButton createButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    ImageButton deleteButton;
 
@@ -90,10 +90,12 @@ public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFr
    @Override
    public FileTemplate getSelectedTemplate()
    {
-      return fileTemplateListGrid.getSelectedItems().size() == 0 ? null : fileTemplateListGrid.getSelectedItems().get(0);
+      return fileTemplateListGrid.getSelectedItems().size() == 0 ? null : fileTemplateListGrid.getSelectedItems()
+         .get(0);
    }
-   
-   public void selectTemplate(FileTemplate template) {
+
+   public void selectTemplate(FileTemplate template)
+   {
       fileTemplateListGrid.selectItem(template);
    }
 

@@ -75,11 +75,11 @@ public class IDEMimeTypes
    {
       return extensions;
    }
-   
+
    public static List<String> getSupportedMimeTypes()
    {
       List<String> supportedMimeTypes = new ArrayList<String>();
-      
+
       for (List<String> mimeTypeList : mimeTypes.values())
       {
          for (String mimeType : mimeTypeList)
@@ -90,7 +90,7 @@ public class IDEMimeTypes
             }
          }
       }
-      
+
       return supportedMimeTypes;
    }
 

@@ -85,7 +85,8 @@ import java.util.Map;
  */
 
 public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHandler, ViewClosedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, TemplatesMigratedHandler, ApplicationSettingsReceivedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, TemplatesMigratedHandler,
+   ApplicationSettingsReceivedHandler
 {
 
    public interface Display extends IsView
@@ -192,9 +193,9 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    protected FileTemplate selectedTemplate;
 
    private boolean isTemplatesMigrated = false;
-   
+
    private ApplicationSettings applicationSettings;
-   
+
    private List<Item> selectedItems = new ArrayList<Item>();
 
    public CreateFileFromTemplatePresenter()
@@ -207,7 +208,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
-   
+
    private void bindDisplay(String title, String submitButtonTitle)
    {
       display.getFileNameField().addValueChangeHandler(fileNameFieldChangeHandler);
@@ -472,7 +473,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       String contentType = selectedTemplate.getMimeType();
 
       fileName = getDefaultNewFileName(baseFolder, fileName);
-      
+
       ProjectModel project = null;
       if (selectedItems != null && selectedItems.size() != 0)
       {
@@ -488,13 +489,13 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       newFile.setContentChanged(true);
       newFile.setId(fileName);
       newFile.setProject(project);
-      
+
       Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
       if (defaultEditors == null)
       {
          defaultEditors = new LinkedHashMap<String, String>();
       }
-      
+
       try
       {
          String defaultEditorDescription = defaultEditors.get(contentType);
@@ -507,7 +508,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          Dialogs.getInstance().showError(
             org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.createFileCantFindEditorForType(contentType));
       }
-      
+
       closeView();
    }
 

@@ -50,18 +50,18 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
       HasClickHandlers getOpenButton();
 
       HasClickHandlers getCancelButton();
-      
+
       void enableOpenButton();
-      
+
       void disableOpenButton();
 
       HasKeyPressHandlers getFilePathField();
-      
+
       void selectPathField();
-      
+
       void focusInPathField();
-      
-      TextFieldItem getFilePathFieldOrigin(); 
+
+      TextFieldItem getFilePathFieldOrigin();
    }
 
    private Display display;
@@ -69,7 +69,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
    public OpenFileByPathPresenter()
    {
       IDE.getInstance().addControl(new OpenFileByPathControl());
-      
+
       IDE.addHandler(OpenFileByPathEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
@@ -86,7 +86,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          {
             openFile();
          }
-         
+
       });
 
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -96,7 +96,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-      
+
       display.getFilePathField().addKeyPressHandler(new KeyPressHandler()
       {
 
@@ -107,22 +107,22 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
                openFile();
             }
          }
-         
+
       });
-      
+
       display.getFilePathFieldOrigin().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-         
+
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
             updateOpenButtonState(event.getValue());
          }
       });
-      
+
       display.disableOpenButton();
-      
-   } 
+
+   }
 
    private void updateOpenButtonState(Object filePath)
    {
@@ -135,7 +135,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          display.enableOpenButton();
       }
    }
-   
+
    private void openFile()
    {
       String filePath = display.getFilePathFieldOrigin().getValue();
@@ -145,11 +145,11 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          display.disableOpenButton();
          return;
       }
-      
+
       IDE.fireEvent(new OpenFileEvent(filePath));
       IDE.getInstance().closeView(display.asView().getId());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
     */
@@ -161,7 +161,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          display = null;
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler#onOpenFileByPath(org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent)
     */
@@ -180,5 +180,5 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          IDE.fireEvent(new ExceptionThrownEvent("Display OpenFileByPath must be null"));
       }
    }
-   
+
 }

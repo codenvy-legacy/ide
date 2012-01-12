@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface OpenLocalFileHandler extends EventHandler
 {
-   
+
    void onOpenLocalFile(OpenLocalFileEvent event);
 
 }

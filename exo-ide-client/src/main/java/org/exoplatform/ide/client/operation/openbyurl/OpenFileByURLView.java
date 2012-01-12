@@ -41,14 +41,15 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class OpenFileByURLView extends ViewImpl implements org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display
+public class OpenFileByURLView extends ViewImpl implements
+   org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display
 {
-   
+
    /**
     * View ID.
     */
    public static final String ID = "ide.openFileByURL.view";
-   
+
    /**
     * Initial width of this view
     */
@@ -57,7 +58,7 @@ public class OpenFileByURLView extends ViewImpl implements org.exoplatform.ide.c
    /**
     * Initial height of this view
     */
-   private static final int HEIGHT = 170;   
+   private static final int HEIGHT = 170;
 
    private static OpenFileByURLViewUiBinder uiBinder = GWT.create(OpenFileByURLViewUiBinder.class);
 
@@ -66,19 +67,19 @@ public class OpenFileByURLView extends ViewImpl implements org.exoplatform.ide.c
    }
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openFileByURLViewTitle();
-   
+
    /**
     * URL text field.
     */
    @UiField
    TextInput urlField;
-   
+
    /**
     * Open button.
     */
    @UiField
    ImageButton openButton;
-   
+
    /**
     * Cancel button.
     */

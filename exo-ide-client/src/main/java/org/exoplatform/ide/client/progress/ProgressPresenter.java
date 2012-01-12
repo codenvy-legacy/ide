@@ -94,7 +94,7 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
             }
             jobs = job;
             display.updateJobs(jobs);
-            if(jobs.isEmpty())
+            if (jobs.isEmpty())
                control.hide();
          }
       });

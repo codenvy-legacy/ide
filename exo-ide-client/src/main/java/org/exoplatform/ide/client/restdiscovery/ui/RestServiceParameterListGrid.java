@@ -33,7 +33,7 @@ import com.google.gwt.user.cellview.client.Column;
 */
 public class RestServiceParameterListGrid extends ListGrid<ParamExt>
 {
-   
+
    private static final String NAME = IDE.PREFERENCES_CONSTANT.restServiceListGridNameColumn();
 
    private static final String TYPE = IDE.PREFERENCES_CONSTANT.restServiceListGridTypeColumn();

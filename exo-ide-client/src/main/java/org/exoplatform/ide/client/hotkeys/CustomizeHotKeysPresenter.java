@@ -104,15 +104,17 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     * Other groups will be formed from menu titles: File, Edit and so on.
     */
    private static final String EDITOR_GROUP = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.hotkeysEditorGroup();
-   
+
    /*
     * Group for hotkeys, that don't belong to one of defined groups.
     */
    private static final String OTHER_GROUP = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.hotkeysOtherGroup();
-   
-   private static final String CANT_SAVE_HOTKEYS = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.hotkeysCantSaveHotkeys();
-   
-   private static final IdePreferencesLocalizationConstant CONSTANTS = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT;
+
+   private static final String CANT_SAVE_HOTKEYS = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .hotkeysCantSaveHotkeys();
+
+   private static final IdePreferencesLocalizationConstant CONSTANTS =
+      org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT;
 
    private Display display;
 
@@ -127,7 +129,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    public CustomizeHotKeysPresenter()
    {
       IDE.getInstance().addControl(new CustomizeHotKeysControl());
-      
+
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
 

@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ShowProjectExplorerHandler extends EventHandler
 {
-   
+
    void onShowProjectExplorer(ShowProjectExplorerEvent event);
 
 }

@@ -51,5 +51,5 @@ public interface UntypedTreeGrid extends HasOpenHandlers<Object>, HasSelectionHa
     * @param list of methods and resources mapped in root resource
     */
    void setPaths(RestService service, List<?> list);
-   
+
 }

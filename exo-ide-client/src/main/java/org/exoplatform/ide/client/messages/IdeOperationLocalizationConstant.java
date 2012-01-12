@@ -37,7 +37,7 @@ public interface IdeOperationLocalizationConstant extends Constants
     */
    @Key("preview.notAvailable")
    String previewNotAvailable();
-   
+
    @Key("priview.notAvailable.saveFile")
    String previewNotAvailableSaveFile();
 

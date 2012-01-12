@@ -44,12 +44,12 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
 {
 
    private ProjectTemplateList projectTemplateList;
-   
+
    public ProjectTemplateListUnmarshaller(ProjectTemplateList projectTemplateList)
    {
       this.projectTemplateList = projectTemplateList;
    }
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
@@ -70,7 +70,7 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
          projectTemplates.add(projectTemplate);
       }
    }
-   
+
    private ProjectTemplate parseObject(JSONObject jsonObject)
    {
       ProjectTemplate projectTemplate = new ProjectTemplate(null);
@@ -112,11 +112,11 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
       }
       return projectTemplate;
    }
-   
+
    private List<Template> parseChildrenListValue(JSONArray array)
    {
       List<Template> templates = new ArrayList<Template>();
-      
+
       for (int i = 0; i < array.size(); i++)
       {
          JSONObject obj = array.get(i).isObject();
@@ -133,7 +133,7 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
       }
       return templates;
    }
-   
+
    private Template parseFile(JSONObject jsonObject)
    {
       FileTemplate fileTemplate = new FileTemplate(null, null);
@@ -151,7 +151,7 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
       }
       return fileTemplate;
    }
-   
+
    private Template parseFolder(JSONObject jsonObject)
    {
       FolderTemplate folderTemplate = new FolderTemplate();
@@ -172,10 +172,9 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
       }
       return folderTemplate;
    }
-   
-   public static native JavaScriptObject build(String json) /*-{
-   return eval('(' + json + ')');      
-   }-*/;
 
+   public static native JavaScriptObject build(String json) /*-{
+                                                            return eval('(' + json + ')');      
+                                                            }-*/;
 
 }

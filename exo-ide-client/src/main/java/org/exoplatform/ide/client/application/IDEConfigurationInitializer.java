@@ -88,16 +88,16 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                {
                   applicationConfiguration = result.getIdeConfiguration();
                   applicationSettings = result.getSettings();
-                  
+
                   if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0)
                   {
                      controls.initControls(result.getUserInfo().getRoles());
-                     
+
                      IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
                      new SettingsServiceImpl(IDE.eventBus(), applicationConfiguration.getRegistryURL(), result
                         .getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
                      SettingsService.getInstance().restoreFromCookies(applicationSettings);
-                     
+
                      DirectoryFilter.get().setPattern(applicationConfiguration.getHiddenFiles());
 
                      IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
@@ -105,8 +105,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                      IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
                      checkEntryPoint();
 
-                  } else {
-                     Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.userHasNoRoles());                     
+                  }
+                  else
+                  {
+                     Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.userHasNoRoles());
                   }
                }
                catch (Exception e)
@@ -131,7 +133,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       {
          final String entryPoint = applicationSettings.getValueAsString(Settings.ENTRY_POINT);
          IDE.addHandler(VfsChangedEvent.TYPE, this);
-         
+
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
             @Override
@@ -139,10 +141,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             {
                IDE.fireEvent(new SwitchVFSEvent(entryPoint));
             }
-         });         
+         });
       }
       else
-      {        
+      {
          promptToSelectEntryPoint();
       }
    }

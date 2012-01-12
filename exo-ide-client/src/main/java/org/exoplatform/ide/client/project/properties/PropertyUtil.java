@@ -29,37 +29,46 @@ package org.exoplatform.ide.client.project.properties;
 
 public class PropertyUtil
 {
-   
-   public static String getHumanReadableName(String name) {
+
+   public static String getHumanReadableName(String name)
+   {
       String result = "";
-            
-      if (name.indexOf(":") >= 0) {
+
+      if (name.indexOf(":") >= 0)
+      {
          name = name.substring(name.indexOf(":") + 1);
       }
-      
+
       String upper = name.toUpperCase();
-      String lower = name.toLowerCase();      
-      
+      String lower = name.toLowerCase();
+
       boolean up = true;
-      for (int i = 0; i < name.length(); i++) {
-         if (name.charAt(i) >= 'A' && name.charAt(i) <= 'Z') {
+      for (int i = 0; i < name.length(); i++)
+      {
+         if (name.charAt(i) >= 'A' && name.charAt(i) <= 'Z')
+         {
             result += " ";
             up = true;
-         } else if (name.charAt(i) == '-') {
+         }
+         else if (name.charAt(i) == '-')
+         {
             result += " ";
             up = true;
             continue;
          }
 
-         if (up) {
+         if (up)
+         {
             result += upper.charAt(i);
             up = false;
-         } else {
+         }
+         else
+         {
             result += lower.charAt(i);
          }
       }
-      
+
       return result;
-   }   
+   }
 
 }

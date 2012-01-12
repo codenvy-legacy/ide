@@ -83,7 +83,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       void enableReplaceButton(boolean isEnable);
 
       void enableReplaceAllButton(boolean isEnable);
-      
+
       void focusInFindField();
 
    }
@@ -98,8 +98,8 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
    public FindTextPresenter()
    {
-      IDE.getInstance().addControl(new FindTextControl(), Docking.TOOLBAR);      
-      
+      IDE.getInstance().addControl(new FindTextControl(), Docking.TOOLBAR);
+
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);

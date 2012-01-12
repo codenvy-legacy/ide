@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client.about.AboutIDEPresenter.Display
 {
-   
+
    private static final String ID = "ideAboutView";
 
    private static final int WIDTH = 280;
@@ -67,7 +67,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
    private static final String NAME = IDE.PREFERENCES_CONSTANT.aboutIdeName();
 
    private static final String YEAR = IDE.PREFERENCES_CONSTANT.aboutYear();
-   
+
    private static final String TITLE = IDE.PREFERENCES_CONSTANT.aboutTitle();
 
    private ImageButton okButton;
@@ -76,7 +76,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.about()), WIDTH, HEIGHT, false);
       setCloseOnEscape(true);
-      
+
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
       REVISION = IDE.PREFERENCES_CONSTANT.aboutRevision() + buildNumber.buildNumber();
       VERSION = IDE.PREFERENCES_CONSTANT.aboutVersion() + buildNumber.version();

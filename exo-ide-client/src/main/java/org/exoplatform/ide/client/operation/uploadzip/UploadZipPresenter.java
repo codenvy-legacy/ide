@@ -78,7 +78,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       HasFileSelectedHandler getFileUploadInput();
 
       HasValue<String> getFileNameField();
-      
+
       HasValue<Boolean> getOverwriteAllField();
 
       void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType);

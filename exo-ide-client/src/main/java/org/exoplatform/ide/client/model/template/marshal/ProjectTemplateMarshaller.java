@@ -39,7 +39,7 @@ import java.util.List;
 public class ProjectTemplateMarshaller implements Marshallable
 {
    private ProjectTemplate projectTemplate;
-   
+
    public ProjectTemplateMarshaller(ProjectTemplate projectTemplate)
    {
       this.projectTemplate = projectTemplate;
@@ -56,7 +56,7 @@ public class ProjectTemplateMarshaller implements Marshallable
       {
          return jsonObject.toString();
       }
-      
+
       jsonObject.put("name", new JSONString(projectTemplate.getName()));
       final String description = projectTemplate.getDescription() == null ? "" : projectTemplate.getDescription();
       jsonObject.put("description", new JSONString(description));
@@ -70,7 +70,7 @@ public class ProjectTemplateMarshaller implements Marshallable
 
       return jsonObject.toString();
    }
-   
+
    private JSONArray getChildrenJsonArray(List<Template> childrenList)
    {
       JSONArray childrenJsonArray = new JSONArray();

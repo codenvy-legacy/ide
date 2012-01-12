@@ -79,11 +79,11 @@ public interface IdeLocalizationConstant extends Constants
    @DefaultStringValue("No")
    @Key("noButton")
    String noButton();
-   
+
    @DefaultStringValue("Back")
    @Key("backButton")
    String backButton();
-   
+
    @DefaultStringValue("Finish")
    @Key("finishButton")
    String finishButton();
@@ -235,10 +235,10 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.deleteItems.prompt")
    String deleteItemsPromptControl();
-   
+
    @Key("control.output.title")
    String outputTitleControl();
-   
+
    @Key("control.output.prompt")
    String outputPromptControl();
 
@@ -373,15 +373,12 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.createProjectTemplate.prompt")
    String createProjectTemplatePromptControl();
-   
-   
+
    @Key("control.projectExplorer.title")
    String projectExplorerControlTitle();
-   
+
    @Key("control.projectExplorer.prompt")
    String projectExplorerControlPrompt();
-   
-   
 
    @Key("control.restServicesDiscovery")
    String restServicesDiscoveryControl();

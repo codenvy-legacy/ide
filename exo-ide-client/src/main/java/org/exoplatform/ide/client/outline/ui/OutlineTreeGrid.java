@@ -46,7 +46,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    public OutlineTreeGrid()
    {
    }
-   
+
    public OutlineTreeGrid(String id)
    {
       getElement().setId(id);
@@ -68,7 +68,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       }
       else
       {
-         TreeItem addItem = tree.addItem(createItemWidget(value));         
+         TreeItem addItem = tree.addItem(createItemWidget(value));
          addItem.setUserObject(value);
          addItem.getElement().setId(getIdForToken(value));
          fillTreeItems(addItem, getValue().getSubTokenList());
@@ -208,8 +208,9 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
 
    protected Widget createItemWidget(Token token)
    {
-      OutlineItemCreator outlineItemCreator = IDE.getInstance().getOutlineItemCreator(((TokenBeenImpl)token).getMimeType());
-      
+      OutlineItemCreator outlineItemCreator =
+         IDE.getInstance().getOutlineItemCreator(((TokenBeenImpl)token).getMimeType());
+
       if (outlineItemCreator != null)
       {
          return outlineItemCreator.getOutlineItemWidget(token);
@@ -218,12 +219,12 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       {
          Grid grid = new Grid(1, 2);
          grid.setWidth("100%");
-   
+
          Label l = new Label();
          l.getElement().setInnerHTML(token.getName());
          l.setWordWrap(false);
          grid.setWidget(0, 1, l);
-   
+
          grid.getCellFormatter().setWidth(0, 0, "16px");
          grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
          grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
@@ -232,7 +233,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
          return grid;
       }
    }
-   
+
    /**
     * Find {@link TreeItem} in the whole of the pointed token.
     * 

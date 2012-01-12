@@ -32,22 +32,23 @@ import com.google.gwt.event.shared.GwtEvent;
 public class CreateFileFromTemplateEvent extends GwtEvent<CreateFileFromTemplateHandler>
 {
    private CreateFileFromTemplateCallback callback;
-   
+
    /**
     * Used to rewrite CreateFileFromTemplate title.
     */
    private String formTitle;
-   
+
    /**
     * Used to rewrite CreateFileFromTemplate submit button title.
     */
    private String submitButtonTitle;
-   
+
    public CreateFileFromTemplateEvent()
    {
    }
-   
-   public CreateFileFromTemplateEvent(CreateFileFromTemplateCallback callback, String formTitle, String submitButtonTitle)
+
+   public CreateFileFromTemplateEvent(CreateFileFromTemplateCallback callback, String formTitle,
+      String submitButtonTitle)
    {
       this.callback = callback;
       this.formTitle = formTitle;
@@ -68,7 +69,7 @@ public class CreateFileFromTemplateEvent extends GwtEvent<CreateFileFromTemplate
    {
       return TYPE;
    }
-   
+
    /**
     * @return the callback
     */
@@ -76,7 +77,7 @@ public class CreateFileFromTemplateEvent extends GwtEvent<CreateFileFromTemplate
    {
       return callback;
    }
-   
+
    /**
     * @return the formTitle
     */
@@ -84,7 +85,7 @@ public class CreateFileFromTemplateEvent extends GwtEvent<CreateFileFromTemplate
    {
       return formTitle;
    }
-   
+
    /**
     * @return the submitButtonTitle
     */

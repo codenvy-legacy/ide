@@ -50,11 +50,11 @@ import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 public class UploadFileView extends ViewImpl implements
    org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display
 {
-   
+
    private static final String MIME_TYPE_HIDDED_FIELD = "mimeType";
-   
+
    private static final String NAME_HIDDED_FIELD = "name";
-   
+
    private static final String OVERWRITE_HIDDED_FIELD = "overwrite";
 
    public static final int WIDTH = 460;
@@ -88,11 +88,11 @@ public class UploadFileView extends ViewImpl implements
 
    @UiField
    ComboBoxField mimeTypesField;
-   
+
    private Hidden nameHiddenField;
-   
+
    private Hidden mimeTypeHiddenField;
-   
+
    private Hidden overwriteHiddenField;
 
    public UploadFileView()
@@ -100,7 +100,7 @@ public class UploadFileView extends ViewImpl implements
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT, false);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      
+
       nameHiddenField = new Hidden(NAME_HIDDED_FIELD);
       mimeTypeHiddenField = new Hidden(MIME_TYPE_HIDDED_FIELD);
       overwriteHiddenField = new Hidden(OVERWRITE_HIDDED_FIELD);
@@ -175,7 +175,7 @@ public class UploadFileView extends ViewImpl implements
       mimeTypeHiddenField.setValue(mimeType);
       if (postFieldsPanel.getWidgetIndex(mimeTypeHiddenField) == -1)
          postFieldsPanel.add(mimeTypeHiddenField);
-      
+
    }
 
    /**

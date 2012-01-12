@@ -33,7 +33,7 @@ import java.util.List;
 public class ProjectMenuItemFormatter implements ControlsFormatter
 {
    private List<String> controlIdsOrder;
-   
+
    private void initControlsOrder()
    {
       controlIdsOrder = new ArrayList<String>();
@@ -53,14 +53,14 @@ public class ProjectMenuItemFormatter implements ControlsFormatter
       initControlsOrder();
       Collections.sort(controls, controlComparator);
    }
-   
+
    private Comparator<Control> controlComparator = new Comparator<Control>()
    {
       public int compare(Control control1, Control control2)
       {
          Integer index1 = controlIdsOrder.indexOf(control1.getId());
          Integer index2 = controlIdsOrder.indexOf(control2.getId());
-         
+
          if (index1 == -1 || index2 == -1)
             return 0;
 

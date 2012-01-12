@@ -20,7 +20,6 @@ package org.exoplatform.ide.client;
 
 import com.google.gwt.core.client.EntryPoint;
 
-
 /**
  * Created by The eXo Platform SAS.
  *	
@@ -37,5 +36,5 @@ public class IDEGwtTest implements EntryPoint
    public void onModuleLoad()
    {
    }
-   
+
 }

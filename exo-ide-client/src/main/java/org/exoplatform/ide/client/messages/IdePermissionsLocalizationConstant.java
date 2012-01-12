@@ -37,31 +37,31 @@ public interface IdePermissionsLocalizationConstant extends Constants
     */
    @Key("permissions.list.grid.identity")
    String listGridIdentity();
-   
+
    @Key("permissions.list.grid.read")
    String listGridRead();
-   
+
    @Key("permissions.list.grid.write")
    String listGridWrite();
-   
+
    /*
     * PermissionsManagerForm
     */
    @Key("permissions.title")
    String permissionsTitle();
-   
+
    @Key("permissions.name")
    String permissionsName();
-   
+
    @Key("permissions.owner")
    String permissionsOwner();
-   
+
    /*
     * PermissionsManagerPresenter
     */
    @Key("permissions.setAclFailure")
    String permissionsSetAclFailure();
-   
+
    @Key("permissions.noAclProperty")
    String permissionsNoAclProperty();
 

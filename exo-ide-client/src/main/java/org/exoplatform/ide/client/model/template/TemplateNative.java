@@ -37,19 +37,19 @@ public class TemplateNative extends JavaScriptObject
    }
 
    public final native String getName() /*-{
-      return this.name;
-   }-*/;
+                                        return this.name;
+                                        }-*/;
 
    public final native String getDescription() /*-{
-      return this.description;
-   }-*/;
-   
+                                               return this.description;
+                                               }-*/;
+
    public final native String getMimeType() /*-{
-   return this.mimeType;
-}-*/;
+                                            return this.mimeType;
+                                            }-*/;
 
    public static final native TemplateNative build(String json) /*-{
-      return eval('(' + json + ')');
-   }-*/;
+                                                                return eval('(' + json + ')');
+                                                                }-*/;
 
 }

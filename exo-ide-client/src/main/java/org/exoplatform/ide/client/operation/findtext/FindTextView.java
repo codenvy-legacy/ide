@@ -43,17 +43,18 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  * @version $Id:   ${date} ${time}
  *
  */
-public class FindTextView extends ViewImpl implements org.exoplatform.ide.client.operation.findtext.FindTextPresenter.Display
+public class FindTextView extends ViewImpl implements
+   org.exoplatform.ide.client.operation.findtext.FindTextPresenter.Display
 {
-   
-   private static final String ID = "ideFindReplaceTextView";   
+
+   private static final String ID = "ideFindReplaceTextView";
 
    private static final int DEFAULT_WIDTH = 470;
 
    private static final int DEFAULT_HEIGHT = 230;
 
    private static final String TITLE = IDE.EDITOR_CONSTANT.findTextTitle();
-   
+
    @UiField
    ImageButton findTextButton;
 
@@ -74,19 +75,18 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    @UiField
    CheckBox caseSensitiveField;
-   
+
    @UiField
    Label findResultLabel;
-   
+
    interface FindTextViewUiBinder extends UiBinder<Widget, FindTextView>
    {
    }
-   
+
    /**
     * UIBinder instance
     */
    private static FindTextViewUiBinder uiBinder = GWT.create(FindTextViewUiBinder.class);
-
 
    public FindTextView()
    {

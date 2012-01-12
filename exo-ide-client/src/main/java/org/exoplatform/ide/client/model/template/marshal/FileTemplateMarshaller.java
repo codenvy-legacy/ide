@@ -33,9 +33,9 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
  */
 public class FileTemplateMarshaller implements Marshallable
 {
-   
+
    private FileTemplate fileTemplate;
-   
+
    public FileTemplateMarshaller(FileTemplate fileTemplate)
    {
       this.fileTemplate = fileTemplate;
@@ -52,7 +52,7 @@ public class FileTemplateMarshaller implements Marshallable
       {
          return jsonObject.toString();
       }
-      
+
       jsonObject.put("name", new JSONString(fileTemplate.getName()));
       final String description = fileTemplate.getDescription() == null ? "" : fileTemplate.getDescription();
       jsonObject.put("description", new JSONString(description));

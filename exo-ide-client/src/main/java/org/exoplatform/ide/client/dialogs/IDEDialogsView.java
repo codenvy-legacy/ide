@@ -40,13 +40,14 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 public class IDEDialogsView extends ViewImpl
 {
 
-   private final String BUTTONS_PANEL_HEIGHT = "22px";   
-   
+   private final String BUTTONS_PANEL_HEIGHT = "22px";
+
    private VerticalPanel mainLayout;
-   
+
    private HorizontalPanel buttonsLayout;
-   
-   public IDEDialogsView(String id, String title, int width, int height, Widget content) {
+
+   public IDEDialogsView(String id, String title, int width, int height, Widget content)
+   {
       super(id, ViewType.MODAL, title, null, width, height);
       setCloseOnEscape(true);
 
@@ -63,7 +64,7 @@ public class IDEDialogsView extends ViewImpl
 
       add(mainLayout);
    }
-   
+
    /**
     * Create layout for displaying buttons.
     * 
@@ -92,6 +93,6 @@ public class IDEDialogsView extends ViewImpl
    public HorizontalPanel getButtonsLayout()
    {
       return buttonsLayout;
-   }   
+   }
 
 }

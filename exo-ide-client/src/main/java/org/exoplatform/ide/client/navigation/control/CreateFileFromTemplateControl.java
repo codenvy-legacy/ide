@@ -34,15 +34,15 @@ public class CreateFileFromTemplateControl extends NewFileControl
 {
 
    public final static String ID = "File/New/Create File From Template...";
-   
+
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplateTitleControl();
-   
+
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplatePromptControl();
 
    public CreateFileFromTemplateControl()
    {
-      super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(),
-         IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
+      super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(), IDEImageBundle.INSTANCE
+         .createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
       setDelimiterBefore(true);
    }
 

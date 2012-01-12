@@ -54,20 +54,20 @@ public class PreviewHTMLView extends ViewImpl implements
    private static final int DEFAULT_HEIGHT = 300;
 
    private FlowPanel previewPanel;
-   
-   private HTML previewDisabledHTML;   
-   
+
+   private HTML previewDisabledHTML;
+
    private PreviewFrame previewFrame;
-   
+
    private boolean previewAvailable = true;
-   
+
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.previewHtmlTitle();
 
    public PreviewHTMLView()
    {
       super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.preview()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
-      previewPanel = new FlowPanel();     
+      previewPanel = new FlowPanel();
       if (ViewType.POPUP.equals(getType()))
       {
          previewPanel.setSize("100%", "100%");
@@ -77,7 +77,7 @@ public class PreviewHTMLView extends ViewImpl implements
       {
          add(previewPanel);
       }
-      
+
       previewDisabledHTML = new HTML();
       previewDisabledHTML.setSize("100%", "100%");
       previewDisabledHTML.setVisible(false);
@@ -87,7 +87,7 @@ public class PreviewHTMLView extends ViewImpl implements
       previewFrame.setSize("100%", "100%");
       DOM.setElementAttribute(previewFrame.getElement(), "frameborder", "0");
       DOM.setStyleAttribute(previewFrame.getElement(), "border", "none");
-      
+
       previewFrame.addLoadHandler(new LoadHandler()
       {
          @Override
@@ -98,28 +98,27 @@ public class PreviewHTMLView extends ViewImpl implements
       });
       previewPanel.add(previewFrame);
    }
-   
+
    private native void setHandler(Element e)/*-{
-      var type = "mousedown";
-      var instance = this;
-      if(typeof e.contentDocument != "undefined")
-      {
-         e.contentDocument.addEventListener(type,
-            function() {
-               instance.@org.exoplatform.ide.client.preview.PreviewHTMLView::activate()();
-            },
-         false);
-      }
-      else
-      {
-         e.contentWindow.document.attachEvent("on" + type,
-            function() {
-               instance.@org.exoplatform.ide.client.preview.PreviewHTMLView::activate()();
-            }
-         );
-      }
-   }-*/;
-   
+                                            var type = "mousedown";
+                                            var instance = this;
+                                            if(typeof e.contentDocument != "undefined")
+                                            {
+                                            e.contentDocument.addEventListener(type,
+                                            function() {
+                                            instance.@org.exoplatform.ide.client.preview.PreviewHTMLView::activate()();
+                                            },
+                                            false);
+                                            }
+                                            else
+                                            {
+                                            e.contentWindow.document.attachEvent("on" + type,
+                                            function() {
+                                            instance.@org.exoplatform.ide.client.preview.PreviewHTMLView::activate()();
+                                            }
+                                            );
+                                            }
+                                            }-*/;
 
    @Override
    public void showPreview(String url)
@@ -151,7 +150,9 @@ public class PreviewHTMLView extends ViewImpl implements
    @Override
    public void setMessage(String message)
    {
-      String html = "<table style=\"width:100%; height:100%;\"><tr style=\"vertical-align:top;\"><td style=\"text-align:center;\">" + message + "</td></tr></table>";
+      String html =
+         "<table style=\"width:100%; height:100%;\"><tr style=\"vertical-align:top;\"><td style=\"text-align:center;\">"
+            + message + "</td></tr></table>";
       previewDisabledHTML.setHTML(html);
    }
 

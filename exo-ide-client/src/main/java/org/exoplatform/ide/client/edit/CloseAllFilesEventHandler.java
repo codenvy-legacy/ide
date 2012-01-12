@@ -51,18 +51,22 @@ import java.util.Map;
  * @version $
  */
 
-public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFileOpenedHandler, EditorFileClosedHandler, FileSavedHandler
+public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFileOpenedHandler,
+   EditorFileClosedHandler, FileSavedHandler
 {
-   
-   private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.workspaceCloseAllFilesDialogTitle();
 
-   private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.workspaceCloseAllFilesDialogText();   
-   
+   private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
+      .workspaceCloseAllFilesDialogTitle();
+
+   private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
+      .workspaceCloseAllFilesDialogText();
+
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
-   
+
    private FileModel fileToClose;
-   
-   public CloseAllFilesEventHandler() {
+
+   public CloseAllFilesEventHandler()
+   {
       IDE.addHandler(CloseAllFilesEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -72,7 +76,8 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
    @Override
    public void onCloseAllFiles(CloseAllFilesEvent event)
    {
-      if (openedFiles.size() == 0) {
+      if (openedFiles.size() == 0)
+      {
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
             @Override
@@ -81,10 +86,10 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
                IDE.fireEvent(new AllFilesClosedEvent());
             }
          });
-         
+
          return;
       }
-      
+
       Dialogs.getInstance().ask(ASK_DIALOG_TITLE, ASK_DIALOG_TEXT, new BooleanValueReceivedHandler()
       {
          public void booleanValueReceived(Boolean value)
@@ -107,7 +112,7 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
    private void closeNextFile()
    {
       fileToClose = null;
-      
+
       if (openedFiles.size() == 0)
       {
          IDE.fireEvent(new AllFilesClosedEvent());
@@ -124,7 +129,7 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
             org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.selectWorkspaceAskSaveFileBeforeClosing(fileName);
          final String title =
             org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.selectWorkspaceAskSaveFileBeforeClosingDialogTitle();
-         
+
          Dialogs.getInstance().ask(title, message, new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)
@@ -179,12 +184,13 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
    @Override
    public void onFileSaved(FileSavedEvent event)
    {
-      if (fileToClose != null) {
+      if (fileToClose != null)
+      {
          EditorCloseFileEvent e = new EditorCloseFileEvent(fileToClose, true);
          fileToClose = null;
-         IDE.fireEvent(e);         
+         IDE.fireEvent(e);
          closeNextFile();
       }
    }
-   
+
 }

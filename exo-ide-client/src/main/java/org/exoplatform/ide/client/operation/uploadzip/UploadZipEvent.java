@@ -31,7 +31,7 @@ public class UploadZipEvent extends GwtEvent<UploadZipHandler>
 {
 
    public static final GwtEvent.Type<UploadZipHandler> TYPE = new GwtEvent.Type<UploadZipHandler>();
-   
+
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<UploadZipHandler> getAssociatedType()
    {

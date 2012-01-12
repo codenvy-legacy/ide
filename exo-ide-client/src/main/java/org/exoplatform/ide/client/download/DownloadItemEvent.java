@@ -31,7 +31,7 @@ public class DownloadItemEvent extends GwtEvent<DownloadItemHandler>
 {
 
    public static final GwtEvent.Type<DownloadItemHandler> TYPE = new GwtEvent.Type<DownloadItemHandler>();
-   
+
    @Override
    protected void dispatch(DownloadItemHandler handler)
    {

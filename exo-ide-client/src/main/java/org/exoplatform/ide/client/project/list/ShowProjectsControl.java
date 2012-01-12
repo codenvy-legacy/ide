@@ -56,7 +56,7 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
       setEvent(new ShowProjectsEvent());
-//      setDelimiterBefore(true);
+      //      setDelimiterBefore(true);
    }
 
    /**

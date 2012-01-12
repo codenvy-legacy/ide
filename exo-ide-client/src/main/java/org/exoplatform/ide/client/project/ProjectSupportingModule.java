@@ -62,9 +62,9 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    public ProjectSupportingModule()
    {
       IDE.getInstance().addControl(new ProjectPaaSControl());
-      
+
       new CreateProjectFromTemplatePresenter();
-      
+
       new DeployProjectToPaasPresenter();
 
       //      new CreateProjectTemplatePresenter();
@@ -74,11 +74,11 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       new TinyProjectExplorerPresenter();
 
       new CreateEmptyProjectPresenter();
-      
+
       new ProjectPropertiesPresenter();
-      
+
       new ProjectCreatedEventHandler();
-      
+
       IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
 
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);

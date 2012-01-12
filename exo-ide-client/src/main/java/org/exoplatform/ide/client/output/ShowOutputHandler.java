@@ -29,5 +29,5 @@ public interface ShowOutputHandler extends EventHandler
 {
 
    void onShowOutput(ShowOutputEvent event);
-   
+
 }

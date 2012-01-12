@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface ShowPermissionsHandler extends EventHandler
 {
-   
+
    void onShowPermissions(ShowPermissionsEvent event);
 
 }

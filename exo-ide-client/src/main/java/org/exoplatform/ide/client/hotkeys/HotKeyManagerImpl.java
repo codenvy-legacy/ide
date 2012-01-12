@@ -58,15 +58,15 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    private static final class WindowCloseHandlerImpl implements ClosingHandler
    {
       public native void onWindowClosing(ClosingEvent event) /*-{
-       $doc.onkeydown = null; 
-       }-*/;
+                                                             $doc.onkeydown = null; 
+                                                             }-*/;
 
       private native void init() /*-{
-         $doc.onkeydown = function(evt) { 
-         var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
-         hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
-         }                        
-         }-*/;
+                                 $doc.onkeydown = function(evt) { 
+                                 var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
+                                 hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
+                                 }                        
+                                 }-*/;
    }
 
    private HotKeyPressedListener hotKeyPressedListener;
@@ -151,8 +151,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    private void hotKeyCustomizing(final Event event)
    {
 
-      hotKeyPressedListener.onHotKeyPressed(event.getCtrlKey(), event.getAltKey(), 
-         DOM.eventGetKeyCode(event));
+      hotKeyPressedListener.onHotKeyPressed(event.getCtrlKey(), event.getAltKey(), DOM.eventGetKeyCode(event));
       event.preventDefault();
    }
 
@@ -178,7 +177,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       hotKeys.put("Ctrl+68", DeleteCurrentLineControl.ID); //Ctrl+D
       hotKeys.put("Ctrl+76", GoToLineControl.ID); //Ctrl+L
       hotKeys.put("Ctrl+78", CreateFileFromTemplateControl.ID); //Ctrl+N
-      
+
       hotKeys.putAll(hotKeys);
    }
 
@@ -211,11 +210,12 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
        */
       for (Control control : registeredControls)
       {
-         if (!(control instanceof SimpleControl)) {
+         if (!(control instanceof SimpleControl))
+         {
             continue;
          }
-         
-         SimpleControl simpleControl = (SimpleControl)control;         
+
+         SimpleControl simpleControl = (SimpleControl)control;
          simpleControl.setHotKey(null);
       }
 
@@ -230,7 +230,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
          {
             continue;
          }
-         
+
          SimpleControl simpleControl = (SimpleControl)control;
 
          String k = HotKeyHelper.convertToStringCombination(key);

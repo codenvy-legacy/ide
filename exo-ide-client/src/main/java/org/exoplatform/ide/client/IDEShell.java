@@ -29,13 +29,13 @@ import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
  */
 public class IDEShell implements EntryPoint
 {
-   
+
    public void onModuleLoad()
    {
       GWT.setUncaughtExceptionHandler(new H());
-      new IDE();      
+      new IDE();
    }
-   
+
    private class H implements UncaughtExceptionHandler
    {
 

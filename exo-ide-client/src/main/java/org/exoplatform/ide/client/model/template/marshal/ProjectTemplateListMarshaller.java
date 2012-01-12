@@ -38,7 +38,7 @@ import java.util.List;
 public class ProjectTemplateListMarshaller implements Marshallable
 {
    private List<ProjectTemplate> projectTemplates;
-   
+
    public ProjectTemplateListMarshaller(List<ProjectTemplate> projectTemplates)
    {
       this.projectTemplates = projectTemplates;
@@ -75,7 +75,7 @@ public class ProjectTemplateListMarshaller implements Marshallable
 
       return jsonArray.toString();
    }
-   
+
    private JSONArray getChildrenJsonArray(List<Template> childrenList)
    {
       JSONArray childrenJsonArray = new JSONArray();

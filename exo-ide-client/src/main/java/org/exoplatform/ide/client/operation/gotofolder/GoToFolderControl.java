@@ -66,7 +66,7 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
@@ -97,5 +97,5 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
          setVisible(false);
       }
    }
-   
+
 }

@@ -55,9 +55,9 @@ public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingVie
    private Map<String, Widget> lockPanels = new HashMap<String, Widget>();
 
    protected Map<String, Window> windows = new HashMap<String, Window>();
-   
+
    protected Map<String, WindowController> windowControllers = new HashMap<String, WindowController>();
-   
+
    protected class WindowController implements CloseClickHandler
    {
 
@@ -121,16 +121,14 @@ public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingVie
          add(lockPanel);
          lockPanels.put(view.getId(), lockPanel);
       }
-      
+
       if (windows.size() == 0)
       {
          RootLayoutPanel.get().add(this);
          RootLayoutPanel.get().setWidgetLeftWidth(this, 0, Unit.PX, 100, Unit.PCT);
       }
 
-      Window window = view.canResize()
-         ? new ResizeableWindow(view.getTitle()) 
-         : new Window(view.getTitle());
+      Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
 
       window.getElement().setAttribute("id", view.getId() + "-window");
       //window.getElement().getStyle().setProperty("zIndex", "auto");
@@ -143,7 +141,7 @@ public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingVie
 
       windows.put(view.getId(), window);
       window.add(view.asWidget());
-      
+
       WindowController controller = new WindowController(view, window);
       windowControllers.put(view.getId(), controller);
 

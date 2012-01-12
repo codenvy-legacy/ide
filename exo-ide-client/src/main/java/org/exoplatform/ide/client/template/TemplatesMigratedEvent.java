@@ -33,7 +33,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class TemplatesMigratedEvent extends GwtEvent<TemplatesMigratedHandler>
 {
-   
+
    public static final GwtEvent.Type<TemplatesMigratedHandler> TYPE = new GwtEvent.Type<TemplatesMigratedHandler>();
 
    /**

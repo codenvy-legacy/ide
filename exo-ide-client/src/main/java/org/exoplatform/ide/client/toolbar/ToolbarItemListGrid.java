@@ -58,13 +58,13 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
    public ToolbarItemListGrid()
    {
       setID(ID);
-      
+
       initColumns();
    }
-   
+
    private String getDivider(String title, String style)
    {
-      
+
       String divider =
          "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:16px;\">"
             + "<tr><td><hr></td><td class=\"" + style + "\">&nbsp;" + title + "&nbsp;</td><td><hr></td></tr>"
@@ -72,7 +72,7 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
 
       return divider;
    }
-   
+
    private void initColumns()
    {
       Column<ToolbarItem, SafeHtml> titleColumn = new Column<ToolbarItem, SafeHtml>(new SafeHtmlCell())
@@ -97,7 +97,7 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
       };
       getCellTable().addColumn(titleColumn, TOOLBAR);
       getCellTable().setColumnWidth(titleColumn, 60, Unit.PX);
-      
+
    }
 
    private String getItemTitle(ToolbarItem item)
@@ -143,11 +143,13 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
 
    }
 
-   private String build(String image, String command) {
-      String h ="<div style=\"height: 16px; padding:0px; margin:0px; line-height:16px;\">" +
-         (image != null ? "<div style=\"width:16px; height:16px; overflow:hidden; float:left;\">" + image + "</div>" : "") +
-         "<div style=\"float:left;\">&nbsp;" + command + "</div></div>";      
-      return  h;
-   }   
+   private String build(String image, String command)
+   {
+      String h =
+         "<div style=\"height: 16px; padding:0px; margin:0px; line-height:16px;\">"
+            + (image != null ? "<div style=\"width:16px; height:16px; overflow:hidden; float:left;\">" + image
+               + "</div>" : "") + "<div style=\"float:left;\">&nbsp;" + command + "</div></div>";
+      return h;
+   }
 
 }

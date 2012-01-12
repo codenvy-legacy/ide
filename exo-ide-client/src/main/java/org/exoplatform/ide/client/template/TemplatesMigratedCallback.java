@@ -27,7 +27,7 @@ package org.exoplatform.ide.client.template;
  */
 public interface TemplatesMigratedCallback
 {
-   
+
    void onTemplatesMigrated();
 
 }

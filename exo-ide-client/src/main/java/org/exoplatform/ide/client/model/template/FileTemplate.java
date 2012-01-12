@@ -32,7 +32,7 @@ public class FileTemplate extends Template
    private String mimeType;
 
    private String content;
-   
+
    private String fileName;
 
    public FileTemplate(String mimeType, String name, String description, String content, String nodeName)
@@ -41,33 +41,33 @@ public class FileTemplate extends Template
       this.mimeType = mimeType;
       this.content = content;
    }
-   
+
    public FileTemplate(String mimeType, String name, String description, String content, boolean isDefault)
    {
       super(name, description, isDefault);
       this.mimeType = mimeType;
       this.content = content;
    }
-   
+
    public FileTemplate(String name, String fileName, String mimeType)
    {
       super(name);
       this.fileName = fileName;
       this.mimeType = mimeType;
    }
-   
+
    public FileTemplate(String name, String fileName)
    {
       super(name);
       this.fileName = fileName;
    }
-   
+
    public FileTemplate(String name, String description, String mimeType, boolean isDefault)
    {
       super(name, description, isDefault);
       this.mimeType = mimeType;
    }
-   
+
    /**
     * @return the content
     */
@@ -99,7 +99,7 @@ public class FileTemplate extends Template
    {
       this.mimeType = mimeType;
    }
-   
+
    /**
     * @return the fileName
     */
@@ -107,7 +107,7 @@ public class FileTemplate extends Template
    {
       return fileName;
    }
-   
+
    /**
     * @param fileName the fileName to set
     */

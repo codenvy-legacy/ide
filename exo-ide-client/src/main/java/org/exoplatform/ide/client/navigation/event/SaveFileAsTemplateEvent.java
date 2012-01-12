@@ -29,7 +29,7 @@ public class SaveFileAsTemplateEvent extends GwtEvent<SaveFileAsTemplateHandler>
 {
 
    public static final GwtEvent.Type<SaveFileAsTemplateHandler> TYPE = new GwtEvent.Type<SaveFileAsTemplateHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */

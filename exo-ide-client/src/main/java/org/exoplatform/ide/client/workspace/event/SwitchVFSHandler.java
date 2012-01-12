@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface SwitchVFSHandler extends EventHandler
 {
-   
+
    void onSwitchVFS(SwitchVFSEvent event);
 
 }

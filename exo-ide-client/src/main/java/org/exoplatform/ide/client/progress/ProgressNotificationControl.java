@@ -101,13 +101,13 @@ public class ProgressNotificationControl extends StatusTextControl implements ID
     */
    private String prepareText(String message, ImageResource icon, boolean error)
    {
-    
+
       String table =
          "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height:16px; border-collapse: collapse;width:100%; table-layout: fixed;\">"
             + "<tr>"
-            + "<td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif;" +
-            (error ? " color:#880000;" : "") + 
-            " font-size:11px; font-style:normal; text-align: left; overflow: hidden; white-space: nowrap; width:250px; text-overflow: ellipsis;\">"
+            + "<td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif;"
+            + (error ? " color:#880000;" : "")
+            + " font-size:11px; font-style:normal; text-align: left; overflow: hidden; white-space: nowrap; width:250px; text-overflow: ellipsis;\">"
             + message
             + "</td>"
             + "<td style=\"width:20px; height:16px;text-align: right;\">"

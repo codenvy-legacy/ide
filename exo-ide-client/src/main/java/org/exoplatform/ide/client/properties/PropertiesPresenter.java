@@ -39,7 +39,8 @@ import com.google.gwt.core.client.GWT;
  * @version @version $Id: $
  */
 
-public class PropertiesPresenter implements EditorActiveFileChangedHandler, ShowPropertiesHandler, ViewClosedHandler, FileSavedHandler
+public class PropertiesPresenter implements EditorActiveFileChangedHandler, ShowPropertiesHandler, ViewClosedHandler,
+   FileSavedHandler
 {
 
    public interface Display extends IsView
@@ -59,7 +60,7 @@ public class PropertiesPresenter implements EditorActiveFileChangedHandler, Show
       IDE.addHandler(ShowPropertiesEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(FileSavedEvent.TYPE, this);
-      
+
       IDE.getInstance().addControl(new ShowPropertiesControl(), Docking.TOOLBAR_RIGHT);
    }
 
@@ -101,21 +102,21 @@ public class PropertiesPresenter implements EditorActiveFileChangedHandler, Show
    }
 
    //TODO: need rework according new VFS
-//   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
-//   {
-//      if (event.getItem() instanceof FileModel)
-//      {
-//         refreshProperties((FileModel)event.getItem());
-//      }
-//   }
+   //   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
+   //   {
+   //      if (event.getItem() instanceof FileModel)
+   //      {
+   //         refreshProperties((FileModel)event.getItem());
+   //      }
+   //   }
 
-//   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-//   {
-//      if (event.getItem() instanceof File)
-//      {
-//         refreshProperties((File)event.getItem());
-//      }
-//   }
+   //   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   //   {
+   //      if (event.getItem() instanceof File)
+   //      {
+   //         refreshProperties((File)event.getItem());
+   //      }
+   //   }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {

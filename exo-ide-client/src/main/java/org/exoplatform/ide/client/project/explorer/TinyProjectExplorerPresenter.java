@@ -453,7 +453,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          }
       }
 
-      
       if (folder instanceof FolderModel)
       {
          ((FolderModel)folder).getChildren().getItems().clear();
@@ -464,7 +463,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          ((ProjectModel)folder).getChildren().getItems().clear();
          ((ProjectModel)folder).getChildren().getItems().addAll(result);
       }
-      
+
       IDE.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
 
@@ -472,7 +471,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       List<Item> children =
          (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
             .getChildren().getItems();
-//      removeSystemItems(children);
+      //      removeSystemItems(children);
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);
@@ -481,25 +480,25 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       refreshNextFolder();
    }
 
-//   /**
-//    * Removes items for not to be displayed, if they are system ones
-//    * (for example, ".groovyclasspath" file).
-//    * To known system item or not call {@link Item} method: boolean isSystem().
-//    * 
-//    * @param items
-//    */
-//   private void removeSystemItems(List<Item> items)
-//   {
-//      List<Item> itemsToRemove = new ArrayList<Item>();
-//      for (Item item : items)
-//      {
-//         if (item.getName().startsWith("."))
-//         {
-//            itemsToRemove.add(item);
-//         }
-//      }
-//      items.removeAll(itemsToRemove);
-//   }
+   //   /**
+   //    * Removes items for not to be displayed, if they are system ones
+   //    * (for example, ".groovyclasspath" file).
+   //    * To known system item or not call {@link Item} method: boolean isSystem().
+   //    * 
+   //    * @param items
+   //    */
+   //   private void removeSystemItems(List<Item> items)
+   //   {
+   //      List<Item> itemsToRemove = new ArrayList<Item>();
+   //      for (Item item : items)
+   //      {
+   //         if (item.getName().startsWith("."))
+   //         {
+   //            itemsToRemove.add(item);
+   //         }
+   //      }
+   //      items.removeAll(itemsToRemove);
+   //   }
 
    /**
     * Comparator for comparing items in received directory.
@@ -572,12 +571,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      
+
       if (display != null)
       {
          display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
       }
-      
+
       ensureProjectExplorerDisplayCreated();
    }
 
@@ -717,7 +716,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       if (openedProject != null)
       {
-         if (openedProject.getId().equals(event.getProject().getId()) && openedProject.getName().equals(event.getProject().getName()))
+         if (openedProject.getId().equals(event.getProject().getId())
+            && openedProject.getName().equals(event.getProject().getName()))
          {
             return;
          }

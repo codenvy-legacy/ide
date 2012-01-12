@@ -37,9 +37,9 @@ import java.util.List;
  */
 public class FileTemplateListMarshaller implements Marshallable
 {
-   
+
    private List<FileTemplate> fileTemplates;
-   
+
    public FileTemplateListMarshaller(List<FileTemplate> fileTemplates)
    {
       this.fileTemplates = fileTemplates;
@@ -69,7 +69,7 @@ public class FileTemplateListMarshaller implements Marshallable
          jsonObject.put("isDefault", new JSONString(String.valueOf(fileTemplate.isDefault())));
          jsonArray.set(i++, jsonObject);
       }
-      
+
       return jsonArray.toString();
 
    }

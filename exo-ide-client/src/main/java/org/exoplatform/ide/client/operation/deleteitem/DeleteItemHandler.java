@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface DeleteItemHandler extends EventHandler
 {
-   
+
    void onDeleteItem(DeleteItemEvent event);
 
 }

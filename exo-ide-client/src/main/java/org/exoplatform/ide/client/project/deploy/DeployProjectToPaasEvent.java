@@ -26,22 +26,21 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class DeployProjectToPaasEvent extends GwtEvent<DeployProjectToPaasHandler>
 {
-   
+
    private String projectName;
-   
+
    private String projectType;
-   
+
    private String templateName;
-   
+
    public DeployProjectToPaasEvent(String projectName, String projectType, String templateName)
    {
       this.projectName = projectName;
       this.projectType = projectType;
       this.templateName = templateName;
    }
-   
-   public static final GwtEvent.Type<DeployProjectToPaasHandler> TYPE =
-      new GwtEvent.Type<DeployProjectToPaasHandler>();
+
+   public static final GwtEvent.Type<DeployProjectToPaasHandler> TYPE = new GwtEvent.Type<DeployProjectToPaasHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
@@ -60,7 +59,7 @@ public class DeployProjectToPaasEvent extends GwtEvent<DeployProjectToPaasHandle
    {
       handler.onDeployProjectToPaas(this);
    }
-   
+
    /**
     * @return the projectName
     */
@@ -68,7 +67,7 @@ public class DeployProjectToPaasEvent extends GwtEvent<DeployProjectToPaasHandle
    {
       return projectName;
    }
-   
+
    /**
     * @return the projectType
     */
@@ -76,7 +75,7 @@ public class DeployProjectToPaasEvent extends GwtEvent<DeployProjectToPaasHandle
    {
       return projectType;
    }
-   
+
    /**
     * @return the templateName
     */

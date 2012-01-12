@@ -63,7 +63,7 @@ public class MenuImpl extends MenuBar implements Menu
          MenuItem menuItem = createdMenuItems.get(control);
          new MenuItemControl(IDE.eventBus(), menuItem, control);
       }
-      
+
    }
 
    private MenuItem add(MenuItem parent, SimpleControl control, int depth)

@@ -42,38 +42,38 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  */
 public class DeployProjectToPaasView extends ViewImpl implements DeployProjectToPaasPresenter.Display
 {
-private static final String ID = "DeployNewProjectView";
-   
+   private static final String ID = "DeployNewProjectView";
+
    private static final String TITLE = "Deploy project to PaaS";
-   
+
    private static final int HEIGHT = 345;
 
    private static final int WIDTH = 550;
-   
+
    interface CreateProjectViewUiBinder extends UiBinder<Widget, DeployProjectToPaasView>
    {
    }
-   
+
    @UiField
    SelectItem selectPaasField;
-   
+
    @UiField
    ImageButton finishButton;
-   
+
    @UiField
    ImageButton backButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    FlowPanel paasPanel;
-   
+
    /**
     * UIBinder instance
     */
    private static CreateProjectViewUiBinder uiBinder = GWT.create(CreateProjectViewUiBinder.class);
-   
+
    public DeployProjectToPaasView()
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);

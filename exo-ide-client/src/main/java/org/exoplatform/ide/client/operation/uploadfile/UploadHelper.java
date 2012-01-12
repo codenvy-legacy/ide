@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.uploadfile;
 
-
 /**
  * Helper to parse response from server, that was got
  * in SubmitCompleteHandler.
@@ -35,7 +34,7 @@ package org.exoplatform.ide.client.operation.uploadfile;
  */
 public class UploadHelper
 {
-   
+
    public static class ErrorData
    {
       public ErrorData(int code, String text)
@@ -48,7 +47,7 @@ public class UploadHelper
 
       public String text;
    }
-   
+
    /**
     * Parse error message in such form: <p/>
     * <code>&lt;pre&gt;Code: &lt;exit-code&gt; Text: &lt;error message&gt; &lt;/pre&gt;<code>.

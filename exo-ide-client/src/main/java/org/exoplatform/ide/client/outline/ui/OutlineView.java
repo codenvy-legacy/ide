@@ -43,8 +43,7 @@ import java.util.List;
  * @version $
  */
 
-public class OutlineView extends ViewImpl implements
-   org.exoplatform.ide.client.outline.OutlinePresenter.Display
+public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.outline.OutlinePresenter.Display
 {
 
    private static final String ID = "ideOutlineView";
@@ -59,11 +58,11 @@ public class OutlineView extends ViewImpl implements
     */
    private static final int HEIGHT = 450;
 
-   private static final String REFRESHING_MARK =
-      " <span title=" + org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_CONSTANT.outlineTitleRefreshingMarkTitle()
-         + " style='position: relative; top: 2px' width='20px;'><img width='15px;' src='"
-         + UIHelper.getGadgetImagesURL() + GWTLoader.LOADER_PROGRESSIMAGE + "'></img></span>";
-   
+   private static final String REFRESHING_MARK = " <span title="
+      + org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_CONSTANT.outlineTitleRefreshingMarkTitle()
+      + " style='position: relative; top: 2px' width='20px;'><img width='15px;' src='" + UIHelper.getGadgetImagesURL()
+      + GWTLoader.LOADER_PROGRESSIMAGE + "'></img></span>";
+
    private static OutlineViewUiBinder uiBinder = GWT.create(OutlineViewUiBinder.class);
 
    interface OutlineViewUiBinder extends UiBinder<Widget, OutlineView>
@@ -75,14 +74,14 @@ public class OutlineView extends ViewImpl implements
 
    private boolean outlineAvailable = false;
 
-//   @UiField
-//   Border outlineTreeGridPanel;
+   //   @UiField
+   //   Border outlineTreeGridPanel;
 
    @UiField
    OutlineTreeGrid outlineTreeGrid;
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outlineTitle();
-   
+
    public OutlineView()
    {
       super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.outline()), WIDTH, HEIGHT);
@@ -122,7 +121,7 @@ public class OutlineView extends ViewImpl implements
 
       if (available)
       {
-         outlineDisabledPanel. setVisible(false);
+         outlineDisabledPanel.setVisible(false);
          //outlineTreeGridPanel.setVisible(true);
          outlineTreeGrid.setVisible(true);
       }
@@ -165,7 +164,7 @@ public class OutlineView extends ViewImpl implements
    {
       TokenBeenImpl emptyToken = new TokenBeenImpl();
       emptyToken.setSubTokenList(new ArrayList<TokenBeenImpl>());
-      
+
       getOutlineTree().setValue(emptyToken);
    }
 

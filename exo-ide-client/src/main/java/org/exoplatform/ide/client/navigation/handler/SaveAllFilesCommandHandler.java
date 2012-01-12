@@ -56,7 +56,7 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
    public SaveAllFilesCommandHandler()
    {
       IDE.getInstance().addControl(new SaveAllFilesControl());
-      
+
       IDE.addHandler(SaveAllFilesEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -128,6 +128,5 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
    {
       openedFiles = event.getOpenedFiles();
    }
-
 
 }

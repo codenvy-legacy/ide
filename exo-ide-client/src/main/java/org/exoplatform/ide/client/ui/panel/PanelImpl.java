@@ -132,7 +132,6 @@ public class PanelImpl implements Panel, HasViewVisibilityChangedHandler, SetVie
       tab.getElement().getStyle().setMargin(2, Unit.PX);
 
       createMaxinizeRestorePanelButtons();
-      
 
       tab.addSelectionHandler(tabSelectionHandler);
       tab.addCloseTabHandler(closeTabHandler);
@@ -403,7 +402,7 @@ public class PanelImpl implements Panel, HasViewVisibilityChangedHandler, SetVie
    @Override
    public void setPanelHidden(boolean panelHidden)
    {
-     
+
       tab.getElement().setAttribute("panel-hidden", "" + panelHidden);
 
       tab.setVisible(!panelHidden);

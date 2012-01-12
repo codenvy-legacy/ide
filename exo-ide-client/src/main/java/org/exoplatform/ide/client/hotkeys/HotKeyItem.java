@@ -31,14 +31,14 @@ public class HotKeyItem
    private String hotKey;
 
    private Control command;
-   
+
    //--- fields for group item
    private boolean isGroup = false;
-   
+
    private String title;
-   
+
    private String group;
-   
+
    public HotKeyItem(Control command, String hotkey, String group)
    {
       this.command = command;
@@ -53,7 +53,7 @@ public class HotKeyItem
       this.isGroup = isGroup;
       this.group = group;
    }
-   
+
    /**
     * @return the group
     */
@@ -61,7 +61,7 @@ public class HotKeyItem
    {
       return group;
    }
-   
+
    /**
     * @return the isGroup
     */
@@ -69,7 +69,7 @@ public class HotKeyItem
    {
       return isGroup;
    }
-   
+
    /**
     * @return the title
     */

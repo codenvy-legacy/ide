@@ -58,5 +58,5 @@ public class MaximizePanelEvent extends GwtEvent<MaximizePanelHandler>
    {
       handler.onMaximizePanel(this);
    }
-   
+
 }

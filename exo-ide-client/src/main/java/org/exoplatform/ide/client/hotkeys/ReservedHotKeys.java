@@ -38,7 +38,7 @@ public class ReservedHotKeys
     * Value - displayed title in list grid.
     */
    private static Map<String, String> hotkeys = new HashMap<String, String>();
-   
+
    static
    {
       hotkeys.put("Ctrl+32", IDE.PREFERENCES_CONSTANT.reservedHotkyesAutocomplete()); //Ctrl+Space

@@ -36,14 +36,14 @@ package org.exoplatform.ide.client;
 
 public class Alert
 {
-   
+
    public static final native void init() /*-{
-      var alertFunc = $wnd.alert;
-      $wnd.nativeAlertFunction = alertFunc;
-   }-*/;
-   
+                                          var alertFunc = $wnd.alert;
+                                          $wnd.nativeAlertFunction = alertFunc;
+                                          }-*/;
+
    public static final native void alert(String message) /*-{
-      $wnd.nativeAlertFunction(message);      
-   }-*/;
+                                                         $wnd.nativeAlertFunction(message);      
+                                                         }-*/;
 
 }

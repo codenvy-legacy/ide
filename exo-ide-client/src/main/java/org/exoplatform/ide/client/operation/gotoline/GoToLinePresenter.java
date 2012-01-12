@@ -51,7 +51,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
 
    public interface Display extends IsView
    {
-      
+
       TextFieldItem getLineNumber();
 
       HasClickHandlers getGoButton();
@@ -61,7 +61,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
       void setCaptionLabel(String caption);
 
       void removeFocusFromLineNumber();
-      
+
       void setFocusInLineNumberField();
 
    }
@@ -84,28 +84,29 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
    public GoToLinePresenter()
    {
       IDE.getInstance().addControl(new GoToLineControl());
-      IDE.getInstance().addControl(new CursorPositionControl(), Docking.STATUSBAR_RIGHT);      
-      
+      IDE.getInstance().addControl(new CursorPositionControl(), Docking.STATUSBAR_RIGHT);
+
       IDE.addHandler(GoToLineEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.edit.event.GoToLineHandler#onGoToLine(org.exoplatform.ide.client.edit.event.GoToLineEvent)
     */
    @Override
    public void onGoToLine(GoToLineEvent event)
    {
-      if (display != null) {
+      if (display != null)
+      {
          return;
       }
-      
+
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
       display.setFocusInLineNumberField();
-   }   
+   }
 
    public void bindDisplay()
    {
@@ -171,7 +172,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
          Dialogs.getInstance().showError(CANT_PARSE_LINE_NUMBER);
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
@@ -198,22 +199,22 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
          display = null;
       }
    }
-   
+
    private native int getLineNumber(String content) /*-{
-   if (! content) return 1;
+                                                    if (! content) return 1;
 
-   // test if content is not ended with line break
-   if (content.charAt(content.length - 1) !== "\n") {
-   return content.split("\n").length;
-   }
+                                                    // test if content is not ended with line break
+                                                    if (content.charAt(content.length - 1) !== "\n") {
+                                                    return content.split("\n").length;
+                                                    }
 
-   // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
-   if (this.@org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
-   {          
-      return content.split("\n").length;
-   }
+                                                    // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
+                                                    if (this.@org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
+                                                    {          
+                                                    return content.split("\n").length;
+                                                    }
 
-   return content.split("\n").length - 1;
-   }-*/;
+                                                    return content.split("\n").length - 1;
+                                                    }-*/;
 
 }

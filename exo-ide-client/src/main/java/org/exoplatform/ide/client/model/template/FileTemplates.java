@@ -33,7 +33,7 @@ import java.util.Map;
 public class FileTemplates
 {
 
-   private static final Map<String,String> TEMPLATES = new HashMap<String,String>();
+   private static final Map<String, String> TEMPLATES = new HashMap<String, String>();
 
    static
    {
@@ -46,9 +46,9 @@ public class FileTemplates
       addGadgetContent();
       addGtmplTemplate();
       addUWAWidgetContent();
-     // addClassPathTemplate();
+      // addClassPathTemplate();
       addRubyTemplate();
-      addPhpTemplate();  
+      addPhpTemplate();
       addJspTemplate();
       addJavaTemplate();
    }
@@ -62,47 +62,35 @@ public class FileTemplates
       }
       return content;
    }
-   
+
    private static void addJspTemplate()
    {
-    String content = 
-       "<%@page contentType=\"text/html\" import=\"java.util.Date\"%>\n"+
-       "<html>\n" +
-       "  <body>\n" +
-       "    <div align=\"center\">\n"+
-       "      <center>\n" +
-       "       <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"460\"   bgcolor=\"#EEFFCA\">\n" +
-       "        <tr><td width=\"100%\"><font size=\"6\" color=\"#008000\">&nbsp;Date example</font></td></tr>\n" +
-       "        <tr><td width=\"100%\"><b>&nbsp;Current Date and time is:&nbsp;<font color=\"#FF0000\"><%=new Date().toString()%> </font></b></td></tr>\n" +
-       "     </table>\n" +
-       "  </center>\n" +
-       " </div>\n" +
-       " </body>\n"+
-       "</html>";
-    TEMPLATES.put(MimeType.APPLICATION_JSP, content);
+      String content =
+         "<%@page contentType=\"text/html\" import=\"java.util.Date\"%>\n"
+            + "<html>\n"
+            + "  <body>\n"
+            + "    <div align=\"center\">\n"
+            + "      <center>\n"
+            + "       <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"460\"   bgcolor=\"#EEFFCA\">\n"
+            + "        <tr><td width=\"100%\"><font size=\"6\" color=\"#008000\">&nbsp;Date example</font></td></tr>\n"
+            + "        <tr><td width=\"100%\"><b>&nbsp;Current Date and time is:&nbsp;<font color=\"#FF0000\"><%=new Date().toString()%> </font></b></td></tr>\n"
+            + "     </table>\n" + "  </center>\n" + " </div>\n" + " </body>\n" + "</html>";
+      TEMPLATES.put(MimeType.APPLICATION_JSP, content);
    }
-   
+
    private static void addJavaTemplate()
    {
-      String content = 
-      "public class HelloWorldApp {\n" +
-      "    public static void main(String[] args) {\n" +
-      "      System.out.println(\"Hello World!\");\n" +
-      "    }\n}";
+      String content =
+         "public class HelloWorldApp {\n" + "    public static void main(String[] args) {\n"
+            + "      System.out.println(\"Hello World!\");\n" + "    }\n}";
       TEMPLATES.put(MimeType.APPLICATION_JAVA, content);
-  }
+   }
 
    private static void addPhpTemplate()
    {
-      String content =      
-         "<html>\n" +
-         "  <head>\n" +
-         "     <title>PHP Test</title>\n" +
-         "  </head>\n" +
-         "  <body>\n" +
-         "     <?php echo '<p>Hello World</p>'; ?>\n" + 
-         "  </body>\n" +
-         "</html>";
+      String content =
+         "<html>\n" + "  <head>\n" + "     <title>PHP Test</title>\n" + "  </head>\n" + "  <body>\n"
+            + "     <?php echo '<p>Hello World</p>'; ?>\n" + "  </body>\n" + "</html>";
       TEMPLATES.put(MimeType.APPLICATION_PHP, content);
    }
 
@@ -118,19 +106,15 @@ public class FileTemplates
             + "   </body>\n" + "</html>";
       TEMPLATES.put(MimeType.GROOVY_TEMPLATE, content);
    }
-   
+
    private static void addRubyTemplate()
    {
-      String content = "# Ruby Sample program\n" +
-      "class HelloClass\n" +
-      "  def sayHello\n"+
-      "    puts( \"Hello, world!\" )\n"+
-      "  end\n"+
-      "end\n\n"+
+      String content =
+         "# Ruby Sample program\n" + "class HelloClass\n" + "  def sayHello\n" + "    puts( \"Hello, world!\" )\n"
+            + "  end\n" + "end\n\n" +
 
-      "ob = HelloClass.new\n"+
-      "ob.sayHello\n";
-         
+            "ob = HelloClass.new\n" + "ob.sayHello\n";
+
       TEMPLATES.put(MimeType.APPLICATION_RUBY, content);
    }
 
@@ -139,23 +123,20 @@ public class FileTemplates
       String content = "<?xml version='1.0' encoding='UTF-8'?>\n";
       TEMPLATES.put(MimeType.TEXT_XML, content);
    }
-   
+
    private static void addClassPathTemplate()
    {
-      String content =
-      "{\n"
-  +"\"entries\": [\n"
-          +"]\n"
-          +"}";
+      String content = "{\n" + "\"entries\": [\n" + "]\n" + "}";
 
-//      templates.put(MimeType.APPLICATION_JSON, content);
+      //      templates.put(MimeType.APPLICATION_JSON, content);
    }
 
    private static void addEmptyHTML()
    {
       String content =
-         "" + "<html>\r\n" + "  <head>\r\n    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\r\n" + "    <title></title>\r\n" + "  </head>\r\n" + "  <body>\r\n"
-            + "  </body>\r\n" + "</html>";
+         "" + "<html>\r\n"
+            + "  <head>\r\n    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\r\n"
+            + "    <title></title>\r\n" + "  </head>\r\n" + "  <body>\r\n" + "  </body>\r\n" + "</html>";
       TEMPLATES.put(MimeType.TEXT_HTML, content);
    }
 
@@ -245,12 +226,12 @@ public class FileTemplates
             + "        UWA.Data.getFeed(widget.getValue('url'), YourWidgetName.display);\n" + "      }\n"
             + "    </script>\n" + "  </head>\n" + "  <body>\n" + "    <p>Hello world!</p>\n" + "  </body>\n"
             + "</html>\n";
-//      List<String> list = new ArrayList<String>();
-//      list.add(content);
-//      list.add(NetvibseWidgetTemplates.FLASH);
-//      list.add(NetvibseWidgetTemplates.CHART);
-//      list.add(NetvibseWidgetTemplates.TABVIEW);
-//      list.add(NetvibseWidgetTemplates.W3C);
+      //      List<String> list = new ArrayList<String>();
+      //      list.add(content);
+      //      list.add(NetvibseWidgetTemplates.FLASH);
+      //      list.add(NetvibseWidgetTemplates.CHART);
+      //      list.add(NetvibseWidgetTemplates.TABVIEW);
+      //      list.add(NetvibseWidgetTemplates.W3C);
       TEMPLATES.put(MimeType.UWA_WIDGET, content);
    }
 

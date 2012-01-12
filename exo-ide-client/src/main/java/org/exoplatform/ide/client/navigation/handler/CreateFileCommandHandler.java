@@ -98,7 +98,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
             index++;
          }
       }
-      
+
       FolderModel parent = new FolderModel();
       ProjectModel project = null;
       if (selectedItems != null && selectedItems.size() != 0)
@@ -117,7 +117,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
          {
             parent = new FolderModel((Project)item);
          }
-         
+
          if (item instanceof ItemContext)
          {
             project = ((ItemContext)item).getProject();
@@ -128,7 +128,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
       newFile.setContentChanged(true);
       newFile.setId(fileName);
       newFile.setProject(project);
-      
+
       Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
       if (defaultEditors == null)
       {

@@ -53,13 +53,14 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
 {
 
    private FileModel activeFile;
-//TODO
-//   private Map<String, String> lockTokens;
+
+   //TODO
+   //   private Map<String, String> lockTokens;
 
    public SaveFileCommandHandler()
    {
       IDE.getInstance().addControl(new SaveFileControl(), Docking.TOOLBAR);
-      
+
       IDE.addHandler(SaveFileEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -91,8 +92,7 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception,
-                     "Service is not deployed.<br>Resource not found."));
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
                }
             });
          }
@@ -162,8 +162,8 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-//TODO
-//      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+      //TODO
+      //      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }

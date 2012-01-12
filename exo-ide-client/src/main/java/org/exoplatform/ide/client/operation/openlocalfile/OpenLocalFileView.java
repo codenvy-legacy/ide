@@ -121,11 +121,11 @@ public class OpenLocalFileView extends ViewImpl implements
       Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
       postFieldsPanel.add(mimeTypeField);
 
-//      Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
-//      postFieldsPanel.add(nodeTypeField);
-//
-//      Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
-//      postFieldsPanel.add(jcrContentNodeTypeField);
+      //      Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
+      //      postFieldsPanel.add(nodeTypeField);
+      //
+      //      Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
+      //      postFieldsPanel.add(jcrContentNodeTypeField);
 
       Hidden locationField = new Hidden(FormFields.LOCATION, location);
       postFieldsPanel.add(locationField);

@@ -53,17 +53,17 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private static final String USER_SETTINGS = "userSettings";
 
-//   @Deprecated
-//   private static final String DEFAUTL_ENTRY_POINT = "defaultEntrypoint";
-   
+   //   @Deprecated
+   //   private static final String DEFAUTL_ENTRY_POINT = "defaultEntrypoint";
+
    private static final String VFS_ID = "vfsId";
-   
+
    private static final String VFS_BASE_URL = "vfsBaseUrl";
 
    private static final String IS_DISCOVERABLE = "discoverable";
 
    private static final String USER = "user";
-   
+
    private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
 
    //   private static final String HTTPS_PORT = "httpsPort";
@@ -117,22 +117,21 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
                new ApplicationSettingsUnmarshaller(applicationSettings).parseSettings(object.get(USER_SETTINGS));
             }
 
-//            if (object.containsKey(DEFAUTL_ENTRY_POINT))
-//            {
-//               initializationConfiguration.getIdeConfiguration().setDefaultEntryPoint(
-//                  object.get(DEFAUTL_ENTRY_POINT).isString().stringValue());
-//            }
-            
+            //            if (object.containsKey(DEFAUTL_ENTRY_POINT))
+            //            {
+            //               initializationConfiguration.getIdeConfiguration().setDefaultEntryPoint(
+            //                  object.get(DEFAUTL_ENTRY_POINT).isString().stringValue());
+            //            }
+
             if (object.containsKey(VFS_BASE_URL))
             {
                initializationConfiguration.getIdeConfiguration().setVfsBaseUrl(
                   object.get(VFS_BASE_URL).isString().stringValue());
             }
-            
+
             if (object.containsKey(VFS_ID))
             {
-               initializationConfiguration.getIdeConfiguration().setVfsId(
-                  object.get(VFS_ID).isString().stringValue());
+               initializationConfiguration.getIdeConfiguration().setVfsId(object.get(VFS_ID).isString().stringValue());
             }
 
             if (object.containsKey(IS_DISCOVERABLE))
@@ -206,11 +205,11 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
    }
 
    private static native String getRegistryURL() /*-{
-		return $wnd.registryURL;
-   }-*/;
+                                                 return $wnd.registryURL;
+                                                 }-*/;
 
    private static native String getHiddenFiles() /*-{
-      return $wnd.hiddenFiles;
-   }-*/;
+                                                 return $wnd.hiddenFiles;
+                                                 }-*/;
 
 }

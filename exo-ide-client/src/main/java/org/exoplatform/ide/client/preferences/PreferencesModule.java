@@ -80,11 +80,11 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
        * Rest Services Discovery.
        */
       new RestServicesDiscoveryPresenter();
-      
+
       /*
        * Hot Keys customizing.
        */
-      new CustomizeHotKeysPresenter();      
+      new CustomizeHotKeysPresenter();
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

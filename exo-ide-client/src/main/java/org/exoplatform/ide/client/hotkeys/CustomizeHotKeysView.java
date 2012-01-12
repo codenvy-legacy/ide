@@ -41,15 +41,16 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
  * @version $
  */
 
-public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display
+public class CustomizeHotKeysView extends ViewImpl implements
+   org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display
 {
-   
+
    public static final String ID = "ideCustomizeHotKeysView";
-   
+
    public static final String MSG_LABEL_ID = "ideCustomizeHotKeysMessageLabel";
-   
+
    private static final String TITLE = IDE.PREFERENCES_CONSTANT.customizeHotkeysTitle();
-   
+
    /**
     * Initial width of this view
     */
@@ -58,32 +59,32 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
    /**
     * Initial height of this view
     */
-   private static final int HEIGHT = 300;   
+   private static final int HEIGHT = 300;
 
    private static CustomizeHotKeysViewUiBinder uiBinder = GWT.create(CustomizeHotKeysViewUiBinder.class);
 
    interface CustomizeHotKeysViewUiBinder extends UiBinder<Widget, CustomizeHotKeysView>
    {
    }
-   
+
    @UiField
    ImageButton bindButton;
-   
+
    @UiField
-   ImageButton unbindButton;   
+   ImageButton unbindButton;
 
    @UiField
    ImageButton okButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    HotKeyItemListGrid hotKeyItemListGrid;
-   
+
    @UiField
    TextInput hotKeyField;
-   
+
    @UiField
    Label messageLabel;
 

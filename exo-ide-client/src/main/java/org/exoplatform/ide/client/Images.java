@@ -145,7 +145,6 @@ public interface Images
 
       public static final String SEARCH = IMAGE_URL + "buttons/search.png";
 
-
       public static final String ADD = IMAGE_URL + "bundled/actions/add.png";
 
       public static final String REMOVE = IMAGE_URL + "bundled/actions/remove.png";
@@ -186,8 +185,11 @@ public interface Images
    public interface Editor
    {
       public static final String READONLY_FILE = IMAGE_URL + "panel/editor/file_readonly.png";
+
       public static final String SOURCE_BUTTON_ICON = IMAGE_URL + "panel/editor/source_button.png";;
-      public static final String DESIGN_BUTTON_ICON = IMAGE_URL + "panel/editor/design_button.png";;      
+
+      public static final String DESIGN_BUTTON_ICON = IMAGE_URL + "panel/editor/design_button.png";;
+
       public static final String EDITOR_SWITCHER_BACKGROUND = IMAGE_URL + "panel/editor/editor_switcher_background.png";
    }
 

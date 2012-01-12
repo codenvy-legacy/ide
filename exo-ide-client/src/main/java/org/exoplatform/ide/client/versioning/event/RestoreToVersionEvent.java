@@ -31,7 +31,7 @@ public class RestoreToVersionEvent extends GwtEvent<RestoreToVersionHandler>
 {
 
    public static final GwtEvent.Type<RestoreToVersionHandler> TYPE = new GwtEvent.Type<RestoreToVersionHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
@@ -48,6 +48,6 @@ public class RestoreToVersionEvent extends GwtEvent<RestoreToVersionHandler>
    protected void dispatch(RestoreToVersionHandler handler)
    {
       handler.onRestoreToVersion(this);
-   } 
+   }
 
 }

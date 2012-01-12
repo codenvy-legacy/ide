@@ -49,29 +49,29 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 public class IDEDialogs extends Dialogs implements ViewClosedHandler
 {
 
-   private DialogClosedHandler dialogClosedHandler;   
+   private DialogClosedHandler dialogClosedHandler;
 
    public IDEDialogs()
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
+
    private abstract class DialogClosedHandler implements ViewClosedHandler
    {
-      
+
       private String id;
-      
-      public DialogClosedHandler(String id) {
+
+      public DialogClosedHandler(String id)
+      {
          this.id = id;
       }
-      
+
       public String getId()
       {
          return id;
       }
 
    }
-   
 
    private BooleanCallback booleanCallback = new BooleanCallback()
    {
@@ -148,7 +148,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
             valueCallback.execute(textField.getValue());
          }
       });
-      
+
       ImageButton cancelButton = createButton("Cancel", null);
       view.getButtonsLayout().add(cancelButton);
       cancelButton.addClickHandler(new ClickHandler()
@@ -160,7 +160,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
             valueCallback.execute(null);
          }
       });
-      
+
       dialogClosedHandler = new DialogClosedHandler("exoAskForValueModalView")
       {
          @Override
@@ -179,7 +179,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    {
       HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), message);
       final IDEDialogsView view = new IDEDialogsView("ideAskModalView", title, 430, 150, content);
-      
+
       ImageButton yesButton = createButton("Yes", null);
       view.getButtonsLayout().add(yesButton);
       yesButton.addClickHandler(new ClickHandler()
@@ -206,7 +206,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
             }
          }
       });
-      
+
       dialogClosedHandler = new DialogClosedHandler("ideAskModalView")
       {
          @Override
@@ -225,7 +225,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    {
       HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.warnDialog(), message);
       final IDEDialogsView view = new IDEDialogsView("ideWarningModalView", title, 450, 250, content);
-      
+
       ImageButton okButton = createButton("Ok", null);
       view.getButtonsLayout().add(okButton);
       okButton.addClickHandler(new ClickHandler()
@@ -237,7 +237,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
             booleanCallback.execute(true);
          }
       });
-      
+
       dialogClosedHandler = new DialogClosedHandler("ideWarningModalView")
       {
          @Override
@@ -256,9 +256,9 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    {
       HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.sayDialog(), message);
       final IDEDialogsView view = new IDEDialogsView("ideInformationModalView", title, 400, 130, content);
-      
+
       ImageButton okButton = createButton("Ok", null);
-      view.getButtonsLayout().add(okButton);      
+      view.getButtonsLayout().add(okButton);
       okButton.addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -268,7 +268,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
             booleanCallback.execute(true);
          }
       });
-      
+
       dialogClosedHandler = new DialogClosedHandler("ideInformationModalView")
       {
          @Override
@@ -277,7 +277,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
             dialogClosedHandler = null;
             booleanCallback.execute(null);
          }
-      };      
+      };
 
       IDE.getInstance().openView(view);
    };
@@ -347,7 +347,8 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (dialogClosedHandler != null && dialogClosedHandler.getId().equals(event.getView().getId())) {
+      if (dialogClosedHandler != null && dialogClosedHandler.getId().equals(event.getView().getId()))
+      {
          dialogClosedHandler.onViewClosed(event);
       }
    }

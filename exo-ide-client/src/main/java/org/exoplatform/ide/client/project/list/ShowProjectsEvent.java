@@ -33,7 +33,7 @@ public class ShowProjectsEvent extends GwtEvent<ShowProjectsHandler>
 {
 
    public static final GwtEvent.Type<ShowProjectsHandler> TYPE = new GwtEvent.Type<ShowProjectsHandler>();
-   
+
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<ShowProjectsHandler> getAssociatedType()
    {

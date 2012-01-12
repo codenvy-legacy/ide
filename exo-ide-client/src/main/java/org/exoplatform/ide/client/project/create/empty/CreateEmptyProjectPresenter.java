@@ -84,16 +84,17 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
    }
 
    private ErrorMessage errorMessage = GWT.create(ErrorMessage.class);
-   
+
    private Display display;
 
    private VirtualFileSystemInfo vfsInfo;
-   
-   public CreateEmptyProjectPresenter() {
-//      IDE.getInstance().addControl(new NewProjectMenuGroup());
-//      IDE.getInstance().addControl(new CreateProjectControl());
 
-      IDE.addHandler(CreateEmptyProjectEvent.TYPE, this);      
+   public CreateEmptyProjectPresenter()
+   {
+      //      IDE.getInstance().addControl(new NewProjectMenuGroup());
+      //      IDE.getInstance().addControl(new CreateProjectControl());
+
+      IDE.addHandler(CreateEmptyProjectEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
@@ -130,31 +131,31 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
       }
 
       FolderModel parent = (FolderModel)vfsInfo.getRoot();
-      
+
       ProjectModel model = new ProjectModel();
       model.setName(display.getProjectName().getValue());
       model.setProjectType(display.getProjectType().getValue());
       model.setParent(parent);
       try
       {
-         VirtualFileSystem.getInstance().createProject(parent, new AsyncRequestCallback<ProjectModel>(
-            new ProjectUnmarshaller(model))
-         {
-            @Override
-            protected void onSuccess(ProjectModel result)
+         VirtualFileSystem.getInstance().createProject(parent,
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(model))
             {
-               IDE.getInstance().closeView(display.asView().getId());
-               IDE.fireEvent(new ProjectCreatedEvent(result));
-               IDE.fireEvent(new RefreshBrowserEvent(result.getParent()));
-            }
+               @Override
+               protected void onSuccess(ProjectModel result)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+                  IDE.fireEvent(new ProjectCreatedEvent(result));
+                  IDE.fireEvent(new RefreshBrowserEvent(result.getParent()));
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception,
-                  "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -182,17 +183,17 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
       this.errorMessage = errorMessage;
    }
 
-
    @Override
    public void onCreateProject(CreateEmptyProjectEvent event)
    {
-      if (display != null) {
+      if (display != null)
+      {
          return;
       }
-      
+
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
-      bindDisplay();      
+      bindDisplay();
    }
 
    @Override
@@ -204,7 +205,8 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display) {
+      if (event.getView() instanceof Display)
+      {
          display = null;
       }
    }

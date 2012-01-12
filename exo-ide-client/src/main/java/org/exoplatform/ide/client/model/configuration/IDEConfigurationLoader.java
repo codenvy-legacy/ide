@@ -40,10 +40,10 @@ public class IDEConfigurationLoader
 
    /* Consts */
    public static final String APPLICATION_NAME = "IDE"; //$NON-NLS-1$
-   
+
    /* Error messages */
    private static final String CANT_READ_CONFIGURATION = IDE.ERRORS_CONSTANT.confLoaderCantReadConfiguration();
-   
+
    private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
 
    /* Fields */
@@ -90,15 +90,15 @@ public class IDEConfigurationLoader
    }
 
    private static native String getConfigurationURL()/*-{
-		return $wnd.configurationURL;
-   }-*/;
+                                                     return $wnd.configurationURL;
+                                                     }-*/;
 
    private static native String getRegistryURL() /*-{
-		return $wnd.registryURL;
-   }-*/;
+                                                 return $wnd.registryURL;
+                                                 }-*/;
 
    private static native JavaScriptObject getAppConfig() /*-{
-		return $wnd.appConfig;
-   }-*/;
+                                                         return $wnd.appConfig;
+                                                         }-*/;
 
 }

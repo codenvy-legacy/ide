@@ -31,5 +31,5 @@ public interface HasHidePanelHandler
 {
 
    HandlerRegistration addHidePanelHandler(HidePanelHandler hidePanelHandler);
-   
+
 }

@@ -31,5 +31,5 @@ public interface HasMaximizePanelHandler
 {
 
    HandlerRegistration addMaximizePanelHandler(MaximizePanelHandler maximizePanelHandler);
-   
+
 }

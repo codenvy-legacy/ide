@@ -64,5 +64,5 @@ public class SwitchVFSEvent extends GwtEvent<SwitchVFSHandler>
    {
       return vfsID;
    }
-   
+
 }

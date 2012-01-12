@@ -48,7 +48,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class CreateProjectTemplateView extends ViewImpl implements CreateProjectTemplatePresenter.Display
 {
-   
+
    public static final int WIDTH = 530;
 
    public static final int HEIGHT = 350;
@@ -68,9 +68,9 @@ public class CreateProjectTemplateView extends ViewImpl implements CreateProject
    private static final String TEMPLATE_NAME_FIELD = "ideCreateProjectTemplateFormNameField";
 
    private static final String DESCRIPTION_FIELD = "ideCreateProjectTemplateFormDescriptionField";
-   
+
    private static final String TITLE = IDE.TEMPLATE_CONSTANT.createProjectTemplateTitle();
-   
+
    @UiField
    ImageButton createButton;
 
@@ -94,21 +94,21 @@ public class CreateProjectTemplateView extends ViewImpl implements CreateProject
 
    @UiField
    TextAreaInput descriptionField;
-   
+
    @UiField
    ScrollPanel scrollPanel;
-   
+
    interface CreateProjectTemplateViewUiBinder extends UiBinder<Widget, CreateProjectTemplateView>
    {
    }
-   
+
    private static CreateProjectTemplateViewUiBinder uiBinder = GWT.create(CreateProjectTemplateViewUiBinder.class);
 
    public CreateProjectTemplateView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      
+
       createButton.setButtonId(ID_CREATE_BUTTON);
       cancelButton.setButtonId(ID_CANCEL_BUTTON);
       addFolderButton.setButtonId(ID_ADD_FOLDER_BUTTON);

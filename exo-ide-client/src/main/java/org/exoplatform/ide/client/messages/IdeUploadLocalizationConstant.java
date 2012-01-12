@@ -37,73 +37,73 @@ public interface IdeUploadLocalizationConstant extends Constants
     */
    @Key("upload.button.browse")
    String uploadBrowseBtn();
-   
+
    @Key("upload.folder.title")
    String uploadFolderTitle();
-   
+
    @Key("upload.button")
    String uploadButton();
-   
+
    @Key("upload.folderToUpload")
    String folderToUpload();
-   
+
    /*
     * UploadFileForm
     */
    @Key("uploadFile.title")
    String uploadFileTitle();
-   
+
    @Key("uploadFile.fileToUpload")
    String fileToUpload();
-   
+
    @Key("uploadFile.mimeType")
    String uploadFileMimeType();
-   
+
    /*
     * OpenLocalFileForm
     */
    @Key("openLocalFile.title")
    String openLocalFileTitle();
-   
+
    @Key("openButton")
    String openButton();
-   
+
    @Key("fileToOpen")
    String fileToOpen();
-   
+
    /*
     * OpenFileByPathForm
     */
    @Key("openFileByPath.title")
    String openFileByPathTitle();
-   
+
    @Key("openFileByPath.fileUrl")
    String openFileByPathFileUrl();
-   
+
    /*
     * UploadFilePresenter
     */
    @Key("upload.file.exist.title")
    String uploadFileExistTitle();
-   
+
    @Key("upload.file.exist.text")
    String uploadFileExistText();
-   
+
    /*
     * DownloadForm
     */
    @Key("download.file.error")
    String downloadFileError();
-   
+
    @Key("download.zip.folder.error")
    String downloadFolderError();
-   
+
    @Key("upload.overwrite.title")
    String uploadOverwriteTitle();
-   
+
    @Key("upload.overwrite.ask")
    String uploadOverwriteAsk();
-   
+
    /*
     * UploadZipView
     */

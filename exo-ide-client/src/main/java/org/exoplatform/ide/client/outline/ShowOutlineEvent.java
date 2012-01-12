@@ -30,7 +30,7 @@ public class ShowOutlineEvent extends GwtEvent<ShowOutlineHandler>
 {
 
    public static final GwtEvent.Type<ShowOutlineHandler> TYPE = new GwtEvent.Type<ShowOutlineHandler>();
-   
+
    private boolean show;
 
    public ShowOutlineEvent(boolean show)

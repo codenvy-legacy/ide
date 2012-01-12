@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.hotkeys;
 
 import com.google.gwt.user.client.Event;
 
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -29,25 +28,25 @@ import com.google.gwt.user.client.Event;
  */
 public abstract class HotKeyManager
 {
-   
+
    private static HotKeyManager instance;
-   
+
    public static HotKeyManager getInstance()
    {
       return instance;
    }
-   
+
    protected HotKeyManager()
    {
       instance = this;
    }
-   
+
    public abstract void onKeyDown(final Event event);
-   
+
    public abstract void setHotKeyPressedListener(HotKeyPressedListener listener);
-   
+
    public abstract void onKeyPress(final Event event);
 
    public abstract void onKeyUp(final Event event);
-   
+
 }

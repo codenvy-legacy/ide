@@ -52,7 +52,7 @@ public class UploadZipView extends ViewImpl implements
 {
 
    private static final String ID = "ideUploadForm";
-   
+
    private static final String OVERWRITE_HIDDED_FIELD = "overwrite";
 
    /**
@@ -90,15 +90,15 @@ public class UploadZipView extends ViewImpl implements
 
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    CheckBox overwriteField;
-   
+
    private Hidden overwriteHiddenField;
 
    public UploadZipView()
    {
-      super(ID, "modal", UPLOAD_FOLDER_TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT,false);
+      super(ID, "modal", UPLOAD_FOLDER_TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT, false);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       overwriteHiddenField = new Hidden(OVERWRITE_HIDDED_FIELD);

@@ -29,22 +29,24 @@ import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
 
 public class IDEIconSet
 {
-   
-   public static void init() {
+
+   public static void init()
+   {
       ImageFactory.addImage("ok", IDEImageBundle.INSTANCE.ok(), IDEImageBundle.INSTANCE.okDisabled());
       ImageFactory.addImage("cancel", IDEImageBundle.INSTANCE.cancel(), IDEImageBundle.INSTANCE.cancelDisabled());
       ImageFactory.addImage("yes", IDEImageBundle.INSTANCE.ok(), IDEImageBundle.INSTANCE.okDisabled());
       ImageFactory.addImage("no", IDEImageBundle.INSTANCE.cancel(), IDEImageBundle.INSTANCE.cancelDisabled());
       ImageFactory.addImage("search", IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
       ImageFactory.addImage("delete", IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
-      ImageFactory.addImage("properties", IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
-      
+      ImageFactory.addImage("properties", IDEImageBundle.INSTANCE.properties(),
+         IDEImageBundle.INSTANCE.propertiesDisabled());
+
       ImageFactory.addImage("add", IDEImageBundle.INSTANCE.add(), IDEImageBundle.INSTANCE.addDisabled());
       ImageFactory.addImage("remove", IDEImageBundle.INSTANCE.remove(), IDEImageBundle.INSTANCE.removeDisabled());
       ImageFactory.addImage("up", IDEImageBundle.INSTANCE.up(), IDEImageBundle.INSTANCE.upDisabled());
       ImageFactory.addImage("down", IDEImageBundle.INSTANCE.down(), IDEImageBundle.INSTANCE.downDisabled());
       ImageFactory.addImage("defaults", IDEImageBundle.INSTANCE.defaults(), IDEImageBundle.INSTANCE.defaultsDisabled());
-      
+
       ImageFactory.addImage("upload", IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
       ImageFactory.addImage("edit", IDEImageBundle.INSTANCE.edit(), IDEImageBundle.INSTANCE.editDisabled());
    }

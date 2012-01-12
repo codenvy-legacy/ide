@@ -30,11 +30,11 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class MigrateTemplatesEvent extends GwtEvent<MigrateTemplatesHandler>
 {
-   
+
    public static final GwtEvent.Type<MigrateTemplatesHandler> TYPE = new GwtEvent.Type<MigrateTemplatesHandler>();
-   
+
    private TemplatesMigratedCallback callback;
-   
+
    public MigrateTemplatesEvent(TemplatesMigratedCallback callback)
    {
       this.callback = callback;
@@ -57,7 +57,7 @@ public class MigrateTemplatesEvent extends GwtEvent<MigrateTemplatesHandler>
    {
       handler.onMigrateTemplates(this);
    }
-   
+
    /**
     * @return the callback
     */

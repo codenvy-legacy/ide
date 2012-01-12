@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface MaximizePanelHandler extends EventHandler
 {
-   
+
    void onMaximizePanel(MaximizePanelEvent event);
 
 }

@@ -49,9 +49,9 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
    private final static String TITLE = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridCommand();
 
    private final static String CONTROL = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridBinding();
-   
+
    private final static String POPUP = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridPopup();
-   
+
    private final static String ID = "ideCustomizeHotKeysListGrid";
 
    public HotKeyItemListGrid()
@@ -59,7 +59,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       setID(ID);
       initColumns();
    }
-   
+
    private void initColumns()
    {
       Column<HotKeyItem, SafeHtml> titleColumn = new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell())
@@ -84,7 +84,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       };
       getCellTable().addColumn(titleColumn, TITLE);
       getCellTable().setColumnWidth(titleColumn, 50, Unit.PCT);
-      
+
       Column<HotKeyItem, SafeHtml> controlColumn = new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell())
       {
 
@@ -108,7 +108,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
       getCellTable().addColumn(controlColumn, CONTROL);
       getCellTable().setColumnWidth(controlColumn, 100, Unit.PCT);
    }
-   
+
    private String getItemTitle(HotKeyItem item)
    {
       if (item.isGroup())
@@ -159,18 +159,16 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
          return title;
       }
    }
-   
+
    private String getDivider(String title)
    {
       String divider =
          "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
-            + "<tr><td></td><td>&nbsp;" + 
-            "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 15px\">" + title + "</font></b>"
-            + "&nbsp;</td><td></td></tr>"
-            + "</table>";
-      
+            + "<tr><td></td><td>&nbsp;" + "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 15px\">"
+            + title + "</font></b>" + "&nbsp;</td><td></td></tr>" + "</table>";
+
       return divider;
-//      return "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 20px\">" + title + "</font></b>";
+      //      return "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 20px\">" + title + "</font></b>";
    }
 
 }

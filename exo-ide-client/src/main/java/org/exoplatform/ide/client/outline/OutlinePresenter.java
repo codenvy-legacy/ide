@@ -69,7 +69,7 @@ import com.google.gwt.user.client.Timer;
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler,  
+   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler,
    EditorTokenListPreparedHandler
 {
 
@@ -133,7 +133,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    private boolean onItemClicked = false;
 
    JavaScriptObject lastFocusedElement;
-   
+
    private ApplicationSettings applicationSettings;
 
    public OutlinePresenter()
@@ -143,9 +143,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorContentChangedEvent.TYPE, this);
-      IDE.addHandler(EditorCursorActivityEvent.TYPE, this);      
+      IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
       IDE.addHandler(EditorTokenListPreparedEvent.TYPE, this);
-      
+
       IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR);
    }
 
@@ -231,10 +231,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          public void onKeyPress(KeyPressEvent event)
          {
             onItemClicked();
-         }     
+         }
       });
-      
-      
+
       currentRow = 0;
 
       if (canShowOutline())
@@ -251,9 +250,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private void onItemSelected(TokenBeenImpl selectedItem)
    {
-      if (!onItemClicked ||
-               currentToken != null && selectedItem.getName().equals(currentToken.getName())
-               && selectedItem.getLineNumber() == currentToken.getLineNumber())
+      if (!onItemClicked || currentToken != null && selectedItem.getName().equals(currentToken.getName())
+         && selectedItem.getLineNumber() == currentToken.getLineNumber())
       {
          return;
       }
@@ -261,7 +259,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       currentToken = selectedItem;
 
       setEditorCursorPosition(selectedItem.getLineNumber());
-      
+
       onItemClicked = false;
    }
 
@@ -271,7 +269,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    private void onItemClicked()
    {
       onItemClicked = true;
-      
+
       if (display.getSelectedTokens().size() > 0)
       {
          currentToken = display.getSelectedTokens().get(0);
@@ -290,7 +288,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          return;
       }
-    
+
       display.setRefreshingMarkInTitle();
       activeEditor.getTokenListInBackground();
    }
@@ -358,7 +356,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
 
       refreshOutlineTimer.cancel();
-      
+
       if (canShowOutline())
       {
          display.clearOutlineTree();
@@ -379,13 +377,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          return false;
       }
-      
+
       for (int i = 0; i < tokens.size(); i++)
       {
          TokenBeenImpl token = tokens.get(i);
-         if (currentRow < token.getLineNumber()
-               || ! shouldBeDisplayed(token)
-             )
+         if (currentRow < token.getLineNumber() || !shouldBeDisplayed(token))
          {
             continue;
          }
@@ -409,7 +405,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             }
          }
       }
-         
+
       return false;
    }
 
@@ -422,18 +418,17 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     * @return
     */
    private boolean isCurrentToken(int currentLineNumber, TokenBeenImpl token, TokenBeenImpl nextToken)
-   {      
+   {
       if (currentLineNumber == token.getLineNumber())
       {
          return true;
       }
-      
+
       if (token.getLastLineNumber() != 0)
       {
-         return currentLineNumber >= token.getLineNumber()
-                  && currentLineNumber <= token.getLastLineNumber();         
+         return currentLineNumber >= token.getLineNumber() && currentLineNumber <= token.getLastLineNumber();
       }
-         
+
       // test if currentLineNumber before nextToken
       if (nextToken != null)
       {
@@ -442,7 +437,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       return currentLineNumber >= token.getLineNumber();
    }
-   
+
    /**
     * Test should token be displayed in outline tree.
     * @param token
@@ -450,7 +445,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
     */
    private boolean shouldBeDisplayed(TokenBeenImpl token)
    {
-      return ! (token.getType().equals(TokenType.IMPORT));
+      return !(token.getType().equals(TokenType.IMPORT));
    }
 
    private void selectToken(TokenBeenImpl token)
@@ -493,25 +488,25 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
 
       if (!onItemClicked)
-      {   
+      {
          if (currentRow == event.getRow())
          {
             return;
          }
-   
+
          currentRow = event.getRow();
 
          selectOutlineTimer.cancel();
          selectOutlineTimer.schedule(100);
       }
-      else 
+      else
       {
          // restore focus on OutlinePanel
          if (lastFocusedElement != null)
          {
-            setElementFocus(lastFocusedElement);   
+            setElementFocus(lastFocusedElement);
          }
-         
+
          onItemClicked = false;
       }
    }
@@ -525,7 +520,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          {
             // restore focus of FileTab
             JavaScriptObject lastFocusedElement = getActiveElement();
-            
+
             if (!selectTokenByRow(tokens))
             {
                display.deselectAllTokens();
@@ -537,43 +532,41 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          }
       }
    };
-   
+
    private native JavaScriptObject getActiveElement() /*-{
-      return $doc.activeElement;
-   }-*/;
-   
+                                                      return $doc.activeElement;
+                                                      }-*/;
+
    private native void setElementFocus(JavaScriptObject element) /*-{
-      element.focus();
-   }-*/;
+                                                                 element.focus();
+                                                                 }-*/;
 
    public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
-   {      
-      if (event.getTokenList() == null 
-               || display == null
-               || ! activeEditor.getEditorId().equals(event.getEditorId()))
+   {
+      if (event.getTokenList() == null || display == null || !activeEditor.getEditorId().equals(event.getEditorId()))
       {
          return;
       }
 
       display.removeRefreshingMarkFromTitle();
-      
-      tokens = (List<TokenBeenImpl>) event.getTokenList();
-      
+
+      tokens = (List<TokenBeenImpl>)event.getTokenList();
+
       // restore focus of FileTab
-      JavaScriptObject lastFocusedElement = getActiveElement();        
+      JavaScriptObject lastFocusedElement = getActiveElement();
 
       TokenBeenImpl token = new TokenBeenImpl();
       token.setSubTokenList(tokens);
       display.getOutlineTree().setValue(token);
       currentRow = activeEditor.getCursorRow();
       currentToken = null;
-      
+
       if (!selectTokenByRow(tokens))
       {
          display.deselectAllTokens();
       }
 
       // restore focus of FileTab
-      setElementFocus(lastFocusedElement);      
+      setElementFocus(lastFocusedElement);
    }
 }

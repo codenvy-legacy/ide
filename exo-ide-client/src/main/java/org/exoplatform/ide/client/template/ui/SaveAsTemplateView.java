@@ -59,7 +59,7 @@ public class SaveAsTemplateView extends ViewImpl implements SaveAsTemplatePresen
    private static final String DESCRIPTION_FIELD = "ideSaveAsTemplateFormDescriptionField";
 
    private static final String TITLE = IDE.TEMPLATE_CONSTANT.saveAsTemplateTitle();
-   
+
    @UiField
    TextInput nameField;
 
@@ -71,14 +71,14 @@ public class SaveAsTemplateView extends ViewImpl implements SaveAsTemplatePresen
 
    @UiField
    ImageButton saveButton;
-   
+
    @UiField
    ImageButton cancelButton;
 
    interface SaveAsTemplateViewUiBinder extends UiBinder<Widget, SaveAsTemplateView>
    {
    }
-   
+
    private static SaveAsTemplateViewUiBinder uiBinder = GWT.create(SaveAsTemplateViewUiBinder.class);
 
    public SaveAsTemplateView()
@@ -86,7 +86,7 @@ public class SaveAsTemplateView extends ViewImpl implements SaveAsTemplatePresen
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      
+
       nameField.setName(NAME_FIELD);
       descriptionField.setName(DESCRIPTION_FIELD);
       typeField.setName(TYPE_FIELD);

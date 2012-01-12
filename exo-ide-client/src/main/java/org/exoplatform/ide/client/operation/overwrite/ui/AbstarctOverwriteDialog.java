@@ -48,8 +48,9 @@ import org.exoplatform.ide.client.messages.IdeOverwriteLocalizationConstant;
  */
 public abstract class AbstarctOverwriteDialog extends ViewImpl
 {
-   public static final IdeOverwriteLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(IdeOverwriteLocalizationConstant.class);
-   
+   public static final IdeOverwriteLocalizationConstant LOCALIZATION_CONSTANT = GWT
+      .create(IdeOverwriteLocalizationConstant.class);
+
    public static final String ID = "ideOverwriteForm";
 
    public static final int WIDTH = 400;
@@ -57,31 +58,30 @@ public abstract class AbstarctOverwriteDialog extends ViewImpl
    public static final int HEIGHT = 180;
 
    public static final String TITLE = LOCALIZATION_CONSTANT.dialogTitle();
-   
-   
+
    interface AbstarctOverwriteDialogUiBinder extends UiBinder<Widget, AbstarctOverwriteDialog>
    {
    }
-   
+
    private static AbstarctOverwriteDialogUiBinder uiBinder = GWT.create(AbstarctOverwriteDialogUiBinder.class);
-   
+
    @UiField
    TextInput renameField;
-   
+
    @UiField
    ImageButton renameButton;
-   
+
    @UiField
    ImageButton overwriteButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    Label errMsgLabel;
-   
+
    private String defaultItemName;
-   
+
    /**
     * @param defaultName item name, that will be displayed in name field
     * @param errMsg message with error, that occurs
@@ -90,7 +90,7 @@ public abstract class AbstarctOverwriteDialog extends ViewImpl
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      
+
       renameButton.addClickHandler(new ClickHandler()
       {
          @Override
@@ -100,7 +100,7 @@ public abstract class AbstarctOverwriteDialog extends ViewImpl
             closeDialog();
          }
       });
-      
+
       overwriteButton.addClickHandler(new ClickHandler()
       {
          @Override
@@ -110,7 +110,7 @@ public abstract class AbstarctOverwriteDialog extends ViewImpl
             closeDialog();
          }
       });
-      
+
       cancelButton.addClickHandler(new ClickHandler()
       {
          @Override
@@ -120,7 +120,7 @@ public abstract class AbstarctOverwriteDialog extends ViewImpl
             closeDialog();
          }
       });
-      
+
       renameField.addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -139,27 +139,27 @@ public abstract class AbstarctOverwriteDialog extends ViewImpl
             }
          }
       });
-      
+
       defaultItemName = defaultName;
       renameField.setValue(defaultName);
       renameButton.setEnabled(false);
       errMsgLabel.setText(errMsg);
    }
-   
+
    private void closeDialog()
    {
       IDE.getInstance().closeView(getId());
    }
-   
+
    public void setDealutItemName(String value)
    {
       defaultItemName = value;
       renameField.setValue(value);
    }
-   
+
    public abstract void onOverwrite();
-   
+
    public abstract void onRename(String value);
-   
+
    public abstract void onCancel();
 }

@@ -38,7 +38,8 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
  * @version $Id: $
  *
  */
-public class GoToLineView extends ViewImpl implements org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display
+public class GoToLineView extends ViewImpl implements
+   org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display
 {
 
    private static final String ID = "ideGoToLineForm";

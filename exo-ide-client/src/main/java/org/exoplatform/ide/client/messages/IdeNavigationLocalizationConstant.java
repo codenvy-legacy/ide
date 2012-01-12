@@ -32,111 +32,107 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface IdeNavigationLocalizationConstant extends Messages
 {
-   
+
    @Key("folder.has.opened.file")
    String cutFolderHasOpenFile(String folderName, String fileName);
-   
+
    @Key("cut.opened.file")
    String cutOpenFile(String fileName);
+
    /*
     * WorkspaceViewExtended
     */
    @Key("workspace.title")
    String workspaceTitle();
-   
+
    /*
     * SearchResultsViewExtended
     */
    @Key("searchResult.title")
    String searchResultTitle();
-   
+
    /*
     * SearchFilesView
     */
    @Key("searchFiles.title")
    String searchFilesTitle();
-   
+
    @Key("searchFiles.path")
    String searchFilesPath();
-   
+
    @Key("searchFiles.containingText")
    String searchFilesContainingText();
-   
+
    @Key("searchFiles.mimeType")
    String searchFilesMimeType();
-   
+
    /*
     * RenameItemForm
     */
    @Key("renameItem.title")
    String renameItemTitle();
-   
+
    @Key("renameItem.renameItemTo")
    String renameItemTo();
-   
+
    @Key("renameItem.selectMimeType")
    String renameItemSelectMimeType();
-   
+
    @Key("renameItem.renameButton")
    String renameItemRenameBtn();
-   
+
    /*
     * GetItemURLView
     */
    @Key("getItemUrl.webdavItemsUrl")
    String getItemUrlWebdavItemsUrl();
-   
+
    @Key("getItemUrl.title")
    String getItemUrlTitle();
-   
+
    /*
     * DeleteItemView
     */
    @Key("deleteItem.title")
    String deleteItemTitle();
-   
+
    /*
     * DeleteItemsPresenter
     */
    @Key("deleteFile.dialog.title")
    String deleteFileDialogTitle();
-   
+
    /*
     * AbstractCreateFolderForm
     */
    @Key("createFolder.nameOfNewFolder")
    String createFolderNameOfNewFolder();
-   
+
    /*
     * CreateFileCommandHandler
     */
    @Key("createFile.untitledFile.name")
    String createFileUntitledFileName();
-   
+
    /*
     * SaveFileAsCommandHandler
     */
    @Key("saveFileAs.newFileName.prefix")
    String saveFileAsNewFileNamePrefix();
-   
+
    @Key("saveFileAs.dialog.title")
    String saveFileAsDialogTitle();
-   
+
    @Key("saveFileAs.dialog.enterNewName")
    String saveFileAsDialogEnterNewName();
-   
+
    @Key("saveFileAs.dialog.doYouWantToSave")
    String saveFileAsDialogDoYouWantToSave();
-   
+
    /*
     * 
     */
    @Key("paste.saveFileBeforeCutAskDialog.title")
    String pasteSaveFileBeforeCutAskDialogTitle();
-   
-   
-   
-   
 
-   
 }

@@ -65,8 +65,8 @@ import java.util.List;
  * @version $
  */
 
-public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedHandler,
-   ItemsSelectedHandler, InitializeServicesHandler
+public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedHandler, ItemsSelectedHandler,
+   InitializeServicesHandler
 {
 
    public interface Display extends IsView
@@ -111,7 +111,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
     * Selected items in Workspace view.
     */
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private Loader loader;
 
    /**
@@ -133,8 +133,8 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
    public void onInitializeServices(InitializeServicesEvent event)
    {
       loader = event.getLoader();
-   }   
-   
+   }
+
    /**
     * @see org.exoplatform.ide.client.remote.OpenFileByURLHandler#onOpenFileByURL(org.exoplatform.ide.client.remote.OpenFileByURLEvent)
     */
@@ -241,7 +241,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
       final FileModel file = new FileModel();
       file.setName(fileName);
       //file.setId(fileName);
-      
+
       AsyncRequestCallback<FileModel> callback = new AsyncRequestCallback<FileModel>()
       {
          @Override
@@ -249,24 +249,24 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
          {
             openFileInEditor(result);
          }
-         
-       @Override
-       protected void onFailure(Throwable exception)
-       {
-          if (exception instanceof ServerException)
-          {
-             String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByURLErrorMessage(file.getName());
-             Dialogs.getInstance().showError(message);
-          }
-          else
-          {
-             super.onFailure(exception);
-          }
-       }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            if (exception instanceof ServerException)
+            {
+               String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByURLErrorMessage(file.getName());
+               Dialogs.getInstance().showError(message);
+            }
+            else
+            {
+               super.onFailure(exception);
+            }
+         }
       };
-      
+
       callback.setResult(file);
-      
+
       Unmarshallable unmarshaller = new FileContentUnmarshaller(file);
       callback.setPayload(unmarshaller);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);

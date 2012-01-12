@@ -49,11 +49,11 @@ import com.google.gwt.user.client.ui.Widget;
 public class RestServicesDiscoveryView extends ViewImpl implements
    org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display
 {
-   
+
    /**
     * ID of this view.
     */
-   private static final String ID = "ideResrServicesDiscoveryView";   
+   private static final String ID = "ideResrServicesDiscoveryView";
 
    /**
     * Initial width of this view
@@ -64,7 +64,7 @@ public class RestServicesDiscoveryView extends ViewImpl implements
     * Initial height of this view
     */
    private static final int INITIAL_HEIGHT = 330;
-   
+
    private static final String TITLE = IDE.PREFERENCES_CONSTANT.restServicesDiscoveryTitle();
 
    /**
@@ -123,8 +123,8 @@ public class RestServicesDiscoveryView extends ViewImpl implements
     */
    public RestServicesDiscoveryView()
    {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()),
-         INITIAL_WIDTH, INITIAL_HEIGHT);
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), INITIAL_WIDTH,
+         INITIAL_HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }

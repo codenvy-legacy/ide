@@ -15,12 +15,12 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */   
+ */
 package org.exoplatform.ide.client.hotkeys;
 
 public interface HotKeyPressedListener
 {
-   
+
    void onHotKeyPressed(boolean isCtrl, boolean isAlt, int keyCode);
 
 }

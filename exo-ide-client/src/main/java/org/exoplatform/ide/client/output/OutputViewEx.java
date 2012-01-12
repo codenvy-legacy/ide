@@ -48,7 +48,7 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
 {
 
    private static final String ID = "ideOutputView";
-   
+
    private static final String CONTENT_ID = "ideOutputContent";
 
    public static final int WIDTH = 450;
@@ -56,9 +56,9 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
    public static final int HEIGHT = 250;
 
    private static OutputViewExUiBinder uiBinder = GWT.create(OutputViewExUiBinder.class);
-   
+
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outputTitle();
-   
+
    private static final String CLEAR_OUTPUT = IDE.IDE_LOCALIZATION_CONSTANT.outputClear();
 
    interface OutputViewExUiBinder extends UiBinder<Widget, OutputViewEx>
@@ -89,7 +89,7 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
       clearOutputButton.setTitle(CLEAR_OUTPUT);
 
       toolbar.addItem(clearOutputButton, true);
-      
+
       contentPanel.getElement().setId(CONTENT_ID);
    }
 

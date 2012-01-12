@@ -29,18 +29,18 @@ import com.google.gwt.resources.client.TextResource;
 */
 public interface NetvibesSamples extends ClientBundle
 {
-   
+
    NetvibesSamples INSTANCE = GWT.create(NetvibesSamples.class);
-   
+
    @Source("netvibes/SampleBlogPostWidget.html")
    TextResource getSampleBlogPostWidgetSource();
-   
+
    @Source("netvibes/SampleChartWidget.html")
    TextResource getSampleChartWidgetSource();
-   
+
    @Source("netvibes/SampleFlashWidget.html")
    TextResource getSampleFlashWidgetSource();
-   
+
    @Source("netvibes/SampleTabbedWidget.html")
    TextResource getSampleTabbedWidgetSource();
 

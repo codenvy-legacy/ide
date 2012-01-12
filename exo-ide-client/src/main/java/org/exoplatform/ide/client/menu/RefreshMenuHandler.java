@@ -31,5 +31,5 @@ public interface RefreshMenuHandler extends EventHandler
 {
 
    void onRefreshMenu(RefreshMenuEvent event);
-   
+
 }

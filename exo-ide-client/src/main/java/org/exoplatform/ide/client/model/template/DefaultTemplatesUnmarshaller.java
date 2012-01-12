@@ -37,9 +37,9 @@ import java.util.List;
  */
 public class DefaultTemplatesUnmarshaller implements Unmarshallable
 {
-   
+
    private List<TemplateNative> templateList;
-   
+
    public DefaultTemplatesUnmarshaller(List<TemplateNative> templateList)
    {
       this.templateList = templateList;
@@ -49,16 +49,16 @@ public class DefaultTemplatesUnmarshaller implements Unmarshallable
    {
       JavaScriptObject json = build(response.getText());
       JSONArray jsonArray = new JSONArray(json);
-      
+
       for (int i = 0; i < jsonArray.size(); i++)
       {
          JSONValue value = jsonArray.get(i);
          templateList.add(TemplateNative.build(value.toString()));
       }
    }
-   
+
    public static native JavaScriptObject build(String json) /*-{
-         return eval('(' + json + ')');      
-      }-*/;
+                                                            return eval('(' + json + ')');      
+                                                            }-*/;
 
 }

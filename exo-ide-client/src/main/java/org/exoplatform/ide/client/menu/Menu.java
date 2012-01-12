@@ -31,7 +31,7 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 
 public interface Menu
 {
-   
+
    void refresh(List<Control> commands);
 
 }

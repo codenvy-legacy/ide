@@ -38,7 +38,8 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display
+public class OpenFileByPathView extends ViewImpl implements
+   org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display
 {
 
    public static final int WIDTH = 500;
@@ -52,9 +53,9 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
    private static final String CANCEL_BUTTON_ID = "ideOpenFileByPathFormCancelButton";
 
    private static final String FILE_PATH_FIELD_NAME = "ideOpenFileByPathFormFilePathField";
-   
+
    private static final String TITLE = IDE.UPLOAD_CONSTANT.openFileByPathTitle();
-   
+
    @UiField
    TextInput filePathField;
 
@@ -63,19 +64,18 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
 
    @UiField
    ImageButton cancelButton;
-   
+
    interface OpenFileByPathViewUiBinder extends UiBinder<Widget, OpenFileByPathView>
    {
    }
-   
+
    private static OpenFileByPathViewUiBinder uiBinder = GWT.create(OpenFileByPathViewUiBinder.class);
-   
 
    public OpenFileByPathView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      
+
       filePathField.setName(FILE_PATH_FIELD_NAME);
       openButton.setButtonId(OPEN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
@@ -128,5 +128,5 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
    {
       filePathField.focus();
    }
-   
+
 }

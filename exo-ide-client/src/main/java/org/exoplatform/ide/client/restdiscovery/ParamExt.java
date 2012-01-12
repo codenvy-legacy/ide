@@ -30,24 +30,24 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
  */
 public class ParamExt
 {
-   
+
    private Param param;
-   
+
    private boolean group = false;
-   
+
    private String title;
-   
+
    public ParamExt(Param param)
    {
       this.param = param;
    }
-   
+
    public ParamExt(String title)
    {
       this.title = title;
       group = true;
    }
-   
+
    /**
     * @return the param
     */
@@ -55,7 +55,7 @@ public class ParamExt
    {
       return param;
    }
-   
+
    /**
     * @return the title
     */
@@ -63,7 +63,7 @@ public class ParamExt
    {
       return title;
    }
-   
+
    /**
     * @return the group
     */

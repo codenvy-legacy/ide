@@ -30,7 +30,8 @@ import com.google.gwt.event.shared.GwtEvent;
 public class CreateProjectTemplateEvent extends GwtEvent<CreateProjectTemplateHandler>
 {
 
-   public static final GwtEvent.Type<CreateProjectTemplateHandler> TYPE = new GwtEvent.Type<CreateProjectTemplateHandler>();
+   public static final GwtEvent.Type<CreateProjectTemplateHandler> TYPE =
+      new GwtEvent.Type<CreateProjectTemplateHandler>();
 
    @Override
    protected void dispatch(CreateProjectTemplateHandler handler)

@@ -44,8 +44,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class DeleteItemView extends ViewImpl implements
    org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter.Display
 {
-   
-   private static final String ID = "ideDeleteItemsView";   
+
+   private static final String ID = "ideDeleteItemsView";
 
    public static final int DEFAULT_WIDTH = 500;
 

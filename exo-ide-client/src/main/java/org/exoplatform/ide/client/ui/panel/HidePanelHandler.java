@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface HidePanelHandler extends EventHandler
 {
-   
+
    void onHidePanel(HidePanelEvent event);
 
 }

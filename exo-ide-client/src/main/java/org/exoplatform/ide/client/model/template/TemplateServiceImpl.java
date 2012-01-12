@@ -171,7 +171,6 @@ public class TemplateServiceImpl extends TemplateService
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
-
    /**
     * @see org.exoplatform.ide.client.model.template.TemplateService#addFileTemplate(org.exoplatform.ide.client.model.template.Template, org.exoplatform.ide.client.model.template.TemplateCreatedCallback)
     */
@@ -356,33 +355,33 @@ public class TemplateServiceImpl extends TemplateService
             .getSampleBlogPostWidgetSource().getText(), true));
 
       //find file templates in default projects
-//      ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
-//      for (Template template : shoppingCardProject.getTemplateList())
-//      {
-//         if (template instanceof FileTemplate)
-//            fileTemplates.add((FileTemplate)template);
-//      }
-//
-//      TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
-//      for (Template template : twitterTrendsProject.getTemplateList())
-//      {
-//         if (template instanceof FileTemplate)
-//            fileTemplates.add((FileTemplate)template);
-//      }
-//
-//      LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
-//      for (Template template : linkedinContactsProject.getTemplateList())
-//      {
-//         if (template instanceof FileTemplate)
-//            fileTemplates.add((FileTemplate)template);
-//      }
-//
-//      DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
-//      for (Template template : defaultIdeProject.getTemplateList())
-//      {
-//         if (template instanceof FileTemplate)
-//            fileTemplates.add((FileTemplate)template);
-//      }
+      //      ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
+      //      for (Template template : shoppingCardProject.getTemplateList())
+      //      {
+      //         if (template instanceof FileTemplate)
+      //            fileTemplates.add((FileTemplate)template);
+      //      }
+      //
+      //      TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
+      //      for (Template template : twitterTrendsProject.getTemplateList())
+      //      {
+      //         if (template instanceof FileTemplate)
+      //            fileTemplates.add((FileTemplate)template);
+      //      }
+      //
+      //      LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
+      //      for (Template template : linkedinContactsProject.getTemplateList())
+      //      {
+      //         if (template instanceof FileTemplate)
+      //            fileTemplates.add((FileTemplate)template);
+      //      }
+      //
+      //      DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
+      //      for (Template template : defaultIdeProject.getTemplateList())
+      //      {
+      //         if (template instanceof FileTemplate)
+      //            fileTemplates.add((FileTemplate)template);
+      //      }
       return fileTemplates;
    }
 
@@ -390,19 +389,19 @@ public class TemplateServiceImpl extends TemplateService
    {
       List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
 
-//      ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
-//      projectTemplates.add(shoppingCardProject.getProjectTemplate());
-//
-//      TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
-//      projectTemplates.add(twitterTrendsProject.getProjectTemplate());
-//
-//      LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
-//      projectTemplates.add(linkedinContactsProject.getProjectTemplate());
-//
-//      DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
-//      projectTemplates.add(defaultIdeProject.getProjectTemplate());
+      //      ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
+      //      projectTemplates.add(shoppingCardProject.getProjectTemplate());
+      //
+      //      TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
+      //      projectTemplates.add(twitterTrendsProject.getProjectTemplate());
+      //
+      //      LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
+      //      projectTemplates.add(linkedinContactsProject.getProjectTemplate());
+      //
+      //      DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
+      //      projectTemplates.add(defaultIdeProject.getProjectTemplate());
 
-//      projectTemplates.add(getEmptyProject());
+      //      projectTemplates.add(getEmptyProject());
       return projectTemplates;
    }
 
@@ -412,7 +411,8 @@ public class TemplateServiceImpl extends TemplateService
     */
    @Override
    public void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback) throws RequestException
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback)
+      throws RequestException
    {
       String url = restContext + "/ide/templates/project/create";
       url += "?vfsid=" + vfsId;
@@ -420,8 +420,7 @@ public class TemplateServiceImpl extends TemplateService
       url += "&parentId=" + parentId;
       url += "&templateName=" + templateName;
       url = URL.encode(url);
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url)
-      .send(callback);
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
 }

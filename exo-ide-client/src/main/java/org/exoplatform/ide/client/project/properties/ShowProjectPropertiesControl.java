@@ -36,16 +36,18 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @version $
  */
 
-public class ShowProjectPropertiesControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
+public class ShowProjectPropertiesControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
+   ProjectClosedHandler
 {
-   
+
    public static final String ID = "Project/Properties...";
 
    private static final String TITLE = "Properties...";
 
-   private static final String PROMPT = "Show Project Properties...";   
-   
-   public ShowProjectPropertiesControl() {
+   private static final String PROMPT = "Show Project Properties...";
+
+   public ShowProjectPropertiesControl()
+   {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);

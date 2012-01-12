@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.GwtEvent;
 */
 public class CopyItemsEvent extends GwtEvent<CopyItemsHandler>
 {
-   
+
    public static final GwtEvent.Type<CopyItemsHandler> TYPE = new GwtEvent.Type<CopyItemsHandler>();
 
    @Override
@@ -41,5 +41,5 @@ public class CopyItemsEvent extends GwtEvent<CopyItemsHandler>
    {
       return TYPE;
    }
-   
+
 }

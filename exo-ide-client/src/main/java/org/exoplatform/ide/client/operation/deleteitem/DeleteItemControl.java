@@ -120,8 +120,7 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
          return;
       }
 
-      if (event.getView() instanceof NavigatorDisplay
-         && selectedItem.getId().equals(vfsInfo.getRoot().getId()))
+      if (event.getView() instanceof NavigatorDisplay && selectedItem.getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
          return;

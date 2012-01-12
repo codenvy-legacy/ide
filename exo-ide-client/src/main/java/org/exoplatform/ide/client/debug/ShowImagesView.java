@@ -61,7 +61,7 @@ public class ShowImagesView extends ViewImpl implements org.exoplatform.ide.clie
 
    @UiField
    Grid imagesGrid;
-   
+
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showImagesTitle();
 
    public ShowImagesView()
@@ -100,7 +100,7 @@ public class ShowImagesView extends ViewImpl implements org.exoplatform.ide.clie
       }
 
       String div = "<div style=\"width:1px; height:1px; \"></div>";
-      
+
       imagesGrid.setHTML(row, 0, div);
       imagesGrid.setHTML(row, 1, div);
       imagesGrid.setHTML(row, 2, div);

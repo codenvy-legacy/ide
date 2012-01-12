@@ -30,9 +30,9 @@ import java.util.List;
  */
 public class ProjectTemplateList
 {
-   
+
    private List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
-   
+
    /**
     * @return the projectTemplates
     */
@@ -40,7 +40,7 @@ public class ProjectTemplateList
    {
       return projectTemplates;
    }
-   
+
    /**
     * @param projectTemplates the projectTemplates to set
     */

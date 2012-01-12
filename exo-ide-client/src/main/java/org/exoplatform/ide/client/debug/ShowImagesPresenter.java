@@ -37,26 +37,28 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 public class ShowImagesPresenter implements ShowImagesHandler, ViewClosedHandler
 {
-   
+
    public interface Display extends IsView
    {
-      
+
       HasClickHandlers getOkButton();
-      
+
       void updateImageList();
-      
+
    }
-   
+
    private Display display;
-   
-   public ShowImagesPresenter() {
+
+   public ShowImagesPresenter()
+   {
       IDE.getInstance().addControl(new ShowImagesControl());
-      
+
       IDE.addHandler(ShowImagesEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
-   private void bindDisplay() {
+
+   private void bindDisplay()
+   {
       display.getOkButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -65,17 +67,18 @@ public class ShowImagesPresenter implements ShowImagesHandler, ViewClosedHandler
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-     
+
       display.updateImageList();
    }
 
    @Override
    public void onShowImages(ShowImagesEvent event)
    {
-      if (display != null) {
+      if (display != null)
+      {
          return;
       }
-      
+
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
@@ -84,7 +87,8 @@ public class ShowImagesPresenter implements ShowImagesHandler, ViewClosedHandler
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display) {
+      if (event.getView() instanceof Display)
+      {
          display = null;
       }
    }

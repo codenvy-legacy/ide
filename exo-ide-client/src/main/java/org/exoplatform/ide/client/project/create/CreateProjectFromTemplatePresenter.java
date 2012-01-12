@@ -163,7 +163,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    private int itemsCreated = 0;
 
    private ProjectModel projectFolder;
-   
+
    private VirtualFileSystemInfo vfsInfo;
 
    /**
@@ -184,8 +184,8 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
 
    public CreateProjectFromTemplatePresenter()
    {
-      IDE.getInstance().addControl(new CreateProjectFromTemplateControl());      
-      
+      IDE.getInstance().addControl(new CreateProjectFromTemplateControl());
+
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(CreateNewProjectEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -234,9 +234,10 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
                name = display.getSelectedTemplates().get(0).getName();
             }
             String type = display.getSelectedTemplates().get(0).getType();
-            IDE.eventBus().fireEvent(new DeployProjectToPaasEvent(name, type, display.getSelectedTemplates().get(0).getName()));
+            IDE.eventBus().fireEvent(
+               new DeployProjectToPaasEvent(name, type, display.getSelectedTemplates().get(0).getName()));
             IDE.getInstance().closeView(display.asView().getId());
-//            doCreateProjectFromTemplate();
+            //            doCreateProjectFromTemplate();
          }
       });
 
@@ -247,7 +248,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       {
          public void onDoubleClick(DoubleClickEvent event)
          {
-//            doCreateProjectFromTemplate();
+            //            doCreateProjectFromTemplate();
          }
       });
 
@@ -405,25 +406,31 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
          try
          {
             String parentId = vfsInfo.getRoot().getId();
-            
-            loader.show();
-            TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName, selectedTemplate.getName(), new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
-            {
-               @Override
-               protected void onSuccess(ProjectModel result)
-               {
-                  loader.hide();
-                  projectFolder = result;
-                  finishProjectCreation();
-               }
 
-               @Override
-               protected void onFailure(Throwable exception)
+            loader.show();
+            TemplateService.getInstance().createProjectFromTemplate(
+               vfsInfo.getId(),
+               parentId,
+               projectName,
+               selectedTemplate.getName(),
+               new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(
+                  new ProjectUnmarshaller(new ProjectModel()))
                {
-                  loader.hide();
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
+                  @Override
+                  protected void onSuccess(ProjectModel result)
+                  {
+                     loader.hide();
+                     projectFolder = result;
+                     finishProjectCreation();
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     loader.hide();
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               });
          }
          catch (RequestException e)
          {
@@ -434,11 +441,11 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       else
       {
          //TODO create project from user template
-//         folderList.clear();
-//         projectFolder = new ProjectModel(projectName, baseFolder, selectedTemplate.getType(), null);
-//         build(selectedTemplate.getChildren(), projectFolder);
-//         //      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
-//         createFolder((FolderModel)projectFolder);
+         //         folderList.clear();
+         //         projectFolder = new ProjectModel(projectName, baseFolder, selectedTemplate.getType(), null);
+         //         build(selectedTemplate.getChildren(), projectFolder);
+         //         //      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
+         //         createFolder((FolderModel)projectFolder);
       }
    }
 
@@ -618,7 +625,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    {
       vfsInfo = event.getVfsInfo();
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.event.CreateNewProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event.CreateNewProjectEvent)
     */
@@ -636,7 +643,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
          Dialogs.getInstance().showError("Display for Create project presenter can't be null.");
          return;
       }
-      
+
       if (isTemplatesMigrated)
       {
          createProjectFromTemplate();

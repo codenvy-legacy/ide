@@ -31,29 +31,29 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface IdeOverwriteLocalizationConstant extends Messages
 {
-   
+
    /*
     * Buttons
     */
    @Key("button.overwrite")
    String overwriteButton();
-   
+
    @Key("button.rename")
    String renameButton();
-   
+
    /*
     * OverwriteDialog
     */
    @Key("dialog.title")
    String dialogTitle();
-   
+
    @Key("dialog.text.fileExists")
    String dialogTextFileExists();
-   
+
    @Key("dialog.text.ask")
    String dialogAskToOverwrite();
-   
+
    @Key("dialog.renameField.lable")
    String dialogRenameFieldLable();
-      
+
 }

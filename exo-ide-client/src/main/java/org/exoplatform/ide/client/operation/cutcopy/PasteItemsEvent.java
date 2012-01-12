@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.GwtEvent;
 */
 public class PasteItemsEvent extends GwtEvent<PasteItemsHandler>
 {
-   
+
    public static final GwtEvent.Type<PasteItemsHandler> TYPE = new GwtEvent.Type<PasteItemsHandler>();
 
    @Override
@@ -41,5 +41,5 @@ public class PasteItemsEvent extends GwtEvent<PasteItemsHandler>
    {
       return TYPE;
    }
-   
+
 }

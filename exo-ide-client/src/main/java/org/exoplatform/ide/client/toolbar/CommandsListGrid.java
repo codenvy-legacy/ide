@@ -57,7 +57,7 @@ public class CommandsListGrid extends ListGrid<CommandItemEx>
 
       initColumns();
    }
-   
+
    private void initColumns()
    {
       Column<CommandItemEx, SafeHtml> titleColumn = new Column<CommandItemEx, SafeHtml>(new SafeHtmlCell())
@@ -93,7 +93,7 @@ public class CommandsListGrid extends ListGrid<CommandItemEx>
 
       return divider;
    }
-   
+
    private String getItemTitle(CommandItemEx item)
    {
       if (item.isGroup())
@@ -103,9 +103,9 @@ public class CommandsListGrid extends ListGrid<CommandItemEx>
          title = getDivider(title, Style.GROUP);
          return title;
       }
-      
+
       String title = "";
-      String imageHTML = null;      
+      String imageHTML = null;
       String commandName = item.getCommand().getId();
       if (commandName.indexOf("/") >= 0)
       {
@@ -131,17 +131,19 @@ public class CommandsListGrid extends ListGrid<CommandItemEx>
       {
          imageHTML = "<img src = \"" + item.getCommand().getIcon() + "\"/>";
       }
-      
+
       title = build(imageHTML, commandName);
 
       return title;
    }
-   
-   private String build(String image, String command) {
-      String h ="<div style=\"height: 16px; padding:0px; margin:0px; line-height:16px;\">" +
-         (image != null ? "<div style=\"width:16px; height:16px; overflow:hidden; float:left;\">" + image + "</div>" : "") +
-      	"<div style=\"float:left;\">&nbsp;" + command + "</div></div>";      
-      return  h;
+
+   private String build(String image, String command)
+   {
+      String h =
+         "<div style=\"height: 16px; padding:0px; margin:0px; line-height:16px;\">"
+            + (image != null ? "<div style=\"width:16px; height:16px; overflow:hidden; float:left;\">" + image
+               + "</div>" : "") + "<div style=\"float:left;\">&nbsp;" + command + "</div></div>";
+      return h;
    }
 
 }

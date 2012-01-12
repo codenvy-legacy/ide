@@ -126,7 +126,8 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    {
       final String newFolderName = display.getFolderNameField().getValue();
       final Folder baseFolder =
-         (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent() : (Folder)selectedItems.get(0);
+         (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent()
+            : (Folder)selectedItems.get(0);
 
       FolderModel newFolder = new FolderModel();
       newFolder.setName(newFolderName);
@@ -173,7 +174,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
-      
+
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override

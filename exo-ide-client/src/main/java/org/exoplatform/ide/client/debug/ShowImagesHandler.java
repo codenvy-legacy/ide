@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ShowImagesHandler extends EventHandler
 {
-   
+
    void onShowImages(ShowImagesEvent event);
 
 }

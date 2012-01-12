@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  */
 public class DocumentationView extends ViewImpl implements DocumentationPresenter.Display
 {
-   
+
    private static final String ID = "ideDocumentationView";
 
    private static final String FRAME_ID = "ideDocumentationFrame";
@@ -45,7 +45,7 @@ public class DocumentationView extends ViewImpl implements DocumentationPresente
 
    public DocumentationView()
    {
-      super(ID, ViewType.INFORMATION , IDE.IDE_LOCALIZATION_CONSTANT.documentationTitle());
+      super(ID, ViewType.INFORMATION, IDE.IDE_LOCALIZATION_CONSTANT.documentationTitle());
       setIcon(DOCUMENTATION_TAB_ICON);
 
       iFrame = new Frame();

@@ -44,7 +44,7 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
    protected void init(UserPreferences preferences)
    {
       final VerticalPanel idePanel = new VerticalPanel();
-      
+
       RootPanel.get().add(idePanel);
       if (BrowserResolver.CURRENT_BROWSER == Browser.CHROME)
       {
@@ -59,7 +59,7 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
             dynamicHeightFeature.adjustHeight();
          }
       }
-      
+
       new IDE();
    }
 
@@ -71,9 +71,9 @@ public class IDEGadget extends Gadget<UserPreferences> implements NeedsDynamicHe
    //Fix gadget height work only in Gatein
    //get height of parent element in the DOM.  
    private static native String expandGadgetHeight() /*-{
-       var y = $wnd.parent.document.getElementById("UIGadgetPortlet").parentNode;
-       return y.style.height;
-    }-*/;
+                                                     var y = $wnd.parent.document.getElementById("UIGadgetPortlet").parentNode;
+                                                     return y.style.height;
+                                                     }-*/;
 
    private Integer getFixHeight()
    {

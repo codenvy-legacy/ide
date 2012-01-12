@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.EventHandler;
 */
 public interface CopyItemsHandler extends EventHandler
 {
-   
+
    void onCopyItems(CopyItemsEvent event);
-   
+
 }

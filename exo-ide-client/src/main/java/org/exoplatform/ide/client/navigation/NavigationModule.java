@@ -67,11 +67,11 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
  */
 public class NavigationModule implements InitializeServicesHandler
 {
-   
+
    public NavigationModule()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      
+
       IDE.getInstance().addControl(new NewItemPopupToolbarControl(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new NewItemMenuGroup());
 
@@ -81,42 +81,38 @@ public class NavigationModule implements InitializeServicesHandler
       new CreateFolderPresenter();
 
       IDE.getInstance().addControl(
-         new NewItemControl(
-            "File/New/New TEXT",
-            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
-            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(),
-            Images.FileTypes.TXT,
-            MimeType.TEXT_PLAIN, true));
-      
+         new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
+            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN, true));
+
       //TODO: need rework according with VFS       
-//      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
-//      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
-//      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
-//      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
-//      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);      
-//    new VersionHistoryCommandHandler();
-//    new RestoreToVersionCommandHandler();
-//    new VersionsListPresenter();
-      
+      //      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
+      //      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
+      //      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
+      //      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
+      //      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);      
+      //    new VersionHistoryCommandHandler();
+      //    new RestoreToVersionCommandHandler();
+      //    new VersionsListPresenter();
+
       new UploadFilePresenter();
       new UploadZipPresenter();
-      
+
       new OpenLocalFilePresenter();
       new OpenFileByPathPresenter();
       new OpenFileByURLPresenter();
 
       new DownloadHandler();
-      
+
       new SaveFileCommandHandler();
 
       new SaveFileAsCommandHandler();
-      
+
       new SaveAllFilesCommandHandler();
-      
+
       new SaveAsTemplatePresenter();
 
       new CutCopyPasteItemsCommandHandler();
-      
+
       IDE.getInstance().addControl(new RenameItemControl());
       new RenameFilePresenter();
       new RenameFolderPresenter();
@@ -124,9 +120,9 @@ public class NavigationModule implements InitializeServicesHandler
       new DeleteItemsPresenter();
 
       new SearchFilesPresenter();
-      
+
       new SearchResultsPresenter();
-      
+
       IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR);
 
       new GoToFolderCommandHandler();
@@ -151,6 +147,6 @@ public class NavigationModule implements InitializeServicesHandler
          (event.getApplicationConfiguration().getVfsBaseUrl().endsWith("/")) ? event.getApplicationConfiguration()
             .getVfsBaseUrl() + event.getApplicationConfiguration().getVfsId() : event.getApplicationConfiguration()
             .getVfsBaseUrl() + "/" + event.getApplicationConfiguration().getVfsId();
-            new VirtualFileSystem(workspace, new GWTLoader());
+      new VirtualFileSystem(workspace, new GWTLoader());
    }
 }

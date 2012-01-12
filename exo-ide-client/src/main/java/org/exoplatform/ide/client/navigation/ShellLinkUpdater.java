@@ -36,27 +36,30 @@ import com.google.gwt.user.client.Element;
  */
 public class ShellLinkUpdater implements ItemsSelectedHandler
 {
-   
-   public ShellLinkUpdater() {
+
+   public ShellLinkUpdater()
+   {
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
-   
+
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().isEmpty()) {
+      if (event.getSelectedItems().isEmpty())
+      {
          return;
       }
-      
+
       String path = event.getSelectedItems().get(0).getId();
       Element ae = DOM.getElementById("shell-link");
-      if(ae == null) {
+      if (ae == null)
+      {
          return;
       }
-      
+
       AnchorElement a = AnchorElement.as(ae);
       String newHref = "/shell/Shell.html?workdir=" + path;
       a.setHref(newHref);
-   }   
+   }
 
 }

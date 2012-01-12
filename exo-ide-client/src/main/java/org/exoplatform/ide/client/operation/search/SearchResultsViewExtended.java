@@ -40,11 +40,12 @@ import java.util.List;
  * @version $
  */
 
-public class SearchResultsViewExtended extends ViewImpl implements org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display
+public class SearchResultsViewExtended extends ViewImpl implements
+   org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display
 {
-   
+
    private static final String ID = "ideSearchResultView";
-   
+
    /**
     * Initial width of this view
     */
@@ -53,17 +54,17 @@ public class SearchResultsViewExtended extends ViewImpl implements org.exoplatfo
    /**
     * Initial height of this view
     */
-   private static final int HEIGHT = 450;   
+   private static final int HEIGHT = 450;
 
    private static SearchResultsViewExtendedUiBinder uiBinder = GWT.create(SearchResultsViewExtendedUiBinder.class);
 
    interface SearchResultsViewExtendedUiBinder extends UiBinder<Widget, SearchResultsViewExtended>
    {
    }
-   
+
    @UiField
    ItemTree treeGrid;
-   
+
    private static final String TITLE = IDE.NAVIGATION_CONSTANT.searchResultTitle();
 
    public SearchResultsViewExtended()
@@ -95,5 +96,5 @@ public class SearchResultsViewExtended extends ViewImpl implements org.exoplatfo
    {
       treeGrid.deselectAllRecords();
    }
-   
+
 }

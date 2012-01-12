@@ -61,12 +61,13 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id:
  *
  */
-public class CreateProjectTemplatePresenter implements CreateProjectTemplateHandler, TemplatesMigratedHandler, ViewClosedHandler
+public class CreateProjectTemplatePresenter implements CreateProjectTemplateHandler, TemplatesMigratedHandler,
+   ViewClosedHandler
 {
 
    public interface Display extends IsView
    {
-      
+
       TreeGridItem<Template> getTemplateTreeGrid();
 
       HasValue<String> getNameField();
@@ -110,7 +111,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
       void setRootNodeName(String name);
 
       String getTemplateLocationInProject(Template template);
-      
+
    }
 
    private Display display;
@@ -120,17 +121,17 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
    private Template templateToCreate;
 
    private Template selectedTemplate;
-   
+
    private ProjectTemplate projectTemplate;
-   
+
    private static final String ENTER_FILE_NAME_FIRST = IDE.TEMPLATE_CONSTANT.createProjectTemplateEnterNameFirst();
-   
+
    private boolean isTemplatesMigrated = false;
 
    public CreateProjectTemplatePresenter()
    {
-//    IDE.getInstance().addControl(new CreateProjectTemplateControl());            
-      
+      //    IDE.getInstance().addControl(new CreateProjectTemplateControl());            
+
       IDE.addHandler(CreateProjectTemplateEvent.TYPE, this);
       IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -379,16 +380,17 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
             return;
          }
       }
-      TemplateService.getInstance().addProjectTemplate(projectTemplate, new AsyncRequestCallback<String>(IDE.eventBus())
-      {
-
-         @Override
-         protected void onSuccess(String result)
+      TemplateService.getInstance().addProjectTemplate(projectTemplate,
+         new AsyncRequestCallback<String>(IDE.eventBus())
          {
-            closeView();
-            Dialogs.getInstance().showInfo(IDE.TEMPLATE_CONSTANT.createProjectTemplateCreated());
-         }
-      });
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               closeView();
+               Dialogs.getInstance().showInfo(IDE.TEMPLATE_CONSTANT.createProjectTemplateCreated());
+            }
+         });
    }
 
    public void destroy()
@@ -415,12 +417,12 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
       display.updateTree();
       display.selectTemplate(fileTemplate);
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
    }
-   
+
    private void openView()
    {
       if (display == null)
@@ -457,29 +459,30 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
          }));
       }
    }
-   
+
    private void createProjectTemplate()
    {
       templateList = new ArrayList<Template>();
-      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(IDE.eventBus())
-      {
-         @Override
-         protected void onSuccess(ProjectTemplateList result)
+      TemplateService.getInstance().getProjectTemplateList(
+         new AsyncRequestCallback<ProjectTemplateList>(IDE.eventBus())
          {
-            templateList.addAll(result.getProjectTemplates());
-            TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>()
+            @Override
+            protected void onSuccess(ProjectTemplateList result)
             {
-
-               @Override
-               protected void onSuccess(FileTemplateList result)
+               templateList.addAll(result.getProjectTemplates());
+               TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>()
                {
-                  templateList.addAll(result.getFileTemplates());
-//                  new CreateProjectTemplateView(eventBus, templates);
-                  openView();
-               }
-            });
-         }
-      });
+
+                  @Override
+                  protected void onSuccess(FileTemplateList result)
+                  {
+                     templateList.addAll(result.getFileTemplates());
+                     //                  new CreateProjectTemplateView(eventBus, templates);
+                     openView();
+                  }
+               });
+            }
+         });
    }
 
    /**
@@ -502,5 +505,5 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
          display = null;
       }
    }
-   
+
 }

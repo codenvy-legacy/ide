@@ -36,7 +36,7 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/public/images/logo/eXo-IDE-Logo.png")
    ImageResource ideLogo();
-   
+
    /*
     * BUTTONS
     */
@@ -52,38 +52,38 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("bundled-images/cancel-disabled.png")
    ImageResource cancelDisabled();
-   
+
    @Source("bundled-images/yes.png")
    ImageResource yes();
 
    @Source("bundled-images/yes-disabled.png")
    ImageResource yesDisabled();
-   
+
    /*
     * Navigation buttons
     */
    @Source("bundled-images/welcome/next.png")
    ImageResource next();
-   
+
    @Source("bundled-images/welcome/next_Disabled.png")
    ImageResource nextDisabled();
-   
+
    @Source("bundled-images/welcome/back.png")
    ImageResource back();
-   
+
    @Source("bundled-images/welcome/back_Disabled.png")
    ImageResource backDisabled();
-   
+
    @Source("bundled-images/welcome/welcome.png")
    ImageResource welcome();
-   
+
    @Source("bundled-images/welcome/welcome-disabled.png")
    ImageResource welcomeDisabled();
-   
+
    /*
     * Actions
     */
-   
+
    @Source("../public/images/bundled/actions/add.png")
    ImageResource add();
 
@@ -113,19 +113,19 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/actions/defaults_Disabled.png")
    ImageResource defaultsDisabled();
-   
+
    @Source("org/exoplatform/ide/public/images/filetype/folder_closed.png")
    ImageResource folder();
-   
+
    @Source("org/exoplatform/ide/public/images/filetype/default.png")
    ImageResource defaultFile();
 
    @Source("bundled-images/edit.png")
    ImageResource edit();
-   
+
    @Source("bundled-images/edit-disabled.png")
    ImageResource editDisabled();
-   
+
    /*
     * BROWSER
     */
@@ -314,66 +314,59 @@ public interface IDEImageBundle extends ClientBundle
    /*
     * Project
     */
-   
+
    @Source("bundled-images/projects/project-explorer.png")
    ImageResource projectExplorer();
-   
+
    @Source("bundled-images/projects/project-explorer-disabled.png")
    ImageResource projectExplorerDisabled();
 
-   
    @Source("bundled-images/projects/open-project.png")
    ImageResource openProject();
-   
+
    @Source("bundled-images/projects/open-project-disabled.png")
    ImageResource openProjectDisabled();
-   
 
    @Source("bundled-images/projects/project-opened.png")
    ImageResource projectOpened();
-   
+
    @Source("bundled-images/projects/project-opened-disabled.png")
    ImageResource projectOpenedDisabled();
-   
+
    @Source("bundled-images/projects/paas.png")
    ImageResource paas();
-   
+
    @Source("bundled-images/projects/paas_Disabled.png")
    ImageResource paasDisabled();
 
-   
    @Source("bundled-images/projects/project-closed.png")
    ImageResource projectClosed();
-   
+
    @Source("bundled-images/projects/project-closed-disabled.png")
    ImageResource projectClosedDisabled();
-   
-  
+
    @Source("bundled-images/projects/new-project.png")
    ImageResource newProject();
-   
+
    @Source("bundled-images/projects/new-project-disabled.png")
    ImageResource newProjectDisabled();
 
    @Source("bundled-images/projects/project-properties.png")
    ImageResource projectProperties();
-   
+
    @Source("bundled-images/projects/project-properties-disabled.png")
    ImageResource projectPropertiesDisabled();
 
    /*
     * Navigator
     */
-   
-   
+
    @Source("bundled-images/navigator.png")
    ImageResource navigator();
-   
+
    @Source("bundled-images/navigator-disabled.png")
    ImageResource navigatorDisabled();
-   
-   
-   
+
    /*
     * HELP
     */
@@ -545,16 +538,16 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/panel/minimize.png")
    ImageResource restore();
-   
+
    /*
     * Welcome images
     */
    @Source("bundled-images/welcome/tutorial.png")
    ImageResource welcomeTutorial();
-   
+
    @Source("bundled-images/welcome/samples.png")
    ImageResource welcomeSamples();
-   
+
    @Source("org/exoplatform/ide/public/images/filetype/txt.png")
    ImageResource textFile();
 
@@ -563,10 +556,10 @@ public interface IDEImageBundle extends ClientBundle
     */
    @Source("org/exoplatform/ide/client/bundled-images/async_request.gif")
    ImageResource asyncRequest();
-   
+
    @Source("org/exoplatform/ide/client/bundled-images/progress.gif")
    ImageResource progresImage();
-   
+
    @Source("org/exoplatform/ide/client/bundled-images/progress_remall.gif")
    ImageResource progresRemall();
 }

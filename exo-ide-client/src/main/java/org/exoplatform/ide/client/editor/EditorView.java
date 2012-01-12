@@ -71,10 +71,9 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    private HandlerManager eventBus;
 
-   private LayoutPanel  editorArea;
+   private LayoutPanel editorArea;
 
    int lastEditorHeight = 0;
-   
 
    /**
     * Uses for storing row index of the cursor when Editor View lose focus.
@@ -84,7 +83,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    /**
     * Uses for storing column index of the cursor when Editor View lose focus.
     */
-   private int frozenCursorColumn;   
+   private int frozenCursorColumn;
 
    private static final String FILE_IS_READ_ONLY = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
       .editorControllerFileIsReadOnly();
@@ -104,7 +103,8 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    public EditorView(FileModel file, boolean isFileReadOnly, HandlerManager eventBus, List<Editor> supportedEditors,
       int currentEditorIndex)
    {
-      super("editor-" + i++, "editor", getFileTitle(file, isFileReadOnly), new Image(ImageUtil.getIcon(file.getMimeType())));
+      super("editor-" + i++, "editor", getFileTitle(file, isFileReadOnly), new Image(ImageUtil.getIcon(file
+         .getMimeType())));
 
       if (supportedEditors == null)
          return;
@@ -175,22 +175,22 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       editorSwitcherContainer.setHeight("" + BUTTON_HEIGHT);
 
       editorArea.add(editorSwitcherContainer);
-//      editorArea.setCellHeight(editorSwitcherContainer, "" + BUTTON_HEIGHT);
+      //      editorArea.setCellHeight(editorSwitcherContainer, "" + BUTTON_HEIGHT);
       editorArea.setWidgetBottomHeight(editorSwitcherContainer, 0, Unit.PX, BUTTON_HEIGHT, Unit.PX);
-      
+
       add(editorArea);
    }
 
    private void showEditor(final EditorType editorType)
    {
-    
+
       editorArea.setWidgetVisible(editorArea.getWidget(editorType.getPosition()), true);
       restoreEditorHeight(editorType);
-      
+
       editors.get(editorType).setFocus();
       new Timer()
       {
-         
+
          @Override
          public void run()
          {
@@ -205,19 +205,19 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    }
 
    private native void setDisplayBlock(JavaScriptObject element) /*-{
-      if (element)
-      {
-         element.style.display = "block";
-      }
-   }-*/;
-   
+                                                                 if (element)
+                                                                 {
+                                                                 element.style.display = "block";
+                                                                 }
+                                                                 }-*/;
+
    private native void setDisplayNone(JavaScriptObject element) /*-{
-      if (element)
-      {
-         element.style.display = "none";
-      }   
-   }-*/;
-   
+                                                                if (element)
+                                                                {
+                                                                element.style.display = "none";
+                                                                }   
+                                                                }-*/;
+
    /**
     * @return the editor
     */
@@ -410,13 +410,13 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       onViewInnerEditorSwitched(nextEditor);
    }
 
-//   @Override
-//   public void resize(int width, int height)
-//   {
-//      super.resize(width, height);
-//
-//      restoreEditorHeight(currentEditorType);
-//   }
+   //   @Override
+   //   public void resize(int width, int height)
+   //   {
+   //      super.resize(width, height);
+   //
+   //      restoreEditorHeight(currentEditorType);
+   //   }
 
    /**
     * restore CKEditor height on resize
@@ -430,11 +430,12 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
             lastEditorHeight = editorArea.getOffsetHeight();
             editors.get(editorType).setHeight(String.valueOf(lastEditorHeight));
          }
-         
+
          else if (getEditorAreaHeight() > BUTTON_HEIGHT + EDITOR_SWITCHER_OFFSET)
          {
             lastEditorHeight = getEditorAreaHeight();
-            editors.get(editorType).setHeight(String.valueOf(lastEditorHeight - BUTTON_HEIGHT - EDITOR_SWITCHER_OFFSET));
+            editors.get(editorType)
+               .setHeight(String.valueOf(lastEditorHeight - BUTTON_HEIGHT - EDITOR_SWITCHER_OFFSET));
          }
       }
    }

@@ -34,8 +34,8 @@ import java.util.Map.Entry;
 public class HotKeyHelper
 {
    static final Map<String, String> KEY_CODES = new HashMap<String, String>();
-   
-   static 
+
+   static
    {
       /*
        * Keys, that doesn't present in table
@@ -67,12 +67,12 @@ public class HotKeyHelper
       KEY_CODES.put("19", "Pause");
       KEY_CODES.put("20", "CapsLock");
       KEY_CODES.put("27", "Esc");
-      KEY_CODES.put("32", "Space"); 
+      KEY_CODES.put("32", "Space");
       KEY_CODES.put("33", "PageUp");
       KEY_CODES.put("34", "PageDown");
       KEY_CODES.put("35", "End");
       KEY_CODES.put("36", "Home");
-      
+
       KEY_CODES.put("37", "Left");
       KEY_CODES.put("38", "Up");
       KEY_CODES.put("39", "Right");
@@ -84,7 +84,7 @@ public class HotKeyHelper
       KEY_CODES.put("45", "Insert");
       KEY_CODES.put("46", "Delete");
       KEY_CODES.put("47", "Help");
-      
+
       KEY_CODES.put("48", "0");
       KEY_CODES.put("49", "1");
       KEY_CODES.put("50", "2");
@@ -95,8 +95,7 @@ public class HotKeyHelper
       KEY_CODES.put("55", "7");
       KEY_CODES.put("56", "8");
       KEY_CODES.put("57", "9");
-      
-      
+
       KEY_CODES.put("65", "A");
       KEY_CODES.put("66", "B");
       KEY_CODES.put("67", "C");
@@ -153,13 +152,13 @@ public class HotKeyHelper
       KEY_CODES.put("121", "F10");
       KEY_CODES.put("122", "F11");
       KEY_CODES.put("123", "F12");
-      
+
       KEY_CODES.put("144", "NumLock");
       KEY_CODES.put("145", "ScrollLock");
-      
+
       KEY_CODES.put("154", "PrintScreen");
       KEY_CODES.put("157", "Meta");
-      
+
       KEY_CODES.put("186", ";");
       KEY_CODES.put("187", "=");
       KEY_CODES.put("188", ",");
@@ -172,7 +171,7 @@ public class HotKeyHelper
       KEY_CODES.put("221", "]");
       KEY_CODES.put("222", "'");
    }
-   
+
    /**
     * For example, converts from "Ctrl+65" to "Ctrl+A"
     * 
@@ -184,21 +183,22 @@ public class HotKeyHelper
    {
       if (codeCombination == null || codeCombination.length() < 1)
          return "";
-      
+
       if (!codeCombination.contains("+") || codeCombination.endsWith("+"))
          return codeCombination;
-      
+
       String controlKey = codeCombination.substring(0, codeCombination.indexOf("+"));
       String keyCode = codeCombination.substring(codeCombination.indexOf("+") + 1, codeCombination.length());
-      
+
       String charKey = (KEY_CODES.get(keyCode) != null) ? KEY_CODES.get(keyCode) : null;
-      
+
       if (charKey == null)
-         throw new IllegalArgumentException(IDE.IDE_LOCALIZATION_MESSAGES.hotkeysCantFindCodeCombination(codeCombination));
-      
+         throw new IllegalArgumentException(
+            IDE.IDE_LOCALIZATION_MESSAGES.hotkeysCantFindCodeCombination(codeCombination));
+
       return controlKey + "+" + charKey;
    }
-   
+
    /**
     * Return string for key code.
     * 
@@ -209,7 +209,7 @@ public class HotKeyHelper
    {
       return KEY_CODES.get(keyCode);
    }
-   
+
    /**
     * Find in keycodes map value of keyString and return the key code.
     * 
@@ -229,7 +229,7 @@ public class HotKeyHelper
       }
       return null;
    }
-   
+
    /**
     * For example, converts from "Ctrl+A" to "Ctrl+65".
     * 

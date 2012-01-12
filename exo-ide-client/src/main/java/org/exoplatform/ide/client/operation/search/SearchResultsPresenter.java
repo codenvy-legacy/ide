@@ -52,8 +52,8 @@ import java.util.List;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class SearchResultsPresenter implements ViewVisibilityChangedHandler,
-ViewClosedHandler, SearchResultReceivedHandler
+public class SearchResultsPresenter implements ViewVisibilityChangedHandler, ViewClosedHandler,
+   SearchResultReceivedHandler
 {
 
    public interface Display extends IsView
@@ -103,7 +103,7 @@ ViewClosedHandler, SearchResultReceivedHandler
 
    private void refreshSearchResult()
    {
-//      searchResult.setIcon(Images.FileTypes.WORKSPACE);
+      //      searchResult.setIcon(Images.FileTypes.WORKSPACE);
       if (searchResult.getChildren() != null && !searchResult.getChildren().getItems().isEmpty())
       {
          // sort items in search result list
@@ -147,10 +147,10 @@ ViewClosedHandler, SearchResultReceivedHandler
             onItemSelected();
          }
       });
-      
+
       display.getSearchResultTree().addOpenHandler(new OpenHandler<Item>()
       {
-         
+
          @Override
          public void onOpen(OpenEvent<Item> event)
          {
@@ -207,10 +207,11 @@ ViewClosedHandler, SearchResultReceivedHandler
       @Override
       public void run()
       {
-         if (display == null) {
+         if (display == null)
+         {
             return;
          }
-         
+
          selectedItems = display.getSelectedItems();
          IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
       }
@@ -239,7 +240,7 @@ ViewClosedHandler, SearchResultReceivedHandler
          }
       }
    }
-   
+
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {

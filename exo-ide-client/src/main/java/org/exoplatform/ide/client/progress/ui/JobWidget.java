@@ -65,7 +65,7 @@ public class JobWidget extends Composite
       body.getCellFormatter().setWidth(0, 0, "16px");
       body.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       body.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      
+
       initWidget(body);
 
       if (odd)

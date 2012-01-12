@@ -31,9 +31,9 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  */
 public class TemplateContentUnmarshaller implements Unmarshallable
 {
-   
+
    private AsyncRequestCallback<String> callback;
-   
+
    public TemplateContentUnmarshaller(AsyncRequestCallback<String> callback)
    {
       this.callback = callback;

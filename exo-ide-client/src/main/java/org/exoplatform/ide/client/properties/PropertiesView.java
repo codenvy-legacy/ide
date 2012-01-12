@@ -100,10 +100,12 @@ public class PropertiesView extends ViewImpl implements
 
          //add id to get access to field's text from Selenium tests 
          DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "propertyName", key);
-         
-         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "fontFamily", "Verdana,Bitstream Vera Sans,sans-serif");
+
+         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "fontFamily",
+            "Verdana,Bitstream Vera Sans,sans-serif");
          DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "fontSize", "11px");
-         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "fontFamily", "Verdana,Bitstream Vera Sans,sans-serif");
+         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "fontFamily",
+            "Verdana,Bitstream Vera Sans,sans-serif");
          DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "fontSize", "11px");
          DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "textAlign", "right");
          DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "width", "100%");

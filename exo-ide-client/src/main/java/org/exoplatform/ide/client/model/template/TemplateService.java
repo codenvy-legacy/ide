@@ -73,9 +73,9 @@ public abstract class TemplateService
     * @param callback
     * @throws RequestException 
     */
-   public abstract void createProjectFromTemplate(String vfsId, String parentId, String name,
-      String templateName,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback) throws RequestException;
+   public abstract void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback)
+      throws RequestException;
 
    /*
     * Methods, used for templates transfer from registry to settings file.

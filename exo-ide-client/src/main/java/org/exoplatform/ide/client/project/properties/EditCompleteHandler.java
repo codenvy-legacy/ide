@@ -19,7 +19,6 @@
 
 package org.exoplatform.ide.client.project.properties;
 
-
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -30,7 +29,7 @@ package org.exoplatform.ide.client.project.properties;
 
 public interface EditCompleteHandler
 {
-   
+
    void onEditComplete();
 
 }

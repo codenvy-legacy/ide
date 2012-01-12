@@ -105,13 +105,9 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
    private void setContents(String html)
    {
       String table =
-         "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr>" +
-            "<td style=\"" +
-               "font-family: Verdana,Bitstream Vera Sans,sans-serif;" +
-               "font-size: 11px;" +
-               "font-style: normal;" +
-               "font-weight: normal" +
-               "\">" + html + "</td></tr></table>";
+         "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr>" + "<td style=\""
+            + "font-family: Verdana,Bitstream Vera Sans,sans-serif;" + "font-size: 11px;" + "font-style: normal;"
+            + "font-weight: normal" + "\">" + html + "</td></tr></table>";
       getElement().setInnerHTML(table);
    }
 

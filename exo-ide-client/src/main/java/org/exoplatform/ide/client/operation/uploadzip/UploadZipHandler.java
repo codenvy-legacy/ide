@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface UploadZipHandler extends EventHandler
 {
-   
+
    void onUploadZip(UploadZipEvent event);
 
 }

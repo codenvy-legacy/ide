@@ -37,5 +37,5 @@ public interface ValueDiscardCallback
 {
 
    void discard();
-   
+
 }

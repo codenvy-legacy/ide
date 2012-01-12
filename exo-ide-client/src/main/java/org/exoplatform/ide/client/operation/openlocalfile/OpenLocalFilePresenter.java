@@ -250,7 +250,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
       }
 
       //FIXME 
-//      String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
+      //      String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
       String contentNodeType = "nt:resource";
       display.setHiddenFields("", mimeType, "", contentNodeType);
       display.getUploadForm().submit();

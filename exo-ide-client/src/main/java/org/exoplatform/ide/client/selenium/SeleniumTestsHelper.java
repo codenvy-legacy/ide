@@ -46,7 +46,6 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-
 public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, EditorOpenFileHandler, ItemsSelectedHandler
 {
 

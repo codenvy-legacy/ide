@@ -29,9 +29,9 @@ import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 
 public class IDELoader extends GWTLoader
 {
-   
+
    private static IDELoader loader;
-   
+
    public static IDELoader getInstance()
    {
       if (loader == null)

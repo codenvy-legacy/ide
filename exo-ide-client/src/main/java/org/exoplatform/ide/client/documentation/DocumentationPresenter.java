@@ -90,7 +90,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      
+
       if (settings == null)
          return;
 

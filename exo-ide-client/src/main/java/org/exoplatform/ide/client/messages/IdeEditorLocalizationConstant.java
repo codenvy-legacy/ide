@@ -37,80 +37,80 @@ public interface IdeEditorLocalizationConstant extends Messages
     */
    @Key("editorsListGrid.column.editors")
    String editorsListGridEditorsColumn();
-   
+
    @Key("editorListGrid.default")
    String editorsListGridDefault();
-   
+
    /*
     * EditorFactory
     */
    @Key("codeMirror.textEditor")
    String codeMirrorTextEditor();
-   
+
    /*
     * GoToLineForm
     */
    @Key("goToLine.title")
    String goToLineTitle();
-   
+
    @Key("goToLine.goButton")
    String goToLineGoButton();
-   
+
    /*
     * GoToLinePresenter
     */
    @Key("goToLine.label.enterLineNumber")
    String goToLineLabelEnterLineNumber(int lineNumber);
-   
+
    /*
     * FindTextView
     */
    @Key("findText.title")
    String findTextTitle();
-   
+
    @Key("findText.textField.find")
    String findTextFind();
-   
+
    @Key("findText.textField.replaceWith")
    String findTextReplaceWith();
-   
+
    @Key("findText.checkbox.caseSensitive")
    String findTextCaseSensitive();
-   
+
    @Key("findText.button.find")
    String findTextFindButton();
-   
+
    @Key("findText.button.replace")
    String findTextReplaceButton();
-   
+
    @Key("findText.button.replaceFind")
    String findTextReplaceFindButton();
-   
+
    @Key("findText.button.replaceAll")
    String findTextReplaceAllButton();
-   
+
    @Key("findText.searchStatusLabel")
    String findTextSearchStatusLabel();
-   
+
    @Key("findText.fieldValue.someText")
    String findTextFieldValueSomeText();
-   
+
    @Key("findText.fieldValue.replateText")
    String findTextFieldValueReplaceText();
-   
+
    /*
     * EditorController
     */
    @Key("editorController.dialogTitle.closeFile")
    String editorControllerAskCloseFile();
-   
+
    @Key("editorController.fileIsReadOnly")
    String editorControllerFileIsReadOnly();
-   
+
    @Key("editorController.fileTab.sourceView")
    String editorControllerFileTabSourceView();
-   
+
    @Key("editorController.fileTab.designView")
    String editorControllerFileTabDesignView();
-   
+
 }

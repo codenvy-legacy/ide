@@ -48,24 +48,25 @@ public class TemplateMarshaller implements Marshallable, Const
    }
 
    public static native String javaScriptEncodeURIComponent(String text) /*-{
-         return encodeURIComponent(text);
-      }-*/;
+                                                                         return encodeURIComponent(text);
+                                                                         }-*/;
 
    public String marshal()
    {
       Document doc = XMLParser.createDocument();
-      
+
       Element templateElement = doc.createElement(TEMPLATE);
       doc.appendChild(templateElement);
-      
+
       Element templateNameElement = doc.createElement(NAME);
       templateNameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(template.getName())));
       templateElement.appendChild(templateNameElement);
-      
+
       Element templateDescriptionElement = doc.createElement(DESCRIPTION);
-      templateDescriptionElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(template.getDescription())));
+      templateDescriptionElement
+         .appendChild(doc.createTextNode(javaScriptEncodeURIComponent(template.getDescription())));
       templateElement.appendChild(templateDescriptionElement);
-      
+
       if (template instanceof FileTemplate)
       {
          buildFileElement(doc, templateElement, (FileTemplate)template);
@@ -79,74 +80,76 @@ public class TemplateMarshaller implements Marshallable, Const
          if (projectTemplate.getClassPathLocation() != null && projectTemplate.getClassPathLocation().length() > 0)
          {
             Element classPathLocationElement = doc.createElement(CLASSPATH);
-            classPathLocationElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(projectTemplate.getClassPathLocation())));
+            classPathLocationElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(projectTemplate
+               .getClassPathLocation())));
             templateElement.appendChild(classPathLocationElement);
          }
          buildProjectElement(doc, templateElement, projectTemplate.getChildren());
       }
-      
+
       return doc.toString();
    }
-   
-   private void buildProjectElement(Document doc, Element parentElement, List<Template>templates)
+
+   private void buildProjectElement(Document doc, Element parentElement, List<Template> templates)
    {
       if (templates == null)
       {
          return;
       }
-      
+
       Element itemsListElement = doc.createElement(ITEMS);
-      
+
       for (Template child : templates)
       {
          if (child instanceof FileTemplate)
          {
             Element fileElement = doc.createElement(FILE);
-            
+
             Element nameElement = doc.createElement(TEMPLATE_FILE_NAME);
             nameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(child.getName())));
-            
+
             Element fileNameElement = doc.createElement(FILE_NAME);
-            fileNameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(((FileTemplate)child).getFileName())));
-            
+            fileNameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(((FileTemplate)child)
+               .getFileName())));
+
             fileElement.appendChild(nameElement);
             fileElement.appendChild(fileNameElement);
-            
+
             itemsListElement.appendChild(fileElement);
          }
          else if (child instanceof FolderTemplate)
          {
             Element folderElement = doc.createElement(FOLDER);
-            
+
             Element nameElement = doc.createElement(NAME);
             nameElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(child.getName())));
             folderElement.appendChild(nameElement);
-            
+
             itemsListElement.appendChild(folderElement);
-            
+
             buildProjectElement(doc, folderElement, ((FolderTemplate)child).getChildren());
          }
       }
-      
+
       if (itemsListElement.getChildNodes() != null && itemsListElement.getChildNodes().getLength() > 0)
       {
          parentElement.appendChild(itemsListElement);
       }
    }
-   
+
    private void buildFileElement(Document doc, Element templateElement, FileTemplate fileTemplate)
    {
       Element typeElement = doc.createElement(TEMPLATE_TYPE);
       typeElement.appendChild(doc.createTextNode(TemplateType.FILE));
       templateElement.appendChild(typeElement);
-      
+
       Element mimeTypeElement = doc.createElement(MIME_TYPE);
       mimeTypeElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(fileTemplate.getMimeType())));
       templateElement.appendChild(mimeTypeElement);
-      
+
       Element contentElement = doc.createElement(CONTENT);
       contentElement.appendChild(doc.createTextNode(javaScriptEncodeURIComponent(fileTemplate.getContent())));
       templateElement.appendChild(contentElement);
    }
-   
+
 }

@@ -45,12 +45,13 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 public class ProjectCreatedEventHandler implements ProjectCreatedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
-   
+
    private ProjectModel openedProject;
-   
+
    private ProjectModel projectToBeOpened;
-   
-   public ProjectCreatedEventHandler() {
+
+   public ProjectCreatedEventHandler()
+   {
       IDE.addHandler(ProjectCreatedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
@@ -61,13 +62,14 @@ public class ProjectCreatedEventHandler implements ProjectCreatedHandler, Projec
    {
       openedProject = event.getProject();
    }
-   
+
    @Override
    public void onProjectCreated(final ProjectCreatedEvent event)
    {
       projectToBeOpened = null;
-      
-      if (openedProject == null) {
+
+      if (openedProject == null)
+      {
          openProject(event.getProject());
          return;
       }
@@ -86,19 +88,21 @@ public class ProjectCreatedEventHandler implements ProjectCreatedHandler, Projec
             }
          });
    }
-   
+
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
       openedProject = null;
-      
-      if (projectToBeOpened != null) {
+
+      if (projectToBeOpened != null)
+      {
          openProject(projectToBeOpened);
          projectToBeOpened = null;
       }
    }
-   
-   private void openProject(final ProjectModel project) {
+
+   private void openProject(final ProjectModel project)
+   {
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
@@ -106,7 +110,7 @@ public class ProjectCreatedEventHandler implements ProjectCreatedHandler, Projec
          {
             IDE.fireEvent(new OpenProjectEvent(project));
          }
-      });      
+      });
    }
-   
+
 }

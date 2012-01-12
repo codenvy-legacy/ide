@@ -43,7 +43,7 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
 {
 
    private Map<String, String> lockTokens;
-   
+
    private static final String UNLOCK_FAILURE_MSG = IDE.ERRORS_CONSTANT.fileClosedUnlockFailure();
 
    public FileClosedHandler()
@@ -58,36 +58,36 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
    public void onEditorFileClosed(final EditorFileClosedEvent event)
    {
       String lockToken = lockTokens.get(event.getFile().getId());
-      if(!event.getFile().isPersisted())
+      if (!event.getFile().isPersisted())
       {
          return;
       }
-      
+
       if (lockToken != null)
       {
          try
          {
             VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Object>()
             {
-               
+
                @Override
                protected void onSuccess(Object result)
                {
                   IDE.fireEvent(new ItemUnlockedEvent(event.getFile()));
                }
-               
+
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));    
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
                }
             });
          }
          catch (RequestException e)
          {
-            IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG)); 
-         } 
-         
+            IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
+         }
+
       }
    }
 

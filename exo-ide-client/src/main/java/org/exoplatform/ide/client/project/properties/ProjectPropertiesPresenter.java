@@ -204,14 +204,14 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
          }
       });
 
-//      display.getAddButton().addClickHandler(new ClickHandler()
-//      {
-//         @Override
-//         public void onClick(ClickEvent event)
-//         {
-//            createProperty();
-//         }
-//      });
+      //      display.getAddButton().addClickHandler(new ClickHandler()
+      //      {
+      //         @Override
+      //         public void onClick(ClickEvent event)
+      //         {
+      //            createProperty();
+      //         }
+      //      });
 
       display.getEditButton().addClickHandler(new ClickHandler()
       {
@@ -272,25 +272,24 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
    private void deleteSelectedProperty()
    {
       String name = PropertyUtil.getHumanReadableName(selectedProperty.getName());
-      Dialogs.getInstance().ask("IDE", "Delete property <b>" + name + "</b>?",
-         new BooleanValueReceivedHandler()
+      Dialogs.getInstance().ask("IDE", "Delete property <b>" + name + "</b>?", new BooleanValueReceivedHandler()
+      {
+         @SuppressWarnings("unchecked")
+         @Override
+         public void booleanValueReceived(Boolean value)
          {
-            @SuppressWarnings("unchecked")
-            @Override
-            public void booleanValueReceived(Boolean value)
+            if (value != null && value.booleanValue())
             {
-               if (value != null && value.booleanValue())
-               {
-                  selectedProperty.setValue(null);
-                  selectedProperty = null;
+               selectedProperty.setValue(null);
+               selectedProperty = null;
 
-                  display.setEditButtonEnabled(false);
-                  display.setDeleteButtonEnabled(false);
-                  display.setOkButtonEnabled(true);
-                  refreshProperties();
-               }
+               display.setEditButtonEnabled(false);
+               display.setDeleteButtonEnabled(false);
+               display.setOkButtonEnabled(true);
+               refreshProperties();
             }
-         });
+         }
+      });
    }
 
    private void onPropertySelected(Property property)

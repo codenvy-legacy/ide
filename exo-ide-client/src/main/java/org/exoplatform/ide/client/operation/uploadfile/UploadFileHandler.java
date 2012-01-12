@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface UploadFileHandler extends EventHandler
 {
-   
+
    void onUploadFile(UploadFileEvent event);
 
 }

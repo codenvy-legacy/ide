@@ -117,7 +117,7 @@ public class ApplicationSettingsMarshaller implements Marshallable
       {
          xml.append(JsonUtils.escapeValue(v)).append(",");
       }
-      
+
       if (xml.lastIndexOf(",") != -1)
          xml = xml.deleteCharAt(xml.lastIndexOf(","));
       xml.append("],");
@@ -135,7 +135,7 @@ public class ApplicationSettingsMarshaller implements Marshallable
       {
          String k = keyIter.next();
          String v = values.get(k);
-         xml += JsonUtils.escapeValue(k) + ":" + JsonUtils.escapeValue(v)+ ",";
+         xml += JsonUtils.escapeValue(k) + ":" + JsonUtils.escapeValue(v) + ",";
       }
 
       if (xml.endsWith(","))

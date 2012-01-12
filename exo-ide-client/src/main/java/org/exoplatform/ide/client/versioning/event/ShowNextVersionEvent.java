@@ -29,7 +29,7 @@ public class ShowNextVersionEvent extends GwtEvent<ShowNextVersionHandler>
 {
 
    public static final GwtEvent.Type<ShowNextVersionHandler> TYPE = new GwtEvent.Type<ShowNextVersionHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

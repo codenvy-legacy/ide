@@ -40,7 +40,8 @@ import org.exoplatform.ide.vfs.shared.Property;
  * @version $
  */
 
-public class ProjectPropertiesView extends ViewImpl implements org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display
+public class ProjectPropertiesView extends ViewImpl implements
+   org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display
 {
 
    private static ProjectPropertiesViewUiBinder uiBinder = GWT.create(ProjectPropertiesViewUiBinder.class);
@@ -48,11 +49,11 @@ public class ProjectPropertiesView extends ViewImpl implements org.exoplatform.i
    interface ProjectPropertiesViewUiBinder extends UiBinder<Widget, ProjectPropertiesView>
    {
    }
-   
+
    public static final String ID = "ideProjectPropertiesView";
-   
+
    public static final String TITLE = "Project Properties";
-   
+
    /**
     * Initial width of this view
     */
@@ -61,23 +62,23 @@ public class ProjectPropertiesView extends ViewImpl implements org.exoplatform.i
    /**
     * Initial height of this view
     */
-   private static final int HEIGHT = 280;   
-   
+   private static final int HEIGHT = 280;
+
    @UiField
    PropertiesListGrid propertiesListGrid;
-   
-//   @UiField
-//   ImageButton addButton;
-   
+
+   //   @UiField
+   //   ImageButton addButton;
+
    @UiField
    ImageButton editButton;
-   
+
    @UiField
    ImageButton deleteButton;
-   
+
    @UiField
    ImageButton okButton;
-   
+
    @UiField
    ImageButton cancelButton;
 
@@ -85,7 +86,7 @@ public class ProjectPropertiesView extends ViewImpl implements org.exoplatform.i
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));      
+      add(uiBinder.createAndBindUi(this));
    }
 
    @Override
@@ -112,11 +113,11 @@ public class ProjectPropertiesView extends ViewImpl implements org.exoplatform.i
       return propertiesListGrid;
    }
 
-//   @Override
-//   public HasClickHandlers getAddButton()
-//   {
-//      return addButton;
-//   }
+   //   @Override
+   //   public HasClickHandlers getAddButton()
+   //   {
+   //      return addButton;
+   //   }
 
    @Override
    public HasClickHandlers getEditButton()

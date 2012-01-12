@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ShowNavigatorHandler extends EventHandler
 {
-   
+
    void onShowNavigator(ShowNavigatorEvent event);
 
 }

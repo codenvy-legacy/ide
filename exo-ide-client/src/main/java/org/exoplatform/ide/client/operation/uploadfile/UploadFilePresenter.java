@@ -274,7 +274,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    private void submitComplete(String uploadServiceResponse)
    {
       IDELoader.getInstance().hide();
-      
+
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {
          //if response is null or empty - than complete upload
@@ -287,21 +287,21 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       {
          AbstarctOverwriteDialog dialog = new AbstarctOverwriteDialog(fileName, errData.text)
          {
-            
+
             @Override
             public void onOverwrite()
             {
                display.setOverwriteHiddedField(true);
                display.getUploadForm().submit();
             }
-            
+
             @Override
             public void onRename(String value)
             {
                display.setNameHiddedField(value);
                display.getUploadForm().submit();
             }
-            
+
             @Override
             public void onCancel()
             {
@@ -320,7 +320,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    private void completeUpload()
    {
       closeView();
-      
+
       Item item = selectedItems.get(0);
       if (item instanceof FileModel)
       {

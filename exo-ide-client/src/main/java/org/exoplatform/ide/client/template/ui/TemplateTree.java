@@ -119,7 +119,9 @@ public class TemplateTree extends Tree<Template>
             String nodeName = template.getName();
             if (template instanceof FileTemplate)
             {
-               nodeName = ((FileTemplate)template).getFileName() + "(" + IDE.TEMPLATE_CONSTANT.from() + " " + template.getName() + ")";
+               nodeName =
+                  ((FileTemplate)template).getFileName() + "(" + IDE.TEMPLATE_CONSTANT.from() + " "
+                     + template.getName() + ")";
             }
             newNode = new TreeItem(createTreeNodeWidget(new Image(template.getIcon()), nodeName));
             newNode.setUserObject(template);
@@ -163,7 +165,7 @@ public class TemplateTree extends Tree<Template>
    {
       if (parent.getUserObject() == template)
          return parent;
-      
+
       for (int i = 0; i < parent.getChildCount(); i++)
       {
          TreeItem node = parent.getChild(i);

@@ -36,9 +36,10 @@ import java.util.List;
  */
 public class PropertiesListGrid extends ListGrid<Property>
 {
-   
-   public PropertiesListGrid() {
-      
+
+   public PropertiesListGrid()
+   {
+
       Column<Property, String> nameColumn = new Column<Property, String>(new TextCell())
       {
          @Override
@@ -47,7 +48,7 @@ public class PropertiesListGrid extends ListGrid<Property>
             return PropertyUtil.getHumanReadableName(object.getName());
          }
       };
-      
+
       Column<Property, String> valueColumn = new Column<Property, String>(new TextCell())
       {
          @Override
@@ -55,21 +56,23 @@ public class PropertiesListGrid extends ListGrid<Property>
          {
             String value = "";
             List values = object.getValue();
-            for (Object v : values) {
-               if (!value.isEmpty()) {
+            for (Object v : values)
+            {
+               if (!value.isEmpty())
+               {
                   value += "<br>";
                }
-               
+
                value += v;
             }
-            
+
             return value;
          }
       };
 
       nameColumn.setCellStyleNames("default-cursor");
       valueColumn.setCellStyleNames("default-cursor");
-      
+
       getCellTable().addColumn(nameColumn, "Name");
       getCellTable().addColumn(valueColumn, "Value");
    }

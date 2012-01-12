@@ -58,7 +58,7 @@ public class ProjectsListGrid extends ListGrid<ProjectModel>
             return object.getName();
          }
       };
-      
+
       Column<ProjectModel, String> typeColumn = new Column<ProjectModel, String>(new TextCell())
       {
          @Override
@@ -67,13 +67,13 @@ public class ProjectsListGrid extends ListGrid<ProjectModel>
             return object.getProjectType();
          }
       };
-      
+
       nameColumn.setCellStyleNames("default-cursor");
       typeColumn.setCellStyleNames("default-cursor");
 
       getCellTable().addColumn(iconColumn, "");
       getCellTable().setColumnWidth(iconColumn, "20px");
-      
+
       getCellTable().addColumn(nameColumn, "Name");
       getCellTable().addColumn(typeColumn, "Type");
    }

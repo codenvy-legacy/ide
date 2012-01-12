@@ -44,7 +44,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.Display
 {
-   
+
    public static final String ID = "ideCreateFolderForm";
 
    public static final int WIDTH = 410;
@@ -58,7 +58,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
    public final String ID_DYNAMIC_FORM = "ideCreateFolderFormDynamicForm";
 
    public final String NAME_FIELD = "ideCreateFolderFormNameField";
-   
+
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFolderFormTitle();
 
    @UiField
@@ -73,7 +73,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
    interface CreateFolderViewUiBinder extends UiBinder<Widget, CreateFolderView>
    {
    }
-   
+
    private static CreateFolderViewUiBinder uiBinder = GWT.create(CreateFolderViewUiBinder.class);
 
    /**
@@ -86,7 +86,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.newFolder()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      
+
       folderNameField.setName(NAME_FIELD);
       createButton.setButtonId(ID_CREATE_BUTTON);
       cancelButton.setButtonId(ID_CANCEL_BUTTON);

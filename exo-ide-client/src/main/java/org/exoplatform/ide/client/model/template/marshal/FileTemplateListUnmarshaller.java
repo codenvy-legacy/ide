@@ -67,7 +67,7 @@ public class FileTemplateListUnmarshaller implements Unmarshallable
          fileTemplates.add(fileTemplate);
       }
    }
-   
+
    private FileTemplate parseObject(JSONObject jsonObject)
    {
       String name = null;

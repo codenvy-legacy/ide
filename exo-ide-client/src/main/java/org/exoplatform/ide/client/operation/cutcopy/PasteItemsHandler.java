@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.EventHandler;
 */
 public interface PasteItemsHandler extends EventHandler
 {
-   
+
    void onPasteItems(PasteItemsEvent event);
-   
+
 }

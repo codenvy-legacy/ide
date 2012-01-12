@@ -34,12 +34,12 @@ public abstract class SettingsService
 {
 
    private static SettingsService instance;
-   
+
    protected SettingsService()
    {
       instance = this;
    }
-   
+
    public static SettingsService getInstance()
    {
       return instance;
@@ -50,9 +50,9 @@ public abstract class SettingsService
     * @param applicationSettings
     * @param callback
     */
-   public abstract void saveSettingsToServer(ApplicationSettings applicationSettings,  
+   public abstract void saveSettingsToServer(ApplicationSettings applicationSettings,
       AsyncRequestCallback<ApplicationSettings> callback);
-   
+
    /**
     * Save application settings to cookies.
     * 

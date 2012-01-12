@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface RestorePanelHandler extends EventHandler
 {
-   
+
    void onRestorePanel(RestorePanelEvent event);
 
 }

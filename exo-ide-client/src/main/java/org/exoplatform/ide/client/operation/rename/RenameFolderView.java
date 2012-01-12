@@ -77,7 +77,7 @@ public class RenameFolderView extends ViewImpl implements RenameFolderPresenter.
 
    public RenameFolderView()
    {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT,true);
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT, true);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 

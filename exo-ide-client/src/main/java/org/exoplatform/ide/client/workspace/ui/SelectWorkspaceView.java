@@ -42,11 +42,11 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 public class SelectWorkspaceView extends ViewImpl implements
    org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display
 {
-   
+
    /*
     * Id of Select Workspace View
     */
-   public static final String ID = "ideSelectWorkspaceView";   
+   public static final String ID = "ideSelectWorkspaceView";
 
    /**
     * Initial width of this view.
@@ -57,7 +57,7 @@ public class SelectWorkspaceView extends ViewImpl implements
     * Initial height of this view.
     */
    private static final int HEIGHT = 180;
-   
+
    private static final String TITLE = IDE.PREFERENCES_CONSTANT.workspaceTitle();
 
    /**

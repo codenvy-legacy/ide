@@ -28,7 +28,7 @@ import com.google.gwt.resources.client.TextResource;
  */
 public interface BaseSamples extends ClientBundle
 {
-   
+
    BaseSamples INSTANCE = GWT.create(BaseSamples.class);
 
    @Source("base/chromattic-do.groovy")
@@ -36,17 +36,17 @@ public interface BaseSamples extends ClientBundle
 
    @Source("base/gadget.xml")
    TextResource getGadget();
-   
+
    @Source("base/GTMPL.gtmpl")
    TextResource getGTMPL();
-   
+
    @Source("base/html.html")
    TextResource getHtml();
-   
+
    @Source("base/netvibse.html")
    TextResource getNetvibse();
-   
+
    @Source("base/rest-service.grs")
    TextResource getRestService();
-   
+
 }

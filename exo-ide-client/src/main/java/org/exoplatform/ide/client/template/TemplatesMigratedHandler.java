@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface TemplatesMigratedHandler extends EventHandler
 {
-   
+
    void onTemplatesMigrated(TemplatesMigratedEvent event);
-   
+
 }

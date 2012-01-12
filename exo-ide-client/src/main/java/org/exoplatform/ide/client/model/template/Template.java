@@ -29,13 +29,13 @@ import com.google.gwt.resources.client.ImageResource;
 
 public abstract class Template
 {
-   
+
    private String name;
-   
+
    private String description;
-   
+
    private String nodeName;
-   
+
    /**
     * If template is default, than it must be created by server.
     * If not default (user template), than it must be crated
@@ -47,8 +47,8 @@ public abstract class Template
    {
 
    }
-   
-   public Template (String name)
+
+   public Template(String name)
    {
       this.name = name;
    }
@@ -59,14 +59,14 @@ public abstract class Template
       this.description = description;
       this.nodeName = nodeName;
    }
-   
+
    public Template(String name, String description, boolean isDefault)
    {
       this.name = name;
       this.description = description;
       this.isDefault = isDefault;
    }
-   
+
    /**
     * @return the isDefault
     */
@@ -74,7 +74,7 @@ public abstract class Template
    {
       return isDefault;
    }
-   
+
    /**
     * @param isDefault the isDefault to set
     */
@@ -130,7 +130,7 @@ public abstract class Template
    {
       this.nodeName = nodeName;
    }
-   
+
    public abstract ImageResource getIcon();
-   
+
 }

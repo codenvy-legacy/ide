@@ -59,7 +59,8 @@ import com.google.gwt.http.client.RequestException;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHandler, SelectWorkspaceHandler, ViewClosedHandler, AllFilesClosedHandler
+public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHandler, SelectWorkspaceHandler,
+   ViewClosedHandler, AllFilesClosedHandler
 {
 
    public interface Display extends IsView
@@ -96,7 +97,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
 
    }
 
-
    /**
     * Instance of Display
     */
@@ -116,7 +116,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
     * Application Settings for retrieving current Workspace and storing selected Workspace
     */
    private ApplicationSettings applicationSettings;
-   
+
    /**
     * List of workspaces for displaying in Workspace List
     */
@@ -302,14 +302,15 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
    {
       IDE.fireEvent(new CloseAllFilesEvent());
    }
-   
+
    @Override
    public void onAllFilesClosed(AllFilesClosedEvent event)
    {
-      if (display == null) {
+      if (display == null)
+      {
          return;
       }
-      
+
       storeCurrentWorkspaceToConfiguration();
    }
 

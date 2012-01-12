@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface ShowRestServicesDiscoveryHandler extends EventHandler
 {
-   
+
    void onShowRestServicesDiscovery(ShowRestServicesDiscoveryEvent event);
 
 }

@@ -55,7 +55,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewClosedHandler, TemplatesMigratedHandler,
    EditorActiveFileChangedHandler
 {
-   
+
    public interface Display extends IsView
    {
 
@@ -68,36 +68,36 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
       HasClickHandlers getSaveButton();
 
       HasClickHandlers getCancelButton();
-      
+
       void disableSaveButton();
-      
+
       void enableSaveButton();
-      
+
       void focusInNameField();
 
    }
 
    private static final String ENTER_TEMPLATE_NAME = IDE.TEMPLATE_CONSTANT.saveAsTemplateEnterNameFirst();
-   
+
    private static final String TEMPLATE_CREATED = IDE.TEMPLATE_CONSTANT.saveAsTemplateCreated();
-   
+
    private static final String OPEN_FILE_FOR_TEMPLATE = IDE.TEMPLATE_CONSTANT.saveAsTemplateOpenFileForTemplate();
-   
+
    private Display display;
 
    private Template templateToCreate;
-   
+
    private FileModel activeFile;
-   
+
    /**
     * Flag, to indicate, were templates moved from registry to plain text file on server.
     */
    private boolean isTemplatesMigrated = false;
-   
+
    public SaveAsTemplatePresenter()
    {
       IDE.getInstance().addControl(new SaveFileAsTemplateControl());
-      
+
       IDE.addHandler(SaveFileAsTemplateEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -113,7 +113,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
          public void onValueChange(ValueChangeEvent<String> event)
          {
             String value = event.getValue();
-            
+
             if (value == null || value.length() == 0)
             {
                display.disableSaveButton();
@@ -161,9 +161,9 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
       {
          description = display.getDescriptionField().getValue();
       }
-      
+
       templateToCreate = new FileTemplate(activeFile.getMimeType(), name, description, activeFile.getContent(), null);
-      
+
       TemplateServiceImpl.getInstance().addFileTemplate((FileTemplate)templateToCreate,
          new AsyncRequestCallback<FileTemplate>(IDE.eventBus())
          {
@@ -175,7 +175,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
             }
          });
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
@@ -203,7 +203,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
          }));
       }
    }
-   
+
    private void openView()
    {
       if (activeFile == null)

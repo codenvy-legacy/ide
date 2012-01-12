@@ -79,7 +79,8 @@ public class ProgressView extends ViewImpl implements Display
 
    public ProgressView()
    {
-      super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.progresImage()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.progresImage()), DEFAULT_WIDTH,
+         DEFAULT_HEIGHT);
       add(uiBinder.createAndBindUi(this));
       Image normalIcon = new Image(IDEImageBundle.INSTANCE.progresRemall());
       Image disabledIcon = new Image(IDEImageBundle.INSTANCE.progresRemall());
@@ -87,7 +88,7 @@ public class ProgressView extends ViewImpl implements Display
       removeAllFinishedButton.setTitle(IDE.IDE_LOCALIZATION_CONSTANT.progressRemoveAllFinished());
 
       toolbar.addItem(removeAllFinishedButton, true);
-      
+
    }
 
    /**

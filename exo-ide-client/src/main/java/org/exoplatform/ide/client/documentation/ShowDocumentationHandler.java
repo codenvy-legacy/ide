@@ -29,5 +29,5 @@ public interface ShowDocumentationHandler extends EventHandler
 {
 
    void onShowDocumentation(ShowDocumentationEvent event);
-   
+
 }

@@ -49,13 +49,14 @@ import com.google.gwt.user.client.ui.Composite;
  * @version $
  */
 
-public class EditPropertyView extends ViewImpl implements org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display
+public class EditPropertyView extends ViewImpl implements
+   org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display
 {
-   
- public static final String ID = "ideEditProjectPropertyView";
-   
+
+   public static final String ID = "ideEditProjectPropertyView";
+
    public static final String TITLE = "Edit Property";
-   
+
    /**
     * Initial width of this view
     */
@@ -64,23 +65,23 @@ public class EditPropertyView extends ViewImpl implements org.exoplatform.ide.cl
    /**
     * Initial height of this view
     */
-   private static final int HEIGHT = 200;   
+   private static final int HEIGHT = 200;
 
    private static EditPropertyViewUiBinder uiBinder = GWT.create(EditPropertyViewUiBinder.class);
 
    interface EditPropertyViewUiBinder extends UiBinder<Widget, EditPropertyView>
    {
    }
-   
+
    @UiField
    TextBox nameField;
-   
+
    @UiField
    TextBox valueField;
-   
+
    @UiField
    ImageButton okButton;
-   
+
    @UiField
    ImageButton cancelButton;
 
@@ -89,7 +90,7 @@ public class EditPropertyView extends ViewImpl implements org.exoplatform.ide.cl
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      
+
       nameField.setReadOnly(true);
    }
 

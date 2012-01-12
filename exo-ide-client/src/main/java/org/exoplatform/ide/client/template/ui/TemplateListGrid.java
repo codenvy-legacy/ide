@@ -43,28 +43,28 @@ import org.exoplatform.ide.client.model.template.Template;
 
 public class TemplateListGrid<T extends Template> extends ListGrid<T>
 {
-   
+
    private static final String ID = "ideCreateFileFromTemplateFormTemplateListGrid";
-   
+
    private static final String NAME = IDE.TEMPLATE_CONSTANT.listGridName();
-   
+
    protected static final String DESCRIPTION = IDE.TEMPLATE_CONSTANT.listGridDescription();
-   
+
    public TemplateListGrid()
    {
       super();
       setID(ID);
       initColumns();
    }
-   
+
    public void selectLastItem()
    {
       T item = items.get(items.size() - 1);
       getCellTable().getSelectionModel().setSelected(item, true);
    }
-   
+
    //------- Implementation ------------------
-   
+
    /**
     * Return URL to icon of template according to type of template:
     * FileTemplate or ProjectTemplate and according to mime type if FileTemplate.
@@ -82,10 +82,10 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       {
          return ProjectResolver.getImageForProject(((ProjectTemplate)template).getType());
       }
-      
+
       return null;
    }
-   
+
    /**
     * Create columns.
     */
@@ -101,10 +101,10 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
             return getItemIcon(item);
          }
       };
-      
+
       getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
       getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
-      
+
       //--- name column -----
       SafeHtmlCell htmlCell = new SafeHtmlCell();
       Column<T, SafeHtml> nameColumn = new Column<T, SafeHtml>(htmlCell)
@@ -122,8 +122,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
                {
                   if (item.isDefault())
                   {
-                     return "<span title=\"" + item.getName() + "\">" + item.getName()
-                        + "</span>";
+                     return "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>";
                   }
                   else
                   {
@@ -135,11 +134,11 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
          }
 
       };
-      
+
       nameColumn.setCellStyleNames("default-cursor");
       getCellTable().addColumn(nameColumn, NAME);
       getCellTable().setColumnWidth(nameColumn, 40, Unit.PCT);
-      
+
       //--- description column -----
       SafeHtmlCell descCell = new SafeHtmlCell();
       Column<T, SafeHtml> entryNameColumn = new Column<T, SafeHtml>(descCell)
@@ -157,8 +156,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
                {
                   if (item.getNodeName() == null)
                   {
-                     return "<span title=\"" + item.getDescription() + "\">"
-                        + item.getDescription() + "</span>";
+                     return "<span title=\"" + item.getDescription() + "\">" + item.getDescription() + "</span>";
                   }
                   else
                   {
@@ -170,7 +168,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
          }
 
       };
-      
+
       entryNameColumn.setCellStyleNames("default-cursor");
       getCellTable().addColumn(entryNameColumn, DESCRIPTION);
       getCellTable().setColumnWidth(entryNameColumn, 60, Unit.PCT);
