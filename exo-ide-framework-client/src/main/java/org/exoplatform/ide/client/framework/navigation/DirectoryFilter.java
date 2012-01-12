@@ -121,7 +121,6 @@ public class DirectoryFilter
 
       catch (Exception e)
       {
-         e.printStackTrace();
          return false;
       }
    }

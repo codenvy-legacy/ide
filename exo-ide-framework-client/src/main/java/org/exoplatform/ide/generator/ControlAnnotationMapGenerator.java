@@ -87,7 +87,6 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
       }
       catch (NotFoundException e)
       {
-         e.printStackTrace();
          return null;
       }
    }

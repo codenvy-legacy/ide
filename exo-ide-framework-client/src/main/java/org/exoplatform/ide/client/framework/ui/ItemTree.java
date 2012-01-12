@@ -407,7 +407,6 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 

@@ -53,7 +53,6 @@ public class SafeHandlerManager extends HandlerManager
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
    }
 
