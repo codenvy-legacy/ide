@@ -27,6 +27,7 @@ import com.google.gwt.resources.client.ResourceCallback;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 import org.exoplatform.ide.editor.html.client.codeassistant.HtmlCodeAssistant;
@@ -46,7 +47,7 @@ class JspHtmlCodeAssistant extends HtmlCodeAssistant
       @Source("org/exoplatform/ide/editor/jsp/client/tokens/jsp_tags.js")
       ExternalTextResource jspTagsTokens();
    }
-   
+
    private List<Token> templates;
 
    /**
@@ -61,7 +62,7 @@ class JspHtmlCodeAssistant extends HtmlCodeAssistant
          super.getTokens(lineContent, cursorPositionX);
          return;
       }
-      
+
       JspHtmlBuandle buandle = GWT.create(JspHtmlBuandle.class);
       buandle.jspTagsTokens().getText(new ResourceCallback<TextResource>()
       {
@@ -90,34 +91,33 @@ class JspHtmlCodeAssistant extends HtmlCodeAssistant
             }
             catch (ResourceException e)
             {
-               e.printStackTrace();
+               Log.info(e.getMessage());
             }
          }
 
          @Override
          public void onError(ResourceException e)
          {
-            e.printStackTrace();
             try
             {
                JspHtmlCodeAssistant.this.getTokens(lineContent, cursorPositionX);
             }
             catch (ResourceException e1)
             {
-               e1.printStackTrace();
+               Log.info(e1.getMessage());
             }
          }
       });
 
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant#showDefaultTags(java.util.List)
     */
    @Override
    protected void showDefaultTags(List<Token> token)
    {
-      if(templates != null)
+      if (templates != null)
          token.addAll(templates);
       super.showDefaultTags(token);
    }

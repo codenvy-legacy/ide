@@ -27,6 +27,7 @@ import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
@@ -93,13 +94,13 @@ public class JspCodeAssistant extends JavaCodeAssistant
                @Override
                public void onError(ResourceException e)
                {
-                  e.printStackTrace();
+                  Log.info(e.getMessage());
                }
             });
          }
          catch (ResourceException e)
          {
-            e.printStackTrace();
+            Log.info(e.getMessage());
          }
       }
    }
