@@ -53,7 +53,6 @@ public class TestNetvibesDeploy extends TestCase
       catch (MalformedURLException e)
       {
          fail();
-         e.printStackTrace();
       }
 
    }
@@ -84,12 +83,9 @@ public class TestNetvibesDeploy extends TestCase
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
-
-      System.out.println("TestNetvibesDeploy.testDeploy()" + content.toString());
-      System.out.println(service.deployNetvibesWidget(content.toString(), "vitaly.parfonov@gmail.com", "1234qwer",
-         "lofshagBicpoorelinha", "DoigFogIvtyejvavyinn"));
+      service.deployNetvibesWidget(content.toString(), "vitaly.parfonov@gmail.com", "1234qwer", "lofshagBicpoorelinha",
+         "DoigFogIvtyejvavyinn");
    }
 
 }

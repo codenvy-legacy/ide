@@ -530,7 +530,6 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
             @Override
             protected void onFailure(Throwable exception)
             {
-               exception.printStackTrace();
                String message = "Can not get widget's categories.";
                message +=
                   (exception == null || exception.getMessage() == null) ? "" : "Possible reason: <br>"

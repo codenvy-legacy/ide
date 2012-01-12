@@ -70,12 +70,13 @@ public class NetvibesWidgetService
    private static String NETVIBES_URL = "http://api.eco.netvibes.com";
 
    private static String SUBMIT = "/submit/?";
-   
+
    private final RepositoryService repositoryService;
-   
+
    private final ThreadLocalSessionProviderService sessionProviderService;
 
-   public NetvibesWidgetService(RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
+   public NetvibesWidgetService(RepositoryService repositoryService,
+      ThreadLocalSessionProviderService sessionProviderService)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
@@ -103,15 +104,11 @@ public class NetvibesWidgetService
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
       }
-      
       return inputStream;
-
    }
 
    /**
@@ -216,7 +213,7 @@ public class NetvibesWidgetService
    {
       return Response.status(status).entity(t.getMessage()).type("text/plain").build();
    }
-   
+
    private Session getSession(String repoName, String repoPath) throws RepositoryException,
       RepositoryConfigurationException
    {
