@@ -271,7 +271,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
 //      }
 //      catch (RequestException e)
 //      {
-//         e.printStackTrace();
+//         IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
 //      }
 //   }
 
@@ -300,7 +300,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
 //      }
 //      catch (RequestException e)
 //      {
-//         e.printStackTrace();
 //         handleError(e);
 //      }
 //   }

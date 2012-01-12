@@ -77,7 +77,6 @@
 //      }
 //      catch (EditorNotFoundException e)
 //      {
-//         e.printStackTrace();
 //      }
 //      
 //      add(editor);
@@ -120,7 +119,6 @@
 //      }
 //      catch (Exception e)
 //      {
-//         e.printStackTrace();
 //      }
 //   }
 //

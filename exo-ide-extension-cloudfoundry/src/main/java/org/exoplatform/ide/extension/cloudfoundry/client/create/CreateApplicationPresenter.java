@@ -673,7 +673,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }

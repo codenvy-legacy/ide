@@ -66,7 +66,6 @@ public class LogReaderUnmarshaller implements Unmarshallable
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException("Can't parse log.");
       }
    }

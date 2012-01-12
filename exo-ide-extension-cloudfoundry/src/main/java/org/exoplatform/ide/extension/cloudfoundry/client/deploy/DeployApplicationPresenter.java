@@ -332,7 +332,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }

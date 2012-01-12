@@ -188,7 +188,6 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
       }
    }
 

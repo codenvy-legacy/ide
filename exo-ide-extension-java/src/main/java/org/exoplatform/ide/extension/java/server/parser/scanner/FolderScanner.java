@@ -84,8 +84,6 @@ public class FolderScanner
          }
          catch (VirtualFileSystemException e)
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
          }
       }
       else

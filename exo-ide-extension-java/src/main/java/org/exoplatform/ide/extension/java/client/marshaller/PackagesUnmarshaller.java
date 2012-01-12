@@ -65,7 +65,6 @@ public class PackagesUnmarshaller implements Unmarshallable
       }
       catch (Exception exc)
       {
-         exc.printStackTrace();
          String message = "Can't parse item " + response.getText();
          throw new UnmarshallerException(message);
       }

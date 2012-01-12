@@ -64,7 +64,6 @@ public class SshKeysUnmarshaller
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException("Can't parse SSH Keys");
       }
    }
