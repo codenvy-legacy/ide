@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.control;
 
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 22, 2010 $
@@ -26,10 +25,10 @@ package org.exoplatform.ide.client.framework.control;
  */
 public interface IDEControl
 {
-   
+
    /**
     * Initializes control.
     */
    void initialize();
-   
+
 }

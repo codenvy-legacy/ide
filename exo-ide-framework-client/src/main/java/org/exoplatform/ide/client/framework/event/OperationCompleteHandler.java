@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface OperationCompleteHandler extends EventHandler
 {
-   
+
    void onOperationComplete(OperationCompleteEvent event);
 
 }

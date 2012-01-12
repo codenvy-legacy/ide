@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface OperationFailedHandler extends EventHandler
 {
-   
+
    void onOperationFailed(OperationFailedEvent event);
 
 }

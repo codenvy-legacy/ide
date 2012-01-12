@@ -31,5 +31,5 @@ public interface HasFileSelectedHandler
 {
 
    HandlerRegistration addFileSelectedHandler(FileSelectedHandler handler);
-   
+
 }

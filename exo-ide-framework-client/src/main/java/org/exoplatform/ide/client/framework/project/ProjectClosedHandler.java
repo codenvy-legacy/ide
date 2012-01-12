@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ProjectClosedHandler extends EventHandler
 {
-   
+
    void onProjectClosed(ProjectClosedEvent event);
 
 }

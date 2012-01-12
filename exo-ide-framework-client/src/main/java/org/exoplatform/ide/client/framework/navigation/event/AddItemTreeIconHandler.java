@@ -29,5 +29,5 @@ public interface AddItemTreeIconHandler extends EventHandler
 {
 
    void onAddItemTreeIcon(AddItemTreeIconEvent event);
-   
+
 }

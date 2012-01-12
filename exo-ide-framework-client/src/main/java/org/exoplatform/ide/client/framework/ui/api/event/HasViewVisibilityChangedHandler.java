@@ -31,5 +31,5 @@ public interface HasViewVisibilityChangedHandler
 {
 
    HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler);
-   
+
 }

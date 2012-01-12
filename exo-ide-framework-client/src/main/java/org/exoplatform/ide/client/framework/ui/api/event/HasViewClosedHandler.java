@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface HasViewClosedHandler
 {
-   
+
    HandlerRegistration addViewClosedHandler(ViewClosedHandler viewClosedHandler);
 
 }

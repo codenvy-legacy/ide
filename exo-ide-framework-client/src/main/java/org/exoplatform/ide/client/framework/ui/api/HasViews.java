@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -28,7 +27,7 @@ package org.exoplatform.ide.client.framework.ui.api;
 
 public interface HasViews
 {
-   
+
    /**
     * Adds a view.
     * 

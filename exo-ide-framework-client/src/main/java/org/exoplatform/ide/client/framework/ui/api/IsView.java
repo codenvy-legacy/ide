@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
-
 /**
  * This interface determines whether the implementing object View interface
  * 
@@ -30,7 +29,7 @@ package org.exoplatform.ide.client.framework.ui.api;
 
 public interface IsView
 {
-   
+
    /**
     * Gets View instance.
     * 

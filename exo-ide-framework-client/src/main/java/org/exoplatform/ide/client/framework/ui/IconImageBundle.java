@@ -28,29 +28,29 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImageBundle.java Sep 2, 2011 4:40:03 PM vereshchaka $
  */
-public interface IconImageBundle  extends ClientBundle
+public interface IconImageBundle extends ClientBundle
 {
-   
+
    public static final IconImageBundle INSTANCE = GWT.create(IconImageBundle.class);
-   
+
    @Source("org/exoplatform/ide/public/images/filetype/default.png")
    ImageResource defaultFile();
-   
+
    @Source("org/exoplatform/ide/public/images/filetype/folder_closed.png")
    ImageResource folder();
-   
+
    @Source("org/exoplatform/ide/client/bundled-images/projects/java-project.png")
    ImageResource javaProject();
-   
+
    @Source("org/exoplatform/ide/client/bundled-images/projects/ror.png")
    ImageResource rubyProject();
-   
+
    @Source("org/exoplatform/ide/client/bundled-images/projects/spring.png")
    ImageResource springProject();
-   
+
    @Source("org/exoplatform/ide/client/bundled-images/projects/groovy-project.png")
    ImageResource groovyProject();
-   
+
    @Source("org/exoplatform/ide/client/bundled-images/projects/default-project.png")
    ImageResource defaultProject();
 

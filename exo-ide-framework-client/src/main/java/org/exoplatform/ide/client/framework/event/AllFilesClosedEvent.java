@@ -31,9 +31,9 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class AllFilesClosedEvent extends GwtEvent<AllFilesClosedHandler>
 {
-   
+
    public static final GwtEvent.Type<AllFilesClosedHandler> TYPE = new GwtEvent.Type<AllFilesClosedHandler>();
-   
+
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<AllFilesClosedHandler> getAssociatedType()
    {

@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ProjectOpenedHandler extends EventHandler
 {
-   
+
    void onProjectOpened(ProjectOpenedEvent event);
 
 }

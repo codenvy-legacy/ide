@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface AllFilesClosedHandler extends EventHandler
 {
-   
+
    void onAllFilesClosed(AllFilesClosedEvent event);
 
 }

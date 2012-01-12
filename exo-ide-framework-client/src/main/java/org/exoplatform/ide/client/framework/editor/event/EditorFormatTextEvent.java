@@ -42,5 +42,5 @@ public class EditorFormatTextEvent extends GwtEvent<EditorFormatTextHandler>
    {
       return TYPE;
    }
-   
+
 }

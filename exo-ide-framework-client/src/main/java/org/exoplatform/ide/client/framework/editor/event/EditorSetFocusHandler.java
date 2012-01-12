@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface EditorSetFocusHandler extends EventHandler
 {
-   
+
    void onEditorSetFocus(EditorSetFocusEvent event);
-   
+
 }

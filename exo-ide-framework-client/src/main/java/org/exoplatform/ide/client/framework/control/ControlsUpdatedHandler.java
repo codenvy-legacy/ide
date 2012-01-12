@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ControlsUpdatedHandler extends EventHandler
 {
-   
+
    void onControlsUpdated(ControlsUpdatedEvent event);
 
 }

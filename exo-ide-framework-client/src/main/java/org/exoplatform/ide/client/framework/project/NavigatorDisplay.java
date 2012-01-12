@@ -36,53 +36,53 @@ import java.util.Map;
  */
 public interface NavigatorDisplay extends IsView
 {
-      /**
-       * @return {@link TreeGridItem}
-       */
-      TreeGridItem<Item> getBrowserTree();
+   /**
+    * @return {@link TreeGridItem}
+    */
+   TreeGridItem<Item> getBrowserTree();
 
-      /**
-       * Get selected items in the tree.
-       * 
-       * @return {@link List} selected items
-       */
-      List<Item> getSelectedItems();
+   /**
+    * Get selected items in the tree.
+    * 
+    * @return {@link List} selected items
+    */
+   List<Item> getSelectedItems();
 
-      /**
-       * Select item in browser tree by path.
-       * 
-       * @param itemId item's path
-       */
-      void selectItem(String itemId);
+   /**
+    * Select item in browser tree by path.
+    * 
+    * @param itemId item's path
+    */
+   void selectItem(String itemId);
 
-      /**
-       * Deselect item in browser tree by path.
-       * 
-       * @param itemId item's path
-       */
-      void deselectItem(String itemId);
+   /**
+    * Deselect item in browser tree by path.
+    * 
+    * @param itemId item's path
+    */
+   void deselectItem(String itemId);
 
-      /**
-       * Update the state of the item in the tree.
-       * 
-       * @param file
-       */
-      void updateItemState(FileModel file);
+   /**
+    * Update the state of the item in the tree.
+    * 
+    * @param file
+    */
+   void updateItemState(FileModel file);
 
-      /**
-       * Set lock tokens to the items in the tree.
-       * 
-       * @param locktokens
-       */
-      void setLockTokens(Map<String, String> locktokens);
+   /**
+    * Set lock tokens to the items in the tree.
+    * 
+    * @param locktokens
+    */
+   void setLockTokens(Map<String, String> locktokens);
 
-      /**
-       * Add info icons to main item icon
-       */
-      void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
+   /**
+    * Add info icons to main item icon
+    */
+   void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
 
-      /**
-       * Remove info icon from item
-       */
-      void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
+   /**
+    * Remove info icon from item
+    */
+   void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
 }

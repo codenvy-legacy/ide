@@ -29,5 +29,5 @@ public interface RemoveItemTreeIconHandler extends EventHandler
 {
 
    void onRemoveItemTreeIcon(RemoveItemTreeIconEvent event);
-   
+
 }

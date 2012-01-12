@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface RestServicesReceivedHandler extends EventHandler
 {
-   
+
    void onRestServicesReceived(RestServicesReceivedEvent event);
-   
+
 }

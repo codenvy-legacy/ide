@@ -33,7 +33,7 @@ public class EditorReplaceFileEvent extends GwtEvent<EditorReplaceFileHandler>
    public static final GwtEvent.Type<EditorReplaceFileHandler> TYPE = new GwtEvent.Type<EditorReplaceFileHandler>();
 
    private FileModel file;
-   
+
    private FileModel newFile;
 
    public EditorReplaceFileEvent(FileModel file, FileModel newFile)

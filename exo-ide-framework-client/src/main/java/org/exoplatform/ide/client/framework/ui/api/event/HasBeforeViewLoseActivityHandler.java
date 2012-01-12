@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.HasHandlers;
 
 public interface HasBeforeViewLoseActivityHandler extends HasHandlers
 {
-   
+
    HandlerRegistration addBeforeViewLoseActivityHandler(BeforeViewLoseActivityHandler handler);
 
 }

@@ -38,5 +38,5 @@ public interface ClosingViewHandler extends EventHandler
     * @param event ClosingView Event
     */
    void onClosingView(ClosingViewEvent event);
-   
+
 }

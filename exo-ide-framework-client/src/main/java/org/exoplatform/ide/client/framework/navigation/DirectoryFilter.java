@@ -76,8 +76,9 @@ public class DirectoryFilter
          for (String p : parts)
          {
             p = p.trim();
-            
-            if (p == null || "".equals(p)) {
+
+            if (p == null || "".equals(p))
+            {
                continue;
             }
 

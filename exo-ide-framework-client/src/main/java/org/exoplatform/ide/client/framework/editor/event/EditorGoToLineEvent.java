@@ -31,20 +31,20 @@ public class EditorGoToLineEvent extends GwtEvent<EditorGoToLineHandler>
    public static final GwtEvent.Type<EditorGoToLineHandler> TYPE = new GwtEvent.Type<EditorGoToLineHandler>();
 
    private int lineNumber;
-   
+
    private int columnNumber = 1;
-   
+
    public EditorGoToLineEvent(int lineNumber)
    {
       this.lineNumber = lineNumber;
    }
-   
+
    public EditorGoToLineEvent(int lineNumber, int columnNumber)
    {
       this.lineNumber = lineNumber;
       this.columnNumber = columnNumber;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */

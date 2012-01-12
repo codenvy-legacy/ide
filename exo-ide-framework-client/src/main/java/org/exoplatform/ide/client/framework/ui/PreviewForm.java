@@ -47,7 +47,7 @@ public class PreviewForm extends ViewImpl
    public PreviewForm()
    {
       super(ID, ViewType.OPERATION, ID);
-//      setHeight100();
+      //      setHeight100();
    }
 
    /**
@@ -58,7 +58,6 @@ public class PreviewForm extends ViewImpl
    {
       return "Preview";
    }
-
 
    /**
     * @param file
@@ -79,7 +78,7 @@ public class PreviewForm extends ViewImpl
       frame.setStyleName("");
       frame.setWidth("100%");
       frame.setHeight("100%");
-      
+
       frame.addLoadHandler(new LoadHandler()
       {
 
@@ -93,17 +92,17 @@ public class PreviewForm extends ViewImpl
    }
 
    private native void setHandler(Element e)/*-{
-      var type = "mousedown";
-      var instance = this;
-      if(typeof e.contentDocument != "undefined")
-      {
-              e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.framework.ui.PreviewForm::activate()();},false);
-      }
-      else
-      {
-         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.framework.ui.PreviewForm::activate()();});
-      }
-   }-*/;
+                                            var type = "mousedown";
+                                            var instance = this;
+                                            if(typeof e.contentDocument != "undefined")
+                                            {
+                                            e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.client.framework.ui.PreviewForm::activate()();},false);
+                                            }
+                                            else
+                                            {
+                                            e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.client.framework.ui.PreviewForm::activate()();});
+                                            }
+                                            }-*/;
 
    public String getId()
    {

@@ -28,8 +28,7 @@ package org.exoplatform.ide.client.framework.output.event;
 public class OutputMessage
 {
 
-   public enum Type 
-   {
+   public enum Type {
 
       INFO, ERROR, WARNING, LOG, OUTPUT
 

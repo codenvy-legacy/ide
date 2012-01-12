@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ViewClosedHandler extends EventHandler
 {
-   
+
    /**
     * Handle the event after view was closed.
     * 

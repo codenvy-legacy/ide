@@ -47,7 +47,7 @@ public class NewItemControl extends SimpleControl implements IDEControl
       setDisabledImage(disabledIcon);
       setEvent(event);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
@@ -75,13 +75,15 @@ public class NewItemControl extends SimpleControl implements IDEControl
       this.mimeType = mimeType;
    }
 
-   public NewItemControl(String id, String title, String prompt, String icon, String mimeType, boolean hasDelimiterBefore)
+   public NewItemControl(String id, String title, String prompt, String icon, String mimeType,
+      boolean hasDelimiterBefore)
    {
       this(id, title, prompt, icon, mimeType);
       setDelimiterBefore(hasDelimiterBefore);
    }
 
-   public NewItemControl(String id, String title, String prompt, ImageResource icon, ImageResource disabledIcon, String mimeType)
+   public NewItemControl(String id, String title, String prompt, ImageResource icon, ImageResource disabledIcon,
+      String mimeType)
    {
       super(id);
 

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.annotation;
 
-
 import java.util.HashMap;
 import java.util.List;
 

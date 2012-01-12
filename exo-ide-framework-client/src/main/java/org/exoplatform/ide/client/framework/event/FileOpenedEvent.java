@@ -56,7 +56,7 @@ public class FileOpenedEvent extends GwtEvent<FileOpenedHandler>
    {
       return editor;
    }
-   
+
    @Override
    protected void dispatch(FileOpenedHandler handler)
    {

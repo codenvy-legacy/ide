@@ -33,11 +33,11 @@ import com.google.gwt.user.client.ui.TextBox;
  */
 public class ClearFocusForm
 {
-   
+
    private static ClearFocusForm form;
 
    private TextBox textBox;
-   
+
    private ClearFocusForm()
    {
       textBox = new TextBox();
@@ -52,12 +52,12 @@ public class ClearFocusForm
       textBox.setFocus(true);
       textBox.setText(".");
    }
-   
+
    public static ClearFocusForm getInstance()
    {
       if (form == null)
       {
-         form  = new ClearFocusForm();
+         form = new ClearFocusForm();
       }
       return form;
    }

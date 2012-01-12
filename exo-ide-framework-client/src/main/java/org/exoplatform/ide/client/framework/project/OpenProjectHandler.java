@@ -33,5 +33,5 @@ public interface OpenProjectHandler extends EventHandler
 {
 
    void onOpenProject(OpenProjectEvent event);
-   
+
 }

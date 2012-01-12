@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface BeforeViewLoseActivityHandler extends EventHandler
 {
-   
+
    void onBeforeViewLoseActivity(BeforeViewLoseActivityEvent event);
 
 }

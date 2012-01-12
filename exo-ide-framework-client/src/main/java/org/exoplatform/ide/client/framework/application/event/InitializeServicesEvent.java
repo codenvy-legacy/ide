@@ -37,7 +37,7 @@ public class InitializeServicesEvent extends GwtEvent<InitializeServicesHandler>
    public static final GwtEvent.Type<InitializeServicesHandler> TYPE = new GwtEvent.Type<InitializeServicesHandler>();
 
    private IDEConfiguration applicationConfiguration;
-   
+
    private Loader loader;
 
    public InitializeServicesEvent(IDEConfiguration applicationConfiguration, Loader loader)

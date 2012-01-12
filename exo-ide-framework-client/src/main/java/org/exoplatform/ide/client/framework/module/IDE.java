@@ -112,7 +112,7 @@ public abstract class IDE
     * @param controlsFormatter formatter to be added
     */
    public abstract void addControlsFormatter(ControlsFormatter controlsFormatter);
-   
+
    /**
     * Get list of controls.
     * 
@@ -158,13 +158,13 @@ public abstract class IDE
     * @return {@link OutlineItemCreator} for mimeType
     */
    public abstract OutlineItemCreator getOutlineItemCreator(String mimeType);
-   
+
    /**
     * Get the list of registered paases.
     * @return
     */
    public abstract List<Paas> getPaases();
-   
+
    /**
     * Add new paas.
     * @param paas

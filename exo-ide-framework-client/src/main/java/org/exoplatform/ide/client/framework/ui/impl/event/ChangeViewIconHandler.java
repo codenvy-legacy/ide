@@ -31,5 +31,5 @@ public interface ChangeViewIconHandler extends EventHandler
 {
 
    void onChangeViewIcon(ChangeViewIconEvent event);
-   
+
 }

@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface SaveApplicationSettingsHandler extends EventHandler
 {
-   
+
    void onSaveApplicationSettings(SaveApplicationSettingsEvent event);
 
 }

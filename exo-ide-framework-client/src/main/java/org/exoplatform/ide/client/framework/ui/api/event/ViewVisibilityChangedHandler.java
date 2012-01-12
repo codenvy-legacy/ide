@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ViewVisibilityChangedHandler extends EventHandler
 {
-   
+
    void onViewVisibilityChanged(ViewVisibilityChangedEvent event);
 
 }

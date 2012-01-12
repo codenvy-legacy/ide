@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface UserInfoReceivedHandler extends EventHandler
 {
-   
+
    void onUserInfoReceived(UserInfoReceivedEvent event);
 
 }

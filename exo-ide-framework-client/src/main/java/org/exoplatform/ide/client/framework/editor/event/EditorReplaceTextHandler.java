@@ -34,5 +34,5 @@ public interface EditorReplaceTextHandler extends EventHandler
     * @param event
     */
    void onEditorReplaceText(EditorReplaceTextEvent event);
-   
-}  
+
+}

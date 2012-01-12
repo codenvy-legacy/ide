@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface EditorFileOpenedHandler extends EventHandler
 {
-   
+
    void onEditorFileOpened(EditorFileOpenedEvent event);
 
 }

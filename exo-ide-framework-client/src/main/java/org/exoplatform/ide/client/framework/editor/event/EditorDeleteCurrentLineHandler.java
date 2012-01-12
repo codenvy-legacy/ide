@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface EditorDeleteCurrentLineHandler extends EventHandler
 {
-   
+
    void onEditorDeleteCurrentLine(EditorDeleteCurrentLineEvent event);
-   
+
 }

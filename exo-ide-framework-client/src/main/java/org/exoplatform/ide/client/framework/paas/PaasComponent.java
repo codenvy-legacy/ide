@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.framework.paas;
 
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CompositeProvider.java Dec 2, 2011 12:21:09 PM vereshchaka $
@@ -28,11 +27,11 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  */
 public interface PaasComponent
 {
-   
+
    void getView(String projectName, PaasCallback paasCallback);
-   
+
    void validate();
-   
+
    void deploy(ProjectModel project);
-   
+
 }

@@ -35,7 +35,7 @@ public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
    public static final GwtEvent.Type<EditorCloseFileHandler> TYPE = new GwtEvent.Type<EditorCloseFileHandler>();
 
    private FileModel file;
-   
+
    private boolean ignoreChanges = false;
 
    public EditorCloseFileEvent(FileModel file)
@@ -47,7 +47,7 @@ public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
    {
       this.file = file;
       this.ignoreChanges = ignoreChanges;
-   }   
+   }
 
    public boolean isIgnoreChanges()
    {

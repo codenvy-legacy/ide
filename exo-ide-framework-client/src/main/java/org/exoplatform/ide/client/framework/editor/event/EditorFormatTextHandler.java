@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface EditorFormatTextHandler extends EventHandler
 {
-   
+
    void onFormatFile(EditorFormatTextEvent event);
-   
+
 }

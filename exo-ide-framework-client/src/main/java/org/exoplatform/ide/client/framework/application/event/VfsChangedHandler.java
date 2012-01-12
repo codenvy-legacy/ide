@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface VfsChangedHandler extends EventHandler
 {
-   
+
    void onVfsChanged(VfsChangedEvent event);
 
 }

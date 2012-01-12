@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ChangeViewTitleHandler extends EventHandler
 {
-   
+
    void onChangeViewTitle(ChangeViewTitleEvent event);
 
 }

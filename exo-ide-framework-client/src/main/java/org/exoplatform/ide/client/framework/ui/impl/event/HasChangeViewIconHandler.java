@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.ui.impl.event;
 
-
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
@@ -32,5 +31,5 @@ public interface HasChangeViewIconHandler
 {
 
    HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler);
-   
+
 }

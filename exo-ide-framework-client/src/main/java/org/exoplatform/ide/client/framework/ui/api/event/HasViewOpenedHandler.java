@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface HasViewOpenedHandler
 {
-   
+
    HandlerRegistration addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler);
 
 }

@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface HasClosingViewHandler
 {
-   
+
    HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler);
 
 }

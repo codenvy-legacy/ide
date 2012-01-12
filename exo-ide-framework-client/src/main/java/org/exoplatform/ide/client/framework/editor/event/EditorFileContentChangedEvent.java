@@ -30,7 +30,8 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentChangedHandler>
 {
 
-   public static final GwtEvent.Type<EditorFileContentChangedHandler> TYPE = new GwtEvent.Type<EditorFileContentChangedHandler>();
+   public static final GwtEvent.Type<EditorFileContentChangedHandler> TYPE =
+      new GwtEvent.Type<EditorFileContentChangedHandler>();
 
    private FileModel file;
 

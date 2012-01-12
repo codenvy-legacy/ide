@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class CloseProjectEvent extends GwtEvent<CloseProjectHandler>
 {
-   
+
    public static final GwtEvent.Type<CloseProjectHandler> TYPE = new GwtEvent.Type<CloseProjectHandler>();
 
    @Override

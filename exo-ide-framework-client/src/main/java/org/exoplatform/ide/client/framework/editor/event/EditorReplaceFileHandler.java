@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.framework.editor.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
-
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -29,7 +27,7 @@ import com.google.gwt.event.shared.EventHandler;
 */
 public interface EditorReplaceFileHandler extends EventHandler
 {
-   
+
    void onEditorReplaceFile(EditorReplaceFileEvent event);
-   
+
 }

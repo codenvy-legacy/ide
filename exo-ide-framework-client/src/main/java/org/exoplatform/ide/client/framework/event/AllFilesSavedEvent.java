@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class AllFilesSavedEvent extends GwtEvent<AllFilesSavedHandler>
 {
-   
+
    public static final GwtEvent.Type<AllFilesSavedHandler> TYPE = new GwtEvent.Type<AllFilesSavedHandler>();
 
    @Override

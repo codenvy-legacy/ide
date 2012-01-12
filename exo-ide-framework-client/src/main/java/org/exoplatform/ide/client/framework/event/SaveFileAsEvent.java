@@ -37,10 +37,8 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
     * Enum to configure ask for value dialog window:
     * two buttons (Yes, Cancel) or three buttons (Yes, No, Cancel).
     */
-   public enum SaveDialogType
-   {
-      YES_CANCEL,
-      EXTENDED
+   public enum SaveDialogType {
+      YES_CANCEL, EXTENDED
    }
 
    public static final GwtEvent.Type<SaveFileAsHandler> TYPE = new GwtEvent.Type<SaveFileAsHandler>();
@@ -48,11 +46,11 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
    private FileModel file;
 
    private boolean saveOnly = false;
-   
+
    private GwtEvent<?> eventFiredOnNo;
-   
+
    private GwtEvent<?> eventFiredOnCancel;
-   
+
    private SaveDialogType dialogType;
 
    public SaveFileAsEvent()
@@ -70,7 +68,6 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
       this.saveOnly = saveOnly;
    }
 
-   
    /**
     * @param file - file to save
     * @param type - type of dialog window (two or three buttons)
@@ -78,7 +75,8 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
     * @param eventFiredOnCancel - event, which will be fired if Cancel button will be clicked 
     * (if null - window will be closed without any actions)
     */
-   public SaveFileAsEvent(FileModel file,  SaveDialogType type, GwtEvent<?> eventFiredOnNo, GwtEvent<?> eventFiredOnCancel)
+   public SaveFileAsEvent(FileModel file, SaveDialogType type, GwtEvent<?> eventFiredOnNo,
+      GwtEvent<?> eventFiredOnCancel)
    {
       this.file = file;
       this.eventFiredOnNo = eventFiredOnNo;
@@ -127,7 +125,7 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
    {
       return eventFiredOnCancel;
    }
-   
+
    /**
     * @return the eventFiredOnNo
     */
@@ -135,7 +133,7 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
    {
       return eventFiredOnNo;
    }
-   
+
    /**
     * @return the dialogType
     */
@@ -143,5 +141,5 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
    {
       return dialogType;
    }
-   
+
 }

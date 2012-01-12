@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface AllFilesSavedHandler extends EventHandler
 {
-   
+
    void onAllFilesSaved(AllFilesSavedEvent event);
 
 }

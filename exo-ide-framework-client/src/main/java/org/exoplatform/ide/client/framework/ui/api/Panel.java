@@ -66,5 +66,4 @@ public interface Panel extends HasViews, IsWidget
 
    boolean isPanelHidden();
 
-
 }

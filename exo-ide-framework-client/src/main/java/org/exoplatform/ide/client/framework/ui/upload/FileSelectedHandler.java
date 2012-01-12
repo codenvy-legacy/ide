@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface FileSelectedHandler extends EventHandler
 {
-   
+
    void onFileSelected(FileSelectedEvent event);
 
 }

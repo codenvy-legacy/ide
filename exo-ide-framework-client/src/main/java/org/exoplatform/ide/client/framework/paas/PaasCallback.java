@@ -27,11 +27,11 @@ import com.google.gwt.user.client.ui.Composite;
  */
 public interface PaasCallback
 {
-   
+
    void onViewReceived(Composite composite);
-   
+
    void onValidate(boolean result);
-   
+
    void onDeploy(boolean result);
-   
+
 }

@@ -29,10 +29,10 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface EditorTextFoundHandler extends EventHandler
 {
-   
+
    /**
     * @param event
     */
    void onEditorTextFound(EditorTextFoundEvent event);
-   
+
 }

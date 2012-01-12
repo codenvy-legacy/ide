@@ -49,7 +49,7 @@ public abstract class BaseGenerator extends Generator
       JClassType interfaceType = getInterfaceType(context.getTypeOracle(), typeName, logger);
 
       String packageName = interfaceType.getPackage().getName();
-      
+
       //Create implementation class name
       String implName = interfaceType.getName().replace(".", "_") + "Impl";
       PrintWriter printWriter = context.tryCreate(logger, packageName, implName);
@@ -89,5 +89,6 @@ public abstract class BaseGenerator extends Generator
     * @param writer source writer
     * @param context generator context
     */
-   abstract protected void doGenerate(JClassType interfaceType, String implName, ConsolePrintWriter writer, GeneratorContext context);
+   abstract protected void doGenerate(JClassType interfaceType, String implName, ConsolePrintWriter writer,
+      GeneratorContext context);
 }

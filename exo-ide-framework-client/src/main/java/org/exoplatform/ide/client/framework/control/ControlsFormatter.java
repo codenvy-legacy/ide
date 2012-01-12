@@ -37,5 +37,5 @@ public interface ControlsFormatter
     * @param controls controls to format
     */
    void format(List<Control> controls);
-   
+
 }

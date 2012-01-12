@@ -34,8 +34,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChange
  * @version $
  */
 
-public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler, IsWidget
+public interface Perspective extends HasViewVisibilityChangedHandler, HasViewOpenedHandler, HasViewClosedHandler,
+   HasClosingViewHandler, IsWidget
 {
 
    /**
@@ -51,7 +51,7 @@ HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler, IsWidget
     * @param viewId
     */
    void closeView(String viewId);
-   
+
    /**
     * Returns map of opened views.
     * 
@@ -64,6 +64,6 @@ HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler, IsWidget
     * 
     * @return
     */
-   public Map<String, Panel> getPanels();   
+   public Map<String, Panel> getPanels();
 
 }

@@ -29,5 +29,5 @@ public interface RegisterDocumentationHandler extends EventHandler
 {
 
    void onRegisterDocumentation(RegisterDocumentationEvent event);
-   
+
 }

@@ -28,10 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class CreateNewProjectEvent extends GwtEvent<CreateNewProjectHandler>
 {
-   
-   public static final GwtEvent.Type<CreateNewProjectHandler> TYPE =
-      new GwtEvent.Type<CreateNewProjectHandler>();
-   
+
+   public static final GwtEvent.Type<CreateNewProjectHandler> TYPE = new GwtEvent.Type<CreateNewProjectHandler>();
+
    @Override
    protected void dispatch(CreateNewProjectHandler handler)
    {

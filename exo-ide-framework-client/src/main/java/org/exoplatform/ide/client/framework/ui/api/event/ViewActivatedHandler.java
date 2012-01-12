@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ViewActivatedHandler extends EventHandler
 {
-   
+
    /**
     * Handle the event after View was activated.
     * 

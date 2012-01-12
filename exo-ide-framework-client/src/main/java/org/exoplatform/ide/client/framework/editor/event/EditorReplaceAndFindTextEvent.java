@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class EditorReplaceAndFindTextEvent extends GwtEvent<EditorReplaceAndFindTextHandler>
 {
-   
+
    public static final GwtEvent.Type<EditorReplaceAndFindTextHandler> TYPE =
       new GwtEvent.Type<EditorReplaceAndFindTextHandler>();
 
@@ -104,5 +104,5 @@ public class EditorReplaceAndFindTextEvent extends GwtEvent<EditorReplaceAndFind
    {
       return fileId;
    }
-   
+
 }

@@ -188,15 +188,16 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       for (int position = 0; position < children.size(); position++)
       {
          Item item = children.get(position);
-         
-         if (DirectoryFilter.get().matchWithPattern(item.getName())) {
+
+         if (DirectoryFilter.get().matchWithPattern(item.getName()))
+         {
             continue;
          }
 
-//         if (item.getName() != null && item.getName().startsWith("."))
-//         {
-//            continue;
-//         }
+         //         if (item.getName() != null && item.getName().startsWith("."))
+         //         {
+         //            continue;
+         //         }
 
          TreeItem node = createTreeNode(item);
          parentNode.addItem(node);

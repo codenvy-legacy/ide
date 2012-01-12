@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface InitializeServicesHandler extends EventHandler
 {
-   
+
    void onInitializeServices(InitializeServicesEvent event);
 
 }

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.ui.impl.event;
 
-
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
@@ -30,7 +29,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface HasSetViewVisibleHandler
 {
-   
+
    HandlerRegistration addSetViewVisibleHandler(SetViewVisibleHandler setViewVisibleHandler);
 
 }

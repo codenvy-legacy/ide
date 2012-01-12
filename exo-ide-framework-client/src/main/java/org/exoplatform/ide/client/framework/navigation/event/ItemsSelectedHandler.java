@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ItemsSelectedHandler extends EventHandler
 {
-   
+
    void onItemsSelected(ItemsSelectedEvent event);
 
 }

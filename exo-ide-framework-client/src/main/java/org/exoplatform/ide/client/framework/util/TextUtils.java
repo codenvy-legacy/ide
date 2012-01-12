@@ -27,21 +27,21 @@ package org.exoplatform.ide.client.framework.util;
 
 public class TextUtils
 {
-   
+
    public static native String javaScriptDecodeURI(String text) /*-{
-      return decodeURI(text);
-   }-*/;
+                                                                return decodeURI(text);
+                                                                }-*/;
 
    public static native String javaScriptEncodeURI(String text) /*-{
-      return encodeURI(text);
-   }-*/;
-   
+                                                                return encodeURI(text);
+                                                                }-*/;
+
    public static native String javaScriptDecodeURIComponent(String text) /*-{
-      return decodeURIComponent(text);
-   }-*/;
+                                                                         return decodeURIComponent(text);
+                                                                         }-*/;
 
    public static native String javaScriptEncodeURIComponent(String text) /*-{
-      return encodeURIComponent(text);
-   }-*/;
-   
+                                                                         return encodeURIComponent(text);
+                                                                         }-*/;
+
 }

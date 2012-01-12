@@ -33,13 +33,13 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    public static final GwtEvent.Type<OpenFileHandler> TYPE = new GwtEvent.Type<OpenFileHandler>();
 
    private FileModel file;
-   
+
    private String fileId;
-   
+
    private String editor;
-   
-   private int ignoreErrorsCount = 0; 
-   
+
+   private int ignoreErrorsCount = 0;
+
    /**
     * Check is lock file.
     */
@@ -49,20 +49,20 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    {
       this.file = file;
    }
-   
+
    public OpenFileEvent(FileModel file, boolean lockFile)
    {
       this.file = file;
       this.lockFile = lockFile;
    }
-   
+
    public OpenFileEvent(FileModel file, boolean lockFile, int ignoreErrorsCount)
    {
       this.file = file;
       this.lockFile = lockFile;
       this.ignoreErrorsCount = ignoreErrorsCount;
    }
-   
+
    public OpenFileEvent(String fileId)
    {
       this.fileId = fileId;
@@ -73,7 +73,7 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
       this(file);
       this.editor = editor;
    }
-   
+
    public OpenFileEvent(FileModel file, String editor, boolean lockFile)
    {
       this(file);
@@ -90,17 +90,17 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    {
       return editor;
    }
-   
+
    public String getFileId()
    {
       return fileId;
    }
-   
+
    public boolean isLockFile()
    {
       return lockFile;
    }
-   
+
    @Override
    protected void dispatch(OpenFileHandler hendler)
    {
@@ -117,5 +117,5 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    {
       return ignoreErrorsCount;
    }
-   
+
 }

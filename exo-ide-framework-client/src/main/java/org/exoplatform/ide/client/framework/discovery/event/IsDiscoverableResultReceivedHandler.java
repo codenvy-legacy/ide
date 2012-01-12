@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface IsDiscoverableResultReceivedHandler extends EventHandler
 {
-   
+
    void isDiscoverableResultReceived(IsDiscoverableResultReceivedEvent event);
 
 }

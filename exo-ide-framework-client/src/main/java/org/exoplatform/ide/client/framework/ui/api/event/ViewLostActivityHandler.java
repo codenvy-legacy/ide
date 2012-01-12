@@ -31,5 +31,5 @@ public interface ViewLostActivityHandler extends EventHandler
 {
 
    void onViewLostActivity(ViewLostActivityEvent event);
-   
+
 }
