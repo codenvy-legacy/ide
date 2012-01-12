@@ -28,6 +28,7 @@ import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -35,7 +36,6 @@ import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 import org.exoplatform.ide.editor.css.client.codeassistant.CssCodeAssistant;
@@ -125,13 +125,13 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
                @Override
                public void onError(ResourceException e)
                {
-                  e.printStackTrace();
+                  Log.info(e.getMessage());
                }
             });
          }
          catch (ResourceException e)
          {
-            e.printStackTrace();
+            Log.info(e.getMessage());
          }
          return;
       }
@@ -224,7 +224,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
    }
 

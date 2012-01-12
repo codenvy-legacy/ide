@@ -27,6 +27,7 @@ import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -152,14 +153,13 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
                   errorHandler.handleError(exception);
                }
             });
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
    }
 
@@ -266,7 +266,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
    }
 
@@ -514,7 +514,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                }
                catch (ResourceException e)
                {
-                  e.printStackTrace();
+                  Log.info(e.getMessage());
                }
             }
 

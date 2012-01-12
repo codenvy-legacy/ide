@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.css.client.codeassistant;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -47,7 +48,7 @@ public class CssCodeAssistant extends CodeAssistant
       @Source("org/exoplatform/ide/editor/css/client/tokens/css_tokens.js")
       ExternalTextResource cssTokens();
    }
-   
+
    private static List<Token> cssProperty;
 
    /**
@@ -62,8 +63,7 @@ public class CssCodeAssistant extends CodeAssistant
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    public void autocompleteCalled(final Editor editor, final int cursorOffsetX, final int cursorOffsetY,
-       List<Token> tokenList, String lineMimeType,
-      Token currentToken)
+      List<Token> tokenList, String lineMimeType, Token currentToken)
    {
       try
       {
@@ -73,22 +73,22 @@ public class CssCodeAssistant extends CodeAssistant
          if (cssProperty == null)
          {
             CssBundle buandle = GWT.create(CssBundle.class);
-            buandle.cssTokens().getText( new ResourceCallback<TextResource>()
+            buandle.cssTokens().getText(new ResourceCallback<TextResource>()
             {
-               
+
                @Override
                public void onSuccess(TextResource resource)
-               {                  
+               {
                   JSONTokenParser parser = new JSONTokenParser();
                   JSONArray tokenArray = new JSONArray(parseJson(resource.getText()));
                   cssProperty = parser.getTokens(tokenArray);
                   fillTokens(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
                }
-               
+
                @Override
                public void onError(ResourceException e)
                {
-                  e.printStackTrace();
+                  Log.info(e.getMessage());
                }
             });
             return;
@@ -97,7 +97,7 @@ public class CssCodeAssistant extends CodeAssistant
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
    }
 
@@ -113,7 +113,8 @@ public class CssCodeAssistant extends CodeAssistant
       afterToken = lineContent.substring(cursorPositionX - 1);
 
       String token = "";
-      if (!subToken.endsWith(" ") && !subToken.endsWith(":") && !subToken.endsWith(";") && !subToken.endsWith("}")&& !subToken.endsWith("{"))
+      if (!subToken.endsWith(" ") && !subToken.endsWith(":") && !subToken.endsWith(";") && !subToken.endsWith("}")
+         && !subToken.endsWith("{"))
       {
          String[] split = subToken.split("[/()|&\",' ]+");
 

@@ -28,6 +28,7 @@ import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -160,7 +161,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
    }
 
@@ -191,7 +192,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
          @Override
          public void onError(ResourceException e)
          {
-            e.printStackTrace();
+            Log.info(e.getMessage());
          }
       });
    }

@@ -27,6 +27,7 @@ import com.google.gwt.resources.client.ResourceCallback;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -123,7 +124,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
                @Override
                public void onError(ResourceException e)
                {
-                  e.printStackTrace();
+                  Log.info(e.getMessage());
                }
             });
 
@@ -133,11 +134,11 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
       }
       catch (ResourceException e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
    }
 
@@ -224,14 +225,14 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
             }
             catch (Exception e)
             {
-               e.printStackTrace();
+               Log.info(e.getMessage());
             }
          }
 
          @Override
          public void onFailure(Throwable reason)
          {
-            reason.printStackTrace();
+            Log.info(reason.getMessage());
          }
       });
 

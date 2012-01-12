@@ -27,6 +27,7 @@ import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.ArrayProperty;
@@ -49,7 +50,8 @@ import java.util.Map;
  * @version $Id: NetvibesCodeAssistant Mar 2, 2011 11:11:45 AM evgen $
  *
  */
-public class NetvibesCodeAssistant extends HtmlCodeAssistant implements Comparator<Token>, ResourceCallback<TextResource>
+public class NetvibesCodeAssistant extends HtmlCodeAssistant implements Comparator<Token>,
+   ResourceCallback<TextResource>
 {
 
    public interface NetvibesBundle extends ClientBundle
@@ -119,7 +121,7 @@ public class NetvibesCodeAssistant extends HtmlCodeAssistant implements Comparat
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
    }
 
@@ -476,7 +478,7 @@ public class NetvibesCodeAssistant extends HtmlCodeAssistant implements Comparat
    @Override
    public void onError(ResourceException e)
    {
-      e.printStackTrace();
+      Log.info(e.getMessage());
    }
 
    /**
@@ -500,7 +502,7 @@ public class NetvibesCodeAssistant extends HtmlCodeAssistant implements Comparat
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
       List<Token> jSApiTokens = parser.getTokens(obj.get("java_script_api").isArray());
       for (Token t : jSApiTokens)
@@ -529,7 +531,7 @@ public class NetvibesCodeAssistant extends HtmlCodeAssistant implements Comparat
       autocompletion(lineContent, cursorPositionX, cursorPositionY, tokenFromParser, currentToken);
 
    }
-   
+
    /**
     * @param tokenFromParser
     */

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.xml.client.codeassistant;
 
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -82,7 +83,7 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
    }
 
