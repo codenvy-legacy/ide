@@ -98,7 +98,7 @@ public class ShellInitializer
                      }
                      catch (RequestException e)
                      {
-                        e.printStackTrace();
+                        CloudShell.console().println(e.getMessage());
                      }
                   }
                   else
@@ -110,14 +110,14 @@ public class ShellInitializer
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
+                  CloudShell.console().println(exception.getMessage());
                }
             });
 
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         CloudShell.console().println(e.getMessage());
       }
    }
 
@@ -157,7 +157,7 @@ public class ShellInitializer
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         CloudShell.console().println(e.getMessage());
       }
 
    }
@@ -195,7 +195,6 @@ public class ShellInitializer
                      Environment.get().setCurrentFolder(root);
                      Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, root.getId());
                      createShell();
-                     exception.printStackTrace();
                   }
                });
          }
@@ -204,7 +203,6 @@ public class ShellInitializer
             Environment.get().setCurrentFolder(root);
             Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, root.getId());
             createShell();
-            e.printStackTrace();
          }
       }
       else

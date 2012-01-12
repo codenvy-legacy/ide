@@ -367,14 +367,12 @@ public class ShellPresenter
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     exception.printStackTrace();
                      CloudShell.console().print(CloudShell.messages.cdErrorFolder(folderPath) + "\n");
                   }
                });
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
             CloudShell.console().print(CloudShell.messages.cdErrorFolder(folderPath) + "\n");
          }
       }
@@ -499,7 +497,6 @@ public class ShellPresenter
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
          CloudShell.console().println(CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
       }
    }

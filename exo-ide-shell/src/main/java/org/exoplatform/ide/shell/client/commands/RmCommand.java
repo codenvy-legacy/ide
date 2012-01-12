@@ -90,7 +90,6 @@ public class RmCommand extends ClientCommand
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     exception.printStackTrace();
                      CloudShell.console().println(exception.getMessage());
                   }
                });
@@ -98,7 +97,6 @@ public class RmCommand extends ClientCommand
          catch (RequestException e)
          {
             CloudShell.console().println(e.getMessage());
-            e.printStackTrace();
          }
       }
    }
@@ -122,7 +120,6 @@ public class RmCommand extends ClientCommand
             @Override
             protected void onFailure(Throwable exception)
             {
-               exception.printStackTrace();
                CloudShell.console().println(exception.getMessage());
             }
          });
@@ -130,7 +127,6 @@ public class RmCommand extends ClientCommand
       catch (RequestException e)
       {
          CloudShell.console().println(e.getMessage());
-         e.printStackTrace();
       }
    }
 

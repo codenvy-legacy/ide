@@ -94,7 +94,6 @@ public class GenericJsonUnmarshaller extends StringUnmarshaller
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          builder.setLength(0);
          builder.append(response.getText());
       }

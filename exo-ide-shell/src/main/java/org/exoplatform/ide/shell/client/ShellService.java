@@ -142,7 +142,6 @@ public class ShellService
          }
          catch (Exception e)
          {
-            e.printStackTrace();
             //TODO
             CloudShell.console().print(CloudShell.messages.syntaxtError(cmd));
          }

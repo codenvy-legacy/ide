@@ -110,14 +110,12 @@ public class CdCommand extends ClientCommand
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     exception.printStackTrace();
                      CloudShell.console().println(CloudShell.messages.cdErrorFolder(newPath));
                   }
                });
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
             CloudShell.console().println(CloudShell.messages.cdErrorFolder(newPath));
          }
       }

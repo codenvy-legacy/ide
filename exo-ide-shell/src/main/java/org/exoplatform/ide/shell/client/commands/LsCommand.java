@@ -103,14 +103,12 @@ public class LsCommand extends ClientCommand
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     exception.printStackTrace();
                      CloudShell.console().print(CloudShell.messages.lsError(args.get(0)));
                   }
                });
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
             CloudShell.console().print(CloudShell.messages.lsError(args.get(0)));
          }
 
@@ -145,7 +143,6 @@ public class LsCommand extends ClientCommand
       catch (RequestException e)
       {
          CloudShell.console().println(CloudShell.messages.lsError(folder.getPath()));
-         e.printStackTrace();
       }
    }
 

@@ -130,7 +130,6 @@ public class CatCommand extends ClientCommand
                                  @Override
                                  protected void onFailure(Throwable exception)
                                  {
-                                    exception.printStackTrace();
                                     CloudShell.console().println(CloudShell.messages.catGetFileContentError());
                                  }
                               });
@@ -142,7 +141,6 @@ public class CatCommand extends ClientCommand
                      }
                      catch (RequestException e)
                      {
-                        e.printStackTrace();
                         CloudShell.console().println(CloudShell.messages.catGetFileContentError());
                      }
                   }
@@ -150,14 +148,12 @@ public class CatCommand extends ClientCommand
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     exception.printStackTrace();
                      CloudShell.console().println(CloudShell.messages.catGetFileContentError());
                   }
                });
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
             CloudShell.console().println(CloudShell.messages.catFileNotFound(files.get(0)));
          }
       }

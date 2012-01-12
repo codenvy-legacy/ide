@@ -91,7 +91,6 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException(CloudShell.messages.commandsUnmarshallerError());
       }
    }

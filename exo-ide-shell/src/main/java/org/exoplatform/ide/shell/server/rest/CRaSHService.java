@@ -109,7 +109,6 @@ public class CRaSHService
       }
       catch (InterruptedException e)
       {
-         e.printStackTrace();
          sb.append("failure ").append(e.getMessage());
       }
       sb.append('\n');
