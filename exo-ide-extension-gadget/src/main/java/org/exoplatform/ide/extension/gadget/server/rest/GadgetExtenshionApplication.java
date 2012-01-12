@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.gadget.server.rest;
 
-
 import java.util.HashSet;
 import java.util.Set;
 

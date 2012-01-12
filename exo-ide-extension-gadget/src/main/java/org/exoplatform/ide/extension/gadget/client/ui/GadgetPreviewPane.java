@@ -56,7 +56,7 @@ public class GadgetPreviewPane extends ViewImpl
    public static final String ID = "gadgetpreview";
 
    private IDEConfiguration configuration;
-   
+
    private FlowPanel framePanel;
 
    /**
@@ -66,13 +66,13 @@ public class GadgetPreviewPane extends ViewImpl
    public GadgetPreviewPane()
    {
       super(ID, ViewType.OPERATION, TITLE);
-      
+
       framePanel = new FlowPanel();
       framePanel.setSize("100%", "100%");
-      add(framePanel);    
+      add(framePanel);
 
    }
-   
+
    /**
     * @param configuration the configuration to set
     */
@@ -80,7 +80,7 @@ public class GadgetPreviewPane extends ViewImpl
    {
       this.configuration = configuration;
    }
-   
+
    /**
     * @param metadata the metadata to set
     */
@@ -90,16 +90,16 @@ public class GadgetPreviewPane extends ViewImpl
    }
 
    private native String getST()/*-{
-		return encodeURIComponent(gadgets.util.getUrlParameters().st);
-   }-*/;
+                                return encodeURIComponent(gadgets.util.getUrlParameters().st);
+                                }-*/;
 
    private native String getGadgetParent()/*-{
-		return encodeURIComponent(gadgets.util.getUrlParameters().parent);
-   }-*/;
+                                          return encodeURIComponent(gadgets.util.getUrlParameters().parent);
+                                          }-*/;
 
    private native boolean isGadget()/*-{
-		return (typeof (gadgets) !== "undefined" && typeof (gadgets) !== "null");
-   }-*/;
+                                    return (typeof (gadgets) !== "undefined" && typeof (gadgets) !== "null");
+                                    }-*/;
 
    /**
     * Create iframe. 
@@ -139,28 +139,28 @@ public class GadgetPreviewPane extends ViewImpl
       });
 
       framePanel.clear();
-      framePanel.add(frame);      
+      framePanel.add(frame);
    }
 
    private native void setHandler(Element e)/*-{
-		var type = "mousedown";
-		var instance = this;
-		if (typeof e.contentDocument != "undefined") {
-			e.contentDocument
-					.addEventListener(
-							type,
-							function() {
-								instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
-							}, false);
-		} else if (typeof e.contentWindow != "undefined") {
-			e.contentWindow.document
-					.attachEvent(
-							"on" + type,
-							function() {
-								instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
-							});
-		}
-   }-*/;
+                                            var type = "mousedown";
+                                            var instance = this;
+                                            if (typeof e.contentDocument != "undefined") {
+                                            e.contentDocument
+                                            .addEventListener(
+                                            type,
+                                            function() {
+                                            instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
+                                            }, false);
+                                            } else if (typeof e.contentWindow != "undefined") {
+                                            e.contentWindow.document
+                                            .attachEvent(
+                                            "on" + type,
+                                            function() {
+                                            instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
+                                            });
+                                            }
+                                            }-*/;
 
    public String getId()
    {

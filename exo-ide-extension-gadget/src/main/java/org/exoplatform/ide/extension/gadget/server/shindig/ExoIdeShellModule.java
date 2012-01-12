@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.gadget.server.shindig;
 
 import org.apache.shindig.common.PropertiesModule;
 
-
 /**
  * USE ONLY IN STANDALONE BUILD
  * 
@@ -40,7 +39,7 @@ import org.apache.shindig.common.PropertiesModule;
 public class ExoIdeShellModule extends PropertiesModule
 {
    private static String DEFAULT_PROPERTIES = "ide.shell.shindig.properties";
-   
+
    public ExoIdeShellModule()
    {
       super(DEFAULT_PROPERTIES);

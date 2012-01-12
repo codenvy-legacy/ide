@@ -46,12 +46,12 @@ public abstract class GadgetService
     * @param tokenResponse
     * @param callback
     */
-   public abstract void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<GadgetMetadata>callback);
-   
+   public abstract void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<GadgetMetadata> callback);
+
    /**
     * @param request
     * @param callback
     */
    public abstract void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback);
-   
+
 }

@@ -40,7 +40,7 @@ public class GadgetExtension extends Extension implements InitializeServicesHand
    @Override
    public void initialize()
    {
-      IDE.getInstance().addControl(new ShowGadgetPreviewControl(),  Docking.TOOLBAR_RIGHT);
+      IDE.getInstance().addControl(new ShowGadgetPreviewControl(), Docking.TOOLBAR_RIGHT);
       new GadgetPluginEventHandler();
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
    }

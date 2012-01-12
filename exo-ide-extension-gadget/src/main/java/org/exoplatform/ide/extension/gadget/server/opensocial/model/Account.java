@@ -32,12 +32,12 @@ public class Account
     * The top-most authoritative domain for this account.
     */
    private String domain;
-   
+
    /**
     * An alphanumeric user name, usually chosen by the user.
     */
    private String userName;
-   
+
    /**
     *A user ID associated with this account. 
     */

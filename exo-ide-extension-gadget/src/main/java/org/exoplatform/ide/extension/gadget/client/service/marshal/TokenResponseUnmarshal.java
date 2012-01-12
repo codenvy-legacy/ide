@@ -52,7 +52,7 @@ public class TokenResponseUnmarshal implements Unmarshallable
       catch (Exception exc)
       {
          String message = "Can't parse token response";
-         throw new UnmarshallerException(message);       
+         throw new UnmarshallerException(message);
       }
    }
 

@@ -25,7 +25,7 @@ package org.exoplatform.ide.extension.gadget.client.service;
 */
 public class TokenRequest
 {
-   
+
    /**
     * 
     */
@@ -206,20 +206,16 @@ public class TokenRequest
    {
       this.domain = domain;
    }
-   
-   
+
    @Override
-   public String toString() 
+   public String toString()
    {
-      String json = "{\"" + GADGET_URL + "\":\"" + gadgetURL
-      + "\",\""+ OWNER + "\":\"" + owner
-      + "\",\""+ VIEWER + "\":\"" + viewer
-      + "\",\""+ MODULE_ID + "\":" + moduleId
-      + ",\""+ CONTAINER + "\":\"" + container
-      + "\",\""+ DOMAIN + "\":\"" + domain
-      + "\"}";
+      String json =
+         "{\"" + GADGET_URL + "\":\"" + gadgetURL + "\",\"" + OWNER + "\":\"" + owner + "\",\"" + VIEWER + "\":\""
+            + viewer + "\",\"" + MODULE_ID + "\":" + moduleId + ",\"" + CONTAINER + "\":\"" + container + "\",\""
+            + DOMAIN + "\":\"" + domain + "\"}";
       return json;
-      
+
    }
 
 }

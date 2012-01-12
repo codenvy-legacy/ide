@@ -44,12 +44,11 @@ public interface GadgetClientBundle extends ClientBundle
 
    @Source("bundled/undeploy_gadget_Disabled.png")
    ImageResource undeployGadgetDisabled();
-   
+
    @Source("bundled/preview.png")
    ImageResource preview();
-   
+
    @Source("bundled/preview_Disabled.png")
    ImageResource previewDisabled();
-   
-   
+
 }

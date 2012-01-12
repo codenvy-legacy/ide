@@ -65,7 +65,6 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       this.activeFile = event.getFile();

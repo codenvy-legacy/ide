@@ -39,12 +39,10 @@ import org.apache.shindig.common.PropertiesModule;
 public class ExoIdeModule extends PropertiesModule
 {
    private static String DEFAULT_PROPERTIES = "ide.shindig.properties";
-   
+
    public ExoIdeModule()
    {
       super(DEFAULT_PROPERTIES);
    }
-   
-   
- 
+
 }

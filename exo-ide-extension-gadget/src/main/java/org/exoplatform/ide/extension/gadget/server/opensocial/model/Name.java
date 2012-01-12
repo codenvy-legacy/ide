@@ -31,27 +31,27 @@ public class Name
     * The family name of this Person, or "Last Name". 
     */
    private String familyName;
-   
+
    /**
     * The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Mr. Joseph Robert Smarr, Esq.).
     */
    private String formatted;
-   
+
    /**
     * The given name of this Person, or "First Name".
     */
    private String givenName;
-   
+
    /**
     * The honorific prefix(es) of this Person.
     */
    private String honorificPrefix;
-   
+
    /**
     * The honorifix suffix(es) of this Person.
     */
    private String honorificSuffix;
-   
+
    /**
     * The middle name(s) of this Person.
     */
@@ -153,4 +153,3 @@ public class Name
       this.middleName = middleName;
    }
 }
-

@@ -42,7 +42,7 @@ public interface PeopleService
     * @return {@link Person} requested person
     */
    Person getPerson(String userId, List<String> fields, EscapeType escapeType);
-   
+
    /**
     * @param userId of person to retrieve
     * @param groupId Group ID of the group of users related to User ID
@@ -51,16 +51,14 @@ public interface PeopleService
     * @return {@link List<{@link Person}}>} list of people
     */
    List<Person> getPeopleList(String userId, String groupId, List<String> fields, Float networkDistance);
-   
-   
-   
+
    /**
     * Retrieve a list of supported Person fields.
     * 
     * @return {@link List<{@link String}}>} list of supported fields
     */
    List<String> getPersonFields();
-   
+
    /**
     * Get list of people who are no longer friends with a given user.
     * 
@@ -68,8 +66,7 @@ public interface PeopleService
     * @return {@link List<{@link Person}}>} list of deleted friends
     */
    List<Person> getDeletedFriends(String userId);
-   
-   
+
    /**
     * A request to create a relationship MUST support the Standard-Request-Parameters and the following additional parameters:
     * 
@@ -78,7 +75,7 @@ public interface PeopleService
     * @param person the target of the relationship
     */
    void createRelationship(String userId, String groupId, Person person);
-   
+
    /**
     * Request to update a person.
     * 
@@ -88,7 +85,7 @@ public interface PeopleService
     * @return {@link Person} 
    */
    Person updatePerson(String userId, String groupId, Person person);
-   
+
    /**
     * Request to remove a Person.
     * 

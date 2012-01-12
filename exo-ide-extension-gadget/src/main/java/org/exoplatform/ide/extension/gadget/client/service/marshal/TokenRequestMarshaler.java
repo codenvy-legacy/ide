@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.gadget.client.service.marshal;
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
@@ -29,14 +28,14 @@ import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 */
 public class TokenRequestMarshaler implements Marshallable
 {
-   
+
    private TokenRequest tokenRequest;
-   
+
    public TokenRequestMarshaler(TokenRequest tokenRequest)
    {
       this.tokenRequest = tokenRequest;
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -44,5 +43,5 @@ public class TokenRequestMarshaler implements Marshallable
    {
       return tokenRequest.toString();
    }
-   
+
 }

@@ -33,62 +33,67 @@ public class Organization
     * The physical address of this organization.
     */
    private Address address;
-   
+
    /**
     * The department within this organization.
     */
    private String department;
-   
+
    /**
     * A textual description of the role this Person played in this organization.
     */
    private String description;
-   
+
    /**
     * The date this Person left this organization or the role specified by title within this organization.
     */
    private java.util.Date endDate;
-   
+
    /**
     * The field the Organization is in.
     */
    private String field;
-   
+
    /**
     * The physical location of this organization.
     */
    private String location;
-   
+
    /**
     * The name of the organization.
     */
    private String name;
-   
+
    /**
     *The salary the person receieves from the organization.s
     */
    private String salary;
-   
+
    /**
     * The date this Person joined this organization.
     */
    private Date startDate;
+
    /**
     * The subfield the Organization is in.
     */
    private String subField;
+
    /**
     * The job title or organizational role within this organization.
     */
    private String title;
+
    /**
     * A webpage related to the organization.
     */
    private String webpage;
+
    /**
     * The type of organization.
     */
    private String type;
+
    /**
     * @return the address
     */
@@ -96,6 +101,7 @@ public class Organization
    {
       return address;
    }
+
    /**
     * @param address the address to set
     */
@@ -103,6 +109,7 @@ public class Organization
    {
       this.address = address;
    }
+
    /**
     * @return the department
     */
@@ -110,6 +117,7 @@ public class Organization
    {
       return department;
    }
+
    /**
     * @param department the department to set
     */
@@ -117,6 +125,7 @@ public class Organization
    {
       this.department = department;
    }
+
    /**
     * @return the description
     */
@@ -124,6 +133,7 @@ public class Organization
    {
       return description;
    }
+
    /**
     * @param description the description to set
     */
@@ -131,6 +141,7 @@ public class Organization
    {
       this.description = description;
    }
+
    /**
     * @return the endDate
     */
@@ -138,6 +149,7 @@ public class Organization
    {
       return endDate;
    }
+
    /**
     * @param endDate the endDate to set
     */
@@ -145,6 +157,7 @@ public class Organization
    {
       this.endDate = endDate;
    }
+
    /**
     * @return the field
     */
@@ -152,6 +165,7 @@ public class Organization
    {
       return field;
    }
+
    /**
     * @param field the field to set
     */
@@ -159,6 +173,7 @@ public class Organization
    {
       this.field = field;
    }
+
    /**
     * @return the location
     */
@@ -166,6 +181,7 @@ public class Organization
    {
       return location;
    }
+
    /**
     * @param location the location to set
     */
@@ -173,6 +189,7 @@ public class Organization
    {
       this.location = location;
    }
+
    /**
     * @return the name
     */
@@ -180,6 +197,7 @@ public class Organization
    {
       return name;
    }
+
    /**
     * @param name the name to set
     */
@@ -187,6 +205,7 @@ public class Organization
    {
       this.name = name;
    }
+
    /**
     * @return the salary
     */
@@ -194,6 +213,7 @@ public class Organization
    {
       return salary;
    }
+
    /**
     * @param salary the salary to set
     */
@@ -201,6 +221,7 @@ public class Organization
    {
       this.salary = salary;
    }
+
    /**
     * @return the startDate
     */
@@ -208,6 +229,7 @@ public class Organization
    {
       return startDate;
    }
+
    /**
     * @param startDate the startDate to set
     */
@@ -215,6 +237,7 @@ public class Organization
    {
       this.startDate = startDate;
    }
+
    /**
     * @return the subField
     */
@@ -222,6 +245,7 @@ public class Organization
    {
       return subField;
    }
+
    /**
     * @param subField the subField to set
     */
@@ -229,6 +253,7 @@ public class Organization
    {
       this.subField = subField;
    }
+
    /**
     * @return the title
     */
@@ -236,6 +261,7 @@ public class Organization
    {
       return title;
    }
+
    /**
     * @param title the title to set
     */
@@ -243,6 +269,7 @@ public class Organization
    {
       this.title = title;
    }
+
    /**
     * @return the webpage
     */
@@ -250,6 +277,7 @@ public class Organization
    {
       return webpage;
    }
+
    /**
     * @param webpage the webpage to set
     */
@@ -257,6 +285,7 @@ public class Organization
    {
       this.webpage = webpage;
    }
+
    /**
     * @return the type
     */
@@ -264,6 +293,7 @@ public class Organization
    {
       return type;
    }
+
    /**
     * @param type the type to set
     */

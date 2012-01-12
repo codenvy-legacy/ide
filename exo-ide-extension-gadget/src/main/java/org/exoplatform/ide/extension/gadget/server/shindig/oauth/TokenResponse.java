@@ -26,69 +26,64 @@ package org.exoplatform.ide.extension.gadget.server.shindig.oauth;
 public class TokenResponse
 {
    public static final String SECURITY_TOKEN = "securityToken";
-   
+
    public static final String GADGET_URL = "gadgetURL";
-   
-   public static final String MODULE_ID =  "moduleId";
-   
+
+   public static final String MODULE_ID = "moduleId";
+
    private String securityToken;
-   
+
    private String gadgetURL;
-   
+
    private Long moduleId;
-   
-  
-   
+
    public TokenResponse()
    {
    }
-   
+
    public TokenResponse(String securityToken, String gadgetURL, Long moduleId)
    {
       this.securityToken = securityToken;
       this.gadgetURL = gadgetURL;
       this.moduleId = moduleId;
    }
-   
+
    public String getSecurityToken()
    {
       return securityToken;
    }
-   
+
    public void setSecurityToken(String securityToken)
    {
       this.securityToken = securityToken;
    }
-   
+
    public String getGadgetURL()
    {
       return gadgetURL;
    }
-   
+
    public void setGadgetURL(String gadgetURL)
    {
       this.gadgetURL = gadgetURL;
    }
-   
+
    public void setModuleId(Long moduleId)
    {
       this.moduleId = moduleId;
    }
-   
+
    public Long getModuleId()
    {
       return moduleId;
    }
-   
-   
-   
+
    @Override
    public String toString()
    {
-      String json = "{\"" + GADGET_URL + "\":\"" + gadgetURL
-      + "\",\""+ SECURITY_TOKEN + "\":\"" + securityToken
-      + "\",\""+ MODULE_ID + "\":\"" + moduleId
-      + "\"}";
+      String json =
+         "{\"" + GADGET_URL + "\":\"" + gadgetURL + "\",\"" + SECURITY_TOKEN + "\":\"" + securityToken + "\",\""
+            + MODULE_ID + "\":\"" + moduleId + "\"}";
       return json;
    }
 }

@@ -31,42 +31,42 @@ public class Address
     * The country name component.
     */
    private String country;
-   
+
    /**
     * The full mailing address, formatted for display or use with a mailing label. This field MAY contain newlines.
     */
    private String formatted;
-   
+
    /**
     * Expresses the latitude of the location on a map.
     */
    private String latitude;
-   
+
    /**
     * The city or locality component.
     */
    private String locality;
-   
+
    /**
     * The longitude of the location on a map. 
     */
    private String longitude;
-   
+
    /**
     * The zipcode or postal code component.
     */
    private String zipcode;
-   
+
    /**
     * The state or region component.
     */
    private String region;
-   
+
    /**
     * The full street address component.
     */
    private String streetAddress;
-   
+
    /**
     * The address type or label. Examples include 'work', 'home'.
     */

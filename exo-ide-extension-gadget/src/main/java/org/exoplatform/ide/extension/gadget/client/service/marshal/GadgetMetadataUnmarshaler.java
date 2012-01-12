@@ -126,7 +126,7 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
 
       if (gm.containsKey(GadgetMetadata.URL))
          metadata.setUrl((gm.get(GadgetMetadata.URL).isString().stringValue()));
-      
+
       if (gm.containsKey(GadgetMetadata.IFRAME_URL))
          metadata.setIframeUrl((gm.get(GadgetMetadata.IFRAME_URL).isString().stringValue()));
 

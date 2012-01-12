@@ -33,43 +33,42 @@ public class Album
     * Description of the album.
     */
    private String description;
-   
+
    /**
     * Unique identifier for the album.
     */
    private String id;
-   
+
    /**
     * Location corresponding to the album.
     */
    private Address location;
-   
+
    /**
     * Number of items in the album.
     */
    private Integer mediaItemCount;
-   
+
    /**
     * Array of strings identifying the mime-types of media items in the Album.
     */
    private List<String> mediaMimeType;
-   
+
    /**
     * Array of MediaItem types, types are one of: audio, image, video.
     */
    private List<String> mediaType;
-   
+
    /**
     * ID of the owner of the album.
     */
    private String ownerId;
-   
-   
+
    /**
     * URL to a thumbnail cover of the album.
     */
    private String thumbnailUrl;
-   
+
    /**
     * The title of the album. 
     */

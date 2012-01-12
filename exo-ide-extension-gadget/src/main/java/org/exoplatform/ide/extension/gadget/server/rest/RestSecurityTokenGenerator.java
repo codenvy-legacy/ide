@@ -41,23 +41,22 @@ import javax.ws.rs.core.MediaType;
  * @version $Id: $
 */
 @Path("/ide/shindig/securitytoken")
-public class RestSecurityTokenGenerator 
+public class RestSecurityTokenGenerator
 {
    /**
      * Class logger.
      */
    private final Log log = ExoLogger.getLogger("rest.RestSecurityTokenGenerator");
-   
-   
+
    @POST
    @Path("/createToken")
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_JSON)
-   public TokenResponse createToken(TokenRequest tokenRequest)  
+   public TokenResponse createToken(TokenRequest tokenRequest)
    {
       try
       {
-         return SecurityTokenGenerator.createToken(tokenRequest,KeyCreator.getKeyFilePath());
+         return SecurityTokenGenerator.createToken(tokenRequest, KeyCreator.getKeyFilePath());
       }
       catch (IOException e)
       {
@@ -70,8 +69,8 @@ public class RestSecurityTokenGenerator
          if (log.isDebugEnabled())
             log.error(e.getMessage(), e);
          throw new WebApplicationException(e);
-      } 
-      
+      }
+
    }
-  
+
 }

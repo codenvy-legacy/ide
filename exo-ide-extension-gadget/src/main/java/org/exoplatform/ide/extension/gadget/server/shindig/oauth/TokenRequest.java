@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.gadget.server.shindig.oauth;
 
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
@@ -26,7 +25,7 @@ package org.exoplatform.ide.extension.gadget.server.shindig.oauth;
 */
 public class TokenRequest
 {
-   
+
    /**
     * 
     */
@@ -56,6 +55,7 @@ public class TokenRequest
     * 
     */
    public static final String DOMAIN = "domain";
+
    /**
     * 
     */
@@ -206,18 +206,16 @@ public class TokenRequest
    {
       this.domain = domain;
    }
-   
+
    @Override
-   public String toString() {
-      String json = "{\"" + GADGET_URL + "\":\"" + gadgetURL
-      + "\",\""+ OWNER + "\":\"" + owner
-      + "\",\""+ VIEWER + "\":\"" + viewer
-      + "\",\""+ MODULE_ID + "\":" + moduleId
-      + ",\""+ CONTAINER + "\":\"" + container
-      + "\",\""+ DOMAIN + "\":\"" + domain
-      + "\"}";
+   public String toString()
+   {
+      String json =
+         "{\"" + GADGET_URL + "\":\"" + gadgetURL + "\",\"" + OWNER + "\":\"" + owner + "\",\"" + VIEWER + "\":\""
+            + viewer + "\",\"" + MODULE_ID + "\":" + moduleId + ",\"" + CONTAINER + "\":\"" + container + "\",\""
+            + DOMAIN + "\":\"" + domain + "\"}";
       return json;
-      
+
    }
 
 }

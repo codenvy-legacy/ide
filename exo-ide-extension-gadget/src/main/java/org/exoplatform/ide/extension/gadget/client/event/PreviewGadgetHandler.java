@@ -25,9 +25,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: PreviewGadgetHandler Feb 17, 2011 11:23:33 AM evgen $
  *
  */
-public interface PreviewGadgetHandler extends EventHandler 
+public interface PreviewGadgetHandler extends EventHandler
 {
 
    void onPreviewGadget(PreviewGadgetEvent event);
-   
+
 }

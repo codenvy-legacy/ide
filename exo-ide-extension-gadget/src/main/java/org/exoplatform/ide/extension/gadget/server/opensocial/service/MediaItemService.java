@@ -52,7 +52,7 @@ public interface MediaItemService
     * @return {@link MediaItem} created media item
     */
    MediaItem createMediaItem(String userId, MediaItem mediaItem);
-   
+
    /**
     * Update media item.
     * 
@@ -61,7 +61,7 @@ public interface MediaItemService
     * @return {@link MediaItem} updated media item
     */
    MediaItem updateMediaItem(String userId, MediaItem mediaItem);
-   
+
    /**
     * Delete MediaItem.
     * 

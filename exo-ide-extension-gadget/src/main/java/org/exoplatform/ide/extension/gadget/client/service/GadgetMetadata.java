@@ -27,9 +27,9 @@ import com.google.gwt.json.client.JSONObject;
 */
 public class GadgetMetadata
 {
-   
-   private String source; 
-   
+
+   private String source;
+
    private JSONObject userPrefs;
 
    private String author;
@@ -61,7 +61,7 @@ public class GadgetMetadata
    private String authorLink;
 
    private String url;
-   
+
    private String iframeUrl;
 
    private boolean scaling;
@@ -81,9 +81,9 @@ public class GadgetMetadata
    private String authorPhoto;
 
    private boolean showInDirectory;
-   
+
    private String securityToken;
-   
+
    public static final String GADGETS = "gadgets";
 
    public static final String USER_PREFS = "userPrefs";
@@ -117,7 +117,7 @@ public class GadgetMetadata
    public static final String AUTHOR_LINK = "authorLink";
 
    public static final String URL = "url";
-   
+
    public static final String IFRAME_URL = "iframeUrl";
 
    public static final String SCALING = "scaling";
@@ -393,7 +393,6 @@ public class GadgetMetadata
    {
       this.url = url;
    }
-   
 
    /**
     * @return the iframeUrl
@@ -554,8 +553,7 @@ public class GadgetMetadata
    {
       this.showInDirectory = showInDirectory;
    }
-   
-   
+
    /**
     * @return the securityToken
     */
@@ -576,11 +574,10 @@ public class GadgetMetadata
    {
       return source;
    }
-   
+
    public void setSource(String source)
    {
       this.source = source;
    }
-   
 
 }

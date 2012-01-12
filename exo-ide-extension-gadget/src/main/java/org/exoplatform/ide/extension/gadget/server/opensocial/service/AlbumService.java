@@ -41,7 +41,7 @@ public interface AlbumService
     * @return
     */
    List<Album> getAlbums(String userId, String groupId, String appId, List<String> id);
-   
+
    /**
     * Create new album.
     * 
@@ -50,7 +50,7 @@ public interface AlbumService
     * @return {@link Album} created album
     */
    Album createAlbum(String userId, Album album);
-   
+
    /**
     * Update an Album.
     * 
@@ -59,7 +59,7 @@ public interface AlbumService
     * @return {@link Album} album
     */
    Album updateAlbum(String userId, Album album);
-   
+
    /**
     * Delete album.
     * 

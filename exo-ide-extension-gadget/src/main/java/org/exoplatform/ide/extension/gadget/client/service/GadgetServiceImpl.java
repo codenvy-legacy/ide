@@ -30,7 +30,6 @@ import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenResponse
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
@@ -47,7 +46,6 @@ public class GadgetServiceImpl extends GadgetService
 
    private String gadgetServer;
 
-
    public GadgetServiceImpl(HandlerManager eventBus, Loader loader, String restServiceContext, String gadgetServer,
       String publicContext)
    {
@@ -57,7 +55,7 @@ public class GadgetServiceImpl extends GadgetService
       this.gadgetServer = gadgetServer;
    }
 
-   public void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<GadgetMetadata>callback)
+   public void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<GadgetMetadata> callback)
    {
       String data =
          "{\"context\":{\"country\":\"" + "us" + "\",\"language\":\"" + "en" + "\"},\"gadgets\":[" + "{\"moduleId\":"
@@ -71,7 +69,7 @@ public class GadgetServiceImpl extends GadgetService
       callback.setPayload(unmarshaller);
 
       String url = gadgetServer + "metadata";
-      
+
       AsyncRequest.build(RequestBuilder.POST, url, loader).data(data).send(callback);
    }
 
@@ -81,7 +79,7 @@ public class GadgetServiceImpl extends GadgetService
       callback.setResult(tokenResponse);
       TokenResponseUnmarshal unmarshal = new TokenResponseUnmarshal(tokenResponse);
       TokenRequestMarshaler marshaler = new TokenRequestMarshaler(request);
-      
+
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshal);
 
