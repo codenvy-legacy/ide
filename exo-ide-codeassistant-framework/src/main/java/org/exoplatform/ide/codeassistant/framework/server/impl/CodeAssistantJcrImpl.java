@@ -106,21 +106,21 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       catch (RepositoryException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (JsonException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          throw new CodeAssistantException(500, e.getMessage());
       }
 
@@ -154,14 +154,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       catch (RepositoryException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
@@ -197,14 +197,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       catch (RepositoryException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
@@ -251,7 +251,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
@@ -304,14 +304,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       catch (RepositoryException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }

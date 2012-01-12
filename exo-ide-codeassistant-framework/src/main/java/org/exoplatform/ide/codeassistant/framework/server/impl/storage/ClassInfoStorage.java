@@ -123,12 +123,11 @@ public class ClassInfoStorage implements Startable
          {
             try
             {
-               if (jars != null && jars.size()>0)
-                addClassesOnStartUp(jars);
+               if (jars != null && jars.size() > 0)
+                  addClassesOnStartUp(jars);
             }
             catch (Throwable e)
             {
-               e.printStackTrace();
             }
          }
       };
@@ -201,15 +200,15 @@ public class ClassInfoStorage implements Startable
                   }
                   catch (Exception e)
                   {
-                     LOG.debug("Could not ad class " + fqn);
+                     LOG.debug("Could not add class " + fqn);
                      if (LOG.isDebugEnabled())
-                        e.printStackTrace();
+                        LOG.error(e);
                   }
                   catch (NoClassDefFoundError e)
                   {
                      LOG.debug(e.getMessage());
                      if (LOG.isDebugEnabled())
-                        e.printStackTrace();
+                        LOG.error(e);
                   }
                }
             }
@@ -219,35 +218,27 @@ public class ClassInfoStorage implements Startable
       }
       catch (RepositoryException e)
       {
-         e.printStackTrace();
-
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO: need think about status
          throw new SaveClassInfoException(500, e.getMessage());
       }
       catch (IOException e)
       {
-         e.printStackTrace();
-
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          throw new SaveClassInfoException(500, e.getMessage());
       }
       catch (IncompatibleClassChangeError e)
       {
-         e.printStackTrace();
-
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          throw new SaveClassInfoException(500, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
-         e.printStackTrace();
-
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          throw new SaveClassInfoException(500, e.getMessage());
       }
    }

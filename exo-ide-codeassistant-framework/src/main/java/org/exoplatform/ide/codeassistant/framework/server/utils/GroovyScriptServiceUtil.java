@@ -204,12 +204,10 @@ public class GroovyScriptServiceUtil
          }
          catch (RepositoryException e)
          {
-            e.printStackTrace();
             return null;
          }
          catch (RepositoryConfigurationException e)
          {
-            e.printStackTrace();
             return null;
          }
       }

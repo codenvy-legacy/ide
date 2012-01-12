@@ -105,12 +105,12 @@ public class DocStorage implements Startable
          {
             try
             {
-               if (jars != null && jars.size()>0)
-               addJavaDocsOnStartUp(jars);
+               if (jars != null && jars.size() > 0)
+                  addJavaDocsOnStartUp(jars);
             }
             catch (Exception e)
             {
-               e.printStackTrace();
+               LOG.error(e);
             }
          }
       };
@@ -204,14 +204,14 @@ public class DocStorage implements Startable
       catch (RepositoryException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new SaveDocException(400, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
          //TODO:need fix status code
          throw new SaveDocException(400, e.getMessage());
       }

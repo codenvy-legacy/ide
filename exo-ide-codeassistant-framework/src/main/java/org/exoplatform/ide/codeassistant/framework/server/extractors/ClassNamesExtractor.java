@@ -126,7 +126,6 @@ public class ClassNamesExtractor
                }
                
             } catch (Exception e) {
-               e.printStackTrace();
                LOG.error("Could not add class " + fqn);
             }
                         

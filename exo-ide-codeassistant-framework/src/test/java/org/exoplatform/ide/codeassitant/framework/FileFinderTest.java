@@ -45,11 +45,10 @@ public class FileFinderTest
       {
          FileFinder finder = new FileFinder(PATH);
          List<String> fileList = finder.getFileList();
-         assertEquals(2,fileList.size());
+         assertEquals(2, fileList.size());
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail(e.getMessage());
       }
    }
@@ -61,11 +60,10 @@ public class FileFinderTest
       {
          FileFinder finder = new FileFinder(WRONG_PATH);
          List<String> fileList = finder.getFileList();
-         assertEquals(0,fileList.size());
+         assertEquals(0, fileList.size());
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          fail(e.getMessage());
       }
    }

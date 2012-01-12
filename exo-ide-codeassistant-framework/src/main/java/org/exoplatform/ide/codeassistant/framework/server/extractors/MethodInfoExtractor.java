@@ -143,7 +143,6 @@ public class MethodInfoExtractor
          }
          catch (Throwable e)
          {
-            e.printStackTrace();
          }
       }
       return type.getName();

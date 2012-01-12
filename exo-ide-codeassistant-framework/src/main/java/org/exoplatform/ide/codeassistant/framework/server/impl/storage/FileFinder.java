@@ -84,7 +84,7 @@ public class FileFinder
       catch (Exception e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e);
       }
 
    }
@@ -112,7 +112,7 @@ public class FileFinder
          catch (Exception e)
          {
             if (LOG.isDebugEnabled())
-               e.printStackTrace();
+               LOG.error(e);
          }
       }
       else

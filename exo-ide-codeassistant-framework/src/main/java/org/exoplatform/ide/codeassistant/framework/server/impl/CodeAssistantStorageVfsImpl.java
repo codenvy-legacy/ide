@@ -91,25 +91,25 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
       catch (NotSupportedException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e.getMessage());
          throw new CodeAssistantException(500, e.getMessage());
       }
       catch (InvalidArgumentException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e.getMessage());
          throw new CodeAssistantException(500, e.getMessage());
       }
       catch (VirtualFileSystemException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e.getMessage());
          throw new CodeAssistantException(500, e.getMessage());
       }
       catch (JsonException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e.getMessage());
          throw new CodeAssistantException(500, e.getMessage());
       }
    }
@@ -138,19 +138,19 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
       catch (NotSupportedException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e.getMessage());
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (InvalidArgumentException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e.getMessage());
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (VirtualFileSystemException e)
       {
          if (LOG.isDebugEnabled())
-            e.printStackTrace();
+            LOG.error(e.getMessage());
          throw new CodeAssistantException(404, e.getMessage());
       }
 
