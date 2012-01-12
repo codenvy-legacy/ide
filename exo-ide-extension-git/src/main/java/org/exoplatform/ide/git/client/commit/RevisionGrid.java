@@ -88,14 +88,15 @@ public class RevisionGrid extends ListGrid<Revision>
    private void initColumns()
    {
       CellTable<Revision> cellTable = getCellTable();
-      
+
       dateColumn = new Column<Revision, String>(new TextCell())
       {
 
          @Override
          public String getValue(Revision revision)
          {
-            return DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(revision.getCommitTime()));
+            return DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(
+               new Date(revision.getCommitTime()));
          }
       };
 

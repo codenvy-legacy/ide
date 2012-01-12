@@ -33,7 +33,7 @@ public class ShowWorkTreeStatusEvent extends GwtEvent<ShowWorkTreeStatusHandler>
     *  Type used to register this event.
     */
    public static final GwtEvent.Type<ShowWorkTreeStatusHandler> TYPE = new GwtEvent.Type<ShowWorkTreeStatusHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

@@ -34,12 +34,12 @@ import org.exoplatform.ide.git.shared.RemoteAddRequest;
  */
 public class RemoteAddRequestMarshaller implements Marshallable, Constants
 {
-   
+
    /**
     * Add remote repository request.
     */
    private RemoteAddRequest remoteAddRequest;
-   
+
    /**
     * @param remoteAddRequest add remote repository request
     */
@@ -47,7 +47,7 @@ public class RemoteAddRequestMarshaller implements Marshallable, Constants
    {
       this.remoteAddRequest = remoteAddRequest;
    }
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */

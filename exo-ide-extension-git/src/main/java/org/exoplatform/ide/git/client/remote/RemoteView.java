@@ -89,7 +89,7 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.remotesViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      
+
       addButton.setButtonId(ADD_BUTTON_ID);
       deleteButton.setButtonId(DELETE_BUTTON_ID);
       closeButton.setButtonId(CLOSE_BUTTON_ID);

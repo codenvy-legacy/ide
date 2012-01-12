@@ -183,30 +183,31 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
     */
    public void getRemotes(final String projectId)
    {
-      GitClientService.getInstance().remoteList(vfs.getId(), projectId, null, true, new AsyncRequestCallback<List<Remote>>()
-      {
-         @Override
-         protected void onSuccess(List<Remote> result)
+      GitClientService.getInstance().remoteList(vfs.getId(), projectId, null, true,
+         new AsyncRequestCallback<List<Remote>>()
          {
-            if (display == null)
+            @Override
+            protected void onSuccess(List<Remote> result)
             {
-               Display d = GWT.create(Display.class);
-               IDE.getInstance().openView(d.asView());
-               bindDisplay(d);
+               if (display == null)
+               {
+                  Display d = GWT.create(Display.class);
+                  IDE.getInstance().openView(d.asView());
+                  bindDisplay(d);
+               }
+
+               display.getRemoteGrid().setValue(result);
+               display.enableDeleteButton(false);
             }
 
-            display.getRemoteGrid().setValue(result);
-            display.enableDeleteButton(false);
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteListFailed();
-            Dialogs.getInstance().showError(errorMessage);
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String errorMessage =
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteListFailed();
+               Dialogs.getInstance().showError(errorMessage);
+            }
+         });
    }
 
    /**

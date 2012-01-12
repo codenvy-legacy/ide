@@ -34,8 +34,7 @@ public class CommitEvent extends GwtEvent<CommitHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<CommitHandler> TYPE = new GwtEvent.Type<CommitHandler>();
-   
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

@@ -58,10 +58,10 @@ public class InitRepositoryView extends ViewImpl implements
 
    @UiField
    TextInput workdirField;
-   
+
    @UiField
    CheckBox bareField;
-   
+
    @UiField
    ImageButton initButton;
 

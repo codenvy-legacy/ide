@@ -83,7 +83,7 @@ public class CloneRepositoryView extends ViewImpl implements
       workdirField.setName(WORKDIR_FIELD_ID);
       remoteUriField.setName(REMOTE_URI_FIELD_ID);
       remoteNameField.setName(REMOTE_NAME_FIELD_ID);
-     
+
       cloneButton.setButtonId(CLONE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }

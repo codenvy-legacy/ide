@@ -37,7 +37,7 @@ public class CloneRequestMarshaller implements Marshallable, Constants
     * Clone repository request.
     */
    private CloneRequest cloneRequest;
-   
+
    /**
     * @param cloneRequest
     */
@@ -45,8 +45,7 @@ public class CloneRequestMarshaller implements Marshallable, Constants
    {
       this.cloneRequest = cloneRequest;
    }
-   
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */

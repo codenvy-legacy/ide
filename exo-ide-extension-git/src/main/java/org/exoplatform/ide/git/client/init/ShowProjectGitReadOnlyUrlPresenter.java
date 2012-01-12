@@ -87,7 +87,6 @@ public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements 
       });
    }
 
-
    @Override
    public void onShowGitUrl(ShowProjectGitReadOnlyUrlEvent event)
    {

@@ -58,20 +58,20 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
    /*Elements titles*/
    @UiField
    ImageButton addButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    CheckBox updateField;
-   
+
    @UiField
    Label messageField;
-   
+
    interface AddToIndexViewUiBinder extends UiBinder<Widget, AddToIndexView>
    {
    }
-   
+
    private static AddToIndexViewUiBinder uiBinder = GWT.create(AddToIndexViewUiBinder.class);
 
    public AddToIndexView()

@@ -86,7 +86,7 @@ public class BranchGrid extends ListGrid<Branch>
                {
                   if (branch.isActive())
                   {
-                     return branch.getDisplayName()  + "&nbsp;" +  new Image(GitClientBundle.INSTANCE.currentBranch());
+                     return branch.getDisplayName() + "&nbsp;" + new Image(GitClientBundle.INSTANCE.currentBranch());
                   }
                   else
                   {

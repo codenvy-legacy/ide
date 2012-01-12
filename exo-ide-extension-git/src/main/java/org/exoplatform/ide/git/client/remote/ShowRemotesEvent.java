@@ -34,7 +34,7 @@ public class ShowRemotesEvent extends GwtEvent<ShowRemotesHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<ShowRemotesHandler> TYPE = new GwtEvent.Type<ShowRemotesHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

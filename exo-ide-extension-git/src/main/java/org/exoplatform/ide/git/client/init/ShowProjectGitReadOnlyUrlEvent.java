@@ -33,8 +33,9 @@ public class ShowProjectGitReadOnlyUrlEvent extends GwtEvent<ShowProjectGitReadO
    /**
     * Type used to register this event.
     */
-   public static final GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler> TYPE = new GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler>();
-   
+   public static final GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler> TYPE =
+      new GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler>();
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

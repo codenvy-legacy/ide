@@ -130,29 +130,31 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
             display.enableMergeButton(false);
          }
 
-         GitClientService.getInstance().branchList(vfs.getId(), projectId, false, new AsyncRequestCallback<List<Branch>>()
-         {
-
-            @Override
-            protected void onSuccess(List<Branch> result)
+         GitClientService.getInstance().branchList(vfs.getId(), projectId, false,
+            new AsyncRequestCallback<List<Branch>>()
             {
-               if (result == null || result.size() == 0)
-                  return;
-               setReferences(result, true);
-            }
-         });
 
-         GitClientService.getInstance().branchList(vfs.getId(), projectId, true, new AsyncRequestCallback<List<Branch>>()
-         {
+               @Override
+               protected void onSuccess(List<Branch> result)
+               {
+                  if (result == null || result.size() == 0)
+                     return;
+                  setReferences(result, true);
+               }
+            });
 
-            @Override
-            protected void onSuccess(List<Branch> result)
+         GitClientService.getInstance().branchList(vfs.getId(), projectId, true,
+            new AsyncRequestCallback<List<Branch>>()
             {
-               if (result == null || result.size() == 0)
-                  return;
-               setReferences(result, false);
-            }
-         });
+
+               @Override
+               protected void onSuccess(List<Branch> result)
+               {
+                  if (result == null || result.size() == 0)
+                     return;
+                  setReferences(result, false);
+               }
+            });
       }
    }
 
@@ -205,18 +207,19 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
          return;
       }
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      
-      GitClientService.getInstance().merge(vfs.getId(), projectId, reference.getDisplayName(), new AsyncRequestCallback<MergeResult>()
-      {
 
-         @Override
-         protected void onSuccess(MergeResult result)
+      GitClientService.getInstance().merge(vfs.getId(), projectId, reference.getDisplayName(),
+         new AsyncRequestCallback<MergeResult>()
          {
-            IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
-            IDE.getInstance().closeView(display.asView().getId());
-            IDE.fireEvent(new RefreshBrowserEvent());
-         }
-      });
+
+            @Override
+            protected void onSuccess(MergeResult result)
+            {
+               IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
+               IDE.getInstance().closeView(display.asView().getId());
+               IDE.fireEvent(new RefreshBrowserEvent());
+            }
+         });
    }
 
    /**

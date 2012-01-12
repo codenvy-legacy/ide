@@ -46,14 +46,14 @@ public abstract class AddRemoteRepositoryPresenter
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getCancelButton();
-      
+
       /**
        * Get ok button's click handler.
        * 
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getOkButton();
-      
+
       /**
        * Change the enable state of the ok button.
        * 

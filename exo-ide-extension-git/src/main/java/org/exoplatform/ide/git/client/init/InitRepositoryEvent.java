@@ -30,12 +30,12 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class InitRepositoryEvent extends GwtEvent<InitRepositoryHandler>
 {
-   
+
    /**
     * Type used to register this event.
     */
    public static final GwtEvent.Type<InitRepositoryHandler> TYPE = new GwtEvent.Type<InitRepositoryHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

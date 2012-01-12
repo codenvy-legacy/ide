@@ -34,8 +34,7 @@ public class CloneRepositoryEvent extends GwtEvent<CloneRepositoryHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<CloneRepositoryHandler> TYPE = new GwtEvent.Type<CloneRepositoryHandler>();
-   
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

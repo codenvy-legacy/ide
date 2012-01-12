@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
  *
  */
 public class DeleteRepositoryEvent extends GwtEvent<DeleteRepositoryHandler>
-{  
+{
    /**
     * Type, used to register event.
     */

@@ -65,8 +65,7 @@ public class RemoteGrid extends ListGrid<Remote>
    private void initColumns()
    {
       CellTable<Remote> cellTable = getCellTable();
-      
-    
+
       nameColumn = new Column<Remote, String>(new TextCell())
       {
 

@@ -20,7 +20,6 @@ package org.exoplatform.ide.git.client.init;
 
 import com.google.gwt.event.shared.EventHandler;
 
-
 /**
  * Handler for {@link InitRepositoryEvent} event.
  * 

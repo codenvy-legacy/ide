@@ -62,7 +62,7 @@ import java.util.HashMap;
  */
 public class HistoryView extends ViewImpl implements HistoryPresenter.Display
 {
-   
+
    public static final String ID = "ideHistoryView";
 
    private Editor editor;
@@ -114,7 +114,7 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
 
    @UiField
    TableCellElement revisionBDate;
-   
+
    @UiField
    TableCellElement revisionATitle;
 
@@ -154,12 +154,9 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
    /**
     * Editor's producer.
     */
-   private EditorProducer editorProducer = new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff", null,
-      true,
-      new CodeMirrorConfiguration().
-         setGenericParsers("['parsediff.js']").
-         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']")
-   );
+   private EditorProducer editorProducer = new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff",
+      null, true, new CodeMirrorConfiguration().setGenericParsers("['parsediff.js']").setGenericStyles(
+         "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
 
    /**
     * UI binder for this view.
@@ -178,7 +175,7 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
 
       revisionADate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
       revisionATitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionTitle());
-      
+
       comitADate.setHeight("20px");
       comitARevision.setHeight("20px");
       comitBDate.setHeight("20px");

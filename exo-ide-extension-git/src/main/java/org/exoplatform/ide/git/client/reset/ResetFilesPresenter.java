@@ -172,7 +172,8 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMassage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
+            String errorMassage =
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
             IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
          }
       });
@@ -192,8 +193,8 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
          }
       }
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().reset(vfs.getId(), projectId, files.toArray(new String[files.size()]), "HEAD", null,
-         new AsyncRequestCallback<String>()
+      GitClientService.getInstance().reset(vfs.getId(), projectId, files.toArray(new String[files.size()]), "HEAD",
+         null, new AsyncRequestCallback<String>()
          {
 
             @Override

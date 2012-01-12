@@ -41,7 +41,7 @@ public class RemoteListUnmarshaller extends JSONUmarshaller
     * Remote repositories.
     */
    private List<Remote> remotes;
-  
+
    /**
     * @param remotes remote repositories
     */
@@ -62,7 +62,7 @@ public class RemoteListUnmarshaller extends JSONUmarshaller
       JSONArray array = new JSONArray(json);
       if (array == null || array.size() <= 0)
          return;
-      
+
       for (int i = 0; i < array.size(); i++)
       {
          JSONObject object = array.get(i).isObject();

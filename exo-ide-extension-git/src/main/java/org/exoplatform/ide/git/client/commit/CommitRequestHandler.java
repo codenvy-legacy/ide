@@ -33,7 +33,6 @@ import org.exoplatform.ide.git.client.GitExtension;
 public class CommitRequestHandler extends RequestStatusHandlerBase
 {
 
-   
    /**
     * @param projectName
     */

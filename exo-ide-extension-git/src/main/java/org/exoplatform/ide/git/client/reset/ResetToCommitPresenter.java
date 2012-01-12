@@ -174,7 +174,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
    private void getCommits()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      
+
       GitClientService.getInstance().log(vfs.getId(), projectId, false, new AsyncRequestCallback<LogResponse>()
       {
 
@@ -192,7 +192,8 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
+            String errorMessage =
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
             IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -208,22 +209,24 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
       type = (type == null && display.getSoftMode().getValue()) ? ResetType.SOFT : type;
       type = (type == null && display.getHardMode().getValue()) ? ResetType.HARD : type;
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type, new AsyncRequestCallback<String>()
-      {
-
-         @Override
-         protected void onSuccess(String result)
+      GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type,
+         new AsyncRequestCallback<String>()
          {
-            IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.INFO));
-            IDE.getInstance().closeView(display.asView().getId());
-         }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFail();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+            @Override
+            protected void onSuccess(String result)
+            {
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.INFO));
+               IDE.getInstance().closeView(display.asView().getId());
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String errorMessage =
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFail();
+               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            }
+         });
    }
 }

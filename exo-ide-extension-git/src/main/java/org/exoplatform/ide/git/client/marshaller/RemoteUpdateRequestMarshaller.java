@@ -56,7 +56,7 @@ public class RemoteUpdateRequestMarshaller implements Marshallable, Constants
       JSONObject jsonObject = new JSONObject();
       jsonObject.put(NAME, new JSONString(remoteUpdateRequest.getName()));
       //TODO
-      
+
       return jsonObject.toString();
    }
 

@@ -43,11 +43,11 @@ import org.exoplatform.ide.git.client.GitExtension;
 public class MergeView extends ViewImpl implements MergePresenter.Display
 {
    private static final String ID = "MergeView";
-   
+
    private static final String MERGE_BUTTON_ID = "MergeViewMergeButton";
-   
+
    private static final String CANCEL_BUTTON_ID = "MergeViewCancelButton";
-   
+
    private static final int WIDTH = 430;
 
    private static final int HEIGHT = 250;

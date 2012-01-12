@@ -30,12 +30,12 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class AddFilesEvent extends GwtEvent<AddFilesHandler>
 {
-   
+
    /**
     * Type used to register this event.
     */
    public static final GwtEvent.Type<AddFilesHandler> TYPE = new GwtEvent.Type<AddFilesHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

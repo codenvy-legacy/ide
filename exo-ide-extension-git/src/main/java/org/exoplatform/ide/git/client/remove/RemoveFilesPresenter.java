@@ -172,7 +172,8 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMassage = (exception.getMessage() != null) ? exception.getMessage() :GitExtension.MESSAGES.statusFailed();
+            String errorMassage =
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
             IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
          }
       });

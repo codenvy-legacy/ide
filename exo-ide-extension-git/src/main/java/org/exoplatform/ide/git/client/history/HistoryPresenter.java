@@ -381,8 +381,8 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
    protected void doDiffWithNotCommited(String[] filePatterns, final Revision revision, final boolean isCached)
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0, revision.getId(), isCached,
-         new AsyncRequestCallback<DiffResponse>()
+      GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,
+         revision.getId(), isCached, new AsyncRequestCallback<DiffResponse>()
          {
 
             @Override
@@ -420,8 +420,8 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
       {
          final Revision revisionB = revisions.get(index + 1);
          String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0, revision.getId(),
-            revisionB.getId(), new AsyncRequestCallback<DiffResponse>()
+         GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,
+            revision.getId(), revisionB.getId(), new AsyncRequestCallback<DiffResponse>()
             {
 
                @Override

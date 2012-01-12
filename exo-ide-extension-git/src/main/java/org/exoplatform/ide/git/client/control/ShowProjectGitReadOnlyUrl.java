@@ -36,7 +36,8 @@ public class ShowProjectGitReadOnlyUrl extends GitControl
       super(GitExtension.MESSAGES.projectReadOnlyGitUrlId());
       setTitle(GitExtension.MESSAGES.projectReadOnlyGitUrlTitle());
       setPrompt(GitExtension.MESSAGES.projectReadOnlyGitUrlPrompt());
-      setImages(GitClientBundle.INSTANCE.projectReadOnlyGitUrl(), GitClientBundle.INSTANCE.projectReadOnlyGitUrlDisabled());
+      setImages(GitClientBundle.INSTANCE.projectReadOnlyGitUrl(),
+         GitClientBundle.INSTANCE.projectReadOnlyGitUrlDisabled());
       setEvent(new ShowProjectGitReadOnlyUrlEvent());
    }
 }

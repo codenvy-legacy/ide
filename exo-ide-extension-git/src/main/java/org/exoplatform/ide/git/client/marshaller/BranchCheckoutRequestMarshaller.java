@@ -40,7 +40,7 @@ public class BranchCheckoutRequestMarshaller implements Marshallable, Constants
     * Branch checkout request.
     */
    private BranchCheckoutRequest branchCheckoutRequest;
-   
+
    /**
     * @param branchCheckoutRequest branch checkout request
     */
@@ -48,23 +48,23 @@ public class BranchCheckoutRequestMarshaller implements Marshallable, Constants
    {
       this.branchCheckoutRequest = branchCheckoutRequest;
    }
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
     */
    @Override
    public String marshal()
-   {  
+   {
       JSONObject jsonObject = new JSONObject();
       jsonObject.put(NAME, new JSONString(branchCheckoutRequest.getName()));
-      
+
       if (branchCheckoutRequest.getStartPoint() != null)
       {
          jsonObject.put(START_POINT, new JSONString(branchCheckoutRequest.getStartPoint()));
       }
-      
+
       jsonObject.put(CREATE_NEW, JSONBoolean.getInstance(branchCheckoutRequest.isCreateNew()));
-      
+
       return jsonObject.toString();
    }
 
