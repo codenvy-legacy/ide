@@ -51,135 +51,135 @@ public class ArrayReference extends Reference
       return this.position.analyseCode(currentScope, flowContext, flowInfo);
    }
 
-//   public void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
-//      boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//      this.receiver.generateCode(currentScope, codeStream, true);
-//      if (this.receiver instanceof CastExpression // ((type[])null)[0]
-//         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
-//      {
-//         codeStream.checkcast(this.receiver.resolvedType);
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//      this.position.generateCode(currentScope, codeStream, true);
-//      assignment.expression.generateCode(currentScope, codeStream, true);
-//      codeStream.arrayAtPut(this.resolvedType.id, valueRequired);
-//      if (valueRequired)
-//      {
-//         codeStream.generateImplicitConversion(assignment.implicitConversion);
-//      }
-//   }
-//
-//   /**
-//    * Code generation for a array reference
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//      this.receiver.generateCode(currentScope, codeStream, true);
-//      if (this.receiver instanceof CastExpression // ((type[])null)[0]
-//         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
-//      {
-//         codeStream.checkcast(this.receiver.resolvedType);
-//      }
-//      this.position.generateCode(currentScope, codeStream, true);
-//      codeStream.arrayAt(this.resolvedType.id);
-//      // Generating code for the potential runtime type checking
-//      if (valueRequired)
-//      {
-//         codeStream.generateImplicitConversion(this.implicitConversion);
-//      }
-//      else
-//      {
-//         boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
-//         // conversion only generated if unboxing
-//         if (isUnboxing)
-//            codeStream.generateImplicitConversion(this.implicitConversion);
-//         switch (isUnboxing ? postConversionType(currentScope).id : this.resolvedType.id)
-//         {
-//            case T_long :
-//            case T_double :
-//               codeStream.pop2();
-//               break;
-//            default :
-//               codeStream.pop();
-//         }
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
-//
-//   public void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream, Expression expression,
-//      int operator, int assignmentImplicitConversion, boolean valueRequired)
-//   {
-//      this.receiver.generateCode(currentScope, codeStream, true);
-//      if (this.receiver instanceof CastExpression // ((type[])null)[0]
-//         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
-//      {
-//         codeStream.checkcast(this.receiver.resolvedType);
-//      }
-//      this.position.generateCode(currentScope, codeStream, true);
-//      codeStream.dup2();
-//      codeStream.arrayAt(this.resolvedType.id);
-//      int operationTypeID;
-//      switch (operationTypeID = (this.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4)
-//      {
-//         case T_JavaLangString :
-//         case T_JavaLangObject :
-//         case T_undefined :
-//            codeStream.generateStringConcatenationAppend(currentScope, null, expression);
-//            break;
-//         default :
-//            // promote the array reference to the suitable operation type
-//            codeStream.generateImplicitConversion(this.implicitConversion);
-//            // generate the increment value (will by itself  be promoted to the operation value)
-//            if (expression == IntLiteral.One)
-//            { // prefix operation
-//               codeStream.generateConstant(expression.constant, this.implicitConversion);
-//            }
-//            else
-//            {
-//               expression.generateCode(currentScope, codeStream, true);
-//            }
-//            // perform the operation
-//            codeStream.sendOperator(operator, operationTypeID);
-//            // cast the value back to the array reference type
-//            codeStream.generateImplicitConversion(assignmentImplicitConversion);
-//      }
-//      codeStream.arrayAtPut(this.resolvedType.id, valueRequired);
-//   }
-//
-//   public void generatePostIncrement(BlockScope currentScope, CodeStream codeStream, CompoundAssignment postIncrement,
-//      boolean valueRequired)
-//   {
-//      this.receiver.generateCode(currentScope, codeStream, true);
-//      if (this.receiver instanceof CastExpression // ((type[])null)[0]
-//         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
-//      {
-//         codeStream.checkcast(this.receiver.resolvedType);
-//      }
-//      this.position.generateCode(currentScope, codeStream, true);
-//      codeStream.dup2();
-//      codeStream.arrayAt(this.resolvedType.id);
-//      if (valueRequired)
-//      {
-//         switch (this.resolvedType.id)
-//         {
-//            case TypeIds.T_long :
-//            case TypeIds.T_double :
-//               codeStream.dup2_x2();
-//               break;
-//            default :
-//               codeStream.dup_x2();
-//               break;
-//         }
-//      }
-//      codeStream.generateImplicitConversion(this.implicitConversion);
-//      codeStream.generateConstant(postIncrement.expression.constant, this.implicitConversion);
-//      codeStream.sendOperator(postIncrement.operator, this.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
-//      codeStream.generateImplicitConversion(postIncrement.preAssignImplicitConversion);
-//      codeStream.arrayAtPut(this.resolvedType.id, false);
-//   }
+   //   public void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
+   //      boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //      this.receiver.generateCode(currentScope, codeStream, true);
+   //      if (this.receiver instanceof CastExpression // ((type[])null)[0]
+   //         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
+   //      {
+   //         codeStream.checkcast(this.receiver.resolvedType);
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //      this.position.generateCode(currentScope, codeStream, true);
+   //      assignment.expression.generateCode(currentScope, codeStream, true);
+   //      codeStream.arrayAtPut(this.resolvedType.id, valueRequired);
+   //      if (valueRequired)
+   //      {
+   //         codeStream.generateImplicitConversion(assignment.implicitConversion);
+   //      }
+   //   }
+   //
+   //   /**
+   //    * Code generation for a array reference
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //      this.receiver.generateCode(currentScope, codeStream, true);
+   //      if (this.receiver instanceof CastExpression // ((type[])null)[0]
+   //         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
+   //      {
+   //         codeStream.checkcast(this.receiver.resolvedType);
+   //      }
+   //      this.position.generateCode(currentScope, codeStream, true);
+   //      codeStream.arrayAt(this.resolvedType.id);
+   //      // Generating code for the potential runtime type checking
+   //      if (valueRequired)
+   //      {
+   //         codeStream.generateImplicitConversion(this.implicitConversion);
+   //      }
+   //      else
+   //      {
+   //         boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
+   //         // conversion only generated if unboxing
+   //         if (isUnboxing)
+   //            codeStream.generateImplicitConversion(this.implicitConversion);
+   //         switch (isUnboxing ? postConversionType(currentScope).id : this.resolvedType.id)
+   //         {
+   //            case T_long :
+   //            case T_double :
+   //               codeStream.pop2();
+   //               break;
+   //            default :
+   //               codeStream.pop();
+   //         }
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
+   //
+   //   public void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream, Expression expression,
+   //      int operator, int assignmentImplicitConversion, boolean valueRequired)
+   //   {
+   //      this.receiver.generateCode(currentScope, codeStream, true);
+   //      if (this.receiver instanceof CastExpression // ((type[])null)[0]
+   //         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
+   //      {
+   //         codeStream.checkcast(this.receiver.resolvedType);
+   //      }
+   //      this.position.generateCode(currentScope, codeStream, true);
+   //      codeStream.dup2();
+   //      codeStream.arrayAt(this.resolvedType.id);
+   //      int operationTypeID;
+   //      switch (operationTypeID = (this.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4)
+   //      {
+   //         case T_JavaLangString :
+   //         case T_JavaLangObject :
+   //         case T_undefined :
+   //            codeStream.generateStringConcatenationAppend(currentScope, null, expression);
+   //            break;
+   //         default :
+   //            // promote the array reference to the suitable operation type
+   //            codeStream.generateImplicitConversion(this.implicitConversion);
+   //            // generate the increment value (will by itself  be promoted to the operation value)
+   //            if (expression == IntLiteral.One)
+   //            { // prefix operation
+   //               codeStream.generateConstant(expression.constant, this.implicitConversion);
+   //            }
+   //            else
+   //            {
+   //               expression.generateCode(currentScope, codeStream, true);
+   //            }
+   //            // perform the operation
+   //            codeStream.sendOperator(operator, operationTypeID);
+   //            // cast the value back to the array reference type
+   //            codeStream.generateImplicitConversion(assignmentImplicitConversion);
+   //      }
+   //      codeStream.arrayAtPut(this.resolvedType.id, valueRequired);
+   //   }
+   //
+   //   public void generatePostIncrement(BlockScope currentScope, CodeStream codeStream, CompoundAssignment postIncrement,
+   //      boolean valueRequired)
+   //   {
+   //      this.receiver.generateCode(currentScope, codeStream, true);
+   //      if (this.receiver instanceof CastExpression // ((type[])null)[0]
+   //         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
+   //      {
+   //         codeStream.checkcast(this.receiver.resolvedType);
+   //      }
+   //      this.position.generateCode(currentScope, codeStream, true);
+   //      codeStream.dup2();
+   //      codeStream.arrayAt(this.resolvedType.id);
+   //      if (valueRequired)
+   //      {
+   //         switch (this.resolvedType.id)
+   //         {
+   //            case TypeIds.T_long :
+   //            case TypeIds.T_double :
+   //               codeStream.dup2_x2();
+   //               break;
+   //            default :
+   //               codeStream.dup_x2();
+   //               break;
+   //         }
+   //      }
+   //      codeStream.generateImplicitConversion(this.implicitConversion);
+   //      codeStream.generateConstant(postIncrement.expression.constant, this.implicitConversion);
+   //      codeStream.sendOperator(postIncrement.operator, this.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
+   //      codeStream.generateImplicitConversion(postIncrement.preAssignImplicitConversion);
+   //      codeStream.arrayAtPut(this.resolvedType.id, false);
+   //   }
 
    public int nullStatus(FlowInfo flowInfo)
    {

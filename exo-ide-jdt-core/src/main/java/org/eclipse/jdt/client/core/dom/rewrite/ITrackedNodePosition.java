@@ -21,23 +21,23 @@ package org.eclipse.jdt.client.core.dom.rewrite;
  * @since 3.0
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface ITrackedNodePosition {
+public interface ITrackedNodePosition
+{
 
-	/**
-	 * Returns the original or modified start position of the tracked node depending if called before
-	 * or after the rewrite is applied. <code>-1</code> is returned for removed nodes.
-	 *
-	 * @return the original or modified start position of the tracked node
-	 */
-	public int getStartPosition();
+   /**
+    * Returns the original or modified start position of the tracked node depending if called before
+    * or after the rewrite is applied. <code>-1</code> is returned for removed nodes.
+    *
+    * @return the original or modified start position of the tracked node
+    */
+   public int getStartPosition();
 
-	/**
-	 * Returns the original or modified length of the tracked node depending if called before
-	 * or after the rewrite is applied. <code>-1</code> is returned for removed nodes.
-	 *
-	 * @return the original or modified length of the tracked node
-	 */
-	public int getLength();
-
+   /**
+    * Returns the original or modified length of the tracked node depending if called before
+    * or after the rewrite is applied. <code>-1</code> is returned for removed nodes.
+    *
+    * @return the original or modified length of the tracked node
+    */
+   public int getLength();
 
 }

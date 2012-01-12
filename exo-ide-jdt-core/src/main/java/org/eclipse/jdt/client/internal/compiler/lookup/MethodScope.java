@@ -304,70 +304,70 @@ public class MethodScope extends BlockScope
       }
    }
 
-//   /**
-//    * Compute variable positions in scopes given an initial position offset
-//    * ignoring unused local variables.
-//    *
-//    * Deal with arguments here, locals and subscopes are processed in BlockScope method
-//    */
-//   public void computeLocalVariablePositions(int initOffset, CodeStream codeStream)
-//   {
-//      this.offset = initOffset;
-//      this.maxOffset = initOffset;
-//
-//      // manage arguments
-//      int ilocal = 0, maxLocals = this.localIndex;
-//      while (ilocal < maxLocals)
-//      {
-//         LocalVariableBinding local = this.locals[ilocal];
-//         if (local == null || ((local.tagBits & TagBits.IsArgument) == 0))
-//            break; // done with arguments
-//
-//         // record user-defined argument for attribute generation
-//         codeStream.record(local);
-//
-//         // assign variable position
-//         local.resolvedPosition = this.offset;
-//
-//         if ((local.type == TypeBinding.LONG) || (local.type == TypeBinding.DOUBLE))
-//         {
-//            this.offset += 2;
-//         }
-//         else
-//         {
-//            this.offset++;
-//         }
-//         // check for too many arguments/local variables
-//         if (this.offset > 0xFF)
-//         { // no more than 255 words of arguments
-//            problemReporter().noMoreAvailableSpaceForArgument(local, local.declaration);
-//         }
-//         ilocal++;
-//      }
-//
-//      // sneak in extra argument before other local variables
-//      if (this.extraSyntheticArguments != null)
-//      {
-//         for (int iarg = 0, maxArguments = this.extraSyntheticArguments.length; iarg < maxArguments; iarg++)
-//         {
-//            SyntheticArgumentBinding argument = this.extraSyntheticArguments[iarg];
-//            argument.resolvedPosition = this.offset;
-//            if ((argument.type == TypeBinding.LONG) || (argument.type == TypeBinding.DOUBLE))
-//            {
-//               this.offset += 2;
-//            }
-//            else
-//            {
-//               this.offset++;
-//            }
-//            if (this.offset > 0xFF)
-//            { // no more than 255 words of arguments
-//               problemReporter().noMoreAvailableSpaceForArgument(argument, (ASTNode)this.referenceContext);
-//            }
-//         }
-//      }
-//      this.computeLocalVariablePositions(ilocal, this.offset, codeStream);
-//   }
+   //   /**
+   //    * Compute variable positions in scopes given an initial position offset
+   //    * ignoring unused local variables.
+   //    *
+   //    * Deal with arguments here, locals and subscopes are processed in BlockScope method
+   //    */
+   //   public void computeLocalVariablePositions(int initOffset, CodeStream codeStream)
+   //   {
+   //      this.offset = initOffset;
+   //      this.maxOffset = initOffset;
+   //
+   //      // manage arguments
+   //      int ilocal = 0, maxLocals = this.localIndex;
+   //      while (ilocal < maxLocals)
+   //      {
+   //         LocalVariableBinding local = this.locals[ilocal];
+   //         if (local == null || ((local.tagBits & TagBits.IsArgument) == 0))
+   //            break; // done with arguments
+   //
+   //         // record user-defined argument for attribute generation
+   //         codeStream.record(local);
+   //
+   //         // assign variable position
+   //         local.resolvedPosition = this.offset;
+   //
+   //         if ((local.type == TypeBinding.LONG) || (local.type == TypeBinding.DOUBLE))
+   //         {
+   //            this.offset += 2;
+   //         }
+   //         else
+   //         {
+   //            this.offset++;
+   //         }
+   //         // check for too many arguments/local variables
+   //         if (this.offset > 0xFF)
+   //         { // no more than 255 words of arguments
+   //            problemReporter().noMoreAvailableSpaceForArgument(local, local.declaration);
+   //         }
+   //         ilocal++;
+   //      }
+   //
+   //      // sneak in extra argument before other local variables
+   //      if (this.extraSyntheticArguments != null)
+   //      {
+   //         for (int iarg = 0, maxArguments = this.extraSyntheticArguments.length; iarg < maxArguments; iarg++)
+   //         {
+   //            SyntheticArgumentBinding argument = this.extraSyntheticArguments[iarg];
+   //            argument.resolvedPosition = this.offset;
+   //            if ((argument.type == TypeBinding.LONG) || (argument.type == TypeBinding.DOUBLE))
+   //            {
+   //               this.offset += 2;
+   //            }
+   //            else
+   //            {
+   //               this.offset++;
+   //            }
+   //            if (this.offset > 0xFF)
+   //            { // no more than 255 words of arguments
+   //               problemReporter().noMoreAvailableSpaceForArgument(argument, (ASTNode)this.referenceContext);
+   //            }
+   //         }
+   //      }
+   //      this.computeLocalVariablePositions(ilocal, this.offset, codeStream);
+   //   }
 
    /**
     * Error management:

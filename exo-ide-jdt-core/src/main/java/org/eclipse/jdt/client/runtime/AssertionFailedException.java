@@ -23,19 +23,21 @@ package org.eclipse.jdt.client.runtime;
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
-public class AssertionFailedException extends RuntimeException {
+public class AssertionFailedException extends RuntimeException
+{
 
-	/**
-	 * All serializable objects should have a stable serialVersionUID
-	 */
-	private static final long serialVersionUID = 1L;
+   /**
+    * All serializable objects should have a stable serialVersionUID
+    */
+   private static final long serialVersionUID = 1L;
 
-	/** 
-	 * Constructs a new exception with the given message.
-	 * 
-	 * @param detail the message
-	 */
-	public AssertionFailedException(String detail) {
-		super(detail);
-	}
+   /** 
+    * Constructs a new exception with the given message.
+    * 
+    * @param detail the message
+    */
+   public AssertionFailedException(String detail)
+   {
+      super(detail);
+   }
 }

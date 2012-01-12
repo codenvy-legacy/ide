@@ -19,39 +19,49 @@ import org.eclipse.jdt.client.core.dom.IMethodBinding;
 /**
  * Member value pair which compose of default values.
  */
-class DefaultValuePairBinding extends MemberValuePairBinding {
+class DefaultValuePairBinding extends MemberValuePairBinding
+{
 
-	private org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding method;
+   private org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding method;
 
-	DefaultValuePairBinding(org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding binding, BindingResolver resolver) {
-		super(null, resolver);
-		this.method = binding;
-		this.value = MemberValuePairBinding.buildDOMValue(binding.getDefaultValue(), resolver);
-		if (binding.returnType != null && binding.returnType.isArrayType()) {
-			if (!this.value.getClass().isArray()) {
-				// wrap into an array
-				this.value = new Object[] { this.value };
-			}
-		}
-	}
+   DefaultValuePairBinding(org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding binding,
+      BindingResolver resolver)
+   {
+      super(null, resolver);
+      this.method = binding;
+      this.value = MemberValuePairBinding.buildDOMValue(binding.getDefaultValue(), resolver);
+      if (binding.returnType != null && binding.returnType.isArrayType())
+      {
+         if (!this.value.getClass().isArray())
+         {
+            // wrap into an array
+            this.value = new Object[]{this.value};
+         }
+      }
+   }
 
-	public IMethodBinding getMethodBinding() {
-		return this.bindingResolver.getMethodBinding(this.method);
-	}
+   public IMethodBinding getMethodBinding()
+   {
+      return this.bindingResolver.getMethodBinding(this.method);
+   }
 
-	public String getName() {
-		return new String(this.method.selector);
-	}
+   public String getName()
+   {
+      return new String(this.method.selector);
+   }
 
-	public Object getValue() {
-		return this.value;
-	}
+   public Object getValue()
+   {
+      return this.value;
+   }
 
-	public boolean isDefault() {
-		return true;
-	}
+   public boolean isDefault()
+   {
+      return true;
+   }
 
-	public boolean isDeprecated() {
-		return this.method.isDeprecated();
-	}
+   public boolean isDeprecated()
+   {
+      return this.method.isDeprecated();
+   }
 }

@@ -5081,7 +5081,7 @@ public class ProblemReporter extends ProblemHandler
       }
       else
       { // default
-         //22 = No enclosing instance of the type {0} is accessible in scope
+        //22 = No enclosing instance of the type {0} is accessible in scope
          id = IProblem.IncorrectEnclosingInstanceReference;
       }
 

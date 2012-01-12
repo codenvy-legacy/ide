@@ -16,34 +16,39 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
+public class JavadocArrayQualifiedTypeReference extends ArrayQualifiedTypeReference
+{
 
+   public int tagSourceStart, tagSourceEnd;
 
-public class JavadocArrayQualifiedTypeReference extends ArrayQualifiedTypeReference {
+   public JavadocArrayQualifiedTypeReference(JavadocQualifiedTypeReference typeRef, int dim)
+   {
+      super(typeRef.tokens, dim, typeRef.sourcePositions);
+   }
 
-	public int tagSourceStart, tagSourceEnd;
+   protected void reportInvalidType(Scope scope)
+   {
+      scope.problemReporter().javadocInvalidType(this, this.resolvedType, scope.getDeclarationModifiers());
+   }
 
-	public JavadocArrayQualifiedTypeReference(JavadocQualifiedTypeReference typeRef, int dim) {
-		super(typeRef.tokens, dim, typeRef.sourcePositions);
-	}
+   protected void reportDeprecatedType(TypeBinding type, Scope scope)
+   {
+      scope.problemReporter().javadocDeprecatedType(type, this, scope.getDeclarationModifiers());
+   }
 
-	protected void reportInvalidType(Scope scope) {
-		scope.problemReporter().javadocInvalidType(this, this.resolvedType, scope.getDeclarationModifiers());
-	}
-	protected void reportDeprecatedType(TypeBinding type, Scope scope) {
-		scope.problemReporter().javadocDeprecatedType(type, this, scope.getDeclarationModifiers());
-	}
+   /* (non-Javadoc)
+    * Redefine to capture javadoc specific signatures
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    */
+   public void traverse(ASTVisitor visitor, BlockScope scope)
+   {
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
 
-	/* (non-Javadoc)
-	 * Redefine to capture javadoc specific signatures
-	 * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
-	 */
-	public void traverse(ASTVisitor visitor, BlockScope scope) {
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
-
-	public void traverse(ASTVisitor visitor, ClassScope scope) {
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
+   public void traverse(ASTVisitor visitor, ClassScope scope)
+   {
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
 }

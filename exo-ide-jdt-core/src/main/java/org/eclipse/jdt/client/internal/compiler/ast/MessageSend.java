@@ -157,100 +157,100 @@ public class MessageSend extends Expression implements InvocationSite
       super.computeConversion(scope, runtimeTimeType, compileTimeType);
    }
 
-//   /**
-//    * MessageSend code generation
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    * @param valueRequired boolean
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//      // generate receiver/enclosing instance access
-//      MethodBinding codegenBinding =
-//         this.binding instanceof PolymorphicMethodBinding ? this.binding : this.binding.original();
-//      boolean isStatic = codegenBinding.isStatic();
-//      if (isStatic)
-//      {
-//         this.receiver.generateCode(currentScope, codeStream, false);
-//      }
-//      else if ((this.bits & ASTNode.DepthMASK) != 0 && this.receiver.isImplicitThis())
-//      { // outer access ?
-//         // outer method can be reached through emulation if implicit access
-//         ReferenceBinding targetType =
-//            currentScope.enclosingSourceType().enclosingTypeAt((this.bits & ASTNode.DepthMASK) >> ASTNode.DepthSHIFT);
-//         Object[] path =
-//            currentScope.getEmulationPath(targetType, true /*only exact match*/, false/*consider enclosing arg*/);
-//         codeStream.generateOuterAccess(path, this, targetType, currentScope);
-//      }
-//      else
-//      {
-//         this.receiver.generateCode(currentScope, codeStream, true);
-//         if ((this.bits & NeedReceiverGenericCast) != 0)
-//         {
-//            codeStream.checkcast(this.actualReceiverType);
-//         }
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//      // generate arguments
-//      generateArguments(this.binding, this.arguments, currentScope, codeStream);
-//      pc = codeStream.position;
-//      // actual message invocation
-//      if (this.syntheticAccessor == null)
-//      {
-//         TypeBinding constantPoolDeclaringClass =
-//            CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
-//               this.receiver.isImplicitThis());
-//         if (isStatic)
-//         {
-//            codeStream.invoke(Opcodes.OPC_invokestatic, codegenBinding, constantPoolDeclaringClass);
-//         }
-//         else if ((this.receiver.isSuper()) || codegenBinding.isPrivate())
-//         {
-//            codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, constantPoolDeclaringClass);
-//         }
-//         else if (constantPoolDeclaringClass.isInterface())
-//         { // interface or annotation type
-//            codeStream.invoke(Opcodes.OPC_invokeinterface, codegenBinding, constantPoolDeclaringClass);
-//         }
-//         else
-//         {
-//            codeStream.invoke(Opcodes.OPC_invokevirtual, codegenBinding, constantPoolDeclaringClass);
-//         }
-//      }
-//      else
-//      {
-//         codeStream.invoke(Opcodes.OPC_invokestatic, this.syntheticAccessor, null /* default declaringClass */);
-//      }
-//      // required cast must occur even if no value is required
-//      if (this.valueCast != null)
-//         codeStream.checkcast(this.valueCast);
-//      if (valueRequired)
-//      {
-//         // implicit conversion if necessary
-//         codeStream.generateImplicitConversion(this.implicitConversion);
-//      }
-//      else
-//      {
-//         boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
-//         // conversion only generated if unboxing
-//         if (isUnboxing)
-//            codeStream.generateImplicitConversion(this.implicitConversion);
-//         switch (isUnboxing ? postConversionType(currentScope).id : codegenBinding.returnType.id)
-//         {
-//            case T_long :
-//            case T_double :
-//               codeStream.pop2();
-//               break;
-//            case T_void :
-//               break;
-//            default :
-//               codeStream.pop();
-//         }
-//      }
-//      codeStream.recordPositionsFrom(pc, (int)(this.nameSourcePosition >>> 32)); // highlight selector
-//   }
+   //   /**
+   //    * MessageSend code generation
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    * @param valueRequired boolean
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //      // generate receiver/enclosing instance access
+   //      MethodBinding codegenBinding =
+   //         this.binding instanceof PolymorphicMethodBinding ? this.binding : this.binding.original();
+   //      boolean isStatic = codegenBinding.isStatic();
+   //      if (isStatic)
+   //      {
+   //         this.receiver.generateCode(currentScope, codeStream, false);
+   //      }
+   //      else if ((this.bits & ASTNode.DepthMASK) != 0 && this.receiver.isImplicitThis())
+   //      { // outer access ?
+   //         // outer method can be reached through emulation if implicit access
+   //         ReferenceBinding targetType =
+   //            currentScope.enclosingSourceType().enclosingTypeAt((this.bits & ASTNode.DepthMASK) >> ASTNode.DepthSHIFT);
+   //         Object[] path =
+   //            currentScope.getEmulationPath(targetType, true /*only exact match*/, false/*consider enclosing arg*/);
+   //         codeStream.generateOuterAccess(path, this, targetType, currentScope);
+   //      }
+   //      else
+   //      {
+   //         this.receiver.generateCode(currentScope, codeStream, true);
+   //         if ((this.bits & NeedReceiverGenericCast) != 0)
+   //         {
+   //            codeStream.checkcast(this.actualReceiverType);
+   //         }
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //      // generate arguments
+   //      generateArguments(this.binding, this.arguments, currentScope, codeStream);
+   //      pc = codeStream.position;
+   //      // actual message invocation
+   //      if (this.syntheticAccessor == null)
+   //      {
+   //         TypeBinding constantPoolDeclaringClass =
+   //            CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
+   //               this.receiver.isImplicitThis());
+   //         if (isStatic)
+   //         {
+   //            codeStream.invoke(Opcodes.OPC_invokestatic, codegenBinding, constantPoolDeclaringClass);
+   //         }
+   //         else if ((this.receiver.isSuper()) || codegenBinding.isPrivate())
+   //         {
+   //            codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, constantPoolDeclaringClass);
+   //         }
+   //         else if (constantPoolDeclaringClass.isInterface())
+   //         { // interface or annotation type
+   //            codeStream.invoke(Opcodes.OPC_invokeinterface, codegenBinding, constantPoolDeclaringClass);
+   //         }
+   //         else
+   //         {
+   //            codeStream.invoke(Opcodes.OPC_invokevirtual, codegenBinding, constantPoolDeclaringClass);
+   //         }
+   //      }
+   //      else
+   //      {
+   //         codeStream.invoke(Opcodes.OPC_invokestatic, this.syntheticAccessor, null /* default declaringClass */);
+   //      }
+   //      // required cast must occur even if no value is required
+   //      if (this.valueCast != null)
+   //         codeStream.checkcast(this.valueCast);
+   //      if (valueRequired)
+   //      {
+   //         // implicit conversion if necessary
+   //         codeStream.generateImplicitConversion(this.implicitConversion);
+   //      }
+   //      else
+   //      {
+   //         boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
+   //         // conversion only generated if unboxing
+   //         if (isUnboxing)
+   //            codeStream.generateImplicitConversion(this.implicitConversion);
+   //         switch (isUnboxing ? postConversionType(currentScope).id : codegenBinding.returnType.id)
+   //         {
+   //            case T_long :
+   //            case T_double :
+   //               codeStream.pop2();
+   //               break;
+   //            case T_void :
+   //               break;
+   //            default :
+   //               codeStream.pop();
+   //         }
+   //      }
+   //      codeStream.recordPositionsFrom(pc, (int)(this.nameSourcePosition >>> 32)); // highlight selector
+   //   }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
@@ -493,7 +493,7 @@ public class MessageSend extends Expression implements InvocationSite
                   {
                      if (closestMatch.original().typeVariables != Binding.NO_TYPE_VARIABLES)
                      { // generic method
-                        // shouldn't return generic method outside its context, rather convert it to raw method (175409)
+                       // shouldn't return generic method outside its context, rather convert it to raw method (175409)
                         closestMatch =
                            scope.environment().createParameterizedGenericMethod(closestMatch.original(),
                               (RawTypeBinding)null);

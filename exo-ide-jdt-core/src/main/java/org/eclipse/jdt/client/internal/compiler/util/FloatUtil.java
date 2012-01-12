@@ -102,8 +102,8 @@ public class FloatUtil
    {
       return Double.parseDouble(new String(source));
       //TODO use math library to correct parse double value
-//      long bits = convertHexFloatingPointLiteralToBits(source);
-//      return MathUtil.longBitsToDouble(bits);
+      //      long bits = convertHexFloatingPointLiteralToBits(source);
+      //      return MathUtil.longBitsToDouble(bits);
    }
 
    /**

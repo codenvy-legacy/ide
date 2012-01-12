@@ -10,23 +10,25 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.env;
 
-public interface ISourceImport {
+public interface ISourceImport
+{
 
-/**
- * Answer the source end position of the import declaration.
- */
+   /**
+    * Answer the source end position of the import declaration.
+    */
 
-int getDeclarationSourceEnd();
-/**
- * Answer the source start position of the import declaration.
- */
+   int getDeclarationSourceEnd();
 
-int getDeclarationSourceStart();
+   /**
+    * Answer the source start position of the import declaration.
+    */
 
-/**
- * Answer an int whose bits are set according the access constants
- * defined by the VM spec.
- * Since Java 1.5, static imports can be defined.
- */
-int getModifiers();
+   int getDeclarationSourceStart();
+
+   /**
+    * Answer an int whose bits are set according the access constants
+    * defined by the VM spec.
+    * Since Java 1.5, static imports can be defined.
+    */
+   int getModifiers();
 }

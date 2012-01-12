@@ -12,26 +12,31 @@ package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import org.eclipse.jdt.client.internal.compiler.ast.LocalDeclaration;
 
-public class CatchParameterBinding extends LocalVariableBinding {
-	
-	TypeBinding [] preciseTypes = Binding.NO_EXCEPTIONS;  // the catch block can be entered with the parameters set to these types.
-	
-	public CatchParameterBinding(LocalDeclaration declaration, TypeBinding type, int modifiers, boolean isArgument) {
-		super(declaration, type, modifiers, isArgument);
-	}
-	
-	public TypeBinding [] getPreciseTypes() {
-		return this.preciseTypes;
-	}
+public class CatchParameterBinding extends LocalVariableBinding
+{
 
-	public void setPreciseType(TypeBinding raisedException) {
-		int length = this.preciseTypes.length;
-		for (int i = 0; i < length; ++i) {
-			if (this.preciseTypes[i] == raisedException)
-				return;
-		}
-		System.arraycopy(this.preciseTypes, 0, this.preciseTypes = new TypeBinding [length + 1], 0, length);
-		this.preciseTypes[length] = raisedException;
-		return;
-	}
+   TypeBinding[] preciseTypes = Binding.NO_EXCEPTIONS; // the catch block can be entered with the parameters set to these types.
+
+   public CatchParameterBinding(LocalDeclaration declaration, TypeBinding type, int modifiers, boolean isArgument)
+   {
+      super(declaration, type, modifiers, isArgument);
+   }
+
+   public TypeBinding[] getPreciseTypes()
+   {
+      return this.preciseTypes;
+   }
+
+   public void setPreciseType(TypeBinding raisedException)
+   {
+      int length = this.preciseTypes.length;
+      for (int i = 0; i < length; ++i)
+      {
+         if (this.preciseTypes[i] == raisedException)
+            return;
+      }
+      System.arraycopy(this.preciseTypes, 0, this.preciseTypes = new TypeBinding[length + 1], 0, length);
+      this.preciseTypes[length] = raisedException;
+      return;
+   }
 }

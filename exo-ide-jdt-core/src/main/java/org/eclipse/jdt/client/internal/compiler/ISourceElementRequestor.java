@@ -44,155 +44,214 @@ import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
  * <Element>
  */
 
-public interface ISourceElementRequestor {
+public interface ISourceElementRequestor
+{
 
-	public static class TypeInfo {
-		public int declarationStart;
-		public int modifiers;
-		public char[] name;
-		public int nameSourceStart;
-		public int nameSourceEnd;
-		public char[] superclass;
-		public char[][] superinterfaces;
-		public TypeParameterInfo[] typeParameters;
-		public char[][] categories;
-		public boolean secondary;
-		public boolean anonymousMember;
-		public Annotation[] annotations;
-		public int extraFlags;
-		public TypeDeclaration node;
-		public HashMap childrenCategories = new HashMap();
-	}
+   public static class TypeInfo
+   {
+      public int declarationStart;
 
-	public static class TypeParameterInfo {
-		public int declarationStart;
-		public int declarationEnd;
-		public char[] name;
-		public int nameSourceStart;
-		public int nameSourceEnd;
-		public char[][] bounds;
-	}
+      public int modifiers;
 
-	public static class MethodInfo {
-		public boolean isConstructor;
-		public boolean isAnnotation;
-		public int declarationStart;
-		public int modifiers;
-		public char[] returnType;
-		public char[] name;
-		public int nameSourceStart;
-		public int nameSourceEnd;
-		public char[][] parameterTypes;
-		public char[][] parameterNames;
-		public char[][] exceptionTypes;
-		public TypeParameterInfo[] typeParameters;
-		public char[][] categories;
-		public Annotation[] annotations;
-		public char[] declaringPackageName;
-		public int declaringTypeModifiers;
-		public int extraFlags;
-		public AbstractMethodDeclaration node;
-		public ParameterInfo[] parameterInfos;
-	}
+      public char[] name;
 
-	public static class ParameterInfo {
-		public int modifiers;
-		public int declarationStart;
-		public int declarationEnd;
-		public int nameSourceStart;
-		public int nameSourceEnd;
-		public char[] name;
-	}
-	public static class FieldInfo {
-		public int declarationStart;
-		public int modifiers;
-		public char[] type;
-		public char[] name;
-		public int nameSourceStart;
-		public int nameSourceEnd;
-		public char[][] categories;
-		public Annotation[] annotations;
-		public FieldDeclaration node;
-	}
+      public int nameSourceStart;
 
-	void acceptAnnotationTypeReference(char[][] annotation, int sourceStart, int sourceEnd);
+      public int nameSourceEnd;
 
-	void acceptAnnotationTypeReference(char[] annotation, int sourcePosition);
+      public char[] superclass;
 
-	void acceptConstructorReference(char[] typeName, int argCount, int sourcePosition);
+      public char[][] superinterfaces;
 
-	void acceptFieldReference(char[] fieldName, int sourcePosition);
-	/**
-	 * @param declarationStart
-	 *                   This is the position of the first character of the import
-	 *                   keyword.
-	 * @param declarationEnd
-	 *                   This is the position of the ';' ending the import statement or
-	 *                   the end of the comment following the import.
-	 * @param nameStart
-	 *                   This is the position of the first character of the import declaration's
-	 *                   name.
-	 * @param nameEnd
-	 *                   This is the position of the last character of the import declaration's
-	 *                   name.
-	 * @param tokens
-	 *                   This are the tokens of the import like specified in the source.
-	 * @param onDemand
-	 *                   set to true if the import is an import on demand (e.g. import
-	 *                   java.io.*). False otherwise.
-	 * @param modifiers
-	 *                   can be set to static from 1.5 on.
-	 */
-	void acceptImport(int declarationStart, int declarationEnd, int nameStart, int nameEnd, char[][] tokens, boolean onDemand, int modifiers);
+      public TypeParameterInfo[] typeParameters;
 
-	/*
-	 * Table of line separator position. This table is passed once at the end of
-	 * the parse action, so as to allow computation of normalized ranges.
-	 *
-	 * A line separator might corresponds to several characters in the source,
-	 *
-	 */
-	void acceptLineSeparatorPositions(int[] positions);
+      public char[][] categories;
 
-	void acceptMethodReference(char[] methodName, int argCount, int sourcePosition);
+      public boolean secondary;
 
-	void acceptPackage(ImportReference importReference);
+      public boolean anonymousMember;
 
-	void acceptProblem(CategorizedProblem problem);
+      public Annotation[] annotations;
 
-	void acceptTypeReference(char[][] typeName, int sourceStart, int sourceEnd);
+      public int extraFlags;
 
-	void acceptTypeReference(char[] typeName, int sourcePosition);
+      public TypeDeclaration node;
 
-	void acceptUnknownReference(char[][] name, int sourceStart, int sourceEnd);
+      public HashMap childrenCategories = new HashMap();
+   }
 
-	void acceptUnknownReference(char[] name, int sourcePosition);
+   public static class TypeParameterInfo
+   {
+      public int declarationStart;
 
-	void enterCompilationUnit();
+      public int declarationEnd;
 
-	void enterConstructor(MethodInfo methodInfo);
+      public char[] name;
 
-	void enterField(FieldInfo fieldInfo);
+      public int nameSourceStart;
 
-	void enterInitializer(int declarationStart, int modifiers);
+      public int nameSourceEnd;
 
-	void enterMethod(MethodInfo methodInfo);
+      public char[][] bounds;
+   }
 
-	void enterType(TypeInfo typeInfo);
+   public static class MethodInfo
+   {
+      public boolean isConstructor;
 
-	void exitCompilationUnit(int declarationEnd);
+      public boolean isAnnotation;
 
-	void exitConstructor(int declarationEnd);
+      public int declarationStart;
 
-	/*
-	 * initializationStart denotes the source start of the expression used for
-	 * initializing the field if any (-1 if no initialization).
-	 */
-	void exitField(int initializationStart, int declarationEnd, int declarationSourceEnd);
+      public int modifiers;
 
-	void exitInitializer(int declarationEnd);
+      public char[] returnType;
 
-	void exitMethod(int declarationEnd, Expression defaultValue);
+      public char[] name;
 
-	void exitType(int declarationEnd);
+      public int nameSourceStart;
+
+      public int nameSourceEnd;
+
+      public char[][] parameterTypes;
+
+      public char[][] parameterNames;
+
+      public char[][] exceptionTypes;
+
+      public TypeParameterInfo[] typeParameters;
+
+      public char[][] categories;
+
+      public Annotation[] annotations;
+
+      public char[] declaringPackageName;
+
+      public int declaringTypeModifiers;
+
+      public int extraFlags;
+
+      public AbstractMethodDeclaration node;
+
+      public ParameterInfo[] parameterInfos;
+   }
+
+   public static class ParameterInfo
+   {
+      public int modifiers;
+
+      public int declarationStart;
+
+      public int declarationEnd;
+
+      public int nameSourceStart;
+
+      public int nameSourceEnd;
+
+      public char[] name;
+   }
+
+   public static class FieldInfo
+   {
+      public int declarationStart;
+
+      public int modifiers;
+
+      public char[] type;
+
+      public char[] name;
+
+      public int nameSourceStart;
+
+      public int nameSourceEnd;
+
+      public char[][] categories;
+
+      public Annotation[] annotations;
+
+      public FieldDeclaration node;
+   }
+
+   void acceptAnnotationTypeReference(char[][] annotation, int sourceStart, int sourceEnd);
+
+   void acceptAnnotationTypeReference(char[] annotation, int sourcePosition);
+
+   void acceptConstructorReference(char[] typeName, int argCount, int sourcePosition);
+
+   void acceptFieldReference(char[] fieldName, int sourcePosition);
+
+   /**
+    * @param declarationStart
+    *                   This is the position of the first character of the import
+    *                   keyword.
+    * @param declarationEnd
+    *                   This is the position of the ';' ending the import statement or
+    *                   the end of the comment following the import.
+    * @param nameStart
+    *                   This is the position of the first character of the import declaration's
+    *                   name.
+    * @param nameEnd
+    *                   This is the position of the last character of the import declaration's
+    *                   name.
+    * @param tokens
+    *                   This are the tokens of the import like specified in the source.
+    * @param onDemand
+    *                   set to true if the import is an import on demand (e.g. import
+    *                   java.io.*). False otherwise.
+    * @param modifiers
+    *                   can be set to static from 1.5 on.
+    */
+   void acceptImport(int declarationStart, int declarationEnd, int nameStart, int nameEnd, char[][] tokens,
+      boolean onDemand, int modifiers);
+
+   /*
+    * Table of line separator position. This table is passed once at the end of
+    * the parse action, so as to allow computation of normalized ranges.
+    *
+    * A line separator might corresponds to several characters in the source,
+    *
+    */
+   void acceptLineSeparatorPositions(int[] positions);
+
+   void acceptMethodReference(char[] methodName, int argCount, int sourcePosition);
+
+   void acceptPackage(ImportReference importReference);
+
+   void acceptProblem(CategorizedProblem problem);
+
+   void acceptTypeReference(char[][] typeName, int sourceStart, int sourceEnd);
+
+   void acceptTypeReference(char[] typeName, int sourcePosition);
+
+   void acceptUnknownReference(char[][] name, int sourceStart, int sourceEnd);
+
+   void acceptUnknownReference(char[] name, int sourcePosition);
+
+   void enterCompilationUnit();
+
+   void enterConstructor(MethodInfo methodInfo);
+
+   void enterField(FieldInfo fieldInfo);
+
+   void enterInitializer(int declarationStart, int modifiers);
+
+   void enterMethod(MethodInfo methodInfo);
+
+   void enterType(TypeInfo typeInfo);
+
+   void exitCompilationUnit(int declarationEnd);
+
+   void exitConstructor(int declarationEnd);
+
+   /*
+    * initializationStart denotes the source start of the expression used for
+    * initializing the field if any (-1 if no initialization).
+    */
+   void exitField(int initializationStart, int declarationEnd, int declarationSourceEnd);
+
+   void exitInitializer(int declarationEnd);
+
+   void exitMethod(int declarationEnd, Expression defaultValue);
+
+   void exitType(int declarationEnd);
 }

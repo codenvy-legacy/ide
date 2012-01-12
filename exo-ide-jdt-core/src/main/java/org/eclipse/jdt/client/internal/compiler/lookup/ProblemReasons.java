@@ -10,21 +10,37 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-public interface ProblemReasons {
-	final int NoError = 0;
-	final int NotFound = 1;
-	final int NotVisible = 2;
-	final int Ambiguous = 3;
-	final int InternalNameProvided = 4; // used if an internal name is used in source
-	final int InheritedNameHidesEnclosingName = 5;
-	final int NonStaticReferenceInConstructorInvocation = 6;
-	final int NonStaticReferenceInStaticContext = 7;
-	final int ReceiverTypeNotVisible = 8;
-	final int IllegalSuperTypeVariable = 9;
-	final int ParameterBoundMismatch = 10; // for generic method
-	final int TypeParameterArityMismatch = 11; // for generic method
-	final int ParameterizedMethodTypeMismatch = 12; // for generic method
-	final int TypeArgumentsForRawGenericMethod = 13; // for generic method
-	final int InvalidTypeForStaticImport = 14;
-	final int InvalidTypeForAutoManagedResource = 15;
+public interface ProblemReasons
+{
+   final int NoError = 0;
+
+   final int NotFound = 1;
+
+   final int NotVisible = 2;
+
+   final int Ambiguous = 3;
+
+   final int InternalNameProvided = 4; // used if an internal name is used in source
+
+   final int InheritedNameHidesEnclosingName = 5;
+
+   final int NonStaticReferenceInConstructorInvocation = 6;
+
+   final int NonStaticReferenceInStaticContext = 7;
+
+   final int ReceiverTypeNotVisible = 8;
+
+   final int IllegalSuperTypeVariable = 9;
+
+   final int ParameterBoundMismatch = 10; // for generic method
+
+   final int TypeParameterArityMismatch = 11; // for generic method
+
+   final int ParameterizedMethodTypeMismatch = 12; // for generic method
+
+   final int TypeArgumentsForRawGenericMethod = 13; // for generic method
+
+   final int InvalidTypeForStaticImport = 14;
+
+   final int InvalidTypeForAutoManagedResource = 15;
 }

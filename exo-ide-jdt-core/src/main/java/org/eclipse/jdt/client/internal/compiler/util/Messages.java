@@ -15,7 +15,7 @@ import com.google.gwt.core.client.GWT;
 public interface Messages extends com.google.gwt.i18n.client.Messages
 {
    Messages instance = GWT.create(Messages.class);
-   
+
    @Key("compilation_unresolvedProblem")
    String compilation_unresolvedProblem();
 

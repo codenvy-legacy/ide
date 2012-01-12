@@ -23,24 +23,26 @@ package org.eclipse.jdt.client.core;
  * @see SourceRange
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface ISourceRange {
+public interface ISourceRange
+{
 
-/**
- * Returns the number of characters of the source code for this element,
- * relative to the source buffer in which this element is contained.
- *
- * @return the number of characters of the source code for this element,
- * relative to the source buffer in which this element is contained
- */
-int getLength();
-/**
- * Returns the 0-based index of the first character of the source code for this element,
- * relative to the source buffer in which this element is contained. However, if the element
- * has no associated source code, an implementation may return -1. 
- *
- * @return the 0-based index of the first character of the source code for this element,
- * relative to the source buffer in which this element is contained. However, if the element
- * has no associated source code, an implementation may return -1. 
- */
-int getOffset();
+   /**
+    * Returns the number of characters of the source code for this element,
+    * relative to the source buffer in which this element is contained.
+    *
+    * @return the number of characters of the source code for this element,
+    * relative to the source buffer in which this element is contained
+    */
+   int getLength();
+
+   /**
+    * Returns the 0-based index of the first character of the source code for this element,
+    * relative to the source buffer in which this element is contained. However, if the element
+    * has no associated source code, an implementation may return -1. 
+    *
+    * @return the 0-based index of the first character of the source code for this element,
+    * relative to the source buffer in which this element is contained. However, if the element
+    * has no associated source code, an implementation may return -1. 
+    */
+   int getOffset();
 }

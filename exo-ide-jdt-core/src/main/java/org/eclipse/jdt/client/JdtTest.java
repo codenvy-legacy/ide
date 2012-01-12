@@ -48,11 +48,11 @@ public class JdtTest implements EntryPoint
 
    public interface Data extends ClientBundle
    {
-      
+
       @Source("org/eclipse/jdt/client/TypeDeclaration.txt")
       TextResource content();
    }
-   
+
    /**
     * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
     */
@@ -69,7 +69,7 @@ public class JdtTest implements EntryPoint
       table.setWidget(0, 0, new Label(System.currentTimeMillis() + ""));
       ASTNode ast = parser.createAST(null);
       table.setWidget(0, 1, new Label(System.currentTimeMillis() + ""));
-      CompilationUnit unit  = (CompilationUnit)ast;
+      CompilationUnit unit = (CompilationUnit)ast;
       TypeDeclaration type = (TypeDeclaration)unit.types().get(0);
       RootLayoutPanel.get().add(new Label(type.getName().getFullyQualifiedName()));
    }

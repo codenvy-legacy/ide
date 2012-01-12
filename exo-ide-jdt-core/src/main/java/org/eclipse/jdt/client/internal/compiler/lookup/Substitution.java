@@ -13,21 +13,22 @@ package org.eclipse.jdt.client.internal.compiler.lookup;
 /*
  * Encapsulates aspects related to type variable substitution
  */
-public interface Substitution {
+public interface Substitution
+{
 
-	/**
-	 * Returns the type substitute for a given type variable, or itself
-	 * if no substitution got performed.
-	 */
-	TypeBinding substitute(TypeVariableBinding typeVariable);
+   /**
+    * Returns the type substitute for a given type variable, or itself
+    * if no substitution got performed.
+    */
+   TypeBinding substitute(TypeVariableBinding typeVariable);
 
-	/**
-	 * Returns the lookup environment
-	 */
-	LookupEnvironment environment();
+   /**
+    * Returns the lookup environment
+    */
+   LookupEnvironment environment();
 
-	/**
-	 * Returns true for raw substitution
-	 */
-	boolean isRawSubstitution();
+   /**
+    * Returns true for raw substitution
+    */
+   boolean isRawSubstitution();
 }

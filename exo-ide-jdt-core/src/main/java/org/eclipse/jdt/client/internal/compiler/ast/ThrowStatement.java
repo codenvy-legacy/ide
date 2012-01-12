@@ -41,21 +41,21 @@ public class ThrowStatement extends Statement
       return FlowInfo.DEAD_END;
    }
 
-//   /**
-//    * Throw code generation
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//      if ((this.bits & ASTNode.IsReachable) == 0)
-//         return;
-//      int pc = codeStream.position;
-//      this.exception.generateCode(currentScope, codeStream, true);
-//      codeStream.athrow();
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Throw code generation
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //      if ((this.bits & ASTNode.IsReachable) == 0)
+   //         return;
+   //      int pc = codeStream.position;
+   //      this.exception.generateCode(currentScope, codeStream, true);
+   //      codeStream.athrow();
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    public StringBuffer printStatement(int indent, StringBuffer output)
    {

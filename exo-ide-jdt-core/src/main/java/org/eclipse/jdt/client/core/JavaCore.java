@@ -122,12 +122,6 @@ public final class JavaCore
 
    // Begin configurable option IDs {
 
-
-
-   
-
- 
-
    /**
     * Compiler option ID: Defining Target Java Platform.
     * <p>For binary compatibility reason, .class files can be tagged to with certain VM versions and later.
@@ -205,7 +199,6 @@ public final class JavaCore
     */
    public static final String COMPILER_PB_ENUM_IDENTIFIER = PLUGIN_ID + ".compiler.problem.enumIdentifier"; //$NON-NLS-1$
 
-
    /**
     * Compiler option ID: Setting Source Compatibility Mode.
     * <p>Specify whether which source level compatibility is used. From 1.4 on, <code>'assert'</code> is a keyword
@@ -241,7 +234,6 @@ public final class JavaCore
     * @category CompilerOptionID
     */
    public static final String COMPILER_COMPLIANCE = PLUGIN_ID + ".compiler.compliance"; //$NON-NLS-1$
-
 
    /**
     * Compiler option ID: Defining the Automatic Task Tags.
@@ -351,7 +343,7 @@ public final class JavaCore
     * @category OptionValue
     */
    public static final String WARNING = "warning"; //$NON-NLS-1$
-   
+
    /**
     * Configurable option value: {@value}.
     * @since 2.0

@@ -66,7 +66,7 @@ public class ASTVisitorTest
       unit.accept(visitor);
       assertThat(visitor.typeCount).isEqualTo(2);
    }
-   
+
    @Test
    @Ignore
    public void methodDeclarationVisitor() throws Exception

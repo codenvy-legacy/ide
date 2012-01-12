@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-public class InnerEmulationDependency{
+public class InnerEmulationDependency
+{
 
-	public BlockScope scope;
-	public boolean wasEnclosingInstanceSupplied;
+   public BlockScope scope;
 
-	public InnerEmulationDependency(BlockScope scope, boolean wasEnclosingInstanceSupplied) {
-		this.scope = scope;
-		this.wasEnclosingInstanceSupplied = wasEnclosingInstanceSupplied;
-	}
+   public boolean wasEnclosingInstanceSupplied;
+
+   public InnerEmulationDependency(BlockScope scope, boolean wasEnclosingInstanceSupplied)
+   {
+      this.scope = scope;
+      this.wasEnclosingInstanceSupplied = wasEnclosingInstanceSupplied;
+   }
 }

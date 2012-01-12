@@ -16,124 +16,133 @@ import org.eclipse.jdt.client.internal.compiler.flow.*;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
-public class QualifiedThisReference extends ThisReference {
+public class QualifiedThisReference extends ThisReference
+{
 
-	public TypeReference qualification;
-	ReferenceBinding currentCompatibleType;
+   public TypeReference qualification;
 
-	public QualifiedThisReference(TypeReference name, int sourceStart, int sourceEnd) {
-		super(sourceStart, sourceEnd);
-		this.qualification = name;
-		name.bits |= IgnoreRawTypeCheck; // no need to worry about raw type usage
-		this.sourceStart = name.sourceStart;
-	}
+   ReferenceBinding currentCompatibleType;
 
-	public FlowInfo analyseCode(
-		BlockScope currentScope,
-		FlowContext flowContext,
-		FlowInfo flowInfo) {
+   public QualifiedThisReference(TypeReference name, int sourceStart, int sourceEnd)
+   {
+      super(sourceStart, sourceEnd);
+      this.qualification = name;
+      name.bits |= IgnoreRawTypeCheck; // no need to worry about raw type usage
+      this.sourceStart = name.sourceStart;
+   }
 
-		return flowInfo;
-	}
+   public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
+   {
 
-	public FlowInfo analyseCode(
-		BlockScope currentScope,
-		FlowContext flowContext,
-		FlowInfo flowInfo,
-		boolean valueRequired) {
+      return flowInfo;
+   }
 
-		return flowInfo;
-	}
+   public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo,
+      boolean valueRequired)
+   {
 
-//	/**
-//	 * Code generation for QualifiedThisReference
-//	 *
-//	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//	 * @param valueRequired boolean
-//	 */
-//	public void generateCode(
-//		BlockScope currentScope,
-//		CodeStream codeStream,
-//		boolean valueRequired) {
-//
-//		int pc = codeStream.position;
-//		if (valueRequired) {
-//			if ((this.bits & DepthMASK) != 0) {
-//				Object[] emulationPath =
-//					currentScope.getEmulationPath(this.currentCompatibleType, true /*only exact match*/, false/*consider enclosing arg*/);
-//				codeStream.generateOuterAccess(emulationPath, this, this.currentCompatibleType, currentScope);
-//			} else {
-//				// nothing particular after all
-//				codeStream.aload_0();
-//			}
-//		}
-//		codeStream.recordPositionsFrom(pc, this.sourceStart);
-//	}
+      return flowInfo;
+   }
 
-	public TypeBinding resolveType(BlockScope scope) {
+   //	/**
+   //	 * Code generation for QualifiedThisReference
+   //	 *
+   //	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //	 * @param valueRequired boolean
+   //	 */
+   //	public void generateCode(
+   //		BlockScope currentScope,
+   //		CodeStream codeStream,
+   //		boolean valueRequired) {
+   //
+   //		int pc = codeStream.position;
+   //		if (valueRequired) {
+   //			if ((this.bits & DepthMASK) != 0) {
+   //				Object[] emulationPath =
+   //					currentScope.getEmulationPath(this.currentCompatibleType, true /*only exact match*/, false/*consider enclosing arg*/);
+   //				codeStream.generateOuterAccess(emulationPath, this, this.currentCompatibleType, currentScope);
+   //			} else {
+   //				// nothing particular after all
+   //				codeStream.aload_0();
+   //			}
+   //		}
+   //		codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //	}
 
-		this.constant = Constant.NotAConstant;
-		// X.this is not a param/raw type as denoting enclosing instance
-		TypeBinding type = this.qualification.resolveType(scope, true /* check bounds*/);
-		if (type == null || !type.isValidBinding()) return null;
-		// X.this is not a param/raw type as denoting enclosing instance
-		type = type.erasure();
+   public TypeBinding resolveType(BlockScope scope)
+   {
 
-		// resolvedType needs to be converted to parameterized
-		if (type instanceof ReferenceBinding) {
-			this.resolvedType = scope.environment().convertToParameterizedType((ReferenceBinding) type);
-		} else {
-			// error case
-			this.resolvedType = type;
-		}
+      this.constant = Constant.NotAConstant;
+      // X.this is not a param/raw type as denoting enclosing instance
+      TypeBinding type = this.qualification.resolveType(scope, true /* check bounds*/);
+      if (type == null || !type.isValidBinding())
+         return null;
+      // X.this is not a param/raw type as denoting enclosing instance
+      type = type.erasure();
 
-		// the qualification MUST exactly match some enclosing type name
-		// It is possible to qualify 'this' by the name of the current class
-		int depth = 0;
-		this.currentCompatibleType = scope.referenceType().binding;
-		while (this.currentCompatibleType != null && this.currentCompatibleType != type) {
-			depth++;
-			this.currentCompatibleType = this.currentCompatibleType.isStatic() ? null : this.currentCompatibleType.enclosingType();
-		}
-		this.bits &= ~DepthMASK; // flush previous depth if any
-		this.bits |= (depth & 0xFF) << DepthSHIFT; // encoded depth into 8 bits
+      // resolvedType needs to be converted to parameterized
+      if (type instanceof ReferenceBinding)
+      {
+         this.resolvedType = scope.environment().convertToParameterizedType((ReferenceBinding)type);
+      }
+      else
+      {
+         // error case
+         this.resolvedType = type;
+      }
 
-		if (this.currentCompatibleType == null) {
-			scope.problemReporter().noSuchEnclosingInstance(type, this, false);
-			return this.resolvedType;
-		}
+      // the qualification MUST exactly match some enclosing type name
+      // It is possible to qualify 'this' by the name of the current class
+      int depth = 0;
+      this.currentCompatibleType = scope.referenceType().binding;
+      while (this.currentCompatibleType != null && this.currentCompatibleType != type)
+      {
+         depth++;
+         this.currentCompatibleType =
+            this.currentCompatibleType.isStatic() ? null : this.currentCompatibleType.enclosingType();
+      }
+      this.bits &= ~DepthMASK; // flush previous depth if any
+      this.bits |= (depth & 0xFF) << DepthSHIFT; // encoded depth into 8 bits
 
-		// Ensure one cannot write code like: B() { super(B.this); }
-		if (depth == 0) {
-			checkAccess(scope.methodScope());
-		} // if depth>0, path emulation will diagnose bad scenarii
+      if (this.currentCompatibleType == null)
+      {
+         scope.problemReporter().noSuchEnclosingInstance(type, this, false);
+         return this.resolvedType;
+      }
 
-		return this.resolvedType;
-	}
+      // Ensure one cannot write code like: B() { super(B.this); }
+      if (depth == 0)
+      {
+         checkAccess(scope.methodScope());
+      } // if depth>0, path emulation will diagnose bad scenarii
 
-	public StringBuffer printExpression(int indent, StringBuffer output) {
+      return this.resolvedType;
+   }
 
-		return this.qualification.print(0, output).append(".this"); //$NON-NLS-1$
-	}
+   public StringBuffer printExpression(int indent, StringBuffer output)
+   {
 
-	public void traverse(
-		ASTVisitor visitor,
-		BlockScope blockScope) {
+      return this.qualification.print(0, output).append(".this"); //$NON-NLS-1$
+   }
 
-		if (visitor.visit(this, blockScope)) {
-			this.qualification.traverse(visitor, blockScope);
-		}
-		visitor.endVisit(this, blockScope);
-	}
+   public void traverse(ASTVisitor visitor, BlockScope blockScope)
+   {
 
-	public void traverse(
-			ASTVisitor visitor,
-			ClassScope blockScope) {
+      if (visitor.visit(this, blockScope))
+      {
+         this.qualification.traverse(visitor, blockScope);
+      }
+      visitor.endVisit(this, blockScope);
+   }
 
-		if (visitor.visit(this, blockScope)) {
-			this.qualification.traverse(visitor, blockScope);
-		}
-		visitor.endVisit(this, blockScope);
-	}
+   public void traverse(ASTVisitor visitor, ClassScope blockScope)
+   {
+
+      if (visitor.visit(this, blockScope))
+      {
+         this.qualification.traverse(visitor, blockScope);
+      }
+      visitor.endVisit(this, blockScope);
+   }
 }

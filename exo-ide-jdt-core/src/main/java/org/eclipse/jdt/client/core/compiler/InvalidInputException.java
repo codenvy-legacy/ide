@@ -17,22 +17,25 @@ package org.eclipse.jdt.client.core.compiler;
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class InvalidInputException extends Exception {
+public class InvalidInputException extends Exception
+{
 
-	private static final long serialVersionUID = 2909732853499731592L; // backward compatible
+   private static final long serialVersionUID = 2909732853499731592L; // backward compatible
 
-/**
- * Creates a new exception with no detail message.
- */
-public InvalidInputException() {
-	super();
-}
+   /**
+    * Creates a new exception with no detail message.
+    */
+   public InvalidInputException()
+   {
+      super();
+   }
 
-/**
- * Creates a new exception with the given detail message.
- * @param message the detail message
- */
-public InvalidInputException(String message) {
-	super(message);
-}
+   /**
+    * Creates a new exception with the given detail message.
+    * @param message the detail message
+    */
+   public InvalidInputException(String message)
+   {
+      super(message);
+   }
 }

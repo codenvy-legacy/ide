@@ -234,11 +234,13 @@ public final class ImportRewrite
       //		// consider that no contexts are used
       //		this.useContextToFilterImplicitImports = false;
       //
-      		this.defaultContext= new ImportRewriteContext() {
-      			public int findInContext(String qualifier, String name, int kind) {
-      				return findInImports(qualifier, name, kind);
-      			}
-      		};
+      this.defaultContext = new ImportRewriteContext()
+      {
+         public int findInContext(String qualifier, String name, int kind)
+         {
+            return findInImports(qualifier, name, kind);
+         }
+      };
       //		this.addedImports= null; // Initialized on use
       //		this.removedImports= null; // Initialized on use
       //		this.createdImports= null;
@@ -248,7 +250,7 @@ public final class ImportRewrite
       //		this.importOnDemandThreshold= 99;
       //		this.staticImportOnDemandThreshold= 99;
       //		
-      		this.importsKindMap = new HashMap();
+      this.importsKindMap = new HashMap();
    }
 
    /**
@@ -386,38 +388,40 @@ public final class ImportRewrite
    //	/**
    //	 * Not API, package visibility as accessed from an anonymous type
    //	 */
-   	/* package */ final int findInImports(String qualifier, String name, int kind) {
-   	   //TODO
-   //		boolean allowAmbiguity=  (kind == ImportRewriteContext.KIND_STATIC_METHOD) || (name.length() == 1 && name.charAt(0) == '*');
-   //		List imports= this.existingImports;
-   //		char prefix= (kind == ImportRewriteContext.KIND_TYPE) ? NORMAL_PREFIX : STATIC_PREFIX;
-   //
-   //		for (int i= imports.size() - 1; i >= 0 ; i--) {
-   //			String curr= (String) imports.get(i);
-   //			int res= compareImport(prefix, qualifier, name, curr);
-   //			if (res != ImportRewriteContext.RES_NAME_UNKNOWN) {
-   //				if (!allowAmbiguity || res == ImportRewriteContext.RES_NAME_FOUND) {
-   //					if (prefix != STATIC_PREFIX) {
-   //						return res;
-   //					}
-   //					Object currKind = this.importsKindMap.get(curr.substring(1));
-   //					if (currKind != null && currKind.equals(this.importsKindMap.get(qualifier + '.' + name))) {
-   //						return res;
-   //					}
-   //				}
-   //			}
-   //		}
-   //		if (this.filterImplicitImports && this.useContextToFilterImplicitImports) {
-   //			String fPackageName= this.compilationUnit.getParent().getElementName();
-   //			String mainTypeSimpleName= JavaCore.removeJavaLikeExtension(this.compilationUnit.getElementName());
-   //			String fMainTypeName= Util.concatenateName(fPackageName, mainTypeSimpleName, '.');
-   //			if (kind == ImportRewriteContext.KIND_TYPE
-   //					&& (qualifier.equals(fPackageName)
-   //							|| fMainTypeName.equals(Util.concatenateName(qualifier, name, '.'))))
-   //				return ImportRewriteContext.RES_NAME_FOUND;
-   //		}
-   		return ImportRewriteContext.RES_NAME_UNKNOWN;
-   	}
+   /* package */final int findInImports(String qualifier, String name, int kind)
+   {
+      //TODO
+      //		boolean allowAmbiguity=  (kind == ImportRewriteContext.KIND_STATIC_METHOD) || (name.length() == 1 && name.charAt(0) == '*');
+      //		List imports= this.existingImports;
+      //		char prefix= (kind == ImportRewriteContext.KIND_TYPE) ? NORMAL_PREFIX : STATIC_PREFIX;
+      //
+      //		for (int i= imports.size() - 1; i >= 0 ; i--) {
+      //			String curr= (String) imports.get(i);
+      //			int res= compareImport(prefix, qualifier, name, curr);
+      //			if (res != ImportRewriteContext.RES_NAME_UNKNOWN) {
+      //				if (!allowAmbiguity || res == ImportRewriteContext.RES_NAME_FOUND) {
+      //					if (prefix != STATIC_PREFIX) {
+      //						return res;
+      //					}
+      //					Object currKind = this.importsKindMap.get(curr.substring(1));
+      //					if (currKind != null && currKind.equals(this.importsKindMap.get(qualifier + '.' + name))) {
+      //						return res;
+      //					}
+      //				}
+      //			}
+      //		}
+      //		if (this.filterImplicitImports && this.useContextToFilterImplicitImports) {
+      //			String fPackageName= this.compilationUnit.getParent().getElementName();
+      //			String mainTypeSimpleName= JavaCore.removeJavaLikeExtension(this.compilationUnit.getElementName());
+      //			String fMainTypeName= Util.concatenateName(fPackageName, mainTypeSimpleName, '.');
+      //			if (kind == ImportRewriteContext.KIND_TYPE
+      //					&& (qualifier.equals(fPackageName)
+      //							|| fMainTypeName.equals(Util.concatenateName(qualifier, name, '.'))))
+      //				return ImportRewriteContext.RES_NAME_FOUND;
+      //		}
+      return ImportRewriteContext.RES_NAME_UNKNOWN;
+   }
+
    /**
     * Adds a new import to the rewriter's record and returns a {@link Type} node that can be used
     * in the code as a reference to the type. The type binding can be an array binding, type variable or wildcard.

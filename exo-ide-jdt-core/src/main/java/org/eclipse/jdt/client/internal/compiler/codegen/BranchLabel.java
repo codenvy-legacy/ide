@@ -24,58 +24,57 @@ public class BranchLabel extends Label
    // Label tagbits
    public int tagBits;
 
-
    public BranchLabel()
    {
       // for creating labels ahead of code generation
    }
 
-// TODO Remove unused code found by UCDetector
-//    /**
-//     * Add a forward refrence for the array.
-//     */
-//    void addForwardReference(int pos)
-//    {
-//       if (this.delegate != null)
-//       {
-//          this.delegate.addForwardReference(pos);
-//          return;
-//       }
-//       final int count = this.forwardReferenceCount;
-//       if (count >= 1)
-//       {
-//          int previousValue = this.forwardReferences[count - 1];
-//          if (previousValue < pos)
-//          {
-//             int length;
-//             if (count >= (length = this.forwardReferences.length))
-//                System.arraycopy(this.forwardReferences, 0, (this.forwardReferences = new int[2 * length]), 0, length);
-//             this.forwardReferences[this.forwardReferenceCount++] = pos;
-//          }
-//          else if (previousValue > pos)
-//          {
-//             int[] refs = this.forwardReferences;
-//             // check for duplicates
-//             for (int i = 0, max = this.forwardReferenceCount; i < max; i++)
-//             {
-//                if (refs[i] == pos)
-//                   return; // already recorded
-//             }
-//             int length;
-//             if (count >= (length = refs.length))
-//                System.arraycopy(refs, 0, (this.forwardReferences = new int[2 * length]), 0, length);
-//             this.forwardReferences[this.forwardReferenceCount++] = pos;
-//             Arrays.sort(this.forwardReferences, 0, this.forwardReferenceCount);
-//          }
-//       }
-//       else
-//       {
-//          int length;
-//          if (count >= (length = this.forwardReferences.length))
-//             System.arraycopy(this.forwardReferences, 0, (this.forwardReferences = new int[2 * length]), 0, length);
-//          this.forwardReferences[this.forwardReferenceCount++] = pos;
-//       }
-//    }
+   // TODO Remove unused code found by UCDetector
+   //    /**
+   //     * Add a forward refrence for the array.
+   //     */
+   //    void addForwardReference(int pos)
+   //    {
+   //       if (this.delegate != null)
+   //       {
+   //          this.delegate.addForwardReference(pos);
+   //          return;
+   //       }
+   //       final int count = this.forwardReferenceCount;
+   //       if (count >= 1)
+   //       {
+   //          int previousValue = this.forwardReferences[count - 1];
+   //          if (previousValue < pos)
+   //          {
+   //             int length;
+   //             if (count >= (length = this.forwardReferences.length))
+   //                System.arraycopy(this.forwardReferences, 0, (this.forwardReferences = new int[2 * length]), 0, length);
+   //             this.forwardReferences[this.forwardReferenceCount++] = pos;
+   //          }
+   //          else if (previousValue > pos)
+   //          {
+   //             int[] refs = this.forwardReferences;
+   //             // check for duplicates
+   //             for (int i = 0, max = this.forwardReferenceCount; i < max; i++)
+   //             {
+   //                if (refs[i] == pos)
+   //                   return; // already recorded
+   //             }
+   //             int length;
+   //             if (count >= (length = refs.length))
+   //                System.arraycopy(refs, 0, (this.forwardReferences = new int[2 * length]), 0, length);
+   //             this.forwardReferences[this.forwardReferenceCount++] = pos;
+   //             Arrays.sort(this.forwardReferences, 0, this.forwardReferenceCount);
+   //          }
+   //       }
+   //       else
+   //       {
+   //          int length;
+   //          if (count >= (length = this.forwardReferences.length))
+   //             System.arraycopy(this.forwardReferences, 0, (this.forwardReferences = new int[2 * length]), 0, length);
+   //          this.forwardReferences[this.forwardReferenceCount++] = pos;
+   //       }
+   //    }
 
    /**
     * Makes the current label inline all references to the other label

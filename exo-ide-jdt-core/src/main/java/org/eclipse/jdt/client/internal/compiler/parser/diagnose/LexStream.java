@@ -16,276 +16,348 @@ import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 
-public class LexStream implements TerminalTokens {
-	public static final int IS_AFTER_JUMP = 1;
-	public static final int LBRACE_MISSING = 2;
+public class LexStream implements TerminalTokens
+{
+   public static final int IS_AFTER_JUMP = 1;
 
-	public static class Token{
-		int kind;
-		char[] name;
-		int start;
-		int end;
-		int line;
-		int flags;
+   public static final int LBRACE_MISSING = 2;
 
-		public String toString() {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(this.name).append('[').append(this.kind).append(']');
-			buffer.append('{').append(this.start).append(',').append(this.end).append('}').append(this.line);
-			return buffer.toString();
-		}
+   public static class Token
+   {
+      int kind;
 
-	}
+      char[] name;
 
-	private int tokenCacheIndex;
-	private int tokenCacheEOFIndex;
-	private Token[] tokenCache;
+      int start;
 
-	private int currentIndex = -1;
+      int end;
 
-	private Scanner scanner;
-	private int[] intervalStartToSkip;
-	private int[] intervalEndToSkip;
-	private int[] intervalFlagsToSkip;
+      int line;
 
-	private int previousInterval = -1;
-	private int currentInterval = -1;
+      int flags;
 
-	public LexStream(int size, Scanner scanner, int[] intervalStartToSkip, int[] intervalEndToSkip, int[] intervalFlagsToSkip, int firstToken, int init, int eof) {
-		this.tokenCache = new Token[size];
-		this.tokenCacheIndex = 0;
-		this.tokenCacheEOFIndex = Integer.MAX_VALUE;
-		this.tokenCache[0] = new Token();
-		this.tokenCache[0].kind = firstToken;
-		this.tokenCache[0].name = CharOperation.NO_CHAR;
-		this.tokenCache[0].start = init;
-		this.tokenCache[0].end = init;
-		this.tokenCache[0].line = 0;
+      public String toString()
+      {
+         StringBuffer buffer = new StringBuffer();
+         buffer.append(this.name).append('[').append(this.kind).append(']');
+         buffer.append('{').append(this.start).append(',').append(this.end).append('}').append(this.line);
+         return buffer.toString();
+      }
 
-		this.intervalStartToSkip = intervalStartToSkip;
-		this.intervalEndToSkip = intervalEndToSkip;
-		this.intervalFlagsToSkip = intervalFlagsToSkip;
+   }
 
-		scanner.resetTo(init, eof);
-		this.scanner = scanner;
-	}
+   private int tokenCacheIndex;
 
-	private void readTokenFromScanner(){
-		int length = this.tokenCache.length;
-		boolean tokenNotFound = true;
+   private int tokenCacheEOFIndex;
 
-		while(tokenNotFound) {
-			try {
-				int tokenKind =  this.scanner.getNextToken();
-				if(tokenKind != TokenNameEOF) {
-					int start = this.scanner.getCurrentTokenStartPosition();
-					int end = this.scanner.getCurrentTokenEndPosition();
+   private Token[] tokenCache;
 
-					int nextInterval = this.currentInterval + 1;
-					if(this.intervalStartToSkip.length == 0 ||
-							nextInterval >= this.intervalStartToSkip.length ||
-							start < this.intervalStartToSkip[nextInterval]) {
-						Token token = new Token();
-						token.kind = tokenKind;
-						token.name = this.scanner.getCurrentTokenSource();
-						token.start = start;
-						token.end = end;
-						token.line = Util.getLineNumber(end, this.scanner.lineEnds, 0, this.scanner.linePtr);
+   private int currentIndex = -1;
 
-						if(this.currentInterval != this.previousInterval && (this.intervalFlagsToSkip[this.currentInterval] & RangeUtil.IGNORE) == 0){
-							token.flags = IS_AFTER_JUMP;
-							if((this.intervalFlagsToSkip[this.currentInterval] & RangeUtil.LBRACE_MISSING) != 0){
-								token.flags |= LBRACE_MISSING;
-							}
-						}
-						this.previousInterval = this.currentInterval;
+   private Scanner scanner;
 
-						this.tokenCache[++this.tokenCacheIndex % length] = token;
+   private int[] intervalStartToSkip;
 
-						tokenNotFound = false;
-					} else {
-						this.scanner.resetTo(this.intervalEndToSkip[++this.currentInterval] + 1, this.scanner.eofPosition - 1);
-					}
-				} else {
-					int start = this.scanner.getCurrentTokenStartPosition();
-					int end = this.scanner.getCurrentTokenEndPosition();
-					Token token = new Token();
-					token.kind = tokenKind;
-					token.name = CharOperation.NO_CHAR;
-					token.start = start;
-					token.end = end;
-					token.line = Util.getLineNumber(end, this.scanner.lineEnds, 0, this.scanner.linePtr);
+   private int[] intervalEndToSkip;
 
-					this.tokenCache[++this.tokenCacheIndex % length] = token;
+   private int[] intervalFlagsToSkip;
 
-					this.tokenCacheEOFIndex = this.tokenCacheIndex;
-					tokenNotFound = false;
-				}
-			} catch (InvalidInputException e) {
-				// return next token
-			}
-		}
-	}
+   private int previousInterval = -1;
 
-	public Token token(int index) {
-		if(index < 0) {
-			Token eofToken = new Token();
-			eofToken.kind = TokenNameEOF;
-			eofToken.name = CharOperation.NO_CHAR;
-			return eofToken;
-		}
-		if(this.tokenCacheEOFIndex >= 0 && index > this.tokenCacheEOFIndex) {
-			return token(this.tokenCacheEOFIndex);
-		}
-		int length = this.tokenCache.length;
-		if(index > this.tokenCacheIndex) {
-			int tokensToRead = index - this.tokenCacheIndex;
-			while(tokensToRead-- != 0) {
-				readTokenFromScanner();
-			}
-		} else if(this.tokenCacheIndex - length >= index) {
-			return null;
-		}
+   private int currentInterval = -1;
 
-		return this.tokenCache[index % length];
-	}
+   public LexStream(int size, Scanner scanner, int[] intervalStartToSkip, int[] intervalEndToSkip,
+      int[] intervalFlagsToSkip, int firstToken, int init, int eof)
+   {
+      this.tokenCache = new Token[size];
+      this.tokenCacheIndex = 0;
+      this.tokenCacheEOFIndex = Integer.MAX_VALUE;
+      this.tokenCache[0] = new Token();
+      this.tokenCache[0].kind = firstToken;
+      this.tokenCache[0].name = CharOperation.NO_CHAR;
+      this.tokenCache[0].start = init;
+      this.tokenCache[0].end = init;
+      this.tokenCache[0].line = 0;
 
+      this.intervalStartToSkip = intervalStartToSkip;
+      this.intervalEndToSkip = intervalEndToSkip;
+      this.intervalFlagsToSkip = intervalFlagsToSkip;
 
+      scanner.resetTo(init, eof);
+      this.scanner = scanner;
+   }
 
-	public int getToken() {
-		return this.currentIndex = next(this.currentIndex);
-	}
+   private void readTokenFromScanner()
+   {
+      int length = this.tokenCache.length;
+      boolean tokenNotFound = true;
 
-	public int previous(int tokenIndex) {
-		return tokenIndex > 0 ? tokenIndex - 1 : 0;
-	}
+      while (tokenNotFound)
+      {
+         try
+         {
+            int tokenKind = this.scanner.getNextToken();
+            if (tokenKind != TokenNameEOF)
+            {
+               int start = this.scanner.getCurrentTokenStartPosition();
+               int end = this.scanner.getCurrentTokenEndPosition();
 
-	public int next(int tokenIndex) {
-		return tokenIndex < this.tokenCacheEOFIndex ? tokenIndex + 1 : this.tokenCacheEOFIndex;
-	}
+               int nextInterval = this.currentInterval + 1;
+               if (this.intervalStartToSkip.length == 0 || nextInterval >= this.intervalStartToSkip.length
+                  || start < this.intervalStartToSkip[nextInterval])
+               {
+                  Token token = new Token();
+                  token.kind = tokenKind;
+                  token.name = this.scanner.getCurrentTokenSource();
+                  token.start = start;
+                  token.end = end;
+                  token.line = Util.getLineNumber(end, this.scanner.lineEnds, 0, this.scanner.linePtr);
 
-	public boolean afterEol(int i) {
-		return i < 1 ? true : line(i - 1) < line(i);
-	}
+                  if (this.currentInterval != this.previousInterval
+                     && (this.intervalFlagsToSkip[this.currentInterval] & RangeUtil.IGNORE) == 0)
+                  {
+                     token.flags = IS_AFTER_JUMP;
+                     if ((this.intervalFlagsToSkip[this.currentInterval] & RangeUtil.LBRACE_MISSING) != 0)
+                     {
+                        token.flags |= LBRACE_MISSING;
+                     }
+                  }
+                  this.previousInterval = this.currentInterval;
 
-	public void reset() {
-		this.currentIndex = -1;
-	}
+                  this.tokenCache[++this.tokenCacheIndex % length] = token;
 
-	public void reset(int i) {
-		this.currentIndex = previous(i);
-	}
+                  tokenNotFound = false;
+               }
+               else
+               {
+                  this.scanner
+                     .resetTo(this.intervalEndToSkip[++this.currentInterval] + 1, this.scanner.eofPosition - 1);
+               }
+            }
+            else
+            {
+               int start = this.scanner.getCurrentTokenStartPosition();
+               int end = this.scanner.getCurrentTokenEndPosition();
+               Token token = new Token();
+               token.kind = tokenKind;
+               token.name = CharOperation.NO_CHAR;
+               token.start = start;
+               token.end = end;
+               token.line = Util.getLineNumber(end, this.scanner.lineEnds, 0, this.scanner.linePtr);
 
-	public int badtoken() {
-		return 0;
-	}
+               this.tokenCache[++this.tokenCacheIndex % length] = token;
 
-	public int kind(int tokenIndex) {
-		return token(tokenIndex).kind;
-	}
+               this.tokenCacheEOFIndex = this.tokenCacheIndex;
+               tokenNotFound = false;
+            }
+         }
+         catch (InvalidInputException e)
+         {
+            // return next token
+         }
+      }
+   }
 
-	public char[] name(int tokenIndex) {
-		return token(tokenIndex).name;
-	}
+   public Token token(int index)
+   {
+      if (index < 0)
+      {
+         Token eofToken = new Token();
+         eofToken.kind = TokenNameEOF;
+         eofToken.name = CharOperation.NO_CHAR;
+         return eofToken;
+      }
+      if (this.tokenCacheEOFIndex >= 0 && index > this.tokenCacheEOFIndex)
+      {
+         return token(this.tokenCacheEOFIndex);
+      }
+      int length = this.tokenCache.length;
+      if (index > this.tokenCacheIndex)
+      {
+         int tokensToRead = index - this.tokenCacheIndex;
+         while (tokensToRead-- != 0)
+         {
+            readTokenFromScanner();
+         }
+      }
+      else if (this.tokenCacheIndex - length >= index)
+      {
+         return null;
+      }
 
-	public int line(int tokenIndex) {
-		return token(tokenIndex).line;
-	}
+      return this.tokenCache[index % length];
+   }
 
-	public int start(int tokenIndex) {
-		return token(tokenIndex).start;
-	}
+   public int getToken()
+   {
+      return this.currentIndex = next(this.currentIndex);
+   }
 
-	public int end(int tokenIndex) {
-		return token(tokenIndex).end;
-	}
+   public int previous(int tokenIndex)
+   {
+      return tokenIndex > 0 ? tokenIndex - 1 : 0;
+   }
 
-	public int flags(int tokenIndex) {
-		return token(tokenIndex).flags;
-	}
+   public int next(int tokenIndex)
+   {
+      return tokenIndex < this.tokenCacheEOFIndex ? tokenIndex + 1 : this.tokenCacheEOFIndex;
+   }
 
-	public boolean isInsideStream(int index) {
-		if(this.tokenCacheEOFIndex >= 0 && index > this.tokenCacheEOFIndex) {
-			return false;
-		} else if(index > this.tokenCacheIndex) {
-			return true;
-		} else if(this.tokenCacheIndex - this.tokenCache.length >= index) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+   public boolean afterEol(int i)
+   {
+      return i < 1 ? true : line(i - 1) < line(i);
+   }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		StringBuffer res = new StringBuffer();
+   public void reset()
+   {
+      this.currentIndex = -1;
+   }
 
-		String source = new String(this.scanner.source);
-		if(this.currentIndex < 0) {
-			int previousEnd = -1;
-			for (int i = 0; i < this.intervalStartToSkip.length; i++) {
-				int intervalStart = this.intervalStartToSkip[i];
-				int intervalEnd = this.intervalEndToSkip[i];
+   public void reset(int i)
+   {
+      this.currentIndex = previous(i);
+   }
 
-				res.append(source.substring(previousEnd + 1, intervalStart));
-				res.append('<');
-				res.append('@');
-				res.append(source.substring(intervalStart, intervalEnd + 1));
-				res.append('@');
-				res.append('>');
+   public int badtoken()
+   {
+      return 0;
+   }
 
-				previousEnd = intervalEnd;
-			}
-			res.append(source.substring(previousEnd + 1));
-		} else {
-			Token token = token(this.currentIndex);
-			int curtokKind = token.kind;
-			int curtokStart = token.start;
-			int curtokEnd = token.end;
+   public int kind(int tokenIndex)
+   {
+      return token(tokenIndex).kind;
+   }
 
-			int previousEnd = -1;
-			for (int i = 0; i < this.intervalStartToSkip.length; i++) {
-				int intervalStart = this.intervalStartToSkip[i];
-				int intervalEnd = this.intervalEndToSkip[i];
+   public char[] name(int tokenIndex)
+   {
+      return token(tokenIndex).name;
+   }
 
-				if(curtokStart >= previousEnd && curtokEnd <= intervalStart) {
-					res.append(source.substring(previousEnd + 1, curtokStart));
-					res.append('<');
-					res.append('#');
-					res.append(source.substring(curtokStart, curtokEnd + 1));
-					res.append('#');
-					res.append('>');
-					res.append(source.substring(curtokEnd+1, intervalStart));
-				} else {
-					res.append(source.substring(previousEnd + 1, intervalStart));
-				}
-				res.append('<');
-				res.append('@');
-				res.append(source.substring(intervalStart, intervalEnd + 1));
-				res.append('@');
-				res.append('>');
+   public int line(int tokenIndex)
+   {
+      return token(tokenIndex).line;
+   }
 
-				previousEnd = intervalEnd;
-			}
-			if(curtokStart >= previousEnd) {
-				res.append(source.substring(previousEnd + 1, curtokStart));
-				res.append('<');
-				res.append('#');
-				if(curtokKind == TokenNameEOF) {
-					res.append("EOF#>"); //$NON-NLS-1$
-				} else {
-					res.append(source.substring(curtokStart, curtokEnd + 1));
-					res.append('#');
-					res.append('>');
-					res.append(source.substring(curtokEnd+1));
-				}
-			} else {
-				res.append(source.substring(previousEnd + 1));
-			}
-		}
+   public int start(int tokenIndex)
+   {
+      return token(tokenIndex).start;
+   }
 
-		return res.toString();
-	}
+   public int end(int tokenIndex)
+   {
+      return token(tokenIndex).end;
+   }
+
+   public int flags(int tokenIndex)
+   {
+      return token(tokenIndex).flags;
+   }
+
+   public boolean isInsideStream(int index)
+   {
+      if (this.tokenCacheEOFIndex >= 0 && index > this.tokenCacheEOFIndex)
+      {
+         return false;
+      }
+      else if (index > this.tokenCacheIndex)
+      {
+         return true;
+      }
+      else if (this.tokenCacheIndex - this.tokenCache.length >= index)
+      {
+         return false;
+      }
+      else
+      {
+         return true;
+      }
+   }
+
+   /* (non-Javadoc)
+    * @see java.lang.Object#toString()
+    */
+   public String toString()
+   {
+      StringBuffer res = new StringBuffer();
+
+      String source = new String(this.scanner.source);
+      if (this.currentIndex < 0)
+      {
+         int previousEnd = -1;
+         for (int i = 0; i < this.intervalStartToSkip.length; i++)
+         {
+            int intervalStart = this.intervalStartToSkip[i];
+            int intervalEnd = this.intervalEndToSkip[i];
+
+            res.append(source.substring(previousEnd + 1, intervalStart));
+            res.append('<');
+            res.append('@');
+            res.append(source.substring(intervalStart, intervalEnd + 1));
+            res.append('@');
+            res.append('>');
+
+            previousEnd = intervalEnd;
+         }
+         res.append(source.substring(previousEnd + 1));
+      }
+      else
+      {
+         Token token = token(this.currentIndex);
+         int curtokKind = token.kind;
+         int curtokStart = token.start;
+         int curtokEnd = token.end;
+
+         int previousEnd = -1;
+         for (int i = 0; i < this.intervalStartToSkip.length; i++)
+         {
+            int intervalStart = this.intervalStartToSkip[i];
+            int intervalEnd = this.intervalEndToSkip[i];
+
+            if (curtokStart >= previousEnd && curtokEnd <= intervalStart)
+            {
+               res.append(source.substring(previousEnd + 1, curtokStart));
+               res.append('<');
+               res.append('#');
+               res.append(source.substring(curtokStart, curtokEnd + 1));
+               res.append('#');
+               res.append('>');
+               res.append(source.substring(curtokEnd + 1, intervalStart));
+            }
+            else
+            {
+               res.append(source.substring(previousEnd + 1, intervalStart));
+            }
+            res.append('<');
+            res.append('@');
+            res.append(source.substring(intervalStart, intervalEnd + 1));
+            res.append('@');
+            res.append('>');
+
+            previousEnd = intervalEnd;
+         }
+         if (curtokStart >= previousEnd)
+         {
+            res.append(source.substring(previousEnd + 1, curtokStart));
+            res.append('<');
+            res.append('#');
+            if (curtokKind == TokenNameEOF)
+            {
+               res.append("EOF#>"); //$NON-NLS-1$
+            }
+            else
+            {
+               res.append(source.substring(curtokStart, curtokEnd + 1));
+               res.append('#');
+               res.append('>');
+               res.append(source.substring(curtokEnd + 1));
+            }
+         }
+         else
+         {
+            res.append(source.substring(previousEnd + 1));
+         }
+      }
+
+      return res.toString();
+   }
 }

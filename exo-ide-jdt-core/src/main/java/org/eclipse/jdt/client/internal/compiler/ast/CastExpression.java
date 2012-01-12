@@ -546,50 +546,50 @@ public class CastExpression extends Expression
       return true;
    }
 
-//   /**
-//    * Cast expression code generation
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    * @param valueRequired boolean
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//      boolean needRuntimeCheckcast = (this.bits & ASTNode.GenerateCheckcast) != 0;
-//      if (this.constant != Constant.NotAConstant)
-//      {
-//         if (valueRequired || needRuntimeCheckcast)
-//         { // Added for: 1F1W9IG: IVJCOM:WINNT - Compiler omits casting check
-//            codeStream.generateConstant(this.constant, this.implicitConversion);
-//            if (needRuntimeCheckcast)
-//            {
-//               codeStream.checkcast(this.resolvedType);
-//            }
-//            if (!valueRequired)
-//            {
-//               // the resolveType cannot be double or long
-//               codeStream.pop();
-//            }
-//         }
-//         codeStream.recordPositionsFrom(pc, this.sourceStart);
-//         return;
-//      }
-//      this.expression.generateCode(currentScope, codeStream, valueRequired || needRuntimeCheckcast);
-//      if (needRuntimeCheckcast && this.expression.postConversionType(currentScope) != this.resolvedType.erasure())
-//      { // no need to issue a checkcast if already done as genericCast
-//         codeStream.checkcast(this.resolvedType);
-//      }
-//      if (valueRequired)
-//      {
-//         codeStream.generateImplicitConversion(this.implicitConversion);
-//      }
-//      else if (needRuntimeCheckcast)
-//      {
-//         codeStream.pop();
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Cast expression code generation
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    * @param valueRequired boolean
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //      boolean needRuntimeCheckcast = (this.bits & ASTNode.GenerateCheckcast) != 0;
+   //      if (this.constant != Constant.NotAConstant)
+   //      {
+   //         if (valueRequired || needRuntimeCheckcast)
+   //         { // Added for: 1F1W9IG: IVJCOM:WINNT - Compiler omits casting check
+   //            codeStream.generateConstant(this.constant, this.implicitConversion);
+   //            if (needRuntimeCheckcast)
+   //            {
+   //               codeStream.checkcast(this.resolvedType);
+   //            }
+   //            if (!valueRequired)
+   //            {
+   //               // the resolveType cannot be double or long
+   //               codeStream.pop();
+   //            }
+   //         }
+   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //         return;
+   //      }
+   //      this.expression.generateCode(currentScope, codeStream, valueRequired || needRuntimeCheckcast);
+   //      if (needRuntimeCheckcast && this.expression.postConversionType(currentScope) != this.resolvedType.erasure())
+   //      { // no need to issue a checkcast if already done as genericCast
+   //         codeStream.checkcast(this.resolvedType);
+   //      }
+   //      if (valueRequired)
+   //      {
+   //         codeStream.generateImplicitConversion(this.implicitConversion);
+   //      }
+   //      else if (needRuntimeCheckcast)
+   //      {
+   //         codeStream.pop();
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    public Expression innermostCastedExpression()
    {

@@ -89,39 +89,39 @@ public class LabeledStatement extends Statement
       return this.statement;
    }
 
-//   /**
-//    * Code generation for labeled statement
-//    *
-//    * may not need actual source positions recording
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//
-//      if ((this.bits & IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      int pc = codeStream.position;
-//      if (this.targetLabel != null)
-//      {
-//         this.targetLabel.initialize(codeStream);
-//         if (this.statement != null)
-//         {
-//            this.statement.generateCode(currentScope, codeStream);
-//         }
-//         this.targetLabel.place();
-//      }
-//      // May loose some local variable initializations : affecting the local variable attributes
-//      if (this.mergedInitStateIndex != -1)
-//      {
-//         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-//         codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Code generation for labeled statement
+   //    *
+   //    * may not need actual source positions recording
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //
+   //      if ((this.bits & IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      int pc = codeStream.position;
+   //      if (this.targetLabel != null)
+   //      {
+   //         this.targetLabel.initialize(codeStream);
+   //         if (this.statement != null)
+   //         {
+   //            this.statement.generateCode(currentScope, codeStream);
+   //         }
+   //         this.targetLabel.place();
+   //      }
+   //      // May loose some local variable initializations : affecting the local variable attributes
+   //      if (this.mergedInitStateIndex != -1)
+   //      {
+   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   //         codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    public StringBuffer printStatement(int tab, StringBuffer output)
    {

@@ -24,7 +24,7 @@ public class ExceptionLabel extends Label
 
    public ExceptionLabel(TypeBinding exceptionType)
    {
-//      super(codeStream);
+      //      super(codeStream);
       this.exceptionType = exceptionType;
    }
 
@@ -35,41 +35,41 @@ public class ExceptionLabel extends Label
 
    public void place()
    {
-//      // register the handler inside the codeStream then normal place
-//      this.codeStream.registerExceptionHandler(this);
-//      this.position = this.codeStream.getPosition();
+      //      // register the handler inside the codeStream then normal place
+      //      this.codeStream.registerExceptionHandler(this);
+      //      this.position = this.codeStream.getPosition();
    }
 
    public void placeEnd()
    {
-//      int endPosition = this.codeStream.position;
-//      if (this.ranges[this.count - 1] == endPosition)
-//      { // start == end ?
-//         // discard empty exception handler
-//         this.count--;
-//      }
-//      else
-//      {
-//         this.ranges[this.count++] = endPosition;
-//      }
+      //      int endPosition = this.codeStream.position;
+      //      if (this.ranges[this.count - 1] == endPosition)
+      //      { // start == end ?
+      //         // discard empty exception handler
+      //         this.count--;
+      //      }
+      //      else
+      //      {
+      //         this.ranges[this.count++] = endPosition;
+      //      }
    }
 
    public void placeStart()
    {
-//      int startPosition = this.codeStream.position;
-//      if (this.count > 0 && this.ranges[this.count - 1] == startPosition)
-//      { // start == previous end ?
-//         // reopen current handler
-//         this.count--;
-//         return;
-//      }
-//      // only need to grow on even additions (i.e. placeStart only)
-//      int length;
-//      if (this.count == (length = this.ranges.length))
-//      {
-//         System.arraycopy(this.ranges, 0, this.ranges = new int[length * 2], 0, length);
-//      }
-//      this.ranges[this.count++] = startPosition;
+      //      int startPosition = this.codeStream.position;
+      //      if (this.count > 0 && this.ranges[this.count - 1] == startPosition)
+      //      { // start == previous end ?
+      //         // reopen current handler
+      //         this.count--;
+      //         return;
+      //      }
+      //      // only need to grow on even additions (i.e. placeStart only)
+      //      int length;
+      //      if (this.count == (length = this.ranges.length))
+      //      {
+      //         System.arraycopy(this.ranges, 0, this.ranges = new int[length * 2], 0, length);
+      //      }
+      //      this.ranges[this.count++] = startPosition;
    }
 
    public String toString()

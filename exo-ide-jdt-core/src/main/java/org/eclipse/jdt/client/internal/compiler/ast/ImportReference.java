@@ -14,67 +14,81 @@ import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
-public class ImportReference extends ASTNode {
+public class ImportReference extends ASTNode
+{
 
-	public char[][] tokens;
-	public long[] sourcePositions; //each entry is using the code : (start<<32) + end
-	public int declarationEnd; // doesn't include an potential trailing comment
-	public int declarationSourceStart;
-	public int declarationSourceEnd;
-	public int modifiers; // 1.5 addition for static imports
-	public Annotation[] annotations;
-	// star end position
-	public int trailingStarPosition;
+   public char[][] tokens;
 
-	public ImportReference(
-			char[][] tokens,
-			long[] sourcePositions,
-			boolean onDemand,
-			int modifiers) {
+   public long[] sourcePositions; //each entry is using the code : (start<<32) + end
 
-		this.tokens = tokens;
-		this.sourcePositions = sourcePositions;
-		if (onDemand) {
-			this.bits |= ASTNode.OnDemand;
-		}
-		this.sourceEnd = (int) (sourcePositions[sourcePositions.length-1] & 0x00000000FFFFFFFF);
-		this.sourceStart = (int) (sourcePositions[0] >>> 32);
-		this.modifiers = modifiers;
-	}
+   public int declarationEnd; // doesn't include an potential trailing comment
 
-	public boolean isStatic() {
-		return (this.modifiers & ClassFileConstants.AccStatic) != 0;
-	}
+   public int declarationSourceStart;
 
-	/**
-	 * @return char[][]
-	 */
-	public char[][] getImportName() {
+   public int declarationSourceEnd;
 
-		return this.tokens;
-	}
+   public int modifiers; // 1.5 addition for static imports
 
-	public StringBuffer print(int indent, StringBuffer output) {
+   public Annotation[] annotations;
 
-		return print(indent, output, true);
-	}
+   // star end position
+   public int trailingStarPosition;
 
-	public StringBuffer print(int tab, StringBuffer output, boolean withOnDemand) {
+   public ImportReference(char[][] tokens, long[] sourcePositions, boolean onDemand, int modifiers)
+   {
 
-		/* when withOnDemand is false, only the name is printed */
-		for (int i = 0; i < this.tokens.length; i++) {
-			if (i > 0) output.append('.');
-			output.append(this.tokens[i]);
-		}
-		if (withOnDemand && ((this.bits & ASTNode.OnDemand) != 0)) {
-			output.append(".*"); //$NON-NLS-1$
-		}
-		return output;
-	}
+      this.tokens = tokens;
+      this.sourcePositions = sourcePositions;
+      if (onDemand)
+      {
+         this.bits |= ASTNode.OnDemand;
+      }
+      this.sourceEnd = (int)(sourcePositions[sourcePositions.length - 1] & 0x00000000FFFFFFFF);
+      this.sourceStart = (int)(sourcePositions[0] >>> 32);
+      this.modifiers = modifiers;
+   }
 
-	public void traverse(ASTVisitor visitor, CompilationUnitScope scope) {
-		// annotations are traversed during the compilation unit traversal using a class scope
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
+   public boolean isStatic()
+   {
+      return (this.modifiers & ClassFileConstants.AccStatic) != 0;
+   }
+
+   /**
+    * @return char[][]
+    */
+   public char[][] getImportName()
+   {
+
+      return this.tokens;
+   }
+
+   public StringBuffer print(int indent, StringBuffer output)
+   {
+
+      return print(indent, output, true);
+   }
+
+   public StringBuffer print(int tab, StringBuffer output, boolean withOnDemand)
+   {
+
+      /* when withOnDemand is false, only the name is printed */
+      for (int i = 0; i < this.tokens.length; i++)
+      {
+         if (i > 0)
+            output.append('.');
+         output.append(this.tokens[i]);
+      }
+      if (withOnDemand && ((this.bits & ASTNode.OnDemand) != 0))
+      {
+         output.append(".*"); //$NON-NLS-1$
+      }
+      return output;
+   }
+
+   public void traverse(ASTVisitor visitor, CompilationUnitScope scope)
+   {
+      // annotations are traversed during the compilation unit traversal using a class scope
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
 }

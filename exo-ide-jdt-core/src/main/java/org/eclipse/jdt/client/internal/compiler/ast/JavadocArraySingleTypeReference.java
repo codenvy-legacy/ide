@@ -16,32 +16,38 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
+public class JavadocArraySingleTypeReference extends ArrayTypeReference
+{
 
-public class JavadocArraySingleTypeReference extends ArrayTypeReference {
+   public JavadocArraySingleTypeReference(char[] name, int dim, long pos)
+   {
+      super(name, dim, pos);
+      this.bits |= InsideJavadoc;
+   }
 
-	public JavadocArraySingleTypeReference(char[] name, int dim, long pos) {
-		super(name, dim, pos);
-		this.bits |= InsideJavadoc;
-	}
+   protected void reportInvalidType(Scope scope)
+   {
+      scope.problemReporter().javadocInvalidType(this, this.resolvedType, scope.getDeclarationModifiers());
+   }
 
-	protected void reportInvalidType(Scope scope) {
-		scope.problemReporter().javadocInvalidType(this, this.resolvedType, scope.getDeclarationModifiers());
-	}
-	protected void reportDeprecatedType(TypeBinding type, Scope scope) {
-		scope.problemReporter().javadocDeprecatedType(type, this, scope.getDeclarationModifiers());
-	}
+   protected void reportDeprecatedType(TypeBinding type, Scope scope)
+   {
+      scope.problemReporter().javadocDeprecatedType(type, this, scope.getDeclarationModifiers());
+   }
 
-	/* (non-Javadoc)
-	 * Redefine to capture javadoc specific signatures
-	 * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
-	 */
-	public void traverse(ASTVisitor visitor, BlockScope scope) {
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
+   /* (non-Javadoc)
+    * Redefine to capture javadoc specific signatures
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    */
+   public void traverse(ASTVisitor visitor, BlockScope scope)
+   {
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
 
-	public void traverse(ASTVisitor visitor, ClassScope scope) {
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
+   public void traverse(ASTVisitor visitor, ClassScope scope)
+   {
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
 }

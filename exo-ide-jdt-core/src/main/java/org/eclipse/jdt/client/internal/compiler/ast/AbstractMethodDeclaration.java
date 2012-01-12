@@ -191,144 +191,144 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
       return this.compilationResult;
    }
 
-//   /**
-//    * Bytecode generation for a method
-//    * @param classScope
-//    * @param classFile
-//    */
-//   public void generateCode(ClassScope classScope, ClassFile classFile)
-//   {
-//
-//      int problemResetPC = 0;
-//      classFile.codeStream.wideMode = false; // reset wideMode to false
-//      if (this.ignoreFurtherInvestigation)
-//      {
-//         // method is known to have errors, dump a problem method
-//         if (this.binding == null)
-//            return; // handle methods with invalid signature or duplicates
-//         int problemsLength;
-//         CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getProblems();
-//         CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
-//         System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
-//         classFile.addProblemMethod(this, this.binding, problemsCopy);
-//         return;
-//      }
-//      boolean restart = false;
-//      boolean abort = false;
-//      // regular code generation
-//      do
-//      {
-//         try
-//         {
-//            problemResetPC = classFile.contentsOffset;
-//            this.generateCode(classFile);
-//            restart = false;
-//         }
-//         catch (AbortMethod e)
-//         {
-//            // a fatal error was detected during code generation, need to restart code gen if possible
-//            if (e.compilationResult == CodeStream.RESTART_IN_WIDE_MODE)
-//            {
-//               // a branch target required a goto_w, restart code gen in wide mode.
-//               if (!restart)
-//               {
-//                  classFile.contentsOffset = problemResetPC;
-//                  classFile.methodCount--;
-//                  classFile.codeStream.resetInWideMode(); // request wide mode
-//                  restart = true;
-//               }
-//               else
-//               {
-//                  // after restarting in wide mode, code generation failed again
-//                  // report a problem
-//                  restart = false;
-//                  abort = true;
-//               }
-//            }
-//            else if (e.compilationResult == CodeStream.RESTART_CODE_GEN_FOR_UNUSED_LOCALS_MODE)
-//            {
-//               classFile.contentsOffset = problemResetPC;
-//               classFile.methodCount--;
-//               classFile.codeStream.resetForCodeGenUnusedLocals();
-//               restart = true;
-//            }
-//            else
-//            {
-//               restart = false;
-//               abort = true;
-//            }
-//         }
-//      }
-//      while (restart);
-//      // produce a problem method accounting for this fatal error
-//      if (abort)
-//      {
-//         int problemsLength;
-//         CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getAllProblems();
-//         CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
-//         System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
-//         classFile.addProblemMethod(this, this.binding, problemsCopy, problemResetPC);
-//      }
-//   }
-//
-//   public void generateCode(ClassFile classFile)
-//   {
-//
-//      classFile.generateMethodInfoHeader(this.binding);
-//      int methodAttributeOffset = classFile.contentsOffset;
-//      int attributeNumber = classFile.generateMethodInfoAttributes(this.binding);
-//      if ((!this.binding.isNative()) && (!this.binding.isAbstract()))
-//      {
-//         int codeAttributeOffset = classFile.contentsOffset;
-//         classFile.generateCodeAttributeHeader();
-//         CodeStream codeStream = classFile.codeStream;
-//         codeStream.reset(this, classFile);
-//         // initialize local positions
-//         this.scope.computeLocalVariablePositions(this.binding.isStatic() ? 0 : 1, codeStream);
-//
-//         // arguments initialization for local variable debug attributes
-//         if (this.arguments != null)
-//         {
-//            for (int i = 0, max = this.arguments.length; i < max; i++)
-//            {
-//               LocalVariableBinding argBinding;
-//               codeStream.addVisibleLocalVariable(argBinding = this.arguments[i].binding);
-//               argBinding.recordInitializationStartPC(0);
-//            }
-//         }
-//         if (this.statements != null)
-//         {
-//            for (int i = 0, max = this.statements.length; i < max; i++)
-//               this.statements[i].generateCode(this.scope, codeStream);
-//         }
-//         // if a problem got reported during code gen, then trigger problem method creation
-//         if (this.ignoreFurtherInvestigation)
-//         {
-//            throw new AbortMethod(this.scope.referenceCompilationUnit().compilationResult, null);
-//         }
-//         if ((this.bits & ASTNode.NeedFreeReturn) != 0)
-//         {
-//            codeStream.return_();
-//         }
-//         // local variable attributes
-//         codeStream.exitUserScope(this.scope);
-//         codeStream.recordPositionsFrom(0, this.declarationSourceEnd);
-//         try
-//         {
-//            classFile.completeCodeAttribute(codeAttributeOffset);
-//         }
-//         catch (NegativeArraySizeException e)
-//         {
-//            throw new AbortMethod(this.scope.referenceCompilationUnit().compilationResult, null);
-//         }
-//         attributeNumber++;
-//      }
-//      else
-//      {
-//         checkArgumentsSize();
-//      }
-//      classFile.completeMethodInfo(this.binding, methodAttributeOffset, attributeNumber);
-//   }
+   //   /**
+   //    * Bytecode generation for a method
+   //    * @param classScope
+   //    * @param classFile
+   //    */
+   //   public void generateCode(ClassScope classScope, ClassFile classFile)
+   //   {
+   //
+   //      int problemResetPC = 0;
+   //      classFile.codeStream.wideMode = false; // reset wideMode to false
+   //      if (this.ignoreFurtherInvestigation)
+   //      {
+   //         // method is known to have errors, dump a problem method
+   //         if (this.binding == null)
+   //            return; // handle methods with invalid signature or duplicates
+   //         int problemsLength;
+   //         CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getProblems();
+   //         CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
+   //         System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
+   //         classFile.addProblemMethod(this, this.binding, problemsCopy);
+   //         return;
+   //      }
+   //      boolean restart = false;
+   //      boolean abort = false;
+   //      // regular code generation
+   //      do
+   //      {
+   //         try
+   //         {
+   //            problemResetPC = classFile.contentsOffset;
+   //            this.generateCode(classFile);
+   //            restart = false;
+   //         }
+   //         catch (AbortMethod e)
+   //         {
+   //            // a fatal error was detected during code generation, need to restart code gen if possible
+   //            if (e.compilationResult == CodeStream.RESTART_IN_WIDE_MODE)
+   //            {
+   //               // a branch target required a goto_w, restart code gen in wide mode.
+   //               if (!restart)
+   //               {
+   //                  classFile.contentsOffset = problemResetPC;
+   //                  classFile.methodCount--;
+   //                  classFile.codeStream.resetInWideMode(); // request wide mode
+   //                  restart = true;
+   //               }
+   //               else
+   //               {
+   //                  // after restarting in wide mode, code generation failed again
+   //                  // report a problem
+   //                  restart = false;
+   //                  abort = true;
+   //               }
+   //            }
+   //            else if (e.compilationResult == CodeStream.RESTART_CODE_GEN_FOR_UNUSED_LOCALS_MODE)
+   //            {
+   //               classFile.contentsOffset = problemResetPC;
+   //               classFile.methodCount--;
+   //               classFile.codeStream.resetForCodeGenUnusedLocals();
+   //               restart = true;
+   //            }
+   //            else
+   //            {
+   //               restart = false;
+   //               abort = true;
+   //            }
+   //         }
+   //      }
+   //      while (restart);
+   //      // produce a problem method accounting for this fatal error
+   //      if (abort)
+   //      {
+   //         int problemsLength;
+   //         CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getAllProblems();
+   //         CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
+   //         System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
+   //         classFile.addProblemMethod(this, this.binding, problemsCopy, problemResetPC);
+   //      }
+   //   }
+   //
+   //   public void generateCode(ClassFile classFile)
+   //   {
+   //
+   //      classFile.generateMethodInfoHeader(this.binding);
+   //      int methodAttributeOffset = classFile.contentsOffset;
+   //      int attributeNumber = classFile.generateMethodInfoAttributes(this.binding);
+   //      if ((!this.binding.isNative()) && (!this.binding.isAbstract()))
+   //      {
+   //         int codeAttributeOffset = classFile.contentsOffset;
+   //         classFile.generateCodeAttributeHeader();
+   //         CodeStream codeStream = classFile.codeStream;
+   //         codeStream.reset(this, classFile);
+   //         // initialize local positions
+   //         this.scope.computeLocalVariablePositions(this.binding.isStatic() ? 0 : 1, codeStream);
+   //
+   //         // arguments initialization for local variable debug attributes
+   //         if (this.arguments != null)
+   //         {
+   //            for (int i = 0, max = this.arguments.length; i < max; i++)
+   //            {
+   //               LocalVariableBinding argBinding;
+   //               codeStream.addVisibleLocalVariable(argBinding = this.arguments[i].binding);
+   //               argBinding.recordInitializationStartPC(0);
+   //            }
+   //         }
+   //         if (this.statements != null)
+   //         {
+   //            for (int i = 0, max = this.statements.length; i < max; i++)
+   //               this.statements[i].generateCode(this.scope, codeStream);
+   //         }
+   //         // if a problem got reported during code gen, then trigger problem method creation
+   //         if (this.ignoreFurtherInvestigation)
+   //         {
+   //            throw new AbortMethod(this.scope.referenceCompilationUnit().compilationResult, null);
+   //         }
+   //         if ((this.bits & ASTNode.NeedFreeReturn) != 0)
+   //         {
+   //            codeStream.return_();
+   //         }
+   //         // local variable attributes
+   //         codeStream.exitUserScope(this.scope);
+   //         codeStream.recordPositionsFrom(0, this.declarationSourceEnd);
+   //         try
+   //         {
+   //            classFile.completeCodeAttribute(codeAttributeOffset);
+   //         }
+   //         catch (NegativeArraySizeException e)
+   //         {
+   //            throw new AbortMethod(this.scope.referenceCompilationUnit().compilationResult, null);
+   //         }
+   //         attributeNumber++;
+   //      }
+   //      else
+   //      {
+   //         checkArgumentsSize();
+   //      }
+   //      classFile.completeMethodInfo(this.binding, methodAttributeOffset, attributeNumber);
+   //   }
 
    private void checkArgumentsSize()
    {

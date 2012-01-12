@@ -587,7 +587,7 @@ public final class CharOperation
 
          if (iPattern == patternEnd)
          { // we have exhausted pattern...
-            // it's a match if the name can have additional parts (i.e. uppercase characters) or is also exhausted
+           // it's a match if the name can have additional parts (i.e. uppercase characters) or is also exhausted
             if (!samePartCount || iName == nameEnd)
                return true;
 
@@ -703,17 +703,16 @@ public final class CharOperation
          // Since pattern is also at an uppercase letter
       }
    }
-   
+
    public static native boolean isJavaIdentifierPart(char ch)/*-{
-      var pat = /[\p{L}\p{N}\p{Sc}_]/;
-      return ch.match(pat);
-   }-*/;
-   
+                                                             var pat = /[\p{L}\p{N}\p{Sc}_]/;
+                                                             return ch.match(pat);
+                                                             }-*/;
+
    public static native boolean isJavaIdentifierStart(char ch)/*-{
-      var pat = /[\p{L}_\p{Sc}]/;
-      return ch.match(pat);
-   }-*/;
-   
+                                                              var pat = /[\p{L}_\p{Sc}]/;
+                                                              return ch.match(pat);
+                                                              }-*/;
 
    /**
     * Returns the char arrays as an array of Strings

@@ -612,149 +612,149 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return null;
    }
 
-//   /**
-//    * Generic bytecode generation for type
-//    */
-//   public void generateCode(ClassFile enclosingClassFile)
-//   {
-//      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
-//         return;
-//      this.bits |= ASTNode.HasBeenGenerated;
-//      if (this.ignoreFurtherInvestigation)
-//      {
-//         if (this.binding == null)
-//            return;
-//         ClassFile.createProblemType(this, this.scope.referenceCompilationUnit().compilationResult);
-//         return;
-//      }
-//      try
-//      {
-//         // create the result for a compiled type
-//         ClassFile classFile = ClassFile.getNewInstance(this.binding);
-//         classFile.initialize(this.binding, enclosingClassFile, false);
-//         if (this.binding.isMemberType())
-//         {
-//            classFile.recordInnerClasses(this.binding);
-//         }
-//         else if (this.binding.isLocalType())
-//         {
-//            enclosingClassFile.recordInnerClasses(this.binding);
-//            classFile.recordInnerClasses(this.binding);
-//         }
-//         TypeVariableBinding[] typeVariables = this.binding.typeVariables();
-//         for (int i = 0, max = typeVariables.length; i < max; i++)
-//         {
-//            TypeVariableBinding typeVariableBinding = typeVariables[i];
-//            if ((typeVariableBinding.tagBits & TagBits.ContainsNestedTypeReferences) != 0)
-//            {
-//               Util.recordNestedType(classFile, typeVariableBinding);
-//            }
-//         }
-//
-//         // generate all fiels
-//         classFile.addFieldInfos();
-//
-//         if (this.memberTypes != null)
-//         {
-//            for (int i = 0, max = this.memberTypes.length; i < max; i++)
-//            {
-//               TypeDeclaration memberType = this.memberTypes[i];
-//               classFile.recordInnerClasses(memberType.binding);
-//               memberType.generateCode(this.scope, classFile);
-//            }
-//         }
-//         // generate all methods
-//         classFile.setForMethodInfos();
-//         if (this.methods != null)
-//         {
-//            for (int i = 0, max = this.methods.length; i < max; i++)
-//            {
-//               this.methods[i].generateCode(this.scope, classFile);
-//            }
-//         }
-//         // generate all synthetic and abstract methods
-//         classFile.addSpecialMethods();
-//
-//         if (this.ignoreFurtherInvestigation)
-//         { // trigger problem type generation for code gen errors
-//            throw new AbortType(this.scope.referenceCompilationUnit().compilationResult, null);
-//         }
-//
-//         // finalize the compiled type result
-//         classFile.addAttributes();
-//         this.scope.referenceCompilationUnit().compilationResult.record(this.binding.constantPoolName(), classFile);
-//      }
-//      catch (AbortType e)
-//      {
-//         if (this.binding == null)
-//            return;
-//         ClassFile.createProblemType(this, this.scope.referenceCompilationUnit().compilationResult);
-//      }
-//   }
+   //   /**
+   //    * Generic bytecode generation for type
+   //    */
+   //   public void generateCode(ClassFile enclosingClassFile)
+   //   {
+   //      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
+   //         return;
+   //      this.bits |= ASTNode.HasBeenGenerated;
+   //      if (this.ignoreFurtherInvestigation)
+   //      {
+   //         if (this.binding == null)
+   //            return;
+   //         ClassFile.createProblemType(this, this.scope.referenceCompilationUnit().compilationResult);
+   //         return;
+   //      }
+   //      try
+   //      {
+   //         // create the result for a compiled type
+   //         ClassFile classFile = ClassFile.getNewInstance(this.binding);
+   //         classFile.initialize(this.binding, enclosingClassFile, false);
+   //         if (this.binding.isMemberType())
+   //         {
+   //            classFile.recordInnerClasses(this.binding);
+   //         }
+   //         else if (this.binding.isLocalType())
+   //         {
+   //            enclosingClassFile.recordInnerClasses(this.binding);
+   //            classFile.recordInnerClasses(this.binding);
+   //         }
+   //         TypeVariableBinding[] typeVariables = this.binding.typeVariables();
+   //         for (int i = 0, max = typeVariables.length; i < max; i++)
+   //         {
+   //            TypeVariableBinding typeVariableBinding = typeVariables[i];
+   //            if ((typeVariableBinding.tagBits & TagBits.ContainsNestedTypeReferences) != 0)
+   //            {
+   //               Util.recordNestedType(classFile, typeVariableBinding);
+   //            }
+   //         }
+   //
+   //         // generate all fiels
+   //         classFile.addFieldInfos();
+   //
+   //         if (this.memberTypes != null)
+   //         {
+   //            for (int i = 0, max = this.memberTypes.length; i < max; i++)
+   //            {
+   //               TypeDeclaration memberType = this.memberTypes[i];
+   //               classFile.recordInnerClasses(memberType.binding);
+   //               memberType.generateCode(this.scope, classFile);
+   //            }
+   //         }
+   //         // generate all methods
+   //         classFile.setForMethodInfos();
+   //         if (this.methods != null)
+   //         {
+   //            for (int i = 0, max = this.methods.length; i < max; i++)
+   //            {
+   //               this.methods[i].generateCode(this.scope, classFile);
+   //            }
+   //         }
+   //         // generate all synthetic and abstract methods
+   //         classFile.addSpecialMethods();
+   //
+   //         if (this.ignoreFurtherInvestigation)
+   //         { // trigger problem type generation for code gen errors
+   //            throw new AbortType(this.scope.referenceCompilationUnit().compilationResult, null);
+   //         }
+   //
+   //         // finalize the compiled type result
+   //         classFile.addAttributes();
+   //         this.scope.referenceCompilationUnit().compilationResult.record(this.binding.constantPoolName(), classFile);
+   //      }
+   //      catch (AbortType e)
+   //      {
+   //         if (this.binding == null)
+   //            return;
+   //         ClassFile.createProblemType(this, this.scope.referenceCompilationUnit().compilationResult);
+   //      }
+   //   }
 
-//   /**
-//    * Bytecode generation for a local inner type (API as a normal statement code gen)
-//    */
-//   public void generateCode(BlockScope blockScope, CodeStream codeStream)
-//   {
-//      if ((this.bits & ASTNode.IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
-//         return;
-//      int pc = codeStream.position;
-//      if (this.binding != null)
-//      {
-//         SyntheticArgumentBinding[] enclosingInstances =
-//            ((NestedTypeBinding)this.binding).syntheticEnclosingInstances();
-//         for (int i = 0, slotSize = 0, count = enclosingInstances == null ? 0 : enclosingInstances.length; i < count; i++)
-//         {
-//            SyntheticArgumentBinding enclosingInstance = enclosingInstances[i];
-//            enclosingInstance.resolvedPosition = ++slotSize; // shift by 1 to leave room for aload0==this
-//            if (slotSize > 0xFF)
-//            { // no more than 255 words of arguments
-//               blockScope.problemReporter().noMoreAvailableSpaceForArgument(enclosingInstance,
-//                  blockScope.referenceType());
-//            }
-//         }
-//      }
-//      generateCode(codeStream.classFile);
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Bytecode generation for a local inner type (API as a normal statement code gen)
+   //    */
+   //   public void generateCode(BlockScope blockScope, CodeStream codeStream)
+   //   {
+   //      if ((this.bits & ASTNode.IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
+   //         return;
+   //      int pc = codeStream.position;
+   //      if (this.binding != null)
+   //      {
+   //         SyntheticArgumentBinding[] enclosingInstances =
+   //            ((NestedTypeBinding)this.binding).syntheticEnclosingInstances();
+   //         for (int i = 0, slotSize = 0, count = enclosingInstances == null ? 0 : enclosingInstances.length; i < count; i++)
+   //         {
+   //            SyntheticArgumentBinding enclosingInstance = enclosingInstances[i];
+   //            enclosingInstance.resolvedPosition = ++slotSize; // shift by 1 to leave room for aload0==this
+   //            if (slotSize > 0xFF)
+   //            { // no more than 255 words of arguments
+   //               blockScope.problemReporter().noMoreAvailableSpaceForArgument(enclosingInstance,
+   //                  blockScope.referenceType());
+   //            }
+   //         }
+   //      }
+   //      generateCode(codeStream.classFile);
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
-//   /**
-//    * Bytecode generation for a member inner type
-//    */
-//   public void generateCode(ClassScope classScope, ClassFile enclosingClassFile)
-//   {
-//      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
-//         return;
-//      if (this.binding != null)
-//      {
-//         SyntheticArgumentBinding[] enclosingInstances =
-//            ((NestedTypeBinding)this.binding).syntheticEnclosingInstances();
-//         for (int i = 0, slotSize = 0, count = enclosingInstances == null ? 0 : enclosingInstances.length; i < count; i++)
-//         {
-//            SyntheticArgumentBinding enclosingInstance = enclosingInstances[i];
-//            enclosingInstance.resolvedPosition = ++slotSize; // shift by 1 to leave room for aload0==this
-//            if (slotSize > 0xFF)
-//            { // no more than 255 words of arguments
-//               classScope.problemReporter().noMoreAvailableSpaceForArgument(enclosingInstance,
-//                  classScope.referenceType());
-//            }
-//         }
-//      }
-//      generateCode(enclosingClassFile);
-//   }
+   //   /**
+   //    * Bytecode generation for a member inner type
+   //    */
+   //   public void generateCode(ClassScope classScope, ClassFile enclosingClassFile)
+   //   {
+   //      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
+   //         return;
+   //      if (this.binding != null)
+   //      {
+   //         SyntheticArgumentBinding[] enclosingInstances =
+   //            ((NestedTypeBinding)this.binding).syntheticEnclosingInstances();
+   //         for (int i = 0, slotSize = 0, count = enclosingInstances == null ? 0 : enclosingInstances.length; i < count; i++)
+   //         {
+   //            SyntheticArgumentBinding enclosingInstance = enclosingInstances[i];
+   //            enclosingInstance.resolvedPosition = ++slotSize; // shift by 1 to leave room for aload0==this
+   //            if (slotSize > 0xFF)
+   //            { // no more than 255 words of arguments
+   //               classScope.problemReporter().noMoreAvailableSpaceForArgument(enclosingInstance,
+   //                  classScope.referenceType());
+   //            }
+   //         }
+   //      }
+   //      generateCode(enclosingClassFile);
+   //   }
 
-//   /**
-//    * Bytecode generation for a package member
-//    */
-//   public void generateCode(CompilationUnitScope unitScope)
-//   {
-//      generateCode((ClassFile)null);
-//   }
+   //   /**
+   //    * Bytecode generation for a package member
+   //    */
+   //   public void generateCode(CompilationUnitScope unitScope)
+   //   {
+   //      generateCode((ClassFile)null);
+   //   }
 
    public boolean hasErrors()
    {
@@ -1521,7 +1521,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
             }
             else if (blockScope.isDefinedInSameUnit(existingType))
             { // only consider hiding inside same unit
-               // hiding sibling
+              // hiding sibling
                blockScope.problemReporter().typeHiding(this, existingType);
             }
          }

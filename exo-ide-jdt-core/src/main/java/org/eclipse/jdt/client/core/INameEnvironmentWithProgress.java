@@ -24,13 +24,14 @@ import org.eclipse.jdt.client.runtime.IProgressMonitor;
  * 
  * @since 3.6
  */
-public interface INameEnvironmentWithProgress extends INameEnvironment {
-	
-	/**
-	 * Set the monitor for the given name environment. In order to be able to cancel this name environment calls,
-	 * a non-null monitor should be given. 
-	 * 
-	 * @param monitor the given monitor
-	 */
-	void setMonitor(IProgressMonitor monitor);
+public interface INameEnvironmentWithProgress extends INameEnvironment
+{
+
+   /**
+    * Set the monitor for the given name environment. In order to be able to cancel this name environment calls,
+    * a non-null monitor should be given. 
+    * 
+    * @param monitor the given monitor
+    */
+   void setMonitor(IProgressMonitor monitor);
 }

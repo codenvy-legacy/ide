@@ -79,7 +79,6 @@ public class CharUtil
       }
    }
 
-   
    @SuppressWarnings("deprecation")
    public static boolean isSpaceChar(int cp)
    {
@@ -117,24 +116,24 @@ public class CharUtil
    }
 
    private static native String deLZW(Decoder d, int max) /*-{
-		var dict = {}, f = String.fromCharCode;
-		var current = f(d.@org.eclipse.jdt.client.core.util.CharUtil.Decoder::next()());
-		var oldPhrase = current, seen = max, phrase, out = [ current ], code;
-		for (;;) {
-			if ((code = d.@org.eclipse.jdt.client.core.util.CharUtil.Decoder::next()()) < 0) {
-				break;
-			} else if (code < max) {
-				phrase = f(code);
-			} else {
-				phrase = dict[code] ? dict[code] : oldPhrase + current;
-			}
-			out.push(phrase);
-			current = phrase.charAt(0);
-			dict[seen++] = oldPhrase + current;
-			oldPhrase = phrase;
-		}
-		return out.join("") + f(301);
-   }-*/;
+                                                          var dict = {}, f = String.fromCharCode;
+                                                          var current = f(d.@org.eclipse.jdt.client.core.util.CharUtil.Decoder::next()());
+                                                          var oldPhrase = current, seen = max, phrase, out = [ current ], code;
+                                                          for (;;) {
+                                                          if ((code = d.@org.eclipse.jdt.client.core.util.CharUtil.Decoder::next()()) < 0) {
+                                                          break;
+                                                          } else if (code < max) {
+                                                          phrase = f(code);
+                                                          } else {
+                                                          phrase = dict[code] ? dict[code] : oldPhrase + current;
+                                                          }
+                                                          out.push(phrase);
+                                                          current = phrase.charAt(0);
+                                                          dict[seen++] = oldPhrase + current;
+                                                          oldPhrase = phrase;
+                                                          }
+                                                          return out.join("") + f(301);
+                                                          }-*/;
 
    private static class Decoder
    {

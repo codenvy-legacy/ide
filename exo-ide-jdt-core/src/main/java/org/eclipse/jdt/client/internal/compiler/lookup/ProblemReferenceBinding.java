@@ -52,35 +52,35 @@ public class ProblemReferenceBinding extends ReferenceBinding
       return this.problemReason;
    }
 
-//   public static String problemReasonString(int problemReason)
-//   {
-//      
-//         
-//         String simpleName =  ProblemReasons.class.getSimpleName();
-//
-//         switch (problemReason)
-//         {
-//            case ProblemReasons.Ambiguous :
-//                 return simpleName + '.' + "Ambiguous";
-//                 
-//           
-//             default :
-//             return "unknown"; //$NON-NLS-1$        
-//         }
-////         Field[] fields = reasons.getFields();
-////         for (int i = 0, length = fields.length; i < length; i++)
-////         {
-////            Field field = fields[i];
-////            if (!field.getType().equals(int.class))
-////               continue;
-////            if (field.getInt(reasons) == problemReason)
-////            {
-////               return simpleName + '.' + field.getName();
-////            }
-////         }
-//      
-//      
-//   }
+   //   public static String problemReasonString(int problemReason)
+   //   {
+   //      
+   //         
+   //         String simpleName =  ProblemReasons.class.getSimpleName();
+   //
+   //         switch (problemReason)
+   //         {
+   //            case ProblemReasons.Ambiguous :
+   //                 return simpleName + '.' + "Ambiguous";
+   //                 
+   //           
+   //             default :
+   //             return "unknown"; //$NON-NLS-1$        
+   //         }
+   ////         Field[] fields = reasons.getFields();
+   ////         for (int i = 0, length = fields.length; i < length; i++)
+   ////         {
+   ////            Field field = fields[i];
+   ////            if (!field.getType().equals(int.class))
+   ////               continue;
+   ////            if (field.getInt(reasons) == problemReason)
+   ////            {
+   ////               return simpleName + '.' + field.getName();
+   ////            }
+   ////         }
+   //      
+   //      
+   //   }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName()

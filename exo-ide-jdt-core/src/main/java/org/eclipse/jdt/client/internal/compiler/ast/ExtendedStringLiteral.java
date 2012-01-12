@@ -13,67 +13,69 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
-public class ExtendedStringLiteral extends StringLiteral {
+public class ExtendedStringLiteral extends StringLiteral
+{
 
-	/**
-	 *  Build a string+char literal
-	 */
-	public ExtendedStringLiteral(StringLiteral str, CharLiteral character) {
+   /**
+    *  Build a string+char literal
+    */
+   public ExtendedStringLiteral(StringLiteral str, CharLiteral character)
+   {
 
-		super(str.source, str.sourceStart, str.sourceEnd, str.lineNumber);
-		extendWith(character);
-	}
+      super(str.source, str.sourceStart, str.sourceEnd, str.lineNumber);
+      extendWith(character);
+   }
 
-	/**
-	 * Build a two-strings literal
-	 * */
-	public ExtendedStringLiteral(StringLiteral str1, StringLiteral str2) {
+   /**
+    * Build a two-strings literal
+    * */
+   public ExtendedStringLiteral(StringLiteral str1, StringLiteral str2)
+   {
 
-		super(str1.source, str1.sourceStart, str1.sourceEnd, str1.lineNumber);
-		extendWith(str2);
-	}
+      super(str1.source, str1.sourceStart, str1.sourceEnd, str1.lineNumber);
+      extendWith(str2);
+   }
 
-	/**
-	 * Add the lit source to mine, just as if it was mine
-	 */
-	public ExtendedStringLiteral extendWith(CharLiteral lit) {
+   /**
+    * Add the lit source to mine, just as if it was mine
+    */
+   public ExtendedStringLiteral extendWith(CharLiteral lit)
+   {
 
-		//update the source
-		int length = this.source.length;
-		System.arraycopy(this.source, 0, (this.source = new char[length + 1]), 0, length);
-		this.source[length] = lit.value;
-		//position at the end of all literals
-		this.sourceEnd = lit.sourceEnd;
-		return this;
-	}
+      //update the source
+      int length = this.source.length;
+      System.arraycopy(this.source, 0, (this.source = new char[length + 1]), 0, length);
+      this.source[length] = lit.value;
+      //position at the end of all literals
+      this.sourceEnd = lit.sourceEnd;
+      return this;
+   }
 
-	/**
-	 *  Add the lit source to mine, just as if it was mine
-	 */
-	public ExtendedStringLiteral extendWith(StringLiteral lit) {
+   /**
+    *  Add the lit source to mine, just as if it was mine
+    */
+   public ExtendedStringLiteral extendWith(StringLiteral lit)
+   {
 
-		//uddate the source
-		int length = this.source.length;
-		System.arraycopy(
-			this.source,
-			0,
-			this.source = new char[length + lit.source.length],
-			0,
-			length);
-		System.arraycopy(lit.source, 0, this.source, length, lit.source.length);
-		//position at the end of all literals
-		this.sourceEnd = lit.sourceEnd;
-		return this;
-	}
+      //uddate the source
+      int length = this.source.length;
+      System.arraycopy(this.source, 0, this.source = new char[length + lit.source.length], 0, length);
+      System.arraycopy(lit.source, 0, this.source, length, lit.source.length);
+      //position at the end of all literals
+      this.sourceEnd = lit.sourceEnd;
+      return this;
+   }
 
-	public StringBuffer printExpression(int indent, StringBuffer output) {
+   public StringBuffer printExpression(int indent, StringBuffer output)
+   {
 
-		return output.append("ExtendedStringLiteral{").append(this.source).append('}'); //$NON-NLS-1$
-	}
+      return output.append("ExtendedStringLiteral{").append(this.source).append('}'); //$NON-NLS-1$
+   }
 
-	public void traverse(ASTVisitor visitor, BlockScope scope) {
+   public void traverse(ASTVisitor visitor, BlockScope scope)
+   {
 
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
 }

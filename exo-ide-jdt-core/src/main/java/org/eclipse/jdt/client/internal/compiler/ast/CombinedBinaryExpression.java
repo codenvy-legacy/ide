@@ -145,154 +145,154 @@ public class CombinedBinaryExpression extends BinaryExpression
       return this.right.analyseCode(currentScope, flowContext, flowInfo).unconditionalInits();
    }
 
-//   public void generateOptimizedStringConcatenation(BlockScope blockScope, CodeStream codeStream, int typeID)
-//   {
-//      // keep implementation in sync with BinaryExpression and Expression
-//      // #generateOptimizedStringConcatenation
-//      if (this.referencesTable == null)
-//      {
-//         super.generateOptimizedStringConcatenation(blockScope, codeStream, typeID);
-//      }
-//      else
-//      {
-//         if ((((this.bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT) == OperatorIds.PLUS)
-//            && ((this.bits & ASTNode.ReturnTypeIDMASK) == TypeIds.T_JavaLangString))
-//         {
-//            if (this.constant != Constant.NotAConstant)
-//            {
-//               codeStream.generateConstant(this.constant, this.implicitConversion);
-//               codeStream.invokeStringConcatenationAppendForType(this.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
-//            }
-//            else
-//            {
-//               BinaryExpression cursor = this.referencesTable[0];
-//
-//               int restart = 0;
-//               //			int cursorTypeID;
-//               int pc = codeStream.position;
-//               for (restart = this.arity - 1; restart >= 0; restart--)
-//               {
-//                  if ((cursor = this.referencesTable[restart]).constant != Constant.NotAConstant)
-//                  {
-//                     codeStream.generateConstant(cursor.constant, cursor.implicitConversion);
-//                     codeStream.invokeStringConcatenationAppendForType(cursor.implicitConversion
-//                        & TypeIds.COMPILE_TYPE_MASK);
-//                     break;
-//                  }
-//                  // never happens for now - may reconsider if we decide to
-//                  // cover more than string concatenation
-//                  //				if (!((((cursor = this.referencesTable[restart]).bits &
-//                  //						ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT) ==
-//                  //							OperatorIds.PLUS) &
-//                  //						((cursorTypeID = cursor.bits & ASTNode.ReturnTypeIDMASK) ==
-//                  //							TypeIds.T_JavaLangString)) {
-//                  //					if (cursorTypeID == T_JavaLangString &&
-//                  //							cursor.constant != Constant.NotAConstant &&
-//                  //							cursor.constant.stringValue().length() == 0) {
-//                  //						break; // optimize str + ""
-//                  //					}
-//                  //					cursor.generateCode(blockScope, codeStream, true);
-//                  //					codeStream.invokeStringConcatenationAppendForType(
-//                  //							cursorTypeID);
-//                  //					break;
-//                  //				}
-//               }
-//               restart++;
-//               if (restart == 0)
-//               { // reached the leftmost expression
-//                  cursor.left.generateOptimizedStringConcatenation(blockScope, codeStream,
-//                     cursor.left.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
-//               }
-//               int pcAux;
-//               for (int i = restart; i < this.arity; i++)
-//               {
-//                  codeStream.recordPositionsFrom(pc, (cursor = this.referencesTable[i]).left.sourceStart);
-//                  pcAux = codeStream.position;
-//                  cursor.right.generateOptimizedStringConcatenation(blockScope, codeStream,
-//                     cursor.right.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
-//                  codeStream.recordPositionsFrom(pcAux, cursor.right.sourceStart);
-//               }
-//               codeStream.recordPositionsFrom(pc, this.left.sourceStart);
-//               pc = codeStream.position;
-//               this.right.generateOptimizedStringConcatenation(blockScope, codeStream, this.right.implicitConversion
-//                  & TypeIds.COMPILE_TYPE_MASK);
-//               codeStream.recordPositionsFrom(pc, this.right.sourceStart);
-//            }
-//         }
-//         else
-//         {
-//            super.generateOptimizedStringConcatenation(blockScope, codeStream, typeID);
-//         }
-//      }
-//   }
-//
-//   public void generateOptimizedStringConcatenationCreation(BlockScope blockScope, CodeStream codeStream, int typeID)
-//   {
-//      // keep implementation in sync with BinaryExpression
-//      // #generateOptimizedStringConcatenationCreation
-//      if (this.referencesTable == null)
-//      {
-//         super.generateOptimizedStringConcatenationCreation(blockScope, codeStream, typeID);
-//      }
-//      else
-//      {
-//         if ((((this.bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT) == OperatorIds.PLUS)
-//            && ((this.bits & ASTNode.ReturnTypeIDMASK) == TypeIds.T_JavaLangString)
-//            && this.constant == Constant.NotAConstant)
-//         {
-//            int pc = codeStream.position;
-//            BinaryExpression cursor = this.referencesTable[this.arity - 1];
-//            // silence warnings
-//            int restart = 0;
-//            for (restart = this.arity - 1; restart >= 0; restart--)
-//            {
-//               if (((((cursor = this.referencesTable[restart]).bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT) == OperatorIds.PLUS)
-//                  && ((cursor.bits & ASTNode.ReturnTypeIDMASK) == TypeIds.T_JavaLangString))
-//               {
-//                  if (cursor.constant != Constant.NotAConstant)
-//                  {
-//                     codeStream.newStringContatenation(); // new: java.lang.StringBuffer
-//                     codeStream.dup();
-//                     codeStream.ldc(cursor.constant.stringValue());
-//                     codeStream.invokeStringConcatenationStringConstructor();
-//                     // invokespecial: java.lang.StringBuffer.<init>(Ljava.lang.String;)V
-//                     break;
-//                  }
-//               }
-//               else
-//               {
-//                  cursor.generateOptimizedStringConcatenationCreation(blockScope, codeStream, cursor.implicitConversion
-//                     & TypeIds.COMPILE_TYPE_MASK);
-//                  break;
-//               }
-//            }
-//            restart++;
-//            if (restart == 0)
-//            { // reached the leftmost expression
-//               cursor.left.generateOptimizedStringConcatenationCreation(blockScope, codeStream,
-//                  cursor.left.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
-//            }
-//            int pcAux;
-//            for (int i = restart; i < this.arity; i++)
-//            {
-//               codeStream.recordPositionsFrom(pc, (cursor = this.referencesTable[i]).left.sourceStart);
-//               pcAux = codeStream.position;
-//               cursor.right.generateOptimizedStringConcatenation(blockScope, codeStream,
-//                  cursor.right.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
-//               codeStream.recordPositionsFrom(pcAux, cursor.right.sourceStart);
-//            }
-//            codeStream.recordPositionsFrom(pc, this.left.sourceStart);
-//            pc = codeStream.position;
-//            this.right.generateOptimizedStringConcatenation(blockScope, codeStream, this.right.implicitConversion
-//               & TypeIds.COMPILE_TYPE_MASK);
-//            codeStream.recordPositionsFrom(pc, this.right.sourceStart);
-//         }
-//         else
-//         {
-//            super.generateOptimizedStringConcatenationCreation(blockScope, codeStream, typeID);
-//         }
-//      }
-//   }
+   //   public void generateOptimizedStringConcatenation(BlockScope blockScope, CodeStream codeStream, int typeID)
+   //   {
+   //      // keep implementation in sync with BinaryExpression and Expression
+   //      // #generateOptimizedStringConcatenation
+   //      if (this.referencesTable == null)
+   //      {
+   //         super.generateOptimizedStringConcatenation(blockScope, codeStream, typeID);
+   //      }
+   //      else
+   //      {
+   //         if ((((this.bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT) == OperatorIds.PLUS)
+   //            && ((this.bits & ASTNode.ReturnTypeIDMASK) == TypeIds.T_JavaLangString))
+   //         {
+   //            if (this.constant != Constant.NotAConstant)
+   //            {
+   //               codeStream.generateConstant(this.constant, this.implicitConversion);
+   //               codeStream.invokeStringConcatenationAppendForType(this.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
+   //            }
+   //            else
+   //            {
+   //               BinaryExpression cursor = this.referencesTable[0];
+   //
+   //               int restart = 0;
+   //               //			int cursorTypeID;
+   //               int pc = codeStream.position;
+   //               for (restart = this.arity - 1; restart >= 0; restart--)
+   //               {
+   //                  if ((cursor = this.referencesTable[restart]).constant != Constant.NotAConstant)
+   //                  {
+   //                     codeStream.generateConstant(cursor.constant, cursor.implicitConversion);
+   //                     codeStream.invokeStringConcatenationAppendForType(cursor.implicitConversion
+   //                        & TypeIds.COMPILE_TYPE_MASK);
+   //                     break;
+   //                  }
+   //                  // never happens for now - may reconsider if we decide to
+   //                  // cover more than string concatenation
+   //                  //				if (!((((cursor = this.referencesTable[restart]).bits &
+   //                  //						ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT) ==
+   //                  //							OperatorIds.PLUS) &
+   //                  //						((cursorTypeID = cursor.bits & ASTNode.ReturnTypeIDMASK) ==
+   //                  //							TypeIds.T_JavaLangString)) {
+   //                  //					if (cursorTypeID == T_JavaLangString &&
+   //                  //							cursor.constant != Constant.NotAConstant &&
+   //                  //							cursor.constant.stringValue().length() == 0) {
+   //                  //						break; // optimize str + ""
+   //                  //					}
+   //                  //					cursor.generateCode(blockScope, codeStream, true);
+   //                  //					codeStream.invokeStringConcatenationAppendForType(
+   //                  //							cursorTypeID);
+   //                  //					break;
+   //                  //				}
+   //               }
+   //               restart++;
+   //               if (restart == 0)
+   //               { // reached the leftmost expression
+   //                  cursor.left.generateOptimizedStringConcatenation(blockScope, codeStream,
+   //                     cursor.left.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
+   //               }
+   //               int pcAux;
+   //               for (int i = restart; i < this.arity; i++)
+   //               {
+   //                  codeStream.recordPositionsFrom(pc, (cursor = this.referencesTable[i]).left.sourceStart);
+   //                  pcAux = codeStream.position;
+   //                  cursor.right.generateOptimizedStringConcatenation(blockScope, codeStream,
+   //                     cursor.right.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
+   //                  codeStream.recordPositionsFrom(pcAux, cursor.right.sourceStart);
+   //               }
+   //               codeStream.recordPositionsFrom(pc, this.left.sourceStart);
+   //               pc = codeStream.position;
+   //               this.right.generateOptimizedStringConcatenation(blockScope, codeStream, this.right.implicitConversion
+   //                  & TypeIds.COMPILE_TYPE_MASK);
+   //               codeStream.recordPositionsFrom(pc, this.right.sourceStart);
+   //            }
+   //         }
+   //         else
+   //         {
+   //            super.generateOptimizedStringConcatenation(blockScope, codeStream, typeID);
+   //         }
+   //      }
+   //   }
+   //
+   //   public void generateOptimizedStringConcatenationCreation(BlockScope blockScope, CodeStream codeStream, int typeID)
+   //   {
+   //      // keep implementation in sync with BinaryExpression
+   //      // #generateOptimizedStringConcatenationCreation
+   //      if (this.referencesTable == null)
+   //      {
+   //         super.generateOptimizedStringConcatenationCreation(blockScope, codeStream, typeID);
+   //      }
+   //      else
+   //      {
+   //         if ((((this.bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT) == OperatorIds.PLUS)
+   //            && ((this.bits & ASTNode.ReturnTypeIDMASK) == TypeIds.T_JavaLangString)
+   //            && this.constant == Constant.NotAConstant)
+   //         {
+   //            int pc = codeStream.position;
+   //            BinaryExpression cursor = this.referencesTable[this.arity - 1];
+   //            // silence warnings
+   //            int restart = 0;
+   //            for (restart = this.arity - 1; restart >= 0; restart--)
+   //            {
+   //               if (((((cursor = this.referencesTable[restart]).bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT) == OperatorIds.PLUS)
+   //                  && ((cursor.bits & ASTNode.ReturnTypeIDMASK) == TypeIds.T_JavaLangString))
+   //               {
+   //                  if (cursor.constant != Constant.NotAConstant)
+   //                  {
+   //                     codeStream.newStringContatenation(); // new: java.lang.StringBuffer
+   //                     codeStream.dup();
+   //                     codeStream.ldc(cursor.constant.stringValue());
+   //                     codeStream.invokeStringConcatenationStringConstructor();
+   //                     // invokespecial: java.lang.StringBuffer.<init>(Ljava.lang.String;)V
+   //                     break;
+   //                  }
+   //               }
+   //               else
+   //               {
+   //                  cursor.generateOptimizedStringConcatenationCreation(blockScope, codeStream, cursor.implicitConversion
+   //                     & TypeIds.COMPILE_TYPE_MASK);
+   //                  break;
+   //               }
+   //            }
+   //            restart++;
+   //            if (restart == 0)
+   //            { // reached the leftmost expression
+   //               cursor.left.generateOptimizedStringConcatenationCreation(blockScope, codeStream,
+   //                  cursor.left.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
+   //            }
+   //            int pcAux;
+   //            for (int i = restart; i < this.arity; i++)
+   //            {
+   //               codeStream.recordPositionsFrom(pc, (cursor = this.referencesTable[i]).left.sourceStart);
+   //               pcAux = codeStream.position;
+   //               cursor.right.generateOptimizedStringConcatenation(blockScope, codeStream,
+   //                  cursor.right.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
+   //               codeStream.recordPositionsFrom(pcAux, cursor.right.sourceStart);
+   //            }
+   //            codeStream.recordPositionsFrom(pc, this.left.sourceStart);
+   //            pc = codeStream.position;
+   //            this.right.generateOptimizedStringConcatenation(blockScope, codeStream, this.right.implicitConversion
+   //               & TypeIds.COMPILE_TYPE_MASK);
+   //            codeStream.recordPositionsFrom(pc, this.right.sourceStart);
+   //         }
+   //         else
+   //         {
+   //            super.generateOptimizedStringConcatenationCreation(blockScope, codeStream, typeID);
+   //         }
+   //      }
+   //   }
 
    private void initArity(Expression expression, int value)
    {

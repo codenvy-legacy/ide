@@ -12,73 +12,91 @@ package org.eclipse.jdt.client.internal.compiler.impl;
 
 import org.eclipse.jdt.client.core.util.MathUtil;
 
-public class FloatConstant extends Constant {
+public class FloatConstant extends Constant
+{
 
-	float value;
+   float value;
 
-	public static Constant fromValue(float value) {
-		return new FloatConstant(value);
-	}
+   public static Constant fromValue(float value)
+   {
+      return new FloatConstant(value);
+   }
 
-	private FloatConstant(float value) {
-		this.value = value;
-	}
+   private FloatConstant(float value)
+   {
+      this.value = value;
+   }
 
-	public byte byteValue() {
-		return (byte) this.value;
-	}
+   public byte byteValue()
+   {
+      return (byte)this.value;
+   }
 
-	public char charValue() {
-		return (char) this.value;
-	}
+   public char charValue()
+   {
+      return (char)this.value;
+   }
 
-	public double doubleValue() {
-		return this.value; // implicit cast to return type
-	}
+   public double doubleValue()
+   {
+      return this.value; // implicit cast to return type
+   }
 
-	public float floatValue() {
-		return this.value;
-	}
+   public float floatValue()
+   {
+      return this.value;
+   }
 
-	public int intValue() {
-		return (int) this.value;
-	}
+   public int intValue()
+   {
+      return (int)this.value;
+   }
 
-	public long longValue() {
-		return (long) this.value;
-	}
+   public long longValue()
+   {
+      return (long)this.value;
+   }
 
-	public short shortValue() {
-		return (short) this.value;
-	}
+   public short shortValue()
+   {
+      return (short)this.value;
+   }
 
-	public String stringValue() {
-		return String.valueOf(this.value);
-	}
+   public String stringValue()
+   {
+      return String.valueOf(this.value);
+   }
 
-	public String toString() {
-		return "(float)" + this.value; //$NON-NLS-1$
-	}
+   public String toString()
+   {
+      return "(float)" + this.value; //$NON-NLS-1$
+   }
 
-	public int typeID() {
-		return T_float;
-	}
+   public int typeID()
+   {
+      return T_float;
+   }
 
-	public int hashCode() {
-		return (int)MathUtil.floatToIntBits(this.value);
-	}
+   public int hashCode()
+   {
+      return (int)MathUtil.floatToIntBits(this.value);
+   }
 
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		FloatConstant other = (FloatConstant) obj;
-		return MathUtil.floatToIntBits(this.value) == MathUtil.floatToIntBits(other.value);
-	}
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      FloatConstant other = (FloatConstant)obj;
+      return MathUtil.floatToIntBits(this.value) == MathUtil.floatToIntBits(other.value);
+   }
 }

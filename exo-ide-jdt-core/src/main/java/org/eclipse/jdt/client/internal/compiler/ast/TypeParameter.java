@@ -95,10 +95,10 @@ public class TypeParameter extends AbstractVariableDeclaration
       return output;
    }
 
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//      // nothing to do
-//   }
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //      // nothing to do
+   //   }
 
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {

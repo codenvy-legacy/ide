@@ -17,36 +17,45 @@ import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
  * Reflects the context of code analysis, keeping track of enclosing
  *	try statements, exception handlers, etc...
  */
-public class SwitchFlowContext extends FlowContext {
+public class SwitchFlowContext extends FlowContext
+{
 
-	public BranchLabel breakLabel;
-	public UnconditionalFlowInfo initsOnBreak = FlowInfo.DEAD_END;
+   public BranchLabel breakLabel;
 
-public SwitchFlowContext(FlowContext parent, ASTNode associatedNode, BranchLabel breakLabel) {
-	super(parent, associatedNode);
-	this.breakLabel = breakLabel;
-}
+   public UnconditionalFlowInfo initsOnBreak = FlowInfo.DEAD_END;
 
-public BranchLabel breakLabel() {
-	return this.breakLabel;
-}
+   public SwitchFlowContext(FlowContext parent, ASTNode associatedNode, BranchLabel breakLabel)
+   {
+      super(parent, associatedNode);
+      this.breakLabel = breakLabel;
+   }
 
-public String individualToString() {
-	StringBuffer buffer = new StringBuffer("Switch flow context"); //$NON-NLS-1$
-	buffer.append("[initsOnBreak -").append(this.initsOnBreak.toString()).append(']'); //$NON-NLS-1$
-	return buffer.toString();
-}
+   public BranchLabel breakLabel()
+   {
+      return this.breakLabel;
+   }
 
-public boolean isBreakable() {
-	return true;
-}
+   public String individualToString()
+   {
+      StringBuffer buffer = new StringBuffer("Switch flow context"); //$NON-NLS-1$
+      buffer.append("[initsOnBreak -").append(this.initsOnBreak.toString()).append(']'); //$NON-NLS-1$
+      return buffer.toString();
+   }
 
-public void recordBreakFrom(FlowInfo flowInfo) {
-	if ((this.initsOnBreak.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) == 0) {
-		this.initsOnBreak = this.initsOnBreak.mergedWith(flowInfo.unconditionalInits());
-	}
-	else {
-		this.initsOnBreak = flowInfo.unconditionalCopy();
-	}
-}
+   public boolean isBreakable()
+   {
+      return true;
+   }
+
+   public void recordBreakFrom(FlowInfo flowInfo)
+   {
+      if ((this.initsOnBreak.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) == 0)
+      {
+         this.initsOnBreak = this.initsOnBreak.mergedWith(flowInfo.unconditionalInits());
+      }
+      else
+      {
+         this.initsOnBreak = flowInfo.unconditionalCopy();
+      }
+   }
 }

@@ -53,8 +53,7 @@ public class ParserTest
    public void parseFile() throws IOException
    {
       javaFiles =
-         IOUtils.toCharArray(Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream("Display.java"));
+         IOUtils.toCharArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("Display.java"));
       parser = ASTParser.newParser(AST.JLS3);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
    }
@@ -67,6 +66,6 @@ public class ParserTest
       parser.setSource(javaFiles);
       parser.setEnvironment(null, new String[]{"/my/path"}, new String[]{"UTF-8"}, true);
       ASTNode ast = parser.createAST(null);
-      
+
    }
 }

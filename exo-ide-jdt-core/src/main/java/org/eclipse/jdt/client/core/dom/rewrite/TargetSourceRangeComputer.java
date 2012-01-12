@@ -35,101 +35,109 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
  *
  * @since 3.1
  */
-public class TargetSourceRangeComputer {
+public class TargetSourceRangeComputer
+{
 
-	/**
-	 * Reified source range. Instances are &quot;value&quot; object
-	 * (cannot be modified).
-	 *
-	 * @since 3.1
-	 */
-	public static final class SourceRange {
-		/**
-		 * 0-based character index, or <code>-1</code>
-		 * if no source position information is known.
-		 */
-		private int startPosition;
+   /**
+    * Reified source range. Instances are &quot;value&quot; object
+    * (cannot be modified).
+    *
+    * @since 3.1
+    */
+   public static final class SourceRange
+   {
+      /**
+       * 0-based character index, or <code>-1</code>
+       * if no source position information is known.
+       */
+      private int startPosition;
 
-		/**
-		 * (possibly 0) length, or <code>0</code>
-		 * if no source position information is known.
-		 */
-		private int length;
+      /**
+       * (possibly 0) length, or <code>0</code>
+       * if no source position information is known.
+       */
+      private int length;
 
-		/**
-		 * Creates a new source range.
-		 *
-		 * @param startPosition the 0-based character index, or <code>-1</code>
-		 *    if no source position information is known
-		 * @param length the (possibly 0) length, or <code>0</code>
-		 *    if no source position information is known
-		 */
-		public SourceRange(int startPosition, int length) {
-			this.startPosition = startPosition;
-			this.length = length;
-		}
+      /**
+       * Creates a new source range.
+       *
+       * @param startPosition the 0-based character index, or <code>-1</code>
+       *    if no source position information is known
+       * @param length the (possibly 0) length, or <code>0</code>
+       *    if no source position information is known
+       */
+      public SourceRange(int startPosition, int length)
+      {
+         this.startPosition = startPosition;
+         this.length = length;
+      }
 
-		/**
-		 * Returns the start position.
-		 *
-		 * @return the 0-based character index, or <code>-1</code>
-		 *    if no source position information is known
-		 */
-		public int getStartPosition() {
-			return this.startPosition;
-		}
+      /**
+       * Returns the start position.
+       *
+       * @return the 0-based character index, or <code>-1</code>
+       *    if no source position information is known
+       */
+      public int getStartPosition()
+      {
+         return this.startPosition;
+      }
 
-		/**
-		 * Returns the source length.
-		 *
-		 * @return a (possibly 0) length, or <code>0</code>
-		 *    if no source position information is known
-		 */
-		public int getLength() {
-			return this.length;
-		}
-	}
+      /**
+       * Returns the source length.
+       *
+       * @return a (possibly 0) length, or <code>0</code>
+       *    if no source position information is known
+       */
+      public int getLength()
+      {
+         return this.length;
+      }
+   }
 
-	/**
-	 * Creates a new target source range computer.
-	 */
-	public TargetSourceRangeComputer() {
-		// do nothing
-	}
+   /**
+    * Creates a new target source range computer.
+    */
+   public TargetSourceRangeComputer()
+   {
+      // do nothing
+   }
 
-	/**
-	 * Returns the target source range of the given node. Unlike
-	 * {@link ASTNode#getStartPosition()} and {@link ASTNode#getLength()},
-	 * the extended source range may include comments and whitespace
-	 * immediately before or after the normal source range for the node.
-	 * <p>
-	 * The returned source ranges must satisfy the following conditions:
-	 * <dl>
-	 * <li>no two source ranges in an AST may be overlapping</li>
-	 * <li>a source range of a parent node must fully cover the source ranges of its children</li>
-	 * 	</dl>
-	 * 	</p>
-	 * <p>
-	 * The default implementation uses
-	 * {@link CompilationUnit#getExtendedStartPosition(ASTNode)}
-	 * and {@link CompilationUnit#getExtendedLength(ASTNode)}
-	 * to compute the target source range. Clients may override or
-	 * extend this method to expand or contract the source range of the
-	 * given node. The resulting source range must cover at least the
-	 * original source range of the node.
-	 * </p>
-	 *
-	 * @param node the node with a known source range in the compilation unit
-	 * being rewritten
-	 * @return the exact source range in the compilation unit being rewritten
-	 * that should be replaced (or deleted)
-	 */
-	public SourceRange computeSourceRange(ASTNode node) {
-		ASTNode root= node.getRoot();
-		if (root instanceof CompilationUnit) {
-			CompilationUnit cu= (CompilationUnit) root;
-			return new SourceRange(cu.getExtendedStartPosition(node), cu.getExtendedLength(node));
-		}
-		return new SourceRange(node.getStartPosition(), node.getLength());
-	}
+   /**
+    * Returns the target source range of the given node. Unlike
+    * {@link ASTNode#getStartPosition()} and {@link ASTNode#getLength()},
+    * the extended source range may include comments and whitespace
+    * immediately before or after the normal source range for the node.
+    * <p>
+    * The returned source ranges must satisfy the following conditions:
+    * <dl>
+    * <li>no two source ranges in an AST may be overlapping</li>
+    * <li>a source range of a parent node must fully cover the source ranges of its children</li>
+    * 	</dl>
+    * 	</p>
+    * <p>
+    * The default implementation uses
+    * {@link CompilationUnit#getExtendedStartPosition(ASTNode)}
+    * and {@link CompilationUnit#getExtendedLength(ASTNode)}
+    * to compute the target source range. Clients may override or
+    * extend this method to expand or contract the source range of the
+    * given node. The resulting source range must cover at least the
+    * original source range of the node.
+    * </p>
+    *
+    * @param node the node with a known source range in the compilation unit
+    * being rewritten
+    * @return the exact source range in the compilation unit being rewritten
+    * that should be replaced (or deleted)
+    */
+   public SourceRange computeSourceRange(ASTNode node)
+   {
+      ASTNode root = node.getRoot();
+      if (root instanceof CompilationUnit)
+      {
+         CompilationUnit cu = (CompilationUnit)root;
+         return new SourceRange(cu.getExtendedStartPosition(node), cu.getExtendedLength(node));
+      }
+      return new SourceRange(node.getStartPosition(), node.getLength());
+   }
 }

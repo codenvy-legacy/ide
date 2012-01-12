@@ -10,126 +10,147 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.util;
 
-public final class ObjectVector {
+public final class ObjectVector
+{
 
-	static int INITIAL_SIZE = 10;
+   static int INITIAL_SIZE = 10;
 
-	public int size;
-	int maxSize;
-	Object[] elements;
+   public int size;
 
-	public ObjectVector() {
-		this(INITIAL_SIZE);
-	}
+   int maxSize;
 
-	public ObjectVector(int initialSize) {
-		this.maxSize = initialSize > 0 ? initialSize : INITIAL_SIZE;
-		this.size = 0;
-		this.elements = new Object[this.maxSize];
-	}
+   Object[] elements;
 
-	public void add(Object newElement) {
+   public ObjectVector()
+   {
+      this(INITIAL_SIZE);
+   }
 
-		if (this.size == this.maxSize) // knows that size starts <= maxSize
-			System.arraycopy(this.elements, 0, (this.elements = new Object[this.maxSize *= 2]), 0, this.size);
-		this.elements[this.size++] = newElement;
-	}
+   public ObjectVector(int initialSize)
+   {
+      this.maxSize = initialSize > 0 ? initialSize : INITIAL_SIZE;
+      this.size = 0;
+      this.elements = new Object[this.maxSize];
+   }
 
-	public void addAll(Object[] newElements) {
+   public void add(Object newElement)
+   {
 
-		if (this.size + newElements.length >= this.maxSize) {
-			this.maxSize = this.size + newElements.length; // assume no more elements will be added
-			System.arraycopy(this.elements, 0, (this.elements = new Object[this.maxSize]), 0, this.size);
-		}
-		System.arraycopy(newElements, 0, this.elements, this.size, newElements.length);
-		this.size += newElements.length;
-	}
+      if (this.size == this.maxSize) // knows that size starts <= maxSize
+         System.arraycopy(this.elements, 0, (this.elements = new Object[this.maxSize *= 2]), 0, this.size);
+      this.elements[this.size++] = newElement;
+   }
 
-	public void addAll(ObjectVector newVector) {
+   public void addAll(Object[] newElements)
+   {
 
-		if (this.size + newVector.size >= this.maxSize) {
-			this.maxSize = this.size + newVector.size; // assume no more elements will be added
-			System.arraycopy(this.elements, 0, (this.elements = new Object[this.maxSize]), 0, this.size);
-		}
-		System.arraycopy(newVector.elements, 0, this.elements, this.size, newVector.size);
-		this.size += newVector.size;
-	}
+      if (this.size + newElements.length >= this.maxSize)
+      {
+         this.maxSize = this.size + newElements.length; // assume no more elements will be added
+         System.arraycopy(this.elements, 0, (this.elements = new Object[this.maxSize]), 0, this.size);
+      }
+      System.arraycopy(newElements, 0, this.elements, this.size, newElements.length);
+      this.size += newElements.length;
+   }
 
-	/**
-	 * Identity check
-	 */
-	public boolean containsIdentical(Object element) {
+   public void addAll(ObjectVector newVector)
+   {
 
-		for (int i = this.size; --i >= 0;)
-			if (element == this.elements[i])
-				return true;
-		return false;
-	}
+      if (this.size + newVector.size >= this.maxSize)
+      {
+         this.maxSize = this.size + newVector.size; // assume no more elements will be added
+         System.arraycopy(this.elements, 0, (this.elements = new Object[this.maxSize]), 0, this.size);
+      }
+      System.arraycopy(newVector.elements, 0, this.elements, this.size, newVector.size);
+      this.size += newVector.size;
+   }
 
-	/**
-	 * Equality check
-	 */
-	public boolean contains(Object element) {
+   /**
+    * Identity check
+    */
+   public boolean containsIdentical(Object element)
+   {
 
-		for (int i = this.size; --i >= 0;)
-			if (element.equals(this.elements[i]))
-				return true;
-		return false;
-	}
+      for (int i = this.size; --i >= 0;)
+         if (element == this.elements[i])
+            return true;
+      return false;
+   }
 
-	public void copyInto(Object[] targetArray){
+   /**
+    * Equality check
+    */
+   public boolean contains(Object element)
+   {
 
-		this.copyInto(targetArray, 0);
-	}
+      for (int i = this.size; --i >= 0;)
+         if (element.equals(this.elements[i]))
+            return true;
+      return false;
+   }
 
-	public void copyInto(Object[] targetArray, int index){
+   public void copyInto(Object[] targetArray)
+   {
 
-		System.arraycopy(this.elements, 0, targetArray, index, this.size);
-	}
+      this.copyInto(targetArray, 0);
+   }
 
-	public Object elementAt(int index) {
+   public void copyInto(Object[] targetArray, int index)
+   {
 
-		return this.elements[index];
-	}
+      System.arraycopy(this.elements, 0, targetArray, index, this.size);
+   }
 
-	public Object find(Object element) {
+   public Object elementAt(int index)
+   {
 
-		for (int i = this.size; --i >= 0;)
-			if (element.equals(this.elements[i]))
-				return this.elements[i];
-		return null;
-	}
+      return this.elements[index];
+   }
 
-	public Object remove(Object element) {
+   public Object find(Object element)
+   {
 
-		// assumes only one occurrence of the element exists
-		for (int i = this.size; --i >= 0;)
-			if (element.equals(this.elements[i])) {
-				// shift the remaining elements down one spot
-				System.arraycopy(this.elements, i + 1, this.elements, i, --this.size - i);
-				this.elements[this.size] = null;
-				return element;
-			}
-		return null;
-	}
+      for (int i = this.size; --i >= 0;)
+         if (element.equals(this.elements[i]))
+            return this.elements[i];
+      return null;
+   }
 
-	public void removeAll() {
+   public Object remove(Object element)
+   {
 
-		for (int i = this.size; --i >= 0;)
-			this.elements[i] = null;
-		this.size = 0;
-	}
+      // assumes only one occurrence of the element exists
+      for (int i = this.size; --i >= 0;)
+         if (element.equals(this.elements[i]))
+         {
+            // shift the remaining elements down one spot
+            System.arraycopy(this.elements, i + 1, this.elements, i, --this.size - i);
+            this.elements[this.size] = null;
+            return element;
+         }
+      return null;
+   }
 
-	public int size(){
+   public void removeAll()
+   {
 
-		return this.size;
-	}
+      for (int i = this.size; --i >= 0;)
+         this.elements[i] = null;
+      this.size = 0;
+   }
 
-	public String toString() {
+   public int size()
+   {
 
-		String s = ""; //$NON-NLS-1$
-		for (int i = 0; i < this.size; i++)
-			s += this.elements[i].toString() + "\n"; //$NON-NLS-1$
-		return s;
-	}
+      return this.size;
+   }
+
+   public String toString()
+   {
+
+      String s = ""; //$NON-NLS-1$
+      for (int i = 0; i < this.size; i++)
+         s += this.elements[i].toString() + "\n"; //$NON-NLS-1$
+      return s;
+   }
 }

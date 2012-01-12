@@ -28,202 +28,213 @@ import java.util.Map;
 /**
  * Utility class to parse different code snippets
  */
-public class CodeSnippetParsingUtil {
+public class CodeSnippetParsingUtil
+{
 
-	public RecordedParsingInformation recordedParsingInformation;
-	public boolean ignoreMethodBodies;
-	
-	public CodeSnippetParsingUtil(boolean ignoreMethodBodies) {
-		this.ignoreMethodBodies = ignoreMethodBodies;
-	}
+   public RecordedParsingInformation recordedParsingInformation;
 
-	public CodeSnippetParsingUtil() {
-		this(false);
-	}
+   public boolean ignoreMethodBodies;
 
-	private RecordedParsingInformation getRecordedParsingInformation(CompilationResult compilationResult, int[][] commentPositions) {
-		int problemsCount = compilationResult.problemCount;
-		CategorizedProblem[] problems = null;
-		if (problemsCount != 0) {
-			final CategorizedProblem[] compilationResultProblems = compilationResult.problems;
-			if (compilationResultProblems.length == problemsCount) {
-				problems = compilationResultProblems;
-			} else {
-				System.arraycopy(compilationResultProblems, 0, (problems = new CategorizedProblem[problemsCount]), 0, problemsCount);
-			}
-		}
-		return new RecordedParsingInformation(problems, compilationResult.getLineSeparatorPositions(), commentPositions);
-	}
+   public CodeSnippetParsingUtil(boolean ignoreMethodBodies)
+   {
+      this.ignoreMethodBodies = ignoreMethodBodies;
+   }
 
-	public ASTNode[] parseClassBodyDeclarations(char[] source, Map settings, boolean recordParsingInformation) {
-		return parseClassBodyDeclarations(source, 0, source.length, settings, recordParsingInformation, false);
-	}
+   public CodeSnippetParsingUtil()
+   {
+      this(false);
+   }
 
-	public ASTNode[] parseClassBodyDeclarations(
-			char[] source,
-			int offset,
-			int length,
-			Map settings,
-			boolean recordParsingInformation,
-			boolean enabledStatementRecovery) {
-		if (source == null) {
-			throw new IllegalArgumentException();
-		}
-		CompilerOptions compilerOptions = new CompilerOptions(settings);
-		compilerOptions.ignoreMethodBodies = this.ignoreMethodBodies;
-		final ProblemReporter problemReporter = new ProblemReporter(
-					DefaultErrorHandlingPolicies.proceedWithAllProblems(),
-					compilerOptions,
-					new DefaultProblemFactory());
+   private RecordedParsingInformation getRecordedParsingInformation(CompilationResult compilationResult,
+      int[][] commentPositions)
+   {
+      int problemsCount = compilationResult.problemCount;
+      CategorizedProblem[] problems = null;
+      if (problemsCount != 0)
+      {
+         final CategorizedProblem[] compilationResultProblems = compilationResult.problems;
+         if (compilationResultProblems.length == problemsCount)
+         {
+            problems = compilationResultProblems;
+         }
+         else
+         {
+            System.arraycopy(compilationResultProblems, 0, (problems = new CategorizedProblem[problemsCount]), 0,
+               problemsCount);
+         }
+      }
+      return new RecordedParsingInformation(problems, compilationResult.getLineSeparatorPositions(), commentPositions);
+   }
 
-		CommentRecorderParser parser = new CommentRecorderParser(problemReporter, false);
-		parser.setMethodsFullRecovery(false);
-		parser.setStatementsRecovery(enabledStatementRecovery);
+   public ASTNode[] parseClassBodyDeclarations(char[] source, Map settings, boolean recordParsingInformation)
+   {
+      return parseClassBodyDeclarations(source, 0, source.length, settings, recordParsingInformation, false);
+   }
 
-		ICompilationUnit sourceUnit =
-			new CompilationUnit(
-				source,
-				"", //$NON-NLS-1$
-				compilerOptions.defaultEncoding);
+   public ASTNode[] parseClassBodyDeclarations(char[] source, int offset, int length, Map settings,
+      boolean recordParsingInformation, boolean enabledStatementRecovery)
+   {
+      if (source == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      CompilerOptions compilerOptions = new CompilerOptions(settings);
+      compilerOptions.ignoreMethodBodies = this.ignoreMethodBodies;
+      final ProblemReporter problemReporter =
+         new ProblemReporter(DefaultErrorHandlingPolicies.proceedWithAllProblems(), compilerOptions,
+            new DefaultProblemFactory());
 
-		CompilationResult compilationResult = new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
-		final CompilationUnitDeclaration compilationUnitDeclaration = new CompilationUnitDeclaration(problemReporter, compilationResult, source.length);
-		ASTNode[] result = parser.parseClassBodyDeclarations(source, offset, length, compilationUnitDeclaration);
+      CommentRecorderParser parser = new CommentRecorderParser(problemReporter, false);
+      parser.setMethodsFullRecovery(false);
+      parser.setStatementsRecovery(enabledStatementRecovery);
 
-		if (recordParsingInformation) {
-			this.recordedParsingInformation = getRecordedParsingInformation(compilationResult, compilationUnitDeclaration.comments);
-		}
-		return result;
-	}
+      ICompilationUnit sourceUnit = new CompilationUnit(source, "", //$NON-NLS-1$
+         compilerOptions.defaultEncoding);
 
-	public CompilationUnitDeclaration parseCompilationUnit(char[] source, Map settings, boolean recordParsingInformation) {
-		if (source == null) {
-			throw new IllegalArgumentException();
-		}
-		CompilerOptions compilerOptions = new CompilerOptions(settings);
-		compilerOptions.ignoreMethodBodies = this.ignoreMethodBodies;
-		CommentRecorderParser parser =
-			new CommentRecorderParser(
-				new ProblemReporter(
-					DefaultErrorHandlingPolicies.proceedWithAllProblems(),
-					compilerOptions,
-					new DefaultProblemFactory()),
-			false);
+      CompilationResult compilationResult = new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
+      final CompilationUnitDeclaration compilationUnitDeclaration =
+         new CompilationUnitDeclaration(problemReporter, compilationResult, source.length);
+      ASTNode[] result = parser.parseClassBodyDeclarations(source, offset, length, compilationUnitDeclaration);
 
-		ICompilationUnit sourceUnit =
-			new CompilationUnit(
-				source,
-				"", //$NON-NLS-1$
-				compilerOptions.defaultEncoding);
-		final CompilationResult compilationResult = new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
-		CompilationUnitDeclaration compilationUnitDeclaration = parser.dietParse(sourceUnit, compilationResult);
+      if (recordParsingInformation)
+      {
+         this.recordedParsingInformation =
+            getRecordedParsingInformation(compilationResult, compilationUnitDeclaration.comments);
+      }
+      return result;
+   }
 
-		if (recordParsingInformation) {
-			this.recordedParsingInformation = getRecordedParsingInformation(compilationResult, compilationUnitDeclaration.comments);
-		}
+   public CompilationUnitDeclaration parseCompilationUnit(char[] source, Map settings, boolean recordParsingInformation)
+   {
+      if (source == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      CompilerOptions compilerOptions = new CompilerOptions(settings);
+      compilerOptions.ignoreMethodBodies = this.ignoreMethodBodies;
+      CommentRecorderParser parser =
+         new CommentRecorderParser(new ProblemReporter(DefaultErrorHandlingPolicies.proceedWithAllProblems(),
+            compilerOptions, new DefaultProblemFactory()), false);
 
-		if (compilationUnitDeclaration.ignoreMethodBodies) {
-			compilationUnitDeclaration.ignoreFurtherInvestigation = true;
-			// if initial diet parse did not work, no need to dig into method bodies.
-			return compilationUnitDeclaration;
-		}
+      ICompilationUnit sourceUnit = new CompilationUnit(source, "", //$NON-NLS-1$
+         compilerOptions.defaultEncoding);
+      final CompilationResult compilationResult =
+         new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
+      CompilationUnitDeclaration compilationUnitDeclaration = parser.dietParse(sourceUnit, compilationResult);
 
-		//fill the methods bodies in order for the code to be generated
-		//real parse of the method....
-		parser.scanner.setSource(compilationResult);
-		org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration[] types = compilationUnitDeclaration.types;
-		if (types != null) {
-			for (int i = 0, length = types.length; i < length; i++) {
-				types[i].parseMethods(parser, compilationUnitDeclaration);
-			}
-		}
+      if (recordParsingInformation)
+      {
+         this.recordedParsingInformation =
+            getRecordedParsingInformation(compilationResult, compilationUnitDeclaration.comments);
+      }
 
-		if (recordParsingInformation) {
-			this.recordedParsingInformation.updateRecordedParsingInformation(compilationResult);
-		}
-		return compilationUnitDeclaration;
-	}
+      if (compilationUnitDeclaration.ignoreMethodBodies)
+      {
+         compilationUnitDeclaration.ignoreFurtherInvestigation = true;
+         // if initial diet parse did not work, no need to dig into method bodies.
+         return compilationUnitDeclaration;
+      }
 
-	public Expression parseExpression(char[] source, Map settings, boolean recordParsingInformation) {
-		return parseExpression(source, 0, source.length, settings, recordParsingInformation);
-	}
+      //fill the methods bodies in order for the code to be generated
+      //real parse of the method....
+      parser.scanner.setSource(compilationResult);
+      org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration[] types = compilationUnitDeclaration.types;
+      if (types != null)
+      {
+         for (int i = 0, length = types.length; i < length; i++)
+         {
+            types[i].parseMethods(parser, compilationUnitDeclaration);
+         }
+      }
 
-	public Expression parseExpression(char[] source, int offset, int length, Map settings, boolean recordParsingInformation) {
+      if (recordParsingInformation)
+      {
+         this.recordedParsingInformation.updateRecordedParsingInformation(compilationResult);
+      }
+      return compilationUnitDeclaration;
+   }
 
-		if (source == null) {
-			throw new IllegalArgumentException();
-		}
-		CompilerOptions compilerOptions = new CompilerOptions(settings);
-		// in this case we don't want to ignore method bodies since we are parsing only an expression
-		final ProblemReporter problemReporter = new ProblemReporter(
-					DefaultErrorHandlingPolicies.proceedWithAllProblems(),
-					compilerOptions,
-					new DefaultProblemFactory());
+   public Expression parseExpression(char[] source, Map settings, boolean recordParsingInformation)
+   {
+      return parseExpression(source, 0, source.length, settings, recordParsingInformation);
+   }
 
-		CommentRecorderParser parser = new CommentRecorderParser(problemReporter, false);
+   public Expression parseExpression(char[] source, int offset, int length, Map settings,
+      boolean recordParsingInformation)
+   {
 
-		ICompilationUnit sourceUnit =
-			new CompilationUnit(
-				source,
-				"", //$NON-NLS-1$
-				compilerOptions.defaultEncoding);
+      if (source == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      CompilerOptions compilerOptions = new CompilerOptions(settings);
+      // in this case we don't want to ignore method bodies since we are parsing only an expression
+      final ProblemReporter problemReporter =
+         new ProblemReporter(DefaultErrorHandlingPolicies.proceedWithAllProblems(), compilerOptions,
+            new DefaultProblemFactory());
 
-		CompilationResult compilationResult = new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
-		CompilationUnitDeclaration unit = new CompilationUnitDeclaration(problemReporter, compilationResult, source.length);
-		Expression result = parser.parseExpression(source, offset, length, unit);
+      CommentRecorderParser parser = new CommentRecorderParser(problemReporter, false);
 
-		if (recordParsingInformation) {
-			this.recordedParsingInformation = getRecordedParsingInformation(compilationResult, unit.comments);
-		}
-		return result;
-	}
+      ICompilationUnit sourceUnit = new CompilationUnit(source, "", //$NON-NLS-1$
+         compilerOptions.defaultEncoding);
 
-	public ConstructorDeclaration parseStatements(char[] source, Map settings, boolean recordParsingInformation, boolean enabledStatementRecovery) {
-		return parseStatements(source, 0, source.length, settings, recordParsingInformation, enabledStatementRecovery);
-	}
+      CompilationResult compilationResult = new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
+      CompilationUnitDeclaration unit =
+         new CompilationUnitDeclaration(problemReporter, compilationResult, source.length);
+      Expression result = parser.parseExpression(source, offset, length, unit);
 
-	public ConstructorDeclaration parseStatements(
-			char[] source,
-			int offset,
-			int length,
-			Map settings,
-			boolean recordParsingInformation,
-			boolean enabledStatementRecovery) {
-		if (source == null) {
-			throw new IllegalArgumentException();
-		}
-		CompilerOptions compilerOptions = new CompilerOptions(settings);
-		// in this case we don't want to ignore method bodies since we are parsing only statements
-		final ProblemReporter problemReporter = new ProblemReporter(
-					DefaultErrorHandlingPolicies.proceedWithAllProblems(),
-					compilerOptions,
-					new DefaultProblemFactory());
-		CommentRecorderParser parser = new CommentRecorderParser(problemReporter, false);
-		parser.setMethodsFullRecovery(false);
-		parser.setStatementsRecovery(enabledStatementRecovery);
+      if (recordParsingInformation)
+      {
+         this.recordedParsingInformation = getRecordedParsingInformation(compilationResult, unit.comments);
+      }
+      return result;
+   }
 
-		ICompilationUnit sourceUnit =
-			new CompilationUnit(
-				source,
-				"", //$NON-NLS-1$
-				compilerOptions.defaultEncoding);
+   public ConstructorDeclaration parseStatements(char[] source, Map settings, boolean recordParsingInformation,
+      boolean enabledStatementRecovery)
+   {
+      return parseStatements(source, 0, source.length, settings, recordParsingInformation, enabledStatementRecovery);
+   }
 
-		final CompilationResult compilationResult = new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
-		CompilationUnitDeclaration compilationUnitDeclaration = new CompilationUnitDeclaration(problemReporter, compilationResult, length);
+   public ConstructorDeclaration parseStatements(char[] source, int offset, int length, Map settings,
+      boolean recordParsingInformation, boolean enabledStatementRecovery)
+   {
+      if (source == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      CompilerOptions compilerOptions = new CompilerOptions(settings);
+      // in this case we don't want to ignore method bodies since we are parsing only statements
+      final ProblemReporter problemReporter =
+         new ProblemReporter(DefaultErrorHandlingPolicies.proceedWithAllProblems(), compilerOptions,
+            new DefaultProblemFactory());
+      CommentRecorderParser parser = new CommentRecorderParser(problemReporter, false);
+      parser.setMethodsFullRecovery(false);
+      parser.setStatementsRecovery(enabledStatementRecovery);
 
-		ConstructorDeclaration constructorDeclaration = new ConstructorDeclaration(compilationResult);
-		constructorDeclaration.sourceEnd  = -1;
-		constructorDeclaration.declarationSourceEnd = offset + length - 1;
-		constructorDeclaration.bodyStart = offset;
-		constructorDeclaration.bodyEnd = offset + length - 1;
+      ICompilationUnit sourceUnit = new CompilationUnit(source, "", //$NON-NLS-1$
+         compilerOptions.defaultEncoding);
 
-		parser.scanner.setSource(compilationResult);
-		parser.scanner.resetTo(offset, offset + length);
-		parser.parse(constructorDeclaration, compilationUnitDeclaration, true);
+      final CompilationResult compilationResult =
+         new CompilationResult(sourceUnit, 0, 0, compilerOptions.maxProblemsPerUnit);
+      CompilationUnitDeclaration compilationUnitDeclaration =
+         new CompilationUnitDeclaration(problemReporter, compilationResult, length);
 
-		if (recordParsingInformation) {
-			this.recordedParsingInformation = getRecordedParsingInformation(compilationResult, compilationUnitDeclaration.comments);
-		}
-		return constructorDeclaration;
-	}
+      ConstructorDeclaration constructorDeclaration = new ConstructorDeclaration(compilationResult);
+      constructorDeclaration.sourceEnd = -1;
+      constructorDeclaration.declarationSourceEnd = offset + length - 1;
+      constructorDeclaration.bodyStart = offset;
+      constructorDeclaration.bodyEnd = offset + length - 1;
+
+      parser.scanner.setSource(compilationResult);
+      parser.scanner.resetTo(offset, offset + length);
+      parser.parse(constructorDeclaration, compilationUnitDeclaration, true);
+
+      if (recordParsingInformation)
+      {
+         this.recordedParsingInformation =
+            getRecordedParsingInformation(compilationResult, compilationUnitDeclaration.comments);
+      }
+      return constructorDeclaration;
+   }
 }

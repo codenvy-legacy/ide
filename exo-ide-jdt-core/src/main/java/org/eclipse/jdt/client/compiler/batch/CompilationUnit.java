@@ -36,8 +36,6 @@ public class CompilationUnit implements ICompilationUnit
 
    String encoding;
 
-   public String destinationPath;
-
    // a specific destination path for this compilation unit; coding is
    // aligned with Main.destinationPath:
    // == null: unspecified, use whatever value is set by the enclosing
@@ -76,7 +74,6 @@ public class CompilationUnit implements ICompilationUnit
 
       this.mainTypeName = CharOperation.subarray(fileNameCharArray, start, end);
       this.encoding = encoding;
-      this.destinationPath = destinationPath;
    }
 
    /**

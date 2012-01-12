@@ -13,36 +13,48 @@ package org.eclipse.jdt.client.internal.compiler.lookup;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
 
-public class ImportBinding extends Binding {
-	public char[][] compoundName;
-	public boolean onDemand;
-	public ImportReference reference;
+public class ImportBinding extends Binding
+{
+   public char[][] compoundName;
 
-	public Binding resolvedImport; // must ensure the import is resolved
+   public boolean onDemand;
 
-public ImportBinding(char[][] compoundName, boolean isOnDemand, Binding binding, ImportReference reference) {
-	this.compoundName = compoundName;
-	this.onDemand = isOnDemand;
-	this.resolvedImport = binding;
-	this.reference = reference;
-}
-/* API
-* Answer the receiver's binding type from Binding.BindingID.
-*/
+   public ImportReference reference;
 
-public final int kind() {
-	return IMPORT;
-}
-public boolean isStatic() {
-	return this.reference != null && this.reference.isStatic();
-}
-public char[] readableName() {
-	if (this.onDemand)
-		return CharOperation.concat(CharOperation.concatWith(this.compoundName, '.'), ".*".toCharArray()); //$NON-NLS-1$
-	else
-		return CharOperation.concatWith(this.compoundName, '.');
-}
-public String toString() {
-	return "import : " + new String(readableName()); //$NON-NLS-1$
-}
+   public Binding resolvedImport; // must ensure the import is resolved
+
+   public ImportBinding(char[][] compoundName, boolean isOnDemand, Binding binding, ImportReference reference)
+   {
+      this.compoundName = compoundName;
+      this.onDemand = isOnDemand;
+      this.resolvedImport = binding;
+      this.reference = reference;
+   }
+
+   /* API
+   * Answer the receiver's binding type from Binding.BindingID.
+   */
+
+   public final int kind()
+   {
+      return IMPORT;
+   }
+
+   public boolean isStatic()
+   {
+      return this.reference != null && this.reference.isStatic();
+   }
+
+   public char[] readableName()
+   {
+      if (this.onDemand)
+         return CharOperation.concat(CharOperation.concatWith(this.compoundName, '.'), ".*".toCharArray()); //$NON-NLS-1$
+      else
+         return CharOperation.concatWith(this.compoundName, '.');
+   }
+
+   public String toString()
+   {
+      return "import : " + new String(readableName()); //$NON-NLS-1$
+   }
 }

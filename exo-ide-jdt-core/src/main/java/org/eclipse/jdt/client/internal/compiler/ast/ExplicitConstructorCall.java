@@ -115,69 +115,69 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
       }
    }
 
-//   /**
-//    * Constructor call code generation
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//      if ((this.bits & ASTNode.IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      try
-//      {
-//         ((MethodScope)currentScope).isConstructorCall = true;
-//
-//         int pc = codeStream.position;
-//         codeStream.aload_0();
-//
-//         MethodBinding codegenBinding = this.binding.original();
-//         ReferenceBinding targetType = codegenBinding.declaringClass;
-//
-//         // special name&ordinal argument generation for enum constructors
-//         if (targetType.erasure().id == TypeIds.T_JavaLangEnum || targetType.isEnum())
-//         {
-//            codeStream.aload_1(); // pass along name param as name arg
-//            codeStream.iload_2(); // pass along ordinal param as ordinal arg
-//         }
-//         // handling innerclass constructor invocation
-//         // handling innerclass instance allocation - enclosing instance arguments
-//         if (targetType.isNestedType())
-//         {
-//            codeStream.generateSyntheticEnclosingInstanceValues(currentScope, targetType,
-//               (this.bits & ASTNode.DiscardEnclosingInstance) != 0 ? null : this.qualification, this);
-//         }
-//         // generate arguments
-//         generateArguments(this.binding, this.arguments, currentScope, codeStream);
-//
-//         // handling innerclass instance allocation - outer local arguments
-//         if (targetType.isNestedType())
-//         {
-//            codeStream.generateSyntheticOuterArgumentValues(currentScope, targetType, this);
-//         }
-//         if (this.syntheticAccessor != null)
-//         {
-//            // synthetic accessor got some extra arguments appended to its signature, which need values
-//            for (int i = 0, max = this.syntheticAccessor.parameters.length - codegenBinding.parameters.length; i < max; i++)
-//            {
-//               codeStream.aconst_null();
-//            }
-//            codeStream.invoke(Opcodes.OPC_invokespecial, this.syntheticAccessor, null /* default declaringClass */);
-//         }
-//         else
-//         {
-//            codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, null /* default declaringClass */);
-//         }
-//         codeStream.recordPositionsFrom(pc, this.sourceStart);
-//      }
-//      finally
-//      {
-//         ((MethodScope)currentScope).isConstructorCall = false;
-//      }
-//   }
+   //   /**
+   //    * Constructor call code generation
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //      if ((this.bits & ASTNode.IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      try
+   //      {
+   //         ((MethodScope)currentScope).isConstructorCall = true;
+   //
+   //         int pc = codeStream.position;
+   //         codeStream.aload_0();
+   //
+   //         MethodBinding codegenBinding = this.binding.original();
+   //         ReferenceBinding targetType = codegenBinding.declaringClass;
+   //
+   //         // special name&ordinal argument generation for enum constructors
+   //         if (targetType.erasure().id == TypeIds.T_JavaLangEnum || targetType.isEnum())
+   //         {
+   //            codeStream.aload_1(); // pass along name param as name arg
+   //            codeStream.iload_2(); // pass along ordinal param as ordinal arg
+   //         }
+   //         // handling innerclass constructor invocation
+   //         // handling innerclass instance allocation - enclosing instance arguments
+   //         if (targetType.isNestedType())
+   //         {
+   //            codeStream.generateSyntheticEnclosingInstanceValues(currentScope, targetType,
+   //               (this.bits & ASTNode.DiscardEnclosingInstance) != 0 ? null : this.qualification, this);
+   //         }
+   //         // generate arguments
+   //         generateArguments(this.binding, this.arguments, currentScope, codeStream);
+   //
+   //         // handling innerclass instance allocation - outer local arguments
+   //         if (targetType.isNestedType())
+   //         {
+   //            codeStream.generateSyntheticOuterArgumentValues(currentScope, targetType, this);
+   //         }
+   //         if (this.syntheticAccessor != null)
+   //         {
+   //            // synthetic accessor got some extra arguments appended to its signature, which need values
+   //            for (int i = 0, max = this.syntheticAccessor.parameters.length - codegenBinding.parameters.length; i < max; i++)
+   //            {
+   //               codeStream.aconst_null();
+   //            }
+   //            codeStream.invoke(Opcodes.OPC_invokespecial, this.syntheticAccessor, null /* default declaringClass */);
+   //         }
+   //         else
+   //         {
+   //            codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, null /* default declaringClass */);
+   //         }
+   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //      }
+   //      finally
+   //      {
+   //         ((MethodScope)currentScope).isConstructorCall = false;
+   //      }
+   //   }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
@@ -450,7 +450,7 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
                   {
                      if (closestMatch.original().typeVariables != Binding.NO_TYPE_VARIABLES)
                      { // generic method
-                        // shouldn't return generic method outside its context, rather convert it to raw method (175409)
+                       // shouldn't return generic method outside its context, rather convert it to raw method (175409)
                         closestMatch =
                            scope.environment().createParameterizedGenericMethod(closestMatch.original(),
                               (RawTypeBinding)null);

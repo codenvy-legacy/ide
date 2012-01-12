@@ -82,7 +82,7 @@ public class ASTParserTest
       TypeDeclaration innerType = td.getTypes()[0];
       assertThat(innerType.getName().getFullyQualifiedName()).isEqualTo("Display");
    }
-   
+
    @Test
    @Ignore
    public void innerTypeMethods() throws Exception
@@ -91,7 +91,7 @@ public class ASTParserTest
       TypeDeclaration innerType = td.getTypes()[0];
       assertThat(innerType.getMethods()).hasSize(19);
    }
-   
+
    @Test
    @Ignore
    public void innerTypeFields() throws Exception
@@ -100,7 +100,5 @@ public class ASTParserTest
       TypeDeclaration innerType = td.getTypes()[0];
       assertThat(innerType.getFields()).hasSize(1);
    }
-   
-   
 
 }

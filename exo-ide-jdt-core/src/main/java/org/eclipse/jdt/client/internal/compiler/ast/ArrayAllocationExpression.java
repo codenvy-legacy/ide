@@ -49,51 +49,51 @@ public class ArrayAllocationExpression extends Expression
       return flowInfo;
    }
 
-//   /**
-//    * Code generation for a array allocation expression
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//
-//      int pc = codeStream.position;
-//
-//      if (this.initializer != null)
-//      {
-//         this.initializer.generateCode(currentScope, codeStream, valueRequired);
-//         return;
-//      }
-//
-//      int explicitDimCount = 0;
-//      for (int i = 0, max = this.dimensions.length; i < max; i++)
-//      {
-//         Expression dimExpression;
-//         if ((dimExpression = this.dimensions[i]) == null)
-//            break; // implicit dim, no further explict after this point
-//         dimExpression.generateCode(currentScope, codeStream, true);
-//         explicitDimCount++;
-//      }
-//
-//      // array allocation
-//      if (explicitDimCount == 1)
-//      {
-//         // Mono-dimensional array
-//         codeStream.newArray((ArrayBinding)this.resolvedType);
-//      }
-//      else
-//      {
-//         // Multi-dimensional array
-//         codeStream.multianewarray(this.resolvedType, explicitDimCount);
-//      }
-//      if (valueRequired)
-//      {
-//         codeStream.generateImplicitConversion(this.implicitConversion);
-//      }
-//      else
-//      {
-//         codeStream.pop();
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Code generation for a array allocation expression
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //
+   //      int pc = codeStream.position;
+   //
+   //      if (this.initializer != null)
+   //      {
+   //         this.initializer.generateCode(currentScope, codeStream, valueRequired);
+   //         return;
+   //      }
+   //
+   //      int explicitDimCount = 0;
+   //      for (int i = 0, max = this.dimensions.length; i < max; i++)
+   //      {
+   //         Expression dimExpression;
+   //         if ((dimExpression = this.dimensions[i]) == null)
+   //            break; // implicit dim, no further explict after this point
+   //         dimExpression.generateCode(currentScope, codeStream, true);
+   //         explicitDimCount++;
+   //      }
+   //
+   //      // array allocation
+   //      if (explicitDimCount == 1)
+   //      {
+   //         // Mono-dimensional array
+   //         codeStream.newArray((ArrayBinding)this.resolvedType);
+   //      }
+   //      else
+   //      {
+   //         // Multi-dimensional array
+   //         codeStream.multianewarray(this.resolvedType, explicitDimCount);
+   //      }
+   //      if (valueRequired)
+   //      {
+   //         codeStream.generateImplicitConversion(this.implicitConversion);
+   //      }
+   //      else
+   //      {
+   //         codeStream.pop();
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
    {

@@ -17,78 +17,97 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
-public class ArrayTypeReference extends SingleTypeReference {
-	public int dimensions;
-	public int originalSourceEnd;
+public class ArrayTypeReference extends SingleTypeReference
+{
+   public int dimensions;
 
-	/**
-	 * ArrayTypeReference constructor comment.
-	 * @param source char[]
-	 * @param dimensions int
-	 * @param pos int
-	 */
-	public ArrayTypeReference(char[] source, int dimensions, long pos) {
+   public int originalSourceEnd;
 
-		super(source, pos);
-		this.originalSourceEnd = this.sourceEnd;
-		this.dimensions = dimensions ;
-	}
+   /**
+    * ArrayTypeReference constructor comment.
+    * @param source char[]
+    * @param dimensions int
+    * @param pos int
+    */
+   public ArrayTypeReference(char[] source, int dimensions, long pos)
+   {
 
-	public int dimensions() {
+      super(source, pos);
+      this.originalSourceEnd = this.sourceEnd;
+      this.dimensions = dimensions;
+   }
 
-		return this.dimensions;
-	}
-	/**
-	 * @return char[][]
-	 */
-	public char [][] getParameterizedTypeName(){
-		int dim = this.dimensions;
-		char[] dimChars = new char[dim*2];
-		for (int i = 0; i < dim; i++) {
-			int index = i*2;
-			dimChars[index] = '[';
-			dimChars[index+1] = ']';
-		}
-		return new char[][]{ CharOperation.concat(this.token, dimChars) };
-	}
-	protected TypeBinding getTypeBinding(Scope scope) {
+   public int dimensions()
+   {
 
-		if (this.resolvedType != null) {
-			return this.resolvedType;
-		}
-		if (this.dimensions > 255) {
-			scope.problemReporter().tooManyDimensions(this);
-		}
-		TypeBinding leafComponentType = scope.getType(this.token);
-		return scope.createArrayType(leafComponentType, this.dimensions);
+      return this.dimensions;
+   }
 
-	}
+   /**
+    * @return char[][]
+    */
+   public char[][] getParameterizedTypeName()
+   {
+      int dim = this.dimensions;
+      char[] dimChars = new char[dim * 2];
+      for (int i = 0; i < dim; i++)
+      {
+         int index = i * 2;
+         dimChars[index] = '[';
+         dimChars[index + 1] = ']';
+      }
+      return new char[][]{CharOperation.concat(this.token, dimChars)};
+   }
 
-	public StringBuffer printExpression(int indent, StringBuffer output){
+   protected TypeBinding getTypeBinding(Scope scope)
+   {
 
-		super.printExpression(indent, output);
-		if ((this.bits & IsVarArgs) != 0) {
-			for (int i= 0 ; i < this.dimensions - 1; i++) {
-				output.append("[]"); //$NON-NLS-1$
-			}
-			output.append("..."); //$NON-NLS-1$
-		} else {
-			for (int i= 0 ; i < this.dimensions; i++) {
-				output.append("[]"); //$NON-NLS-1$
-			}
-		}
-		return output;
-	}
+      if (this.resolvedType != null)
+      {
+         return this.resolvedType;
+      }
+      if (this.dimensions > 255)
+      {
+         scope.problemReporter().tooManyDimensions(this);
+      }
+      TypeBinding leafComponentType = scope.getType(this.token);
+      return scope.createArrayType(leafComponentType, this.dimensions);
 
-	public void traverse(ASTVisitor visitor, BlockScope scope) {
+   }
 
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
+   public StringBuffer printExpression(int indent, StringBuffer output)
+   {
 
-	public void traverse(ASTVisitor visitor, ClassScope scope) {
+      super.printExpression(indent, output);
+      if ((this.bits & IsVarArgs) != 0)
+      {
+         for (int i = 0; i < this.dimensions - 1; i++)
+         {
+            output.append("[]"); //$NON-NLS-1$
+         }
+         output.append("..."); //$NON-NLS-1$
+      }
+      else
+      {
+         for (int i = 0; i < this.dimensions; i++)
+         {
+            output.append("[]"); //$NON-NLS-1$
+         }
+      }
+      return output;
+   }
 
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
+   public void traverse(ASTVisitor visitor, BlockScope scope)
+   {
+
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
+
+   public void traverse(ASTVisitor visitor, ClassScope scope)
+   {
+
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
 }

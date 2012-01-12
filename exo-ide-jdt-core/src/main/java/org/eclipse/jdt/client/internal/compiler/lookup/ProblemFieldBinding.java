@@ -10,27 +10,34 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-public class ProblemFieldBinding extends FieldBinding {
-	private int problemId;
-	public FieldBinding closestMatch;
+public class ProblemFieldBinding extends FieldBinding
+{
+   private int problemId;
 
-// NOTE: must only answer the subset of the name related to the problem
+   public FieldBinding closestMatch;
 
-public ProblemFieldBinding(ReferenceBinding declaringClass, char[] name, int problemId) {
-	this(null, declaringClass, name, problemId);
-}
-public ProblemFieldBinding(FieldBinding closestMatch, ReferenceBinding declaringClass, char[] name, int problemId) {
-	this.closestMatch = closestMatch;
-	this.declaringClass = declaringClass;
-	this.name = name;
-	this.problemId = problemId;
-}
-/* API
-* Answer the problem id associated with the receiver.
-* NoError if the receiver is a valid binding.
-*/
+   // NOTE: must only answer the subset of the name related to the problem
 
-public final int problemId() {
-	return this.problemId;
-}
+   public ProblemFieldBinding(ReferenceBinding declaringClass, char[] name, int problemId)
+   {
+      this(null, declaringClass, name, problemId);
+   }
+
+   public ProblemFieldBinding(FieldBinding closestMatch, ReferenceBinding declaringClass, char[] name, int problemId)
+   {
+      this.closestMatch = closestMatch;
+      this.declaringClass = declaringClass;
+      this.name = name;
+      this.problemId = problemId;
+   }
+
+   /* API
+   * Answer the problem id associated with the receiver.
+   * NoError if the receiver is a valid binding.
+   */
+
+   public final int problemId()
+   {
+      return this.problemId;
+   }
 }

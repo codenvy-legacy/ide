@@ -54,25 +54,25 @@ public class ClassLiteralAccess extends Expression
       return flowInfo;
    }
 
-//   /**
-//    * MessageSendDotClass code generation
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    * @param valueRequired boolean
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//
-//      // in interface case, no caching occurs, since cannot make a cache field for interface
-//      if (valueRequired)
-//      {
-//         codeStream.generateClassLiteralAccessForType(this.type.resolvedType, this.syntheticField);
-//         codeStream.generateImplicitConversion(this.implicitConversion);
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * MessageSendDotClass code generation
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    * @param valueRequired boolean
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //
+   //      // in interface case, no caching occurs, since cannot make a cache field for interface
+   //      if (valueRequired)
+   //      {
+   //         codeStream.generateClassLiteralAccessForType(this.type.resolvedType, this.syntheticField);
+   //         codeStream.generateImplicitConversion(this.implicitConversion);
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
    {

@@ -66,13 +66,13 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
 
    public int parseThreshold = -1;
 
-   public AbstractAnnotationProcessorManager annotationProcessorManager;
+   //   public AbstractAnnotationProcessorManager annotationProcessorManager;
 
-   public int annotationProcessorStartIndex = 0;
+   //   public int annotationProcessorStartIndex = 0;
 
    public ReferenceBinding[] referenceBindings;
 
-   public boolean useSingleThread = true; // by default the compiler will not use worker threads to read/process/write
+   //   public boolean useSingleThread = true; // by default the compiler will not use worker threads to read/process/write
 
    // number of initial units parsed at once (-1: none)
 

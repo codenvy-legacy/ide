@@ -68,22 +68,22 @@ public class CompoundAssignment extends Assignment implements OperatorIds
       return true;
    }
 
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//
-//      // various scenarii are possible, setting an array reference,
-//      // a field reference, a blank final field reference, a field of an enclosing instance or
-//      // just a local variable.
-//
-//      int pc = codeStream.position;
-//      ((Reference)this.lhs).generateCompoundAssignment(currentScope, codeStream, this.expression, this.operator,
-//         this.preAssignImplicitConversion, valueRequired);
-//      if (valueRequired)
-//      {
-//         codeStream.generateImplicitConversion(this.implicitConversion);
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //
+   //      // various scenarii are possible, setting an array reference,
+   //      // a field reference, a blank final field reference, a field of an enclosing instance or
+   //      // just a local variable.
+   //
+   //      int pc = codeStream.position;
+   //      ((Reference)this.lhs).generateCompoundAssignment(currentScope, codeStream, this.expression, this.operator,
+   //         this.preAssignImplicitConversion, valueRequired);
+   //      if (valueRequired)
+   //      {
+   //         codeStream.generateImplicitConversion(this.implicitConversion);
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    public int nullStatus(FlowInfo flowInfo)
    {

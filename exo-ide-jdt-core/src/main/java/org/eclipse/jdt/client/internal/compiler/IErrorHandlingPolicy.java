@@ -22,7 +22,9 @@ package org.eclipse.jdt.client.internal.compiler;
  * display problems and ask user if he wants to proceed or not.
  */
 
-public interface IErrorHandlingPolicy {
-	boolean proceedOnErrors();
-	boolean stopOnFirstError();
+public interface IErrorHandlingPolicy
+{
+   boolean proceedOnErrors();
+
+   boolean stopOnFirstError();
 }

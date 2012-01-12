@@ -13,19 +13,20 @@ package org.eclipse.jdt.client.internal.compiler.env;
 /**
  * This represents the class file information about a member value pair of an annotation.
  */
-public interface IBinaryElementValuePair {
+public interface IBinaryElementValuePair
+{
 
-/** @return the name of the member */
-char[] getName();
+   /** @return the name of the member */
+   char[] getName();
 
-/**
- * Return {@link ClassSignature} for a Class {@link java.lang.Class}.
- * Return {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for compile-time constant of primitive type, as well as String literals.
- * Return {@link EnumConstantSignature} if value is an enum constant.
- * Return {@link IBinaryAnnotation} for annotation type.
- * Return {@link Object}[] for array type.
- *
- * @return the value of this member value pair
- */
-Object getValue();
+   /**
+    * Return {@link ClassSignature} for a Class {@link java.lang.Class}.
+    * Return {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for compile-time constant of primitive type, as well as String literals.
+    * Return {@link EnumConstantSignature} if value is an enum constant.
+    * Return {@link IBinaryAnnotation} for annotation type.
+    * Return {@link Object}[] for array type.
+    *
+    * @return the value of this member value pair
+    */
+   Object getValue();
 }

@@ -10,54 +10,62 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.env;
 
-public interface ISourceMethod extends IGenericMethod {
+public interface ISourceMethod extends IGenericMethod
+{
 
-/**
- * Answer the source end position of the method's declaration.
- */
+   /**
+    * Answer the source end position of the method's declaration.
+    */
 
-int getDeclarationSourceEnd();
-/**
- * Answer the source start position of the method's declaration.
- */
+   int getDeclarationSourceEnd();
 
-int getDeclarationSourceStart();
-/**
- * Answer the unresolved names of the exception types
- * or null if the array is empty.
- *
- * A name is a simple name or a qualified, dot separated name.
- * For example, Hashtable or java.util.Hashtable.
- */
+   /**
+    * Answer the source start position of the method's declaration.
+    */
 
-char[][] getExceptionTypeNames();
-/**
- * Answer the source end position of the method's selector.
- */
+   int getDeclarationSourceStart();
 
-int getNameSourceEnd();
-/**
- * Answer the source start position of the method's selector.
- */
+   /**
+    * Answer the unresolved names of the exception types
+    * or null if the array is empty.
+    *
+    * A name is a simple name or a qualified, dot separated name.
+    * For example, Hashtable or java.util.Hashtable.
+    */
 
-int getNameSourceStart();
-/**
- * Answer the unresolved name of the return type
- * or null if receiver is a constructor or clinit.
- *
- * The name is a simple name or a qualified, dot separated name.
- * For example, Hashtable or java.util.Hashtable.
- */
+   char[][] getExceptionTypeNames();
 
-char[] getReturnTypeName();
-/**
- * Answer the names of the receiver's type parameters
- * or null if the array is empty.
- */
-char[][] getTypeParameterNames();
-/**
- * Answer the array of bound names of the receiver's type parameters
- * or null if the array is empty.
- */
-char[][][] getTypeParameterBounds();
+   /**
+    * Answer the source end position of the method's selector.
+    */
+
+   int getNameSourceEnd();
+
+   /**
+    * Answer the source start position of the method's selector.
+    */
+
+   int getNameSourceStart();
+
+   /**
+    * Answer the unresolved name of the return type
+    * or null if receiver is a constructor or clinit.
+    *
+    * The name is a simple name or a qualified, dot separated name.
+    * For example, Hashtable or java.util.Hashtable.
+    */
+
+   char[] getReturnTypeName();
+
+   /**
+    * Answer the names of the receiver's type parameters
+    * or null if the array is empty.
+    */
+   char[][] getTypeParameterNames();
+
+   /**
+    * Answer the array of bound names of the receiver's type parameters
+    * or null if the array is empty.
+    */
+   char[][][] getTypeParameterBounds();
 }

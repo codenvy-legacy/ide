@@ -18,59 +18,71 @@ import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
-public class SuperReference extends ThisReference {
+public class SuperReference extends ThisReference
+{
 
-	public SuperReference(int sourceStart, int sourceEnd) {
+   public SuperReference(int sourceStart, int sourceEnd)
+   {
 
-		super(sourceStart, sourceEnd);
-	}
+      super(sourceStart, sourceEnd);
+   }
 
-	public static ExplicitConstructorCall implicitSuperConstructorCall() {
+   public static ExplicitConstructorCall implicitSuperConstructorCall()
+   {
 
-		return new ExplicitConstructorCall(ExplicitConstructorCall.ImplicitSuper);
-	}
+      return new ExplicitConstructorCall(ExplicitConstructorCall.ImplicitSuper);
+   }
 
-	public boolean isImplicitThis() {
+   public boolean isImplicitThis()
+   {
 
-		return false;
-	}
+      return false;
+   }
 
-	public boolean isSuper() {
+   public boolean isSuper()
+   {
 
-		return true;
-	}
+      return true;
+   }
 
-	public boolean isThis() {
+   public boolean isThis()
+   {
 
-		return false ;
-	}
+      return false;
+   }
 
-	public StringBuffer printExpression(int indent, StringBuffer output){
+   public StringBuffer printExpression(int indent, StringBuffer output)
+   {
 
-		return output.append("super"); //$NON-NLS-1$
+      return output.append("super"); //$NON-NLS-1$
 
-	}
+   }
 
-	public TypeBinding resolveType(BlockScope scope) {
+   public TypeBinding resolveType(BlockScope scope)
+   {
 
-		this.constant = Constant.NotAConstant;
-		if (!checkAccess(scope.methodScope()))
-			return null;
-		ReferenceBinding enclosingReceiverType = scope.enclosingReceiverType();
-		if (enclosingReceiverType.id == T_JavaLangObject) {
-			scope.problemReporter().cannotUseSuperInJavaLangObject(this);
-			return null;
-		}
-		return this.resolvedType = enclosingReceiverType.superclass();
-	}
+      this.constant = Constant.NotAConstant;
+      if (!checkAccess(scope.methodScope()))
+         return null;
+      ReferenceBinding enclosingReceiverType = scope.enclosingReceiverType();
+      if (enclosingReceiverType.id == T_JavaLangObject)
+      {
+         scope.problemReporter().cannotUseSuperInJavaLangObject(this);
+         return null;
+      }
+      return this.resolvedType = enclosingReceiverType.superclass();
+   }
 
-	public void traverse(ASTVisitor visitor, BlockScope blockScope) {
-		visitor.visit(this, blockScope);
-		visitor.endVisit(this, blockScope);
-	}
-	
-	public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo, boolean valueRequired) {
-		currentScope.resetEnclosingMethodStaticFlag();
-		return analyseCode(currentScope, flowContext, flowInfo);
-	}
+   public void traverse(ASTVisitor visitor, BlockScope blockScope)
+   {
+      visitor.visit(this, blockScope);
+      visitor.endVisit(this, blockScope);
+   }
+
+   public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo,
+      boolean valueRequired)
+   {
+      currentScope.resetEnclosingMethodStaticFlag();
+      return analyseCode(currentScope, flowContext, flowInfo);
+   }
 }

@@ -67,20 +67,20 @@ public class CaseStatement extends Statement
       return output;
    }
 
-//   /**
-//    * Case code generation
-//    *
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//      if ((this.bits & ASTNode.IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      int pc = codeStream.position;
-//      this.targetLabel.place();
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Case code generation
+   //    *
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //      if ((this.bits & ASTNode.IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      int pc = codeStream.position;
+   //      this.targetLabel.place();
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    /**
     * No-op : should use resolveCase(...) instead.

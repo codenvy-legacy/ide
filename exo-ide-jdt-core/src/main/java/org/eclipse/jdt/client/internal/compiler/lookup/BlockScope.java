@@ -165,106 +165,106 @@ public class BlockScope extends Scope
       varBinding.modifiers = modifiers;
    }
 
-//   /* Compute variable positions in scopes given an initial position offset
-//    * ignoring unused local variables.
-//    *
-//    * No argument is expected here (ilocal is the first non-argument local of the outermost scope)
-//    * Arguments are managed by the MethodScope method
-//    */
-//   void computeLocalVariablePositions(int ilocal, int initOffset, CodeStream codeStream)
-//   {
-//      this.offset = initOffset;
-//      this.maxOffset = initOffset;
-//
-//      // local variable init
-//      int maxLocals = this.localIndex;
-//      boolean hasMoreVariables = ilocal < maxLocals;
-//
-//      // scope init
-//      int iscope = 0, maxScopes = this.subscopeCount;
-//      boolean hasMoreScopes = maxScopes > 0;
-//
-//      // iterate scopes and variables in parallel
-//      while (hasMoreVariables || hasMoreScopes)
-//      {
-//         if (hasMoreScopes && (!hasMoreVariables || (this.subscopes[iscope].startIndex() <= ilocal)))
-//         {
-//            // consider subscope first
-//            if (this.subscopes[iscope] instanceof BlockScope)
-//            {
-//               BlockScope subscope = (BlockScope)this.subscopes[iscope];
-//               int subOffset = subscope.shiftScopes == null ? this.offset : subscope.maxShiftedOffset();
-//               subscope.computeLocalVariablePositions(0, subOffset, codeStream);
-//               if (subscope.maxOffset > this.maxOffset)
-//                  this.maxOffset = subscope.maxOffset;
-//            }
-//            hasMoreScopes = ++iscope < maxScopes;
-//         }
-//         else
-//         {
-//
-//            // consider variable first
-//            LocalVariableBinding local = this.locals[ilocal]; // if no local at all, will be locals[ilocal]==null
-//
-//            // check if variable is actually used, and may force it to be preserved
-//            boolean generateCurrentLocalVar =
-//               (local.useFlag > LocalVariableBinding.UNUSED && local.constant() == Constant.NotAConstant);
-//
-//            // do not report fake used variable
-//            if (local.useFlag == LocalVariableBinding.UNUSED && (local.declaration != null) // unused (and non secret) local
-//               && ((local.declaration.bits & ASTNode.IsLocalDeclarationReachable) != 0))
-//            { // declaration is reachable
-//
-//               if (!(local.declaration instanceof Argument)) // do not report unused catch arguments
-//                  problemReporter().unusedLocalVariable(local.declaration);
-//            }
-//
-//            // could be optimized out, but does need to preserve unread variables ?
-//            if (!generateCurrentLocalVar)
-//            {
-//               if (local.declaration != null && compilerOptions().preserveAllLocalVariables)
-//               {
-//                  generateCurrentLocalVar = true; // force it to be preserved in the generated code
-//                  if (local.useFlag == LocalVariableBinding.UNUSED)
-//                     local.useFlag = LocalVariableBinding.USED;
-//               }
-//            }
-//
-//            // allocate variable
-//            if (generateCurrentLocalVar)
-//            {
-//
-//               if (local.declaration != null)
-//               {
-//                  codeStream.record(local); // record user-defined local variables for attribute generation
-//               }
-//               // assign variable position
-//               local.resolvedPosition = this.offset;
-//
-//               if ((local.type == TypeBinding.LONG) || (local.type == TypeBinding.DOUBLE))
-//               {
-//                  this.offset += 2;
-//               }
-//               else
-//               {
-//                  this.offset++;
-//               }
-//               if (this.offset > 0xFFFF)
-//               { // no more than 65535 words of locals
-//                  problemReporter().noMoreAvailableSpaceForLocal(local,
-//                     local.declaration == null ? (ASTNode)methodScope().referenceContext : local.declaration);
-//               }
-//            }
-//            else
-//            {
-//               local.resolvedPosition = -1; // not generated
-//            }
-//            hasMoreVariables = ++ilocal < maxLocals;
-//         }
-//      }
-//      if (this.offset > this.maxOffset)
-//         this.maxOffset = this.offset;
-//   }
+   //   /* Compute variable positions in scopes given an initial position offset
+   //    * ignoring unused local variables.
+   //    *
+   //    * No argument is expected here (ilocal is the first non-argument local of the outermost scope)
+   //    * Arguments are managed by the MethodScope method
+   //    */
+   //   void computeLocalVariablePositions(int ilocal, int initOffset, CodeStream codeStream)
+   //   {
+   //      this.offset = initOffset;
+   //      this.maxOffset = initOffset;
+   //
+   //      // local variable init
+   //      int maxLocals = this.localIndex;
+   //      boolean hasMoreVariables = ilocal < maxLocals;
+   //
+   //      // scope init
+   //      int iscope = 0, maxScopes = this.subscopeCount;
+   //      boolean hasMoreScopes = maxScopes > 0;
+   //
+   //      // iterate scopes and variables in parallel
+   //      while (hasMoreVariables || hasMoreScopes)
+   //      {
+   //         if (hasMoreScopes && (!hasMoreVariables || (this.subscopes[iscope].startIndex() <= ilocal)))
+   //         {
+   //            // consider subscope first
+   //            if (this.subscopes[iscope] instanceof BlockScope)
+   //            {
+   //               BlockScope subscope = (BlockScope)this.subscopes[iscope];
+   //               int subOffset = subscope.shiftScopes == null ? this.offset : subscope.maxShiftedOffset();
+   //               subscope.computeLocalVariablePositions(0, subOffset, codeStream);
+   //               if (subscope.maxOffset > this.maxOffset)
+   //                  this.maxOffset = subscope.maxOffset;
+   //            }
+   //            hasMoreScopes = ++iscope < maxScopes;
+   //         }
+   //         else
+   //         {
+   //
+   //            // consider variable first
+   //            LocalVariableBinding local = this.locals[ilocal]; // if no local at all, will be locals[ilocal]==null
+   //
+   //            // check if variable is actually used, and may force it to be preserved
+   //            boolean generateCurrentLocalVar =
+   //               (local.useFlag > LocalVariableBinding.UNUSED && local.constant() == Constant.NotAConstant);
+   //
+   //            // do not report fake used variable
+   //            if (local.useFlag == LocalVariableBinding.UNUSED && (local.declaration != null) // unused (and non secret) local
+   //               && ((local.declaration.bits & ASTNode.IsLocalDeclarationReachable) != 0))
+   //            { // declaration is reachable
+   //
+   //               if (!(local.declaration instanceof Argument)) // do not report unused catch arguments
+   //                  problemReporter().unusedLocalVariable(local.declaration);
+   //            }
+   //
+   //            // could be optimized out, but does need to preserve unread variables ?
+   //            if (!generateCurrentLocalVar)
+   //            {
+   //               if (local.declaration != null && compilerOptions().preserveAllLocalVariables)
+   //               {
+   //                  generateCurrentLocalVar = true; // force it to be preserved in the generated code
+   //                  if (local.useFlag == LocalVariableBinding.UNUSED)
+   //                     local.useFlag = LocalVariableBinding.USED;
+   //               }
+   //            }
+   //
+   //            // allocate variable
+   //            if (generateCurrentLocalVar)
+   //            {
+   //
+   //               if (local.declaration != null)
+   //               {
+   //                  codeStream.record(local); // record user-defined local variables for attribute generation
+   //               }
+   //               // assign variable position
+   //               local.resolvedPosition = this.offset;
+   //
+   //               if ((local.type == TypeBinding.LONG) || (local.type == TypeBinding.DOUBLE))
+   //               {
+   //                  this.offset += 2;
+   //               }
+   //               else
+   //               {
+   //                  this.offset++;
+   //               }
+   //               if (this.offset > 0xFFFF)
+   //               { // no more than 65535 words of locals
+   //                  problemReporter().noMoreAvailableSpaceForLocal(local,
+   //                     local.declaration == null ? (ASTNode)methodScope().referenceContext : local.declaration);
+   //               }
+   //            }
+   //            else
+   //            {
+   //               local.resolvedPosition = -1; // not generated
+   //            }
+   //            hasMoreVariables = ++ilocal < maxLocals;
+   //         }
+   //      }
+   //      if (this.offset > this.maxOffset)
+   //         this.maxOffset = this.offset;
+   //   }
 
    /*
     *	Record the suitable binding denoting a synthetic field or constructor argument,

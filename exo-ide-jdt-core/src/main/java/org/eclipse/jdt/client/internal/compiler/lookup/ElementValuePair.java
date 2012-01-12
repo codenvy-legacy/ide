@@ -14,97 +14,114 @@ import org.eclipse.jdt.client.internal.compiler.ast.*;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 
-public class ElementValuePair {
-	char[] name;
-	public Object value;
-	public MethodBinding binding;
+public class ElementValuePair
+{
+   char[] name;
 
-public static Object getValue(Expression expression) {
-	if (expression == null)
-		return null;
-	Constant constant = expression.constant;
-	// literals would hit this case.
-	if (constant != null && constant != Constant.NotAConstant)
-		return constant;
+   public Object value;
 
-	if (expression instanceof Annotation)
-		return ((Annotation) expression).getCompilerAnnotation();
-	if (expression instanceof ArrayInitializer) {
-		Expression[] exprs = ((ArrayInitializer) expression).expressions;
-		int length = exprs == null ? 0 : exprs.length;
-		Object[] values = new Object[length];
-		for (int i = 0; i < length; i++)
-			values[i] = getValue(exprs[i]);
-		return values;
-	}
-	if (expression instanceof ClassLiteralAccess)
-		return ((ClassLiteralAccess) expression).targetType;
-	if (expression instanceof Reference) {
-		FieldBinding fieldBinding = null;
-		if (expression instanceof FieldReference) {
-			fieldBinding = ((FieldReference) expression).fieldBinding();
-		} else if (expression instanceof NameReference) {
-			Binding binding = ((NameReference) expression).binding;
-			if (binding != null && binding.kind() == Binding.FIELD)
-				fieldBinding = (FieldBinding) binding;
-		}
-		if (fieldBinding != null && (fieldBinding.modifiers & ClassFileConstants.AccEnum) > 0)
-			return fieldBinding;
-	}
-	// something that isn't a compile time constant.
-	return null;
-}
+   public MethodBinding binding;
 
-public ElementValuePair(char[] name, Expression expression, MethodBinding binding) {
-	this(name, ElementValuePair.getValue(expression), binding);
-}
+   public static Object getValue(Expression expression)
+   {
+      if (expression == null)
+         return null;
+      Constant constant = expression.constant;
+      // literals would hit this case.
+      if (constant != null && constant != Constant.NotAConstant)
+         return constant;
 
-public ElementValuePair(char[] name, Object value, MethodBinding binding) {
-	this.name = name;
-	this.value = value;
-	this.binding = binding;
-}
+      if (expression instanceof Annotation)
+         return ((Annotation)expression).getCompilerAnnotation();
+      if (expression instanceof ArrayInitializer)
+      {
+         Expression[] exprs = ((ArrayInitializer)expression).expressions;
+         int length = exprs == null ? 0 : exprs.length;
+         Object[] values = new Object[length];
+         for (int i = 0; i < length; i++)
+            values[i] = getValue(exprs[i]);
+         return values;
+      }
+      if (expression instanceof ClassLiteralAccess)
+         return ((ClassLiteralAccess)expression).targetType;
+      if (expression instanceof Reference)
+      {
+         FieldBinding fieldBinding = null;
+         if (expression instanceof FieldReference)
+         {
+            fieldBinding = ((FieldReference)expression).fieldBinding();
+         }
+         else if (expression instanceof NameReference)
+         {
+            Binding binding = ((NameReference)expression).binding;
+            if (binding != null && binding.kind() == Binding.FIELD)
+               fieldBinding = (FieldBinding)binding;
+         }
+         if (fieldBinding != null && (fieldBinding.modifiers & ClassFileConstants.AccEnum) > 0)
+            return fieldBinding;
+      }
+      // something that isn't a compile time constant.
+      return null;
+   }
 
-/**
- * @return the name of the element value pair.
- */
-public char[] getName() {
-	return this.name;
-}
+   public ElementValuePair(char[] name, Expression expression, MethodBinding binding)
+   {
+      this(name, ElementValuePair.getValue(expression), binding);
+   }
 
-/**
- * @return the method binding that defined this member value pair or null if no such binding exists.
- */
-public MethodBinding getMethodBinding() {
-	return this.binding;
-}
+   public ElementValuePair(char[] name, Object value, MethodBinding binding)
+   {
+      this.name = name;
+      this.value = value;
+      this.binding = binding;
+   }
 
-/**
- * Return {@link TypeBinding} for member value of type {@link java.lang.Class}
- * Return {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for member of primitive type or String
- * Return {@link FieldBinding} for enum constant
- * Return {@link AnnotationBinding} for annotation instance
- * Return <code>Object[]</code> for member value of array type.
- * @return the value of this member value pair or null if the value is missing or is not a compile-time constant
- */
-public Object getValue() {
-	return this.value;
-}
+   /**
+    * @return the name of the element value pair.
+    */
+   public char[] getName()
+   {
+      return this.name;
+   }
 
-void setMethodBinding(MethodBinding binding) {
-	// lazily set after annotation type was resolved
-	this.binding = binding;
-}
+   /**
+    * @return the method binding that defined this member value pair or null if no such binding exists.
+    */
+   public MethodBinding getMethodBinding()
+   {
+      return this.binding;
+   }
 
-void setValue(Object value) {
-	// can be modified after the initialization if holding an unresolved ref
-	this.value = value;
-}
+   /**
+    * Return {@link TypeBinding} for member value of type {@link java.lang.Class}
+    * Return {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for member of primitive type or String
+    * Return {@link FieldBinding} for enum constant
+    * Return {@link AnnotationBinding} for annotation instance
+    * Return <code>Object[]</code> for member value of array type.
+    * @return the value of this member value pair or null if the value is missing or is not a compile-time constant
+    */
+   public Object getValue()
+   {
+      return this.value;
+   }
 
-public String toString() {
-	StringBuffer buffer = new StringBuffer(5);
-	buffer.append(this.name).append(" = "); //$NON-NLS-1$
-	buffer.append(this.value);
-	return buffer.toString();
-}
+   void setMethodBinding(MethodBinding binding)
+   {
+      // lazily set after annotation type was resolved
+      this.binding = binding;
+   }
+
+   void setValue(Object value)
+   {
+      // can be modified after the initialization if holding an unresolved ref
+      this.value = value;
+   }
+
+   public String toString()
+   {
+      StringBuffer buffer = new StringBuffer(5);
+      buffer.append(this.name).append(" = "); //$NON-NLS-1$
+      buffer.append(this.value);
+      return buffer.toString();
+   }
 }

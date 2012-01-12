@@ -10,53 +10,66 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.impl;
 
-public class BooleanConstant extends Constant {
+public class BooleanConstant extends Constant
+{
 
-	private boolean value;
+   private boolean value;
 
-	private static final BooleanConstant TRUE = new BooleanConstant(true);
-	private static final BooleanConstant FALSE = new BooleanConstant(false);
+   private static final BooleanConstant TRUE = new BooleanConstant(true);
 
-	public static Constant fromValue(boolean value) {
-		return value ? BooleanConstant.TRUE : BooleanConstant.FALSE;
-	}
+   private static final BooleanConstant FALSE = new BooleanConstant(false);
 
-	private BooleanConstant(boolean value) {
-		this.value = value;
-	}
+   public static Constant fromValue(boolean value)
+   {
+      return value ? BooleanConstant.TRUE : BooleanConstant.FALSE;
+   }
 
-	public boolean booleanValue() {
-		return this.value;
-	}
+   private BooleanConstant(boolean value)
+   {
+      this.value = value;
+   }
 
-	public String stringValue() {
-		// spec 15.17.11
-		return String.valueOf(this.value);
-	}
+   public boolean booleanValue()
+   {
+      return this.value;
+   }
 
-	public String toString() {
-		return "(boolean)" + this.value; //$NON-NLS-1$
-	}
+   public String stringValue()
+   {
+      // spec 15.17.11
+      return String.valueOf(this.value);
+   }
 
-	public int typeID() {
-		return T_boolean;
-	}
+   public String toString()
+   {
+      return "(boolean)" + this.value; //$NON-NLS-1$
+   }
 
-	public int hashCode() {
-		return this.value ? 1231 : 1237;
-	}
+   public int typeID()
+   {
+      return T_boolean;
+   }
 
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		// cannot be true anymore as the first test would have returned true
-		return false;
-	}
+   public int hashCode()
+   {
+      return this.value ? 1231 : 1237;
+   }
+
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (getClass() != obj.getClass())
+      {
+         return false;
+      }
+      // cannot be true anymore as the first test would have returned true
+      return false;
+   }
 }

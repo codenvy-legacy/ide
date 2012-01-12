@@ -19,11 +19,13 @@ import org.eclipse.jdt.client.internal.compiler.CompilationResult;
  *
  * should only be thrown from within problem handlers.
  */
-public class AbortType extends AbortCompilationUnit {
+public class AbortType extends AbortCompilationUnit
+{
 
-	private static final long serialVersionUID = -5882417089349134385L; // backward compatible
+   private static final long serialVersionUID = -5882417089349134385L; // backward compatible
 
-public AbortType(CompilationResult compilationResult, CategorizedProblem problem) {
-	super(compilationResult, problem);
-}
+   public AbortType(CompilationResult compilationResult, CategorizedProblem problem)
+   {
+      super(compilationResult, problem);
+   }
 }

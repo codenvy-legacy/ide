@@ -45,7 +45,7 @@ public class ReturnStatement extends Statement
 
    public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
    { // here requires to generate a sequence of finally blocks invocations depending corresponding
-      // to each of the traversed try statements, so that execution will terminate properly.
+     // to each of the traversed try statements, so that execution will terminate properly.
 
       // lookup the label, this should answer the returnContext
 
@@ -143,90 +143,90 @@ public class ReturnStatement extends Statement
       return FlowInfo.DEAD_END;
    }
 
-//   /**
-//    * Retrun statement code generation
-//    *
-//    *   generate the finallyInvocationSequence.
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//      if ((this.bits & ASTNode.IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      int pc = codeStream.position;
-//      boolean alreadyGeneratedExpression = false;
-//      // generate the expression
-//      if (needValueStore())
-//      {
-//         alreadyGeneratedExpression = true;
-//         this.expression.generateCode(currentScope, codeStream, needValue()); // no value needed if non-returning subroutine
-//         generateStoreSaveValueIfNecessary(codeStream);
-//      }
-//
-//      // generation of code responsible for invoking the finally blocks in sequence
-//      if (this.subroutines != null)
-//      {
-//         Object reusableJSRTarget =
-//            this.expression == null ? (Object)TypeBinding.VOID : this.expression.reusableJSRTarget();
-//         for (int i = 0, max = this.subroutines.length; i < max; i++)
-//         {
-//            SubRoutineStatement sub = this.subroutines[i];
-//            boolean didEscape =
-//               sub.generateSubRoutineInvocation(currentScope, codeStream, reusableJSRTarget, this.initStateIndex,
-//                  this.saveValueVariable);
-//            if (didEscape)
-//            {
-//               codeStream.recordPositionsFrom(pc, this.sourceStart);
-//               SubRoutineStatement.reenterAllExceptionHandlers(this.subroutines, i, codeStream);
-//               return;
-//            }
-//         }
-//      }
-//      if (this.saveValueVariable != null)
-//      {
-//         codeStream.addVariable(this.saveValueVariable);
-//         codeStream.load(this.saveValueVariable);
-//      }
-//      if (this.expression != null && !alreadyGeneratedExpression)
-//      {
-//         this.expression.generateCode(currentScope, codeStream, true);
-//         generateStoreSaveValueIfNecessary(codeStream);
-//      }
-//      // output the suitable return bytecode or wrap the value inside a descriptor for doits
-//      generateReturnBytecode(codeStream);
-//      if (this.saveValueVariable != null)
-//      {
-//         codeStream.removeVariable(this.saveValueVariable);
-//      }
-//      if (this.initStateIndex != -1)
-//      {
-//         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.initStateIndex);
-//         codeStream.addDefinitelyAssignedVariables(currentScope, this.initStateIndex);
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//      SubRoutineStatement.reenterAllExceptionHandlers(this.subroutines, -1, codeStream);
-//   }
+   //   /**
+   //    * Retrun statement code generation
+   //    *
+   //    *   generate the finallyInvocationSequence.
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //      if ((this.bits & ASTNode.IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      int pc = codeStream.position;
+   //      boolean alreadyGeneratedExpression = false;
+   //      // generate the expression
+   //      if (needValueStore())
+   //      {
+   //         alreadyGeneratedExpression = true;
+   //         this.expression.generateCode(currentScope, codeStream, needValue()); // no value needed if non-returning subroutine
+   //         generateStoreSaveValueIfNecessary(codeStream);
+   //      }
+   //
+   //      // generation of code responsible for invoking the finally blocks in sequence
+   //      if (this.subroutines != null)
+   //      {
+   //         Object reusableJSRTarget =
+   //            this.expression == null ? (Object)TypeBinding.VOID : this.expression.reusableJSRTarget();
+   //         for (int i = 0, max = this.subroutines.length; i < max; i++)
+   //         {
+   //            SubRoutineStatement sub = this.subroutines[i];
+   //            boolean didEscape =
+   //               sub.generateSubRoutineInvocation(currentScope, codeStream, reusableJSRTarget, this.initStateIndex,
+   //                  this.saveValueVariable);
+   //            if (didEscape)
+   //            {
+   //               codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //               SubRoutineStatement.reenterAllExceptionHandlers(this.subroutines, i, codeStream);
+   //               return;
+   //            }
+   //         }
+   //      }
+   //      if (this.saveValueVariable != null)
+   //      {
+   //         codeStream.addVariable(this.saveValueVariable);
+   //         codeStream.load(this.saveValueVariable);
+   //      }
+   //      if (this.expression != null && !alreadyGeneratedExpression)
+   //      {
+   //         this.expression.generateCode(currentScope, codeStream, true);
+   //         generateStoreSaveValueIfNecessary(codeStream);
+   //      }
+   //      // output the suitable return bytecode or wrap the value inside a descriptor for doits
+   //      generateReturnBytecode(codeStream);
+   //      if (this.saveValueVariable != null)
+   //      {
+   //         codeStream.removeVariable(this.saveValueVariable);
+   //      }
+   //      if (this.initStateIndex != -1)
+   //      {
+   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.initStateIndex);
+   //         codeStream.addDefinitelyAssignedVariables(currentScope, this.initStateIndex);
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //      SubRoutineStatement.reenterAllExceptionHandlers(this.subroutines, -1, codeStream);
+   //   }
 
-//   /**
-//    * Dump the suitable return bytecode for a return statement
-//    *
-//    */
-//   public void generateReturnBytecode(CodeStream codeStream)
-//   {
-//      codeStream.generateReturnBytecode(this.expression);
-//   }
-//
-//   public void generateStoreSaveValueIfNecessary(CodeStream codeStream)
-//   {
-//      if (this.saveValueVariable != null)
-//      {
-//         codeStream.store(this.saveValueVariable, false);
-//      }
-//   }
+   //   /**
+   //    * Dump the suitable return bytecode for a return statement
+   //    *
+   //    */
+   //   public void generateReturnBytecode(CodeStream codeStream)
+   //   {
+   //      codeStream.generateReturnBytecode(this.expression);
+   //   }
+   //
+   //   public void generateStoreSaveValueIfNecessary(CodeStream codeStream)
+   //   {
+   //      if (this.saveValueVariable != null)
+   //      {
+   //         codeStream.store(this.saveValueVariable, false);
+   //      }
+   //   }
 
    private boolean needValueStore()
    {

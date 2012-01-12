@@ -55,259 +55,290 @@ import java.util.List;
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
-public class FieldAccess extends Expression {
+public class FieldAccess extends Expression
+{
 
-	/**
-	 * The "expression" structural property of this node type (child type: {@link Expression}).
-	 * @since 3.0
-	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY =
-		new ChildPropertyDescriptor(FieldAccess.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+   /**
+    * The "expression" structural property of this node type (child type: {@link Expression}).
+    * @since 3.0
+    */
+   public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(FieldAccess.class,
+      "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
-	/**
-	 * The "name" structural property of this node type (child type: {@link SimpleName}).
-	 * @since 3.0
-	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY =
-		new ChildPropertyDescriptor(FieldAccess.class, "name", SimpleName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+   /**
+    * The "name" structural property of this node type (child type: {@link SimpleName}).
+    * @since 3.0
+    */
+   public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(FieldAccess.class,
+      "name", SimpleName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
-	/**
-	 * A list of property descriptors (element type:
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
-	 */
-	private static final List PROPERTY_DESCRIPTORS;
+   /**
+    * A list of property descriptors (element type:
+    * {@link StructuralPropertyDescriptor}),
+    * or null if uninitialized.
+    */
+   private static final List PROPERTY_DESCRIPTORS;
 
-	static {
-		List properyList = new ArrayList(3);
-		createPropertyList(FieldAccess.class, properyList);
-		addProperty(EXPRESSION_PROPERTY, properyList);
-		addProperty(NAME_PROPERTY, properyList);
-		PROPERTY_DESCRIPTORS = reapPropertyList(properyList);
-	}
+   static
+   {
+      List properyList = new ArrayList(3);
+      createPropertyList(FieldAccess.class, properyList);
+      addProperty(EXPRESSION_PROPERTY, properyList);
+      addProperty(NAME_PROPERTY, properyList);
+      PROPERTY_DESCRIPTORS = reapPropertyList(properyList);
+   }
 
-	/**
-	 * Returns a list of structural property descriptors for this node type.
-	 * Clients must not modify the result.
-	 *
-	 * @param apiLevel the API level; one of the
-	 * <code>AST.JLS*</code> constants
+   /**
+    * Returns a list of structural property descriptors for this node type.
+    * Clients must not modify the result.
+    *
+    * @param apiLevel the API level; one of the
+    * <code>AST.JLS*</code> constants
 
-	 * @return a list of property descriptors (element type:
-	 * {@link StructuralPropertyDescriptor})
-	 * @since 3.0
-	 */
-	public static List propertyDescriptors(int apiLevel) {
-		return PROPERTY_DESCRIPTORS;
-	}
+    * @return a list of property descriptors (element type:
+    * {@link StructuralPropertyDescriptor})
+    * @since 3.0
+    */
+   public static List propertyDescriptors(int apiLevel)
+   {
+      return PROPERTY_DESCRIPTORS;
+   }
 
-	/**
-	 * The expression; lazily initialized; defaults to an unspecified,
-	 * but legal, simple name.
-	 */
-	private Expression expression = null;
+   /**
+    * The expression; lazily initialized; defaults to an unspecified,
+    * but legal, simple name.
+    */
+   private Expression expression = null;
 
-	/**
-	 * The field; lazily initialized; defaults to an unspecified,
-	 * but legal, simple field name.
-	 */
-	private SimpleName fieldName = null;
+   /**
+    * The field; lazily initialized; defaults to an unspecified,
+    * but legal, simple field name.
+    */
+   private SimpleName fieldName = null;
 
-	/**
-	 * Creates a new unparented node for a field access expression owned by the
-	 * given AST. By default, the expression and field are both unspecified,
-	 * but legal, names.
-	 * <p>
-	 * N.B. This constructor is package-private.
-	 * </p>
-	 *
-	 * @param ast the AST that is to own this node
-	 */
-	FieldAccess(AST ast) {
-		super(ast);
-	}
+   /**
+    * Creates a new unparented node for a field access expression owned by the
+    * given AST. By default, the expression and field are both unspecified,
+    * but legal, names.
+    * <p>
+    * N.B. This constructor is package-private.
+    * </p>
+    *
+    * @param ast the AST that is to own this node
+    */
+   FieldAccess(AST ast)
+   {
+      super(ast);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final List internalStructuralPropertiesForType(int apiLevel) {
-		return propertyDescriptors(apiLevel);
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   final List internalStructuralPropertiesForType(int apiLevel)
+   {
+      return propertyDescriptors(apiLevel);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
-		if (property == EXPRESSION_PROPERTY) {
-			if (get) {
-				return getExpression();
-			} else {
-				setExpression((Expression) child);
-				return null;
-			}
-		}
-		if (property == NAME_PROPERTY) {
-			if (get) {
-				return getName();
-			} else {
-				setName((SimpleName) child);
-				return null;
-			}
-		}
-		// allow default implementation to flag the error
-		return super.internalGetSetChildProperty(property, get, child);
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
+   {
+      if (property == EXPRESSION_PROPERTY)
+      {
+         if (get)
+         {
+            return getExpression();
+         }
+         else
+         {
+            setExpression((Expression)child);
+            return null;
+         }
+      }
+      if (property == NAME_PROPERTY)
+      {
+         if (get)
+         {
+            return getName();
+         }
+         else
+         {
+            setName((SimpleName)child);
+            return null;
+         }
+      }
+      // allow default implementation to flag the error
+      return super.internalGetSetChildProperty(property, get, child);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final int getNodeType0() {
-		return FIELD_ACCESS;
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   final int getNodeType0()
+   {
+      return FIELD_ACCESS;
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	ASTNode clone0(AST target) {
-		FieldAccess result = new FieldAccess(target);
-		result.setSourceRange(getStartPosition(), getLength());
-		result.setExpression((Expression) getExpression().clone(target));
-		result.setName((SimpleName) getName().clone(target));
-		return result;
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   ASTNode clone0(AST target)
+   {
+      FieldAccess result = new FieldAccess(target);
+      result.setSourceRange(getStartPosition(), getLength());
+      result.setExpression((Expression)getExpression().clone(target));
+      result.setName((SimpleName)getName().clone(target));
+      return result;
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final boolean subtreeMatch0(ASTMatcher matcher, Object other) {
-		// dispatch to correct overloaded match method
-		return matcher.match(this, other);
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   final boolean subtreeMatch0(ASTMatcher matcher, Object other)
+   {
+      // dispatch to correct overloaded match method
+      return matcher.match(this, other);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	void accept0(ASTVisitor visitor) {
-		boolean visitChildren = visitor.visit(this);
-		if (visitChildren) {
-			// visit children in normal left to right reading order
-			acceptChild(visitor, getExpression());
-			acceptChild(visitor, getName());
-		}
-		visitor.endVisit(this);
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   void accept0(ASTVisitor visitor)
+   {
+      boolean visitChildren = visitor.visit(this);
+      if (visitChildren)
+      {
+         // visit children in normal left to right reading order
+         acceptChild(visitor, getExpression());
+         acceptChild(visitor, getName());
+      }
+      visitor.endVisit(this);
+   }
 
-	/**
-	 * Returns the expression of this field access expression.
-	 *
-	 * @return the expression node
-	 */
-	public Expression getExpression() {
-		if (this.expression == null) {
-			// lazy init must be thread-safe for readers
-			synchronized (this) {
-				if (this.expression == null) {
-					preLazyInit();
-					this.expression = new SimpleName(this.ast);
-					postLazyInit(this.expression, EXPRESSION_PROPERTY);
-				}
-			}
-		}
-		return this.expression;
-	}
+   /**
+    * Returns the expression of this field access expression.
+    *
+    * @return the expression node
+    */
+   public Expression getExpression()
+   {
+      if (this.expression == null)
+      {
+         // lazy init must be thread-safe for readers
+         synchronized (this)
+         {
+            if (this.expression == null)
+            {
+               preLazyInit();
+               this.expression = new SimpleName(this.ast);
+               postLazyInit(this.expression, EXPRESSION_PROPERTY);
+            }
+         }
+      }
+      return this.expression;
+   }
 
-	/**
-	 * Sets the expression of this field access expression.
-	 *
-	 * @param expression the new expression
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */
-	public void setExpression(Expression expression) {
-		if (expression == null) {
-			throw new IllegalArgumentException();
-		}
-		ASTNode oldChild = this.expression;
-		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
-		this.expression = expression;
-		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
-	}
+   /**
+    * Sets the expression of this field access expression.
+    *
+    * @param expression the new expression
+    * @exception IllegalArgumentException if:
+    * <ul>
+    * <li>the node belongs to a different AST</li>
+    * <li>the node already has a parent</li>
+    * <li>a cycle in would be created</li>
+    * </ul>
+    */
+   public void setExpression(Expression expression)
+   {
+      if (expression == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      ASTNode oldChild = this.expression;
+      preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+      this.expression = expression;
+      postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+   }
 
-	/**
-	 * Returns the name of the field accessed in this field access expression.
-	 *
-	 * @return the field name
-	 */
-	public SimpleName getName() {
-		if (this.fieldName == null) {
-			// lazy init must be thread-safe for readers
-			synchronized (this) {
-				if (this.fieldName == null) {
-					preLazyInit();
-					this.fieldName = new SimpleName(this.ast);
-					postLazyInit(this.fieldName, NAME_PROPERTY);
-				}
-			}
-		}
-		return this.fieldName;
-	}
+   /**
+    * Returns the name of the field accessed in this field access expression.
+    *
+    * @return the field name
+    */
+   public SimpleName getName()
+   {
+      if (this.fieldName == null)
+      {
+         // lazy init must be thread-safe for readers
+         synchronized (this)
+         {
+            if (this.fieldName == null)
+            {
+               preLazyInit();
+               this.fieldName = new SimpleName(this.ast);
+               postLazyInit(this.fieldName, NAME_PROPERTY);
+            }
+         }
+      }
+      return this.fieldName;
+   }
 
-	/**
-	 * Sets the name of the field accessed in this field access expression.
-	 *
-	 * @param fieldName the field name
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * </ul>
-	 */
-	public void setName(SimpleName fieldName) {
-		if (fieldName == null) {
-			throw new IllegalArgumentException();
-		}
-		ASTNode oldChild = this.fieldName;
-		preReplaceChild(oldChild, fieldName, NAME_PROPERTY);
-		this.fieldName = fieldName;
-		postReplaceChild(oldChild, fieldName, NAME_PROPERTY);
-	}
+   /**
+    * Sets the name of the field accessed in this field access expression.
+    *
+    * @param fieldName the field name
+    * @exception IllegalArgumentException if:
+    * <ul>
+    * <li>the node belongs to a different AST</li>
+    * <li>the node already has a parent</li>
+    * </ul>
+    */
+   public void setName(SimpleName fieldName)
+   {
+      if (fieldName == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      ASTNode oldChild = this.fieldName;
+      preReplaceChild(oldChild, fieldName, NAME_PROPERTY);
+      this.fieldName = fieldName;
+      postReplaceChild(oldChild, fieldName, NAME_PROPERTY);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	int memSize() {
-		// treat Code as free
-		return BASE_NODE_SIZE + 2 * 4;
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   int memSize()
+   {
+      // treat Code as free
+      return BASE_NODE_SIZE + 2 * 4;
+   }
 
-	/**
-	 * Resolves and returns the binding for the field accessed by this
-	 * expression.
-	 * <p>
-	 * Note that bindings are generally unavailable unless requested when the
-	 * AST is being built.
-	 * </p>
-	 *
-	 * @return the variable binding, or <code>null</code> if the binding cannot
-	 * be resolved
-	 * @since 3.0
-	 */
-	public IVariableBinding resolveFieldBinding() {
-		return this.ast.getBindingResolver().resolveField(this);
-	}
+   /**
+    * Resolves and returns the binding for the field accessed by this
+    * expression.
+    * <p>
+    * Note that bindings are generally unavailable unless requested when the
+    * AST is being built.
+    * </p>
+    *
+    * @return the variable binding, or <code>null</code> if the binding cannot
+    * be resolved
+    * @since 3.0
+    */
+   public IVariableBinding resolveFieldBinding()
+   {
+      return this.ast.getBindingResolver().resolveField(this);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	int treeSize() {
-		return
-			memSize()
-			+ (this.expression == null ? 0 : getExpression().treeSize())
-			+ (this.fieldName == null ? 0 : getName().treeSize());
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   int treeSize()
+   {
+      return memSize() + (this.expression == null ? 0 : getExpression().treeSize())
+         + (this.fieldName == null ? 0 : getName().treeSize());
+   }
 }
-

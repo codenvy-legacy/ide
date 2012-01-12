@@ -200,7 +200,7 @@ public class Util
       }
       return i;
    }
-   
+
    /**
     * Simple replacement for clone() method for GWT 
     * @param array
@@ -1645,29 +1645,29 @@ public class Util
    //		}
    //	}
 
-//   /*
-//    * Returns the index of the most specific argument paths which is strictly enclosing the path to check
-//    */
-//   public static int indexOfEnclosingPath(IPath checkedPath, IPath[] paths, int pathCount)
-//   {
-//
-//      int bestMatch = -1, bestLength = -1;
-//      for (int i = 0; i < pathCount; i++)
-//      {
-//         if (paths[i].equals(checkedPath))
-//            continue;
-//         if (paths[i].isPrefixOf(checkedPath))
-//         {
-//            int currentLength = paths[i].segmentCount();
-//            if (currentLength > bestLength)
-//            {
-//               bestLength = currentLength;
-//               bestMatch = i;
-//            }
-//         }
-//      }
-//      return bestMatch;
-//   }
+   //   /*
+   //    * Returns the index of the most specific argument paths which is strictly enclosing the path to check
+   //    */
+   //   public static int indexOfEnclosingPath(IPath checkedPath, IPath[] paths, int pathCount)
+   //   {
+   //
+   //      int bestMatch = -1, bestLength = -1;
+   //      for (int i = 0; i < pathCount; i++)
+   //      {
+   //         if (paths[i].equals(checkedPath))
+   //            continue;
+   //         if (paths[i].isPrefixOf(checkedPath))
+   //         {
+   //            int currentLength = paths[i].segmentCount();
+   //            if (currentLength > bestLength)
+   //            {
+   //               bestLength = currentLength;
+   //               bestMatch = i;
+   //            }
+   //         }
+   //      }
+   //      return bestMatch;
+   //   }
 
    /*
     * Returns the index of the Java like extension of the given file name
@@ -1698,35 +1698,35 @@ public class Util
       return -1;
    }
 
-//   /*
-//    * Returns the index of the first argument paths which is equal to the path to check
-//    */
-//   public static int indexOfMatchingPath(IPath checkedPath, IPath[] paths, int pathCount)
-//   {
-//
-//      for (int i = 0; i < pathCount; i++)
-//      {
-//         if (paths[i].equals(checkedPath))
-//            return i;
-//      }
-//      return -1;
-//   }
+   //   /*
+   //    * Returns the index of the first argument paths which is equal to the path to check
+   //    */
+   //   public static int indexOfMatchingPath(IPath checkedPath, IPath[] paths, int pathCount)
+   //   {
+   //
+   //      for (int i = 0; i < pathCount; i++)
+   //      {
+   //         if (paths[i].equals(checkedPath))
+   //            return i;
+   //      }
+   //      return -1;
+   //   }
 
-//   /*
-//    * Returns the index of the first argument paths which is strictly nested inside the path to check
-//    */
-//   public static int indexOfNestedPath(IPath checkedPath, IPath[] paths, int pathCount)
-//   {
-//
-//      for (int i = 0; i < pathCount; i++)
-//      {
-//         if (checkedPath.equals(paths[i]))
-//            continue;
-//         if (checkedPath.isPrefixOf(paths[i]))
-//            return i;
-//      }
-//      return -1;
-//   }
+   //   /*
+   //    * Returns the index of the first argument paths which is strictly nested inside the path to check
+   //    */
+   //   public static int indexOfNestedPath(IPath checkedPath, IPath[] paths, int pathCount)
+   //   {
+   //
+   //      for (int i = 0; i < pathCount; i++)
+   //      {
+   //         if (checkedPath.equals(paths[i]))
+   //            continue;
+   //         if (checkedPath.isPrefixOf(paths[i]))
+   //            return i;
+   //      }
+   //      return -1;
+   //   }
 
    //	/**
    //	 * Returns whether the local file system supports accessing and modifying
@@ -1790,21 +1790,21 @@ public class Util
    //				return cu != null && isExcluded(cu);
    //		}
    //	}
-//   /*
-//    * Returns whether the given resource path matches one of the inclusion/exclusion
-//    * patterns.
-//    * NOTE: should not be asked directly using pkg root pathes
-//    * @see IClasspathEntry#getInclusionPatterns
-//    * @see IClasspathEntry#getExclusionPatterns
-//    */
-//   public final static boolean isExcluded(IPath resourcePath, char[][] inclusionPatterns, char[][] exclusionPatterns,
-//      boolean isFolderPath)
-//   {
-//      if (inclusionPatterns == null && exclusionPatterns == null)
-//         return false;
-//      return org.eclipse.jdt.internal.compiler.util.Util.isExcluded(resourcePath.toString().toCharArray(),
-//         inclusionPatterns, exclusionPatterns, isFolderPath);
-//   }
+   //   /*
+   //    * Returns whether the given resource path matches one of the inclusion/exclusion
+   //    * patterns.
+   //    * NOTE: should not be asked directly using pkg root pathes
+   //    * @see IClasspathEntry#getInclusionPatterns
+   //    * @see IClasspathEntry#getExclusionPatterns
+   //    */
+   //   public final static boolean isExcluded(IPath resourcePath, char[][] inclusionPatterns, char[][] exclusionPatterns,
+   //      boolean isFolderPath)
+   //   {
+   //      if (inclusionPatterns == null && exclusionPatterns == null)
+   //         return false;
+   //      return org.eclipse.jdt.internal.compiler.util.Util.isExcluded(resourcePath.toString().toCharArray(),
+   //         inclusionPatterns, exclusionPatterns, isFolderPath);
+   //   }
 
    //	/*
    //	 * Returns whether the given resource matches one of the exclusion patterns.
@@ -1990,13 +1990,13 @@ public class Util
    //				message));
    //	}
 
-//   /*
-//    * Add a log entry
-//    */
-//   public static void log(IStatus status)
-//   {
-//      //TODO 
-//   }
+   //   /*
+   //    * Add a log entry
+   //    */
+   //   public static void log(IStatus status)
+   //   {
+   //      //TODO 
+   //   }
 
    //
    //	public static void log(Throwable e) {
@@ -2312,52 +2312,52 @@ public class Util
       }
    }
 
-//   /**
-//    * Returns the toString() of the given full path minus the first given number of segments.
-//    * The returned string is always a relative path (it has no leading slash)
-//    */
-//   public static String relativePath(IPath fullPath, int skipSegmentCount)
-//   {
-//      boolean hasTrailingSeparator = fullPath.hasTrailingSeparator();
-//      String[] segments = fullPath.segments();
-//
-//      // compute length
-//      int length = 0;
-//      int max = segments.length;
-//      if (max > skipSegmentCount)
-//      {
-//         for (int i1 = skipSegmentCount; i1 < max; i1++)
-//         {
-//            length += segments[i1].length();
-//         }
-//         //add the separator lengths
-//         length += max - skipSegmentCount - 1;
-//      }
-//      if (hasTrailingSeparator)
-//         length++;
-//
-//      char[] result = new char[length];
-//      int offset = 0;
-//      int len = segments.length - 1;
-//      if (len >= skipSegmentCount)
-//      {
-//         //append all but the last segment, with separators
-//         for (int i = skipSegmentCount; i < len; i++)
-//         {
-//            int size = segments[i].length();
-//            segments[i].getChars(0, size, result, offset);
-//            offset += size;
-//            result[offset++] = '/';
-//         }
-//         //append the last segment
-//         int size = segments[len].length();
-//         segments[len].getChars(0, size, result, offset);
-//         offset += size;
-//      }
-//      if (hasTrailingSeparator)
-//         result[offset++] = '/';
-//      return new String(result);
-//   }
+   //   /**
+   //    * Returns the toString() of the given full path minus the first given number of segments.
+   //    * The returned string is always a relative path (it has no leading slash)
+   //    */
+   //   public static String relativePath(IPath fullPath, int skipSegmentCount)
+   //   {
+   //      boolean hasTrailingSeparator = fullPath.hasTrailingSeparator();
+   //      String[] segments = fullPath.segments();
+   //
+   //      // compute length
+   //      int length = 0;
+   //      int max = segments.length;
+   //      if (max > skipSegmentCount)
+   //      {
+   //         for (int i1 = skipSegmentCount; i1 < max; i1++)
+   //         {
+   //            length += segments[i1].length();
+   //         }
+   //         //add the separator lengths
+   //         length += max - skipSegmentCount - 1;
+   //      }
+   //      if (hasTrailingSeparator)
+   //         length++;
+   //
+   //      char[] result = new char[length];
+   //      int offset = 0;
+   //      int len = segments.length - 1;
+   //      if (len >= skipSegmentCount)
+   //      {
+   //         //append all but the last segment, with separators
+   //         for (int i = skipSegmentCount; i < len; i++)
+   //         {
+   //            int size = segments[i].length();
+   //            segments[i].getChars(0, size, result, offset);
+   //            offset += size;
+   //            result[offset++] = '/';
+   //         }
+   //         //append the last segment
+   //         int size = segments[len].length();
+   //         segments[len].getChars(0, size, result, offset);
+   //         offset += size;
+   //      }
+   //      if (hasTrailingSeparator)
+   //         result[offset++] = '/';
+   //      return new String(result);
+   //   }
 
    /*
     * Resets the list of Java-like extensions after a change in content-type.
@@ -2987,25 +2987,25 @@ public class Util
       Assert.isTrue(isValidTypeSignature(sig, allowVoid));
    }
 
-//   public static void verbose(String log)
-//   {
-//      verbose(log, System.out);
-//   }
-//
-//   public static synchronized void verbose(String log, PrintStream printStream)
-//   {
-//      int start = 0;
-//      do
-//      {
-//         int end = log.indexOf('\n', start);
-//         printStream.print(Thread.currentThread());
-//         printStream.print(" "); //$NON-NLS-1$
-//         printStream.print(log.substring(start, end == -1 ? log.length() : end + 1));
-//         start = end + 1;
-//      }
-//      while (start != 0);
-//      printStream.println();
-//   }
+   //   public static void verbose(String log)
+   //   {
+   //      verbose(log, System.out);
+   //   }
+   //
+   //   public static synchronized void verbose(String log, PrintStream printStream)
+   //   {
+   //      int start = 0;
+   //      do
+   //      {
+   //         int end = log.indexOf('\n', start);
+   //         printStream.print(Thread.currentThread());
+   //         printStream.print(" "); //$NON-NLS-1$
+   //         printStream.print(log.substring(start, end == -1 ? log.length() : end + 1));
+   //         start = end + 1;
+   //      }
+   //      while (start != 0);
+   //      printStream.println();
+   //   }
 
    /**
     * Returns true if the given name ends with one of the known java like extension.

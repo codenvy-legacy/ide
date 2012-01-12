@@ -77,111 +77,111 @@ public class SynchronizedStatement extends SubRoutineStatement
       return false;
    }
 
-//   /**
-//    * Synchronized statement code generation
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//      if ((this.bits & IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      // in case the labels needs to be reinitialized
-//      // when the code generation is restarted in wide mode
-//      this.anyExceptionLabel = null;
-//
-//      int pc = codeStream.position;
-//
-//      // generate the synchronization expression
-//      this.expression.generateCode(this.scope, codeStream, true);
-//      if (this.block.isEmptyBlock())
-//      {
-//         switch (this.synchroVariable.type.id)
-//         {
-//            case TypeIds.T_long :
-//            case TypeIds.T_double :
-//               codeStream.dup2();
-//               break;
-//            default :
-//               codeStream.dup();
-//               break;
-//         }
-//         // only take the lock
-//         codeStream.monitorenter();
-//         codeStream.monitorexit();
-//         if (this.scope != currentScope)
-//         {
-//            codeStream.exitUserScope(this.scope);
-//         }
-//      }
-//      else
-//      {
-//         // enter the monitor
-//         codeStream.store(this.synchroVariable, true);
-//         codeStream.addVariable(this.synchroVariable);
-//         codeStream.monitorenter();
-//
-//         // generate  the body of the synchronized block
-//         enterAnyExceptionHandler(codeStream);
-//         this.block.generateCode(this.scope, codeStream);
-//         if (this.scope != currentScope)
-//         {
-//            // close all locals defined in the synchronized block except the secret local
-//            codeStream.exitUserScope(this.scope, this.synchroVariable);
-//         }
-//
-//         BranchLabel endLabel = new BranchLabel(codeStream);
-//         if ((this.bits & ASTNode.BlockExit) == 0)
-//         {
-//            codeStream.load(this.synchroVariable);
-//            codeStream.monitorexit();
-//            exitAnyExceptionHandler();
-//            codeStream.goto_(endLabel);
-//            enterAnyExceptionHandler(codeStream);
-//         }
-//         // generate the body of the exception handler
-//         codeStream.pushExceptionOnStack(this.scope.getJavaLangThrowable());
-//         if (this.preSynchronizedInitStateIndex != -1)
-//         {
-//            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSynchronizedInitStateIndex);
-//         }
-//         placeAllAnyExceptionHandler();
-//         codeStream.load(this.synchroVariable);
-//         codeStream.monitorexit();
-//         exitAnyExceptionHandler();
-//         codeStream.athrow();
-//         // May loose some local variable initializations : affecting the local variable attributes
-//         if (this.mergedSynchronizedInitStateIndex != -1)
-//         {
-//            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedSynchronizedInitStateIndex);
-//            codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedSynchronizedInitStateIndex);
-//         }
-//         if (this.scope != currentScope)
-//         {
-//            codeStream.removeVariable(this.synchroVariable);
-//         }
-//         if ((this.bits & ASTNode.BlockExit) == 0)
-//         {
-//            endLabel.place();
-//         }
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
-//
-//   /**
-//    * @see SubRoutineStatement#generateSubRoutineInvocation(BlockScope, CodeStream, Object, int, LocalVariableBinding)
-//    */
-//   public boolean generateSubRoutineInvocation(BlockScope currentScope, CodeStream codeStream, Object targetLocation,
-//      int stateIndex, LocalVariableBinding secretLocal)
-//   {
-//      codeStream.load(this.synchroVariable);
-//      codeStream.monitorexit();
-//      exitAnyExceptionHandler();
-//      return false;
-//   }
+   //   /**
+   //    * Synchronized statement code generation
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //      if ((this.bits & IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      // in case the labels needs to be reinitialized
+   //      // when the code generation is restarted in wide mode
+   //      this.anyExceptionLabel = null;
+   //
+   //      int pc = codeStream.position;
+   //
+   //      // generate the synchronization expression
+   //      this.expression.generateCode(this.scope, codeStream, true);
+   //      if (this.block.isEmptyBlock())
+   //      {
+   //         switch (this.synchroVariable.type.id)
+   //         {
+   //            case TypeIds.T_long :
+   //            case TypeIds.T_double :
+   //               codeStream.dup2();
+   //               break;
+   //            default :
+   //               codeStream.dup();
+   //               break;
+   //         }
+   //         // only take the lock
+   //         codeStream.monitorenter();
+   //         codeStream.monitorexit();
+   //         if (this.scope != currentScope)
+   //         {
+   //            codeStream.exitUserScope(this.scope);
+   //         }
+   //      }
+   //      else
+   //      {
+   //         // enter the monitor
+   //         codeStream.store(this.synchroVariable, true);
+   //         codeStream.addVariable(this.synchroVariable);
+   //         codeStream.monitorenter();
+   //
+   //         // generate  the body of the synchronized block
+   //         enterAnyExceptionHandler(codeStream);
+   //         this.block.generateCode(this.scope, codeStream);
+   //         if (this.scope != currentScope)
+   //         {
+   //            // close all locals defined in the synchronized block except the secret local
+   //            codeStream.exitUserScope(this.scope, this.synchroVariable);
+   //         }
+   //
+   //         BranchLabel endLabel = new BranchLabel(codeStream);
+   //         if ((this.bits & ASTNode.BlockExit) == 0)
+   //         {
+   //            codeStream.load(this.synchroVariable);
+   //            codeStream.monitorexit();
+   //            exitAnyExceptionHandler();
+   //            codeStream.goto_(endLabel);
+   //            enterAnyExceptionHandler(codeStream);
+   //         }
+   //         // generate the body of the exception handler
+   //         codeStream.pushExceptionOnStack(this.scope.getJavaLangThrowable());
+   //         if (this.preSynchronizedInitStateIndex != -1)
+   //         {
+   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSynchronizedInitStateIndex);
+   //         }
+   //         placeAllAnyExceptionHandler();
+   //         codeStream.load(this.synchroVariable);
+   //         codeStream.monitorexit();
+   //         exitAnyExceptionHandler();
+   //         codeStream.athrow();
+   //         // May loose some local variable initializations : affecting the local variable attributes
+   //         if (this.mergedSynchronizedInitStateIndex != -1)
+   //         {
+   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedSynchronizedInitStateIndex);
+   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedSynchronizedInitStateIndex);
+   //         }
+   //         if (this.scope != currentScope)
+   //         {
+   //            codeStream.removeVariable(this.synchroVariable);
+   //         }
+   //         if ((this.bits & ASTNode.BlockExit) == 0)
+   //         {
+   //            endLabel.place();
+   //         }
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
+   //
+   //   /**
+   //    * @see SubRoutineStatement#generateSubRoutineInvocation(BlockScope, CodeStream, Object, int, LocalVariableBinding)
+   //    */
+   //   public boolean generateSubRoutineInvocation(BlockScope currentScope, CodeStream codeStream, Object targetLocation,
+   //      int stateIndex, LocalVariableBinding secretLocal)
+   //   {
+   //      codeStream.load(this.synchroVariable);
+   //      codeStream.monitorexit();
+   //      exitAnyExceptionHandler();
+   //      return false;
+   //   }
 
    public void resolve(BlockScope upperScope)
    {

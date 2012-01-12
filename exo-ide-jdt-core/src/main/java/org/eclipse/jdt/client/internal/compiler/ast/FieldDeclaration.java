@@ -81,43 +81,43 @@ public class FieldDeclaration extends AbstractVariableDeclaration
       return flowInfo;
    }
 
-//   /**
-//    * Code generation for a field declaration:
-//    *	   standard assignment to a field
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//      if ((this.bits & IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      // do not generate initialization code if final and static (constant is then
-//      // recorded inside the field itself).
-//      int pc = codeStream.position;
-//      boolean isStatic;
-//      if (this.initialization != null
-//         && !((isStatic = this.binding.isStatic()) && this.binding.constant() != Constant.NotAConstant))
-//      {
-//         // non-static field, need receiver
-//         if (!isStatic)
-//            codeStream.aload_0();
-//         // generate initialization value
-//         this.initialization.generateCode(currentScope, codeStream, true);
-//         // store into field
-//         if (isStatic)
-//         {
-//            codeStream.fieldAccess(Opcodes.OPC_putstatic, this.binding, null /* default declaringClass */);
-//         }
-//         else
-//         {
-//            codeStream.fieldAccess(Opcodes.OPC_putfield, this.binding, null /* default declaringClass */);
-//         }
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Code generation for a field declaration:
+   //    *	   standard assignment to a field
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //      if ((this.bits & IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      // do not generate initialization code if final and static (constant is then
+   //      // recorded inside the field itself).
+   //      int pc = codeStream.position;
+   //      boolean isStatic;
+   //      if (this.initialization != null
+   //         && !((isStatic = this.binding.isStatic()) && this.binding.constant() != Constant.NotAConstant))
+   //      {
+   //         // non-static field, need receiver
+   //         if (!isStatic)
+   //            codeStream.aload_0();
+   //         // generate initialization value
+   //         this.initialization.generateCode(currentScope, codeStream, true);
+   //         // store into field
+   //         if (isStatic)
+   //         {
+   //            codeStream.fieldAccess(Opcodes.OPC_putstatic, this.binding, null /* default declaringClass */);
+   //         }
+   //         else
+   //         {
+   //            codeStream.fieldAccess(Opcodes.OPC_putfield, this.binding, null /* default declaringClass */);
+   //         }
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()

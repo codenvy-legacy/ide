@@ -429,7 +429,7 @@ public class QualifiedAllocationExpression extends AllocationExpression
                   {
                      if (closestMatch.original().typeVariables != Binding.NO_TYPE_VARIABLES)
                      { // generic method
-                        // shouldn't return generic method outside its context, rather convert it to raw method (175409)
+                       // shouldn't return generic method outside its context, rather convert it to raw method (175409)
                         closestMatch =
                            scope.environment().createParameterizedGenericMethod(closestMatch.original(),
                               (RawTypeBinding)null);

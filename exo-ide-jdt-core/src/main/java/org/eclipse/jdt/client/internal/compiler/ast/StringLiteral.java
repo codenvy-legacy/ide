@@ -64,17 +64,17 @@ public class StringLiteral extends Literal
       return new StringLiteralConcatenation(this, lit);
    }
 
-//   /**
-//    * Code generation for string literal
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//
-//      int pc = codeStream.position;
-//      if (valueRequired)
-//         codeStream.ldc(this.constant.stringValue());
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Code generation for string literal
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //
+   //      int pc = codeStream.position;
+   //      if (valueRequired)
+   //         codeStream.ldc(this.constant.stringValue());
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    public TypeBinding literalType(BlockScope scope)
    {

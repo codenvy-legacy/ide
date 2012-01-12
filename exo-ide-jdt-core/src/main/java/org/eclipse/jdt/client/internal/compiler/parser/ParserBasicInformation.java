@@ -12,24 +12,12 @@ package org.eclipse.jdt.client.internal.compiler.parser;
 
 /*An interface that contains static declarations for some basic information
  about the parser such as the number of rules in the grammar, the starting state, etc...*/
-public interface ParserBasicInformation {
+public interface ParserBasicInformation
+{
 
-	int ERROR_SYMBOL = 110,
-		MAX_NAME_LENGTH = 41,
-		NUM_STATES = 1002,
+   int ERROR_SYMBOL = 110, MAX_NAME_LENGTH = 41, NUM_STATES = 1002,
 
-		NT_OFFSET = 110,
-		SCOPE_UBOUND = 137,
-		SCOPE_SIZE = 138,
-		LA_STATE_OFFSET = 12446,
-		MAX_LA = 1,
-		NUM_RULES = 722,
-		NUM_TERMINALS = 110,
-		NUM_NON_TERMINALS = 323,
-		NUM_SYMBOLS = 433,
-		START_STATE = 1084,
-		EOFT_SYMBOL = 69,
-		EOLT_SYMBOL = 69,
-		ACCEPT_ACTION = 12445,
-		ERROR_ACTION = 12446;
+   NT_OFFSET = 110, SCOPE_UBOUND = 137, SCOPE_SIZE = 138, LA_STATE_OFFSET = 12446, MAX_LA = 1, NUM_RULES = 722,
+            NUM_TERMINALS = 110, NUM_NON_TERMINALS = 323, NUM_SYMBOLS = 433, START_STATE = 1084, EOFT_SYMBOL = 69,
+            EOLT_SYMBOL = 69, ACCEPT_ACTION = 12445, ERROR_ACTION = 12446;
 }

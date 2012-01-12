@@ -13,71 +13,77 @@ package org.eclipse.jdt.client.internal.compiler.lookup;
 /**
  * Binding denoting a polymorphic method
  */
-public class PolymorphicMethodBinding extends MethodBinding {
+public class PolymorphicMethodBinding extends MethodBinding
+{
 
-	protected MethodBinding polymorphicMethod;
+   protected MethodBinding polymorphicMethod;
 
-	public PolymorphicMethodBinding(MethodBinding polymorphicMethod, TypeBinding[] parameterTypes) {
-		super(
-				polymorphicMethod.modifiers,
-				polymorphicMethod.selector,
-				polymorphicMethod.returnType,
-				parameterTypes,
-				polymorphicMethod.thrownExceptions,
-				polymorphicMethod.declaringClass);
-		this.polymorphicMethod = polymorphicMethod;
-		this.tagBits = polymorphicMethod.tagBits;
-	}
-	
-	public PolymorphicMethodBinding(MethodBinding polymorphicMethod, TypeBinding returnType, TypeBinding[] parameterTypes) {
-		super(
-				polymorphicMethod.modifiers,
-				polymorphicMethod.selector,
-				returnType,
-				parameterTypes,
-				polymorphicMethod.thrownExceptions,
-				polymorphicMethod.declaringClass);
-		this.polymorphicMethod = polymorphicMethod;
-		this.tagBits = polymorphicMethod.tagBits;
-	}
+   public PolymorphicMethodBinding(MethodBinding polymorphicMethod, TypeBinding[] parameterTypes)
+   {
+      super(polymorphicMethod.modifiers, polymorphicMethod.selector, polymorphicMethod.returnType, parameterTypes,
+         polymorphicMethod.thrownExceptions, polymorphicMethod.declaringClass);
+      this.polymorphicMethod = polymorphicMethod;
+      this.tagBits = polymorphicMethod.tagBits;
+   }
 
-	public MethodBinding original() {
-		return this.polymorphicMethod;
-	}
-	
-	public boolean isPolymorphic() {
-		return true;
-	}
+   public PolymorphicMethodBinding(MethodBinding polymorphicMethod, TypeBinding returnType, TypeBinding[] parameterTypes)
+   {
+      super(polymorphicMethod.modifiers, polymorphicMethod.selector, returnType, parameterTypes,
+         polymorphicMethod.thrownExceptions, polymorphicMethod.declaringClass);
+      this.polymorphicMethod = polymorphicMethod;
+      this.tagBits = polymorphicMethod.tagBits;
+   }
 
-	public boolean matches(TypeBinding[] matchingParameters, TypeBinding matchingReturnType) {
-		int cachedParametersLength = this.parameters == null ? 0 : this.parameters.length;
-		int matchingParametersLength = matchingParameters == null ? 0 : matchingParameters.length;
-		if (matchingParametersLength != cachedParametersLength) {
-			return false;
-		}
-		for (int j = 0; j < cachedParametersLength; j++){
-			if (this.parameters[j] != matchingParameters[j]) {
-				return false;
-			}
-		}
-		TypeBinding cachedReturnType = this.returnType;
-		if (matchingReturnType == null) {
-			if (cachedReturnType != null) {
-				return false;
-			}
-		} else if (cachedReturnType == null) {
-			return false;
-		} else if (matchingReturnType != cachedReturnType) {
-			return false;
-		}
-		// all arguments match
-		return true;
-	}
-	
-	/*
-	 * Even if polymorphic methods are varargs method, we don't want them to be treated as varargs method
-	 */
-	public boolean isVarargs() {
-		return false;
-	}
+   public MethodBinding original()
+   {
+      return this.polymorphicMethod;
+   }
+
+   public boolean isPolymorphic()
+   {
+      return true;
+   }
+
+   public boolean matches(TypeBinding[] matchingParameters, TypeBinding matchingReturnType)
+   {
+      int cachedParametersLength = this.parameters == null ? 0 : this.parameters.length;
+      int matchingParametersLength = matchingParameters == null ? 0 : matchingParameters.length;
+      if (matchingParametersLength != cachedParametersLength)
+      {
+         return false;
+      }
+      for (int j = 0; j < cachedParametersLength; j++)
+      {
+         if (this.parameters[j] != matchingParameters[j])
+         {
+            return false;
+         }
+      }
+      TypeBinding cachedReturnType = this.returnType;
+      if (matchingReturnType == null)
+      {
+         if (cachedReturnType != null)
+         {
+            return false;
+         }
+      }
+      else if (cachedReturnType == null)
+      {
+         return false;
+      }
+      else if (matchingReturnType != cachedReturnType)
+      {
+         return false;
+      }
+      // all arguments match
+      return true;
+   }
+
+   /*
+    * Even if polymorphic methods are varargs method, we don't want them to be treated as varargs method
+    */
+   public boolean isVarargs()
+   {
+      return false;
+   }
 }

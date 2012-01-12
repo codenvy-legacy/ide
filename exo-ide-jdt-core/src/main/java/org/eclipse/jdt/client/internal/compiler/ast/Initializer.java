@@ -51,25 +51,25 @@ public class Initializer extends FieldDeclaration
       return flowInfo;
    }
 
-//   /**
-//    * Code generation for a non-static initializer:
-//    *    standard block code gen
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//
-//      if ((this.bits & IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      int pc = codeStream.position;
-//      if (this.block != null)
-//         this.block.generateCode(currentScope, codeStream);
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Code generation for a non-static initializer:
+   //    *    standard block code gen
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //
+   //      if ((this.bits & IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      int pc = codeStream.position;
+   //      if (this.block != null)
+   //         this.block.generateCode(currentScope, codeStream);
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()

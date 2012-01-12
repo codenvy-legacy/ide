@@ -19,44 +19,44 @@ import org.eclipse.jdt.client.internal.compiler.impl.Constant;
  * their signature did involve generics or not, so as to get the proper declaringClass for
  * these fields.
  */
-public class ParameterizedFieldBinding extends FieldBinding {
+public class ParameterizedFieldBinding extends FieldBinding
+{
 
-    public FieldBinding originalField;
+   public FieldBinding originalField;
 
-public ParameterizedFieldBinding(ParameterizedTypeBinding parameterizedDeclaringClass, FieldBinding originalField) {
-    super (
-            originalField.name,
-            (originalField.modifiers & ClassFileConstants.AccEnum) != 0
-            	? parameterizedDeclaringClass // enum constant get paramType as its type
-       			: (originalField.modifiers & ClassFileConstants.AccStatic) != 0
-       					? originalField.type // no subst for static field
-       					: Scope.substitute(parameterizedDeclaringClass, originalField.type),
-            originalField.modifiers,
-            parameterizedDeclaringClass,
-            null);
-    this.originalField = originalField;
-    this.tagBits = originalField.tagBits;
-    this.id = originalField.id;
-}
+   public ParameterizedFieldBinding(ParameterizedTypeBinding parameterizedDeclaringClass, FieldBinding originalField)
+   {
+      super(originalField.name, (originalField.modifiers & ClassFileConstants.AccEnum) != 0
+         ? parameterizedDeclaringClass // enum constant get paramType as its type
+         : (originalField.modifiers & ClassFileConstants.AccStatic) != 0 ? originalField.type // no subst for static field
+            : Scope.substitute(parameterizedDeclaringClass, originalField.type), originalField.modifiers,
+         parameterizedDeclaringClass, null);
+      this.originalField = originalField;
+      this.tagBits = originalField.tagBits;
+      this.id = originalField.id;
+   }
 
-/**
- * @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant()
- */
-public Constant constant() {
-	return this.originalField.constant();
-}
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant()
+    */
+   public Constant constant()
+   {
+      return this.originalField.constant();
+   }
 
-/**
- * @see org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding#original()
- */
-public FieldBinding original() {
-	return this.originalField.original();
-}
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding#original()
+    */
+   public FieldBinding original()
+   {
+      return this.originalField.original();
+   }
 
-/**
- * @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant()
- */
-public void setConstant(Constant constant) {
-	this.originalField.setConstant(constant);
-}
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant()
+    */
+   public void setConstant(Constant constant)
+   {
+      this.originalField.setConstant(constant);
+   }
 }

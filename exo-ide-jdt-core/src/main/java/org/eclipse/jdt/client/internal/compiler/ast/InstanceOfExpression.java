@@ -53,28 +53,28 @@ public class InstanceOfExpression extends OperatorExpression
       return this.expression.analyseCode(currentScope, flowContext, flowInfo).unconditionalInits();
    }
 
-//   /**
-//    * Code generation for instanceOfExpression
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    * @param valueRequired boolean
-//   */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//      this.expression.generateCode(currentScope, codeStream, true);
-//      codeStream.instance_of(this.type.resolvedType);
-//      if (valueRequired)
-//      {
-//         codeStream.generateImplicitConversion(this.implicitConversion);
-//      }
-//      else
-//      {
-//         codeStream.pop();
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   /**
+   //    * Code generation for instanceOfExpression
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    * @param valueRequired boolean
+   //   */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //      this.expression.generateCode(currentScope, codeStream, true);
+   //      codeStream.instance_of(this.type.resolvedType);
+   //      if (valueRequired)
+   //      {
+   //         codeStream.generateImplicitConversion(this.implicitConversion);
+   //      }
+   //      else
+   //      {
+   //         codeStream.pop();
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
    {

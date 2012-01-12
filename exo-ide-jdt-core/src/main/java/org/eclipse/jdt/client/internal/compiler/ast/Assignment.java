@@ -96,18 +96,18 @@ public class Assignment extends Expression
       }
    }
 
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//      // various scenarii are possible, setting an array reference,
-//      // a field reference, a blank final field reference, a field of an enclosing instance or
-//      // just a local variable.
-//
-//      int pc = codeStream.position;
-//      ((Reference)this.lhs).generateAssignment(currentScope, codeStream, this, valueRequired);
-//      // variable may have been optimized out
-//      // the lhs is responsible to perform the implicitConversion generation for the assignment since optimized for unused local assignment.
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //      // various scenarii are possible, setting an array reference,
+   //      // a field reference, a blank final field reference, a field of an enclosing instance or
+   //      // just a local variable.
+   //
+   //      int pc = codeStream.position;
+   //      ((Reference)this.lhs).generateAssignment(currentScope, codeStream, this, valueRequired);
+   //      // variable may have been optimized out
+   //      // the lhs is responsible to perform the implicitConversion generation for the assignment since optimized for unused local assignment.
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
 
    FieldBinding getLastField(Expression someExpression)
    {

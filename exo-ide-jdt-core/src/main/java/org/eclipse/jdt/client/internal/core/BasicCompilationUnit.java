@@ -13,6 +13,7 @@ package org.eclipse.jdt.client.internal.core;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
+
 /**
  * A basic implementation of <code>ICompilationUnit</code>
  * for use in the <code>SourceMapper</code>.
@@ -41,43 +42,37 @@ public class BasicCompilationUnit implements ICompilationUnit
       this.packageName = packageName;
    }
 
-   public BasicCompilationUnit(char[] contents, char[][] packageName, String fileName, String encoding)
-   {
-      this(contents, packageName, fileName);
-      this.encoding = encoding;
-   }
+   //   public BasicCompilationUnit(char[] contents, char[][] packageName, String fileName, IJavaElement javaElement)
+   //   {
+   //      this(contents, packageName, fileName);
+   //      initEncoding(javaElement);
+   //   }
 
-//   public BasicCompilationUnit(char[] contents, char[][] packageName, String fileName, IJavaElement javaElement)
-//   {
-//      this(contents, packageName, fileName);
-//      initEncoding(javaElement);
-//   }
-
-//   /*
-//    * Initialize compilation unit encoding.
-//    * If we have a project, then get file name corresponding IFile and retrieve its encoding using
-//    * new API for encoding.
-//    * In case of a class file, then go through project in order to let the possibility to retrieve
-//    * a corresponding source file resource.
-//    * If we have a compilation unit, then get encoding from its resource directly...
-//    */
-//   private void initEncoding(IJavaElement javaElement)
-//   {
-//      if (javaElement != null)
-//      {
-//         this.encoding = "UTF-8";
-//      }
-//      else
-//      {
-//         this.encoding = null;
-//      }
-//   }
+   //   /*
+   //    * Initialize compilation unit encoding.
+   //    * If we have a project, then get file name corresponding IFile and retrieve its encoding using
+   //    * new API for encoding.
+   //    * In case of a class file, then go through project in order to let the possibility to retrieve
+   //    * a corresponding source file resource.
+   //    * If we have a compilation unit, then get encoding from its resource directly...
+   //    */
+   //   private void initEncoding(IJavaElement javaElement)
+   //   {
+   //      if (javaElement != null)
+   //      {
+   //         this.encoding = "UTF-8";
+   //      }
+   //      else
+   //      {
+   //         this.encoding = null;
+   //      }
+   //   }
 
    public char[] getContents()
    {
       if (this.contents != null)
          return this.contents; // answer the cached source
-      
+
       return CharOperation.NO_CHAR;
    }
 

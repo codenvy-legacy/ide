@@ -18,243 +18,274 @@ import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
  * Record conditional initialization status during definite assignment analysis
  *
  */
-public class ConditionalFlowInfo extends FlowInfo {
+public class ConditionalFlowInfo extends FlowInfo
+{
 
-	public FlowInfo initsWhenTrue;
-	public FlowInfo initsWhenFalse;
+   public FlowInfo initsWhenTrue;
 
-ConditionalFlowInfo(FlowInfo initsWhenTrue, FlowInfo initsWhenFalse){
+   public FlowInfo initsWhenFalse;
 
-	this.initsWhenTrue = initsWhenTrue;
-	this.initsWhenFalse = initsWhenFalse;
-}
+   ConditionalFlowInfo(FlowInfo initsWhenTrue, FlowInfo initsWhenFalse)
+   {
 
-public FlowInfo addInitializationsFrom(FlowInfo otherInits) {
+      this.initsWhenTrue = initsWhenTrue;
+      this.initsWhenFalse = initsWhenFalse;
+   }
 
-	this.initsWhenTrue.addInitializationsFrom(otherInits);
-	this.initsWhenFalse.addInitializationsFrom(otherInits);
-	return this;
-}
+   public FlowInfo addInitializationsFrom(FlowInfo otherInits)
+   {
 
-public FlowInfo addNullInfoFrom(FlowInfo otherInits) {
+      this.initsWhenTrue.addInitializationsFrom(otherInits);
+      this.initsWhenFalse.addInitializationsFrom(otherInits);
+      return this;
+   }
 
-	this.initsWhenTrue.addNullInfoFrom(otherInits);
-	this.initsWhenFalse.addNullInfoFrom(otherInits);
-	return this;
-}
+   public FlowInfo addNullInfoFrom(FlowInfo otherInits)
+   {
 
-public FlowInfo addPotentialInitializationsFrom(FlowInfo otherInits) {
+      this.initsWhenTrue.addNullInfoFrom(otherInits);
+      this.initsWhenFalse.addNullInfoFrom(otherInits);
+      return this;
+   }
 
-	this.initsWhenTrue.addPotentialInitializationsFrom(otherInits);
-	this.initsWhenFalse.addPotentialInitializationsFrom(otherInits);
-	return this;
-}
+   public FlowInfo addPotentialInitializationsFrom(FlowInfo otherInits)
+   {
 
-public FlowInfo asNegatedCondition() {
+      this.initsWhenTrue.addPotentialInitializationsFrom(otherInits);
+      this.initsWhenFalse.addPotentialInitializationsFrom(otherInits);
+      return this;
+   }
 
-	FlowInfo extra = this.initsWhenTrue;
-	this.initsWhenTrue = this.initsWhenFalse;
-	this.initsWhenFalse = extra;
-	return this;
-}
+   public FlowInfo asNegatedCondition()
+   {
 
-public FlowInfo copy() {
+      FlowInfo extra = this.initsWhenTrue;
+      this.initsWhenTrue = this.initsWhenFalse;
+      this.initsWhenFalse = extra;
+      return this;
+   }
 
-	return new ConditionalFlowInfo(this.initsWhenTrue.copy(), this.initsWhenFalse.copy());
-}
+   public FlowInfo copy()
+   {
 
-public FlowInfo initsWhenFalse() {
+      return new ConditionalFlowInfo(this.initsWhenTrue.copy(), this.initsWhenFalse.copy());
+   }
 
-	return this.initsWhenFalse;
-}
+   public FlowInfo initsWhenFalse()
+   {
 
-public FlowInfo initsWhenTrue() {
+      return this.initsWhenFalse;
+   }
 
-	return this.initsWhenTrue;
-}
+   public FlowInfo initsWhenTrue()
+   {
 
-public boolean isDefinitelyAssigned(FieldBinding field) {
+      return this.initsWhenTrue;
+   }
 
-	return this.initsWhenTrue.isDefinitelyAssigned(field)
-			&& this.initsWhenFalse.isDefinitelyAssigned(field);
-}
+   public boolean isDefinitelyAssigned(FieldBinding field)
+   {
 
-public boolean isDefinitelyAssigned(LocalVariableBinding local) {
+      return this.initsWhenTrue.isDefinitelyAssigned(field) && this.initsWhenFalse.isDefinitelyAssigned(field);
+   }
 
-	return this.initsWhenTrue.isDefinitelyAssigned(local)
-			&& this.initsWhenFalse.isDefinitelyAssigned(local);
-}
+   public boolean isDefinitelyAssigned(LocalVariableBinding local)
+   {
 
-public boolean isDefinitelyNonNull(LocalVariableBinding local) {
-	return this.initsWhenTrue.isDefinitelyNonNull(local)
-			&& this.initsWhenFalse.isDefinitelyNonNull(local);
-}
+      return this.initsWhenTrue.isDefinitelyAssigned(local) && this.initsWhenFalse.isDefinitelyAssigned(local);
+   }
 
-public boolean isDefinitelyNull(LocalVariableBinding local) {
-	return this.initsWhenTrue.isDefinitelyNull(local)
-			&& this.initsWhenFalse.isDefinitelyNull(local);
-}
+   public boolean isDefinitelyNonNull(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isDefinitelyNonNull(local) && this.initsWhenFalse.isDefinitelyNonNull(local);
+   }
 
-public boolean isDefinitelyUnknown(LocalVariableBinding local) {
-	return this.initsWhenTrue.isDefinitelyUnknown(local)
-			&& this.initsWhenFalse.isDefinitelyUnknown(local);
-}
+   public boolean isDefinitelyNull(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isDefinitelyNull(local) && this.initsWhenFalse.isDefinitelyNull(local);
+   }
 
-public boolean isPotentiallyAssigned(FieldBinding field) {
-	return this.initsWhenTrue.isPotentiallyAssigned(field)
-			|| this.initsWhenFalse.isPotentiallyAssigned(field);
-}
+   public boolean isDefinitelyUnknown(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isDefinitelyUnknown(local) && this.initsWhenFalse.isDefinitelyUnknown(local);
+   }
 
-public boolean isPotentiallyAssigned(LocalVariableBinding local) {
-	return this.initsWhenTrue.isPotentiallyAssigned(local)
-			|| this.initsWhenFalse.isPotentiallyAssigned(local);
-}
+   public boolean isPotentiallyAssigned(FieldBinding field)
+   {
+      return this.initsWhenTrue.isPotentiallyAssigned(field) || this.initsWhenFalse.isPotentiallyAssigned(field);
+   }
 
-public boolean isPotentiallyNonNull(LocalVariableBinding local) {
-	return this.initsWhenTrue.isPotentiallyNonNull(local)
-		|| this.initsWhenFalse.isPotentiallyNonNull(local);
-}
+   public boolean isPotentiallyAssigned(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isPotentiallyAssigned(local) || this.initsWhenFalse.isPotentiallyAssigned(local);
+   }
 
-public boolean isPotentiallyNull(LocalVariableBinding local) {
-	return this.initsWhenTrue.isPotentiallyNull(local)
-		|| this.initsWhenFalse.isPotentiallyNull(local);
-}
+   public boolean isPotentiallyNonNull(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isPotentiallyNonNull(local) || this.initsWhenFalse.isPotentiallyNonNull(local);
+   }
 
-public boolean isPotentiallyUnknown(LocalVariableBinding local) {
-	return this.initsWhenTrue.isPotentiallyUnknown(local)
-		|| this.initsWhenFalse.isPotentiallyUnknown(local);
-}
+   public boolean isPotentiallyNull(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isPotentiallyNull(local) || this.initsWhenFalse.isPotentiallyNull(local);
+   }
 
-public boolean isProtectedNonNull(LocalVariableBinding local) {
-	return this.initsWhenTrue.isProtectedNonNull(local)
-		&& this.initsWhenFalse.isProtectedNonNull(local);
-}
+   public boolean isPotentiallyUnknown(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isPotentiallyUnknown(local) || this.initsWhenFalse.isPotentiallyUnknown(local);
+   }
 
-public boolean isProtectedNull(LocalVariableBinding local) {
-	return this.initsWhenTrue.isProtectedNull(local)
-		&& this.initsWhenFalse.isProtectedNull(local);
-}
+   public boolean isProtectedNonNull(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isProtectedNonNull(local) && this.initsWhenFalse.isProtectedNonNull(local);
+   }
 
-public void markAsComparedEqualToNonNull(LocalVariableBinding local) {
-	this.initsWhenTrue.markAsComparedEqualToNonNull(local);
-	this.initsWhenFalse.markAsComparedEqualToNonNull(local);
-}
+   public boolean isProtectedNull(LocalVariableBinding local)
+   {
+      return this.initsWhenTrue.isProtectedNull(local) && this.initsWhenFalse.isProtectedNull(local);
+   }
 
-public void markAsComparedEqualToNull(LocalVariableBinding local) {
-	this.initsWhenTrue.markAsComparedEqualToNull(local);
-    this.initsWhenFalse.markAsComparedEqualToNull(local);
-}
+   public void markAsComparedEqualToNonNull(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markAsComparedEqualToNonNull(local);
+      this.initsWhenFalse.markAsComparedEqualToNonNull(local);
+   }
 
-public void markAsDefinitelyAssigned(FieldBinding field) {
-	this.initsWhenTrue.markAsDefinitelyAssigned(field);
-	this.initsWhenFalse.markAsDefinitelyAssigned(field);
-}
+   public void markAsComparedEqualToNull(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markAsComparedEqualToNull(local);
+      this.initsWhenFalse.markAsComparedEqualToNull(local);
+   }
 
-public void markAsDefinitelyAssigned(LocalVariableBinding local) {
-	this.initsWhenTrue.markAsDefinitelyAssigned(local);
-	this.initsWhenFalse.markAsDefinitelyAssigned(local);
-}
+   public void markAsDefinitelyAssigned(FieldBinding field)
+   {
+      this.initsWhenTrue.markAsDefinitelyAssigned(field);
+      this.initsWhenFalse.markAsDefinitelyAssigned(field);
+   }
 
-public void markAsDefinitelyNonNull(LocalVariableBinding local) {
-	this.initsWhenTrue.markAsDefinitelyNonNull(local);
-	this.initsWhenFalse.markAsDefinitelyNonNull(local);
-}
+   public void markAsDefinitelyAssigned(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markAsDefinitelyAssigned(local);
+      this.initsWhenFalse.markAsDefinitelyAssigned(local);
+   }
 
-public void markAsDefinitelyNull(LocalVariableBinding local) {
-	this.initsWhenTrue.markAsDefinitelyNull(local);
-	this.initsWhenFalse.markAsDefinitelyNull(local);
-}
+   public void markAsDefinitelyNonNull(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markAsDefinitelyNonNull(local);
+      this.initsWhenFalse.markAsDefinitelyNonNull(local);
+   }
 
-public void resetNullInfo(LocalVariableBinding local) {
-	this.initsWhenTrue.resetNullInfo(local);
-	this.initsWhenFalse.resetNullInfo(local);
-}
+   public void markAsDefinitelyNull(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markAsDefinitelyNull(local);
+      this.initsWhenFalse.markAsDefinitelyNull(local);
+   }
 
-public void markPotentiallyNullBit(LocalVariableBinding local) {
-	this.initsWhenTrue.markPotentiallyNullBit(local);
-	this.initsWhenFalse.markPotentiallyNullBit(local);
-}
+   public void resetNullInfo(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.resetNullInfo(local);
+      this.initsWhenFalse.resetNullInfo(local);
+   }
 
-public void markPotentiallyNonNullBit(LocalVariableBinding local) {
-	this.initsWhenTrue.markPotentiallyNonNullBit(local);
-	this.initsWhenFalse.markPotentiallyNonNullBit(local);
-}
+   public void markPotentiallyNullBit(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markPotentiallyNullBit(local);
+      this.initsWhenFalse.markPotentiallyNullBit(local);
+   }
 
-public void markAsDefinitelyUnknown(LocalVariableBinding local) {
-	this.initsWhenTrue.markAsDefinitelyUnknown(local);
-	this.initsWhenFalse.markAsDefinitelyUnknown(local);
-}
+   public void markPotentiallyNonNullBit(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markPotentiallyNonNullBit(local);
+      this.initsWhenFalse.markPotentiallyNonNullBit(local);
+   }
 
-public void markPotentiallyUnknownBit(LocalVariableBinding local) {
-	this.initsWhenTrue.markPotentiallyUnknownBit(local);
-	this.initsWhenFalse.markPotentiallyUnknownBit(local);
-}
+   public void markAsDefinitelyUnknown(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markAsDefinitelyUnknown(local);
+      this.initsWhenFalse.markAsDefinitelyUnknown(local);
+   }
 
-public FlowInfo setReachMode(int reachMode) {
-	if (reachMode == REACHABLE) {
-		this.tagBits &= ~UNREACHABLE;
-	}
-	else {
-		this.tagBits |= reachMode;
-	}
-	this.initsWhenTrue.setReachMode(reachMode);
-	this.initsWhenFalse.setReachMode(reachMode);
-	return this;
-}
+   public void markPotentiallyUnknownBit(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markPotentiallyUnknownBit(local);
+      this.initsWhenFalse.markPotentiallyUnknownBit(local);
+   }
 
-public UnconditionalFlowInfo mergedWith(UnconditionalFlowInfo otherInits) {
-	return unconditionalInits().mergedWith(otherInits);
-}
+   public FlowInfo setReachMode(int reachMode)
+   {
+      if (reachMode == REACHABLE)
+      {
+         this.tagBits &= ~UNREACHABLE;
+      }
+      else
+      {
+         this.tagBits |= reachMode;
+      }
+      this.initsWhenTrue.setReachMode(reachMode);
+      this.initsWhenFalse.setReachMode(reachMode);
+      return this;
+   }
 
-public UnconditionalFlowInfo nullInfoLessUnconditionalCopy() {
-	return unconditionalInitsWithoutSideEffect().
-		nullInfoLessUnconditionalCopy();
-}
+   public UnconditionalFlowInfo mergedWith(UnconditionalFlowInfo otherInits)
+   {
+      return unconditionalInits().mergedWith(otherInits);
+   }
 
-public String toString() {
+   public UnconditionalFlowInfo nullInfoLessUnconditionalCopy()
+   {
+      return unconditionalInitsWithoutSideEffect().nullInfoLessUnconditionalCopy();
+   }
 
-	return "FlowInfo<true: " + this.initsWhenTrue.toString() + ", false: " + this.initsWhenFalse.toString() + ">"; //$NON-NLS-1$ //$NON-NLS-3$ //$NON-NLS-2$
-}
+   public String toString()
+   {
 
-public FlowInfo safeInitsWhenTrue() {
-	return this.initsWhenTrue;
-}
+      return "FlowInfo<true: " + this.initsWhenTrue.toString() + ", false: " + this.initsWhenFalse.toString() + ">"; //$NON-NLS-1$ //$NON-NLS-3$ //$NON-NLS-2$
+   }
 
-public UnconditionalFlowInfo unconditionalCopy() {
-	return this.initsWhenTrue.unconditionalCopy().
-			mergedWith(this.initsWhenFalse.unconditionalInits());
-}
+   public FlowInfo safeInitsWhenTrue()
+   {
+      return this.initsWhenTrue;
+   }
 
-public UnconditionalFlowInfo unconditionalFieldLessCopy() {
-	return this.initsWhenTrue.unconditionalFieldLessCopy().
-		mergedWith(this.initsWhenFalse.unconditionalFieldLessCopy());
-	// should never happen, hence suboptimal does not hurt
-}
+   public UnconditionalFlowInfo unconditionalCopy()
+   {
+      return this.initsWhenTrue.unconditionalCopy().mergedWith(this.initsWhenFalse.unconditionalInits());
+   }
 
-public UnconditionalFlowInfo unconditionalInits() {
-	return this.initsWhenTrue.unconditionalInits().
-			mergedWith(this.initsWhenFalse.unconditionalInits());
-}
+   public UnconditionalFlowInfo unconditionalFieldLessCopy()
+   {
+      return this.initsWhenTrue.unconditionalFieldLessCopy().mergedWith(
+         this.initsWhenFalse.unconditionalFieldLessCopy());
+      // should never happen, hence suboptimal does not hurt
+   }
 
-public UnconditionalFlowInfo unconditionalInitsWithoutSideEffect() {
-	// cannot do better here than unconditionalCopy - but still a different
-	// operation for UnconditionalFlowInfo
-	return this.initsWhenTrue.unconditionalCopy().
-			mergedWith(this.initsWhenFalse.unconditionalInits());
-}
+   public UnconditionalFlowInfo unconditionalInits()
+   {
+      return this.initsWhenTrue.unconditionalInits().mergedWith(this.initsWhenFalse.unconditionalInits());
+   }
 
-public void markedAsNullOrNonNullInAssertExpression(LocalVariableBinding local) {
-	this.initsWhenTrue.markedAsNullOrNonNullInAssertExpression(local);
-	this.initsWhenFalse.markedAsNullOrNonNullInAssertExpression(local);
-}
+   public UnconditionalFlowInfo unconditionalInitsWithoutSideEffect()
+   {
+      // cannot do better here than unconditionalCopy - but still a different
+      // operation for UnconditionalFlowInfo
+      return this.initsWhenTrue.unconditionalCopy().mergedWith(this.initsWhenFalse.unconditionalInits());
+   }
 
-public boolean isMarkedAsNullOrNonNullInAssertExpression(LocalVariableBinding local) {
-	return (this.initsWhenTrue.isMarkedAsNullOrNonNullInAssertExpression(local)
-		|| this.initsWhenFalse.isMarkedAsNullOrNonNullInAssertExpression(local));
-}
+   public void markedAsNullOrNonNullInAssertExpression(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.markedAsNullOrNonNullInAssertExpression(local);
+      this.initsWhenFalse.markedAsNullOrNonNullInAssertExpression(local);
+   }
 
-public void resetAssignmentInfo(LocalVariableBinding local) {
-	this.initsWhenTrue.resetAssignmentInfo(local);
-	this.initsWhenFalse.resetAssignmentInfo(local);
-}
+   public boolean isMarkedAsNullOrNonNullInAssertExpression(LocalVariableBinding local)
+   {
+      return (this.initsWhenTrue.isMarkedAsNullOrNonNullInAssertExpression(local) || this.initsWhenFalse
+         .isMarkedAsNullOrNonNullInAssertExpression(local));
+   }
+
+   public void resetAssignmentInfo(LocalVariableBinding local)
+   {
+      this.initsWhenTrue.resetAssignmentInfo(local);
+      this.initsWhenFalse.resetAssignmentInfo(local);
+   }
 }

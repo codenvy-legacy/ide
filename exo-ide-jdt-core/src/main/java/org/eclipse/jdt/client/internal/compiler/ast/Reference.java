@@ -46,76 +46,76 @@ public abstract class Reference extends Expression
       return null;
    }
 
-//   public void fieldStore(Scope currentScope, CodeStream codeStream, FieldBinding fieldBinding,
-//      MethodBinding syntheticWriteAccessor, TypeBinding receiverType, boolean isImplicitThisReceiver,
-//      boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//      if (fieldBinding.isStatic())
-//      {
-//         if (valueRequired)
-//         {
-//            switch (fieldBinding.type.id)
-//            {
-//               case TypeIds.T_long :
-//               case TypeIds.T_double :
-//                  codeStream.dup2();
-//                  break;
-//               default :
-//                  codeStream.dup();
-//                  break;
-//            }
-//         }
-//         if (syntheticWriteAccessor == null)
-//         {
-//            TypeBinding constantPoolDeclaringClass =
-//               CodeStream.getConstantPoolDeclaringClass(currentScope, fieldBinding, receiverType,
-//                  isImplicitThisReceiver);
-//            codeStream.fieldAccess(Opcodes.OPC_putstatic, fieldBinding, constantPoolDeclaringClass);
-//         }
-//         else
-//         {
-//            codeStream.invoke(Opcodes.OPC_invokestatic, syntheticWriteAccessor, null /* default declaringClass */);
-//         }
-//      }
-//      else
-//      { // Stack:  [owner][new field value]  ---> [new field value][owner][new field value]
-//         if (valueRequired)
-//         {
-//            switch (fieldBinding.type.id)
-//            {
-//               case TypeIds.T_long :
-//               case TypeIds.T_double :
-//                  codeStream.dup2_x1();
-//                  break;
-//               default :
-//                  codeStream.dup_x1();
-//                  break;
-//            }
-//         }
-//         if (syntheticWriteAccessor == null)
-//         {
-//            TypeBinding constantPoolDeclaringClass =
-//               CodeStream.getConstantPoolDeclaringClass(currentScope, fieldBinding, receiverType,
-//                  isImplicitThisReceiver);
-//            codeStream.fieldAccess(Opcodes.OPC_putfield, fieldBinding, constantPoolDeclaringClass);
-//         }
-//         else
-//         {
-//            codeStream.invoke(Opcodes.OPC_invokestatic, syntheticWriteAccessor, null /* default declaringClass */);
-//         }
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//   }
-//
-//   public abstract void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
-//      boolean valueRequired);
-//
-//   public abstract void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream,
-//      Expression expression, int operator, int assignmentImplicitConversion, boolean valueRequired);
-//
-//   public abstract void generatePostIncrement(BlockScope currentScope, CodeStream codeStream,
-//      CompoundAssignment postIncrement, boolean valueRequired);
+   //   public void fieldStore(Scope currentScope, CodeStream codeStream, FieldBinding fieldBinding,
+   //      MethodBinding syntheticWriteAccessor, TypeBinding receiverType, boolean isImplicitThisReceiver,
+   //      boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //      if (fieldBinding.isStatic())
+   //      {
+   //         if (valueRequired)
+   //         {
+   //            switch (fieldBinding.type.id)
+   //            {
+   //               case TypeIds.T_long :
+   //               case TypeIds.T_double :
+   //                  codeStream.dup2();
+   //                  break;
+   //               default :
+   //                  codeStream.dup();
+   //                  break;
+   //            }
+   //         }
+   //         if (syntheticWriteAccessor == null)
+   //         {
+   //            TypeBinding constantPoolDeclaringClass =
+   //               CodeStream.getConstantPoolDeclaringClass(currentScope, fieldBinding, receiverType,
+   //                  isImplicitThisReceiver);
+   //            codeStream.fieldAccess(Opcodes.OPC_putstatic, fieldBinding, constantPoolDeclaringClass);
+   //         }
+   //         else
+   //         {
+   //            codeStream.invoke(Opcodes.OPC_invokestatic, syntheticWriteAccessor, null /* default declaringClass */);
+   //         }
+   //      }
+   //      else
+   //      { // Stack:  [owner][new field value]  ---> [new field value][owner][new field value]
+   //         if (valueRequired)
+   //         {
+   //            switch (fieldBinding.type.id)
+   //            {
+   //               case TypeIds.T_long :
+   //               case TypeIds.T_double :
+   //                  codeStream.dup2_x1();
+   //                  break;
+   //               default :
+   //                  codeStream.dup_x1();
+   //                  break;
+   //            }
+   //         }
+   //         if (syntheticWriteAccessor == null)
+   //         {
+   //            TypeBinding constantPoolDeclaringClass =
+   //               CodeStream.getConstantPoolDeclaringClass(currentScope, fieldBinding, receiverType,
+   //                  isImplicitThisReceiver);
+   //            codeStream.fieldAccess(Opcodes.OPC_putfield, fieldBinding, constantPoolDeclaringClass);
+   //         }
+   //         else
+   //         {
+   //            codeStream.invoke(Opcodes.OPC_invokestatic, syntheticWriteAccessor, null /* default declaringClass */);
+   //         }
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //   }
+   //
+   //   public abstract void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
+   //      boolean valueRequired);
+   //
+   //   public abstract void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream,
+   //      Expression expression, int operator, int assignmentImplicitConversion, boolean valueRequired);
+   //
+   //   public abstract void generatePostIncrement(BlockScope currentScope, CodeStream codeStream,
+   //      CompoundAssignment postIncrement, boolean valueRequired);
 
    /* report if a private field is only read from a 'special operator',
     * i.e., in a postIncrement expression or a compound assignment,

@@ -432,37 +432,37 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       }
    }
 
-//   /**
-//    * Bytecode generation
-//    */
-//   public void generateCode()
-//   {
-//      if (this.ignoreFurtherInvestigation)
-//      {
-//         if (this.types != null)
-//         {
-//            for (int i = 0, count = this.types.length; i < count; i++)
-//            {
-//               this.types[i].ignoreFurtherInvestigation = true;
-//               // propagate the flag to request problem type creation
-//               this.types[i].generateCode(this.scope);
-//            }
-//         }
-//         return;
-//      }
-//      try
-//      {
-//         if (this.types != null)
-//         {
-//            for (int i = 0, count = this.types.length; i < count; i++)
-//               this.types[i].generateCode(this.scope);
-//         }
-//      }
-//      catch (AbortCompilationUnit e)
-//      {
-//         // ignore
-//      }
-//   }
+   //   /**
+   //    * Bytecode generation
+   //    */
+   //   public void generateCode()
+   //   {
+   //      if (this.ignoreFurtherInvestigation)
+   //      {
+   //         if (this.types != null)
+   //         {
+   //            for (int i = 0, count = this.types.length; i < count; i++)
+   //            {
+   //               this.types[i].ignoreFurtherInvestigation = true;
+   //               // propagate the flag to request problem type creation
+   //               this.types[i].generateCode(this.scope);
+   //            }
+   //         }
+   //         return;
+   //      }
+   //      try
+   //      {
+   //         if (this.types != null)
+   //         {
+   //            for (int i = 0, count = this.types.length; i < count; i++)
+   //               this.types[i].generateCode(this.scope);
+   //         }
+   //      }
+   //      catch (AbortCompilationUnit e)
+   //      {
+   //         // ignore
+   //      }
+   //   }
 
    public char[] getFileName()
    {

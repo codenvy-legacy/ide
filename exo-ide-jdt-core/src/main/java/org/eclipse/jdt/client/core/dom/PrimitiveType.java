@@ -39,264 +39,286 @@ import java.util.Map;
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
-public class PrimitiveType extends Type {
+public class PrimitiveType extends Type
+{
 
-	/**
- 	 * Primitive type codes (typesafe enumeration).
-	 * <pre>
-	 *    <b>byte</b> 	BYTE
-	 *    <b>short</b> 	SHORT
-	 *    <b>char</b> 	CHAR
-	 *    <b>int</b>  	INT
-	 *    <b>long</b>  	LONG
-	 *    <b>float</b>  	FLOAT
-	 *    <b>double</b> 	DOUBLE
-	 *    <b>boolean</b>	BOOLEAN
-	 *    <b>void</b>  	VOID
-	 * </pre>
-	 */
-	public static class Code {
+   /**
+    * Primitive type codes (typesafe enumeration).
+    * <pre>
+    *    <b>byte</b> 	BYTE
+    *    <b>short</b> 	SHORT
+    *    <b>char</b> 	CHAR
+    *    <b>int</b>  	INT
+    *    <b>long</b>  	LONG
+    *    <b>float</b>  	FLOAT
+    *    <b>double</b> 	DOUBLE
+    *    <b>boolean</b>	BOOLEAN
+    *    <b>void</b>  	VOID
+    * </pre>
+    */
+   public static class Code
+   {
 
-		/**
-		 * The name of the type.
-		 */
-		private String name;
+      /**
+       * The name of the type.
+       */
+      private String name;
 
-		/**
-		 * Creates a new primitive type code with the given name.
-		 * <p>
-		 * Note: this constructor is package-private. The only instances
-		 * ever created are the ones for the standard primitive types.
-		 * </p>
-		 *
-		 * @param name the standard name of the primitive type
-		 */
-		Code(String name) {
-			this.name = name;
-		}
+      /**
+       * Creates a new primitive type code with the given name.
+       * <p>
+       * Note: this constructor is package-private. The only instances
+       * ever created are the ones for the standard primitive types.
+       * </p>
+       *
+       * @param name the standard name of the primitive type
+       */
+      Code(String name)
+      {
+         this.name = name;
+      }
 
-		/**
-		 * Returns the standard name of the primitive type.
-		 *
-		 * @return the standard name of the primitive type
-		 */
-		public String toString() {
-			return this.name;
-		}
-	}
+      /**
+       * Returns the standard name of the primitive type.
+       *
+       * @return the standard name of the primitive type
+       */
+      public String toString()
+      {
+         return this.name;
+      }
+   }
 
-	/** Type code for the primitive type "int". */
-	public static final Code INT = new Code("int");//$NON-NLS-1$
-	/** Type code for the primitive type "char". */
-	public static final Code CHAR = new Code("char");//$NON-NLS-1$
-	/** Type code for the primitive type "boolean". */
-	public static final Code BOOLEAN = new Code("boolean");//$NON-NLS-1$
-	/** Type code for the primitive type "short". */
-	public static final Code SHORT = new Code("short");//$NON-NLS-1$
-	/** Type code for the primitive type "long". */
-	public static final Code LONG = new Code("long");//$NON-NLS-1$
-	/** Type code for the primitive type "float". */
-	public static final Code FLOAT = new Code("float");//$NON-NLS-1$
-	/** Type code for the primitive type "double". */
-	public static final Code DOUBLE = new Code("double");//$NON-NLS-1$
-	/** Type code for the primitive type "byte". */
-	public static final Code BYTE = new Code("byte");//$NON-NLS-1$
+   /** Type code for the primitive type "int". */
+   public static final Code INT = new Code("int");//$NON-NLS-1$
 
-	/** Type code for the primitive type "void". Note that "void" is
-	 * special in that its only legitimate uses are as a method return
-	 * type and as a type literal.
-	 */
-	public static final Code VOID = new Code("void");//$NON-NLS-1$
+   /** Type code for the primitive type "char". */
+   public static final Code CHAR = new Code("char");//$NON-NLS-1$
 
-	/**
-	 * The primitive type code; one of the PrimitiveType constants; default
-	 * is int.
-	 */
-	private PrimitiveType.Code typeCode = INT;
+   /** Type code for the primitive type "boolean". */
+   public static final Code BOOLEAN = new Code("boolean");//$NON-NLS-1$
 
-	/**
-	 * Map from token to primitive type code (key type: <code>String</code>;
-	 * value type: <code>PrimitiveType.Code</code>).
-	 */
-	private static final Map CODES;
-	static {
-		CODES = new HashMap(20);
-		Code[] ops = {
-				INT,
-				BYTE,
-				CHAR,
-				BOOLEAN,
-				SHORT,
-				LONG,
-				FLOAT,
-				DOUBLE,
-				VOID,
-			};
-		for (int i = 0; i < ops.length; i++) {
-			CODES.put(ops[i].toString(), ops[i]);
-		}
-	}
+   /** Type code for the primitive type "short". */
+   public static final Code SHORT = new Code("short");//$NON-NLS-1$
 
-	/**
-	 * Returns the primitive type code corresponding to the given string,
-	 * or <code>null</code> if none.
-	 * <p>
-	 * <code>toCode</code> is the converse of <code>toString</code>:
-	 * that is,
-	 * <code>PrimitiveType.Code.toCode(code.toString()) == code</code>
-	 * for all type code <code>code</code>.
-	 * </p>
-	 *
-	 * @param token the standard name of the primitive type
-	 * @return the primitive type code, or <code>null</code> if none
-	 */
-	public static PrimitiveType.Code toCode(String token) {
-		return (PrimitiveType.Code) CODES.get(token);
-	}
+   /** Type code for the primitive type "long". */
+   public static final Code LONG = new Code("long");//$NON-NLS-1$
 
-	/**
-	 * The "primitiveTypeCode" structural property of this node type (type: {@link PrimitiveType.Code}).
-	 * @since 3.0
-	 */
-	public static final SimplePropertyDescriptor PRIMITIVE_TYPE_CODE_PROPERTY =
-		new SimplePropertyDescriptor(PrimitiveType.class, "primitiveTypeCode", PrimitiveType.Code.class, MANDATORY); //$NON-NLS-1$
+   /** Type code for the primitive type "float". */
+   public static final Code FLOAT = new Code("float");//$NON-NLS-1$
 
-	/**
-	 * A list of property descriptors (element type:
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
-	 */
-	private static final List PROPERTY_DESCRIPTORS;
+   /** Type code for the primitive type "double". */
+   public static final Code DOUBLE = new Code("double");//$NON-NLS-1$
 
-	static {
-		List propertyList = new ArrayList(2);
-		createPropertyList(PrimitiveType.class, propertyList);
-		addProperty(PRIMITIVE_TYPE_CODE_PROPERTY, propertyList);
-		PROPERTY_DESCRIPTORS = reapPropertyList(propertyList);
-	}
+   /** Type code for the primitive type "byte". */
+   public static final Code BYTE = new Code("byte");//$NON-NLS-1$
 
-	/**
-	 * Returns a list of structural property descriptors for this node type.
-	 * Clients must not modify the result.
-	 *
-	 * @param apiLevel the API level; one of the
-	 * <code>AST.JLS*</code> constants
+   /** Type code for the primitive type "void". Note that "void" is
+    * special in that its only legitimate uses are as a method return
+    * type and as a type literal.
+    */
+   public static final Code VOID = new Code("void");//$NON-NLS-1$
 
-	 * @return a list of property descriptors (element type:
-	 * {@link StructuralPropertyDescriptor})
-	 * @since 3.0
-	 */
-	public static List propertyDescriptors(int apiLevel) {
-		return PROPERTY_DESCRIPTORS;
-	}
+   /**
+    * The primitive type code; one of the PrimitiveType constants; default
+    * is int.
+    */
+   private PrimitiveType.Code typeCode = INT;
 
-	/**
-	 * Creates a new unparented node for a primitive type owned by the given
-	 * AST. By default, the node has type "int".
-	 * <p>
-	 * N.B. This constructor is package-private.
-	 * </p>
-	 *
-	 * @param ast the AST that is to own this node
-	 */
-	PrimitiveType(AST ast) {
-		super(ast);
-	}
+   /**
+    * Map from token to primitive type code (key type: <code>String</code>;
+    * value type: <code>PrimitiveType.Code</code>).
+    */
+   private static final Map CODES;
+   static
+   {
+      CODES = new HashMap(20);
+      Code[] ops = {INT, BYTE, CHAR, BOOLEAN, SHORT, LONG, FLOAT, DOUBLE, VOID,};
+      for (int i = 0; i < ops.length; i++)
+      {
+         CODES.put(ops[i].toString(), ops[i]);
+      }
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final List internalStructuralPropertiesForType(int apiLevel) {
-		return propertyDescriptors(apiLevel);
-	}
+   /**
+    * Returns the primitive type code corresponding to the given string,
+    * or <code>null</code> if none.
+    * <p>
+    * <code>toCode</code> is the converse of <code>toString</code>:
+    * that is,
+    * <code>PrimitiveType.Code.toCode(code.toString()) == code</code>
+    * for all type code <code>code</code>.
+    * </p>
+    *
+    * @param token the standard name of the primitive type
+    * @return the primitive type code, or <code>null</code> if none
+    */
+   public static PrimitiveType.Code toCode(String token)
+   {
+      return (PrimitiveType.Code)CODES.get(token);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
-		if (property == PRIMITIVE_TYPE_CODE_PROPERTY) {
-			if (get) {
-				return getPrimitiveTypeCode();
-			} else {
-				setPrimitiveTypeCode((Code) value);
-				return null;
-			}
-		}
-		// allow default implementation to flag the error
-		return super.internalGetSetObjectProperty(property, get, value);
-	}
+   /**
+    * The "primitiveTypeCode" structural property of this node type (type: {@link PrimitiveType.Code}).
+    * @since 3.0
+    */
+   public static final SimplePropertyDescriptor PRIMITIVE_TYPE_CODE_PROPERTY = new SimplePropertyDescriptor(
+      PrimitiveType.class, "primitiveTypeCode", PrimitiveType.Code.class, MANDATORY); //$NON-NLS-1$
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final int getNodeType0() {
-		return PRIMITIVE_TYPE;
-	}
+   /**
+    * A list of property descriptors (element type:
+    * {@link StructuralPropertyDescriptor}),
+    * or null if uninitialized.
+    */
+   private static final List PROPERTY_DESCRIPTORS;
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	ASTNode clone0(AST target) {
-		PrimitiveType result = new PrimitiveType(target);
-		result.setSourceRange(getStartPosition(), getLength());
-		result.setPrimitiveTypeCode(getPrimitiveTypeCode());
-		return result;
-	}
+   static
+   {
+      List propertyList = new ArrayList(2);
+      createPropertyList(PrimitiveType.class, propertyList);
+      addProperty(PRIMITIVE_TYPE_CODE_PROPERTY, propertyList);
+      PROPERTY_DESCRIPTORS = reapPropertyList(propertyList);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final boolean subtreeMatch0(ASTMatcher matcher, Object other) {
-		// dispatch to correct overloaded match method
-		return matcher.match(this, other);
-	}
+   /**
+    * Returns a list of structural property descriptors for this node type.
+    * Clients must not modify the result.
+    *
+    * @param apiLevel the API level; one of the
+    * <code>AST.JLS*</code> constants
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	void accept0(ASTVisitor visitor) {
-		visitor.visit(this);
-		visitor.endVisit(this);
-	}
+    * @return a list of property descriptors (element type:
+    * {@link StructuralPropertyDescriptor})
+    * @since 3.0
+    */
+   public static List propertyDescriptors(int apiLevel)
+   {
+      return PROPERTY_DESCRIPTORS;
+   }
 
-	/**
-	 * Returns the primitive type code.
-	 *
-	 * @return one of the primitive type code constants declared in this
-	 *    class
-	 */
-	public PrimitiveType.Code getPrimitiveTypeCode() {
-		return this.typeCode;
-	}
+   /**
+    * Creates a new unparented node for a primitive type owned by the given
+    * AST. By default, the node has type "int".
+    * <p>
+    * N.B. This constructor is package-private.
+    * </p>
+    *
+    * @param ast the AST that is to own this node
+    */
+   PrimitiveType(AST ast)
+   {
+      super(ast);
+   }
 
-	/**
-	 * Sets the primitive type code.
-	 *
-	 * @param typeCode one of the primitive type code constants declared in
-	 *    this class
-	 * @exception IllegalArgumentException if the argument is incorrect
-	 */
-	public void setPrimitiveTypeCode(PrimitiveType.Code typeCode) {
-		if (typeCode == null) {
-			throw new IllegalArgumentException();
-		}
-		preValueChange(PRIMITIVE_TYPE_CODE_PROPERTY);
-		this.typeCode = typeCode;
-		postValueChange(PRIMITIVE_TYPE_CODE_PROPERTY);
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   final List internalStructuralPropertiesForType(int apiLevel)
+   {
+      return propertyDescriptors(apiLevel);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	int memSize() {
-		// treat Code as free
-		return BASE_NODE_SIZE + 1 * 4;
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
+   {
+      if (property == PRIMITIVE_TYPE_CODE_PROPERTY)
+      {
+         if (get)
+         {
+            return getPrimitiveTypeCode();
+         }
+         else
+         {
+            setPrimitiveTypeCode((Code)value);
+            return null;
+         }
+      }
+      // allow default implementation to flag the error
+      return super.internalGetSetObjectProperty(property, get, value);
+   }
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	int treeSize() {
-		return memSize();
-	}
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   final int getNodeType0()
+   {
+      return PRIMITIVE_TYPE;
+   }
+
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   ASTNode clone0(AST target)
+   {
+      PrimitiveType result = new PrimitiveType(target);
+      result.setSourceRange(getStartPosition(), getLength());
+      result.setPrimitiveTypeCode(getPrimitiveTypeCode());
+      return result;
+   }
+
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   final boolean subtreeMatch0(ASTMatcher matcher, Object other)
+   {
+      // dispatch to correct overloaded match method
+      return matcher.match(this, other);
+   }
+
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   void accept0(ASTVisitor visitor)
+   {
+      visitor.visit(this);
+      visitor.endVisit(this);
+   }
+
+   /**
+    * Returns the primitive type code.
+    *
+    * @return one of the primitive type code constants declared in this
+    *    class
+    */
+   public PrimitiveType.Code getPrimitiveTypeCode()
+   {
+      return this.typeCode;
+   }
+
+   /**
+    * Sets the primitive type code.
+    *
+    * @param typeCode one of the primitive type code constants declared in
+    *    this class
+    * @exception IllegalArgumentException if the argument is incorrect
+    */
+   public void setPrimitiveTypeCode(PrimitiveType.Code typeCode)
+   {
+      if (typeCode == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      preValueChange(PRIMITIVE_TYPE_CODE_PROPERTY);
+      this.typeCode = typeCode;
+      postValueChange(PRIMITIVE_TYPE_CODE_PROPERTY);
+   }
+
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   int memSize()
+   {
+      // treat Code as free
+      return BASE_NODE_SIZE + 1 * 4;
+   }
+
+   /* (omit javadoc for this method)
+    * Method declared on ASTNode.
+    */
+   int treeSize()
+   {
+      return memSize();
+   }
 }

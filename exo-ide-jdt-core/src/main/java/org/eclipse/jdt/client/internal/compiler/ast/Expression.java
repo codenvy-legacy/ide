@@ -742,184 +742,184 @@ public abstract class Expression extends Statement
       }
    }
 
-//   /**
-//    * Expression statements are plain expressions, however they generate like
-//    * normal expressions with no value required.
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-//   {
-//      if ((this.bits & ASTNode.IsReachable) == 0)
-//      {
-//         return;
-//      }
-//      generateCode(currentScope, codeStream, false);
-//   }
-//
-//   /**
-//    * Every expression is responsible for generating its implicit conversion when necessary.
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    * @param valueRequired boolean
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//      if (this.constant != Constant.NotAConstant)
-//      {
-//         // generate a constant expression
-//         int pc = codeStream.position;
-//         codeStream.generateConstant(this.constant, this.implicitConversion);
-//         codeStream.recordPositionsFrom(pc, this.sourceStart);
-//      }
-//      else
-//      {
-//         // actual non-constant code generation
-//         throw new ShouldNotImplement(Messages.ast_missingCode);
-//      }
-//   }
-//
-//   /**
-//    * Default generation of a boolean value
-//    * @param currentScope
-//    * @param codeStream
-//    * @param trueLabel
-//    * @param falseLabel
-//    * @param valueRequired
-//    */
-//   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
-//      BranchLabel falseLabel, boolean valueRequired)
-//   {
-//      // a label valued to nil means: by default we fall through the case...
-//      // both nil means we leave the value on the stack
-//
-//      Constant cst = optimizedBooleanConstant();
-//      generateCode(currentScope, codeStream, valueRequired && cst == Constant.NotAConstant);
-//      if ((cst != Constant.NotAConstant) && (cst.typeID() == TypeIds.T_boolean))
-//      {
-//         int pc = codeStream.position;
-//         if (cst.booleanValue() == true)
-//         {
-//            // constant == true
-//            if (valueRequired)
-//            {
-//               if (falseLabel == null)
-//               {
-//                  // implicit falling through the FALSE case
-//                  if (trueLabel != null)
-//                  {
-//                     codeStream.goto_(trueLabel);
-//                  }
-//               }
-//            }
-//         }
-//         else
-//         {
-//            if (valueRequired)
-//            {
-//               if (falseLabel != null)
-//               {
-//                  // implicit falling through the TRUE case
-//                  if (trueLabel == null)
-//                  {
-//                     codeStream.goto_(falseLabel);
-//                  }
-//               }
-//            }
-//         }
-//         codeStream.recordPositionsFrom(pc, this.sourceStart);
-//         return;
-//      }
-//      // branching
-//      int position = codeStream.position;
-//      if (valueRequired)
-//      {
-//         if (falseLabel == null)
-//         {
-//            if (trueLabel != null)
-//            {
-//               // Implicit falling through the FALSE case
-//               codeStream.ifne(trueLabel);
-//            }
-//         }
-//         else
-//         {
-//            if (trueLabel == null)
-//            {
-//               // Implicit falling through the TRUE case
-//               codeStream.ifeq(falseLabel);
-//            }
-//            else
-//            {
-//               // No implicit fall through TRUE/FALSE --> should never occur
-//            }
-//         }
-//      }
-//      // reposition the endPC
-//      codeStream.updateLastRecordedEndPC(currentScope, position);
-//   }
-//
-//   /* Optimized (java) code generation for string concatenations that involve StringBuffer
-//    * creation: going through this path means that there is no need for a new StringBuffer
-//    * creation, further operands should rather be only appended to the current one.
-//    * By default: no optimization.
-//    */
-//   public void generateOptimizedStringConcatenation(BlockScope blockScope, CodeStream codeStream, int typeID)
-//   {
-//      if (typeID == TypeIds.T_JavaLangString && this.constant != Constant.NotAConstant
-//         && this.constant.stringValue().length() == 0)
-//      {
-//         return; // optimize str + ""
-//      }
-//      generateCode(blockScope, codeStream, true);
-//      codeStream.invokeStringConcatenationAppendForType(typeID);
-//   }
-//
-//   /* Optimized (java) code generation for string concatenations that involve StringBuffer
-//    * creation: going through this path means that there is no need for a new StringBuffer
-//    * creation, further operands should rather be only appended to the current one.
-//    */
-//   public void generateOptimizedStringConcatenationCreation(BlockScope blockScope, CodeStream codeStream, int typeID)
-//   {
-//      codeStream.newStringContatenation();
-//      codeStream.dup();
-//      switch (typeID)
-//      {
-//         case T_JavaLangObject :
-//         case T_undefined :
-//            // in the case the runtime value of valueOf(Object) returns null, we have to use append(Object) instead of directly valueOf(Object)
-//            // append(Object) returns append(valueOf(Object)), which means that the null case is handled by the next case.
-//            codeStream.invokeStringConcatenationDefaultConstructor();
-//            generateCode(blockScope, codeStream, true);
-//            codeStream.invokeStringConcatenationAppendForType(TypeIds.T_JavaLangObject);
-//            return;
-//         case T_JavaLangString :
-//         case T_null :
-//            if (this.constant != Constant.NotAConstant)
-//            {
-//               String stringValue = this.constant.stringValue();
-//               if (stringValue.length() == 0)
-//               { // optimize ""+<str>
-//                  codeStream.invokeStringConcatenationDefaultConstructor();
-//                  return;
-//               }
-//               codeStream.ldc(stringValue);
-//            }
-//            else
-//            {
-//               // null case is not a constant
-//               generateCode(blockScope, codeStream, true);
-//               codeStream.invokeStringValueOf(TypeIds.T_JavaLangObject);
-//            }
-//            break;
-//         default :
-//            generateCode(blockScope, codeStream, true);
-//            codeStream.invokeStringValueOf(typeID);
-//      }
-//      codeStream.invokeStringConcatenationStringConstructor();
-//   }
+   //   /**
+   //    * Expression statements are plain expressions, however they generate like
+   //    * normal expressions with no value required.
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   //   {
+   //      if ((this.bits & ASTNode.IsReachable) == 0)
+   //      {
+   //         return;
+   //      }
+   //      generateCode(currentScope, codeStream, false);
+   //   }
+   //
+   //   /**
+   //    * Every expression is responsible for generating its implicit conversion when necessary.
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    * @param valueRequired boolean
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //      if (this.constant != Constant.NotAConstant)
+   //      {
+   //         // generate a constant expression
+   //         int pc = codeStream.position;
+   //         codeStream.generateConstant(this.constant, this.implicitConversion);
+   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //      }
+   //      else
+   //      {
+   //         // actual non-constant code generation
+   //         throw new ShouldNotImplement(Messages.ast_missingCode);
+   //      }
+   //   }
+   //
+   //   /**
+   //    * Default generation of a boolean value
+   //    * @param currentScope
+   //    * @param codeStream
+   //    * @param trueLabel
+   //    * @param falseLabel
+   //    * @param valueRequired
+   //    */
+   //   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
+   //      BranchLabel falseLabel, boolean valueRequired)
+   //   {
+   //      // a label valued to nil means: by default we fall through the case...
+   //      // both nil means we leave the value on the stack
+   //
+   //      Constant cst = optimizedBooleanConstant();
+   //      generateCode(currentScope, codeStream, valueRequired && cst == Constant.NotAConstant);
+   //      if ((cst != Constant.NotAConstant) && (cst.typeID() == TypeIds.T_boolean))
+   //      {
+   //         int pc = codeStream.position;
+   //         if (cst.booleanValue() == true)
+   //         {
+   //            // constant == true
+   //            if (valueRequired)
+   //            {
+   //               if (falseLabel == null)
+   //               {
+   //                  // implicit falling through the FALSE case
+   //                  if (trueLabel != null)
+   //                  {
+   //                     codeStream.goto_(trueLabel);
+   //                  }
+   //               }
+   //            }
+   //         }
+   //         else
+   //         {
+   //            if (valueRequired)
+   //            {
+   //               if (falseLabel != null)
+   //               {
+   //                  // implicit falling through the TRUE case
+   //                  if (trueLabel == null)
+   //                  {
+   //                     codeStream.goto_(falseLabel);
+   //                  }
+   //               }
+   //            }
+   //         }
+   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //         return;
+   //      }
+   //      // branching
+   //      int position = codeStream.position;
+   //      if (valueRequired)
+   //      {
+   //         if (falseLabel == null)
+   //         {
+   //            if (trueLabel != null)
+   //            {
+   //               // Implicit falling through the FALSE case
+   //               codeStream.ifne(trueLabel);
+   //            }
+   //         }
+   //         else
+   //         {
+   //            if (trueLabel == null)
+   //            {
+   //               // Implicit falling through the TRUE case
+   //               codeStream.ifeq(falseLabel);
+   //            }
+   //            else
+   //            {
+   //               // No implicit fall through TRUE/FALSE --> should never occur
+   //            }
+   //         }
+   //      }
+   //      // reposition the endPC
+   //      codeStream.updateLastRecordedEndPC(currentScope, position);
+   //   }
+   //
+   //   /* Optimized (java) code generation for string concatenations that involve StringBuffer
+   //    * creation: going through this path means that there is no need for a new StringBuffer
+   //    * creation, further operands should rather be only appended to the current one.
+   //    * By default: no optimization.
+   //    */
+   //   public void generateOptimizedStringConcatenation(BlockScope blockScope, CodeStream codeStream, int typeID)
+   //   {
+   //      if (typeID == TypeIds.T_JavaLangString && this.constant != Constant.NotAConstant
+   //         && this.constant.stringValue().length() == 0)
+   //      {
+   //         return; // optimize str + ""
+   //      }
+   //      generateCode(blockScope, codeStream, true);
+   //      codeStream.invokeStringConcatenationAppendForType(typeID);
+   //   }
+   //
+   //   /* Optimized (java) code generation for string concatenations that involve StringBuffer
+   //    * creation: going through this path means that there is no need for a new StringBuffer
+   //    * creation, further operands should rather be only appended to the current one.
+   //    */
+   //   public void generateOptimizedStringConcatenationCreation(BlockScope blockScope, CodeStream codeStream, int typeID)
+   //   {
+   //      codeStream.newStringContatenation();
+   //      codeStream.dup();
+   //      switch (typeID)
+   //      {
+   //         case T_JavaLangObject :
+   //         case T_undefined :
+   //            // in the case the runtime value of valueOf(Object) returns null, we have to use append(Object) instead of directly valueOf(Object)
+   //            // append(Object) returns append(valueOf(Object)), which means that the null case is handled by the next case.
+   //            codeStream.invokeStringConcatenationDefaultConstructor();
+   //            generateCode(blockScope, codeStream, true);
+   //            codeStream.invokeStringConcatenationAppendForType(TypeIds.T_JavaLangObject);
+   //            return;
+   //         case T_JavaLangString :
+   //         case T_null :
+   //            if (this.constant != Constant.NotAConstant)
+   //            {
+   //               String stringValue = this.constant.stringValue();
+   //               if (stringValue.length() == 0)
+   //               { // optimize ""+<str>
+   //                  codeStream.invokeStringConcatenationDefaultConstructor();
+   //                  return;
+   //               }
+   //               codeStream.ldc(stringValue);
+   //            }
+   //            else
+   //            {
+   //               // null case is not a constant
+   //               generateCode(blockScope, codeStream, true);
+   //               codeStream.invokeStringValueOf(TypeIds.T_JavaLangObject);
+   //            }
+   //            break;
+   //         default :
+   //            generateCode(blockScope, codeStream, true);
+   //            codeStream.invokeStringValueOf(typeID);
+   //      }
+   //      codeStream.invokeStringConcatenationStringConstructor();
+   //   }
 
    private MethodBinding[] getAllOriginalInheritedMethods(ReferenceBinding binding)
    {

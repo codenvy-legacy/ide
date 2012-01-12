@@ -164,28 +164,28 @@ public class UnaryExpression extends OperatorExpression
    //		codeStream.recordPositionsFrom(pc, this.sourceStart);
    //	}
 
-//   /**
-//    * Boolean operator code generation
-//    *	Optimized operations are: &&, ||, <, <=, >, >=, &, |, ^
-//    */
-//   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
-//      BranchLabel falseLabel, boolean valueRequired)
-//   {
-//
-//      if ((this.constant != Constant.NotAConstant) && (this.constant.typeID() == T_boolean))
-//      {
-//         super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
-//         return;
-//      }
-//      if (((this.bits & OperatorMASK) >> OperatorSHIFT) == NOT)
-//      {
-//         this.expression.generateOptimizedBoolean(currentScope, codeStream, falseLabel, trueLabel, valueRequired);
-//      }
-//      else
-//      {
-//         super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
-//      }
-//   }
+   //   /**
+   //    * Boolean operator code generation
+   //    *	Optimized operations are: &&, ||, <, <=, >, >=, &, |, ^
+   //    */
+   //   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
+   //      BranchLabel falseLabel, boolean valueRequired)
+   //   {
+   //
+   //      if ((this.constant != Constant.NotAConstant) && (this.constant.typeID() == T_boolean))
+   //      {
+   //         super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   //         return;
+   //      }
+   //      if (((this.bits & OperatorMASK) >> OperatorSHIFT) == NOT)
+   //      {
+   //         this.expression.generateOptimizedBoolean(currentScope, codeStream, falseLabel, trueLabel, valueRequired);
+   //      }
+   //      else
+   //      {
+   //         super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   //      }
+   //   }
 
    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
    {

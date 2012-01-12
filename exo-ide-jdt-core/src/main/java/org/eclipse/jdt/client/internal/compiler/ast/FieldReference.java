@@ -212,339 +212,339 @@ public class FieldReference extends Reference implements InvocationSite
       return this.binding;
    }
 
-//   public void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
-//      boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//      FieldBinding codegenBinding = this.binding.original();
-//      this.receiver.generateCode(currentScope, codeStream, !codegenBinding.isStatic());
-//      codeStream.recordPositionsFrom(pc, this.sourceStart);
-//      assignment.expression.generateCode(currentScope, codeStream, true);
-//      fieldStore(currentScope, codeStream, codegenBinding, this.syntheticAccessors == null ? null
-//         : this.syntheticAccessors[FieldReference.WRITE], this.actualReceiverType, this.receiver.isImplicitThis(),
-//         valueRequired);
-//      if (valueRequired)
-//      {
-//         codeStream.generateImplicitConversion(assignment.implicitConversion);
-//      }
-//      // no need for generic cast as value got dupped
-//   }
+   //   public void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
+   //      boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //      FieldBinding codegenBinding = this.binding.original();
+   //      this.receiver.generateCode(currentScope, codeStream, !codegenBinding.isStatic());
+   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //      assignment.expression.generateCode(currentScope, codeStream, true);
+   //      fieldStore(currentScope, codeStream, codegenBinding, this.syntheticAccessors == null ? null
+   //         : this.syntheticAccessors[FieldReference.WRITE], this.actualReceiverType, this.receiver.isImplicitThis(),
+   //         valueRequired);
+   //      if (valueRequired)
+   //      {
+   //         codeStream.generateImplicitConversion(assignment.implicitConversion);
+   //      }
+   //      // no need for generic cast as value got dupped
+   //   }
 
-//   /**
-//    * Field reference code generation
-//    *
-//    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-//    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-//    * @param valueRequired boolean
-//    */
-//   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-//   {
-//      int pc = codeStream.position;
-//      if (this.constant != Constant.NotAConstant)
-//      {
-//         if (valueRequired)
-//         {
-//            codeStream.generateConstant(this.constant, this.implicitConversion);
-//         }
-//         codeStream.recordPositionsFrom(pc, this.sourceStart);
-//         return;
-//      }
-//      FieldBinding codegenBinding = this.binding.original();
-//      boolean isStatic = codegenBinding.isStatic();
-//      boolean isThisReceiver = this.receiver instanceof ThisReference;
-//      Constant fieldConstant = codegenBinding.constant();
-//      if (fieldConstant != Constant.NotAConstant)
-//      {
-//         if (!isThisReceiver)
-//         {
-//            this.receiver.generateCode(currentScope, codeStream, !isStatic);
-//            if (!isStatic)
-//            {
-//               codeStream.invokeObjectGetClass();
-//               codeStream.pop();
-//            }
-//         }
-//         if (valueRequired)
-//         {
-//            codeStream.generateConstant(fieldConstant, this.implicitConversion);
-//         }
-//         codeStream.recordPositionsFrom(pc, this.sourceStart);
-//         return;
-//      }
-//      if (valueRequired
-//         || (!isThisReceiver && currentScope.compilerOptions().complianceLevel >= ClassFileConstants.JDK1_4)
-//         || ((this.implicitConversion & TypeIds.UNBOXING) != 0) || (this.genericCast != null))
-//      {
-//         this.receiver.generateCode(currentScope, codeStream, !isStatic);
-//         if ((this.bits & NeedReceiverGenericCast) != 0)
-//         {
-//            codeStream.checkcast(this.actualReceiverType);
-//         }
-//         pc = codeStream.position;
-//         if (codegenBinding.declaringClass == null)
-//         { // array length
-//            codeStream.arraylength();
-//            if (valueRequired)
-//            {
-//               codeStream.generateImplicitConversion(this.implicitConversion);
-//            }
-//            else
-//            {
-//               // could occur if !valueRequired but compliance >= 1.4
-//               codeStream.pop();
-//            }
-//         }
-//         else
-//         {
-//            if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
-//            {
-//               TypeBinding constantPoolDeclaringClass =
-//                  CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
-//                     this.receiver.isImplicitThis());
-//               if (isStatic)
-//               {
-//                  codeStream.fieldAccess(Opcodes.OPC_getstatic, codegenBinding, constantPoolDeclaringClass);
-//               }
-//               else
-//               {
-//                  codeStream.fieldAccess(Opcodes.OPC_getfield, codegenBinding, constantPoolDeclaringClass);
-//               }
-//            }
-//            else
-//            {
-//               codeStream
-//                  .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
-//            }
-//            // required cast must occur even if no value is required
-//            if (this.genericCast != null)
-//               codeStream.checkcast(this.genericCast);
-//            if (valueRequired)
-//            {
-//               codeStream.generateImplicitConversion(this.implicitConversion);
-//            }
-//            else
-//            {
-//               boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
-//               // conversion only generated if unboxing
-//               if (isUnboxing)
-//                  codeStream.generateImplicitConversion(this.implicitConversion);
-//               switch (isUnboxing ? postConversionType(currentScope).id : codegenBinding.type.id)
-//               {
-//                  case T_long :
-//                  case T_double :
-//                     codeStream.pop2();
-//                     break;
-//                  default :
-//                     codeStream.pop();
-//               }
-//            }
-//         }
-//      }
-//      else
-//      {
-//         if (isThisReceiver)
-//         {
-//            if (isStatic)
-//            {
-//               // if no valueRequired, still need possible side-effects of <clinit> invocation, if field belongs to different class
-//               if (this.binding.original().declaringClass != this.actualReceiverType.erasure())
-//               {
-//                  MethodBinding accessor =
-//                     this.syntheticAccessors == null ? null : this.syntheticAccessors[FieldReference.READ];
-//                  if (accessor == null)
-//                  {
-//                     TypeBinding constantPoolDeclaringClass =
-//                        CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
-//                           this.receiver.isImplicitThis());
-//                     codeStream.fieldAccess(Opcodes.OPC_getstatic, codegenBinding, constantPoolDeclaringClass);
-//                  }
-//                  else
-//                  {
-//                     codeStream.invoke(Opcodes.OPC_invokestatic, accessor, null /* default declaringClass */);
-//                  }
-//                  switch (codegenBinding.type.id)
-//                  {
-//                     case T_long :
-//                     case T_double :
-//                        codeStream.pop2();
-//                        break;
-//                     default :
-//                        codeStream.pop();
-//                  }
-//               }
-//            }
-//         }
-//         else
-//         {
-//            this.receiver.generateCode(currentScope, codeStream, !isStatic);
-//            if (!isStatic)
-//            {
-//               codeStream.invokeObjectGetClass(); // perform null check
-//               codeStream.pop();
-//            }
-//         }
-//      }
-//      codeStream.recordPositionsFrom(pc, this.sourceEnd);
-//   }
-//
-//   public void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream, Expression expression,
-//      int operator, int assignmentImplicitConversion, boolean valueRequired)
-//   {
-//      boolean isStatic;
-//      // check if compound assignment is the only usage of a private field
-//      reportOnlyUselesslyReadPrivateField(currentScope, this.binding, valueRequired);
-//      FieldBinding codegenBinding = this.binding.original();
-//      this.receiver.generateCode(currentScope, codeStream, !(isStatic = codegenBinding.isStatic()));
-//      if (isStatic)
-//      {
-//         if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
-//         {
-//            TypeBinding constantPoolDeclaringClass =
-//               CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
-//                  this.receiver.isImplicitThis());
-//            codeStream.fieldAccess(Opcodes.OPC_getstatic, codegenBinding, constantPoolDeclaringClass);
-//         }
-//         else
-//         {
-//            codeStream
-//               .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
-//         }
-//      }
-//      else
-//      {
-//         codeStream.dup();
-//         if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
-//         {
-//            TypeBinding constantPoolDeclaringClass =
-//               CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
-//                  this.receiver.isImplicitThis());
-//            codeStream.fieldAccess(Opcodes.OPC_getfield, codegenBinding, constantPoolDeclaringClass);
-//         }
-//         else
-//         {
-//            codeStream
-//               .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
-//         }
-//      }
-//      int operationTypeID;
-//      switch (operationTypeID = (this.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4)
-//      {
-//         case T_JavaLangString :
-//         case T_JavaLangObject :
-//         case T_undefined :
-//            codeStream.generateStringConcatenationAppend(currentScope, null, expression);
-//            break;
-//         default :
-//            if (this.genericCast != null)
-//               codeStream.checkcast(this.genericCast);
-//            // promote the array reference to the suitable operation type
-//            codeStream.generateImplicitConversion(this.implicitConversion);
-//            // generate the increment value (will by itself  be promoted to the operation value)
-//            if (expression == IntLiteral.One)
-//            { // prefix operation
-//               codeStream.generateConstant(expression.constant, this.implicitConversion);
-//            }
-//            else
-//            {
-//               expression.generateCode(currentScope, codeStream, true);
-//            }
-//            // perform the operation
-//            codeStream.sendOperator(operator, operationTypeID);
-//            // cast the value back to the array reference type
-//            codeStream.generateImplicitConversion(assignmentImplicitConversion);
-//      }
-//      fieldStore(currentScope, codeStream, codegenBinding, this.syntheticAccessors == null ? null
-//         : this.syntheticAccessors[FieldReference.WRITE], this.actualReceiverType, this.receiver.isImplicitThis(),
-//         valueRequired);
-//      // no need for generic cast as value got dupped
-//   }
-//
-//   public void generatePostIncrement(BlockScope currentScope, CodeStream codeStream, CompoundAssignment postIncrement,
-//      boolean valueRequired)
-//   {
-//      boolean isStatic;
-//      // check if postIncrement is the only usage of a private field
-//      reportOnlyUselesslyReadPrivateField(currentScope, this.binding, valueRequired);
-//      FieldBinding codegenBinding = this.binding.original();
-//      this.receiver.generateCode(currentScope, codeStream, !(isStatic = codegenBinding.isStatic()));
-//      if (isStatic)
-//      {
-//         if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
-//         {
-//            TypeBinding constantPoolDeclaringClass =
-//               CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
-//                  this.receiver.isImplicitThis());
-//            codeStream.fieldAccess(Opcodes.OPC_getstatic, codegenBinding, constantPoolDeclaringClass);
-//         }
-//         else
-//         {
-//            codeStream
-//               .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
-//         }
-//      }
-//      else
-//      {
-//         codeStream.dup();
-//         if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
-//         {
-//            TypeBinding constantPoolDeclaringClass =
-//               CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
-//                  this.receiver.isImplicitThis());
-//            codeStream.fieldAccess(Opcodes.OPC_getfield, codegenBinding, constantPoolDeclaringClass);
-//         }
-//         else
-//         {
-//            codeStream
-//               .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
-//         }
-//      }
-//      TypeBinding operandType;
-//      if (this.genericCast != null)
-//      {
-//         codeStream.checkcast(this.genericCast);
-//         operandType = this.genericCast;
-//      }
-//      else
-//      {
-//         operandType = codegenBinding.type;
-//      }
-//      if (valueRequired)
-//      {
-//         if (isStatic)
-//         {
-//            switch (operandType.id)
-//            {
-//               case TypeIds.T_long :
-//               case TypeIds.T_double :
-//                  codeStream.dup2();
-//                  break;
-//               default :
-//                  codeStream.dup();
-//                  break;
-//            }
-//         }
-//         else
-//         { // Stack:  [owner][old field value]  ---> [old field value][owner][old field value]
-//            switch (operandType.id)
-//            {
-//               case TypeIds.T_long :
-//               case TypeIds.T_double :
-//                  codeStream.dup2_x1();
-//                  break;
-//               default :
-//                  codeStream.dup_x1();
-//                  break;
-//            }
-//         }
-//      }
-//      codeStream.generateImplicitConversion(this.implicitConversion);
-//      codeStream.generateConstant(postIncrement.expression.constant, this.implicitConversion);
-//      codeStream.sendOperator(postIncrement.operator, this.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
-//      codeStream.generateImplicitConversion(postIncrement.preAssignImplicitConversion);
-//      fieldStore(currentScope, codeStream, codegenBinding, this.syntheticAccessors == null ? null
-//         : this.syntheticAccessors[FieldReference.WRITE], this.actualReceiverType, this.receiver.isImplicitThis(),
-//         false);
-//   }
+   //   /**
+   //    * Field reference code generation
+   //    *
+   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   //    * @param valueRequired boolean
+   //    */
+   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   //   {
+   //      int pc = codeStream.position;
+   //      if (this.constant != Constant.NotAConstant)
+   //      {
+   //         if (valueRequired)
+   //         {
+   //            codeStream.generateConstant(this.constant, this.implicitConversion);
+   //         }
+   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //         return;
+   //      }
+   //      FieldBinding codegenBinding = this.binding.original();
+   //      boolean isStatic = codegenBinding.isStatic();
+   //      boolean isThisReceiver = this.receiver instanceof ThisReference;
+   //      Constant fieldConstant = codegenBinding.constant();
+   //      if (fieldConstant != Constant.NotAConstant)
+   //      {
+   //         if (!isThisReceiver)
+   //         {
+   //            this.receiver.generateCode(currentScope, codeStream, !isStatic);
+   //            if (!isStatic)
+   //            {
+   //               codeStream.invokeObjectGetClass();
+   //               codeStream.pop();
+   //            }
+   //         }
+   //         if (valueRequired)
+   //         {
+   //            codeStream.generateConstant(fieldConstant, this.implicitConversion);
+   //         }
+   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
+   //         return;
+   //      }
+   //      if (valueRequired
+   //         || (!isThisReceiver && currentScope.compilerOptions().complianceLevel >= ClassFileConstants.JDK1_4)
+   //         || ((this.implicitConversion & TypeIds.UNBOXING) != 0) || (this.genericCast != null))
+   //      {
+   //         this.receiver.generateCode(currentScope, codeStream, !isStatic);
+   //         if ((this.bits & NeedReceiverGenericCast) != 0)
+   //         {
+   //            codeStream.checkcast(this.actualReceiverType);
+   //         }
+   //         pc = codeStream.position;
+   //         if (codegenBinding.declaringClass == null)
+   //         { // array length
+   //            codeStream.arraylength();
+   //            if (valueRequired)
+   //            {
+   //               codeStream.generateImplicitConversion(this.implicitConversion);
+   //            }
+   //            else
+   //            {
+   //               // could occur if !valueRequired but compliance >= 1.4
+   //               codeStream.pop();
+   //            }
+   //         }
+   //         else
+   //         {
+   //            if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
+   //            {
+   //               TypeBinding constantPoolDeclaringClass =
+   //                  CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
+   //                     this.receiver.isImplicitThis());
+   //               if (isStatic)
+   //               {
+   //                  codeStream.fieldAccess(Opcodes.OPC_getstatic, codegenBinding, constantPoolDeclaringClass);
+   //               }
+   //               else
+   //               {
+   //                  codeStream.fieldAccess(Opcodes.OPC_getfield, codegenBinding, constantPoolDeclaringClass);
+   //               }
+   //            }
+   //            else
+   //            {
+   //               codeStream
+   //                  .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
+   //            }
+   //            // required cast must occur even if no value is required
+   //            if (this.genericCast != null)
+   //               codeStream.checkcast(this.genericCast);
+   //            if (valueRequired)
+   //            {
+   //               codeStream.generateImplicitConversion(this.implicitConversion);
+   //            }
+   //            else
+   //            {
+   //               boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
+   //               // conversion only generated if unboxing
+   //               if (isUnboxing)
+   //                  codeStream.generateImplicitConversion(this.implicitConversion);
+   //               switch (isUnboxing ? postConversionType(currentScope).id : codegenBinding.type.id)
+   //               {
+   //                  case T_long :
+   //                  case T_double :
+   //                     codeStream.pop2();
+   //                     break;
+   //                  default :
+   //                     codeStream.pop();
+   //               }
+   //            }
+   //         }
+   //      }
+   //      else
+   //      {
+   //         if (isThisReceiver)
+   //         {
+   //            if (isStatic)
+   //            {
+   //               // if no valueRequired, still need possible side-effects of <clinit> invocation, if field belongs to different class
+   //               if (this.binding.original().declaringClass != this.actualReceiverType.erasure())
+   //               {
+   //                  MethodBinding accessor =
+   //                     this.syntheticAccessors == null ? null : this.syntheticAccessors[FieldReference.READ];
+   //                  if (accessor == null)
+   //                  {
+   //                     TypeBinding constantPoolDeclaringClass =
+   //                        CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
+   //                           this.receiver.isImplicitThis());
+   //                     codeStream.fieldAccess(Opcodes.OPC_getstatic, codegenBinding, constantPoolDeclaringClass);
+   //                  }
+   //                  else
+   //                  {
+   //                     codeStream.invoke(Opcodes.OPC_invokestatic, accessor, null /* default declaringClass */);
+   //                  }
+   //                  switch (codegenBinding.type.id)
+   //                  {
+   //                     case T_long :
+   //                     case T_double :
+   //                        codeStream.pop2();
+   //                        break;
+   //                     default :
+   //                        codeStream.pop();
+   //                  }
+   //               }
+   //            }
+   //         }
+   //         else
+   //         {
+   //            this.receiver.generateCode(currentScope, codeStream, !isStatic);
+   //            if (!isStatic)
+   //            {
+   //               codeStream.invokeObjectGetClass(); // perform null check
+   //               codeStream.pop();
+   //            }
+   //         }
+   //      }
+   //      codeStream.recordPositionsFrom(pc, this.sourceEnd);
+   //   }
+   //
+   //   public void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream, Expression expression,
+   //      int operator, int assignmentImplicitConversion, boolean valueRequired)
+   //   {
+   //      boolean isStatic;
+   //      // check if compound assignment is the only usage of a private field
+   //      reportOnlyUselesslyReadPrivateField(currentScope, this.binding, valueRequired);
+   //      FieldBinding codegenBinding = this.binding.original();
+   //      this.receiver.generateCode(currentScope, codeStream, !(isStatic = codegenBinding.isStatic()));
+   //      if (isStatic)
+   //      {
+   //         if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
+   //         {
+   //            TypeBinding constantPoolDeclaringClass =
+   //               CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
+   //                  this.receiver.isImplicitThis());
+   //            codeStream.fieldAccess(Opcodes.OPC_getstatic, codegenBinding, constantPoolDeclaringClass);
+   //         }
+   //         else
+   //         {
+   //            codeStream
+   //               .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
+   //         }
+   //      }
+   //      else
+   //      {
+   //         codeStream.dup();
+   //         if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
+   //         {
+   //            TypeBinding constantPoolDeclaringClass =
+   //               CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
+   //                  this.receiver.isImplicitThis());
+   //            codeStream.fieldAccess(Opcodes.OPC_getfield, codegenBinding, constantPoolDeclaringClass);
+   //         }
+   //         else
+   //         {
+   //            codeStream
+   //               .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
+   //         }
+   //      }
+   //      int operationTypeID;
+   //      switch (operationTypeID = (this.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4)
+   //      {
+   //         case T_JavaLangString :
+   //         case T_JavaLangObject :
+   //         case T_undefined :
+   //            codeStream.generateStringConcatenationAppend(currentScope, null, expression);
+   //            break;
+   //         default :
+   //            if (this.genericCast != null)
+   //               codeStream.checkcast(this.genericCast);
+   //            // promote the array reference to the suitable operation type
+   //            codeStream.generateImplicitConversion(this.implicitConversion);
+   //            // generate the increment value (will by itself  be promoted to the operation value)
+   //            if (expression == IntLiteral.One)
+   //            { // prefix operation
+   //               codeStream.generateConstant(expression.constant, this.implicitConversion);
+   //            }
+   //            else
+   //            {
+   //               expression.generateCode(currentScope, codeStream, true);
+   //            }
+   //            // perform the operation
+   //            codeStream.sendOperator(operator, operationTypeID);
+   //            // cast the value back to the array reference type
+   //            codeStream.generateImplicitConversion(assignmentImplicitConversion);
+   //      }
+   //      fieldStore(currentScope, codeStream, codegenBinding, this.syntheticAccessors == null ? null
+   //         : this.syntheticAccessors[FieldReference.WRITE], this.actualReceiverType, this.receiver.isImplicitThis(),
+   //         valueRequired);
+   //      // no need for generic cast as value got dupped
+   //   }
+   //
+   //   public void generatePostIncrement(BlockScope currentScope, CodeStream codeStream, CompoundAssignment postIncrement,
+   //      boolean valueRequired)
+   //   {
+   //      boolean isStatic;
+   //      // check if postIncrement is the only usage of a private field
+   //      reportOnlyUselesslyReadPrivateField(currentScope, this.binding, valueRequired);
+   //      FieldBinding codegenBinding = this.binding.original();
+   //      this.receiver.generateCode(currentScope, codeStream, !(isStatic = codegenBinding.isStatic()));
+   //      if (isStatic)
+   //      {
+   //         if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
+   //         {
+   //            TypeBinding constantPoolDeclaringClass =
+   //               CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
+   //                  this.receiver.isImplicitThis());
+   //            codeStream.fieldAccess(Opcodes.OPC_getstatic, codegenBinding, constantPoolDeclaringClass);
+   //         }
+   //         else
+   //         {
+   //            codeStream
+   //               .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
+   //         }
+   //      }
+   //      else
+   //      {
+   //         codeStream.dup();
+   //         if (this.syntheticAccessors == null || this.syntheticAccessors[FieldReference.READ] == null)
+   //         {
+   //            TypeBinding constantPoolDeclaringClass =
+   //               CodeStream.getConstantPoolDeclaringClass(currentScope, codegenBinding, this.actualReceiverType,
+   //                  this.receiver.isImplicitThis());
+   //            codeStream.fieldAccess(Opcodes.OPC_getfield, codegenBinding, constantPoolDeclaringClass);
+   //         }
+   //         else
+   //         {
+   //            codeStream
+   //               .invoke(Opcodes.OPC_invokestatic, this.syntheticAccessors[FieldReference.READ], null /* default declaringClass */);
+   //         }
+   //      }
+   //      TypeBinding operandType;
+   //      if (this.genericCast != null)
+   //      {
+   //         codeStream.checkcast(this.genericCast);
+   //         operandType = this.genericCast;
+   //      }
+   //      else
+   //      {
+   //         operandType = codegenBinding.type;
+   //      }
+   //      if (valueRequired)
+   //      {
+   //         if (isStatic)
+   //         {
+   //            switch (operandType.id)
+   //            {
+   //               case TypeIds.T_long :
+   //               case TypeIds.T_double :
+   //                  codeStream.dup2();
+   //                  break;
+   //               default :
+   //                  codeStream.dup();
+   //                  break;
+   //            }
+   //         }
+   //         else
+   //         { // Stack:  [owner][old field value]  ---> [old field value][owner][old field value]
+   //            switch (operandType.id)
+   //            {
+   //               case TypeIds.T_long :
+   //               case TypeIds.T_double :
+   //                  codeStream.dup2_x1();
+   //                  break;
+   //               default :
+   //                  codeStream.dup_x1();
+   //                  break;
+   //            }
+   //         }
+   //      }
+   //      codeStream.generateImplicitConversion(this.implicitConversion);
+   //      codeStream.generateConstant(postIncrement.expression.constant, this.implicitConversion);
+   //      codeStream.sendOperator(postIncrement.operator, this.implicitConversion & TypeIds.COMPILE_TYPE_MASK);
+   //      codeStream.generateImplicitConversion(postIncrement.preAssignImplicitConversion);
+   //      fieldStore(currentScope, codeStream, codegenBinding, this.syntheticAccessors == null ? null
+   //         : this.syntheticAccessors[FieldReference.WRITE], this.actualReceiverType, this.receiver.isImplicitThis(),
+   //         false);
+   //   }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
@@ -590,7 +590,7 @@ public class FieldReference extends Reference implements InvocationSite
       }
       else if (this.receiver instanceof QualifiedSuperReference)
       { // qualified super
-         // qualified super need emulation always
+        // qualified super need emulation always
          SourceTypeBinding destinationType =
             (SourceTypeBinding)(((QualifiedSuperReference)this.receiver).currentCompatibleType);
          if (this.syntheticAccessors == null)

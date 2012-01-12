@@ -612,33 +612,33 @@ public class Util implements SuffixConstants
       StringBuffer exceptionBuffer = new StringBuffer(50);
       exceptionBuffer.append(exception.toString());
       //TODO find way to use printStackTrace to fill buffer
-      
+
       // only keep leading frame portion of the trace (i.e. line no. 2 from the stacktrace)
-//      lookupLine2 : for (int i = 0, lineSep = 0, max = buffer.length(), line2Start = 0; i < max; i++)
-//      {
-//         switch (buffer.charAt(i))
-//         {
-//            case '\n' :
-//            case '\r' :
-//               if (line2Start > 0)
-//               {
-//                  exceptionBuffer.append(' ').append(buffer.substring(line2Start, i));
-//                  break lookupLine2;
-//               }
-//               lineSep++;
-//               break;
-//            case ' ' :
-//            case '\t' :
-//               break;
-//            default :
-//               if (lineSep > 0)
-//               {
-//                  line2Start = i;
-//                  lineSep = 0;
-//               }
-//               break;
-//         }
-//      }
+      //      lookupLine2 : for (int i = 0, lineSep = 0, max = buffer.length(), line2Start = 0; i < max; i++)
+      //      {
+      //         switch (buffer.charAt(i))
+      //         {
+      //            case '\n' :
+      //            case '\r' :
+      //               if (line2Start > 0)
+      //               {
+      //                  exceptionBuffer.append(' ').append(buffer.substring(line2Start, i));
+      //                  break lookupLine2;
+      //               }
+      //               lineSep++;
+      //               break;
+      //            case ' ' :
+      //            case '\t' :
+      //               break;
+      //            default :
+      //               if (lineSep > 0)
+      //               {
+      //                  line2Start = i;
+      //                  lineSep = 0;
+      //               }
+      //               break;
+      //         }
+      //      }
       return exceptionBuffer.toString();
    }
 
