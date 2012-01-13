@@ -22,13 +22,16 @@ import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.MenuCommands.File;
 import org.exoplatform.ide.SaveFileUtils;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+
 
 import java.io.IOException;
 
@@ -44,15 +47,14 @@ import java.io.IOException;
  */
 public class HotkeysCustomizationTest extends AbstractHotkeysTest
 {
+   private final static String PROJECT = CursorPositionStatusBarTest.class.getSimpleName();
+
    @Before
    public void setUp() throws Exception
    {
-      FOLDER_NAME = HotkeysCustomizationTest.class.getSimpleName();
-      String filePath = "src/test/resources/org/exoplatform/ide/miscellaneous/GoogleGadget.xml";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -65,7 +67,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -81,310 +83,135 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
    @Test
    public void testDefaultHotkeys() throws Exception
    {
-      //restore default hotkeys after  HotkeysInCodeMirrorTest
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      selectRow("Find-Replace...");
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "F");
-      selenium().keyUp("//", "F");
-      clickButton(BIND_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-
-      selectRow("Save");
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "S");
-      selenium().keyUp("//", "S");
-      selenium().controlKeyUp();
-      clickButton(BIND_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-
-      selectRow("Delete Current Line");
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "D");
-      selenium().keyUp("//", "D");
-      selenium().controlKeyUp();
-      clickButton(BIND_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-
-      selectRow("Go to Line...");
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "L");
-      selenium().keyUp("//", "L");
-      selenium().controlKeyUp();
-      clickButton(BIND_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-
-      selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "N");
-      selenium().keyUp("//", "N");
-      selenium().controlKeyUp();
-      clickButton(BIND_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      clickButton(SAVE_BUTTON_LOCATOR);
-      checkNoCustomizeHotkeyDialogWindow();
-
-      //----- 1 ------------
-      //Press Ctrl+N
-      //TODO 1 step not work, shold be fix call template form; see issue 729
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "N");
-      selenium().keyUp("//", "N");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP);
-      //check, that Create file from template window appeared
-      checkCreateFileFromTemplateFormAndClose();
-      //----- 2 ------------
-      //Check Ctrl+S
-      //open new file
+      //step 1 create new project, open default xml file and check hotkey ctrl+N.
+      //change xml file, press Ctrl+S and check ask for value dialog
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-      //press Ctrl+S
+      IDE.EDITOR.waitTabPresent(1);
+      //driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "h");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
+      IDE.TEMPLATES.waitOpened();
+      IDE.TEMPLATES.clickCancelButton();
+      IDE.TEMPLATES.waitClosed();
+      IDE.EDITOR.deleteFileContent(0);
+      IDE.EDITOR.typeTextIntoEditor(0, "change file");
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "s");
-      //check, that Save As dialog window appeared
-      Thread.sleep(1000);
-      SaveFileUtils.checkSaveAsDialog(true);
-      //close
-      //selenium().click(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
-      IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
-
-      //waitForElementNotPresent(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
-      IDE.ASK_FOR_VALUE_DIALOG.waitClosed();
+      IDE.ASK_FOR_VALUE_DIALOG.waitOpened();
+      IDE.ASK_FOR_VALUE_DIALOG.clickNoButton();
+      IDE.ASK_DIALOG.waitClosed();
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
-   /**
-    * IDE-156:HotKeys customization
-    * ----- 15-19 ------------
-    * @throws Exception
-    */
    @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
-      refresh();
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      //----- 1 ------------
-      //Open several tabs (open existed documents and create some new)
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT);
 
-      IDE.WORKSPACE.doubleClickOnFile(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
-      IDE.EDITOR.clickDesignButton();
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-
-      //----- 2 ------------
-      //Open "Customize Hotkeys" window (Window->Customize Hotkeys)
-      //TODO Form "Hotkeys" don't appear. See issue 730
+      //step 1 create new hotkey for create html file (Ctrl+H) and file from template (Alt+N)
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("New HTML");
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "h");
+      IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Create File From Template...");
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.ALT.toString() + "n");
+      IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
 
-      //----- 3 ------------
-      //Select "New HTML File" and bind Ctrl+H to this command 
-      //(Press Ctrl+H, press "Bind" button)
-      selectRow(Commands.NEW_HTML_FILE);
-
-      //press Ctrl+H
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "H");
-      selenium().keyUp("//", "H");
-      selenium().controlKeyUp();
-      //check Bind button is enabled
-      checkBindButtonEnabled(true);
-      //check, Ctrl+H text appears in text field
-      assertEquals("Ctrl+H", getTextFromTextField());
-      //click Bind button
-      clickButton(BIND_BUTTON_LOCATOR);
-      //check, Ctrl+H text appears near New HTML File in list grid
-      assertEquals("Ctrl+H", getTextFromBindColumn(Commands.NEW_HTML_FILE));
-
-      //----- 18 ------------
-      //Select "Create File From Template" and bind Alt+N to this command. Press Save button
-      selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
-      //press Alt+N
-      selenium().altKeyDown();
-      selenium().keyDown("//", "N");
-      selenium().keyUp("//", "N");
-      selenium().altKeyUp();
-
-      //click Bind button
-      clickButton(BIND_BUTTON_LOCATOR);
-
-      //click Save button
-      clickButton(SAVE_BUTTON_LOCATOR);
-      checkNoCustomizeHotkeyDialogWindow();
-
-      //----- 19 ------------
-      //Try Ctrl+H and Alt+N hotkeys in several tabs
-
-      IDE.EDITOR.selectTab(2);
-
-      //press Alt+N
-      IDE.EDITOR.typeTextIntoEditor(2, Keys.ALT.toString() + "n");
-      Thread.sleep(TestConstants.SLEEP);
-
-      checkCreateFileFromTemplateFormAndClose();
-
-      //press Ctrl+H
-      IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
-      
-      //check new html file created
-      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
-      IDE.EDITOR.closeTabIgnoringChanges(3);
-      Thread.sleep(TestConstants.SLEEP);
-
-      //select first tab
-      IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ALT.toString() + "n");
-      Thread.sleep(TestConstants.SLEEP);
-
-      checkCreateFileFromTemplateFormAndClose();
-      //press Ctrl+H
-      IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
-      
-      //check new html file created
-      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
-      IDE.EDITOR.closeTabIgnoringChanges(3);
-      Thread.sleep(TestConstants.SLEEP);
-
-      //select second tab
+      // step 2 tabs and check in first tab new hotkeys. Selecting second tab, and checking new hotkey here
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.EDITOR.waitTabPresent(2);
       IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.typeTextIntoEditor(2, Keys.ALT.toString() + "n");
-      
-      checkCreateFileFromTemplateFormAndClose();
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.ALT.toString() + "n");
+      IDE.TEMPLATES.waitOpened();
+      IDE.TEMPLATES.clickCancelButton();
+      IDE.TEMPLATES.waitClosed();
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
+      IDE.EDITOR.waitTabPresent(3);
+      IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
+      IDE.EDITOR.closeTabIgnoringChanges(3);
+      IDE.EDITOR.waitTabNotPresent(3);
 
-      //press Ctrl+H
-      IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
-      
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      //repeat all actions in gadget tab
+      IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.ALT.toString() + "n");
+      IDE.TEMPLATES.waitOpened();
+      IDE.TEMPLATES.clickCancelButton();
+      IDE.TEMPLATES.waitClosed();
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
+      IDE.EDITOR.waitTabPresent(3);
+      IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
+      IDE.EDITOR.closeTabIgnoringChanges(3);
+      IDE.EDITOR.waitTabNotPresent(3);
 
-      //check new html file created
-      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
-      //      IDE.EDITOR.closeTabIgnoringChanges(3);
-      //      Thread.sleep(TestConstants.SLEEP);
-
-      //close all tabs
-      //      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      //      IDE.EDITOR.closeTabIgnoringChanges(0);
-      //      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      //      IDE.EDITOR.closeTabIgnoringChanges(0);
-      //      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      //      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.closeTabIgnoringChanges(2);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
-   /**
-    * IDE-156:HotKeys customization
-    * ----- 20 ------------
-    * @throws Exception
-    */
+   //TODO after fix issue IDE-1392 should be uncomment
    @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
 
-      refresh();
-      IDE.WORKSPACE.waitForRootItem();
-      //----- 1 ------------
-      //prepare hotkeys
-      //Open "Customize Hotkeys" window (Window->Customize Hotkeys)
-      //TODO 1 step not work, shold be fix call hotkeys form; see issue 729
+      //step 1 restore default values for HTML file and Create File From Template... commands 
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.New.HTML_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
 
-      //check cutomize hotkeys dialog window appears
-      checkCustomizeHotkeyDialogWindow();
-
-      //Select "New HTML File" and bind Ctrl+H to this command 
-      //(Press Ctrl+H, press "Bind" button)
-      selectRow(Commands.NEW_HTML_FILE);
-      //press Ctrl+H
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "H");
-      selenium().keyUp("//", "H");
-      selenium().controlKeyUp();
-
-      //click Bind button
-      clickButton(BIND_BUTTON_LOCATOR);
-
-      //Select "Create File From Template" and bind Alt+N to this command. Press Save button
-      selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
-      //press Alt+N
-      selenium().altKeyDown();
-      selenium().keyDown("//", "E");
-      selenium().keyUp("//", "E");
-      selenium().altKeyUp();
-
-      //click Bind button
-      clickButton(BIND_BUTTON_LOCATOR);
-
-      //click Save button
-      clickButton(SAVE_BUTTON_LOCATOR);
-
-      checkNoCustomizeHotkeyDialogWindow();
-
-      //----- 2 ------------
-      //refresh browser window and check Ctrl+H and Alt+N
-
-      refresh();
-      Thread.sleep(TestConstants.SLEEP);
-
-      selenium().altKeyDown();
-      selenium().keyDown("//", "E");
-      selenium().keyUp("//", "E");
-      selenium().altKeyUp();
-      Thread.sleep(TestConstants.SLEEP);
-
-      checkCreateFileFromTemplateFormAndClose();
-
-      selenium().controlKeyDown();
-      selenium().keyDown("//body", "H");
-      selenium().keyUp("//body", "H");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP);
-
-      //check new html file created
-      assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(0));
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-      Thread.sleep(TestConstants.SLEEP);
-
-      //----- 3 ------------
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      Thread.sleep(TestConstants.SLEEP);
-      checkCustomizeHotkeyDialogWindow();
-
-      //Select "New HTML File" and check Ctrl+H is bind
-      selectRow(Commands.NEW_HTML_FILE);
-      assertEquals("Ctrl+H", getTextFromBindColumn(Commands.NEW_HTML_FILE));
-
-      //Select "Create File From Template" and check Alt+N is bind to it
-      selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals("Alt+E", getTextFromBindColumn(Commands.CREATE_FILE_FROM_TEMPLATE));
-
-      //restore default values
-      //on create from template value
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "N");
-      selenium().keyUp("//", "N");
-      selenium().controlKeyUp();
-      clickButton(BIND_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP);
-      selectRow(Commands.NEW_HTML_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-      clickButton(UNBIND_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP);
-      clickButton(SAVE_BUTTON_LOCATOR);
-      checkNoCustomizeHotkeyDialogWindow();
-
-      //close
-      //closeHotkeysWindow();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Create File From Template...");
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "n");
+      IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+//      //step 2 opening 2 files and checking restore commands in 2 tabs after refresh
+//      //driver.navigate().refresh();
+//
+//
+//      //      IDE.PROJECT.EXPLORER.waitOpened();
+//      //      IDE.PROJECT.OPEN.openProject(PROJECT);
+//      //      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+//      //      IDE.PROJECT.EXPLORER.openItem(PROJECT);
+//
+//      
+//      
+//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+//      IDE.EDITOR.waitTabPresent(1);
+//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+//      IDE.EDITOR.waitTabPresent(2);
+//
+//      //  driver.navigate().refresh();
+//      IDE.EDITOR.waitTabPresent(2);
+//      IDE.EDITOR.selectTab(1);
+//
+//      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
+//      IDE.TEMPLATES.waitOpened();
+//      IDE.TEMPLATES.clickCancelButton();
+//      IDE.TEMPLATES.waitClosed();
+//
+//      // driver.navigate().refresh();
+//      IDE.EDITOR.waitTabPresent(1);
+//      IDE.EDITOR.selectTab(2);
+//      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "n");
+//      IDE.TEMPLATES.waitOpened();
+//      IDE.TEMPLATES.clickCancelButton();
+//      IDE.TEMPLATES.waitClosed();
 
    }
 
