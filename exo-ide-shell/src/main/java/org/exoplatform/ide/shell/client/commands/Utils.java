@@ -28,16 +28,16 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 11, 2011 evgen $
- *
+ * @version $Id: Aug 11, 2011 evgen $
+ * 
  */
 public class Utils
 {
    private static final String TAB = "  ";
 
    /**
-    * Create new path with current folder and user entered path.
-    * Respect relative paths i.e "../../a/b/../b1"
+    * Create new path with current folder and user entered path. Respect relative paths i.e "../../a/b/../b1"
+    * 
     * @param currentFolder
     * @param path to new location
     * @return new absolute path
@@ -52,7 +52,7 @@ public class Utils
       {
          path += "/";
       }
-      //absolute path
+      // absolute path
       if (path.startsWith("/"))
       {
          return path;
@@ -60,16 +60,16 @@ public class Utils
       if (!path.startsWith(".."))
       {
          String folderPath = currentFolder.getPath();
-         
+
          if (folderPath.endsWith("/") && path.startsWith("/"))
             return folderPath + path.substring(1);
 
-         if(folderPath.isEmpty())
+         if (folderPath.isEmpty())
             return path;
-         
+
          if (!folderPath.endsWith("/") && !path.startsWith("/"))
             return folderPath + "/" + path;
-         
+
          return folderPath + path;
       }
       else
@@ -118,6 +118,7 @@ public class Utils
 
    /**
     * Format items in several columns. Main purpose is reducing terminal space.
+    * 
     * @param items
     * @return
     */
@@ -197,7 +198,8 @@ public class Utils
    }
 
    /**
-    * Get longest name length 
+    * Get longest name length
+    * 
     * @param items
     * @return
     */
@@ -216,8 +218,9 @@ public class Utils
 
    /**
     * Get Maximum length Item name
+    * 
     * @param items
-    * @return  item name
+    * @return item name
     */
    public static String getMaxLengthName(List<Item> items)
    {

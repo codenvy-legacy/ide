@@ -28,8 +28,8 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 10, 2011 evgen $
- *
+ * @version $Id: Aug 10, 2011 evgen $
+ * 
  */
 public abstract class ClientCommand extends CLIResource
 {

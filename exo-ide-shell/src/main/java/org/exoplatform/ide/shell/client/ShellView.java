@@ -28,8 +28,8 @@ import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 2, 2011 11:03:40 AM anya $
- *
+ * @version $Id: Aug 2, 2011 11:03:40 AM anya $
+ * 
  */
 public class ShellView extends FlowPanel implements ShellPresenter.Display
 {

@@ -51,8 +51,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 2, 2011 11:03:32 AM anya $
- *
+ * @version $Id: Aug 2, 2011 11:03:32 AM anya $
+ * 
  */
 public class ShellPresenter
 {
@@ -210,7 +210,7 @@ public class ShellPresenter
                   }
                }.schedule(10);
             }
-            //key code '88' is x   
+            // key code '88' is x
             else if (event.getNativeEvent().getKeyCode() == 88 && event.isControlKeyDown() && event.isShiftKeyDown())
             {
                display.clearConsole();
@@ -277,7 +277,7 @@ public class ShellPresenter
             @Override
             protected void onFailure(Throwable exception)
             {
-               //TODO
+               // TODO
                display.print((exception.getMessage() != null) ? exception.getMessage() + "\n"
                   : "Unknown error in processing the command.\n");
             }
@@ -361,7 +361,7 @@ public class ShellPresenter
                      {
                         getFolderChildren((Folder)i, prefix);
                      }
-                     //TODO
+                     // TODO
                   }
 
                   @Override

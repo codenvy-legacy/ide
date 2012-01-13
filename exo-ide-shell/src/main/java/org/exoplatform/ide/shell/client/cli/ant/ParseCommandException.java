@@ -20,70 +20,64 @@ package org.exoplatform.ide.shell.client.cli.ant;
 /**
  * Signals an error condition during a build
  */
-public class ParseCommandException extends RuntimeException {
+public class ParseCommandException extends RuntimeException
+{
 
-    private static final long serialVersionUID = -5419014565354664240L;
+   private static final long serialVersionUID = -5419014565354664240L;
 
-    /** Location in the build file where the exception occurred */
-//    private Location location = Location.UNKNOWN_LOCATION;
+   /** Location in the build file where the exception occurred */
+   // private Location location = Location.UNKNOWN_LOCATION;
 
-    /**
-     * Constructs a build exception with no descriptive information.
-     */
-    public ParseCommandException() {
-        super();
-    }
+   /**
+    * Constructs a build exception with no descriptive information.
+    */
+   public ParseCommandException()
+   {
+      super();
+   }
 
-    /**
-     * Constructs an exception with the given descriptive message.
-     *
-     * @param message A description of or information about the exception.
-     *            Should not be <code>null</code>.
-     */
-    public ParseCommandException(String message) {
-        super(message);
-    }
+   /**
+    * Constructs an exception with the given descriptive message.
+    * 
+    * @param message A description of or information about the exception. Should not be <code>null</code>.
+    */
+   public ParseCommandException(String message)
+   {
+      super(message);
+   }
 
-    /**
-     * Constructs an exception with the given message and exception as
-     * a root cause.
-     *
-     * @param message A description of or information about the exception.
-     *            Should not be <code>null</code> unless a cause is specified.
-     * @param cause The exception that might have caused this one.
-     *              May be <code>null</code>.
-     */
-    public ParseCommandException(String message, Throwable cause) {
-        super(message);
-        initCause(cause);
-    }
+   /**
+    * Constructs an exception with the given message and exception as a root cause.
+    * 
+    * @param message A description of or information about the exception. Should not be <code>null</code> unless a cause is
+    *           specified.
+    * @param cause The exception that might have caused this one. May be <code>null</code>.
+    */
+   public ParseCommandException(String message, Throwable cause)
+   {
+      super(message);
+      initCause(cause);
+   }
 
-   
-    /**
-     * Constructs an exception with the given exception as a root cause.
-     *
-     * @param cause The exception that might have caused this one.
-     *              Should not be <code>null</code>.
-     */
-    public ParseCommandException(Throwable cause) {
-        super(cause);
-    }
+   /**
+    * Constructs an exception with the given exception as a root cause.
+    * 
+    * @param cause The exception that might have caused this one. Should not be <code>null</code>.
+    */
+   public ParseCommandException(Throwable cause)
+   {
+      super(cause);
+   }
 
-
-    
-
-    /**
-     * Returns the nested exception, if any.
-     *
-     * @return the nested exception, or <code>null</code> if no
-     *         exception is associated with this one
-     * @deprecated Use {@link #getCause} instead.
-     */
-    public Throwable getException() {
-        return getCause();
-    }
-
-
-    
+   /**
+    * Returns the nested exception, if any.
+    * 
+    * @return the nested exception, or <code>null</code> if no exception is associated with this one
+    * @deprecated Use {@link #getCause} instead.
+    */
+   public Throwable getException()
+   {
+      return getCause();
+   }
 
 }

@@ -30,22 +30,22 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.codemirror.CodeValidator;
 import org.exoplatform.ide.editor.groovy.client.codemirror.GroovyCodeValidator;
 
-
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class GroovyTemplateCodeValidator extends CodeValidator
 {
-    
+
    List<? extends Token> groovyCode;
-   
+
    GroovyCodeValidator groovyCodeValidator = new GroovyCodeValidator();
-   
+
    /**
-    * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList 
-    * @param tokenList 
+    * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList
+    * 
+    * @param tokenList
     */
    public List<CodeLine> getCodeErrorList(List<? extends Token> tokenList)
    {
@@ -54,7 +54,8 @@ public class GroovyTemplateCodeValidator extends CodeValidator
          return new ArrayList<CodeLine>();
       }
 
-      groovyCode = extractCode((List<TokenBeenImpl>) tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
+      groovyCode =
+         extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
 
       return groovyCodeValidator.getCodeErrorList(groovyCode);
    }
@@ -64,13 +65,15 @@ public class GroovyTemplateCodeValidator extends CodeValidator
    {
       if (this.groovyCode == null)
       {
-         this.groovyCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
+         this.groovyCode =
+            extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
       }
-      
-      if (groovyCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>) groovyCode, fqn))
-      {      
-         int appropriateLineNumber = GroovyCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>) tokenList);
-         
+
+      if (groovyCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>)groovyCode, fqn))
+      {
+         int appropriateLineNumber =
+            GroovyCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
+
          if (appropriateLineNumber > 1)
          {
             return new CodeLine(CodeType.IMPORT_STATEMENT, "import " + fqn + "\n", appropriateLineNumber);
@@ -80,7 +83,7 @@ public class GroovyTemplateCodeValidator extends CodeValidator
             return new CodeLine(CodeType.IMPORT_STATEMENT, "<%\n  import " + fqn + "\n%>\n", 1);
          }
       }
-      
+
       return null;
-   } 
+   }
 }

@@ -20,8 +20,8 @@ package org.exoplatform.ide.shell.client;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 5, 2011 3:32:00 PM anya $
- *
+ * @version $Id: Aug 5, 2011 3:32:00 PM anya $
+ * 
  */
 public class MandatoryParameterNotFoundException extends Exception
 {

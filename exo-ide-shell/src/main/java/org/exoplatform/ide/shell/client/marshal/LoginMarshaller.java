@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 5, 2011 evgen $
- *
+ * @version $Id: Aug 5, 2011 evgen $
+ * 
  */
 public class LoginMarshaller implements Marshallable
 {

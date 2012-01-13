@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyTamplateCodeAssistant Mar 3, 2011 5:06:09 PM evgen $
- *
+ * 
  */
 public class GroovyTemplateCodeAssistant extends GroovyCodeAssistant
 {
@@ -48,7 +48,9 @@ public class GroovyTemplateCodeAssistant extends GroovyCodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
    public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
@@ -61,7 +63,8 @@ public class GroovyTemplateCodeAssistant extends GroovyCodeAssistant
       }
       else
       {
-         new HtmlCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType, currentToken);
+         new HtmlCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType,
+            currentToken);
       }
    }
 

@@ -20,18 +20,18 @@ package org.exoplatform.ide.shell.client;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 11, 2011 evgen $
- *
+ * @version $Id: Aug 11, 2011 evgen $
+ * 
  */
 public interface EnvironmentVariables
 {
    String CURRENT_FOLDER_ID = "projectid";
-   
+
    String ENTRY_POINT = "ENTRY_POINT";
-   
+
    String USER_NAME = "USER_NAME";
-   
+
    String COMMAND_BUFFER = "COMMAND_BUFFER";
-   
+
    String VFS_ID = "vfsid";
 }

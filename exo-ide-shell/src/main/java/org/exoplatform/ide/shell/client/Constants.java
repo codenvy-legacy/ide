@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.shell.client;
 
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 4, 2011 4:50:06 PM anya $
- *
+ * @version $Id: Aug 4, 2011 4:50:06 PM anya $
+ * 
  */
 public interface Constants
 {
@@ -37,10 +36,10 @@ public interface Constants
    String PRODUCES = "produces";
 
    String PARAMS = "params";
-   
+
    String DESCRIPTION = "description";
 
-   //Parameter:
+   // Parameter:
    String NAME = "name";
 
    String OPTIONS = "options";
@@ -48,6 +47,6 @@ public interface Constants
    String TYPE = "type";
 
    String MANDATORY = "mandatory";
-   
+
    String HAS_ARG = "hasArg";
 }

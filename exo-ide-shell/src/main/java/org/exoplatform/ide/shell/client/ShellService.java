@@ -49,8 +49,8 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 4, 2011 4:31:13 PM anya $
- *
+ * @version $Id: Aug 4, 2011 4:31:13 PM anya $
+ * 
  */
 public class ShellService
 {
@@ -73,23 +73,22 @@ public class ShellService
    {
       String url = REST_CONTEXT + "/" + RESOURCES_PATH;
 
-//      Set<CLIResource> resources = new HashSet<CLIResource>();
-//
-//      CLIResourceUnmarshaller unmarshaller = new CLIResourceUnmarshaller(resources);
-//      callback.setResult(resources);
-//      callback.setPayload(unmarshaller);
+      // Set<CLIResource> resources = new HashSet<CLIResource>();
+      //
+      // CLIResourceUnmarshaller unmarshaller = new CLIResourceUnmarshaller(resources);
+      // callback.setResult(resources);
+      // callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, url)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
    public void loadConfiguration(String url, AsyncRequestCallback<ShellConfiguration> callback) throws RequestException
    {
       ShellConfiguration conf = new ShellConfiguration();
       ShellConfigurationUnmarshaller unmarshaller = new ShellConfigurationUnmarshaller(conf);
-//      callback.setPayload(unmarshaller);
-//      callback.setResult(conf);
-//      callback.setEventBus(CloudShell.EVENT_BUS);
+      // callback.setPayload(unmarshaller);
+      // callback.setResult(conf);
+      // callback.setEventBus(CloudShell.EVENT_BUS);
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
 
@@ -125,7 +124,7 @@ public class ShellService
                   CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
                   String query = formQueryString(resource, commandLine, cmd);
                   url = (query != null && !query.isEmpty()) ? url + "?" + query : url;
-                  //Recreate, because of the URL:
+                  // Recreate, because of the URL:
                   asyncRequest = createAsyncRequest(resource.getMethod(), url);
 
                   setHeaderParameters(asyncRequest, resource.getParams(), commandLine);
@@ -142,13 +141,13 @@ public class ShellService
          }
          catch (Exception e)
          {
-            //TODO
+            // TODO
             CloudShell.console().print(CloudShell.messages.syntaxtError(cmd));
          }
       }
       else
       {
-         //TODO multiply commands:
+         // TODO multiply commands:
       }
 
    }
@@ -157,14 +156,14 @@ public class ShellService
     * @param resource
     * @param cmd
     * @param asyncRequest
-    * @return {@link Boolean} 
+    * @return {@link Boolean}
     */
    protected boolean canParseOptions(CLIResource resource, String cmd, AsyncRequest asyncRequest)
    {
       if (resource.getParams() == null || resource.getParams().size() <= 0)
          return false;
-      //Check only one parameter is specified and its type is BODY.
-      //If there are no options - send whole command line, entered by user.
+      // Check only one parameter is specified and its type is BODY.
+      // If there are no options - send whole command line, entered by user.
       if (resource.getParams().size() == 1)
       {
          CLIResourceParameter parameter = resource.getParams().iterator().next();
@@ -184,7 +183,7 @@ public class ShellService
    {
       String url = REST_CONTEXT + "/ide/crash/command";
       LoginMarshaller marshaller = new LoginMarshaller(command);
-//      callback.setPayload(new StringUnmarshaller(callback));
+      // callback.setPayload(new StringUnmarshaller(callback));
 
       AsyncRequest.build(RequestBuilder.POST, url).data(marshaller.marshal())
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -192,11 +191,10 @@ public class ShellService
    }
 
    /**
-    * Set Accept types header for the request.
-    * Depends on {@link CLIResource.#getProduces()} value.
+    * Set Accept types header for the request. Depends on {@link CLIResource.#getProduces()} value.
     * 
     * @param resource resource
-    * @param asyncRequest asynchronous request 
+    * @param asyncRequest asynchronous request
     */
    protected void setAcceptTypes(CLIResource resource, AsyncRequest asyncRequest)
    {
@@ -207,20 +205,19 @@ public class ShellService
          {
             value += (MimeType.TEXT_PLAIN.equals(type)) ? "," + type + ";q=0.6" : "," + type + ";q=0.4";
          }
-         //Remove last separator:
+         // Remove last separator:
          value = value.replaceFirst(",", "");
-         //TODO temporary solution to get response in "text/plain" format, if there is method, that produces it.
+         // TODO temporary solution to get response in "text/plain" format, if there is method, that produces it.
          value = (value.contains(MimeType.TEXT_PLAIN)) ? value : MimeType.TEXT_PLAIN + ";q=0.6," + value;
          asyncRequest.header(HTTPHeader.ACCEPT, value);
       }
    }
 
    /**
-    * Set Content type header for the request.
-    * Depends on {@link CLIResource.#getConsumes()} value.
+    * Set Content type header for the request. Depends on {@link CLIResource.#getConsumes()} value.
     * 
     * @param resource resource
-    * @param asyncRequest asynchronous request 
+    * @param asyncRequest asynchronous request
     */
    protected void setContentType(CLIResource resource, AsyncRequest asyncRequest)
    {
@@ -231,7 +228,7 @@ public class ShellService
          {
             value += "," + type;
          }
-         //Remove last separator:
+         // Remove last separator:
          value = value.replaceFirst(",", "");
          asyncRequest.header(HTTPHeader.CONTENT_TYPE, value);
       }
@@ -252,13 +249,13 @@ public class ShellService
       JSONObject jsonObject = new JSONObject();
       for (CLIResourceParameter parameter : resource.getParams())
       {
-         //Check type of the parameter is BODY:
+         // Check type of the parameter is BODY:
          if (!Type.BODY.equals(parameter.getType()))
          {
             continue;
          }
 
-         //Process system property
+         // Process system property
          if (parameter.getName().startsWith("$"))
          {
             String value = processSystemProperty(parameter);
@@ -269,13 +266,13 @@ public class ShellService
             continue;
          }
 
-         //Process options with no arguments(flags):
+         // Process options with no arguments(flags):
          if (!parameter.isHasArg() && parameter.getOptions() != null && parameter.getOptions().size() > 0)
          {
             jsonObject.put(parameter.getName(),
                JSONBoolean.getInstance(isOptionPresent(parameter.getOptions(), commandLine)));
          }
-         //Process arguments without options:
+         // Process arguments without options:
          else if (parameter.getOptions() == null || parameter.getOptions().size() == 0)
          {
             List<String> values = getArgumentsWithoutOptions(cmd, resource, commandLine);
@@ -291,7 +288,7 @@ public class ShellService
          }
          else
          {
-            //Get value of the option:
+            // Get value of the option:
             String value = getOptionValue(parameter.getOptions(), commandLine);
 
             if (parameter.isMandatory() && value == null)
@@ -313,8 +310,7 @@ public class ShellService
    }
 
    /**
-    * Create HTTP asynchronous request with specified HTTP method,
-    * and URL.
+    * Create HTTP asynchronous request with specified HTTP method, and URL.
     * 
     * @param method HTTP Method
     * @param url
@@ -332,8 +328,7 @@ public class ShellService
       }
       else
       {
-         return AsyncRequest.build(RequestBuilder.GET, url).header(
-            HTTPHeader.X_HTTP_METHOD_OVERRIDE, method);
+         return AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, method);
       }
    }
 
@@ -342,7 +337,7 @@ public class ShellService
     * 
     * @param params resource parameters
     * @param commandLine parsed command line
-    * @return {@link String}  string with query parameters
+    * @return {@link String} string with query parameters
     * @throws MandatoryParameterNotFoundException
     */
    protected String formQueryString(CLIResource resource, CommandLine commandLine, String cmd)
@@ -359,7 +354,7 @@ public class ShellService
             continue;
          }
 
-         //Process system property
+         // Process system property
          if (param.getName().startsWith("$"))
          {
             String value = processSystemProperty(param);
@@ -367,12 +362,12 @@ public class ShellService
             continue;
          }
 
-         //Parameter has no arguments, so get option is present or not.
+         // Parameter has no arguments, so get option is present or not.
          if (!param.isHasArg())
          {
             query += param.getName() + "=" + isOptionPresent(param.getOptions(), commandLine) + "&";
          }
-         //Process arguments without options:
+         // Process arguments without options:
          else if (param.getOptions() == null || param.getOptions().size() == 0)
          {
             List<String> values = getArgumentsWithoutOptions(cmd, resource, commandLine);
@@ -404,7 +399,7 @@ public class ShellService
    /**
     * Get the value of the option.
     * 
-    * @param options 
+    * @param options
     * @param commandLine
     * @return {@link String} value of the option
     */
@@ -422,11 +417,11 @@ public class ShellService
    }
 
    /**
-    * Get the flag option value (true or false).
-    * If <code>true</code>, then option is present, 
-    * if <code>false</code> then option is not present.
+    * Get the flag option value (true or false). If <code>true</code>, then option is present, if <code>false</code> then option
+    * is not present.
     * 
     * For example: <br>
+    * 
     * <pre>
     * git add --update
     * </pre>
@@ -462,13 +457,13 @@ public class ShellService
    {
       for (CLIResourceParameter parameter : params)
       {
-         //Check type of the parameter:
+         // Check type of the parameter:
          if (!Type.HEADER.equals(parameter.getType()))
          {
             continue;
          }
 
-         //Process system property
+         // Process system property
          if (parameter.getName().startsWith("$"))
          {
             String value = processSystemProperty(parameter);
@@ -499,7 +494,7 @@ public class ShellService
 
    /**
     * Get the system property (environment variable).
-
+    * 
     * @param parameter
     * @return {@link String} value of the property
     * @throws MandatoryParameterNotFoundException
@@ -516,10 +511,8 @@ public class ShellService
    }
 
    /**
-    * Find the list of appropriate commands for the entered 
-    * command line. 
-    * If command line starts with available command or equals it, then
-    * this command is added to the list.
+    * Find the list of appropriate commands for the entered command line. If command line starts with available command or equals
+    * it, then this command is added to the list.
     * 
     * @param cmd string command line
     * @return {@link List} list of the appropriate commands
@@ -543,13 +536,14 @@ public class ShellService
    }
 
    /**
-    * Get the list of arguments without options.
-    * For example: <br>
+    * Get the list of arguments without options. For example: <br>
+    * 
     * <pre>
     * git add file1.txt file2.txt --update
     * </pre>
-    *  will return list with values "file1.txt" and "file2.txt".
-    *  
+    * 
+    * will return list with values "file1.txt" and "file2.txt".
+    * 
     * @param cmd command line entered by user
     * @param resource resource
     * @param commandLine parsed command line

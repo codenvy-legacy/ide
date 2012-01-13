@@ -29,8 +29,8 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 10, 2011 evgen $
- *
+ * @version $Id: Aug 10, 2011 evgen $
+ * 
  */
 public class PwdCommand extends ClientCommand
 {
@@ -56,7 +56,7 @@ public class PwdCommand extends ClientCommand
    @Override
    public void execute(CommandLine commandLine)
    {
-      if(commandLine.hasOption("h"))
+      if (commandLine.hasOption("h"))
       {
          printHelp(CloudShell.messages.pwdUsage(), CloudShell.messages.pwdHeader());
          return;

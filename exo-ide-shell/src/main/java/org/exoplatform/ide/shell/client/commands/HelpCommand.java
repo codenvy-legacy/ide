@@ -32,18 +32,19 @@ import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 10, 2011 evgen $
- *
+ * @version $Id: Aug 10, 2011 evgen $
+ * 
  */
 public class HelpCommand extends ClientCommand
 {
 
    private static final Set<String> commands = new HashSet<String>();
-   
+
    static
    {
       commands.add("help");
    }
+
    /**
     * 
     */
@@ -51,6 +52,7 @@ public class HelpCommand extends ClientCommand
    {
       super(commands, new Options(), CloudShell.messages.helpHelp());
    }
+
    /**
     * @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine)
     */

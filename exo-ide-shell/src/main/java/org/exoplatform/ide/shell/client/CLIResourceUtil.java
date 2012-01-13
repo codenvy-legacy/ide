@@ -33,14 +33,14 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 5, 2011 10:51:12 AM anya $
- *
+ * @version $Id: Aug 5, 2011 10:51:12 AM anya $
+ * 
  */
 public class CLIResourceUtil
 {
    /**
-    * Parse the string command line to {@link CommandLine} instance.
-    * Specify the <b>parameters</b> of the concrete command, that you need to parse.
+    * Parse the string command line to {@link CommandLine} instance. Specify the <b>parameters</b> of the concrete command, that
+    * you need to parse.
     * 
     * @param cmd command line
     * @param parameters command's parameters
@@ -56,8 +56,7 @@ public class CLIResourceUtil
    }
 
    /**
-    * Form the list of options, that are available for pointed parameters
-    * and are necessary for parse command liine operation.
+    * Form the list of options, that are available for pointed parameters and are necessary for parse command liine operation.
     * 
     * @param parameters command's parameters
     * @return {@link Options} options
@@ -74,10 +73,10 @@ public class CLIResourceUtil
          {
             String optionName = null;
             String longOpt = null;
-            //Get options (long format starts with "--")
+            // Get options (long format starts with "--")
             for (String opt : parameter.getOptions())
             {
-               //Only the names of options must be pointed (without "-" and "--").
+               // Only the names of options must be pointed (without "-" and "--").
                if (opt.startsWith("--"))
                {
                   longOpt = opt.replace("--", "");
@@ -92,7 +91,7 @@ public class CLIResourceUtil
             {
                continue;
             }
-            //TODO No description at the moment:
+            // TODO No description at the moment:
             options.addOption(new Option(optionName, longOpt, parameter.isHasArg(), ""));
          }
       }
@@ -101,7 +100,8 @@ public class CLIResourceUtil
 
    /**
     * Get command names form {@link CLIResource} set
-    * @param commands 
+    * 
+    * @param commands
     * @return list of all command names
     */
    public static List<String> getAllCommandNames(Set<CLIResource> commands)

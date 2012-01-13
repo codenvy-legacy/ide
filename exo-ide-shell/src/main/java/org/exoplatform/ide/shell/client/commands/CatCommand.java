@@ -40,8 +40,8 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 11, 2011 evgen $
- *
+ * @version $Id: Aug 11, 2011 evgen $
+ * 
  */
 public class CatCommand extends ClientCommand
 {

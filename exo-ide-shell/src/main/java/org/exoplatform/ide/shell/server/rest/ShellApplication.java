@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.shell.server.rest;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,14 +25,14 @@ import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 1, 2011 evgen $
- *
+ * @version $Id: Aug 1, 2011 evgen $
+ * 
  */
 public class ShellApplication extends Application
 {
 
    private Set<Class<?>> classes = new HashSet<Class<?>>();
-   
+
    /**
     * 
     */
@@ -42,7 +41,7 @@ public class ShellApplication extends Application
       classes.add(CRaSHService.class);
       classes.add(CLIResourcesService.class);
    }
-   
+
    /**
     * @see javax.ws.rs.core.Application#getClasses()
     */

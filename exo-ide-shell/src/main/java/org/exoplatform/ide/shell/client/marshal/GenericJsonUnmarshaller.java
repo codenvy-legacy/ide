@@ -30,9 +30,10 @@ import org.exoplatform.ide.shell.client.commands.Utils;
 
 /**
  * This unmarshaller format JSON string to pretty HTML string.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 16, 2011 evgen $
- *
+ * @version $Id: Aug 16, 2011 evgen $
+ * 
  */
 public class GenericJsonUnmarshaller extends StringUnmarshaller
 {
@@ -102,8 +103,7 @@ public class GenericJsonUnmarshaller extends StringUnmarshaller
    /**
     * Convert the supplied JSONValue to a pretty-printed HTML representation
     * 
-    * @param value
-    *            The value to convert.
+    * @param value The value to convert.
     * @return An HTML string, or null if the value was a null.
     */
    private static String toHtmlJson(JSONValue value)
@@ -117,11 +117,9 @@ public class GenericJsonUnmarshaller extends StringUnmarshaller
    }
 
    /**
-    * Convert the supplied JSONValue to a pretty-printed HTML string, using the
-    * supplied color map.
+    * Convert the supplied JSONValue to a pretty-printed HTML string, using the supplied color map.
     * 
-    * @param value
-    *            The value to convert.
+    * @param value The value to convert.
     * @param colorMap
     * @return An HTML string, or null if the value was a Java null.
     */

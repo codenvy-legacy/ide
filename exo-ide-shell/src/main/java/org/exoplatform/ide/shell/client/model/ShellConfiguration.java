@@ -20,8 +20,8 @@ package org.exoplatform.ide.shell.client.model;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 12, 2011 evgen $
- *
+ * @version $Id: Aug 12, 2011 evgen $
+ * 
  */
 public class ShellConfiguration
 {

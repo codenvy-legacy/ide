@@ -30,13 +30,13 @@ import java.util.List;
 
 public class UserInfo
 {
-   
+
    public static final String DEFAULT_USER_NAME = "DefaultUser";
 
    private String name;
-   
+
    private List<String> groups;
-   
+
    private List<String> roles;
 
    public UserInfo()
@@ -88,7 +88,7 @@ public class UserInfo
     */
    public List<String> getRoles()
    {
-      if (roles == null) 
+      if (roles == null)
          roles = new ArrayList<String>();
       return roles;
    }

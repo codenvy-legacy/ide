@@ -42,9 +42,10 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * REST wrapper for CRaSH Shell
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 1, 2011 evgen $
- *
+ * @version $Id: Aug 1, 2011 evgen $
+ * 
  */
 @Path("ide/crash")
 public class CRaSHService
@@ -98,7 +99,7 @@ public class CRaSHService
       try
       {
          String cmd = command.get("cmd");
-         if(cmd.startsWith(JCOMMAND_PREFIX))
+         if (cmd.startsWith(JCOMMAND_PREFIX))
          {
             cmd = cmd.substring(JCOMMAND_PREFIX.length());
          }

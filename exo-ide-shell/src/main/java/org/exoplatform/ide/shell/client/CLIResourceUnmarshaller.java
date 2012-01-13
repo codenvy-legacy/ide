@@ -34,8 +34,8 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 4, 2011 4:34:11 PM anya $
- *
+ * @version $Id: Aug 4, 2011 4:34:11 PM anya $
+ * 
  */
 public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>, Constants
 {
@@ -47,7 +47,7 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
    }
 
    /**
-    * @throws UnmarshallerException 
+    * @throws UnmarshallerException
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override

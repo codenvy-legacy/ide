@@ -61,7 +61,7 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
    TermText()
    {
       super(Document.get().createElement("pre"));
-      
+
       //
       addMouseDownHandler(new MouseDownHandler()
       {

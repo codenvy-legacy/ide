@@ -30,16 +30,15 @@ import junit.framework.Assert;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class ComandLineParserTest
 {
-   
-   String tabl = "/ide/git/commit;POST=git commit\n" +
-                 "git commit.body.params=message,all\n" +
-                 "git commit.body.message=-m\n"+
-                 "git commit.body.all=-a\n";
+
+   String tabl = "/ide/git/commit;POST=git commit\n" + "git commit.body.params=message,all\n"
+      + "git commit.body.message=-m\n" + "git commit.body.all=-a\n";
 
    @Test
    public void parserTest() throws Exception
@@ -56,10 +55,10 @@ public class ComandLineParserTest
       CommandLine line = parser.parse(options, args);
       Assert.assertEquals("My first commit", line.getOptionValue("m"));
       Assert.assertFalse(Boolean.valueOf(line.getOptionValue("a")));
-      
+
       String[] commands = tabl.split("\n");
       String command = commands[0].split("=")[1];
-      
+
       String url = "";
       if (command.equalsIgnoreCase(line.getArgs()[0] + " " + line.getArgs()[1]))
       {
@@ -68,7 +67,7 @@ public class ComandLineParserTest
       String body = "{\"message\":\"" + line.getOptionValue("m") + "\",\"all\":" + line.getOptionValue("a") + "\"}";
 
    }
-   
+
    @Test
    public void parserLongOptTest() throws Exception
    {
@@ -84,8 +83,7 @@ public class ComandLineParserTest
       CommandLine line = parser.parse(options, args);
       Assert.assertEquals("My first commit", line.getOptionValue("m"));
       Assert.assertFalse(Boolean.valueOf(line.getOptionValue("a")));
-      
+
    }
-   
 
 }

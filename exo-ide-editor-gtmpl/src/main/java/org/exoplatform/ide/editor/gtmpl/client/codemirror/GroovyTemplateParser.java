@@ -34,19 +34,19 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
- *
+ * 
  */
 public class GroovyTemplateParser extends CodeMirrorParserImpl
 {
 
    String currentContentMimeType;
-   
+
    private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
-   
+
    static
    {
-      factory.put(MimeType.TEXT_HTML, new HtmlParser());   
-      factory.put(MimeType.APPLICATION_GROOVY, new GroovyParser());      
+      factory.put(MimeType.TEXT_HTML, new HtmlParser());
+      factory.put(MimeType.APPLICATION_GROOVY, new GroovyParser());
    }
 
    protected static CodeMirrorParserImpl getParser(String mimeType)
@@ -58,27 +58,29 @@ public class GroovyTemplateParser extends CodeMirrorParserImpl
 
       return null;
    }
-   
-   @Override
-   public void init() 
-   {
-      currentContentMimeType = MimeType.TEXT_HTML;
-   }   
 
    @Override
-   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public void init()
+   {
+      currentContentMimeType = MimeType.TEXT_HTML;
+   }
+
+   @Override
+   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken,
+      boolean hasParentParser)
    {
       // interrupt at the end of the document
       if (node == null)
          return currentToken;
-      
+
       String nodeContent = Node.getContent(node).trim(); // returns text without ended space " " in the text
-      String nodeType = Node.getType(node);       
-      
+      String nodeType = Node.getType(node);
+
       // recognize "<%" open tag within the TEXT_HTML content
       if (isGroovyOpenNode(nodeType, nodeContent) && MimeType.TEXT_HTML.equals(currentContentMimeType))
       {
-         TokenBeenImpl newToken = new TokenBeenImpl("groovy code", TokenType.GROOVY_TAG, lineNumber, MimeType.APPLICATION_GROOVY);
+         TokenBeenImpl newToken =
+            new TokenBeenImpl("groovy code", TokenType.GROOVY_TAG, lineNumber, MimeType.APPLICATION_GROOVY);
          if (currentToken != null)
          {
             currentToken.addSubToken(newToken);
@@ -97,25 +99,27 @@ public class GroovyTemplateParser extends CodeMirrorParserImpl
          currentContentMimeType = MimeType.TEXT_HTML;
          getParser(currentContentMimeType).init();
       }
-      
-      currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
-      
-      if (node == null || Node.getName(node).equals("BR")) 
+
+      currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
+
+      if (node == null || Node.getName(node).equals("BR"))
       {
          return currentToken;
       }
 
-      return parseLine(Node.getNext(node), lineNumber, currentToken, false);  // call itself 
+      return parseLine(Node.getNext(node), lineNumber, currentToken, false); // call itself
 
    }
 
    private boolean isGroovyOpenNode(String nodeType, String nodeContent)
    {
-      return (nodeType != null) && (nodeContent != null) && nodeType.equals("gtmpl-groovy") && nodeContent.equals("&lt;%");
+      return (nodeType != null) && (nodeContent != null) && nodeType.equals("gtmpl-groovy")
+         && nodeContent.equals("&lt;%");
    }
 
    private boolean isGroovyCloseNode(String nodeType, String nodeContent)
    {
-      return (nodeType != null) && (nodeContent != null) && nodeType.equals("gtmpl-groovy") && nodeContent.equals("%&gt;");
+      return (nodeType != null) && (nodeContent != null) && nodeType.equals("gtmpl-groovy")
+         && nodeContent.equals("%&gt;");
    };
 }

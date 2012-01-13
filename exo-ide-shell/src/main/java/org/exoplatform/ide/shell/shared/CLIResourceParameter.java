@@ -47,9 +47,13 @@ public class CLIResourceParameter
    }
 
    private String name;
+
    private Set<String> options;
+
    private Type type;
+
    private boolean mandatory;
+
    private boolean hasArg = true;
 
    public CLIResourceParameter(String name, Set<String> options, Type type, boolean mandatory, boolean hasArg)

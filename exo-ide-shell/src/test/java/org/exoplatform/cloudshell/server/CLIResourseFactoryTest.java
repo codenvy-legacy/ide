@@ -96,7 +96,8 @@ public class CLIResourseFactoryTest extends TestCase
    public void test1() throws Exception
    {
       RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
-      AbstractResourceDescriptorImpl resource = new AbstractResourceDescriptorImpl(Resource1.class,ComponentLifecycleScope.PER_REQUEST);
+      AbstractResourceDescriptorImpl resource =
+         new AbstractResourceDescriptorImpl(Resource1.class, ComponentLifecycleScope.PER_REQUEST);
       CLIResourceFactory cliResourceFactory = new CLIResourceFactory();
       Set<CLIResource> cliResources = cliResourceFactory.getCLIResources(resource);
 

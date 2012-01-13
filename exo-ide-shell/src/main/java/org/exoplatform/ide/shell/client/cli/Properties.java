@@ -29,42 +29,46 @@ import java.util.Set;
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 
 /**
  * Minimal emulation of {@link java.util.Properties}.
- *
+ * 
  * @author Hayward Chan
  */
-public class Properties extends AbstractMap<Object, Object> {
-  /*
-   * Q: Why use a backing map instead of having the class extends from
-   *    HashMap directly?
-   * A: This will make the class serializable.  While it works in web mode,
-   *    it doesn't work in hosted mode because this implementation conflicts
-   *    with the JDK version, and cause VerifyError.  It can be worked around
-   *    by providing custom field serializer, but it probably isn't worth
-   *    the effort.
-   */
-  private final Map<Object, Object> values = new HashMap<Object, Object>();
+public class Properties extends AbstractMap<Object, Object>
+{
+   /*
+    * Q: Why use a backing map instead of having the class extends from HashMap directly? A: This will make the class
+    * serializable. While it works in web mode, it doesn't work in hosted mode because this implementation conflicts with the JDK
+    * version, and cause VerifyError. It can be worked around by providing custom field serializer, but it probably isn't worth
+    * the effort.
+    */
+   private final Map<Object, Object> values = new HashMap<Object, Object>();
 
-  public Properties() {
-  }
+   public Properties()
+   {
+   }
 
-  public Enumeration<?> propertyNames() {
-    return Collections.enumeration(keySet());
-  }
+   public Enumeration<?> propertyNames()
+   {
+      return Collections.enumeration(keySet());
+   }
 
-  public String getProperty(String name) {
-    return (String) get(name);
-  }
+   public String getProperty(String name)
+   {
+      return (String)get(name);
+   }
 
-  @Override public Object put(Object key, Object value) {
-    return values.put(key, value);
-  }
+   @Override
+   public Object put(Object key, Object value)
+   {
+      return values.put(key, value);
+   }
 
-  @Override public Set<Entry<Object, Object>> entrySet() {
-    return values.entrySet();
-  }
+   @Override
+   public Set<Entry<Object, Object>> entrySet()
+   {
+      return values.entrySet();
+   }
 }
-

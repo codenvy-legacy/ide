@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Images Mar 11, 2011 11:10:10 AM evgen $
- *
+ * 
  */
 public interface Images extends ClientBundle
 {
@@ -38,7 +38,7 @@ public interface Images extends ClientBundle
    public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
 
    static final String GROOVY_TEMPLATE = IMAGE_URL + "gtmpl.png";
-   
+
    @Source("org/exoplatform/ide/editor/gtmpl/public/images/gtmpl.png")
    ImageResource groovyTemplate();
 }

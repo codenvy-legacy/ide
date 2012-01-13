@@ -27,8 +27,8 @@ import java.util.ArrayList;
  * Buffer of the shell commands.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 4, 2011 10:14:20 AM anya $
- *
+ * @version $Id: Aug 4, 2011 10:14:20 AM anya $
+ * 
  */
 public class ShellComandBuffer extends ArrayList<String>
 {
@@ -101,6 +101,7 @@ public class ShellComandBuffer extends ArrayList<String>
 
    /**
     * Transform buffer to JSON Array
+    * 
     * @return String of JSON Array
     */
    public String toJSON()
@@ -115,6 +116,7 @@ public class ShellComandBuffer extends ArrayList<String>
 
    /**
     * Init buffer from JSON Array
+    * 
     * @param array
     */
    public void init(JSONArray array)

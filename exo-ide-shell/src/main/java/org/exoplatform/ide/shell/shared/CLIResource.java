@@ -26,11 +26,17 @@ import java.util.Set;
 public class CLIResource
 {
    private Set<String> command;
+
    private String path;
+
    private String method;
+
    private Set<String> consumes;
+
    private Set<String> produces;
+
    private Set<CLIResourceParameter> params;
+
    private String description;
 
    public CLIResource(Set<String> command, String path, String method, Set<String> consumes, Set<String> produces,
@@ -115,7 +121,6 @@ public class CLIResource
       this.params = params;
    }
 
-   
    public String getDescription()
    {
       return description;

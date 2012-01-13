@@ -20,8 +20,8 @@ package org.exoplatform.ide.shell.client;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 15, 2011 evgen $
- *
+ * @version $Id: Aug 15, 2011 evgen $
+ * 
  */
 public interface Messages extends com.google.gwt.i18n.client.Messages
 {
@@ -51,71 +51,71 @@ public interface Messages extends com.google.gwt.i18n.client.Messages
 
    @Key("cd.error.not.folder")
    String cdErrorFolder(String name);
-   
+
    @Key("clear.help")
    String clearHelp();
-   
+
    @Key("help.help")
    String helpHelp();
-   
+
    @Key("ls.help")
    String lsHelp();
-   
+
    @Key("ls.usage")
    String lsUsage();
-   
+
    @Key("ls.header")
    String lsHeader();
-   
+
    @Key("ls.error")
    String lsError(String folderName);
-   
+
    @Key("mkdir.help")
    String mkdirHelp();
-   
+
    @Key("mkdir.usage")
    String mkdirUsage();
-   
+
    @Key("mkdir.header")
    String mkdirHeader();
-   
+
    @Key("mkdir.error")
    String mkdirError();
-   
+
    @Key("pwd.help")
    String pwdHelp();
-   
+
    @Key("pwd.usage")
    String pwdUsage();
-   
+
    @Key("pwd.header")
    String pwdHeader();
-   
+
    @Key("rm.help")
    String rmHelp();
-   
+
    @Key("rm.usage")
    String rmUsage();
-   
+
    @Key("rm.header")
    String rmHeader();
-   
-   //Errors
+
+   // Errors
    @Key("commands.unmarshaller.error")
    String commandsUnmarshallerError();
-   
+
    @Key("no.appropriate.command")
    String noAppropriateCommandError(String command);
-   
+
    @Key("syntax.error")
    String syntaxtError(String command);
-   
+
    @Key("required.argument.not.found")
    String requiredArgumentNotFound(String command);
-   
+
    @Key("required.option.not.found")
    String requiredOptionNotFound(String command);
-   
+
    @Key("required.property.not.set")
    String requiredPropertyNotSet(String property);
 }

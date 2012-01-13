@@ -23,12 +23,12 @@ import com.google.gwt.http.client.Response;
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
-
 /**
  * Dummy Unmarshaller, need to unmarshall string response
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 5, 2011 evgen $
- *
+ * @version $Id: Aug 5, 2011 evgen $
+ * 
  */
 public class StringUnmarshaller implements Unmarshallable<StringBuilder>
 {

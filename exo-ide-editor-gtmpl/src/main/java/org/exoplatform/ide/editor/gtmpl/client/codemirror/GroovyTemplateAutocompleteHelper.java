@@ -34,33 +34,38 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class GroovyTemplateAutocompleteHelper extends AutocompleteHelper
 {
-   
+
    HtmlAutocompleteHelper htmlAutocompleteHelper = new HtmlAutocompleteHelper();
-   
+
    GroovyAutocompleteHelper groovyAutocompleteHelper = new GroovyAutocompleteHelper();
-    
+
    List<? extends Token> groovyCode;
 
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
-   {          
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
+      List<? extends Token> tokenList, String currentLineMimeType)
+   {
       if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
       {
-         return htmlAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
+         return htmlAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList,
+            currentLineMimeType);
       }
-      
+
       else if (MimeType.APPLICATION_GROOVY.equals(currentLineMimeType))
       {
-         groovyCode = CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
-         return groovyAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, groovyCode, currentLineMimeType);
+         groovyCode =
+            CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(),
+               MimeType.APPLICATION_GROOVY);
+         return groovyAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, groovyCode,
+            currentLineMimeType);
       }
-      
+
       return null;
    }
-   
+
    public boolean isVariable(String nodeType)
    {
       return false;

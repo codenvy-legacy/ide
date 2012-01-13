@@ -62,8 +62,10 @@ public class CLIResourceFactory
    private static class CLIResourceConfig
    {
       private final AtomicLong lastModified = new AtomicLong();
+
       private final AtomicReference<Map<String, Map<String, CLIResource>>> cliResources =
          new AtomicReference<Map<String, Map<String, CLIResource>>>();
+
       private final File file;
 
       CLIResourceConfig(File file) throws IOException
