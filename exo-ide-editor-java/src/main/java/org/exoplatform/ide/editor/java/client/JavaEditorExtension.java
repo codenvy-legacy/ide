@@ -54,7 +54,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
- *
+ * 
  */
 public class JavaEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler,
    EditorActiveFileChangedHandler, ProjectOpenedHandler
@@ -132,7 +132,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
             "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
          if (!exception.getMessage().equals(""))
          {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on
+                                                                                        // "<br />"
          }
 
          IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));

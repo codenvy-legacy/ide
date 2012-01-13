@@ -41,8 +41,8 @@ import org.exoplatform.ide.editor.java.client.ui.TypeList;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 1, 2011 4:47:35 PM evgen $
- *
+ * @version ${Id}: Dec 1, 2011 4:47:35 PM evgen $
+ * 
  */
 public class CreateJavaClassView extends ViewImpl implements Display
 {

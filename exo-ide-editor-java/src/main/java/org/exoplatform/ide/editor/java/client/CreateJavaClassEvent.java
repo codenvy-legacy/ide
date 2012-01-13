@@ -22,8 +22,8 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 1, 2011 4:34:07 PM evgen $
- *
+ * @version ${Id}: Dec 1, 2011 4:34:07 PM evgen $
+ * 
  */
 public class CreateJavaClassEvent extends GwtEvent<CreateJavaClassHandler>
 {

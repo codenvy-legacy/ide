@@ -36,14 +36,15 @@ import com.google.gwt.user.client.Random;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class UnMarshallerTest extends GWTTestCase
 {
    private String classes =
-            "[{\"name\":\"java.lang.String$1\",\"modifiers\":4104,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$1\",\"modifiers\":4104,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringValue\",\"modifiers\":0,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringIndexOutOfBoundsException\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.lang.StackTraceElement\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringBuffer\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StackOverflowError\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.lang.StrictMath\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$StringEncoder\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringBuilder\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$StringDecoder\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding\",\"modifiers\":0,\"type\":\"CLASS\"},{\"name\":\"java.lang.String\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.String$CaseInsensitiveComparator\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.util.logging.StreamHandler\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.util.StringTokenizer\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.util.Stack\",\"modifiers\":1,\"type\":\"CLASS\"}]";
-   
+      "[{\"name\":\"java.lang.String$1\",\"modifiers\":4104,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$1\",\"modifiers\":4104,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringValue\",\"modifiers\":0,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringIndexOutOfBoundsException\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.lang.StackTraceElement\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringBuffer\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StackOverflowError\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.lang.StrictMath\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$StringEncoder\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringBuilder\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$StringDecoder\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding\",\"modifiers\":0,\"type\":\"CLASS\"},{\"name\":\"java.lang.String\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.String$CaseInsensitiveComparator\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.util.logging.StreamHandler\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.util.StringTokenizer\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.util.Stack\",\"modifiers\":1,\"type\":\"CLASS\"}]";
+
    private final String[] expFqn = {"java.lang.String$1", "java.lang.StringCoding$1", "java.lang.StringValue",
       "java.lang.StringIndexOutOfBoundsException", "java.lang.StackTraceElement", "java.lang.StringBuffer",
       "java.lang.StackOverflowError", "java.lang.StrictMath", "java.lang.StringCoding$StringEncoder",
@@ -95,7 +96,7 @@ public class UnMarshallerTest extends GWTTestCase
          assertEquals(expName[i], tokens.get(i).getName());
       }
    }
-   
+
    @Test
    public void testClassDescriptionUnmarshaller() throws Exception
    {
@@ -106,15 +107,16 @@ public class UnMarshallerTest extends GWTTestCase
       assertEquals(1, javaClass.getPublicMethods().size());
       assertEquals(1, javaClass.getPublicFields().size());
       assertEquals(1, javaClass.getAbstractMethods().size());
-      
+
    }
 
    class MockResponse extends Response
    {
       private final String text;
+
       public MockResponse(String text)
       {
-         this.text =  text;
+         this.text = text;
       }
 
       @Override
@@ -154,8 +156,6 @@ public class UnMarshallerTest extends GWTTestCase
       }
 
    }
-
-   
 
    @Override
    public String getModuleName()

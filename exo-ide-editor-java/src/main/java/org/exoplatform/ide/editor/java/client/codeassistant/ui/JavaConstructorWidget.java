@@ -31,10 +31,10 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 29, 2010 9:40:49 AM evgen $
- *
+ * 
  */
 public class JavaConstructorWidget extends JavaTokenWidgetBase
 {
@@ -79,6 +79,7 @@ public class JavaConstructorWidget extends JavaTokenWidgetBase
 
    /**
     * Return {@link Image} for specific access modifier
+    * 
     * @return
     */
    private Image getImage()

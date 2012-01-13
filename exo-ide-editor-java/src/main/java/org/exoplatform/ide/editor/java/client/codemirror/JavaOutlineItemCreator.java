@@ -31,14 +31,13 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 import com.google.gwt.resources.client.ImageResource;
 
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
-{  
+{
    @Override
    public ImageResource getTokenIcon(TokenBeenImpl token)
    {
@@ -46,31 +45,31 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
       {
          case VARIABLE :
             return JavaClientBundle.INSTANCE.variable();
-            
-         case PROPERTY :            
+
+         case PROPERTY :
             if (isPrivate(token))
             {
                return JavaClientBundle.INSTANCE.privateField();
             }
-            
+
             else if (isProtected(token))
             {
                return JavaClientBundle.INSTANCE.protectedField();
             }
-            
+
             else if (isPublic(token))
             {
                return JavaClientBundle.INSTANCE.publicField();
             }
 
             return JavaClientBundle.INSTANCE.defaultField();
-            
+
          case METHOD :
             if (isPrivate(token))
             {
                return JavaClientBundle.INSTANCE.privateMethod();
             }
-            
+
             else if (isProtected(token))
             {
                return JavaClientBundle.INSTANCE.protectedMethod();
@@ -82,38 +81,37 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
             }
 
             return JavaClientBundle.INSTANCE.defaultMethod();
-            
-            
+
          case CLASS :
             return JavaClientBundle.INSTANCE.classItem();
 
          case INTERFACE :
-            return JavaClientBundle.INSTANCE.interfaceItem();              
-            
+            return JavaClientBundle.INSTANCE.interfaceItem();
+
          case JSP_TAG :
             return JavaClientBundle.INSTANCE.jspTagItem();
-            
+
          default :
             return null;
       }
    }
-   
+
    @Override
    public String getTokenDisplayTitle(TokenBeenImpl token)
    {
       String label = token.getName();
 
-      //icon, that displays in right bottom corner, if token is CLASS, 
-      //and shows access modifier
+      // icon, that displays in right bottom corner, if token is CLASS,
+      // and shows access modifier
       String modfImg = "";
-      
+
       String synchImg = "";
 
-      // should be refactored from using hard code to using ImageResource 
+      // should be refactored from using hard code to using ImageResource
       if (BrowserResolver.CURRENT_BROWSER != Browser.IE)
       {
          if (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType()))
-         {      
+         {
             if (isPrivate(token))
             {
                modfImg =
@@ -149,29 +147,33 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
                   + "outline/clock.png" + "\" />";
          }
       }
-      
-      String deprecateSign = isDeprecated(token) ? "style='text-decoration:line-through;'" : "";
- 
-      label = getModifiersContainer(token) + modfImg + synchImg + "<span class='item-name' " + deprecateSign + " style='margin-left: 5px;' title=\"" + getAnnotationList(token)
-            + "\">" + label + "</span>";            
 
-      // Add parameter list 
+      String deprecateSign = isDeprecated(token) ? "style='text-decoration:line-through;'" : "";
+
+      label =
+         getModifiersContainer(token) + modfImg + synchImg + "<span class='item-name' " + deprecateSign
+            + " style='margin-left: 5px;' title=\"" + getAnnotationList(token) + "\">" + label + "</span>";
+
+      // Add parameter list
       if (TokenType.METHOD.equals(token.getType()))
       {
-         label += getParametersList(token); 
+         label += getParametersList(token);
       }
-      
+
       // Add field type or method return type
       if (token.getElementType() != null)
       {
-         label += "<span style='color:#644a17;' class='item-type' title=\"" + getAnnotationList(token) + "\">" + getElementType(token) + "</span>";
+         label +=
+            "<span style='color:#644a17;' class='item-type' title=\"" + getAnnotationList(token) + "\">"
+               + getElementType(token) + "</span>";
       }
-      
+
       return label;
    }
-   
+
    /**
     * Return parameters list from token.getParameters()
+    * 
     * @param token
     * @return parameters list like '(String, int)', or ($a, $b) for PHP-code, or '()' if there are no parameters
     */
@@ -196,7 +198,8 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
 
             parametersDescription +=
                "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
-                  + "<span class='item-parameter'>" + StringEscapeUtils.htmlEncode(parameter.getElementType()) + "</span></span>";
+                  + "<span class='item-parameter'>" + StringEscapeUtils.htmlEncode(parameter.getElementType())
+                  + "</span></span>";
          }
       }
 
@@ -204,7 +207,7 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
    }
 
    /**
-    * @param annotationList 
+    * @param annotationList
     * @return HTML code to display "@" sign near the groovy token if annotationList is not empty, or "" otherwise
     */
    protected String getAnnotationSign(String annotationList)

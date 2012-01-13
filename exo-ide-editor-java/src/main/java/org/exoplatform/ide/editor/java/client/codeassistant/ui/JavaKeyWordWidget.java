@@ -29,10 +29,10 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 16, 2010 11:33:46 AM evgen $
- *
+ * 
  */
 public class JavaKeyWordWidget extends JavaTokenWidgetBase
 {
@@ -55,7 +55,7 @@ public class JavaKeyWordWidget extends JavaTokenWidgetBase
       grid.setWidget(0, 0, i);
 
       Label nameLabel = new Label(token.getName(), false);
-//      nameLabel.setStyleName(GroovyPluginImageBundle.INSTANCE.css().keywordStyle());
+      // nameLabel.setStyleName(GroovyPluginImageBundle.INSTANCE.css().keywordStyle());
       grid.setWidget(0, 1, nameLabel);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");

@@ -25,7 +25,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Base Feb 25, 2011 10:59:00 AM evgen $
- *
+ * 
  */
 public class Base extends GWTTestCase
 {
@@ -33,19 +33,20 @@ public class Base extends GWTTestCase
    /**
     * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
     */
-//   @Override
+   // @Override
    public String getModuleName()
    {
       return "org.exoplatform.ide.editor.EditorTest";
    }
-   
+
    /**
     * Takes in a trusted JSON String and evals it.
+    * 
     * @param JSON String that you trust
     * @return JavaScriptObject that you can cast to an Overlay Type
     */
    protected native JavaScriptObject parseJson(String json) /*-{
-     return eval('(' + json + ')'); ;
-   }-*/;
+                                                            return eval('(' + json + ')'); ;
+                                                            }-*/;
 
 }

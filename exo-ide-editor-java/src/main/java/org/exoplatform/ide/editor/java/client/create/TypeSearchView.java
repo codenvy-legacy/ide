@@ -40,8 +40,8 @@ import org.exoplatform.ide.editor.java.client.ui.TypeList;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 2, 2011 4:44:25 PM evgen $
- *
+ * @version ${Id}: Dec 2, 2011 4:44:25 PM evgen $
+ * 
  */
 public class TypeSearchView extends ViewImpl implements Display
 {

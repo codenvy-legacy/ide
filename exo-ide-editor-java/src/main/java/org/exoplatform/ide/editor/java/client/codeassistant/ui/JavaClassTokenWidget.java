@@ -32,10 +32,10 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 5:00:40 PM evgen $
- *
+ * 
  */
 public class JavaClassTokenWidget extends JavaTokenWidgetBase
 {

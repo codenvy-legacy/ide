@@ -46,8 +46,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 2, 2011 4:44:04 PM evgen $
- *
+ * @version ${Id}: Dec 2, 2011 4:44:04 PM evgen $
+ * 
  */
 public class TypeSearchPresenter implements ViewClosedHandler
 {

@@ -31,10 +31,10 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 13, 2010 4:06:10 PM evgen $
- *
+ * 
  */
 public class JavaVariableWidget extends JavaTokenWidgetBase
 {

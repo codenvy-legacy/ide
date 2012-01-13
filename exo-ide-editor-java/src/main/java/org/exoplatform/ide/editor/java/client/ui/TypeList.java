@@ -33,29 +33,28 @@ import org.exoplatform.ide.editor.java.client.model.Types;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 2, 2011 12:42:31 PM evgen $
- *
+ * @version ${Id}: Dec 2, 2011 12:42:31 PM evgen $
+ * 
  */
 public class TypeList extends ListGrid<ShortTypeInfo>
 {
-   
-   
 
    /**
     * @param cell
     */
    public TypeList()
    {
-      //Image column
-      Column<ShortTypeInfo, ImageResource> iconColumn = new Column<ShortTypeInfo, ImageResource>(new ImageResourceCell())
-      {
-         @Override
-         public ImageResource getValue(ShortTypeInfo item)
+      // Image column
+      Column<ShortTypeInfo, ImageResource> iconColumn =
+         new Column<ShortTypeInfo, ImageResource>(new ImageResourceCell())
          {
-            return getImageForType(item.getType());
-         }
-      };
-      
+            @Override
+            public ImageResource getValue(ShortTypeInfo item)
+            {
+               return getImageForType(item.getType());
+            }
+         };
+
       Column<ShortTypeInfo, SafeHtml> repositoryColumn = new Column<ShortTypeInfo, SafeHtml>(new SafeHtmlCell())
       {
          @Override
@@ -67,16 +66,17 @@ public class TypeList extends ListGrid<ShortTypeInfo>
 
                public String asString()
                {
-                  return item.getName() + " - " + item.getQualifiedName().substring(0, item.getQualifiedName().lastIndexOf('.'));
+                  return item.getName() + " - "
+                     + item.getQualifiedName().substring(0, item.getQualifiedName().lastIndexOf('.'));
                }
             };
             return html;
          }
       };
-      
+
       getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
       getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
-      
+
       getCellTable().addColumn(repositoryColumn);
    }
 
@@ -92,6 +92,5 @@ public class TypeList extends ListGrid<ShortTypeInfo>
             return JavaClientBundle.INSTANCE.classItem();
       }
    }
-   
 
 }

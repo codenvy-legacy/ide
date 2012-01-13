@@ -20,8 +20,8 @@ package org.exoplatform.ide.editor.java.client.model;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 2, 2011 4:52:03 PM evgen $
- *
+ * @version ${Id}: Dec 2, 2011 4:52:03 PM evgen $
+ * 
  */
 public interface TypeSelectedCallback
 {

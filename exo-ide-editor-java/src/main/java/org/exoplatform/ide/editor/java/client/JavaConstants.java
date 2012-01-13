@@ -22,8 +22,8 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 1, 2011 5:04:44 PM evgen $
- *
+ * @version ${Id}: Dec 1, 2011 5:04:44 PM evgen $
+ * 
  */
 public interface JavaConstants extends Messages
 {

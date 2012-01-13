@@ -32,8 +32,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 5, 2011 12:06:38 PM evgen $
- *
+ * @version ${Id}: Dec 5, 2011 12:06:38 PM evgen $
+ * 
  */
 public class TypesUnmarshaller implements Unmarshallable
 {
@@ -88,7 +88,7 @@ public class TypesUnmarshaller implements Unmarshallable
             {
                String fqn = jObject.get(key).isString().stringValue();
                info.setQualifiedName(fqn);
-               info.setName(fqn.substring(fqn.lastIndexOf(".")+1));
+               info.setName(fqn.substring(fqn.lastIndexOf(".") + 1));
             }
             if (key.equals(MODIFIERS))
             {

@@ -20,8 +20,8 @@ package org.exoplatform.ide.editor.java.client.model;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 2, 2011 12:34:20 PM evgen $
- *
+ * @version ${Id}: Dec 2, 2011 12:34:20 PM evgen $
+ * 
  */
 public class ShortTypeInfo
 {
@@ -30,12 +30,12 @@ public class ShortTypeInfo
    private String name;
 
    /**
-    *  Full Qualified Class Name
+    * Full Qualified Class Name
     */
    private String qualifiedName;
 
    /**
-    * Means this is CLASS, INTERFACE or ANNOTATION  
+    * Means this is CLASS, INTERFACE or ANNOTATION
     */
    private Types type;
 

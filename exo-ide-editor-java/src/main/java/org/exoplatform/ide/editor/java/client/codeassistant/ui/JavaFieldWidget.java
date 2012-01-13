@@ -30,10 +30,10 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 29, 2010 10:25:25 AM evgen $
- *
+ * 
  */
 public class JavaFieldWidget extends JavaTokenWidgetBase
 {

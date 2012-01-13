@@ -46,16 +46,14 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 /**
- * @see Unmarshallable
- * Created by The eXo Platform SAS.
- *
+ * @see Unmarshallable Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:00:56 PM evgen $
- *
+ * 
  */
 public class ClassDescriptionUnmarshaller implements Unmarshallable
 {
-
 
    private JavaClass classInfo;
 
@@ -107,7 +105,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
     */
    private Collection<? extends Token> getAbstractMethods(List<MethodInfo> list)
    {
-      //TODO filter same methods
+      // TODO filter same methods
       Map<String, Token> methods = new HashMap<String, Token>();
       for (MethodInfo mi : list)
       {
@@ -118,8 +116,10 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
             token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
             token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
             token.setProperty(TokenProperties.GENERIC_RETURN_TYPE, new StringProperty(mi.getReturnType()));
-            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi.getParameterTypes().toArray() : null));
-            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() !=  null ? mi.getExceptionTypes().toArray() : null));
+            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi
+               .getParameterTypes().toArray() : null));
+            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() != null
+               ? mi.getExceptionTypes().toArray() : null));
             methods.put(mi.getName() + mi.getParameterTypes().toArray().toString(), token);
          }
       }
@@ -128,6 +128,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
 
    /**
     * Get all public methods
+    * 
     * @param list
     * @return {@link List} of {@link TokenExt} that contains all public method of class
     */
@@ -143,8 +144,10 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
             token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
             token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
             token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(mi.getReturnType()));
-            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi.getParameterTypes().toArray() : null));
-            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() !=  null ? mi.getExceptionTypes().toArray() : null));
+            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi
+               .getParameterTypes().toArray() : null));
+            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() != null
+               ? mi.getExceptionTypes().toArray() : null));
             methods.add(token);
          }
       }
@@ -153,6 +156,7 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
 
    /**
     * Get all public fields
+    * 
     * @param list
     * @return {@link List} of {@link TokenExt} that represent public fields of Class
     */
@@ -175,7 +179,8 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
    }
 
    /**
-    * Get all public constructors 
+    * Get all public constructors
+    * 
     * @param list
     * @return {@link List} of {@link TokenExt} that represent Class constructors
     */
@@ -192,12 +197,14 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
             Token token = new TokenImpl(name, TokenType.CONSTRUCTOR);
             token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
             token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
-            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi.getParameterTypes().toArray() : null));
-            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() !=  null ? mi.getExceptionTypes().toArray() : null));
+            token.setProperty(TokenProperties.PARAMETER_TYPES, new ObjectProperty(mi.getParameterTypes() != null ? mi
+               .getParameterTypes().toArray() : null));
+            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new ObjectProperty(mi.getExceptionTypes() != null
+               ? mi.getExceptionTypes().toArray() : null));
             constructors.add(token);
          }
       }
       return constructors;
    }
-   
+
 }

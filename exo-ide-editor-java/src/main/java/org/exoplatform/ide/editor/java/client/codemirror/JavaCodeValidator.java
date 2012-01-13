@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class JavaCodeValidator extends CodeValidator
 {
@@ -61,7 +61,6 @@ public class JavaCodeValidator extends CodeValidator
    {
    }
 
-
    /**
     * @param classesFromProject the classesFromProject to set
     */
@@ -72,7 +71,7 @@ public class JavaCodeValidator extends CodeValidator
 
    /**
     * Short default java types like "int"...
-   */
+    */
    private static List<String> shortJavaType = Arrays.asList("boolean", "char", "enum", "byte", "double", "float",
       "int", "long", "short", "void");
 
@@ -120,7 +119,8 @@ public class JavaCodeValidator extends CodeValidator
    }
 
    /**
-    * Collect import statements end update lastImportStatementLineNumber 
+    * Collect import statements end update lastImportStatementLineNumber
+    * 
     * @param tokenList
     * @return token list of import statements
     */
@@ -134,7 +134,8 @@ public class JavaCodeValidator extends CodeValidator
          if (TokenType.IMPORT.equals(token.getType()))
          {
             importStatementBlock.add(token);
-            lastImportStatementLineNumber = token.getLineNumber(); // it is needed for inserting the new import statement just after the last import
+            lastImportStatementLineNumber = token.getLineNumber(); // it is needed for inserting the new import statement just
+                                                                   // after the last import
          }
       }
 
@@ -143,6 +144,7 @@ public class JavaCodeValidator extends CodeValidator
 
    /**
     * Validate token's java types and set token's FQN
+    * 
     * @param currentToken
     * @param importStatementBlock
     * @return
@@ -172,9 +174,14 @@ public class JavaCodeValidator extends CodeValidator
 
          String fqn;
 
-         // filter FQN type for full java types like "javax.ws.rs.GET", and "data.ProductItem", but parse type like "ResourceBundle.Control"
+         // filter FQN type for full java types like "javax.ws.rs.GET", and "data.ProductItem", but parse type like
+         // "ResourceBundle.Control"
          if (javaType.contains(".")
-            && (javaType.split("[.]").length > 2 || javaType.split("[.]").length == 2 && javaType.matches("^[a-z].*") // to parse fqn like "data.ProductItem", not "ResourceBundle.Control"
+            && (javaType.split("[.]").length > 2 || javaType.split("[.]").length == 2 && javaType.matches("^[a-z].*") // to parse
+                                                                                                                      // fqn like
+                                                                                                                      // "data.ProductItem",
+                                                                                                                      // not
+                                                                                                                      // "ResourceBundle.Control"
             ))
          {
             currentToken.setFqn(javaType);
@@ -186,7 +193,7 @@ public class JavaCodeValidator extends CodeValidator
             currentToken.setFqn(foundFqn);
          }
 
-         // verifying if this type is from import statements 
+         // verifying if this type is from import statements
          else if (classesFromProject != null
             && (foundFqn = findClassesFromProject(javaType, classesFromProject)) != null)
          {
@@ -237,9 +244,10 @@ public class JavaCodeValidator extends CodeValidator
 
    /**
     * Go through classesFromProject and looking for token with name = javaType
+    * 
     * @param javaType
     * @param classesFromProject
-    * @return FQN of token with name = javaType from classesFromProject  
+    * @return FQN of token with name = javaType from classesFromProject
     */
    private String findClassesFromProject(String javaType, List<Token> classesFromProject)
    {
@@ -259,8 +267,9 @@ public class JavaCodeValidator extends CodeValidator
 
    /**
     * Return type where parameter part of parameterized type like "<Item>" in type "List<Item>" is removed
+    * 
     * @param javaType
-    * @return 
+    * @return
     */
    private String getTypeWithoutParameter(String javaType)
    {
@@ -289,7 +298,8 @@ public class JavaCodeValidator extends CodeValidator
    /**
     * 
     * @param tokenList
-    * @return lastImportStatementLineNumber defined in the "verifyJavaTypes", or search "package" token before class or interface, or return 1; 
+    * @return lastImportStatementLineNumber defined in the "verifyJavaTypes", or search "package" token before class or interface,
+    *         or return 1;
     */
    public static int getAppropriateLineNumberToInsertImportStatement(List<TokenBeenImpl> tokenList)
    {
@@ -333,20 +343,22 @@ public class JavaCodeValidator extends CodeValidator
 
    /**
     * Verify if there any such fqn among the default packages of import statements
+    * 
     * @param fqn
     * @return <b>true</b> if there is no such fqn among the default packages of import statements
     */
    public boolean shouldImportStatementBeInsterted(List<TokenBeenImpl> tokenList, String fqn)
    {
-      //      // test if this is correct FQN with more the two point delimiters like "java.lang.String", not "HelloWorld" fqn or even ""java.lang."
-      //      if (fqn.split("[.]").length <= 2)
-      //      {
-      //         return false;
-      //      }
+      // // test if this is correct FQN with more the two point delimiters like "java.lang.String", not "HelloWorld" fqn or even
+      // ""java.lang."
+      // if (fqn.split("[.]").length <= 2)
+      // {
+      // return false;
+      // }
 
-      // search similar fqn among the default packages 
+      // search similar fqn among the default packages
       Iterator<String> iterator = defaultPackages.keySet().iterator();
-      String fqnClassName = fqn.substring(fqn.lastIndexOf(".") + 1); // get class name as string after the last "." 
+      String fqnClassName = fqn.substring(fqn.lastIndexOf(".") + 1); // get class name as string after the last "."
       while (iterator.hasNext())
       {
          String defaultPackagePrefix = iterator.next();
@@ -365,7 +377,7 @@ public class JavaCodeValidator extends CodeValidator
          }
       }
 
-      // search similar fqn among the import block 
+      // search similar fqn among the import block
       List<TokenBeenImpl> importStatementBlock = getImportStatementBlock(tokenList);
       for (TokenBeenImpl importStatement : importStatementBlock)
       {
@@ -375,7 +387,7 @@ public class JavaCodeValidator extends CodeValidator
          }
       }
 
-      // search similar fqn among the inner classes or interfaces 
+      // search similar fqn among the inner classes or interfaces
       for (TokenBeenImpl token : tokenList)
       {
          if ((TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType()))
@@ -397,7 +409,8 @@ public class JavaCodeValidator extends CodeValidator
       {
 
          // types from java.lang package http://download.oracle.com/javase/6/docs/api/java/lang/package-tree.html
-         // LinkedList has better performance as ArrayList [http://download.oracle.com/javase/tutorial/collections/interfaces/list.html]      
+         // LinkedList has better performance as ArrayList
+         // [http://download.oracle.com/javase/tutorial/collections/interfaces/list.html]
          put("java.lang", new LinkedList<String>()
          {
             {
@@ -509,8 +522,9 @@ public class JavaCodeValidator extends CodeValidator
    };
 
    /**
-    * Get list of code errors and error marks. 
-    * @param tokenList 
+    * Get list of code errors and error marks.
+    * 
+    * @param tokenList
     */
    public List<CodeLine> getCodeErrorList(List<? extends Token> tokenList)
    {

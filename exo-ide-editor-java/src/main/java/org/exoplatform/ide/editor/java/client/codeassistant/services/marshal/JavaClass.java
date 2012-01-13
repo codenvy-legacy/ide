@@ -25,10 +25,10 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 24, 2010 3:18:00 PM evgen $
- *
+ * 
  */
 public class JavaClass
 {

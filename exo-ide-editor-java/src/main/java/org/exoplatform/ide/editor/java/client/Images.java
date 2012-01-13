@@ -23,13 +23,12 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Images Mar 11, 2011 10:54:45 AM evgen $
- *
+ * 
  */
 public interface Images
 {
    String IMAGE_URL = UIHelper.getGadgetImagesURL();
-   
+
    String JAVA = IMAGE_URL + "java.png";
-   
 
 }

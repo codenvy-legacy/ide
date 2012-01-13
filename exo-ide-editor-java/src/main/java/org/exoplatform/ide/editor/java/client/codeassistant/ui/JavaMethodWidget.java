@@ -30,10 +30,10 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 29, 2010 10:06:35 AM evgen $
- *
+ * 
  */
 public class JavaMethodWidget extends JavaTokenWidgetBase
 {
@@ -42,14 +42,14 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
 
    /**
     * @param token
-    * @param restContext 
+    * @param restContext
     */
    public JavaMethodWidget(Token token, String restContext, String projectId)
    {
       super(token, restContext, projectId);
       grid = new Grid(1, 3);
       grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
-      //      grid.setWidth("100%");
+      // grid.setWidth("100%");
 
       Image i = getImage();
       i.setHeight("16px");

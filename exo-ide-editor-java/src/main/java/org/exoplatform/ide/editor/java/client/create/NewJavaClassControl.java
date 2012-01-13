@@ -29,8 +29,8 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Jan 10, 2012 2:05:22 PM anya $
- *
+ * @version $Id: Jan 10, 2012 2:05:22 PM anya $
+ * 
  */
 public class NewJavaClassControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {

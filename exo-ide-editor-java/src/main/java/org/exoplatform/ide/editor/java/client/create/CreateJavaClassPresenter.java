@@ -78,8 +78,8 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 1, 2011 4:47:35 PM evgen $
- *
+ * @version ${Id}: Dec 1, 2011 4:47:35 PM evgen $
+ * 
  */
 public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClosedHandler, ItemsSelectedHandler,
    ProjectOpenedHandler, ProjectClosedHandler, EditorActiveFileChangedHandler
@@ -567,12 +567,12 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       content.append("\n{\n\n");
       loadSuperClassInfo(superFqn, display.getNameText().getValue(), packageDeclaration, content);
 
-      //      doCreateFile(content.toString());
+      // doCreateFile(content.toString());
    }
 
    /**
     * @param superFqn
-    * @param content 
+    * @param content
     */
    private void loadSuperClassInfo(String superFqn, final String className, final String packageDeclaration,
       final StringBuilder content)
@@ -672,7 +672,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       if (fqn.contains("["))
          fqn = fqn.substring(0, fqn.indexOf("["));
 
-      //skip inserting fqn if is generic type i.e. 'T' or 'E'... 
+      // skip inserting fqn if is generic type i.e. 'T' or 'E'...
       if (fqn.length() == 1)
          return;
       if (!imports.contains(fqn) && !defaultImports.contains(fqn))
@@ -912,7 +912,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
       for (Token t : superClass.getPublicConstructors())
       {
-         //if super class has more than 1 constructor, skip default object constructor
+         // if super class has more than 1 constructor, skip default object constructor
          if (superClass.getPublicConstructors().size() > 1
             && t.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue().equals(OBJECT_FQN))
          {
@@ -976,10 +976,9 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    }
 
    /**
-    * Convert int modifier to string of Java modifiers.
-    * <b>This method skip 'abstract' modifier!<br>
-    * For full version of method see {@link ModifierHelper#toString(int)}
-    * </b> 
+    * Convert int modifier to string of Java modifiers. <b>This method skip 'abstract' modifier!<br>
+    * For full version of method see {@link ModifierHelper#toString(int)} </b>
+    * 
     * @param mod
     * @return
     */

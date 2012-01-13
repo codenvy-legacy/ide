@@ -30,10 +30,10 @@ import org.exoplatform.ide.editor.java.client.codeassistant.ui.JavaVariableWidge
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:50:06 PM evgen $
- *
+ * 
  */
 public class JavaTokenWidgetFactory implements TokenWidgetFactory
 {

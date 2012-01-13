@@ -21,7 +21,7 @@ package org.exoplatform.ide.editor.java.client.codeassistant;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaCodeAssistantErrorHandler Mar 3, 2011 12:44:35 PM evgen $
- *
+ * 
  */
 public interface JavaCodeAssistantErrorHandler
 {

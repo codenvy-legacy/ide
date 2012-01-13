@@ -42,7 +42,7 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAss
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaGwtTestCodeAssistant Mar 4, 2011 4:57:07 PM evgen $
- *
+ * 
  */
 public class JavaGwtTestCodeAssistant extends Base
 {
@@ -60,15 +60,16 @@ public class JavaGwtTestCodeAssistant extends Base
       {
          public JavaCodeAssist()
          {
-            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
-            {
-               @Override
-               public void handleError(Throwable exception)
+            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""),
+               new JavaCodeAssistantErrorHandler()
                {
-                  finishTest();
-                  fail();
-               }
-            });
+                  @Override
+                  public void handleError(Throwable exception)
+                  {
+                     finishTest();
+                     fail();
+                  }
+               });
          }
 
          @Override
@@ -87,8 +88,8 @@ public class JavaGwtTestCodeAssistant extends Base
       currentToken.setProperty(TokenProperties.FQN, new StringProperty("java.lang.String"));
       JavaCodeAssist javaCodeAssist = new JavaCodeAssist();
       javaCodeAssist.setActiveProjectId("http://127.0.0.1:8888/rest/jcr/repository/dev-monit/1.txt");
-//      javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, line.length() + 1, 0, new ArrayList<Token>(),
-//         MimeType.APPLICATION_GROOVY, currentToken);
+      // javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, line.length() + 1, 0, new ArrayList<Token>(),
+      // MimeType.APPLICATION_GROOVY, currentToken);
    }
 
    public void testImportAssistant()
@@ -97,45 +98,47 @@ public class JavaGwtTestCodeAssistant extends Base
       {
          public JavaCodeAssist()
          {
-            super(new JavaCodeAssistantService("/rest", new EmptyLoader()),new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
-            {
-               @Override
-               public void handleError(Throwable exception)
+            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""),
+               new JavaCodeAssistantErrorHandler()
                {
-                  finishTest();
-                  fail();
-               }
-            });
+                  @Override
+                  public void handleError(Throwable exception)
+                  {
+                     finishTest();
+                     fail();
+                  }
+               });
          }
+
          @Override
          protected void openImportForm(int left, int top, List<Token> tokens, TokenWidgetFactory factory,
             AssistImportDeclarationHandler handler)
          {
-            Token token =  tokens.get(0);
+            Token token = tokens.get(0);
             assertNotNull(token);
-             assertEquals("Base64",token.getName());
-             assertTrue(token.hasProperty(TokenProperties.FQN));
-             assertNotNull(token.getProperty(TokenProperties.FQN));
-             
-             TokenProperty property = token.getProperty(TokenProperties.FQN);
-             assertNotNull(property.isStringProperty());
-             assertNotNull(property.isStringProperty().stringValue());
-             
-             assertEquals("java.util.prefs.Base64", property.isStringProperty().stringValue());
-             finishTest();
+            assertEquals("Base64", token.getName());
+            assertTrue(token.hasProperty(TokenProperties.FQN));
+            assertNotNull(token.getProperty(TokenProperties.FQN));
+
+            TokenProperty property = token.getProperty(TokenProperties.FQN);
+            assertNotNull(property.isStringProperty());
+            assertNotNull(property.isStringProperty().stringValue());
+
+            assertEquals("java.util.prefs.Base64", property.isStringProperty().stringValue());
+            finishTest();
          }
       }
       delayTestFinish(3000);
-      
+
       List<CodeLine> codeErrorList = new ArrayList<CodeLine>();
       CodeLine codeLine = new CodeLine(CodeType.IMPORT_STATEMENT, "Base64", 5);
       codeErrorList.add(codeLine);
       JavaCodeAssist javaCodeAssist = new JavaCodeAssist();
-      
+
       javaCodeAssist.errorMarkClicked(null, codeErrorList, 0, 0, MimeType.APPLICATION_GROOVY);
-      
+
    }
-   
+
    public void testFindClass()
    {
       final String line = "Strin";
@@ -143,15 +146,16 @@ public class JavaGwtTestCodeAssistant extends Base
       {
          public JavaCodeAssist()
          {
-            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
-            {
-               @Override
-               public void handleError(Throwable exception)
+            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""),
+               new JavaCodeAssistantErrorHandler()
                {
-                  finishTest();
-                  fail();
-               }
-            });
+                  @Override
+                  public void handleError(Throwable exception)
+                  {
+                     finishTest();
+                     fail();
+                  }
+               });
          }
 
          @Override
@@ -167,10 +171,10 @@ public class JavaGwtTestCodeAssistant extends Base
       delayTestFinish(3000);
       Token currentToken = new TokenImpl("String", TokenType.VARIABLE);
       currentToken.setProperty(TokenProperties.FQN, new StringProperty("java.lang.String"));
-//      javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, line.length() + 1, 0, new ArrayList<Token>(),
-//         MimeType.APPLICATION_GROOVY, currentToken);
+      // javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, line.length() + 1, 0, new ArrayList<Token>(),
+      // MimeType.APPLICATION_GROOVY, currentToken);
    }
-   
+
    private void paseLine(final String line, final String before, final String token, final String after,
       final int curPos)
    {
@@ -178,15 +182,16 @@ public class JavaGwtTestCodeAssistant extends Base
       {
          public JavaCodeAssist()
          {
-            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
-            {
-
-               @Override
-               public void handleError(Throwable exception)
+            super(new JavaCodeAssistantService("/rest", new EmptyLoader()), new JavaTokenWidgetFactory(""),
+               new JavaCodeAssistantErrorHandler()
                {
-                  fail();
-               }
-            });
+
+                  @Override
+                  public void handleError(Throwable exception)
+                  {
+                     fail();
+                  }
+               });
          }
 
          @Override
@@ -200,7 +205,7 @@ public class JavaGwtTestCodeAssistant extends Base
 
       JavaCodeAssist javaCodeAssist = new JavaCodeAssist();
       javaCodeAssist.setActiveProjectId("/rest/jcr/repository/dev-monit/1.txt");
-//      javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, curPos, 0, new ArrayList<Token>(),
-//         MimeType.APPLICATION_GROOVY, null);
+      // javaCodeAssist.autocompleteCalled(null, "", 0, 0, line, curPos, 0, new ArrayList<Token>(),
+      // MimeType.APPLICATION_GROOVY, null);
    }
 }

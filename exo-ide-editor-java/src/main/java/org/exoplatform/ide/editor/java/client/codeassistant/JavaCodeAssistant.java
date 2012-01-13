@@ -51,7 +51,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaCodeAssistant Mar 2, 2011 4:41:28 PM evgen $
- *
+ * 
  */
 public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token>
 {
@@ -74,7 +74,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       PUBLIC_STATIC,
 
       /**
-       * Get all <b>public</b> constructors 
+       * Get all <b>public</b> constructors
        */
       PUBLIC_CONSTRUCTORS,
 
@@ -94,7 +94,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       LOCAL_VAR,
 
       /**
-       *  Get annotations
+       * Get annotations
        */
       ANNOTATION;
 
@@ -131,7 +131,8 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor,
+    *      java.util.List, int, int, java.lang.String)
     */
    @Override
    public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, final int markOffsetX,
@@ -164,7 +165,9 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
    public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
@@ -173,7 +176,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
-      //      printTokens(tokenList, 1);
+      // printTokens(tokenList, 1);
       try
       {
          currentLineNumber = editor.getCursorRow();
@@ -215,7 +218,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
             tokenToComplete = token;
             this.tokenFromParser = filterTokenFromParser(tokenFromParser, currentToken);
             action = Action.CLASS_NAME_AND_LOCAL_VAR;
-            //if token to complete is only whitespace string
+            // if token to complete is only whitespace string
             if (tokenToComplete.matches("^[ ]+&") || "".equals(tokenToComplete))
             {
                action = Action.LOCAL_VAR;
@@ -223,7 +226,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                return;
             }
 
-            //if annotation
+            // if annotation
             if (token.startsWith("@"))
             {
                action = Action.ANNOTATION;
@@ -355,9 +358,8 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
-    * Filter {@link JavaClass} by specific {@link Action} and 
-    * call {@link TokensCollectedCallback#onTokensCollected(List, String, String, String)}
-    * to complete collect tokens
+    * Filter {@link JavaClass} by specific {@link Action} and call
+    * {@link TokensCollectedCallback#onTokensCollected(List, String, String, String)} to complete collect tokens
     * 
     * @param gClass {@link JavaClass} that represent current class
     */
@@ -384,7 +386,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
     * Get all <b><code>public static</code></b> fields and methods of Class
     * 
     * @param JavaClass {@link JavaClass}
-    * @return {@link List} of {@link Token} 
+    * @return {@link List} of {@link Token}
     */
    private List<Token> collectPublicStaticFileldsAndMethods(JavaClass JavaClass)
    {
@@ -411,8 +413,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
-    * Get all <b><code>public</code></b> and <b><code>public static</code></b>
-    * fields and methods of class
+    * Get all <b><code>public</code></b> and <b><code>public static</code></b> fields and methods of class
     * 
     * @param JavaClass {@link JavaClass}
     * @return {@link List} of {@link Token}
@@ -427,7 +428,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
    private void classDescriptionReceived(JavaClass gClass)
    {
-      //      classes.put(curentFqn, event.getClassInfo());
+      // classes.put(curentFqn, event.getClassInfo());
 
       filterTokens(gClass);
    }
@@ -544,6 +545,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Parse JSON token to {@link Token} beens
+    * 
     * @param resource JSON
     */
    protected void parseKeyWords(TextResource resource)

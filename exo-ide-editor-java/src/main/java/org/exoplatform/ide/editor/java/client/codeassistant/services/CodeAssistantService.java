@@ -36,14 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This service for auto-complete feature.
- * Service need for retrieve information about Groovy classes.      
- * <br>
+ * This service for auto-complete feature. Service need for retrieve information about Groovy classes. <br>
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 2:44:13 PM evgen $
- *
+ * 
  */
 public abstract class CodeAssistantService
 {
@@ -94,6 +92,7 @@ public abstract class CodeAssistantService
 
    /**
     * Find classes by prefix
+    * 
     * @param prefix the first letters of class name
     * @param projectId for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
@@ -101,8 +100,8 @@ public abstract class CodeAssistantService
    public void findClassesByPrefix(String prefix, String projectId, AsyncRequestCallback<List<Token>> callback)
    {
       String url =
-         restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId + "&vfsid="
-            + VirtualFileSystem.getInstance().getInfo().getId();
+         restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId
+            + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
 
       List<Token> tokens = new ArrayList<Token>();
       callback.setResult(tokens);
