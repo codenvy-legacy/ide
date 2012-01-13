@@ -21,7 +21,7 @@ package org.exoplatform.ide.editor.api;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: EditoCapability Feb 9, 2011 4:30:38 PM evgen $
- *
+ * 
  */
 public enum EditorCapability {
 
@@ -36,7 +36,7 @@ public enum EditorCapability {
    SHOW_LINE_NUMBERS,
 
    /**
-    *  you can use method goToPosition() to set cursor in the any position in the current editor
+    * you can use method goToPosition() to set cursor in the any position in the current editor
     */
    GO_TO_POSITION,
 

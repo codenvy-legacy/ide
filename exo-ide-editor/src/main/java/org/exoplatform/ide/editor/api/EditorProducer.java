@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.HandlerManager;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: EditorProducer Feb 9, 2011 4:37:14 PM evgen $
- *
+ * 
  */
 public abstract class EditorProducer
 {
@@ -75,7 +75,7 @@ public abstract class EditorProducer
    }
 
    /**
-    * @return true if editor default for current mime type 
+    * @return true if editor default for current mime type
     */
    public boolean isDefault()
    {
@@ -92,6 +92,7 @@ public abstract class EditorProducer
 
    /**
     * Create new {@link Editor} widget
+    * 
     * @param content
     * @param eventBus
     * @param params editor configuration parameters

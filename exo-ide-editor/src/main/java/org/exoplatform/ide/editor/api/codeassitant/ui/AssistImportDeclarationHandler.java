@@ -24,9 +24,10 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
  * Callback for AssistImportDeclarationForm.
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 22, 2010 9:43:03 AM evgen $
- *
+ * 
  */
 public interface AssistImportDeclarationHandler
 {
@@ -39,9 +40,8 @@ public interface AssistImportDeclarationHandler
    void onImportTokenSelected(Token token);
 
    /**
-    * Fired if AssistImportDeclarationForm closed without selected token.
-    * It may be click outside the  AssistImportDeclarationForm or "Esc" key  pressed.
-    * Implementor must return focus in to editor.
+    * Fired if AssistImportDeclarationForm closed without selected token. It may be click outside the AssistImportDeclarationForm
+    * or "Esc" key pressed. Implementor must return focus in to editor.
     */
    void onImportCancel();
 

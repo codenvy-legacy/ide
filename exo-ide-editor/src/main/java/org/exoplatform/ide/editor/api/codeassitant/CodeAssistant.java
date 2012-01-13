@@ -33,9 +33,10 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * Callback abstract calss for codeaasistant feature.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistant Feb 22, 2011 12:43:13 PM evgen $
- *
+ * 
  */
 public abstract class CodeAssistant implements TokenSelectedHandler, AssistImportDeclarationHandler
 {
@@ -61,8 +62,9 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
    }
 
    /**
-    * If editor support code validation, it's method called when user click on error mark 
-    * @param editor instance of current editor 
+    * If editor support code validation, it's method called when user click on error mark
+    * 
+    * @param editor instance of current editor
     * @param codeErrorList list with errors
     * @param markOffsetX coordinate X
     * @param markOffsetY coordinate X
@@ -72,23 +74,25 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
       String fileMimeType);
 
    /**
-    * If editor support autocompletion, he calls this method.  
+    * If editor support autocompletion, he calls this method.
+    * 
     * @param editor instance of editor
     * @param cursorOffsetX offset x position of cursor
     * @param cursorOffsetY offset y position of cursor
     * @param tokenList List of parsed tokens
     * @param lineMimeType line mime type
-    * @param currentToken if cursor pleased before dot(i.e. autocompletion called for method or property), 
-    * contains token with information of type of variable
+    * @param currentToken if cursor pleased before dot(i.e. autocompletion called for method or property), contains token with
+    *           information of type of variable
     */
    public abstract void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
       String lineMimeType, Token currentToken);
 
    /**
     * Create and show {@link AutocompletionForm}
+    * 
     * @param tokens list of tokens
     * @param factory instance of {@link TokenWidgetFactory}
-    * @param handler callback  for autocompletion form
+    * @param handler callback for autocompletion form
     */
    protected void openForm(List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
    {
@@ -168,6 +172,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
 
    /**
     * Create and show {@link AssistImportDeclarationForm}
+    * 
     * @param left position
     * @param top position
     * @param tokens list of tokens
@@ -200,6 +205,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
 
    /**
     * Takes in a trusted JSON String and evals it.
+    * 
     * @param JSON String that you trust
     * @return JavaScriptObject that you can cast to an Overlay Type
     */

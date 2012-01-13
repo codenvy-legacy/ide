@@ -51,7 +51,7 @@ import java.util.List;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeMirror Feb 9, 2011 4:58:14 PM $
- *
+ * 
  */
 public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 {
@@ -248,7 +248,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       eventBus.fireEvent(new EditorInitializedEvent(editorId));
 
-      //       turn on code validation time
+      // turn on code validation time
       if (configuration.canBeValidated())
       {
          this.codeValidateTimer.scheduleRepeating(2000);
@@ -311,6 +311,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    /**
     * returns line position number of vertical scroll bar in the body with text in the CodeMirror iframe
+    * 
     * @param currentLine if equals 0 or null, then will get current line position
     */
    public native int getCursorOffsetY(int currentLine) /*-{
@@ -341,7 +342,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
                                                        }
 
                                                        cursorOffsetY = (currentLine - 1)
-                                                       * this.@org.exoplatform.ide.editor.codemirror.CodeMirror::lineHeight;
+                                                        * this.@org.exoplatform.ide.editor.codemirror.CodeMirror::lineHeight;
                                                        cursorOffsetY -= verticalScrollBarPosition;
 
                                                        return cursorOffsetY;
@@ -478,7 +479,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       // calculate cursorOffsetX
       int cursorCol = cursorPositionCol;
-      int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + firstCharacterOffsetLeft; // 8px per symbol 
+      int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + firstCharacterOffsetLeft; // 8px per symbol
 
       if (this.showLineNumbers)
       {
@@ -549,7 +550,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }
 
    /**
-    * @return mimeType of current line content  
+    * @return mimeType of current line content
     */
    private String getCurrentLineMimeType()
    {
@@ -573,12 +574,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }
 
    /**
-    * Updates token's FQNs and returns token before "." in position like "address._", or "address.inde_", or "String._" 
+    * Updates token's FQNs and returns token before "." in position like "address._", or "address.inde_", or "String._"
+    * 
     * @param tokenList
     * @param node the ended node of current line
     * @param lineNumber
     * @param cursorPosition
-    * @return FQN of current cursor content before "." symbol or null, if this fqn is unknown 
+    * @return FQN of current cursor content before "." symbol or null, if this fqn is unknown
     */
    private Token getTokenBeforeCursor(List<? extends Token> tokenList, JavaScriptObject node, int lineNumber,
       int cursorPosition)
@@ -646,7 +648,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       {
          needValidateCode = false;
 
-         // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList         
+         // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList
          if (tokenList == null || tokenList.isEmpty())
          {
             // clear code error marks
@@ -673,7 +675,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       List<CodeLine> lineCodeErrorList;
       for (CodeLine newCodeError : newCodeErrorList)
       {
-         // TODO supress repetitevly setting error mark if there are several errors in the one line         
+         // TODO supress repetitevly setting error mark if there are several errors in the one line
          lineCodeErrorList = CodeValidator.getCodeErrorList(newCodeError.getLineNumber(), newCodeErrorList);
          setErrorMark(newCodeError.getLineNumber(), CodeValidator.getErrorSummary(lineCodeErrorList));
       }
@@ -907,6 +909,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    /**
     * returns line quantity in the content
+    * 
     * @param content
     * @return
     */
@@ -1092,7 +1095,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
                                     }-*/;
 
    /**
-    * @param cursor object - the argument of native codemirror cursorActivity event 
+    * @param cursor object - the argument of native codemirror cursorActivity event
     * @return editor.lineNumber(cursor) - 1
     */
    private native int getCursorActivityRow(JavaScriptObject cursor, int cursorCol) /*-{
@@ -1168,6 +1171,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    /**
     * Set error mark in lineNumbers field
+    * 
     * @param lineNumber starting from 1
     * @param errorSummary text summary of errors within the line
     */
@@ -1183,6 +1187,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    /**
     * Clear error mark from lineNumbers field
+    * 
     * @param lineNumber starting from 1
     */
    private native void clearErrorMark(int lineNumber) /*-{
@@ -1196,7 +1201,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
                                                       }
                                                       }-*/;
 
-   /** 
+   /**
     * @param newText
     * @param lineNumber started from 1
     */
@@ -1244,7 +1249,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }
 
    /**
-    * Set show/hide line numbers and revalidate code if needed 
+    * Set show/hide line numbers and revalidate code if needed
+    * 
     * @param showLineNumbers
     */
    private void setLineNumbers(boolean showLineNumbers)
@@ -1298,6 +1304,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    /**
     * Check if CodeMirror editor instance consists of neccessery objects.
+    * 
     * @param editor
     * @return
     */

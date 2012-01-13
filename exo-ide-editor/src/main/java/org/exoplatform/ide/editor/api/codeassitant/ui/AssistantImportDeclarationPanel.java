@@ -25,10 +25,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:41:26 PM evgen $
- *
+ * 
  */
 public class AssistantImportDeclarationPanel extends FlowPanel
 {
@@ -37,6 +37,7 @@ public class AssistantImportDeclarationPanel extends FlowPanel
 
    /**
     * Add a new child widget to the panel.
+    * 
     * @param w the widget to be added
     */
    public void addWidget(TokenWidget w)

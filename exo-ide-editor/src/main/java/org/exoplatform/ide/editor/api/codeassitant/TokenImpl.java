@@ -24,12 +24,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Basic implementation of {@link Token} interface
- * Created by The eXo Platform SAS.
- *
+ * Basic implementation of {@link Token} interface Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:22:15 PM evgen $
- *
+ * 
  */
 public class TokenImpl implements Token
 {
@@ -106,7 +105,8 @@ public class TokenImpl implements Token
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#setProperty(java.lang.String, org.exoplatform.ide.editor.api.codeassitant.TokenProperty)
+    * @see org.exoplatform.ide.editor.api.codeassitant.Token#setProperty(java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.TokenProperty)
     */
 
    public void setProperty(String key, TokenProperty property)

@@ -19,11 +19,11 @@
 package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
- * Numeric implementation of {@link TokenProperty}
- * Created by The eXo Platform SAS.
+ * Numeric implementation of {@link TokenProperty} Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class NumericProperty extends TokenProperty
 {
 

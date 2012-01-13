@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.HandlerManager;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Parser Feb 9, 2011 4:55:57 PM evgen $
- *
+ * 
  */
 public abstract class Parser
 {

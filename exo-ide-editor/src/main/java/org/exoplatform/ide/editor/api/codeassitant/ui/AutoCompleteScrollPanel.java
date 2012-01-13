@@ -26,10 +26,10 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:31:06 PM evgen $
- *
+ * 
  */
 public class AutoCompleteScrollPanel extends ScrollPanel implements HasMouseOutHandlers
 {

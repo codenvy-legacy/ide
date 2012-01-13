@@ -65,7 +65,7 @@ public class Node
       return this.content;
    }
 
-   /** 
+   /**
     * @param editor
     * @return get first line of document opened in editor
     */
@@ -86,7 +86,7 @@ public class Node
                                                                                       return editor.nthLine(lineNumber);
                                                                                       }-*/;
 
-   /** 
+   /**
     * @param editor - CodeMirror editor object
     * @return last line number of document opened in editor
     */
@@ -166,9 +166,9 @@ public class Node
       return "line-break".equals(this.type);
    }
 
-   /** 
+   /**
     * @param node
-    * @return clone of node by using DOM cloneNode() function, or null if node is not DOM object  
+    * @return clone of node by using DOM cloneNode() function, or null if node is not DOM object
     */
    public native static JavaScriptObject getClone(JavaScriptObject node) /*-{
                                                                          if(node == null || typeof node != 'object' || ! node.cloneNode)

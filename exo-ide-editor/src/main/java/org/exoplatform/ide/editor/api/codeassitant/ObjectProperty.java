@@ -19,11 +19,11 @@
 package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
- * Object implementation of {@link TokenProperty}
- * Created by The eXo Platform SAS.
+ * Object implementation of {@link TokenProperty} Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class ObjectProperty extends TokenProperty
 {
 
@@ -39,8 +39,8 @@ public class ObjectProperty extends TokenProperty
    }
 
    /**
-   * @see org.exoplatform.ide.editor.api.codeassitant.TokenProperty#isObjectProperty()
-   */
+    * @see org.exoplatform.ide.editor.api.codeassitant.TokenProperty#isObjectProperty()
+    */
    @Override
    public ObjectProperty isObjectProperty()
    {

@@ -36,7 +36,7 @@ import com.google.gwt.json.client.JSONObject;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JSONTokenParser.java Jan 24, 2011 10:37:59 AM vereshchaka $
- *
+ * 
  */
 public class JSONTokenParser
 {

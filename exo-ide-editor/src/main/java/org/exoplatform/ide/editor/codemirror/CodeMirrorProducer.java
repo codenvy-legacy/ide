@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeMirrorProducer Feb 11, 2011 2:30:49 PM evgen $
- *
+ * 
  */
 public class CodeMirrorProducer extends EditorProducer
 {
@@ -58,7 +58,8 @@ public class CodeMirrorProducer extends EditorProducer
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.EditorProducer#createEditor(org.exoplatform.ide.client.framework.vfs.File, com.google.gwt.event.shared.HandlerManager, java.util.HashMap)
+    * @see org.exoplatform.ide.editor.api.EditorProducer#createEditor(org.exoplatform.ide.client.framework.vfs.File,
+    *      com.google.gwt.event.shared.HandlerManager, java.util.HashMap)
     */
    @Override
    public Editor createEditor(String content, HandlerManager eventBus, HashMap<String, Object> params)

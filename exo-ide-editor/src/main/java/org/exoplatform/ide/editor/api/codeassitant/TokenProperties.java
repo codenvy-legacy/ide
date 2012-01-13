@@ -20,10 +20,10 @@ package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
  * Properties, that can be applied to {@link Token}
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:31:49 PM evgen $
- *
+ * 
  */
 public interface TokenProperties
 {
@@ -47,22 +47,18 @@ public interface TokenProperties
    String RETURN_TYPE = "RETURNTYPE";
 
    /**
-    * Code, that will be inserted if token selected.
-    * Used only for template tokens.
+    * Code, that will be inserted if token selected. Used only for template tokens.
     */
    String CODE = "CODE";
 
    /**
-    * Used for template tokens.
-    * Short hint, that will be displayed near name in autocomplete form.
-    * Can help user quickly to identify the purpose of template.
+    * Used for template tokens. Short hint, that will be displayed near name in autocomplete form. Can help user quickly to
+    * identify the purpose of template.
     */
    String SHORT_HINT = "SHORT-HINT";
 
    /**
-    * Used for template tokens.
-    * Full text of template, that will be inserted to code editor.
-    * Also, can be shown in javadoc window.
+    * Used for template tokens. Full text of template, that will be inserted to code editor. Also, can be shown in javadoc window.
     */
    String FULL_TEXT = "FULL-TEXT";
 
@@ -75,8 +71,7 @@ public interface TokenProperties
    String FULL_DESCRIPTION = "fullDescription";
 
    /**
-    * Used for sub token list property.
-    * Contains {@link ArrayProperty} 
+    * Used for sub token list property. Contains {@link ArrayProperty}
     */
    String SUB_TOKEN_LIST = "subTokenList";
 

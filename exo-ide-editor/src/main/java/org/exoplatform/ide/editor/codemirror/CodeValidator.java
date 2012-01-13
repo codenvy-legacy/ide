@@ -29,14 +29,15 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a> 
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeValidator Feb 9, 2011 5:48:28 PM $
- *
+ * 
  */
 public abstract class CodeValidator
 {
    /**
     * Get list of code errors in the tokenList
+    * 
     * @param tokenList
     * @return
     */
@@ -44,6 +45,7 @@ public abstract class CodeValidator
 
    /**
     * Get import statement "import <fqn>;" in the appropriate place of file
+    * 
     * @param tokenList
     * @param fqn
     */
@@ -51,6 +53,7 @@ public abstract class CodeValidator
 
    /**
     * Returns list of code error in line with lineNumber
+    * 
     * @param lineNumber
     * @return
     */
@@ -70,7 +73,8 @@ public abstract class CodeValidator
    }
 
    /**
-    * Get text summary of registered errors from the lineCodeErrorList within the line 
+    * Get text summary of registered errors from the lineCodeErrorList within the line
+    * 
     * @param lineCodeErrorList
     * @return text summary of errors within the line
     */
@@ -112,6 +116,7 @@ public abstract class CodeValidator
 
    /**
     * Extract tokens with mimeType from tokenList
+    * 
     * @param tokenList
     * @param code
     * @param mimeType
@@ -137,9 +142,14 @@ public abstract class CodeValidator
 
       if (mimeType.equals(currentToken.getMimeType()))
       {
-         if (MimeType.APPLICATION_GROOVY.equals(mimeType) && TokenType.GROOVY_TAG.equals(currentToken.getType()) // add subtokens of Groovy Template "<%" tag
-            || MimeType.APPLICATION_JAVA.equals(mimeType) && TokenType.JSP_TAG.equals(currentToken.getType()) // add subtokens of JSP file "<%" tag
-            || MimeType.APPLICATION_JAVASCRIPT.equals(mimeType) && TokenType.TAG.equals(currentToken.getType()) // add subtokens of "<script>"
+         if (MimeType.APPLICATION_GROOVY.equals(mimeType) && TokenType.GROOVY_TAG.equals(currentToken.getType()) // add subtokens
+                                                                                                                 // of Groovy
+                                                                                                                 // Template "<%"
+                                                                                                                 // tag
+            || MimeType.APPLICATION_JAVA.equals(mimeType) && TokenType.JSP_TAG.equals(currentToken.getType()) // add subtokens of
+                                                                                                              // JSP file "<%" tag
+            || MimeType.APPLICATION_JAVASCRIPT.equals(mimeType) && TokenType.TAG.equals(currentToken.getType()) // add subtokens
+                                                                                                                // of "<script>"
          )
          {
             if (currentToken.getSubTokenList() != null)

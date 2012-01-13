@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class TokenBeenImpl extends TokenImpl
 {
@@ -276,6 +276,7 @@ public class TokenBeenImpl extends TokenImpl
 
    /**
     * Set statement used to initialize variable, like "widget.createDiv()" in statement "var a = widget.createDiv('test');"
+    * 
     * @param initializationStatement
     */
    public void setInitializationStatement(String initializationStatement)
@@ -294,6 +295,7 @@ public class TokenBeenImpl extends TokenImpl
 
    /**
     * Adds subToken into the last sub token subTokenList
+    * 
     * @param token
     * @param subToken
     */
@@ -329,7 +331,8 @@ public class TokenBeenImpl extends TokenImpl
    }
 
    /**
-    * Set token.elementType += elementType  
+    * Set token.elementType += elementType
+    * 
     * @param elementType
     */
    public void concatElementTypeOfLastSubToken(String elementType)
@@ -410,13 +413,14 @@ public class TokenBeenImpl extends TokenImpl
 
    /**
     * Concatenates the specified "string" to the end of name of last token in annotation list
+    * 
     * @param string
     */
    public void lastAnnotationTokenNameConcat(String string)
    {
       if (getLastAnnotationToken() != null)
       {
-         getLastAnnotationToken().setName(getLastAnnotationToken().getName().concat(string)); // update last  annotation token
+         getLastAnnotationToken().setName(getLastAnnotationToken().getName().concat(string)); // update last annotation token
       }
    }
 

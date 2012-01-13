@@ -25,7 +25,7 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeMirrorParams Feb 10, 2011 9:41:09 AM evgen $
- *
+ * 
  */
 public interface EditorParameters
 {

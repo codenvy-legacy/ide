@@ -53,10 +53,10 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:12:46 PM evgen $
- *
+ * 
  */
 public class AssistImportDeclarationForm extends Composite implements ResizeHandler
 {
@@ -240,8 +240,8 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
    private void selectWidget(int i)
    {
       scrollPanel.ensureVisible(flowPanel.getEntries().get(i));
-      //         DOM.scrollIntoView(widgets.get(i).getElement());
-      //      ensureVisibleImpl(scrollPanel.getElement(), widgets.get(i).getElement());
+      // DOM.scrollIntoView(widgets.get(i).getElement());
+      // ensureVisibleImpl(scrollPanel.getElement(), widgets.get(i).getElement());
       selectTokenWidget(flowPanel.getEntries().get(i));
 
    }
@@ -268,7 +268,7 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
    }
 
    /**
-    *  Lock Layer uses for locking of screen. Uses for hiding popups.
+    * Lock Layer uses for locking of screen. Uses for hiding popups.
     */
    private class LockLayer extends AbsolutePanel
    {

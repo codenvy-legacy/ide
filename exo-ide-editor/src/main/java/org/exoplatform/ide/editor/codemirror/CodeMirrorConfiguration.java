@@ -26,7 +26,7 @@ import com.google.gwt.core.client.GWT;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class CodeMirrorConfiguration
 {
@@ -75,6 +75,7 @@ public class CodeMirrorConfiguration
 
    /**
     * Set generic CodeMirror library parsing files *.js
+    * 
     * @param codeParsers
     * @return configuration instance
     */
@@ -91,6 +92,7 @@ public class CodeMirrorConfiguration
 
    /**
     * Set generic CodeMirror library style files *.css
+    * 
     * @param codeStyles
     * @return configuration instance
     */
@@ -116,22 +118,22 @@ public class CodeMirrorConfiguration
       return this.parser != null && this.codeAssistant != null;
    }
 
-   //   public CodeMirrorConfiguration setCanBeAutocompleted(boolean canBeAutocompleted)
-   //   {
-   //      this.canBeAutocompleted = canBeAutocompleted;
-   //      return this;
-   //   }
+   // public CodeMirrorConfiguration setCanBeAutocompleted(boolean canBeAutocompleted)
+   // {
+   // this.canBeAutocompleted = canBeAutocompleted;
+   // return this;
+   // }
 
    public boolean canBeValidated()
    {
       return this.parser != null && this.codeValidator != null && this.codeAssistant != null;
    }
 
-   //   public CodeMirrorConfiguration setCanBeValidated(boolean canBeValidated)
-   //   {
-   //      this.canBeValidated = canBeValidated;
-   //      return this;
-   //   }
+   // public CodeMirrorConfiguration setCanBeValidated(boolean canBeValidated)
+   // {
+   // this.canBeValidated = canBeValidated;
+   // return this;
+   // }
 
    public Parser getParser()
    {

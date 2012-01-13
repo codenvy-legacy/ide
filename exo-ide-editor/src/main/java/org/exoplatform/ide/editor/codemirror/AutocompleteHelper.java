@@ -29,7 +29,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public abstract class AutocompleteHelper
 {
@@ -41,7 +41,7 @@ public abstract class AutocompleteHelper
     * 
     * @param node
     * @param cursorPosition within the line
-    * @return  line content node " java.lang.String.ch" -> "java.lang.String",  "<End-Of-Line>address.tes_" -> "address"
+    * @return line content node " java.lang.String.ch" -> "java.lang.String", "<End-Of-Line>address.tes_" -> "address"
     */
    public String getStatementBeforePoint(JavaScriptObject node, int cursorPosition)
    {
@@ -63,10 +63,14 @@ public abstract class AutocompleteHelper
             nodeContent = Node.getContent(node);
             nodeType = Node.getType(node);
 
-            if ((!isVariable(nodeType) && !isPoint(nodeType, nodeContent.trim())) // filter part with non-variable and non-point symbols, not ". " symbol
-               || (nodeContent.indexOf(" ") != -1 // filter nodes like "String " in sentence "String name._", or like ". " in sentence ". String_", or like ". _" in sentence like "String. _", or like "ch " in sentence like "name.ch _"  
+            if ((!isVariable(nodeType) && !isPoint(nodeType, nodeContent.trim())) // filter part with non-variable and non-point
+                                                                                  // symbols, not ". " symbol
+               || (nodeContent.indexOf(" ") != -1 // filter nodes like "String " in sentence "String name._", or like ". " in
+                                                  // sentence ". String_", or like ". _" in sentence like "String. _", or like
+                                                  // "ch " in sentence like "name.ch _"
                && (statement.length() > 0 // filter nodes like "name ._" or "name. ch._"
-               || (Node.getNodePositionInLine(node) + nodeContent.length()) <= cursorPosition // filter nodes like "name. _" or "name.ch _"
+               || (Node.getNodePositionInLine(node) + nodeContent.length()) <= cursorPosition // filter nodes like "name. _" or
+                                                                                              // "name.ch _"
                )))
             {
                break;
@@ -86,19 +90,22 @@ public abstract class AutocompleteHelper
       }
       else
       {
-         // clear last chain like ".ch_" in node "java.lang.String.ch_", or "." in node "name.", or statement without point like "name_"         
+         // clear last chain like ".ch_" in node "java.lang.String.ch_", or "." in node "name.", or statement without point like
+         // "name_"
          return statement.substring(0, statement.lastIndexOf("."));
       }
    }
 
    /**
     * Is node type of variable
+    * 
     * @see org.exoplatform.ide.editor.codemirror.AutocompleteHelper#isVariable(java.lang.String)
     */
    public abstract boolean isVariable(String nodeType);
 
    /**
     * Is node type of point
+    * 
     * @see org.exoplatform.ide.editor.codemirror.AutocompleteHelper#isVariable(java.lang.String)
     */
    public abstract boolean isPoint(String nodeType, String nodeContent);
@@ -212,7 +219,8 @@ public abstract class AutocompleteHelper
    int nearestTokenLineNumber;
 
    /**
-    * Recognize container token of line with lineNumber.  
+    * Recognize container token of line with lineNumber.
+    * 
     * @param targetLineNumber
     * @param tokenList
     * @return container token with token.lineNumber <= targetLineNumber < token.lastLineNumber.
@@ -233,7 +241,8 @@ public abstract class AutocompleteHelper
             break;
          }
 
-         // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber), that is Current Line After The Container Token 
+         // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber), that is Current Line
+         // After The Container Token
          else if (targetLineNumber >= token.getLastLineNumber())
          {
             continue;
@@ -269,7 +278,8 @@ public abstract class AutocompleteHelper
                break;
             }
 
-            // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber), that is CurrentLine After The Container Token 
+            // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber), that is CurrentLine
+            // After The Container Token
             else if (targetLineNumber >= token.getLastLineNumber())
             {
                continue;
@@ -283,7 +293,9 @@ public abstract class AutocompleteHelper
       }
 
       int currentTokenLineNumber = currentToken.getLineNumber();
-      if ((currentTokenLineNumber <= targetLineNumber) && (currentTokenLineNumber >= nearestTokenLineNumber) // taking in mind the last token among them in the line
+      if ((currentTokenLineNumber <= targetLineNumber) && (currentTokenLineNumber >= nearestTokenLineNumber) // taking in mind the
+                                                                                                             // last token among
+                                                                                                             // them in the line
       )
       {
          nearestTokenLineNumber = currentTokenLineNumber;

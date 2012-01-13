@@ -23,7 +23,7 @@ import com.google.gwt.resources.client.CssResource;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Codeassistant Feb 22, 2011 5:17:02 PM evgen $
- *
+ * 
  */
 public interface CodeAssistantCss extends CssResource
 {

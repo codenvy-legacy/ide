@@ -22,8 +22,8 @@ package org.exoplatform.ide.editor.api.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Fires just after opened in editor content had been changed.
- * Created by The eXo Platform SAS .
+ * Fires just after opened in editor content had been changed. Created by The eXo Platform SAS .
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */

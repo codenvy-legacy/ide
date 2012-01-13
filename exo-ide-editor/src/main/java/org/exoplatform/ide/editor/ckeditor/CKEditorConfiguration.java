@@ -133,15 +133,19 @@ public class CKEditorConfiguration
 
    private static boolean fullPage = false;
 
-   /** @param fullPage <b>true</b> - ckeditor will add <i>html, head, body</i> - tags of html-file;
-    * <b>false</b> - ckeditor will remove <i>html, head, body</i> - tags of html-file **/
+   /**
+    * @param fullPage <b>true</b> - ckeditor will add <i>html, head, body</i> - tags of html-file; <b>false</b> - ckeditor will
+    *           remove <i>html, head, body</i> - tags of html-file
+    **/
    public static void setFullPage(boolean fullPage)
    {
       CKEditorConfiguration.fullPage = fullPage;
    }
 
-   /** @return <b>true</b> - ckeditor will add <i>html, head, body</i> - tags of html-file;
-    * <b>false</b> - ckeditor will remove <i>html, head, body</i> - tags of html-file **/
+   /**
+    * @return <b>true</b> - ckeditor will add <i>html, head, body</i> - tags of html-file; <b>false</b> - ckeditor will remove
+    *         <i>html, head, body</i> - tags of html-file
+    **/
    public static boolean isFullPage()
    {
       return fullPage;

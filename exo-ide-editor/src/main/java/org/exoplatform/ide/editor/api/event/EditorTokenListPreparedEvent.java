@@ -26,8 +26,8 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Fires just after opened in editor content had been changed.
- * Created by The eXo Platform SAS .
+ * Fires just after opened in editor content had been changed. Created by The eXo Platform SAS .
+ * 
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version @version $Id: $
  */

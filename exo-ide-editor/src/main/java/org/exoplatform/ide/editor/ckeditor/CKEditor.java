@@ -76,7 +76,9 @@ public class CKEditor extends Editor
 
       label = new Label();
       DOM.setElementAttribute(label.getElement(), "id", getEditorId());
-      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars and to display on the full tab         
+      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
+                                                                                                          // and to display on the
+                                                                                                          // full tab
       add(label);
 
       if (params.get(EditorParameters.CONFIGURATION) != null)
@@ -248,7 +250,7 @@ public class CKEditor extends Editor
 
    public void setText(String text)
    {
-      // removed odd "\r" symbols 
+      // removed odd "\r" symbols
       text = text.replace("\r", "");
 
       // extract CDATA section from google gadget
@@ -389,7 +391,7 @@ public class CKEditor extends Editor
    }
 
    /*
-    * set editor height 
+    * set editor height
     */
    public native void setHeightNative(String height) /*-{
                                                      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;      
@@ -433,7 +435,8 @@ public class CKEditor extends Editor
    }
 
    /**
-    * replace window.alert() function on org.exoplatform.gwtframework.ui.client.dialogs.Dialogs.showError() and hide window.confirm() function
+    * replace window.alert() function on org.exoplatform.gwtframework.ui.client.dialogs.Dialogs.showError() and hide
+    * window.confirm() function
     * */
    private native void overrideNativeAlertAndConfirm() /*-{ 
                                                        (function(){
@@ -525,7 +528,7 @@ public class CKEditor extends Editor
    }
 
    /**
-    * Set listeners of hot keys clicking 
+    * Set listeners of hot keys clicking
     */
    private native void setHotKeysClickListener(JavaScriptObject editor) /*-{
                                                                         var instance = this;

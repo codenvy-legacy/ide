@@ -27,7 +27,7 @@ public class GoogleGadgetParser
 
    /**
     * @param code - all gadget content
-    * @return prefix of gadget from start to CDATA open tag "<![CDATA[" 
+    * @return prefix of gadget from start to CDATA open tag "<![CDATA["
     */
    protected static native String getPrefix(String code) /*-{
                                                          if (@org.exoplatform.ide.editor.ckeditor.GoogleGadgetParser::hasContentSection(Ljava/lang/String;)(code))
@@ -46,7 +46,7 @@ public class GoogleGadgetParser
 
    /**
     * @param code - gadget content
-    * @return Content section between Content-CDATA tags 
+    * @return Content section between Content-CDATA tags
     */
    protected static native String getContentSection(String code) /*-{     
                                                                  if (@org.exoplatform.ide.editor.ckeditor.GoogleGadgetParser::hasContentSection(Ljava/lang/String;)(code))
@@ -65,7 +65,7 @@ public class GoogleGadgetParser
 
    /**
     * @param code - all gadget content
-    * @return suffix of gadget from end of Content section to end of file 
+    * @return suffix of gadget from end of Content section to end of file
     */
    protected static native String getSuffix(String code) /*-{
                                                          if (@org.exoplatform.ide.editor.ckeditor.GoogleGadgetParser::hasContentSection(Ljava/lang/String;)(code))

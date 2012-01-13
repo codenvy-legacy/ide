@@ -34,7 +34,7 @@ import com.google.gwt.event.shared.HandlerManager;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class CodeMirrorParserImpl extends Parser
 {
@@ -45,12 +45,13 @@ public class CodeMirrorParserImpl extends Parser
    {
    }
 
-   /** 
+   /**
     * @param node
     * @param lineNumber
     * @param tokenList
     * @param hasParentParser indicates is parser calles by another parser, e.g. JavaScriptParser is called by HtmlParser
-    * @return token list with tokens gathered from node chains from start node to <br> node
+    * @return token list with tokens gathered from node chains from start node to <br>
+    *         node
     */
    public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken,
       boolean hasParentParser)
@@ -110,6 +111,7 @@ public class CodeMirrorParserImpl extends Parser
 
    /**
     * Recognize break line node with name "BR" and type "whitespace"
+    * 
     * @param node
     * @return
     */
@@ -121,10 +123,11 @@ public class CodeMirrorParserImpl extends Parser
    private static String possibleMimeType;
 
    /**
-    * Recognize mimeType of line with lineNumber.  
+    * Recognize mimeType of line with lineNumber.
+    * 
     * @param targetLineNumber
     * @param tokenList
-    * @return 
+    * @return
     */
    public static String getLineMimeType(int targetLineNumber, List<TokenBeenImpl> tokenList)
    {
@@ -226,11 +229,13 @@ public class CodeMirrorParserImpl extends Parser
 
       /**
        * Start building token list
+       * 
        * @param editor
        */
       public void start(JavaScriptObject editor)
       {
-         // container substitution is needed to get container clone and the links on the started node of each line of this clone without getting clone of entire editor (this is almost impossible) 
+         // container substitution is needed to get container clone and the links on the started node of each line of this clone
+         // without getting clone of entire editor (this is almost impossible)
          JavaScriptObject initialEditorContainer = Node.getContainer(editor);
          if (initialEditorContainer == null)
          {
@@ -360,7 +365,8 @@ public class CodeMirrorParserImpl extends Parser
 
       public void shouldRebuild(JavaScriptObject editor)
       {
-         // container substitution is needed to get container clone and the links on the started node of each line of this clone without getting clone of entire editor (this is almost impossible) 
+         // container substitution is needed to get container clone and the links on the started node of each line of this clone
+         // without getting clone of entire editor (this is almost impossible)
          JavaScriptObject initialEditorContainer = Node.getContainer(editor);
          if (initialEditorContainer == null)
          {

@@ -24,8 +24,8 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
- * @version $Id: 
- *
+ * @version $Id:
+ * 
  */
 public interface CodeMirrorClientBundle extends ClientBundle
 {

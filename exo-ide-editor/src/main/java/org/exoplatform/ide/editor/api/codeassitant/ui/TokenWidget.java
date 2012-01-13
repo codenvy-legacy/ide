@@ -35,11 +35,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Base class for UI representation of token.<br>
- *  
+ * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:13:18 PM evgen $
- *
+ * 
  */
 public abstract class TokenWidget extends Composite implements HasClickHandlers, HasMouseOverHandlers,
    HasDoubleClickHandlers
@@ -66,19 +67,19 @@ public abstract class TokenWidget extends Composite implements HasClickHandlers,
    public abstract String getTokenName();
 
    /**
-    * @return String that will inserted in editor 
+    * @return String that will inserted in editor
     */
    public abstract String getTokenValue();
 
    /**
-    * Get token description.
-    * It's may be javadoc, template content etc. 
-    * @return {@link Widget} with description 
+    * Get token description. It's may be javadoc, template content etc.
+    * 
+    * @return {@link Widget} with description
     */
    public abstract Widget getTokenDecription();
 
    /**
-    *  Calls when user select this {@link Widget} 
+    * Calls when user select this {@link Widget}
     */
    public abstract void setSelectedStyle();
 

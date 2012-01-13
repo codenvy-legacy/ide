@@ -20,10 +20,10 @@ package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:45:20 PM evgen $
- *
+ * 
  */
 public enum TokenType {
    CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,
@@ -36,7 +36,7 @@ public enum TokenType {
    TAG,
 
    /**
-    * HTML or XML attribute; 
+    * HTML or XML attribute;
     */
    ATTRIBUTE, CDATA,
 

@@ -59,14 +59,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * This class is UI component that represent autocompletion form.
- * This form works with any bean, but also required implementation of {@link TokenWidgetFactory}
- * to build {@link TokenWidget}
+ * This class is UI component that represent autocompletion form. This form works with any bean, but also required implementation
+ * of {@link TokenWidgetFactory} to build {@link TokenWidget}
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
- *
+ * 
  */
 public class AutocompletionForm extends Composite implements ChangeHandler, ResizeHandler
 {
@@ -130,7 +130,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       DOM.setStyleAttribute(lockLayer.getElement(), "zIndex", "" + (Integer.MAX_VALUE));
 
       blockMouseEventsPanel = new LockLayer();
-      //      blockMouseEventsPanel.setStyleName("exo-lockLayer");
+      // blockMouseEventsPanel.setStyleName("exo-lockLayer");
       blockMouseEventsPanel.setWidth("" + Window.getClientWidth() + "px");
       blockMouseEventsPanel.setHeight("" + Window.getClientHeight() + "px");
       lockLayer.add(blockMouseEventsPanel, 0, 0);
@@ -168,7 +168,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       mousHandler = new MousHandler();
       flowPanel.setWidth("100%");
 
-      //      scrollPanel.addMouseOutHandler(mousHandler);
+      // scrollPanel.addMouseOutHandler(mousHandler);
 
       scrollPanel.setHeight("195px");
       scrollPanel.setWidth("300px");
@@ -203,7 +203,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       {
          TokenWidget w = widgetFactory.buildTokenWidget(t);
          w.addClickHandler(mousHandler);
-         //         w.addMouseOverHandler(mousHandler);
+         // w.addMouseOverHandler(mousHandler);
          w.addDoubleClickHandler(mousHandler);
          allWidgets.add(w);
       }
@@ -524,7 +524,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
    }
 
    /**
-    *  Lock Layer uses for locking of screen. Uses for hiding popups.
+    * Lock Layer uses for locking of screen. Uses for hiding popups.
     */
    private class LockLayer extends AbsolutePanel
    {

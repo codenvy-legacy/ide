@@ -21,7 +21,7 @@ package org.exoplatform.ide.editor.api;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class CodeLine
 {

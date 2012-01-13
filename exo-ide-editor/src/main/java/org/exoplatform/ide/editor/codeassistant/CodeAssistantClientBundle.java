@@ -24,7 +24,7 @@ import com.google.gwt.resources.client.ClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistantClientBundle Feb 22, 2011 5:06:30 PM evgen $
- *
+ * 
  */
 public interface CodeAssistantClientBundle extends ClientBundle
 {
