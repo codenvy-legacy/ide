@@ -22,9 +22,10 @@ import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class WadlParameterEntry extends SimpleParameterEntry
 {
 
@@ -52,6 +53,7 @@ public class WadlParameterEntry extends SimpleParameterEntry
 
    /**
     * Set type
+    * 
     * @param type
     */
    public void setType(String type)
@@ -61,6 +63,7 @@ public class WadlParameterEntry extends SimpleParameterEntry
 
    /**
     * Get type
+    * 
     * @return
     */
    public String getType()
@@ -70,7 +73,7 @@ public class WadlParameterEntry extends SimpleParameterEntry
 
    /**
     * Is send header
-    *  
+    * 
     * @return
     */
    public boolean isSend()

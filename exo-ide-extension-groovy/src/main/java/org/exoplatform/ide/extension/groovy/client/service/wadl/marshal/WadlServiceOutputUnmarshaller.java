@@ -30,9 +30,10 @@ import com.google.gwt.http.client.Response;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class WadlServiceOutputUnmarshaller implements Unmarshallable
 {
 

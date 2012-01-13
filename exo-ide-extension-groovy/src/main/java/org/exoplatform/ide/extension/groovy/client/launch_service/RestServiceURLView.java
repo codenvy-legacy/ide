@@ -36,8 +36,8 @@ import org.exoplatform.ide.extension.groovy.client.Images;
  * Created by The eXo Platform SAS.
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class RestServiceURLView extends ViewImpl implements
    org.exoplatform.ide.extension.groovy.client.launch_service.RestServiceURLPresenter.Display

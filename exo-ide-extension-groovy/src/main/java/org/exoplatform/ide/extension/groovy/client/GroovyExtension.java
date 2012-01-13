@@ -71,6 +71,7 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -90,12 +91,12 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
 
    private IDEConfiguration configuration;
 
-   //TODO: currently not use lock
+   // TODO: currently not use lock
    // private Map<String, String> lockTokens;
 
-   //need for http://jira.exoplatform.org/browse/IDE-347
-   //undeploy service on cancel 
-   //   private boolean undeployOnCancel = false;
+   // need for http://jira.exoplatform.org/browse/IDE-347
+   // undeploy service on cancel
+   // private boolean undeployOnCancel = false;
 
    private boolean previewOpened = false;
 
@@ -127,7 +128,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(SetAutoloadEvent.TYPE, this));
 
-      //handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewWadlOutputEvent.TYPE, this));
+      // handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewWadlOutputEvent.TYPE, this));
 
       handlerRegistrations.put(InitializeServicesEvent.TYPE, IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE,
@@ -193,22 +194,22 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
     */
    public void onSetAutoload(SetAutoloadEvent event)
    {
-      //TODO
-      //      Property jcrContentProperty =
-      //         GroovyPropertyUtil.getProperty(activeFile.getProperties(), ItemProperty.JCR_CONTENT);
-      //      Property autoloadProperty =
-      //         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
-      //      autoloadProperty.setValue("" + event.isAutoload());
+      // TODO
+      // Property jcrContentProperty =
+      // GroovyPropertyUtil.getProperty(activeFile.getProperties(), ItemProperty.JCR_CONTENT);
+      // Property autoloadProperty =
+      // GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
+      // autoloadProperty.setValue("" + event.isAutoload());
       //
-      //      VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()),
-      //         new ItemPropertiesCallback()
-      //         {
-      //            @Override
-      //            protected void onSuccess(Item result)
-      //            {
-      //               eventBus.fireEvent(new ItemPropertiesSavedEvent(result));
-      //            }
-      //         });
+      // VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()),
+      // new ItemPropertiesCallback()
+      // {
+      // @Override
+      // protected void onSuccess(Item result)
+      // {
+      // eventBus.fireEvent(new ItemPropertiesSavedEvent(result));
+      // }
+      // });
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -226,13 +227,11 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      /* TODO currently not use lock
-       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
-        {
-           event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-        }
-
-        lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");*/
+      /*
+       * TODO currently not use lock if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null) {
+       * event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES); } lockTokens
+       * = event.getApplicationSettings().getValueAsMap("lock-tokens");
+       */
    }
 
    /**

@@ -25,7 +25,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 24, 2010 $
- *
+ * 
  */
 public class GroovyClassPathEntry extends JavaScriptObject
 {
@@ -40,15 +40,15 @@ public class GroovyClassPathEntry extends JavaScriptObject
     * @return {@link String} kind of source
     */
    public final native String getKind() /*-{
-      return this.kind;
-   }-*/;
+                                        return this.kind;
+                                        }-*/;
 
    /**
     * @return {@link String} path to source
     */
    public final native String getPath() /*-{
-      return this.path;
-   }-*/;
+                                        return this.path;
+                                        }-*/;
 
    /**
     * Build instance of {@link GroovyClassPathEntry} from JSON.
@@ -57,16 +57,16 @@ public class GroovyClassPathEntry extends JavaScriptObject
     * @return {@link GroovyClassPathEntry} instance
     */
    public static final native GroovyClassPathEntry build(String json) /*-{
-      try 
-      {
-         var object = eval('(' + json + ')');
-         return object;
-      }
-      catch (e)
-      {
-         return null;
-      }
-   }-*/;
+                                                                      try 
+                                                                      {
+                                                                      var object = eval('(' + json + ')');
+                                                                      return object;
+                                                                      }
+                                                                      catch (e)
+                                                                      {
+                                                                      return null;
+                                                                      }
+                                                                      }-*/;
 
    /**
     * Build instance of {@link GroovyClassPathEntry} with pointed kind and path to source.
@@ -76,9 +76,9 @@ public class GroovyClassPathEntry extends JavaScriptObject
     * @return {@link GroovyClassPathEntry} instance
     */
    public static final native GroovyClassPathEntry build(String kind, String path) /*-{
-      var json = {};
-      json.kind = kind;
-      json.path = path;
-      return json;
-   }-*/;
+                                                                                   var json = {};
+                                                                                   json.kind = kind;
+                                                                                   json.path = path;
+                                                                                   return json;
+                                                                                   }-*/;
 }

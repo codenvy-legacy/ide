@@ -77,7 +77,7 @@ import java.util.Set;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
- *
+ * 
  */
 public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSourceToBuildPathHandler,
    ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, VfsChangedHandler,
@@ -356,7 +356,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    {
       if (!projectTypes.contains(project.getProjectType()))
       {
-         //TODO
+         // TODO
          return;
       }
       try

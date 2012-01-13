@@ -32,17 +32,22 @@ import org.junit.Assert;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 public abstract class Base
 {
    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
+
    protected final String vfs_id = "ws";
+
    protected VirtualFileSystem virtualFileSystem;
+
    protected Folder testRoot;
+
    protected StandaloneContainer container;
+
    protected ResourceLauncher launcher;
 
    public void setUp() throws Exception
@@ -54,9 +59,9 @@ public abstract class Base
       // May be overridden in methods!
       ConversationState user = new ConversationState(new Identity("root"));
       ConversationState.setCurrent(user);
-//      String loginConfig = getClass().getResource("/login.conf").toString();
-//      if (System.getProperty("java.security.auth.login.config") == null)
-//         System.setProperty("java.security.auth.login.config", loginConfig);
+      // String loginConfig = getClass().getResource("/login.conf").toString();
+      // if (System.getProperty("java.security.auth.login.config") == null)
+      // System.setProperty("java.security.auth.login.config", loginConfig);
 
       VirtualFileSystemRegistry virtualFileSystemRegistry =
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
@@ -64,7 +69,8 @@ public abstract class Base
 
       virtualFileSystem = virtualFileSystemRegistry.getProvider("ws").newInstance(null);
 
-      testRoot = virtualFileSystem.createFolder(virtualFileSystem.getInfo().getRoot().getId(), getClass().getSimpleName());
+      testRoot =
+         virtualFileSystem.createFolder(virtualFileSystem.getInfo().getRoot().getId(), getClass().getSimpleName());
 
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);

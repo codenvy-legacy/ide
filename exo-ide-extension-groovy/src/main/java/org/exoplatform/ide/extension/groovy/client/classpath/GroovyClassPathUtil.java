@@ -35,12 +35,12 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 11, 2011 $
- *
+ * 
  */
 public class GroovyClassPathUtil
 {
    public static final String ENTRIES = "entries";
-   
+
    public static final String WEBDAV_CONTEXT = "/jcr/";
 
    /**
@@ -52,19 +52,19 @@ public class GroovyClassPathUtil
    public static List<GroovyClassPathEntry> getClassPathEntries(String jsonObject)
    {
       List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();
-      //Try to get object from string
+      // Try to get object from string
       JavaScriptObject json = build(jsonObject);
       if (json == null)
          return groovyClassPathEntries;
-      //Get entries:
+      // Get entries:
       JSONValue entries = new JSONObject(json).get(ENTRIES);
       if (entries == null)
          return groovyClassPathEntries;
-      //The "entries" property contains array value:
+      // The "entries" property contains array value:
       JSONArray array = entries.isArray();
       for (int i = 0; i < array.size(); i++)
       {
-         //Form java object from JSON:
+         // Form java object from JSON:
          GroovyClassPathEntry groovyClassPathEntry = GroovyClassPathEntry.build(array.get(i).isObject().toString());
          if (groovyClassPathEntries != null)
          {
@@ -91,7 +91,7 @@ public class GroovyClassPathUtil
       jsonObject.put(ENTRIES, array);
       return jsonObject.toString();
    }
-   
+
    /**
     * Get jcr location of the source from WEBDAV href.
     * 
@@ -103,16 +103,16 @@ public class GroovyClassPathUtil
       String context = restContext + WEBDAV_CONTEXT;
       String path = href.substring(href.indexOf(context) + context.length());
       String[] parts = path.split("/");
-      
+
       String result = path;
 
-      //Add symbol "#" after workspace name (the second part of the path):
+      // Add symbol "#" after workspace name (the second part of the path):
       if (parts.length > 2)
       {
-         //Start path from workspace:
+         // Start path from workspace:
          final String prefix = parts[1] + "#";
          result = prefix;
-         //decode path components
+         // decode path components
          for (int i = 2; i < parts.length; i++)
          {
             parts[i] = URL.decodePathSegment(parts[i]);
@@ -120,10 +120,10 @@ public class GroovyClassPathUtil
          }
          result += "/";
       }
-      
+
       return result;
    }
-   
+
    public static String getDisplayPath(String path)
    {
       return "";
@@ -136,13 +136,13 @@ public class GroovyClassPathUtil
     * @return {@link JavaScriptObject}
     */
    private static native JavaScriptObject build(String json) /*-{
-      try 
-      {
-         var object = eval('(' + json + ')');
-         return object;
-      } catch (e)
-      {
-         return null;
-      }
-   }-*/;
+                                                             try 
+                                                             {
+                                                             var object = eval('(' + json + ')');
+                                                             return object;
+                                                             } catch (e)
+                                                             {
+                                                             return null;
+                                                             }
+                                                             }-*/;
 }

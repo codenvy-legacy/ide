@@ -22,22 +22,23 @@ import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public abstract class A 
+ */
+public abstract class A
 {
    private String string;
-   
+
    protected Integer integer;
-   
+
    public long l;
-   
+
    public A() throws ClassNotFoundException
    {
-      
+
    }
-   
+
    public A(Set<Class<?>> classes) throws ClassNotFoundException, ClassFormatError
    {
    }
@@ -49,7 +50,7 @@ public abstract class A
    {
       return string;
    }
-   
+
    /**
     * @param string the string to set
     */
@@ -57,8 +58,7 @@ public abstract class A
    {
       this.string = string;
    }
-   
-   
+
    /**
     * @return the integer
     */
@@ -98,7 +98,5 @@ public abstract class A
       this.integer = integer;
       this.l = l;
    }
-   
-   
 
 }

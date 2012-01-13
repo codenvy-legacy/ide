@@ -20,9 +20,10 @@ package org.exoplatform.ide.extension.groovy.client.service;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class SimpleParameterEntry
 {
 
@@ -53,8 +54,7 @@ public class SimpleParameterEntry
    /**
     * Sets name.
     * 
-    * @param name
-    *          The name to set.
+    * @param name The name to set.
     */
    public void setName(String name)
    {
@@ -74,8 +74,7 @@ public class SimpleParameterEntry
    /**
     * Sets value.
     * 
-    * @param value
-    *          The value to set.
+    * @param value The value to set.
     */
    public void setValue(String value)
    {

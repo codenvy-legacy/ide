@@ -58,11 +58,12 @@ public class JarFilesListGrid extends ListGrid<Jar>
                public String asString()
                {
                   String name = item.getPath();
-                  if (name.indexOf("/") >= 0) {
+                  if (name.indexOf("/") >= 0)
+                  {
                      name = name.substring(name.lastIndexOf("/") + 1);
                   }
-                  
-                  String html = "<span>" + name + "</span>";                  
+
+                  String html = "<span>" + name + "</span>";
                   return html;
                }
             };
@@ -73,7 +74,7 @@ public class JarFilesListGrid extends ListGrid<Jar>
       getCellTable().addColumn(entryNameColumn, ENTRY_POINT_COLUMN);
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
 
-//      removeTableHeader();
+      // removeTableHeader();
    }
 
 }

@@ -35,30 +35,30 @@ import com.google.gwt.user.client.ui.Image;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 10, 2011 $
- *
+ * 
  */
 public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
 {
    private final String ID = "ideClassPathEntryListGrid";
-   
+
    private final String PATH = "path";
-   
+
    private final String EMPTY_MESSAGE = "No sources. Click \"Add...\" button to add source directory or file.";
 
    private final String GROOVY_CLASSPATH_ENTRY = "GroovyClassPathEntry";
-   
+
    private String currentRepository;
 
    public ClassPathEntryListGrid()
    {
       super();
       setID(ID);
-      //TODO:
-      //set multi as selection type
-      //hide header and set message for empty table
-//      setSelectionType(SelectionStyle.MULTIPLE);
-//      setShowHeader(false);
-//      setEmptyMessage(EMPTY_MESSAGE);
+      // TODO:
+      // set multi as selection type
+      // hide header and set message for empty table
+      // setSelectionType(SelectionStyle.MULTIPLE);
+      // setShowHeader(false);
+      // setEmptyMessage(EMPTY_MESSAGE);
 
       SafeHtmlCell htmlCell = new SafeHtmlCell();
       Column<GroovyClassPathEntry, SafeHtml> pathColumn = new Column<GroovyClassPathEntry, SafeHtml>(htmlCell)
@@ -93,20 +93,20 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
          }
 
       };
-      
+
       getCellTable().addColumn(pathColumn, PATH);
       getCellTable().setColumnWidth(pathColumn, "100%");
-      
-//      removeTableHeader();
-      
-      //TODO:
-      //add attribute to store entry, like it was in smartGWT list grid
-//    record.setAttribute(GROOVY_CLASSPATH_ENTRY, item);      
+
+      // removeTableHeader();
+
+      // TODO:
+      // add attribute to store entry, like it was in smartGWT list grid
+      // record.setAttribute(GROOVY_CLASSPATH_ENTRY, item);
    }
 
    public void setCurrentRepository(String repository)
    {
       currentRepository = repository;
    }
-   
+
 }

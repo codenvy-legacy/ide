@@ -31,9 +31,10 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.marshal.WadlServ
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class WadlServiceImpl extends WadlService
 {
    private HandlerManager eventBus;
@@ -47,13 +48,14 @@ public class WadlServiceImpl extends WadlService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService#getWadl(java.lang.String, org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback)
+    * @see org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService#getWadl(java.lang.String,
+    *      org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback)
     */
    public void getWadl(String url, AsyncRequestCallback<WadlApplication> callback)
    {
       WadlApplication application = new WadlApplication();
       WadlServiceOutputUnmarshaller unmarshaller = new WadlServiceOutputUnmarshaller(eventBus, application);
-      
+
       callback.setEventBus(eventBus);
       callback.setResult(application);
       callback.setPayload(unmarshaller);
@@ -61,7 +63,7 @@ public class WadlServiceImpl extends WadlService
       AsyncRequest request = AsyncRequest.build(RequestBuilder.POST, url, loader);
 
       request.header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.OPTIONS);
-      request.send(callback);      
+      request.send(callback);
    }
 
 }

@@ -75,7 +75,7 @@ public class JarListUnmarshaller implements Unmarshallable
    }
 
    private static native JavaScriptObject build(String json) /*-{
-      return eval('(' + json + ')');      
-   }-*/;
+                                                             return eval('(' + json + ')');      
+                                                             }-*/;
 
 }

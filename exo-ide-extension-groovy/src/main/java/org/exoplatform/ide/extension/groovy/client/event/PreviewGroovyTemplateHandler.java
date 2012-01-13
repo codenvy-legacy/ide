@@ -23,11 +23,11 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowGroovyTemplatePreviewHandler Feb 17, 2011 5:05:42 PM evgen $
- *
+ * 
  */
 public interface PreviewGroovyTemplateHandler extends EventHandler
 {
 
    void onPreviewGroovyTemplate(PreviewGroovyTemplateEvent event);
-   
+
 }

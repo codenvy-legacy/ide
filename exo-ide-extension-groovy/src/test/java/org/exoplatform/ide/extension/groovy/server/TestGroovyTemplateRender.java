@@ -47,7 +47,7 @@ import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -59,8 +59,8 @@ public class TestGroovyTemplateRender extends Base
       + " if (curentState != null){ Identity identity = curentState.getIdentity();\n"
       + " 3.times { println \"Hello \" + identity.getUserId()}}%><br></body></html>";
 
-
    private DummySecurityContext adminSecurityContext;
+
    private File script;
 
    @Before
@@ -68,14 +68,14 @@ public class TestGroovyTemplateRender extends Base
    {
       super.setUp();
       InputStream source = new ByteArrayInputStream(GTMPL.getBytes());
-      script = virtualFileSystem.createFile(testRoot.getId(), "script1", new MediaType("application", "x-groovy"), source);
+      script =
+         virtualFileSystem.createFile(testRoot.getId(), "script1", new MediaType("application", "x-groovy"), source);
       source.close();
       Set<String> adminRoles = new HashSet<String>();
       adminRoles.add("administrators");
       adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
       ConversationState.setCurrent(new ConversationState(new Identity(
-         adminSecurityContext.getUserPrincipal().getName(),
-         Collections.<MembershipEntry>emptySet(),
+         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
          adminSecurityContext.getUserRoles())));
    }
 
@@ -91,7 +91,8 @@ public class TestGroovyTemplateRender extends Base
       HttpServletResponse httpServletResponse = new MockHttpServletResponse();
       ctx.put(HttpServletResponse.class, httpServletResponse);
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("POST", "/ide/gtmpl/render-source", "", headers, GTMPL.getBytes(), null, ctx);
+      ContainerResponse cres =
+         launcher.service("POST", "/ide/gtmpl/render-source", "", headers, GTMPL.getBytes(), null, ctx);
       Assert.assertEquals(200, cres.getStatus());
       Assert.assertTrue(cres.getEntity().toString().contains("Hello root"));
    }
@@ -107,7 +108,9 @@ public class TestGroovyTemplateRender extends Base
       HttpServletResponse httpServletResponse = new MockHttpServletResponse();
       ctx.put(HttpServletResponse.class, httpServletResponse);
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse response = launcher.service("GET", "/ide/gtmpl/render?vfsid=ws&id=" + script.getId(), "", headers, GTMPL.getBytes(), null, ctx);
+      ContainerResponse response =
+         launcher.service("GET", "/ide/gtmpl/render?vfsid=ws&id=" + script.getId(), "", headers, GTMPL.getBytes(),
+            null, ctx);
       Assert.assertEquals(200, response.getStatus());
       Assert.assertTrue(response.getEntity().toString().contains("Hello root"));
    }

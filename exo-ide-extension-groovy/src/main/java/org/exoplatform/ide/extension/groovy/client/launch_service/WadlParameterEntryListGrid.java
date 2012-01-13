@@ -30,12 +30,13 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
 {
-   
+
    private static final String SEND = "Send";
 
    private static final String NAME = "Name";
@@ -53,7 +54,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
 
    private void initColumns()
    {
-      //isSend column
+      // isSend column
       Column<WadlParameterEntry, Boolean> sendColumn =
          new Column<WadlParameterEntry, Boolean>(new CheckboxCell(true, false))
          {
@@ -78,7 +79,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
       getCellTable().addColumn(sendColumn, SEND);
       getCellTable().setColumnWidth(sendColumn, 33, Unit.PX);
 
-      //name column
+      // name column
       Column<WadlParameterEntry, String> nameColumn = new Column<WadlParameterEntry, String>(new TextCell())
       {
 
@@ -91,7 +92,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
       };
       getCellTable().addColumn(nameColumn, NAME);
 
-      //type column
+      // type column
       Column<WadlParameterEntry, String> typeColumn = new Column<WadlParameterEntry, String>(new TextCell())
       {
 
@@ -104,7 +105,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
       };
       getCellTable().addColumn(typeColumn, TYPE);
 
-      //default column
+      // default column
       Column<WadlParameterEntry, String> defaultColumn = new Column<WadlParameterEntry, String>(new TextCell())
       {
          @Override
@@ -116,7 +117,7 @@ public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
       };
       getCellTable().addColumn(defaultColumn, DEFAULT);
 
-      //value column
+      // value column
       Column<WadlParameterEntry, String> valueColumn = new Column<WadlParameterEntry, String>(new EditTextCell())
       {
 

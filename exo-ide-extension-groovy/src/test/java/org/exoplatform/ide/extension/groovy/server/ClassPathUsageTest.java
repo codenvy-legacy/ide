@@ -89,12 +89,11 @@ public class ClassPathUsageTest
       Assert.assertEquals(GroovyClassPathHelper.getSourceFiles(classPath).length, 0);
       Assert.assertEquals(GroovyClassPathHelper.getSourceFolders(classPath).length, 0);
    }
-   
+
    @Test
    public void emptyClassPathFile() throws JsonException
    {
-      GroovyClassPath classPath =
-         GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream("".getBytes()));
+      GroovyClassPath classPath = GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream("".getBytes()));
       Assert.assertNull(classPath);
    }
 }

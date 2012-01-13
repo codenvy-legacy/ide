@@ -54,15 +54,18 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 public class TestGroovyRestDeployer extends Base
 {
    private File script;
+
    private DummySecurityContext adminSecurityContext;
+
    private DummySecurityContext devSecurityContext;
+
    private ConcurrentPicoContainer restfulContainer;
 
    @Before
@@ -70,7 +73,8 @@ public class TestGroovyRestDeployer extends Base
    {
       super.setUp();
       InputStream source = Thread.currentThread().getContextClassLoader().getResourceAsStream("test1.groovy");
-      script = virtualFileSystem.createFile(testRoot.getId(), "script1", new MediaType("application", "x-groovy"), source);
+      script =
+         virtualFileSystem.createFile(testRoot.getId(), "script1", new MediaType("application", "x-groovy"), source);
       source.close();
 
       Set<String> adminRoles = new HashSet<String>();
@@ -98,16 +102,10 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               adminSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               adminSecurityContext.getUserRoles()
-            )
-         )
-      );
-      String path = "/ide/groovy/deploy" // 
+      ConversationState.setCurrent(new ConversationState(new Identity(
+         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         adminSecurityContext.getUserRoles())));
+      String path = "/ide/groovy/deploy" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //
          + "&projectid=" + testRoot.getId();
@@ -128,15 +126,9 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               adminSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               adminSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(
+         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         adminSecurityContext.getUserRoles())));
       String path = "/ide/groovy/deploy" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //
@@ -170,15 +162,9 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               adminSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               adminSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(
+         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         adminSecurityContext.getUserRoles())));
       String path = "/ide/groovy/validate-script" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&name=" + script.getName() //
@@ -201,15 +187,9 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               adminSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               adminSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(
+         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         adminSecurityContext.getUserRoles())));
       String path = "/ide/groovy/deploy" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //
@@ -230,15 +210,8 @@ public class TestGroovyRestDeployer extends Base
       headers = new MultivaluedMapImpl();
       ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               devSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               devSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(devSecurityContext.getUserPrincipal().getName(),
+         Collections.<MembershipEntry> emptySet(), devSecurityContext.getUserRoles())));
       path = "/ide/groovy/undeploy" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId();
@@ -256,15 +229,8 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               devSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               devSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(devSecurityContext.getUserPrincipal().getName(),
+         Collections.<MembershipEntry> emptySet(), devSecurityContext.getUserRoles())));
       String path = "/ide/groovy/deploy" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //
@@ -285,15 +251,8 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               devSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               devSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(devSecurityContext.getUserPrincipal().getName(),
+         Collections.<MembershipEntry> emptySet(), devSecurityContext.getUserRoles())));
       String path = "/ide/groovy/deploy-sandbox" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //
@@ -315,15 +274,8 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               devSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               devSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(devSecurityContext.getUserPrincipal().getName(),
+         Collections.<MembershipEntry> emptySet(), devSecurityContext.getUserRoles())));
       String path = "/ide/groovy/deploy-sandbox" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //
@@ -344,15 +296,9 @@ public class TestGroovyRestDeployer extends Base
       // Check access resource as different user (not who deploys resource).
       EnvironmentContext ctx1 = new EnvironmentContext();
       ctx1.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               adminSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               adminSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(
+         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         adminSecurityContext.getUserRoles())));
       response = launcher.service("GET", "/test-groovy/groovy1/root", "", headers, null, null, ctx1);
       assertEquals(404, response.getStatus());
    }
@@ -363,15 +309,9 @@ public class TestGroovyRestDeployer extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(
-         new ConversationState(
-            new Identity(
-               adminSecurityContext.getUserPrincipal().getName(),
-               Collections.<MembershipEntry>emptySet(),
-               adminSecurityContext.getUserRoles()
-            )
-         )
-      );
+      ConversationState.setCurrent(new ConversationState(new Identity(
+         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         adminSecurityContext.getUserRoles())));
       String path = "/ide/groovy/deploy-sandbox" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //

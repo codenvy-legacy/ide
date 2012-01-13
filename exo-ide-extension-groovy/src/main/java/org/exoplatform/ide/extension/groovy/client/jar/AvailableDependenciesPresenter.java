@@ -170,7 +170,7 @@ public class AvailableDependenciesPresenter implements ShowAvailableDependencies
    }
 
    /**
-    * Handler when the user selects JAR file in the list.  
+    * Handler when the user selects JAR file in the list.
     */
    SelectionHandler<Jar> jarsListGridSelectionHandler = new SelectionHandler<Jar>()
    {

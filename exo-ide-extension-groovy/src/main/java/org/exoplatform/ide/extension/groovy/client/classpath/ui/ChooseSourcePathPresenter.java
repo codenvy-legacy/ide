@@ -53,7 +53,7 @@ import com.google.gwt.http.client.RequestException;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 10, 2011 $
- *
+ * 
  */
 public class ChooseSourcePathPresenter
 {
@@ -183,7 +183,7 @@ public class ChooseSourcePathPresenter
          display.enableOkButtonState(false);
          return;
       }
-      //Check workspace is among selected:
+      // Check workspace is among selected:
       for (Item item : selectedItems)
       {
          if (item.getId().equals(vfs.getRoot().getId()))

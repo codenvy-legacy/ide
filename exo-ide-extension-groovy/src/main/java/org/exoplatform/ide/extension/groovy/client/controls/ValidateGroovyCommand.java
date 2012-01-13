@@ -46,7 +46,7 @@ public class ValidateGroovyCommand extends SimpleControl implements IDEControl, 
       setTitle("Validate");
       setPrompt("Validate REST Service");
       setIcon(Images.Controls.VALIDATE);
-      //setImages(GroovyPluginImageBundle.INSTANCE.validateGroovy(), GroovyPluginImageBundle.INSTANCE.validateGroovyDisabled());
+      // setImages(GroovyPluginImageBundle.INSTANCE.validateGroovy(), GroovyPluginImageBundle.INSTANCE.validateGroovyDisabled());
       setEvent(new ValidateGroovyScriptEvent());
       setDelimiterBefore(true);
    }

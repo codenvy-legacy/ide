@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 10, 2011 $
- *
+ * 
  */
 public interface AddSourceToBuildPathHandler extends EventHandler
 {

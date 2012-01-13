@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowGroovyTemplatePreview Feb 17, 2011 5:05:12 PM evgen $
- *
+ * 
  */
 public class PreviewGroovyTemplateEvent extends GwtEvent<PreviewGroovyTemplateHandler>
 {

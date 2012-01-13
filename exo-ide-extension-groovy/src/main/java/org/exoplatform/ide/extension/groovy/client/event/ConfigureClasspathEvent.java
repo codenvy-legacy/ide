@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class ConfigureClasspathEvent extends GwtEvent<ConfigureClasspathHandler>
 {
-   
+
    public static final GwtEvent.Type<ConfigureClasspathHandler> TYPE = new GwtEvent.Type<ConfigureClasspathHandler>();
 
    @Override

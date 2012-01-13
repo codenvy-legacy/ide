@@ -61,7 +61,7 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
       setTitle(TITLE_SET);
       setPrompt(TITLE_SET);
       setIcon(Images.Controls.SET_AUTOLOAD);
-      //setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
+      // setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
       setEvent(new SetAutoloadEvent(false));
    }
 
@@ -128,7 +128,7 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
          setTitle(TITLE_SET);
          setPrompt(PROMPT_SET);
          setIcon(Images.Controls.SET_AUTOLOAD);
-         //setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
+         // setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
          setEvent(new SetAutoloadEvent(true));
       }
       else
@@ -137,7 +137,7 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
          setTitle(TITLE_UNSET);
          setPrompt(PROMPT_UNSET);
          setIcon(Images.Controls.UNSET_AUTOLOAD);
-         //setImages(GroovyPluginImageBundle.INSTANCE.unsetAutoLoad(), GroovyPluginImageBundle.INSTANCE.unsetAutoLoadDisabled());
+         // setImages(GroovyPluginImageBundle.INSTANCE.unsetAutoLoad(), GroovyPluginImageBundle.INSTANCE.unsetAutoLoadDisabled());
          setEvent(new SetAutoloadEvent(false));
       }
    }

@@ -38,12 +38,12 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
- *
+ * 
  */
 public class ConfigureBuildPathView extends ViewImpl implements ConfigureBuildPathPresenter.Display
 {
    private static ConfigureBuildPathViewUiBinder uiBinder = GWT.create(ConfigureBuildPathViewUiBinder.class);
-   
+
    interface ConfigureBuildPathViewUiBinder extends UiBinder<Widget, ConfigureBuildPathView>
    {
    }
@@ -75,16 +75,14 @@ public class ConfigureBuildPathView extends ViewImpl implements ConfigureBuildPa
    @UiField
    ClassPathEntryListGrid classPathEntryListGrid;
 
-   
    public static final String CLASS_PATH_ENTRY_LIST_GRID_WIDTH = "100%";
 
    public static final int WIDTH = 600;
 
    public static final int HEIGHT = 335;
 
-   
-   //IDs for Selenium tests:
-   
+   // IDs for Selenium tests:
+
    public static final String ID = "ideConfigureBuildPathForm";
 
    private final String ID_CANCEL_BUTTON = "ideConfigureBuildPathFormCancelButton";
@@ -95,7 +93,6 @@ public class ConfigureBuildPathView extends ViewImpl implements ConfigureBuildPa
 
    private final String ID_REMOVE_BUTTON = "ideConfigureBuildPathFormRemoveButton";
 
-   
    /**
     * @param eventBus handler manager
     */
@@ -105,12 +102,12 @@ public class ConfigureBuildPathView extends ViewImpl implements ConfigureBuildPa
       add(uiBinder.createAndBindUi(this));
 
       // rewrite default width 200px defined in org.exoplatform.gwtframework.ui.client.component.ListGrid
-      classPathEntryListGrid.setWidth(CLASS_PATH_ENTRY_LIST_GRID_WIDTH); 
-      
-      saveButton.setButtonId(ID_SAVE_BUTTON );     
+      classPathEntryListGrid.setWidth(CLASS_PATH_ENTRY_LIST_GRID_WIDTH);
+
+      saveButton.setButtonId(ID_SAVE_BUTTON);
       cancelButton.setButtonId(ID_CANCEL_BUTTON);
 
-      addButton.setButtonId(ID_ADD_BUTTON );     
+      addButton.setButtonId(ID_ADD_BUTTON);
       removeButton.setButtonId(ID_REMOVE_BUTTON);
    }
 

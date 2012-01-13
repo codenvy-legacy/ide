@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface RunGroovyServiceHandler extends EventHandler
 {
-   
+
    void onRunGroovyService(RunGroovyServiceEvent event);
 
 }

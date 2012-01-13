@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ConfigureClasspathHandler extends EventHandler
 {
-   
+
    void onConfigureClasspath(ConfigureClasspathEvent event);
 
 }

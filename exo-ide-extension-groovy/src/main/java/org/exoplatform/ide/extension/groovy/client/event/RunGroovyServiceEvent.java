@@ -31,7 +31,7 @@ public class RunGroovyServiceEvent extends GwtEvent<RunGroovyServiceHandler>
 {
 
    public static final GwtEvent.Type<RunGroovyServiceHandler> TYPE = new GwtEvent.Type<RunGroovyServiceHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */

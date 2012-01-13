@@ -25,9 +25,10 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class WadlServiceOutputReceivedEvent extends ServerExceptionEvent<WadlServiceOutputReceiveHandler>
 {
    public static final GwtEvent.Type<WadlServiceOutputReceiveHandler> TYPE =

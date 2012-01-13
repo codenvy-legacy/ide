@@ -23,7 +23,7 @@ package org.exoplatform.ide.extension.groovy.client.service.groovy.marshal;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
- *
+ * 
  */
 public class ClassPath
 {

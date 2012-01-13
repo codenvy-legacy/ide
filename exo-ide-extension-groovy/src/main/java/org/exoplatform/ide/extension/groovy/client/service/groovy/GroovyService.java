@@ -53,12 +53,12 @@ public abstract class GroovyService
     * Validate Groovy script.
     * 
     * @param file - the file to validate
-    * @param vfsid 
+    * @param vfsid
     * @param fileContent - file content
     * @param groovyCallback - callback to handler response from server
     */
    public abstract void validate(FileModel file, String vfsid, AsyncRequestCallback<FileModel> callback);
-   
+
    /**
     * Deploy Groovy script.
     * 
@@ -66,23 +66,25 @@ public abstract class GroovyService
     * @param callback - the callback code which the user has to implement
     */
    public abstract void deploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Deploy Groovy script.
     * 
     * @param href - href of source to deploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void deploySandbox(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
-   
+   public abstract void deploySandbox(String itemId, String vfsId, String projectId,
+      AsyncRequestCallback<String> callback);
+
    /**
     * Undeploy deployed Groovy script.
     * 
     * @param href - href of source to undeploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void undeploySandbox(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
-   
+   public abstract void undeploySandbox(String itemId, String vfsId, String projectId,
+      AsyncRequestCallback<String> callback);
+
    /**
     * Undeploy deployed Groovy script.
     * 
@@ -90,22 +92,17 @@ public abstract class GroovyService
     * @param callback - the callback code which the user has to implement
     */
    public abstract void undeploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
-   
 
    /**
-    * Get location of the groovy classpath file if exists.
-    * Return status:
-    * 200 - groovy classpath location in the response body
-    * 404 - groovy classpath location is not found.
-    * 500 - internal server error, message of the error is in the response body.
+    * Get location of the groovy classpath file if exists. Return status: 200 - groovy classpath location in the response body 404
+    * - groovy classpath location is not found. 500 - internal server error, message of the error is in the response body.
     * 
-    * @param href location of the item, 
-    * with respect to which the classpath location must be found (file or folder)  (encoded)
+    * @param href location of the item, with respect to which the classpath location must be found (file or folder) (encoded)
     * @param callback - handle the results when they are returned from the server
     */
    @Deprecated
    public abstract void getClassPathLocation(String href, AsyncRequestCallback<ClassPath> callback);
-   
+
    /**
     * Get Groovy script output.
     * 
@@ -125,5 +122,5 @@ public abstract class GroovyService
     * @param callback - handle the results from the server
     */
    public abstract void getAvailableJarLibraries(AsyncRequestCallback<List<Jar>> callback);
-   
+
 }

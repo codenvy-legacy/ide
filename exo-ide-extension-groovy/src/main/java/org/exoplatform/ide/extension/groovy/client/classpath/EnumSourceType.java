@@ -23,17 +23,15 @@ package org.exoplatform.ide.extension.groovy.client.classpath;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 10, 2011 $
- *
+ * 
  */
 public enum EnumSourceType {
-   DIR("dir"), 
-   FILE("file");
-   
+   DIR("dir"), FILE("file");
+
    /**
     * Value.
     */
    private String value;
-  
 
    /**
     * @param value source value
@@ -51,4 +49,3 @@ public enum EnumSourceType {
       return value;
    }
 }
-

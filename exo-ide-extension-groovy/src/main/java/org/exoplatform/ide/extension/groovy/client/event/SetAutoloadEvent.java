@@ -31,9 +31,9 @@ public class SetAutoloadEvent extends GwtEvent<SetAutoloadHandler>
 {
 
    public static final GwtEvent.Type<SetAutoloadHandler> TYPE = new GwtEvent.Type<SetAutoloadHandler>();
-   
+
    private boolean autoload;
-   
+
    public SetAutoloadEvent(Boolean autoload)
    {
       this.autoload = autoload;

@@ -34,9 +34,10 @@ import com.google.gwt.user.cellview.client.Column;
 
 public class AttributesListGrid extends ListGrid<Attribute>
 {
-   
-   public AttributesListGrid() {
-      
+
+   public AttributesListGrid()
+   {
+
       Column<Attribute, SafeHtml> nameColumn = new Column<Attribute, SafeHtml>(new SafeHtmlCell())
       {
          @Override
@@ -45,7 +46,7 @@ public class AttributesListGrid extends ListGrid<Attribute>
             SafeHtml html = new SafeHtml()
             {
                private static final long serialVersionUID = 1L;
-               
+
                @Override
                public String asString()
                {
@@ -56,7 +57,7 @@ public class AttributesListGrid extends ListGrid<Attribute>
          }
       };
       getCellTable().addColumn(nameColumn, "Name");
-      
+
       Column<Attribute, SafeHtml> valueColumn = new Column<Attribute, SafeHtml>(new SafeHtmlCell())
       {
          @Override
@@ -75,8 +76,8 @@ public class AttributesListGrid extends ListGrid<Attribute>
             return html;
          }
       };
-      getCellTable().addColumn(valueColumn, "Value");      
-      
+      getCellTable().addColumn(valueColumn, "Value");
+
    }
 
 }

@@ -31,5 +31,5 @@ public interface GroovyValidateResultReceivedHandler extends EventHandler
 {
 
    void onGroovyValidateResultReceived(GroovyValidateResultReceivedEvent event);
-   
+
 }

@@ -68,8 +68,8 @@ public class RestServiceOutput
       String headers = new String();
       for (Header header : response.getHeaders())
       {
-         //Add temporary for fix strange bug in IE http://jira.exoplatform.org/browse/IDE-250
-         //TODO: try found problem
+         // Add temporary for fix strange bug in IE http://jira.exoplatform.org/browse/IDE-250
+         // TODO: try found problem
          try
          {
             headers += "<b>" + header.getName() + "</b>" + "&nbsp;:&nbsp;" + header.getValue() + "<br/>";
@@ -78,9 +78,9 @@ public class RestServiceOutput
          {
             // TODO: handle exception
          }
-         
+
       }
-      //      
+      //
       String result =
          "- -Status - - - - - - - -<br/>" + response.getStatusCode() + "&nbsp;" + response.getStatusText() + "<br/>"
             + "- -Headers- - - - - - - -<br/>" + headers + "- -Text - - - - - - - - -<br/>"

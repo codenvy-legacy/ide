@@ -26,22 +26,22 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface GroovyLocalizationConstant extends Messages
 {
-   
+
    /*
     * Views
     */
    @Key("view.title.chooseSourcePath")
    String chooseSourcePathViewTitle();
-   
+
    @Key("view.title.configureBuildPath")
    String configureBuildPathTitle();
-   
+
    /*
     * Buttons
     */
    @Key("button.ok")
    String okButton();
-   
+
    @Key("button.cancel")
    String cancelButton();
 
@@ -53,12 +53,11 @@ public interface GroovyLocalizationConstant extends Messages
 
    @Key("button.save")
    String saveButton();
-   
+
    /*
     * Controls
     */
-   
-   
+
    @Key("groovy.classpath.file.create.error")
    String classpathCreationError();
 }

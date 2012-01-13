@@ -65,9 +65,10 @@ import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, EditorActiveFileChangedHandler,
    ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
 {
@@ -281,7 +282,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
             }
             if (!validatePathParams())
                return;
-            //display.closeForm();
+            // display.closeForm();
             sendRequest();
          }
       });
@@ -387,8 +388,8 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
                currentMethod = null;
             }
 
-            //check if it is need to change resource info
-            //If value if path field changed, but path and method stayed the same
+            // check if it is need to change resource info
+            // If value if path field changed, but path and method stayed the same
             // there is no need to set resource info again
             if (!(oldPath != null && oldPath.equals(resource.getPath()) && oldMethodName != null && oldMethodName
                .equals(currentMethod.getName())))
@@ -444,7 +445,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
    }
 
    /**
-    * Validates path parameter values. 
+    * Validates path parameter values.
     * 
     * @return true if validation passed and false otherwise
     */
@@ -477,18 +478,19 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
    }
 
    /**
-    * <p>Returns parameter values for str.</p>
+    * <p>
+    * Returns parameter values for str.
+    * </p>
     * 
-    * <p>Extracts substrings, which contained in str between patterns.</p>
+    * <p>
+    * Extracts substrings, which contained in str between patterns.
+    * </p>
     * 
-    * E.g. to get paramater values from path <code>/rest/hello/{name}/world</code>,
-    * you must pass as <code>str</code> your path and as <code>patterns</code> such array:
+    * E.g. to get paramater values from path <code>/rest/hello/{name}/world</code>, you must pass as <code>str</code> your path
+    * and as <code>patterns</code> such array:
     * 
     * <pre>
-    * {
-    *  "/rest/hello/",
-    *  "/world"
-    * } 
+    * {&quot;/rest/hello/&quot;, &quot;/world&quot;}
     * </pre>
     * 
     * @param str path
@@ -528,7 +530,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
          String methoPath = display.getPathField().getValue();
          String[] parts = methoPath.split("/");
          String encodedPath = "";
-         //Encode path segments:
+         // Encode path segments:
          for (String part : parts)
          {
             encodedPath += (part.isEmpty()) ? "" : URL.encodePathSegment(part) + "/";
@@ -600,7 +602,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
 
    private List<SimpleParameterEntry> getQueryParams()
    {
-      List<SimpleParameterEntry> query = new ArrayList<SimpleParameterEntry>();//display.getParametersQueryListGrid().getValue();
+      List<SimpleParameterEntry> query = new ArrayList<SimpleParameterEntry>();// display.getParametersQueryListGrid().getValue();
 
       if (display.getParametersQueryListGrid().getValue() != null)
       {
@@ -792,7 +794,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
       setResponseMediaType(currentRequestMediaType);
 
       fillParameters(currentResponseMediaType);
-      //      }
+      // }
    }
 
    /**
@@ -817,8 +819,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
    }
 
    /**
-    * Replaces all path parameters with regex string
-    * in order to match input path with existing paths
+    * Replaces all path parameters with regex string in order to match input path with existing paths
     * 
     * @param resource resource
     * @return String
@@ -831,19 +832,19 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
 
          String reg = nReg.replaceAll(REPLACEMENT_REGEX, PATH_REGEX);
 
-         //get path param list i.e. /{pathPatamList: .+}
+         // get path param list i.e. /{pathPatamList: .+}
          String[] pathParam = display.getPathField().getValue().split(reg);
 
-         //if no path parameters list return 
+         // if no path parameters list return
          if (pathParam.length <= 1)
          {
             return resource.getPath().replaceAll(REPLACEMENT_REGEX, PATH_REGEX) + "[/]{0,1}$";
          }
 
-         //Remove first "/"
+         // Remove first "/"
          String exp = pathParam[1].substring(1);
 
-         //Split path parameter list
+         // Split path parameter list
          String[] arr = exp.split("/");
          reg += "/";
          for (int i = 0; i < arr.length; i++)
@@ -893,12 +894,10 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
    }
 
    /**
-    * Finds methods, corresponding to path
-    * and initializes the method field.
+    * Finds methods, corresponding to path and initializes the method field.
     * 
-    * If old method field value belongs to new method array,
-    * then it stays, otherwise first value from method array
-    * sets to method field
+    * If old method field value belongs to new method array, then it stays, otherwise first value from method array sets to method
+    * field
     * 
     * @param path path to resource
     */
@@ -929,7 +928,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
       if (oldMethodName == null)
          return;
 
-      //checks is it need to change method field value
+      // checks is it need to change method field value
       for (String methodName : methodArray.keySet())
       {
          if (oldMethodName.equals(methodName))
@@ -942,8 +941,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
    }
 
    /**
-    * Finds recursively all resources in resource and 
-    * add them to resourceArray
+    * Finds recursively all resources in resource and add them to resourceArray
     * 
     * @param resource resource
     */
@@ -962,7 +960,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
 
    /**
     * Returns true if path exists in opened file.
-    *  
+    * 
     * @param path path to search
     * 
     * @return boolean

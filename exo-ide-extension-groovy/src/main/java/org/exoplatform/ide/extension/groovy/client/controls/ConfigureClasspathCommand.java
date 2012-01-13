@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.groovy.client.event.ConfigureClasspathEvent
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
- *
+ * 
  */
 public class ConfigureClasspathCommand extends SimpleControl implements IDEControl, ProjectOpenedHandler,
    ProjectClosedHandler

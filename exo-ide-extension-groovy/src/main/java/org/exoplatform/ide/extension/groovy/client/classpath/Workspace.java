@@ -25,7 +25,7 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 10, 2011 $
- *
+ * 
  */
 public class Workspace extends FolderModel
 {

@@ -51,7 +51,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -64,6 +64,7 @@ public class CodeAssistantTest extends Base
    private int decMethods;
 
    private Folder project;
+
    private Folder classpath;
 
    @Before
@@ -131,8 +132,8 @@ public class CodeAssistantTest extends Base
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/project/services/" + SERVICE_NAME);
       ContainerResponse response =
-         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + className + "?where=className" + "&projectid=" + project.getId()
-            + "&vfsid=" + vfs_id, "", headers, null, null, null);
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + className + "?where=className"
+            + "&projectid=" + project.getId() + "&vfsid=" + vfs_id, "", headers, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
       Assert.assertEquals(1, types.size());
@@ -145,8 +146,7 @@ public class CodeAssistantTest extends Base
    {
       String pkg = Address.class.getPackage().getName();
       ContainerResponse response =
-         launcher.service("GET",
-            "/ide/code-assistant/groovy/find-by-prefix/" + pkg + "?where=fqn" + "&projectid="
+         launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + pkg + "?where=fqn" + "&projectid="
             + project.getId() + "&vfsid=" + vfs_id, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
@@ -253,7 +253,8 @@ public class CodeAssistantTest extends Base
       Session session = null;
       try
       {
-         RepositoryService repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+         RepositoryService repositoryService =
+            (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
          session = repositoryService.getCurrentRepository().login(vfs_id);
          Node fNode = ((ExtendedSession)session).getNodeByIdentifier(f.getId());
          Node fileNode = fNode.addNode(name, "nt:file");

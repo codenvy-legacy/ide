@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -37,7 +38,7 @@ public class Images
       public static String OK = IMAGE_URL + "module/groovy/buttons/ok.png";
 
       public static String NO = IMAGE_URL + "module/groovy/buttons/no.png";
-      
+
       public static String ADD = IMAGE_URL + "module/groovy/buttons/add.png";
 
       public static String REMOVE = IMAGE_URL + "module/groovy/buttons/remove.png";
@@ -52,7 +53,7 @@ public class Images
    {
 
       static final String DEPLOY = IMAGE_URL + "module/groovy/bundled/deploy.png";
-      
+
       static final String DEPLOY_SANDBOX = IMAGE_URL + "module/groovy/bundled/deploy-sandbox.png";
 
       static final String OUTPUT = IMAGE_URL + "module/groovy/bundled/output.png";
@@ -62,14 +63,14 @@ public class Images
       static final String UNSET_AUTOLOAD = IMAGE_URL + "module/groovy/bundled/unset_autoload.png";
 
       static final String UNDEPLOY = IMAGE_URL + "module/groovy/bundled/undeploy.png";
-      
+
       static final String UNDEPLOY_SANDBOX = IMAGE_URL + "module/groovy/bundled/undeploy-sandbox.png";
 
       static final String VALIDATE = IMAGE_URL + "module/groovy/bundled/validate.png";
-      
-      static final String RUN_GROOVY_SERVICE = IMAGE_URL + "module/groovy/bundled/run_groovy_service.png"; 
-      
-      static final String CONFIGURE_BUILD_PATH = IMAGE_URL + "module/groovy/bundled/configure-build-path.png";   
+
+      static final String RUN_GROOVY_SERVICE = IMAGE_URL + "module/groovy/bundled/run_groovy_service.png";
+
+      static final String CONFIGURE_BUILD_PATH = IMAGE_URL + "module/groovy/bundled/configure-build-path.png";
 
    }
 
@@ -77,9 +78,9 @@ public class Images
    {
 
       static final String GROOVY = IMAGE_URL + "module/groovy/filetype/groovy.png";
-      
+
       static final String REST_SERVICE = IMAGE_URL + "module/groovy/filetype/rest.png";
-      
+
       static final String GROOVY_TEMPLATE = IMAGE_URL + "module/groovy/filetype/gtmpl.png";
 
    }
@@ -87,11 +88,11 @@ public class Images
    public interface ClassPath
    {
       static final String SOURCE_FILE = IMAGE_URL + "module/groovy/classpath/source-file.png";
-      
+
       static final String SOURCE_FOLDER = IMAGE_URL + "module/groovy/classpath/source-folder.png";
-      
+
       static final String WORKSPACE = IMAGE_URL + "module/groovy/classpath/workspace.png";
-      
+
       static final String FOLDER = IMAGE_URL + "module/groovy/classpath/folder.png";
    }
 }

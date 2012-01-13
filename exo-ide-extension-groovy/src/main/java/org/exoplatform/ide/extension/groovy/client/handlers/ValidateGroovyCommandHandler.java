@@ -71,14 +71,12 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
    private boolean goToPositionAfterOpen;
 
    /**
-    * Number of line, where to after,
-    * after user click on error message.
+    * Number of line, where to after, after user click on error message.
     */
    private int lineNumberToGo;
 
    /**
-    * Number of column, where to after,
-    * after user click on error message.
+    * Number of column, where to after, after user click on error message.
     */
    private int columnNumberToGo;
 
@@ -88,14 +86,12 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
    private String errFileHref = "";
 
    /**
-    * Number of line, which extracts from error message and
-    * paths as parameter to javascript method.
+    * Number of line, which extracts from error message and paths as parameter to javascript method.
     */
    private int errLineNumber;
 
    /**
-    * Number of column, which extracts from error message and
-    * paths as parameter to javascript method.
+    * Number of column, which extracts from error message and paths as parameter to javascript method.
     */
    private int errColumnNumber;
 
@@ -174,7 +170,8 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
                   if (!serverException.getMessage().equals(""))
                   {
-                     outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+                     outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols
+                                                                                                 // on "<br />"
                   }
 
                   findLineNumberAndColNumberOfError(exception.getMessage());
@@ -220,10 +217,10 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       lineNumberToGo = lineNumber;
       columnNumberToGo = columnNumber;
 
-      //TODO:
-      //When FileOpenedEvent will be use,
-      //remove this additional variable, 
-      //and listen to that event
+      // TODO:
+      // When FileOpenedEvent will be use,
+      // remove this additional variable,
+      // and listen to that event
       if (openedFiles != null && openedFiles.containsKey(fileHref))
       {
          isGoToPosition = true;
@@ -246,12 +243,12 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
    {
       try
       {
-         //find line number
+         // find line number
          int firstIndex = text.indexOf("@ line") + 7;
          int lastIndex = text.indexOf(", column");
          errLineNumber = Integer.valueOf(text.substring(firstIndex, lastIndex));
 
-         //find column number
+         // find column number
          firstIndex = lastIndex + 9;
          lastIndex = text.indexOf(".", firstIndex);
          errColumnNumber = Integer.valueOf(text.substring(firstIndex, lastIndex));

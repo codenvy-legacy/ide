@@ -43,13 +43,13 @@ import org.exoplatform.ide.extension.groovy.shared.Jar;
  */
 
 public class AvailableDependenciesView extends ViewImpl implements
-org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.Display
+   org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.Display
 {
-   
+
    private static final String JAR_LIST_ID = "ideAvailableDependenciesJARList";
-   
+
    private static final String JAR_ATTRIBUTES_ID = "ideAvailableDependenciesJARAttributesTable";
-   
+
    private static final String OK_BUTTON_ID = "ideAvailableDependenciesOkButton";
 
    /**
@@ -73,14 +73,14 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
    private static int INITIAL_HEIGHT = 330;
 
    /**
-    * UIBinder instance. 
+    * UIBinder instance.
     */
    private static AvailableDependenciesViewUiBinder uiBinder = GWT.create(AvailableDependenciesViewUiBinder.class);
 
    interface AvailableDependenciesViewUiBinder extends UiBinder<Widget, AvailableDependenciesView>
    {
    }
-   
+
    /**
     * Tab panel to placing the JAR List Grid.
     */
@@ -92,7 +92,7 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
     */
    @UiField
    TabPanel propertiesTabPanel;
-   
+
    /**
     * Ok button.
     */
@@ -117,31 +117,31 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
       super(ID, "popup", TITLE, new Image(GroovyClientBundle.INSTANCE.jarLibrary()), INITIAL_WIDTH, INITIAL_HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      
+
       jarsListGrid = new JarFilesListGrid();
       jarsListGrid.setSize("100%", "100%");
       jarsListGrid.setID(JAR_LIST_ID);
-      
+
       Border b1 = GWT.create(Border.class);
       b1.setSize("100%", "100%");
       b1.add(jarsListGrid);
-      
+
       Image jarsIcon = new Image(GroovyClientBundle.INSTANCE.jarLibrary());
       jarsTabPanel.addTab("jarList", jarsIcon, "JAR Libraries", b1, false);
-//      jarsTabPanel.selectTab(0);
+      // jarsTabPanel.selectTab(0);
 
       attributesListGrid = new AttributesListGrid();
       attributesListGrid.setSize("100%", "100%");
       attributesListGrid.setID(JAR_ATTRIBUTES_ID);
-      
+
       Border b2 = GWT.create(Border.class);
       b2.setSize("100%", "100%");
       b2.add(attributesListGrid);
-      
+
       Image attributesIcon = ImageFactory.getImage("properties");
       propertiesTabPanel.addTab("properties", attributesIcon, "Attributes", b2, false);
-//      propertiesTabPanel.selectTab(0);
-      
+      // propertiesTabPanel.selectTab(0);
+
       okButton.setButtonId(OK_BUTTON_ID);
    }
 

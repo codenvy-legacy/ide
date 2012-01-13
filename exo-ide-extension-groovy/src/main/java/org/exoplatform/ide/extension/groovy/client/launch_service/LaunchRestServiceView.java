@@ -40,9 +40,10 @@ import java.util.LinkedHashMap;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class LaunchRestServiceView extends ViewImpl implements LaunchRestServicePresenter.Display
 {
 
@@ -140,7 +141,7 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
       VerticalPanel form = new VerticalPanel();
       form.getElement().setId(ID_BODY_FORM);
       requestbody = new TextArea();
-      //      requestbody.setShowTitle(false);
+      // requestbody.setShowTitle(false);
       requestbody.setWidth("465px");
       requestbody.setHeight("110px");
       requestbody.setValue("");
@@ -329,13 +330,13 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
    public void setBodyTabEnabled()
    {
       // 2 is tabIndex of body tab
-      //TODO not implemented in tab panel parametersTabSet.enableTab(2);
+      // TODO not implemented in tab panel parametersTabSet.enableTab(2);
    }
 
    public void setBodyTabDisabled()
    {
       // 2 is tabIndex of body tab
-      //TODO not implemented in tab panel parametersTabSet.disableTab(2);
+      // TODO not implemented in tab panel parametersTabSet.disableTab(2);
    }
 
    public void setRequestMediaType(LinkedHashMap<String, String> requestMediaType)

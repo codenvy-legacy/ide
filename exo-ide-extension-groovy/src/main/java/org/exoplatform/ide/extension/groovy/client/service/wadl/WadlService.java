@@ -23,9 +23,10 @@ import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public abstract class WadlService
 {
 

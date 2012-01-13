@@ -119,7 +119,8 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
             "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText() + "</i>)";
          if (!serverException.getMessage().equals(""))
          {
-            outputContent += "<br />" + serverException.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+            outputContent += "<br />" + serverException.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on
+                                                                                              // "<br />"
          }
 
          IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));

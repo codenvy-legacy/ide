@@ -20,10 +20,10 @@ package org.exoplatform.ide.extension.groovy.server.codeassistant;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 15, 2010 4:53:36 PM evgen $
- *
+ * 
  */
 public @interface Foo {
 

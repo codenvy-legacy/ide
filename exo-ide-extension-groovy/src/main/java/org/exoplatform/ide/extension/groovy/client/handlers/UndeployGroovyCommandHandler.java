@@ -88,7 +88,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
 
       String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> undeployed successfully.";
       IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-      //      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
+      // eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
    }
 
    private void undeployFail(Throwable exc, String path)
@@ -100,7 +100,8 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
          outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
          if (!exception.getMessage().equals(""))
          {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on
+                                                                                        // "<br />"
          }
       }
       else
@@ -161,7 +162,8 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
          outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
          if (!exception.getMessage().equals(""))
          {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
+            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on
+                                                                                        // "<br />"
          }
          IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
       }

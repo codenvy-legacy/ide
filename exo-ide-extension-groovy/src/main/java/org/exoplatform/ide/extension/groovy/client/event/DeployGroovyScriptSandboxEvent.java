@@ -30,7 +30,8 @@ import com.google.gwt.event.shared.GwtEvent;
 public class DeployGroovyScriptSandboxEvent extends GwtEvent<DeployGroovyScriptSandboxHandler>
 {
 
-   public static final GwtEvent.Type<DeployGroovyScriptSandboxHandler> TYPE = new GwtEvent.Type<DeployGroovyScriptSandboxHandler>();
+   public static final GwtEvent.Type<DeployGroovyScriptSandboxHandler> TYPE =
+      new GwtEvent.Type<DeployGroovyScriptSandboxHandler>();
 
    @Override
    protected void dispatch(DeployGroovyScriptSandboxHandler handler)

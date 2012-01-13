@@ -25,13 +25,12 @@ import java.util.List;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is fired for adding new sources (dir or file) 
- * to build class path of the current project.
+ * Event is fired for adding new sources (dir or file) to build class path of the current project.
  * 
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 10, 2011 $
- *
+ * 
  */
 public class AddSourceToBuildPathEvent extends GwtEvent<AddSourceToBuildPathHandler>
 {
@@ -46,7 +45,7 @@ public class AddSourceToBuildPathEvent extends GwtEvent<AddSourceToBuildPathHand
     * Sources to add to classpath file.
     */
    private List<GroovyClassPathEntry> classPathEntries;
-   
+
    /**
     * @param classPathEntries sources to add to classpath file
     */
@@ -54,7 +53,7 @@ public class AddSourceToBuildPathEvent extends GwtEvent<AddSourceToBuildPathHand
    {
       this.classPathEntries = classPathEntries;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

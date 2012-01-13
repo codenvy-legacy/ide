@@ -39,13 +39,13 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 10, 2011 $
- *
+ * 
  */
 public class ChooseSourcePathView extends ViewImpl implements ChooseSourcePathPresenter.Display
 {
-   
+
    private static ChooseSourcePathViewUiBinder uiBinder = GWT.create(ChooseSourcePathViewUiBinder.class);
-   
+
    interface ChooseSourcePathViewUiBinder extends UiBinder<Widget, ChooseSourcePathView>
    {
    }
@@ -55,7 +55,7 @@ public class ChooseSourcePathView extends ViewImpl implements ChooseSourcePathPr
     */
    @UiField
    ImageButton cancelButton;
-   
+
    /**
     * Confirm button.
     */
@@ -67,16 +67,15 @@ public class ChooseSourcePathView extends ViewImpl implements ChooseSourcePathPr
     */
    @UiField
    ItemTree pathTreeGrid;
-   
-   
+
    public static final int WIDTH = 450;
 
    public static final int HEIGHT = 400;
 
-   //IDs for Selenium tests:
+   // IDs for Selenium tests:
 
    public static final String ID = "ideChooseSourcePathView";
-   
+
    private final String ID_CANCEL_BUTTON = "ideChooseSourcePathViewCancelButton";
 
    private final String ID_OK_BUTTON = "ideChooseSourcePathViewOkButton";
@@ -89,7 +88,7 @@ public class ChooseSourcePathView extends ViewImpl implements ChooseSourcePathPr
       add(uiBinder.createAndBindUi(this));
 
       pathTreeGrid.getElement().setId(ID_TREE_GRID);
-      okButton.setButtonId(ID_OK_BUTTON );     
+      okButton.setButtonId(ID_OK_BUTTON);
       cancelButton.setButtonId(ID_CANCEL_BUTTON);
    }
 

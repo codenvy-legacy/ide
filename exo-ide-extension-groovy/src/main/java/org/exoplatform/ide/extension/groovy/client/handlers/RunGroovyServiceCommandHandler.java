@@ -68,7 +68,7 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
 
    public RunGroovyServiceCommandHandler()
    {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);      
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(RunGroovyServiceEvent.TYPE, this);
    }
 
@@ -84,12 +84,12 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
     * @see org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceHandler#onRunGroovyService(org.exoplatform.ide.client.module.groovy.event.RunGroovyServiceEvent)
     */
    public void onRunGroovyService(RunGroovyServiceEvent event)
-   {      
+   {
       if (activeFile == null)
       {
          return;
       }
-      
+
       if (activeFile.isContentChanged())
       {
          handlerRegistrations.put(FileSavedEvent.TYPE, IDE.addHandler(FileSavedEvent.TYPE, this));
@@ -110,7 +110,8 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
 
    protected void validateFile()
    {
-      handlerRegistrations.put(GroovyValidateResultReceivedEvent.TYPE, IDE.addHandler(GroovyValidateResultReceivedEvent.TYPE, this));
+      handlerRegistrations.put(GroovyValidateResultReceivedEvent.TYPE,
+         IDE.addHandler(GroovyValidateResultReceivedEvent.TYPE, this));
       IDE.fireEvent(new ValidateGroovyScriptEvent());
    }
 
@@ -125,7 +126,8 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
 
    protected void reDeployFile()
    {
-      handlerRegistrations.put(GroovyDeployResultReceivedEvent.TYPE, IDE.addHandler(GroovyDeployResultReceivedEvent.TYPE, this));
+      handlerRegistrations.put(GroovyDeployResultReceivedEvent.TYPE,
+         IDE.addHandler(GroovyDeployResultReceivedEvent.TYPE, this));
       IDE.fireEvent(new DeployGroovyScriptSandboxEvent());
    }
 
@@ -134,7 +136,8 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
       handlerRegistrations.get(GroovyDeployResultReceivedEvent.TYPE).removeHandler();
       if (event.getException() == null)
       {
-         handlerRegistrations.put(RestServiceOutputReceivedEvent.TYPE, IDE.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
+         handlerRegistrations.put(RestServiceOutputReceivedEvent.TYPE,
+            IDE.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
          IDE.fireEvent(new PreviewWadlOutputEvent(true));
       }
    }
@@ -152,15 +155,15 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
    {
       removeHandlers();
    }
-   
+
    /**
     * Remove handlers, that are no longer needed.
     */
    private void removeHandlers()
    {
-      //TODO: such method is not very convenient.
-      //If gwt mvp framework will be used , it will be good to use
-      //ResettableEventBus class
+      // TODO: such method is not very convenient.
+      // If gwt mvp framework will be used , it will be good to use
+      // ResettableEventBus class
       for (HandlerRegistration h : handlerRegistrations.values())
       {
          h.removeHandler();

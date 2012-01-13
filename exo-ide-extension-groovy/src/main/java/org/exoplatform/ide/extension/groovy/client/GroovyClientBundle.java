@@ -33,15 +33,13 @@ public interface GroovyClientBundle extends ClientBundle
    public static final GroovyClientBundle INSTANCE = GWT.create(GroovyClientBundle.class);
 
    /**
-    * To active bundle, call 
-    * <code>GroovyPluginImageBundle.INSTANCE.css().ensureInjected()</code>
-    * method in your module.
+    * To active bundle, call <code>GroovyPluginImageBundle.INSTANCE.css().ensureInjected()</code> method in your module.
     * 
     * @return {@link GroovyCss}
     */
    @Source("groovy.css")
    public GroovyCss css();
-   
+
    @Source("images/codeassistant/class.gif")
    ImageResource classItem();
 
@@ -50,7 +48,7 @@ public interface GroovyClientBundle extends ClientBundle
 
    @Source("images/codeassistant/innerinterface_public.gif")
    ImageResource intrfaceItem();
-   
+
    @Source("images/codeassistant/enum.gif")
    ImageResource enumItem();
 
@@ -67,8 +65,8 @@ public interface GroovyClientBundle extends ClientBundle
    ImageResource jarLibrary();
 
    @Source("org/exoplatform/ide/extension/groovy/client/images/jarlibrary-disabled.png")
-   ImageResource jarLibraryDisabled();   
-   
+   ImageResource jarLibraryDisabled();
+
    @Source("org/exoplatform/ide/extension/groovy/client/images/codeassistant/private-field.png")
    ImageResource privateField();
 
@@ -86,7 +84,7 @@ public interface GroovyClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/groovy/client/images/codeassistant/public-method.png")
    ImageResource publicMethod();
-   
+
    @Source("org/exoplatform/ide/extension/groovy/client/images/codeassistant/local.png")
    ImageResource variable();
 
@@ -95,10 +93,10 @@ public interface GroovyClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/groovy/client/images/preview.png")
    ImageResource preview();
-   
+
    @Source("org/exoplatform/ide/extension/groovy/client/images/preview_Disabled.png")
    ImageResource previewDisabled();
-   
+
    /*
     * Buttons
     */
@@ -107,25 +105,25 @@ public interface GroovyClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/ok_Disabled.png")
    ImageResource okButtonDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/cancel.png")
    ImageResource cancelButton();
 
    @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/cancel_Disabled.png")
    ImageResource cancelButtonDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/add.png")
    ImageResource addButton();
-   
+
    @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/add_Disabled.png")
    ImageResource addButtonDisabled();
 
    @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/remove.png")
    ImageResource removeButton();
-   
+
    @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/remove_Disabled.png")
    ImageResource removeButtonDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/groovy/public/images/module/groovy/classpath/folder.png")
    ImageResource folder();
 }

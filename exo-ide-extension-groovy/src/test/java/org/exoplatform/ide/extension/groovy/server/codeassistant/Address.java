@@ -20,15 +20,21 @@ package org.exoplatform.ide.extension.groovy.server.codeassistant;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class Address
 {
    public String address;
+
    private String city;
+
    public String state;
 
-   public String getCity(){return city;}
+   public String getCity()
+   {
+      return city;
+   }
 
 }

@@ -31,7 +31,7 @@ public class ShowAvailableDependenciesEvent extends GwtEvent<ShowAvailableDepend
 {
 
    public static final GwtEvent.Type<ShowAvailableDependencies> TYPE = new GwtEvent.Type<ShowAvailableDependencies>();
-   
+
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<ShowAvailableDependencies> getAssociatedType()
    {

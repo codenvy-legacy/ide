@@ -26,7 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
- *
+ * 
  */
 public class ClassPathUnmarshaller implements Unmarshallable
 {
@@ -34,8 +34,7 @@ public class ClassPathUnmarshaller implements Unmarshallable
     * Classpath info.
     */
    private ClassPath classPath;
-   
-   
+
    /**
     * @param classPath
     */
@@ -43,8 +42,7 @@ public class ClassPathUnmarshaller implements Unmarshallable
    {
       this.classPath = classPath;
    }
-   
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
