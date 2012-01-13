@@ -117,6 +117,31 @@ public class ClassInfoExtractorTest
    }
 
    @Test
+   public void testMapGeneric() throws IOException
+   {
+      TypeInfo cd = ClassParser.parse(B.class);
+      List<MethodInfo> methods = cd.getMethods();
+      boolean isFound = false;
+      for (MethodInfo method : methods)
+      {
+         if (method.getName().equals("methodWithMap"))
+         {
+            Assert.assertEquals(method.getDeclaringClass(), "org.exoplatform.ide.codeassistant.asm.test.B");
+            Assert.assertEquals(method.getModifiers(), 1);
+            Assert.assertEquals(method.getReturnType(), "T");
+            Assert.assertEquals(method.getExceptionTypes().size(), 0);
+            Assert.assertEquals(method.getParameterNames().size(), 1);
+            Assert.assertEquals(method.getParameterNames().get(0), "map");
+            Assert.assertEquals(method.getParameterTypes().size(), 1);
+            Assert.assertEquals(method.getParameterTypes().get(0), "java.util.Map<K, V>");
+            isFound = true;
+            break;
+         }
+      }
+      Assert.assertTrue(isFound);
+   }
+
+   @Test
    public void testExtractMethod() throws IOException
    {
       TypeInfo cd = ClassParser.parse(B.class);
