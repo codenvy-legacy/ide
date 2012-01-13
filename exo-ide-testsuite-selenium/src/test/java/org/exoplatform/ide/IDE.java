@@ -26,6 +26,7 @@ import org.exoplatform.ide.core.AskForValueDialog;
 import org.exoplatform.ide.core.AvailableDependencies;
 import org.exoplatform.ide.core.Button;
 import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.core.CustomizeHotkeys;
 import org.exoplatform.ide.core.CustomizeToolbar;
 import org.exoplatform.ide.core.Delete;
 import org.exoplatform.ide.core.DeployNodeType;
@@ -176,6 +177,8 @@ public class IDE
    public RESTServiceDiscovery REST_SERVICE_DISCOVERY;
    
    public ProgressBar PROGRESS_BAR;
+   
+   public CustomizeHotkeys CUSTOMIZE_HOTKEYS;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -221,6 +224,7 @@ public class IDE
       CUSTOMIZE_TOOLBAR= PageFactory.initElements(driver, CustomizeToolbar.class);
       REST_SERVICE_DISCOVERY = PageFactory.initElements(driver, RESTServiceDiscovery.class);
       PROGRESS_BAR = PageFactory.initElements(driver, ProgressBar.class);
+      CUSTOMIZE_HOTKEYS = PageFactory.initElements(driver, CustomizeHotkeys.class);
    }
 
    public Selenium getSelenium()
