@@ -24,11 +24,13 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Iuvshyn Roman</a>
@@ -39,18 +41,25 @@ public class CursorPositionStatusBarTest extends BaseTest
 {
    private final static String PROJECT = CursorPositionStatusBarTest.class.getSimpleName();
 
-   private final static String FILE_1 = "CursorPositionStatusBar.html";
+   private final static String FILE_NAME = "CursorPositionStatusBar.html";
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/miscellaneous/CursorPositionStatusBar.html", MimeType.TEXT_HTML,
-            WS_URL + PROJECT + "/" + FILE_1);
+
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, "text/html",
+            "src/test/resources/org/exoplatform/ide/miscellaneous/CursorPositionStatusBar.html");
       }
+
+      //         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      //         VirtualFileSystemUtils.put(
+      //            "src/test/resources/org/exoplatform/ide/miscellaneous/CursorPositionStatusBar.html", MimeType.TEXT_HTML,
+      //            WS_URL + PROJECT + "/" + FILE_NAME);
+
       catch (IOException e)
       {
       }
@@ -63,12 +72,13 @@ public class CursorPositionStatusBarTest extends BaseTest
 
       //step 1 (open project and file, check first cursor position in statusbar)
       IDE.PROJECT.EXPLORER.waitOpened();
+      //Thread.sleep(10000);
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.openItem(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_1);
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
       IDE.LOADER.waitClosed();
       IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
@@ -85,11 +95,13 @@ public class CursorPositionStatusBarTest extends BaseTest
       //step 4 select previous tab and check save cursor position
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       IDE.EDITOR.waitTabPresent(2);
+      //This action is necessary for correctly position the cursor in of previous tab (selectTab(2)and selectTab(1);)
+      IDE.EDITOR.selectTab(2);
       IDE.EDITOR.selectTab(1);
       assertEquals("7 : 7", IDE.STATUSBAR.getCursorPosition());
 
       //step 5 refresh browser and check reset cursor position
-      
+
       //      //TODO after fix issue IDE-1392 should be uncomment
       //      driver.navigate().refresh();
       //      IDE.STATUSBAR.wait();
