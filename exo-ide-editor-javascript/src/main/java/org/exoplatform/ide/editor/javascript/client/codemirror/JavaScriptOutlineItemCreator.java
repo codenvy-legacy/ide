@@ -29,10 +29,10 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class JavaScriptOutlineItemCreator extends OutlineItemCreatorImpl
-{  
+{
    @Override
    public ImageResource getTokenIcon(TokenBeenImpl token)
    {
@@ -43,34 +43,34 @@ public class JavaScriptOutlineItemCreator extends OutlineItemCreatorImpl
 
          case VARIABLE :
             return JavaScriptEditorExtension.RESOURCES.varItem();
-            
+
          case TAG :
             return JavaScriptEditorExtension.RESOURCES.tag();
-            
-         case PROPERTY :            
+
+         case PROPERTY :
             return JavaScriptEditorExtension.RESOURCES.propertyItem();
 
          case METHOD :
             return JavaScriptEditorExtension.RESOURCES.methodItem();
-            
+
          default :
             return null;
       }
    }
-   
+
    @Override
    public String getTokenDisplayTitle(TokenBeenImpl token)
    {
       String label = token.getName();
-      
-      // Add parameter list 
+
+      // Add parameter list
       if (TokenType.FUNCTION.equals(token.getType()))
       {
-         label += getParametersList(token); 
+         label += getParametersList(token);
       }
-      
+
       label += getElementType(token);
-      
+
       return label;
    }
 }

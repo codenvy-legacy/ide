@@ -31,7 +31,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
- *
+ * 
  */
 public class JavaScriptParser extends CodeMirrorParserImpl
 {
@@ -101,7 +101,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
          currentToken = currentToken.getLastSubToken();
       }
 
-      // to recognize variable declaration like "var h = ["               
+      // to recognize variable declaration like "var h = ["
       else if ((newToken = isVariableWithArrayValue((Stack<Node>)nodeStack.clone())) != null)
       {
          addSubToken(lineNumber, currentToken, newToken);
@@ -113,7 +113,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
          cloneNodeStack = (Stack<Node>)nodeStack.clone();
          cloneNodeStack.setSize(cloneNodeStack.size() - 1);
 
-         // to recognize variable like "var h = window.document.getElementById('test')"         
+         // to recognize variable like "var h = window.document.getElementById('test')"
          if ((newToken = isVariableWithReferenceValue((Stack<Node>)cloneNodeStack.clone())) != null)
          {
             newToken.setInitializationStatement(newToken.getInitializationStatement() + "()");
@@ -149,7 +149,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
             nodeStack.clear();
          }
 
-         // to recognize variable declaration like "var i = {"               
+         // to recognize variable declaration like "var i = {"
          else if ((newToken = isVariableWithObjectValue((Stack<Node>)nodeStack.clone())) != null)
          {
             addSubToken(lineNumber, currentToken, newToken);
@@ -162,7 +162,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
          }
       }
 
-      // recognize close brace "}"      
+      // recognize close brace "}"
       else if (!nodeStack.isEmpty() && isCloseBrace(nodeStack.lastElement()))
       {
          if (!enclosers.isEmpty())
@@ -194,6 +194,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize JS comment node like "// comment" with type "js-comment"
+    * 
     * @param node
     * @return
     */
@@ -204,6 +205,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Add newToken as subToken of currentToken, clear nodeStack.
+    * 
     * @param currentToken
     * @param newToken
     */
@@ -215,6 +217,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Set lineNumber to newToken, add newToken as subToken of currentToken, clear nodeStack.
+    * 
     * @param lineNumber
     * @param currentToken
     * @param newToken
@@ -227,8 +230,9 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize js property
+    * 
     * @param nodeType
-    * @return 
+    * @return
     */
    private boolean isJsProperty(String nodeType)
    {
@@ -237,6 +241,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize object creation like "var a = new UWA.Data()"
+    * 
     * @param nodeStack
     * @return token "a" with elementType like "UWA.Data" in case like "var a = new UWA.Data()"
     */
@@ -281,6 +286,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize "function" keyword
+    * 
     * @param node
     * @return
     */
@@ -296,6 +302,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize ";" node
+    * 
     * @param node
     * @return
     */
@@ -306,6 +313,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize variable out of the function
+    * 
     * @param nodeType
     * @return
     */
@@ -316,6 +324,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize local variable definition within the function like "function a() { var b = 1;  }"
+    * 
     * @param nodeType
     * @return
     */
@@ -326,6 +335,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize local variable within the function like "function a() { b = 1;  }"
+    * 
     * @param nodeType
     * @return
     */
@@ -336,6 +346,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize "new" keyword
+    * 
     * @param nodeType
     * @param nodeContent
     * @return
@@ -347,6 +358,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize "." out of the js string
+    * 
     * @return
     */
    public static boolean isPoint(String nodeType, String nodeContent)
@@ -356,6 +368,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize "{"
+    * 
     * @return true if there is open braces of method definition
     */
    private boolean isOpenBrace(Node node)
@@ -373,7 +386,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize function definition like function a(...){ and return its name
-    * @param lineNumber 
+    * 
+    * @param lineNumber
     * @param non-safe nodeStack
     * @return token "a"
     */
@@ -406,7 +420,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
             while (nodeStack.size() > 2)
             {
-               // test if this is like "function a (" 
+               // test if this is like "function a ("
                if (isOpenBracket(nodeStack.lastElement()))
                {
                   if ((isJsVariable(nodeStack.get(nodeStack.size() - 2).getType()) || isJsLocalVariableDef(nodeStack
@@ -427,6 +441,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize function definition like "function (...) {" and return index of function node "function"
+    * 
     * @param non-safe nodeStack
     * @return index of function node "function"
     */
@@ -455,7 +470,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
             while (nodeStack.size() > 1)
             {
-               // test if this is like "function (" 
+               // test if this is like "function ("
                if (isOpenBracket(nodeStack.lastElement()))
                {
                   if (isFunctionNode(nodeStack.get(nodeStack.size() - 2)))
@@ -520,7 +535,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize variable with function assignment like "var a = function(...) {"
-    * @param lineNumber 
+    * 
+    * @param lineNumber
     * @param non-safe nodeStack
     * @return function token with function like "a()" in case like "var a = function(...) {"
     */
@@ -586,8 +602,9 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize variable with reference value returned from a function "var k = window.document" 
-    * @param non-safe nodeStack 
+    * Recognize variable with reference value returned from a function "var k = window.document"
+    * 
+    * @param non-safe nodeStack
     * @return CodeMirrorTokenImpl k with initializationStatement statement like "window.document"
     */
    private TokenBeenImpl isVariableWithReferenceValue(Stack<Node> nodeStack)
@@ -626,7 +643,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    }
 
    /**
-    *  Filter code like "Data..test" or ".Data" or "Data."
+    * Filter code like "Data..test" or ".Data" or "Data."
+    * 
     * @param expression
     * @return
     */
@@ -636,13 +654,14 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize variable with atomic value "var h = 11" like "number", "boolean", "string", null 
-    * @param nodeStack 
+    * Recognize variable with atomic value "var h = 11" like "number", "boolean", "string", null
+    * 
+    * @param nodeStack
     * @return variable token like "h" with element type from "number", "boolean", "string", "object" set
     */
    private TokenBeenImpl isVariableWithAtomicValue(Stack<Node> nodeStack)
    {
-      //      nodeStack = clearStartedWhitespaces(nodeStack);
+      // nodeStack = clearStartedWhitespaces(nodeStack);
       if (nodeStack.size() > 3)
       {
          // recognize type of assignment
@@ -689,7 +708,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize variable with array value like "var h = ["
-    * @param non-safe nodeStack 
+    * 
+    * @param non-safe nodeStack
     * @return node of variable with array type
     */
    private TokenBeenImpl isVariableWithArrayValue(Stack<Node> nodeStack)
@@ -710,8 +730,9 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize variable with array value like "var i = {"
-    * @param lineNumber 
-    * @param non-safe nodeStack 
+    * 
+    * @param lineNumber
+    * @param non-safe nodeStack
     * @return node of variable with array type
     */
    private TokenBeenImpl isVariableWithObjectValue(Stack<Node> nodeStack)
@@ -731,8 +752,9 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize open brackets "(" 
-    * @param node 
+    * Recognize open brackets "("
+    * 
+    * @param node
     * @return
     */
    private boolean isOpenBracket(Node node)
@@ -741,7 +763,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize open brackets ")" 
+    * Recognize open brackets ")"
+    * 
     * @param node
     * @return
     */
@@ -762,6 +785,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize "[" square bracket
+    * 
     * @param node
     * @return
     */
@@ -772,6 +796,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize node type "js-punctuation"
+    * 
     * @param node
     * @return
     */
@@ -813,7 +838,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    };
 
    /**
-    * Recognize "null" node 
+    * Recognize "null" node
+    * 
     * @param lastElement
     * @return
     */
@@ -824,8 +850,9 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
    /**
     * Recognize "js-atom" node type
+    * 
     * @param node
-    * @return 
+    * @return
     */
    private boolean isJsAtomicType(Node node)
    {
@@ -833,7 +860,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize "js-string" node type 
+    * Recognize "js-string" node type
+    * 
     * @param node
     * @return
     */

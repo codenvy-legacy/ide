@@ -29,7 +29,7 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
 /**
  * @author <a href="mailto:dnochevnov@gmail.com">Dmytro Nochevnov</a>
  * @version $Id:
- *
+ * 
  */
 public class JsFunctionWidget extends JSBaseWidget
 {

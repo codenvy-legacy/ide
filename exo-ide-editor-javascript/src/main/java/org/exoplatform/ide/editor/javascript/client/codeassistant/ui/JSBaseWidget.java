@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JSBaseWidget Feb 24, 2011 11:56:26 AM evgen $
- *
+ * 
  */
 public abstract class JSBaseWidget extends TokenWidget
 {

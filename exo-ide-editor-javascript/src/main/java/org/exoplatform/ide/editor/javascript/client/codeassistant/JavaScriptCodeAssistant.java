@@ -48,7 +48,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaScriptCodeAssistant Feb 24, 2011 11:26:32 AM evgen $
- *
+ * 
  */
 public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator<Token>
 {
@@ -64,7 +64,8 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
    private static Map<String, Token> tokensByFQN = new HashMap<String, Token>();
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor,
+    *      java.util.List, int, int, java.lang.String)
     */
    @Override
    public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
@@ -73,7 +74,9 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
    public void autocompleteCalled(final Editor editor, final int cursorOffsetX, final int cursorOffsetY,
@@ -352,8 +355,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
    public int compare(Token t1, Token t2)
    {
       /*
-       * If tokens have the same types,
-       * than compare in alphabetic order.
+       * If tokens have the same types, than compare in alphabetic order.
        */
       if (t1.getType() == t2.getType())
       {

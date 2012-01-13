@@ -29,7 +29,7 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JsKeyWordWidget Feb 24, 2011 11:58:25 AM evgen $
- *
+ * 
  */
 public class JsKeyWordWidget extends JSBaseWidget
 {
@@ -49,7 +49,7 @@ public class JsKeyWordWidget extends JSBaseWidget
       grid.setWidget(0, 0, i);
 
       Label nameLabel = new Label(token.getName(), false);
-      //      nameLabel.setStyleName(GroovyPluginImageBundle.INSTANCE.css().keywordStyle());
+      // nameLabel.setStyleName(GroovyPluginImageBundle.INSTANCE.css().keywordStyle());
       grid.setWidget(0, 1, nameLabel);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");

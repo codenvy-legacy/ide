@@ -23,11 +23,11 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface Images
 {
    public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
-   
+
    static final String JAVA_SCRIPT = IMAGE_URL + "javascript/javascript.gif";
 }

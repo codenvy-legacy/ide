@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.Label;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JsWodget Feb 24, 2011 4:22:18 PM evgen $
- *
+ * 
  */
 public class JsWidget extends JSBaseWidget
 {

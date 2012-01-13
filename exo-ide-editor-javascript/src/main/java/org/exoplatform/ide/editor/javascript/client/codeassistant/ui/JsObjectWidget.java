@@ -29,7 +29,7 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JsObjectWidjet Feb 24, 2011 4:10:26 PM evgen $
- *
+ * 
  */
 public class JsObjectWidget extends JSBaseWidget
 {

@@ -24,7 +24,7 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface JavaScriptClientBundle extends ClientBundle
 {
@@ -55,10 +55,10 @@ public interface JavaScriptClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/javascript/client/images/method-item.png")
    ImageResource methodItem();
-   
+
    @Source("org/exoplatform/ide/editor/javascript/client/images/tag.png")
    ImageResource tag();
-   
+
    @Source("org/exoplatform/ide/editor/javascript/public/images/javascript/javascript.gif")
    ImageResource javaScript();
 }

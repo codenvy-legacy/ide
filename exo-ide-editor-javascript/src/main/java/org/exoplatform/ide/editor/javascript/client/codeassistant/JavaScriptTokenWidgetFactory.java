@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.javascript.client.codeassistant.ui.JsWidget;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaScriptTokenWidgetFactory Feb 24, 2011 11:54:32 AM evgen $
- *
+ * 
  */
 public class JavaScriptTokenWidgetFactory implements TokenWidgetFactory
 {
@@ -56,7 +56,7 @@ public class JavaScriptTokenWidgetFactory implements TokenWidgetFactory
          case VARIABLE :
          case PROPERTY :
             return new JsWidget(token);
-            
+
          case FUNCTION :
             return new JsFunctionWidget(token);
 

@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JsTemplateWidtet Feb 24, 2011 2:28:32 PM evgen $
- *
+ * 
  */
 public class JsTemplateWidtet extends JSBaseWidget
 {
@@ -52,7 +52,7 @@ public class JsTemplateWidtet extends JSBaseWidget
       String name = token.getName();
       if (token.hasProperty(TokenProperties.SHORT_HINT))
       {
-         String hint =  " - "+ token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
+         String hint = " - " + token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
          Label hintLabel = new Label(hint, false);
          grid.setWidget(0, 2, hintLabel);
       }
