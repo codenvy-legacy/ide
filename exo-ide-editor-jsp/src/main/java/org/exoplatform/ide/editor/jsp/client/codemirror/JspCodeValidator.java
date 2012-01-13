@@ -30,22 +30,22 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.codemirror.CodeValidator;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
 
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class JspCodeValidator extends CodeValidator
 {
-    
+
    List<? extends Token> javaCode;
-   
+
    JavaCodeValidator javaCodeValidator = new JavaCodeValidator();
-   
+
    /**
-    * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList 
-    * @param tokenList 
+    * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList
+    * 
+    * @param tokenList
     */
    public List<CodeLine> getCodeErrorList(List<? extends Token> tokenList)
    {
@@ -54,7 +54,8 @@ public class JspCodeValidator extends CodeValidator
          return new ArrayList<CodeLine>();
       }
 
-      javaCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
+      javaCode =
+         extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
 
       return javaCodeValidator.getCodeErrorList(javaCode);
    }
@@ -64,13 +65,15 @@ public class JspCodeValidator extends CodeValidator
    {
       if (this.javaCode == null)
       {
-         this.javaCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
+         this.javaCode =
+            extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
       }
-      
-      if (javaCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>) javaCode, fqn))
-      {      
-         int appropriateLineNumber = JavaCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
-         
+
+      if (javaCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>)javaCode, fqn))
+      {
+         int appropriateLineNumber =
+            JavaCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
+
          if (appropriateLineNumber > 1)
          {
             return new CodeLine(CodeType.IMPORT_STATEMENT, "import " + fqn + ";\n", appropriateLineNumber);
@@ -80,7 +83,7 @@ public class JspCodeValidator extends CodeValidator
             return new CodeLine(CodeType.IMPORT_STATEMENT, "<%\n  import " + fqn + ";\n%>\n", 1);
          }
       }
-      
+
       return null;
-   } 
+   }
 }

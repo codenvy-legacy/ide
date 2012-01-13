@@ -33,19 +33,21 @@ public class AstItem
 {
 
    private String type;
-   
-   public AstItem(String type) {
+
+   public AstItem(String type)
+   {
       this.type = type;
    }
-   
-   public AstItem(JSONObject itemObject) {
+
+   public AstItem(JSONObject itemObject)
+   {
       init(itemObject);
    }
-   
+
    public void init(JSONObject itemObject)
    {
       type = itemObject.get("type").isString().stringValue();
-   }   
+   }
 
    public String getType()
    {

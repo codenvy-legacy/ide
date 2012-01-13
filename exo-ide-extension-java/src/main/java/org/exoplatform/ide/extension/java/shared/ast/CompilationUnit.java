@@ -32,12 +32,14 @@ import com.google.gwt.json.client.JSONObject;
 public class CompilationUnit extends Unit
 {
 
-   public CompilationUnit() {
+   public CompilationUnit()
+   {
       super(Types.COMPILATION_UNIT);
    }
-   
-   public CompilationUnit(JSONObject itemObject) {
+
+   public CompilationUnit(JSONObject itemObject)
+   {
       super(itemObject);
    }
-   
+
 }

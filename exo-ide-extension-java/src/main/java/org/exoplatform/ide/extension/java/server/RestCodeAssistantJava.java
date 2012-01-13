@@ -43,15 +43,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 /**
- * Service provide Autocomplete of source code is also known as code completion feature. 
- * In a source code editor autocomplete is greatly simplified by the regular structure 
- * of the programming languages. 
- * At current moment implemented the search class FQN,
+ * Service provide Autocomplete of source code is also known as code completion feature. In a source code editor autocomplete is
+ * greatly simplified by the regular structure of the programming languages. At current moment implemented the search class FQN,
  * by Simple Class Name and a prefix (the lead characters in the name of the package or class).
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RestCodeAssistantJava Mar 30, 2011 10:40:38 AM evgen $
- *
+ * 
  */
 @Path("/ide/code-assistant/java")
 public class RestCodeAssistantJava
@@ -71,9 +69,9 @@ public class RestCodeAssistantJava
     * Returns the Class object associated with the class or interface with the given string name.
     * 
     * @param fqn the Full Qualified Name
-    * @return {@link TypeInfo} 
+    * @return {@link TypeInfo}
     * @throws CodeAssistantException
-    * @throws VirtualFileSystemException 
+    * @throws VirtualFileSystemException
     */
    @GET
    @Path("/class-description")
@@ -92,25 +90,14 @@ public class RestCodeAssistantJava
    }
 
    /**
-    * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)
-    * Example :
-    * if prefix = "java.util.c"
-    * set must content:
-    *  {
-    *   java.util.Comparator<T>
-    *   java.util.Calendar
-    *   java.util.Collection<E>
-    *   java.util.Collections
-    *   java.util.ConcurrentModificationException
-    *   java.util.Currency
-    *   java.util.concurrent
-    *   java.util.concurrent.atomic
-    *   java.util.concurrent.locks
-    *  }
+    * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name) Example : if prefix = "java.util.c"
+    * set must content: { java.util.Comparator<T> java.util.Calendar java.util.Collection<E> java.util.Collections
+    * java.util.ConcurrentModificationException java.util.Currency java.util.concurrent java.util.concurrent.atomic
+    * java.util.concurrent.locks }
     * 
     * @param prefix the string for matching FQNs
     * @param where the string that indicate where find (must be "className" or "fqn")
-    * @throws VirtualFileSystemException 
+    * @throws VirtualFileSystemException
     */
    @GET
    @Path("/find-by-prefix/{prefix}")
@@ -133,12 +120,12 @@ public class RestCodeAssistantJava
 
    /**
     * Find all classes or annotations or interfaces
-    *   
-    * @param type the string that represent one of Java class type (i.e. CLASS, INTERFACE, ANNOTATION) 
+    * 
+    * @param type the string that represent one of Java class type (i.e. CLASS, INTERFACE, ANNOTATION)
     * @param prefix optional parameter that matching first letter of type name
     * @return Returns set of FQNs matched to class type
     * @throws CodeAssistantException
-    * @throws VirtualFileSystemException 
+    * @throws VirtualFileSystemException
     */
    @GET
    @Path("/find-by-type/{type}")
@@ -172,13 +159,14 @@ public class RestCodeAssistantJava
 
    /**
     * Find all classes in project
+    * 
     * @param uriInfo
     * @param location
-    * @return set of FQNs matched to project at file location 
+    * @return set of FQNs matched to project at file location
     * @throws CodeAssistantException
-    * @throws VirtualFileSystemException 
-    * @throws PermissionDeniedException 
-    * @throws ItemNotFoundException 
+    * @throws VirtualFileSystemException
+    * @throws PermissionDeniedException
+    * @throws ItemNotFoundException
     */
    @GET
    @Path("/find-in-package")

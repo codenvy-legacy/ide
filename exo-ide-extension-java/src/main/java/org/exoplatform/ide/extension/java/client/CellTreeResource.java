@@ -25,31 +25,31 @@ import com.google.gwt.user.cellview.client.CellTree;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CellTableResource.java Mar 11, 2011 11:33:27 AM vereshchaka $
- *
+ * 
  */
 public interface CellTreeResource extends CellTree.Resources
 {
-   
+
    @Source({CellTree.Style.DEFAULT_CSS, "project_explorer/CustomizedCellTree.css"})
    CellTreeStyle cellTreeStyle();
-   
-//   @Source("eXoStyle/skin/default/images/listGrid/header.png")
-//   @ImageOptions(repeatStyle=RepeatStyle.Horizontal)
-//   ImageResource header();
-   
+
+   // @Source("eXoStyle/skin/default/images/listGrid/header.png")
+   // @ImageOptions(repeatStyle=RepeatStyle.Horizontal)
+   // ImageResource header();
+
    /**
     * An image indicating an open branch.
     */
    @ImageOptions(flipRtl = true)
    @Source("project_explorer/close.png")
    ImageResource cellTreeOpenItem();
-   
+
    /**
     * An image indicating a closed branch.
     */
    @ImageOptions(flipRtl = true)
    @Source("project_explorer/open.png")
-   ImageResource cellTreeClosedItem();   
+   ImageResource cellTreeClosedItem();
 
    interface CellTreeStyle extends CellTree.Style
    {

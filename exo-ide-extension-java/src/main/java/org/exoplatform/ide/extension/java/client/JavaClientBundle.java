@@ -27,7 +27,7 @@ import com.google.gwt.resources.client.ImageResource;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JavaClientBundle.java Jun 21, 2011 4:26:42 PM vereshchaka $
- *
+ * 
  */
 public interface JavaClientBundle extends ClientBundle
 {

@@ -24,8 +24,8 @@ import com.thoughtworks.qdox.JavaDocBuilder.ErrorHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 1, 2011 11:48:25 AM evgen $
- *
+ * @version ${Id}: Dec 1, 2011 11:48:25 AM evgen $
+ * 
  */
 public class JavaDocBuilderErrorHandler implements ErrorHandler
 {
@@ -36,7 +36,7 @@ public class JavaDocBuilderErrorHandler implements ErrorHandler
    @Override
    public void handle(ParseException parseException)
    {
-      //TODO collect parser errors
+      // TODO collect parser errors
    }
 
 }

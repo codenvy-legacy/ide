@@ -35,8 +35,8 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 29, 2011 2:11:05 PM evgen $
- *
+ * @version ${Id}: Nov 29, 2011 2:11:05 PM evgen $
+ * 
  */
 public abstract class JavaDocBase extends Base
 {
@@ -60,7 +60,8 @@ public abstract class JavaDocBase extends Base
       vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null);
       try
       {
-         project = (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null, PropertyFilter.NONE_FILTER);
+         project =
+            (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null, PropertyFilter.NONE_FILTER);
          vfs.delete(project.getId(), null);
          project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
       }

@@ -56,7 +56,7 @@ public class Package extends AstItem
    public void init(JSONObject itemObject)
    {
       super.init(itemObject);
-      
+
       name = itemObject.get("name").isString().stringValue();
       projectId = itemObject.get("projectId").isString().stringValue();
       source = itemObject.get("source").isString().stringValue();

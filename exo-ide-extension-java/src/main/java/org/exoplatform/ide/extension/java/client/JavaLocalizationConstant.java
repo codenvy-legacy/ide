@@ -23,7 +23,7 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JavaLocalizationConstant.java Jun 21, 2011 4:31:30 PM vereshchaka $
- *
+ * 
  */
 public interface JavaLocalizationConstant extends Messages
 {
@@ -47,16 +47,16 @@ public interface JavaLocalizationConstant extends Messages
 
    @Key("control.create.javaProject.prompt")
    String createJavaProjectControlPrompt();
-   
+
    @Key("control.create.javaSpringProject.id")
    String createJavaSpringProjectControlId();
-   
+
    @Key("control.create.javaSpringProject.title")
    String createJavaSpringProjectControlTitle();
 
    @Key("control.create.javaSpringProject.prompt")
    String createJavaSpringProjectControlPrompt();
-   
+
    /*
     * CreateApplicationView
     */
@@ -68,16 +68,16 @@ public interface JavaLocalizationConstant extends Messages
 
    @Key("javaProject.view.nameField.defaultName")
    String createJavaProjectDefaultName();
-   
+
    @Key("javaProject.view.name")
    String newProjectName();
-   
+
    @Key("javaProject.view.groupid")
    String newProjectGroupId();
-   
+
    @Key("javaProject.view.artifactid")
    String newProjectArtifactId();
-   
+
    @Key("javaProject.view.version")
    String newProjectVersion();
 
@@ -86,7 +86,7 @@ public interface JavaLocalizationConstant extends Messages
     */
    @Key("javaProject.create.success")
    String createJavaProjectSuccess(String projectName);
-   
+
    @Key("javaProject.clean.success")
    String cleanJavaProjectSuccess(String project);
 }

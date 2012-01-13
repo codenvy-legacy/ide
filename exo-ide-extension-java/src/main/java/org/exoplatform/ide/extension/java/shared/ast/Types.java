@@ -29,15 +29,15 @@ package org.exoplatform.ide.extension.java.shared.ast;
 
 public interface Types
 {
-   
+
    String PROJECT = "project";
-   
+
    String ROOT_PACKAGE = "rootPackage";
-   
+
    String PACKAGE = "package";
-   
+
    String COMPILATION_UNIT = "compilationUnit";
-   
+
    String RESOURCE_UNIT = "resourceUnit";
 
 }

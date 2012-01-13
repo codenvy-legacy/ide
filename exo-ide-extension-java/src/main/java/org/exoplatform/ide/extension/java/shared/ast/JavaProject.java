@@ -89,7 +89,7 @@ public class JavaProject extends AstItem
    public void init(JSONObject itemObject)
    {
       super.init(itemObject);
-      
+
       id = itemObject.get("id").isString().stringValue();
       name = itemObject.get("name").isString().stringValue();
    }

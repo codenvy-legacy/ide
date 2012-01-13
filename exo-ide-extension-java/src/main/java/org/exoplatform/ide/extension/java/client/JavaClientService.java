@@ -45,7 +45,7 @@ import com.google.gwt.http.client.RequestBuilder;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JavaClientServiceImpl.java Jun 21, 2011 5:02:07 PM vereshchaka $
- *
+ * 
  */
 public class JavaClientService
 {
@@ -63,7 +63,7 @@ public class JavaClientService
    private static final String ROOT_PACKAGES = BASE_URL + "/project/packages/root";
 
    private static final String PACKAGES = BASE_URL + "/project/packages/list";
-   
+
    private static final String PACKAGE = BASE_URL + "/project/package";
 
    /**
@@ -109,7 +109,7 @@ public class JavaClientService
       params += "&artifactId=" + artifactId;
       params += "&version=" + version;
       params += "&parentId=" + workDir;
-      params += "&vfsId=" + "dev-monit"; //TODO: need remove hardcode
+      params += "&vfsId=" + "dev-monit"; // TODO: need remove hardcode
 
       MavenResponse mavenResponse = new MavenResponse();
       callback.setResult(mavenResponse);
@@ -123,7 +123,8 @@ public class JavaClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.client.JavaClientService#packageProject(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.java.client.JavaClientService#packageProject(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    public void packageProject(String baseDir, MavenResponseCallback callback)
    {
@@ -142,7 +143,8 @@ public class JavaClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.client.JavaClientService#cleanProject(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.java.client.JavaClientService#cleanProject(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    public void cleanProject(String baseDir, MavenResponseCallback callback)
    {
@@ -222,17 +224,21 @@ public class JavaClientService
 
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
-   
-   public void getPackageEntries(String vfsId, String projectId, String packageSource, String packageName, AsyncRequestCallback<List<AstItem>> callback) {
-      String url = restServiceContext + PACKAGE + "?vfsId=" + vfsId + "&projectId=" + projectId + "&packageName=" + packageName + "&packageSource=" + packageSource;
-      
+
+   public void getPackageEntries(String vfsId, String projectId, String packageSource, String packageName,
+      AsyncRequestCallback<List<AstItem>> callback)
+   {
+      String url =
+         restServiceContext + PACKAGE + "?vfsId=" + vfsId + "&projectId=" + projectId + "&packageName=" + packageName
+            + "&packageSource=" + packageSource;
+
       List<AstItem> entries = new ArrayList<AstItem>();
       callback.setResult(entries);
       callback.setEventBus(eventBus);
-      
+
       PackageEntriesUnmarshaller unmarshaller = new PackageEntriesUnmarshaller(entries);
       callback.setPayload(unmarshaller);
-      
+
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

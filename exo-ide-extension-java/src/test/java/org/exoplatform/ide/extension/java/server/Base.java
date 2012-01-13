@@ -45,18 +45,17 @@ import javax.jcr.Node;
 import javax.jcr.ValueFactory;
 import javax.jcr.Workspace;
 
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Base Mar 30, 2011 11:35:14 AM evgen $
- *
+ * 
  */
 
 public class Base
 {
 
    public static final String WS_NAME = "ws";
-   
+
    public static final String REPO_NAME = "db1";
 
    protected static SessionImpl session;
@@ -74,7 +73,7 @@ public class Base
    protected PersistentDataManager dataManager;
 
    protected static ValueFactory valueFactory;
-   
+
    protected static SessionProviderService sessionProviderService;
 
    protected static StandaloneContainer container;
@@ -86,11 +85,11 @@ public class Base
    public static ResourceLauncher launcher;
 
    public static int resourceNumber = 0;
-   
+
    protected static DummySecurityContext adminSecurityContext;
 
    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
-   
+
    @BeforeClass
    public static void setUp() throws Exception
    {
@@ -133,6 +132,5 @@ public class Base
       devRoles.add("developers");
       adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
    }
-   
 
 }

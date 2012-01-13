@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JapHtmlCodeAssistant May 5, 2011 4:02:40 PM evgen $
- *
+ * 
  */
 class JspHtmlCodeAssistant extends HtmlCodeAssistant
 {
@@ -56,7 +56,7 @@ class JspHtmlCodeAssistant extends HtmlCodeAssistant
    @Override
    protected void getTokens(final String lineContent, final int cursorPositionX) throws ResourceException
    {
-      //if htmlTokens already fill call method from super class
+      // if htmlTokens already fill call method from super class
       if (htmlTokens.size() > 0)
       {
          super.getTokens(lineContent, cursorPositionX);

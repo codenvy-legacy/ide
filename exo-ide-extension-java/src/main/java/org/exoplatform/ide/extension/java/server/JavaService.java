@@ -268,10 +268,11 @@ public class JavaService
       throws VirtualFileSystemException
    {
       ItemList<Item> children = vfs.getChildren(folder.getId(), -1, 0, PropertyFilter.ALL_FILTER);
-      if (canBePackage && showInPackageList(children)) {
+      if (canBePackage && showInPackageList(children))
+      {
          folders.add(folder.getPath());
       }
-      
+
       for (Item item : children.getItems())
       {
          if (item instanceof Folder)
@@ -281,21 +282,27 @@ public class JavaService
          }
       }
    }
-   
-   private boolean showInPackageList(ItemList<Item> children) {
+
+   private boolean showInPackageList(ItemList<Item> children)
+   {
       boolean hasFiles = false;
       int foldersCount = 0;
-      
-      for (Item item : children.getItems())  {
-         if (item instanceof Folder) {
+
+      for (Item item : children.getItems())
+      {
+         if (item instanceof Folder)
+         {
             foldersCount++;
-         } else {
+         }
+         else
+         {
             hasFiles = true;
             break;
          }
       }
-      
-      if (!hasFiles && foldersCount == 1) {
+
+      if (!hasFiles && foldersCount == 1)
+      {
          return false;
       }
 
@@ -325,19 +332,20 @@ public class JavaService
       Item sourceDirectory = getItemByRelPath(vfs, projectItem, path);
 
       List<AstItem> entries = new ArrayList<AstItem>();
-      
+
       ItemList<Item> items = vfs.getChildren(sourceDirectory.getId(), -1, 0, PropertyFilter.ALL_FILTER);
       for (Item item : items.getItems())
       {
          if (item instanceof File)
          {
             File file = (File)item;
-            
+
             String mimeType = file.getMimeType();
-            if (mimeType.indexOf(";") > 0) {
+            if (mimeType.indexOf(";") > 0)
+            {
                mimeType = mimeType.substring(0, mimeType.indexOf(";"));
             }
-            
+
             if ("application/java".equals(mimeType))
             {
                CompilationUnit compilationUnit = new CompilationUnit();

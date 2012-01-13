@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JSPCodeAssistant Apr 15, 2011 12:34:45 PM evgen $
- *
+ * 
  */
 public class JspCodeAssistant extends JavaCodeAssistant
 {
@@ -106,7 +106,9 @@ public class JspCodeAssistant extends JavaCodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
    public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
@@ -135,7 +137,8 @@ public class JspCodeAssistant extends JavaCodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#showMethods(org.exoplatform.ide.editor.api.codeassitant.Token, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#showMethods(org.exoplatform.ide.editor.api.codeassitant.Token,
+    *      java.lang.String, java.lang.String)
     */
    @Override
    protected void showMethods(Token currentToken, String varToken)

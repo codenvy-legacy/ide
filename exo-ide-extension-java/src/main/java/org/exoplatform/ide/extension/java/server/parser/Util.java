@@ -41,8 +41,8 @@ import com.thoughtworks.qdox.model.Type;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 29, 2011 9:54:16 AM evgen $
- *
+ * @version ${Id}: Nov 29, 2011 9:54:16 AM evgen $
+ * 
  */
 public class Util
 {
@@ -180,6 +180,7 @@ public class Util
 
    /**
     * Convert array type to String array of FQNs
+    * 
     * @param types
     * @return
     */

@@ -37,8 +37,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 28, 2011 3:08:29 PM evgen $
- *
+ * @version ${Id}: Nov 28, 2011 3:08:29 PM evgen $
+ * 
  */
 public class VfsClassLibrary extends ClassLibrary
 {

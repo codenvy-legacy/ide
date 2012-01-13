@@ -34,31 +34,36 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class JspAutocompleteHelper extends AutocompleteHelper
 {
-    
+
    List<? extends Token> javaCode;
 
    HtmlAutocompleteHelper htmlAutocompleteHelper = new HtmlAutocompleteHelper();
-   
+
    JavaAutocompleteHelper javaAutocompleteHelper = new JavaAutocompleteHelper();
-   
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
-   {          
+
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
+      List<? extends Token> tokenList, String currentLineMimeType)
+   {
       if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
-         return htmlAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
+         return htmlAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList,
+            currentLineMimeType);
 
       else if (MimeType.APPLICATION_JAVA.equals(currentLineMimeType))
       {
-         javaCode = CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
-         return javaAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaCode, currentLineMimeType);
+         javaCode =
+            CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(),
+               MimeType.APPLICATION_JAVA);
+         return javaAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaCode,
+            currentLineMimeType);
       }
-      
+
       return null;
    }
-   
+
    public boolean isVariable(String nodeType)
    {
       return false;

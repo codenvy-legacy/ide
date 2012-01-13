@@ -27,7 +27,9 @@ import java.util.Map;
 public class MavenResponse
 {
    private int exitCode;
+
    private String output;
+
    private Map<String, String> result;
 
    public MavenResponse(int exitCode, String output, Map<String, String> result)

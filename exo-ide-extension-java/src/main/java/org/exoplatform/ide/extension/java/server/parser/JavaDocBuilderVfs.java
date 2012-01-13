@@ -37,8 +37,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 28, 2011 3:07:14 PM evgen $
- *
+ * @version ${Id}: Nov 28, 2011 3:07:14 PM evgen $
+ * 
  */
 public class JavaDocBuilderVfs extends JavaDocBuilder
 {

@@ -34,7 +34,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
- *
+ * 
  */
 public class JspParser extends CodeMirrorParserImpl
 {
@@ -42,11 +42,11 @@ public class JspParser extends CodeMirrorParserImpl
    String currentContentMimeType;
 
    private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
-   
+
    static
    {
-      factory.put(MimeType.TEXT_HTML, new HtmlParser());   
-      factory.put(MimeType.APPLICATION_JAVA, new JavaParser());      
+      factory.put(MimeType.TEXT_HTML, new HtmlParser());
+      factory.put(MimeType.APPLICATION_JAVA, new JavaParser());
    }
 
    protected static CodeMirrorParserImpl getParser(String mimeType)
@@ -57,28 +57,30 @@ public class JspParser extends CodeMirrorParserImpl
       }
 
       return null;
-   }   
-   
-   @Override
-   public void init() 
-   {
-      currentContentMimeType = MimeType.TEXT_HTML;
-   }   
+   }
 
    @Override
-   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public void init()
+   {
+      currentContentMimeType = MimeType.TEXT_HTML;
+   }
+
+   @Override
+   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken,
+      boolean hasParentParser)
    {
       // interrupt at the end of the document
       if (node == null)
          return currentToken;
-      
+
       String nodeContent = Node.getContent(node).trim(); // returns text without ended space " " in the text
-      String nodeType = Node.getType(node);       
-      
+      String nodeType = Node.getType(node);
+
       // recognize "<%" open tag within the TEXT_HTML content
       if (isJavaOpenNode(nodeType, nodeContent) && MimeType.TEXT_HTML.equals(currentContentMimeType))
       {
-         TokenBeenImpl newToken = new TokenBeenImpl("java code", TokenType.JSP_TAG, lineNumber, MimeType.APPLICATION_JAVA);
+         TokenBeenImpl newToken =
+            new TokenBeenImpl("java code", TokenType.JSP_TAG, lineNumber, MimeType.APPLICATION_JAVA);
          if (currentToken != null)
          {
             currentToken.addSubToken(newToken);
@@ -97,15 +99,15 @@ public class JspParser extends CodeMirrorParserImpl
          currentContentMimeType = MimeType.TEXT_HTML;
          getParser(currentContentMimeType).init();
       }
-      
-      currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
-      
-      if (node == null || Node.getName(node).equals("BR")) 
+
+      currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
+
+      if (node == null || Node.getName(node).equals("BR"))
       {
          return currentToken;
       }
 
-      return parseLine(Node.getNext(node), lineNumber, currentToken, false);  // call itself 
+      return parseLine(Node.getNext(node), lineNumber, currentToken, false); // call itself
 
    }
 

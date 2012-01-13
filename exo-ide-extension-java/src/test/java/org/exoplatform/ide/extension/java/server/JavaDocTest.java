@@ -26,8 +26,8 @@ import org.junit.Test;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 30, 2011 5:17:52 PM evgen $
- *
+ * @version ${Id}: Nov 30, 2011 5:17:52 PM evgen $
+ * 
  */
 public class JavaDocTest extends JavaDocBase
 {

@@ -38,30 +38,31 @@ import com.google.gwt.json.client.JSONObject;
 
 public class Project extends org.exoplatform.ide.vfs.shared.Project
 {
-   
+
    private ItemList<ProjectItem> children = new ItemList<ProjectItem>();
 
-   public Project() {      
+   public Project()
+   {
    }
-   
-   public Project(JSONObject itemObject) {
+
+   public Project(JSONObject itemObject)
+   {
       init(itemObject);
    }
-   
+
    @SuppressWarnings({"unchecked", "rawtypes"})
    public void init(JSONObject itemObject)
    {
-//      id = itemObject.get("id").isString().stringValue();
-//      name = itemObject.get("name").isString().stringValue();
-//      if (itemObject.get("mimeType").isString() != null)
-//        mimeType = itemObject.get("mimeType").isString().stringValue();
-//      path = itemObject.get("path").isString().stringValue();
-//      parentId = (itemObject.get("parentId").isNull() != null) ? null : itemObject.get("parentId").isString().stringValue();
-//      creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
-//      properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-//      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-//      this.persisted = true;
+      // id = itemObject.get("id").isString().stringValue();
+      // name = itemObject.get("name").isString().stringValue();
+      // if (itemObject.get("mimeType").isString() != null)
+      // mimeType = itemObject.get("mimeType").isString().stringValue();
+      // path = itemObject.get("path").isString().stringValue();
+      // parentId = (itemObject.get("parentId").isNull() != null) ? null : itemObject.get("parentId").isString().stringValue();
+      // creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
+      // properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+      // links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+      // this.persisted = true;
    }
-   
-   
+
 }

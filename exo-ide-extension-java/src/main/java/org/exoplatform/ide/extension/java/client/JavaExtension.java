@@ -30,11 +30,11 @@ import com.google.gwt.core.client.GWT;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JavaExtension.java Jun 21, 2011 12:29:16 PM vereshchaka $
- *
+ * 
  */
 public class JavaExtension extends Extension implements InitializeServicesHandler
 {
-   
+
    public static final JavaLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(JavaLocalizationConstant.class);
 
    /**
@@ -53,10 +53,10 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      
-//    IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB));
-//    IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING));
-//    new CreateJavaProjectPresenter(eventBus);
+
+      // IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB));
+      // IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING));
+      // new CreateJavaProjectPresenter(eventBus);
    }
 
 }

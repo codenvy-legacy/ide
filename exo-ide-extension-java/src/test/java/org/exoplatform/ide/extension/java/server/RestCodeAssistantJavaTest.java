@@ -37,13 +37,12 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RestCodeAssistantJavaTest Mar 30, 2011 11:40:04 AM evgen $
- *
+ * 
  */
 public class RestCodeAssistantJavaTest extends JavaDocBase
 {
 
    private int methods;
-
 
    @Test
    public void testGetClassByFqn() throws Exception
@@ -68,7 +67,7 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
          launcher.service("GET", "/ide/code-assistant/java/find-by-prefix/" + pkg + "?where=fqn" + "&projectid="
             + project.getId() + "&vfsid=ws", "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
-      //      assertTrue(cres.getEntity().getClass().isArray());
+      // assertTrue(cres.getEntity().getClass().isArray());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       assertEquals(10, types.size());
    }
@@ -82,7 +81,7 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
          launcher.service("GET", "/ide/code-assistant/java/find-by-prefix/" + clazz + "?where=className"
             + "&projectid=" + project.getId() + "&vfsid=ws", "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
-      //      assertTrue(cres.getEntity().getClass().isArray());
+      // assertTrue(cres.getEntity().getClass().isArray());
       List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
       assertEquals(6, types.size());
    }

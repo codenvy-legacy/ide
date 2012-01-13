@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
@@ -32,8 +31,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 28, 2011 4:34:52 PM evgen $
- *
+ * @version ${Id}: Nov 28, 2011 4:34:52 PM evgen $
+ * 
  */
 public class JavaDocBuilderVfsTest extends JavaDocBase
 {
@@ -42,8 +41,8 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
    public void projectParserConstruntorTest() throws CodeAssistantException, VirtualFileSystemException
    {
       TypeInfo clazz =
-         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", project.getId(),
-            VFS_ID);
+         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
+            project.getId(), VFS_ID);
       Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", clazz.getName());
       Assert.assertEquals(1, clazz.getModifiers());
       List<MethodInfo> methods = clazz.getMethods();
@@ -64,8 +63,8 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
    public void projectParserFieldsTest() throws CodeAssistantException, VirtualFileSystemException
    {
       TypeInfo clazz =
-         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", project.getId(),
-            VFS_ID);
+         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
+            project.getId(), VFS_ID);
       Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", clazz.getName());
       List<FieldInfo> fields = clazz.getFields();
       Assert.assertEquals(6, fields.size());
@@ -80,8 +79,8 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
    public void projectParserMethodsTest() throws CodeAssistantException, VirtualFileSystemException
    {
       TypeInfo clazz =
-         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", project.getId(),
-            VFS_ID);
+         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
+            project.getId(), VFS_ID);
 
       List<MethodInfo> methods = clazz.getMethods();
       Assert.assertNotNull(methods);

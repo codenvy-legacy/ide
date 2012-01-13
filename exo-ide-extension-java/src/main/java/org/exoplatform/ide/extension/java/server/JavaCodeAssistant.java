@@ -52,8 +52,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 22, 2011 4:53:15 PM evgen $
- *
+ * @version ${Id}: Nov 22, 2011 4:53:15 PM evgen $
+ * 
  */
 public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.CodeAssistant
 {
@@ -128,6 +128,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
    /**
     * Return word until first point like "ClassName" on file name "ClassName.java"
+    * 
     * @param fileName
     * @return
     */
@@ -141,6 +142,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
    /**
     * Return possible FQN like "org.exoplatform.example.ClassName" on file path "/org/exoplatform/example/ClassName.java"
+    * 
     * @param fileName
     * @return
     */
@@ -162,12 +164,13 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * Find classes in package 
+    * Find classes in package
+    * 
     * @param fileId
-    * @param vfsId 
+    * @param vfsId
     * @return
     * @throws CodeAssistantException
-    * @throws VirtualFileSystemException  
+    * @throws VirtualFileSystemException
     */
    private List<ShortTypeInfo> findClassesInPackage(File file, Project project, VirtualFileSystem vfs)
       throws CodeAssistantException, VirtualFileSystemException
@@ -180,14 +183,15 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          {
             if (file.getId().equals(i.getId()) || ItemType.FILE != i.getItemType())
                continue;
-            classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()),0, "CLASS"));
+            classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS"));
          }
       }
       return classes;
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassByFqnFromProject(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassByFqnFromProject(java.lang.String, java.lang.String,
+    *      java.lang.String)
     */
    @Override
    protected TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
@@ -204,7 +208,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypesByNamePrefixFromProject(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypesByNamePrefixFromProject(java.lang.String, java.lang.String,
+    *      java.lang.String)
     */
    @Override
    protected List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId, String vfsId)
@@ -221,7 +226,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypesByFqnPrefixInProject(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypesByFqnPrefixInProject(java.lang.String, java.lang.String,
+    *      java.lang.String)
     */
    @Override
    protected List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId, String vfsId)
@@ -238,7 +244,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getByTypeFromProject(org.exoplatform.ide.codeassistant.jvm.shared.JavaType, java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getByTypeFromProject(org.exoplatform.ide.codeassistant.jvm.shared.JavaType,
+    *      java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
    protected List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId, String vfsId)
@@ -270,7 +277,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassesFromProject(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassesFromProject(java.lang.String, java.lang.String,
+    *      java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
@@ -296,7 +304,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getMemberJavaDocFromProject(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getMemberJavaDocFromProject(java.lang.String, java.lang.String,
+    *      java.lang.String)
     */
    @Override
    protected String getMemberJavaDocFromProject(String fqn, String projectId, String vfsId)
@@ -309,7 +318,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       if (clazz == null)
          throw new CodeAssistantException(404, "Not found");
 
-      //member is method
+      // member is method
       if (memberFqn.contains("("))
       {
          for (JavaMethod method : clazz.getMethods())
@@ -320,7 +329,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
             }
          }
       }
-      //member is field
+      // member is field
       else
       {
          for (JavaField field : clazz.getFields())
@@ -338,7 +347,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    /**
     * @param entity
     * @return
-    * @throws CodeAssistantException 
+    * @throws CodeAssistantException
     */
    private String getJavaDoc(AbstractJavaEntity entity) throws CodeAssistantException
    {

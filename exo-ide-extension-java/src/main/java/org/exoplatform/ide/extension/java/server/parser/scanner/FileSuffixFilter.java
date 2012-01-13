@@ -23,8 +23,8 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 28, 2011 4:27:31 PM evgen $
- *
+ * @version ${Id}: Nov 28, 2011 4:27:31 PM evgen $
+ * 
  */
 public class FileSuffixFilter implements Filter
 {

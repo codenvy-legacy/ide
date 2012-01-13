@@ -31,13 +31,15 @@ import com.google.gwt.json.client.JSONObject;
 
 public class ResourceUnit extends Unit
 {
-   
-   public ResourceUnit() {
+
+   public ResourceUnit()
+   {
       super(Types.RESOURCE_UNIT);
    }
-   
-   public ResourceUnit(JSONObject itemObject) {
+
+   public ResourceUnit(JSONObject itemObject)
+   {
       super(itemObject);
    }
-   
+
 }

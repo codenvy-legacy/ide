@@ -41,13 +41,14 @@ import com.google.gwt.json.client.JSONValue;
 
 public class PackageEntriesUnmarshaller implements Unmarshallable
 {
-   
+
    private List<AstItem> entries;
 
-   public PackageEntriesUnmarshaller(List<AstItem> entries) {
+   public PackageEntriesUnmarshaller(List<AstItem> entries)
+   {
       this.entries = entries;
    }
-   
+
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
@@ -67,8 +68,8 @@ public class PackageEntriesUnmarshaller implements Unmarshallable
       {
          String message = "Can't parse item " + response.getText();
          throw new UnmarshallerException(message);
-      }      
-      
+      }
+
    }
 
 }

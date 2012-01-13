@@ -56,7 +56,7 @@ public class RootPackage extends AstItem
    public void init(JSONObject itemObject)
    {
       super.init(itemObject);
-      
+
       id = itemObject.get("id").isString().stringValue();
       projectId = itemObject.get("projectId").isString().stringValue();
       source = itemObject.get("source").isString().stringValue();
