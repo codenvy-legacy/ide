@@ -34,8 +34,8 @@ import com.google.gwt.json.client.JSONValue;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 30, 2011 evgen $
- *
+ * @version $Id: Aug 30, 2011 evgen $
+ * 
  */
 public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
 {

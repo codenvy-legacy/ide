@@ -33,7 +33,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: VFSInfoUnmarshaller Feb 2, 2011 2:16:15 PM evgen $
- *
+ * 
  */
 public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo>
 {

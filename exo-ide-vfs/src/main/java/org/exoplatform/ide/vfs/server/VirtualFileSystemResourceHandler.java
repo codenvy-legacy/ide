@@ -34,8 +34,7 @@ public final class VirtualFileSystemResourceHandler extends URLStreamHandler
    private final VirtualFileSystemRegistry registry;
 
    /**
-    * @param registry
-    *           virtual file system registry
+    * @param registry virtual file system registry
     */
    public VirtualFileSystemResourceHandler(VirtualFileSystemRegistry registry)
    {

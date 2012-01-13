@@ -19,8 +19,8 @@
 package org.exoplatform.ide.vfs.shared;
 
 /**
- * Provide set of exit codes of Virtual Files System operation. Such codes can be used as a supplement to the HTTP
- * status of the client to help define more precisely the type of error.
+ * Provide set of exit codes of Virtual Files System operation. Such codes can be used as a supplement to the HTTP status of the
+ * client to help define more precisely the type of error.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $

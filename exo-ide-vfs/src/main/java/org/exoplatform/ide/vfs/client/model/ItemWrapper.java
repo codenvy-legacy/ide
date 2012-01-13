@@ -22,9 +22,10 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Wrapper for {@link ItemWrapper} to help unmarshall item unknown type
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 29, 2011 evgen $
- *
+ * @version $Id: Sep 29, 2011 evgen $
+ * 
  */
 public class ItemWrapper
 {

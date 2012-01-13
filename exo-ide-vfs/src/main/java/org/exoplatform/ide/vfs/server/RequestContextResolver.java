@@ -36,12 +36,16 @@ public class RequestContextResolver implements RequestContext, ContextResolver<R
 {
    @Context
    private UriInfo uriInfo;
+
    @Context
    private Request request;
+
    @Context
    private HttpHeaders headers;
+
    @Context
    private SecurityContext security;
+
    @Context
    private Providers providers;
 

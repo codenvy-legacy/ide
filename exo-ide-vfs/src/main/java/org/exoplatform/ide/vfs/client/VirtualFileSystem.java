@@ -56,7 +56,7 @@ public class VirtualFileSystem
     */
    private static VirtualFileSystem instance;
 
-   //private final HandlerManager eventBus;
+   // private final HandlerManager eventBus;
 
    /**
     * Fully qualified URL to root folder of VFS
@@ -139,8 +139,8 @@ public class VirtualFileSystem
    {
       String param = "propertyFilter=" + PropertyFilter.ALL;
       loader.setMessage("Loading content...");
-      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param).loader(loader).send(
-         callback);
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
+         .loader(loader).send(callback);
    }
 
    /**
@@ -183,7 +183,7 @@ public class VirtualFileSystem
    /**
     * Create new file.
     * 
-    * @param parent parent folder of the new file 
+    * @param parent parent folder of the new file
     * @param callback callback/
     * @throws RequestException
     */
@@ -221,7 +221,7 @@ public class VirtualFileSystem
     */
    public void updateContent(FileModel file, AsyncRequestCallback<FileModel> callback) throws RequestException
    {
-      //TODO check with lock
+      // TODO check with lock
       String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
       url += (file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "";
       loader.setMessage("Updating content...");
@@ -238,7 +238,7 @@ public class VirtualFileSystem
     */
    public void delete(Item item, AsyncRequestCallback<String> callback) throws RequestException
    {
-      //TODO check with lock
+      // TODO check with lock
       String url = item.getLinkByRelation(Link.REL_DELETE).getHref();
       if (ItemType.FILE == item.getItemType() && ((FileModel)item).isLocked())
       {
@@ -281,7 +281,7 @@ public class VirtualFileSystem
    public void move(Item source, String destination, String lockToken, AsyncRequestCallback<ItemWrapper> callback)
       throws RequestException
    {
-      //TODO check with locks
+      // TODO check with locks
       String url = source.getLinkByRelation(Link.REL_MOVE).getHref();
       url = URL.decode(url).replace("[parentId]", destination);
       if (ItemType.FILE == source.getItemType() && ((FileModel)source).isLocked())
@@ -298,7 +298,7 @@ public class VirtualFileSystem
     * @param mediaType media type to change (may be <code>null</code> in case of just renaming operation)
     * @param newname new name of the item (may be <code>null</code> in case of just changing media type)
     * @param lockToken lock token
-    * @param callback  callback user has to implement to handle response
+    * @param callback callback user has to implement to handle response
     * @throws RequestException
     */
    public void rename(Item item, String mediaType, String newname, String lockToken,
@@ -327,6 +327,7 @@ public class VirtualFileSystem
 
    /**
     * Place lock on File item.
+    * 
     * @param file to be locked
     * @param callback
     * @throws RequestException
@@ -340,6 +341,7 @@ public class VirtualFileSystem
 
    /**
     * Remove lock from file.
+    * 
     * @param file to be unlocked
     * @param lockToken lock token
     * @param callback
@@ -354,8 +356,8 @@ public class VirtualFileSystem
    }
 
    /**
-    * Get item by path.
-    * Path MUST not start with "\"
+    * Get item by path. Path MUST not start with "\"
+    * 
     * @param path to item
     * @param callback
     * @throws RequestException
@@ -372,6 +374,7 @@ public class VirtualFileSystem
 
    /**
     * Get item by id.
+    * 
     * @param id Id of the Item
     * @param callback
     * @throws RequestException
@@ -408,7 +411,8 @@ public class VirtualFileSystem
       url = URL.encode(url);
       loader.setMessage("Searching...");
       AsyncRequest.build(RequestBuilder.POST, url)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED).loader(loader).data(data).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED).loader(loader).data(data)
+         .send(callback);
    }
 
    /**

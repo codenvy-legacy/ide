@@ -39,6 +39,6 @@ public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupported
    public Response toResponse(NotSupportedException exception)
    {
       return Response.status(405).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-               .header("X-Exit-Code", Integer.toString(ExitCodes.UNSUPPORTED)).build();
+         .header("X-Exit-Code", Integer.toString(ExitCodes.UNSUPPORTED)).build();
    }
 }

@@ -47,8 +47,7 @@ public enum ItemType {
     * 
     * @param value string value
     * @return Type
-    * @throws IllegalArgumentException if there is no corresponded Type for
-    *            specified <code>value</code>
+    * @throws IllegalArgumentException if there is no corresponded Type for specified <code>value</code>
     */
    public static ItemType fromValue(String value)
    {

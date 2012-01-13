@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 31, 2011 evgen $
- *
+ * @version $Id: Aug 31, 2011 evgen $
+ * 
  */
 public class ItemPropertiesSavedEvent extends GwtEvent<ItemPropertiesSavedHandler>
 {

@@ -33,8 +33,8 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 /**
- * Serializer for ContentStream. Copy headers and content provided by method {@link ContentStream#getStream()} to HTTP
- * output stream.
+ * Serializer for ContentStream. Copy headers and content provided by method {@link ContentStream#getStream()} to HTTP output
+ * stream.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -64,8 +64,7 @@ public final class ContentStreamWriter implements MessageBodyWriter<ContentStrea
 
    /**
     * @see javax.ws.rs.ext.MessageBodyWriter#writeTo(java.lang.Object, java.lang.Class, java.lang.reflect.Type,
-    *      java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap,
-    *      java.io.OutputStream)
+    *      java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
     */
    @Override
    public void writeTo(ContentStream t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,

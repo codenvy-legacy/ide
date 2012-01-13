@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: VirtualFileSystemInfoReceivedHandler Feb 2, 2011 2:19:13 PM evgen $
- *
+ * 
  */
 public interface VirtualFileSystemInfoReceivedHandler extends EventHandler
 {

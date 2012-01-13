@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 26, 2011 evgen $
- *
+ * @version $Id: Aug 26, 2011 evgen $
+ * 
  */
 public class LocationUnmarshaller implements Unmarshallable<StringBuilder>
 {

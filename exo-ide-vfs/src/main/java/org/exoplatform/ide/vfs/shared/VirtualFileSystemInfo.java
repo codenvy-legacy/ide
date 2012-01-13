@@ -212,9 +212,9 @@ public class VirtualFileSystemInfo
    private String id;
 
    /**
-    * Templates of URL than can be used by client to manage virtual file system. Templates may contains parameters. It
-    * is path or query segments like next: [parameter]. Client should replace parameters by corresponded value or remove
-    * it from template if there is now value for it. Example:
+    * Templates of URL than can be used by client to manage virtual file system. Templates may contains parameters. It is path or
+    * query segments like next: [parameter]. Client should replace parameters by corresponded value or remove it from template if
+    * there is now value for it. Example:
     * 
     * <pre>
     * http://localhost/service/vfs/jcr/file/[parentId]?name=[name]&mediaType=[mediaType]
@@ -250,7 +250,7 @@ public class VirtualFileSystemInfo
    {
       return id;
    }
-   
+
    public void setId(String id)
    {
       this.id = id;

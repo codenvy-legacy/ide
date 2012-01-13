@@ -27,17 +27,16 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 /**
  * @version $Id:$
- *
+ * 
  */
 public class FolderUnmarshaller implements Unmarshallable<FolderModel>
 {
-   
-   
+
    private final FolderModel item;
-   
+
    public FolderUnmarshaller(FolderModel item)
    {
-      
+
       this.item = item;
 
    }
@@ -49,12 +48,12 @@ public class FolderUnmarshaller implements Unmarshallable<FolderModel>
    public void unmarshal(Response response) throws UnmarshallerException
    {
       try
-      {        
+      {
          item.init(JSONParser.parseLenient(response.getText()).isObject());
       }
       catch (Exception exc)
       {
-         String message = "Can't parse item "+response.getText();
+         String message = "Can't parse item " + response.getText();
          throw new UnmarshallerException(message);
       }
 
@@ -65,7 +64,5 @@ public class FolderUnmarshaller implements Unmarshallable<FolderModel>
    {
       return this.item;
    }
-   
-   
 
 }

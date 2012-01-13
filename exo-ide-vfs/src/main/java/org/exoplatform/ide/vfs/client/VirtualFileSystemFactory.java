@@ -30,8 +30,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 26, 2011 5:00:39 PM anya $
- *
+ * @version $Id: Sep 26, 2011 5:00:39 PM anya $
+ * 
  */
 public class VirtualFileSystemFactory
 {

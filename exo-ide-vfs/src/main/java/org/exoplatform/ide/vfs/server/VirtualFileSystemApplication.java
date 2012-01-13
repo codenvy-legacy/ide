@@ -40,6 +40,7 @@ import javax.ws.rs.core.Application;
 public class VirtualFileSystemApplication extends Application
 {
    private final Set<Object> singletons;
+
    private final Set<Class<?>> classes;
 
    public VirtualFileSystemApplication()

@@ -63,18 +63,16 @@ public class ItemList<T>
          list = new ArrayList<T>();
       return list;
    }
-   
+
    public void setItems(List<T> list)
    {
       this.list = list;
    }
 
    /**
-    * @return total number of items. It is not need to be equals to number of
-    *         items in current list {@link #getItems()}. It may be equals to
-    *         number of items in current list only if this list contains all
-    *         requested items and no more pages available. This method must
-    *         return -1 if total number of items in unknown.
+    * @return total number of items. It is not need to be equals to number of items in current list {@link #getItems()}. It may be
+    *         equals to number of items in current list only if this list contains all requested items and no more pages
+    *         available. This method must return -1 if total number of items in unknown.
     */
    public int getNumItems()
    {

@@ -31,8 +31,8 @@ import java.security.PrivilegedExceptionAction;
 import java.util.List;
 
 /**
- * Input property with possibility to transform it to required types. Values may be transformed to required type via
- * method {@link #valueToArray(Class)}.
+ * Input property with possibility to transform it to required types. Values may be transformed to required type via method
+ * {@link #valueToArray(Class)}.
  * <p>
  * Here is example of JSON source for property:
  * 
@@ -104,7 +104,7 @@ public class ConvertibleProperty extends StringProperty
          return (O[])a;
       }
 
-      // Look up Constructor with String parameter. 
+      // Look up Constructor with String parameter.
       Constructor<?> stringConstr = null;
       try
       {
@@ -147,7 +147,7 @@ public class ConvertibleProperty extends StringProperty
          return (O[])a;
       }
 
-      // Look up static Method 'valueOf' with String parameter. 
+      // Look up static Method 'valueOf' with String parameter.
       Method valueOf = null;
       try
       {

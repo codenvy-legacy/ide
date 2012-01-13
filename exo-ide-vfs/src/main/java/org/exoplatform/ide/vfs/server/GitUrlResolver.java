@@ -23,19 +23,19 @@ import org.exoplatform.ide.vfs.server.exceptions.GitUrlResolveException;
 import javax.ws.rs.core.UriInfo;
 
 /**
- * Need for resolving Git URL for public access. 
- * It can be need for using continues integration system that use Git for 
- * getting source for build project or some other services that manipulate with source via Git.
- * Implementation depend on VirtualFileSystem implementation.    
+ * Need for resolving Git URL for public access. It can be need for using continues integration system that use Git for getting
+ * source for build project or some other services that manipulate with source via Git. Implementation depend on VirtualFileSystem
+ * implementation.
  * 
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public interface GitUrlResolver
 {
-   
+
    /**
     * @param uriInfo
     * @param vfs

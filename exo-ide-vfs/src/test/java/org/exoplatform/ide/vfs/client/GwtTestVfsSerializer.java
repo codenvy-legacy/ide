@@ -37,8 +37,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GwtTestVfsSerializer.java 65773 2011-02-02 13:46:50Z andrew00x
- *          $
+ * @version $Id: GwtTestVfsSerializer.java 65773 2011-02-02 13:46:50Z andrew00x $
  */
 public class GwtTestVfsSerializer extends GWTTestCase
 {

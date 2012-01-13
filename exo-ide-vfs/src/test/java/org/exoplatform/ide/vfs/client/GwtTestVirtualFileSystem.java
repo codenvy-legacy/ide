@@ -59,7 +59,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
 
    private VirtualFileSystemInfo info;
 
-   //private HandlerManager eventBus = new HandlerManager(null);
+   // private HandlerManager eventBus = new HandlerManager(null);
 
    @SuppressWarnings("unchecked")
    @Override
@@ -76,7 +76,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
 
       new VirtualFileSystem("/", info, null);
 
-      //VirtualFileSystem.init(info, "/");
+      // VirtualFileSystem.init(info, "/");
    }
 
    public void testCreateFile() throws RequestException
@@ -117,7 +117,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
    public void testGetChildren() throws RequestException
    {
       final String parentId = String.valueOf(Random.nextDouble());
-      //String content = String.valueOf(Random.nextDouble() * Random.nextDouble());
+      // String content = String.valueOf(Random.nextDouble() * Random.nextDouble());
       Map<String, Link> links = new HashMap<String, Link>();
       Link link = new Link("/rest/vfs/mock/children/" + parentId, Link.REL_CREATE_FILE, "*/*");
       links.put(Link.REL_CHILDREN, link);
@@ -257,8 +257,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       file.setContent(content);
       file.setLocked(true);
       file.setLock(new Lock("root", "100", 1000));
-      file.getLinks().put(Link.REL_CONTENT,
-         new Link("/rest/vfs/mock/content/locked-file", Link.REL_CONTENT, "*/*"));
+      file.getLinks().put(Link.REL_CONTENT, new Link("/rest/vfs/mock/content/locked-file", Link.REL_CONTENT, "*/*"));
       VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
       {
          @Override
@@ -285,8 +284,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       file.setContent(content);
       file.setLocked(true);
       file.setLock(new Lock("root", "100111", 1000));
-      file.getLinks().put(Link.REL_CONTENT,
-         new Link("/rest/vfs/mock/content/locked-file", Link.REL_CONTENT, "*/*"));
+      file.getLinks().put(Link.REL_CONTENT, new Link("/rest/vfs/mock/content/locked-file", Link.REL_CONTENT, "*/*"));
       VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
       {
          @Override
@@ -336,8 +334,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       file.setContent(content);
       file.setLocked(true);
       file.setLock(new Lock("root", "100111", 1000));
-      file.getLinks().put(Link.REL_CONTENT,
-         new Link("/rest/vfs/mock/content/locked-file", Link.REL_CONTENT, "*/*"));
+      file.getLinks().put(Link.REL_CONTENT, new Link("/rest/vfs/mock/content/locked-file", Link.REL_CONTENT, "*/*"));
       VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
       {
          @Override
@@ -359,8 +356,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
    public void testCopy() throws RequestException
    {
       FileModel file = new FileModel();
-      file.getLinks().put(Link.REL_COPY,
-         new Link("/rest/vfs/mock/copy/" + Random.nextInt(), Link.REL_COPY, "*/*"));
+      file.getLinks().put(Link.REL_COPY, new Link("/rest/vfs/mock/copy/" + Random.nextInt(), Link.REL_COPY, "*/*"));
       VirtualFileSystem.getInstance().copy(file, "destination", new AsyncRequestCallback<StringBuilder>()
       {
          @Override
@@ -380,8 +376,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
    public void testMove() throws RequestException
    {
       FileModel file = new FileModel();
-      file.getLinks().put(Link.REL_MOVE,
-         new Link("/rest/vfs/mock/move/" + Random.nextInt(), Link.REL_MOVE, "*/*"));
+      file.getLinks().put(Link.REL_MOVE, new Link("/rest/vfs/mock/move/" + Random.nextInt(), Link.REL_MOVE, "*/*"));
       VirtualFileSystem.getInstance().move(file, "destination", "lockToken", new AsyncRequestCallback<ItemWrapper>()
       {
          @Override

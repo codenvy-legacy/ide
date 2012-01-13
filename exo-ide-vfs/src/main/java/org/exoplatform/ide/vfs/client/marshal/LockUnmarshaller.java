@@ -28,8 +28,8 @@ import org.exoplatform.ide.vfs.shared.LockToken;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 25, 2011 evgen $
- *
+ * @version $Id: Aug 25, 2011 evgen $
+ * 
  */
 public class LockUnmarshaller implements Unmarshallable<LockToken>
 {

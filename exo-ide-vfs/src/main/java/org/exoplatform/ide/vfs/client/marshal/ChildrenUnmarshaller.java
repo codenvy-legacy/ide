@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: FilderContentUnmarshaller Feb 2, 2011 2:59:31 PM evgen $
- *
+ * 
  */
 public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
 {
@@ -91,13 +91,14 @@ public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
 
    /**
     * Parse JSON Array to List of Item
+    * 
     * @param itemsArray JSON array
     * @return list of children items
     */
    private void parseItems(JSONArray itemsArray)
    {
-      //ArrayList<Item> items = new ArrayList<Item>();
-      //      items.clear();
+      // ArrayList<Item> items = new ArrayList<Item>();
+      // items.clear();
 
       for (int i = 0; i < itemsArray.size(); i++)
       {
@@ -122,7 +123,7 @@ public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
             items.add(new FileModel(object));
       }
 
-      //this.folder.getChildren().setItems(items);
+      // this.folder.getChildren().setItems(items);
    }
 
 }

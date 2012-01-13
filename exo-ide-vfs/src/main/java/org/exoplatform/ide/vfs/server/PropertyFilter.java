@@ -54,10 +54,9 @@ public class PropertyFilter
    /**
     * Construct new Property Filter.
     * 
-    * @param filterString the string that contains either '*' or comma-separated
-    *           list of properties names. An arbitrary number of space allowed
-    *           before and after each comma. If filterString is 'none' it minds
-    *           all properties should be rejected by filter.
+    * @param filterString the string that contains either '*' or comma-separated list of properties names. An arbitrary number of
+    *           space allowed before and after each comma. If filterString is 'none' it minds all properties should be rejected by
+    *           filter.
     * @throws InvalidArgumentException if <code>filterString</code> is invalid
     */
    public static PropertyFilter valueOf(String filterString) throws InvalidArgumentException
@@ -84,9 +83,8 @@ public class PropertyFilter
    /**
     * Construct new Property Filter.
     * 
-    * @param filterString the string that contains either '*' or comma-separated
-    *           list of properties names. An arbitrary number of space allowed
-    *           before and after each comma.
+    * @param filterString the string that contains either '*' or comma-separated list of properties names. An arbitrary number of
+    *           space allowed before and after each comma.
     * @throws InvalidArgumentException if <code>filterString</code> is invalid
     */
    private PropertyFilter(String filterString) throws InvalidArgumentException

@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
  */
 public abstract class LazyIterator<T> implements Iterator<T>
 {
-   
+
    public static LazyIterator<Object> EMPTY_ITEMS_ITERATOR = new EmptyIterator();
 
    private static class EmptyIterator extends LazyIterator<Object>
@@ -36,7 +36,7 @@ public abstract class LazyIterator<T> implements Iterator<T>
        * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
        */
       @Override
-      protected void fetchNext() 
+      protected void fetchNext()
       {
       }
 
@@ -55,9 +55,9 @@ public abstract class LazyIterator<T> implements Iterator<T>
    {
       return (LazyIterator<T>)EMPTY_ITEMS_ITERATOR;
    }
-   
+
    // -----------------------------------
-   
+
    protected T next;
 
    /**
@@ -94,8 +94,7 @@ public abstract class LazyIterator<T> implements Iterator<T>
    }
 
    /**
-    * Get total number of items in iterator. If not able determine number of
-    * items then -1 will be returned.
+    * Get total number of items in iterator. If not able determine number of items then -1 will be returned.
     * 
     * @return number of items or -1
     */
@@ -108,8 +107,7 @@ public abstract class LazyIterator<T> implements Iterator<T>
     * Skip specified number of element in collection.
     * 
     * @param skip the number of items to skip
-    * @throws NoSuchElementException if skipped past the last item in the
-    *            iterator
+    * @throws NoSuchElementException if skipped past the last item in the iterator
     */
    public void skip(int skip) throws NoSuchElementException
    {

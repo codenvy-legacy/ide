@@ -28,9 +28,13 @@ import java.util.Date;
 public final class ContentStream
 {
    private final String fileName;
+
    private final InputStream stream;
+
    private final String mimeType;
+
    private final long length;
+
    private final Date lastModificationDate;
 
    public ContentStream(String fileName, InputStream stream, String mimeType, long length, Date lastModificationDate)

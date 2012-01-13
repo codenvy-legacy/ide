@@ -58,7 +58,7 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
    public FileModel(String name, String mimeType, String content, FolderModel parent)
    {
       super(null, name, parent.createPath(name), parent.getId(), new Date().getTime(), new Date().getTime(),
-         null /*versionId*/, mimeType, 0, false, new ArrayList<Property>(), new HashMap<String, Link>());
+         null /* versionId */, mimeType, 0, false, new ArrayList<Property>(), new HashMap<String, Link>());
       this.persisted = false;
       this.content = content;
       this.parent = parent;

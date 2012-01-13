@@ -32,14 +32,15 @@ import javax.ws.rs.core.Application;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class MockVfsApplication extends Application
 {
-   
+
    private final Set<Object> singletons = new HashSet<Object>();
-   
+
    public MockVfsApplication()
    {
       singletons.add(new ConstraintExceptionMapper());
@@ -50,18 +51,18 @@ public class MockVfsApplication extends Application
       singletons.add(new PermissionDeniedExceptionMapper());
    }
 
-      @Override
-      public Set<Class<?>> getClasses()
-      {
-         Set<Class<?>> cls = new HashSet<Class<?>>(1);
-         cls.add(MockVFS.class);
-         return cls;
-      }
+   @Override
+   public Set<Class<?>> getClasses()
+   {
+      Set<Class<?>> cls = new HashSet<Class<?>>(1);
+      cls.add(MockVFS.class);
+      return cls;
+   }
 
-      @Override
-      public Set<Object> getSingletons()
-      {
-         return singletons;
-      }
+   @Override
+   public Set<Object> getSingletons()
+   {
+      return singletons;
+   }
 
 }

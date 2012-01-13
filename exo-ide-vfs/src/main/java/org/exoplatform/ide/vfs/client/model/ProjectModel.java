@@ -37,7 +37,9 @@ import java.util.List;
 public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project implements ItemContext
 {
    private ItemList<Item> children = new ItemList<Item>();
+
    private FolderModel parent;
+
    private boolean persisted;
 
    @SuppressWarnings("rawtypes")
@@ -59,7 +61,7 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
    {
       super();
    }
-   
+
    public ProjectModel(JSONObject itemObject)
    {
       super();
@@ -77,7 +79,8 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
       properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
       links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-      projectType = (itemObject.get("projectType") != null) ?  itemObject.get("projectType").isString().stringValue() : null;
+      projectType =
+         (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
       this.persisted = true;
    }
 
@@ -110,7 +113,7 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
    {
       return persisted;
    }
-   
+
    /**
     * @return the children
     */

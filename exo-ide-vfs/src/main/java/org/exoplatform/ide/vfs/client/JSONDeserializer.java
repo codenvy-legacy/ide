@@ -279,7 +279,7 @@ public abstract class JSONDeserializer<O>
             String rootName = root.get("name").isString().stringValue();
             String rootMimeType = null;
             if (root.get("mimeType").isString() != null)
-              rootMimeType = root.get("mimeType").isString().stringValue();
+               rootMimeType = root.get("mimeType").isString().stringValue();
             String rootPath = root.get("path").isString().stringValue();
             long rootCreationDate = (long)root.get("creationDate").isNumber().doubleValue();
             List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));
@@ -299,7 +299,7 @@ public abstract class JSONDeserializer<O>
                ACLCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("aclCapability")).toLowerCase()), //
                QueryCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("queryCapability")).toLowerCase()),
                LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")), //
-               rootFolder // 
+               rootFolder //
             );
          }
 

@@ -34,11 +34,9 @@ public final class VirtualFileSystemURLHandlerFactory implements URLStreamHandle
    private final VirtualFileSystemRegistry registry;
 
    /**
-    * @param delegate
-    *           factory which we should ask to create URLStreamHandler if
-    *           current factory does not support requested protocol.
-    * @param registry
-    *           set of all available virtual file systems
+    * @param delegate factory which we should ask to create URLStreamHandler if current factory does not support requested
+    *           protocol.
+    * @param registry set of all available virtual file systems
     */
    public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate, VirtualFileSystemRegistry registry)
    {

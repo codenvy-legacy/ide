@@ -37,8 +37,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Connection to virtual file system. Instances of this class are not safe to be
- * used by multiple concurrent threads.
+ * Connection to virtual file system. Instances of this class are not safe to be used by multiple concurrent threads.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -54,10 +53,8 @@ public final class VirtualFileSystemURLConnection extends URLConnection
    private Item item;
 
    /**
-    * @param url
-    *           the URL
-    * @param registry
-    *           virtual file system registry
+    * @param url the URL
+    * @param registry virtual file system registry
     */
    public VirtualFileSystemURLConnection(URL url, VirtualFileSystemRegistry registry)
    {
@@ -82,9 +79,8 @@ public final class VirtualFileSystemURLConnection extends URLConnection
    {
       final URI theUri = URI.create(getURL().toString());
       String path = theUri.getPath();
-      final String vfsId = (path == null || "/".equals(path))
-         ? null
-         : (path.startsWith("/")) ? path.substring(1) : path;
+      final String vfsId =
+         (path == null || "/".equals(path)) ? null : (path.startsWith("/")) ? path.substring(1) : path;
       try
       {
          vfs = registry.getProvider(vfsId).newInstance(null);

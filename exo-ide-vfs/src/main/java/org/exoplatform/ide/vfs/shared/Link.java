@@ -26,36 +26,59 @@ public class Link
 {
    // Folder
    public static String REL_CHILDREN = "children";
+
    public static String REL_CREATE_PROJECT = "create-project";
+
    public static String REL_CREATE_FOLDER = "create-folder";
+
    public static String REL_CREATE_FILE = "create-file";
+
    public static String REL_UPLOAD_FILE = "upload-file";
+
    public static String REL_EXPORT = "export";
+
    public static String REL_IMPORT = "import";
+
    public static String REL_DOWNLOAD_ZIP = "download-zip";
+
    public static String REL_UPLOAD_ZIP = "upload-zip";
 
    // File
    public static String REL_CURRENT_VERSION = "current-version";
+
    public static String REL_VERSION_HISTORY = "version-history";
+
    public static String REL_CONTENT = "content";
+
    public static String REL_DOWNLOAD_FILE = "download-file";
+
    public static String REL_CONTENT_BY_PATH = "content-by-path";
+
    public static String REL_UNLOCK = "unlock";
+
    public static String REL_LOCK = "lock";
 
    // Common
    public static String REL_PARENT = "parent";
+
    public static String REL_DELETE = "delete";
+
    public static String REL_MOVE = "move";
+
    public static String REL_COPY = "copy";
+
    public static String REL_SELF = "self";
+
    public static String REL_ITEM = "item";
+
    public static String REL_ITEM_BY_PATH = "item-by-path";
+
    public static String REL_ACL = "acl";
+
    public static String REL_RENAME = "rename";
 
    public static String REL_SEARCH = "search";
+
    public static String REL_SEARCH_FORM = "search-form";
 
    /** URL of resource. */

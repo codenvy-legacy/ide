@@ -22,8 +22,8 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 25, 2011 evgen $
- *
+ * @version $Id: Aug 25, 2011 evgen $
+ * 
  */
 public interface ItemUnlockedHandler extends EventHandler
 {

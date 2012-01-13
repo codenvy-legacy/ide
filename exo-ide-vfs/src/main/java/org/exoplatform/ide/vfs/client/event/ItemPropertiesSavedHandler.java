@@ -22,12 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 31, 2011 evgen $
- *
+ * @version $Id: Aug 31, 2011 evgen $
+ * 
  */
 public interface ItemPropertiesSavedHandler extends EventHandler
 {
 
    void onItemPropertiesSaved(ItemPropertiesSavedEvent event);
-   
+
 }

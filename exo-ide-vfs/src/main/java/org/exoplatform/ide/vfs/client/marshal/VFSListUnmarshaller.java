@@ -33,8 +33,8 @@ import java.util.List;
  * Unmarshaller for the list of virtual file systems.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 27, 2011 9:41:55 AM anya $
- *
+ * @version $Id: Sep 27, 2011 9:41:55 AM anya $
+ * 
  */
 public class VFSListUnmarshaller implements Unmarshallable<List<VirtualFileSystemInfo>>
 {

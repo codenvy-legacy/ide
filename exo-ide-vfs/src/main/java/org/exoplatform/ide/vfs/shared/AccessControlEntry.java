@@ -22,8 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Representation of Access Control Entry used to interaction with client via
- * JSON.
+ * Representation of Access Control Entry used to interaction with client via JSON.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$

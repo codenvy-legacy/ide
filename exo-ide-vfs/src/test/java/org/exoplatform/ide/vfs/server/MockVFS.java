@@ -208,22 +208,22 @@ public class MockVFS implements VirtualFileSystem
       return null;
    }
 
-   //   @Override
-   //   @Path("content/{id:.*}")
-   //   public Response getContentResponse(@PathParam("id") String id) throws ItemNotFoundException,
-   //      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      ContentStream content = getContent(id);
-   //      return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
-   //         .build();
-   //   }
+   // @Override
+   // @Path("content/{id:.*}")
+   // public Response getContentResponse(@PathParam("id") String id) throws ItemNotFoundException,
+   // InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   // {
+   // ContentStream content = getContent(id);
+   // return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
+   // .build();
+   // }
    //
-   //   @Override
-   //   public Response getContentResponse(String path, String versionId) throws ItemNotFoundException,
-   //      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      return null;
-   //   }
+   // @Override
+   // public Response getContentResponse(String path, String versionId) throws ItemNotFoundException,
+   // InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   // {
+   // return null;
+   // }
 
    @Override
    public VirtualFileSystemInfo getInfo()
@@ -280,12 +280,11 @@ public class MockVFS implements VirtualFileSystem
    private URI createURI(String rel, String id, String... query)
    {
       UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-      /*      List<String> matchedURIs = uriInfo.getMatchedURIs();
-            int n = matchedURIs.size();
-            for (int i = n - 1; i > 0; i--)
-               uriBuilder.path(matchedURIs.get(i));
-      */
-      //      uriBuilder.path(MockVFS.class, "getVFS");
+      /*
+       * List<String> matchedURIs = uriInfo.getMatchedURIs(); int n = matchedURIs.size(); for (int i = n - 1; i > 0; i--)
+       * uriBuilder.path(matchedURIs.get(i));
+       */
+      // uriBuilder.path(MockVFS.class, "getVFS");
       uriBuilder.path(rel);
       if (id != null)
          uriBuilder.path(id);
@@ -298,7 +297,7 @@ public class MockVFS implements VirtualFileSystem
             uriBuilder.queryParam(name, value);
          }
       }
-      /*      URI uri = uriBuilder.build(); */
+      /* URI uri = uriBuilder.build(); */
       URI uri = uriBuilder.build("db", "ws");
       return uri;
    }
