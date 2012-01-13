@@ -36,12 +36,12 @@ import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
 
 /**
- * Abstract presenter for displays, which has to show and work with branches 
- * ({@link FetchPresenter}, {@link PullPresenter}, {@link PushToRemotePresenter}) for not to duplicate same methods.
+ * Abstract presenter for displays, which has to show and work with branches ({@link FetchPresenter}, {@link PullPresenter},
+ * {@link PushToRemotePresenter}) for not to duplicate same methods.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 21, 2011 10:55:28 AM anya $
- *
+ * @version $Id: Apr 21, 2011 10:55:28 AM anya $
+ * 
  */
 public abstract class HasBranchesPresenter extends GitPresenter
 {
@@ -51,8 +51,8 @@ public abstract class HasBranchesPresenter extends GitPresenter
    protected List<Branch> remoteBranches;
 
    /**
-    * Get the list of remote repositories for local one.
-    * If remote repositories are found, then method {@link #onRemotesReceived(List)} is called.
+    * Get the list of remote repositories for local one. If remote repositories are found, then method
+    * {@link #onRemotesReceived(List)} is called.
     */
    public void getRemotes(String projectId)
    {
@@ -134,8 +134,7 @@ public abstract class HasBranchesPresenter extends GitPresenter
    protected abstract void setLocalBranches(List<Branch> branches);
 
    /**
-    * Set values of remote branches: filter remote branches due to 
-    * selected remote repository.
+    * Set values of remote branches: filter remote branches due to selected remote repository.
     * 
     * @param remoteName
     */
@@ -164,8 +163,7 @@ public abstract class HasBranchesPresenter extends GitPresenter
    }
 
    /**
-    * Set values of remote branches (show only simple name): filter remote branches due to 
-    * selected remote repository.
+    * Set values of remote branches (show only simple name): filter remote branches due to selected remote repository.
     * 
     * @param remoteName
     */

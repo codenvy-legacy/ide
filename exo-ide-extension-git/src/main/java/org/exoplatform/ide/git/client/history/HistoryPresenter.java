@@ -47,12 +47,11 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
- * Presenter for history view.
- * The view must be pointed in Views.gwt.xml.
+ * Presenter for history view. The view must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 29, 2011 2:57:17 PM anya $
- *
+ * @version $Id: Apr 29, 2011 2:57:17 PM anya $
+ * 
  */
 public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandler, ViewClosedHandler
 {
@@ -98,17 +97,17 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
       HasClickHandlers getDiffWithIndexButton();
 
       /**
-      * Get click handler of the diff with working tree button.
-      * 
-      * @return {@link HasValue} click handler
-      */
+       * Get click handler of the diff with working tree button.
+       * 
+       * @return {@link HasValue} click handler
+       */
       HasClickHandlers getDiffWithWorkingTreeButton();
 
       /**
-      * Get click handler of the diff with previous version button.
-      * 
-      * @return {@link HasValue} click handler
-      */
+       * Get click handler of the diff with previous version button.
+       * 
+       * @return {@link HasValue} click handler
+       */
       HasClickHandlers getDiffWithPrevVersionButton();
 
       /**
@@ -159,8 +158,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
    private Display display;
 
    /**
-    * If <code>true</code> then show all changes in project, 
-    * if <code>false</code> then show changes of the selected resource.
+    * If <code>true</code> then show all changes in project, if <code>false</code> then show changes of the selected resource.
     */
    private boolean showChangesInProject;
 
@@ -341,8 +339,8 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
    }
 
    /**
-    * Get the changes between revisions. On success - display diff in text format, 
-    * otherwise - show the error message in output panel.
+    * Get the changes between revisions. On success - display diff in text format, otherwise - show the error message in output
+    * panel.
     * 
     * @param revision revision
     */

@@ -29,8 +29,8 @@ import org.exoplatform.ide.git.client.GitClientBundle;
  * Tree to display references (local and remote branches, tags).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 20, 2011 2:37:48 PM anya $
- *
+ * @version $Id: Jul 20, 2011 2:37:48 PM anya $
+ * 
  */
 public class RefTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Reference>
 {
@@ -60,7 +60,7 @@ public class RefTree extends org.exoplatform.gwtframework.ui.client.component.Tr
 
       tree.addItem(localBranches);
       tree.addItem(remoteBranches);
-      //TODO when tags are ready   tree.addItem(tags);
+      // TODO when tags are ready tree.addItem(tags);
    }
 
    /**
@@ -91,7 +91,7 @@ public class RefTree extends org.exoplatform.gwtframework.ui.client.component.Tr
     * 
     * @param image node's image
     * @param reference reference (branch or tag)
-    * @return {@link TreeItem} 
+    * @return {@link TreeItem}
     */
    protected TreeItem createNode(Image image, Reference reference)
    {
@@ -130,7 +130,8 @@ public class RefTree extends org.exoplatform.gwtframework.ui.client.component.Tr
 
    /**
     * Get selected reference.
-    * @return  {@link Reference}
+    * 
+    * @return {@link Reference}
     */
    public Reference getSelectedItem()
    {

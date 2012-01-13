@@ -35,8 +35,8 @@ import java.util.List;
  * Grid for displaying revisions' info (date, commiter, comment.)
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 15, 2011 11:26:49 AM anya $
- *
+ * @version $Id: Apr 15, 2011 11:26:49 AM anya $
+ * 
  */
 public class RevisionGrid extends ListGrid<Revision>
 {

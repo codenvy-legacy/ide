@@ -44,12 +44,11 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
- * Presenter for view to work with remote repository list (view, add and delete).
- * View must be pointed in Views.gwt.xml.
+ * Presenter for view to work with remote repository list (view, add and delete). View must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 18, 2011 11:13:30 AM anya $
- *
+ * @version $Id: Apr 18, 2011 11:13:30 AM anya $
+ * 
  */
 public class RemotePresenter extends GitPresenter implements ShowRemotesHandler, ViewClosedHandler
 {
@@ -175,9 +174,8 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
    }
 
    /**
-    * Get the list of remote repositories for local one.
-    * If remote repositories are found, then get the list of 
-    * branches (remote and local).
+    * Get the list of remote repositories for local one. If remote repositories are found, then get the list of branches (remote
+    * and local).
     * 
     * @param workDir
     */

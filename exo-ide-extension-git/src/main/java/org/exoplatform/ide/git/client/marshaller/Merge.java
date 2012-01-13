@@ -24,8 +24,8 @@ import org.exoplatform.ide.git.shared.MergeResult;
  * Represents the merge operation result.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 20, 2011 11:47:56 AM anya $
- *
+ * @version $Id: Jul 20, 2011 11:47:56 AM anya $
+ * 
  */
 public class Merge implements MergeResult
 {

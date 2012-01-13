@@ -42,12 +42,11 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
- * Presenter for view for reseting head to commit.
- * The view must be pointed in Views.gwt.xml.
+ * Presenter for view for reseting head to commit. The view must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 15, 2011 10:31:25 AM anya $
- *
+ * @version $Id: Apr 15, 2011 10:31:25 AM anya $
+ * 
  */
 public class ResetToCommitPresenter extends GitPresenter implements ResetToCommitHandler
 {
@@ -89,10 +88,10 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
       HasValue<Boolean> getSoftMode();
 
       /**
-      * Get the mix mode radio field.
-      * 
-      * @return {@link HasValue}
-      */
+       * Get the mix mode radio field.
+       * 
+       * @return {@link HasValue}
+       */
       HasValue<Boolean> getMixMode();
 
       /**

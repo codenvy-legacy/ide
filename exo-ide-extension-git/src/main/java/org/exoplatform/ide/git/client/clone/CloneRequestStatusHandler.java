@@ -27,8 +27,8 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Oct 28, 2011 evgen $
- *
+ * @version $Id: Oct 28, 2011 evgen $
+ * 
  */
 public class CloneRequestStatusHandler extends RequestStatusHandlerBase
 {

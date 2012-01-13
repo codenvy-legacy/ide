@@ -37,8 +37,8 @@ import java.util.List;
  * Grid for disaplying branches.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 8, 2011 11:31:09 AM anya $
- *
+ * @version $Id: Apr 8, 2011 11:31:09 AM anya $
+ * 
  */
 public class BranchGrid extends ListGrid<Branch>
 {

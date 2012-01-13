@@ -22,8 +22,8 @@ package org.exoplatform.ide.git.client.marshaller;
  * Response with changes between commits, commit and working tree.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 4, 2011 10:53:57 AM anya $
- *
+ * @version $Id: May 4, 2011 10:53:57 AM anya $
+ * 
  */
 public class DiffResponse
 {

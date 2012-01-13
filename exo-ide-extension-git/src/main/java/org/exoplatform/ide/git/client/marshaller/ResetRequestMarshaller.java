@@ -28,11 +28,11 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.git.shared.ResetRequest;
 
 /**
- *  Marshaller for reset files request in JSON format.
+ * Marshaller for reset files request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 13, 2011 5:51:18 PM anya $
- *
+ * @version $Id: Apr 13, 2011 5:51:18 PM anya $
+ * 
  */
 public class ResetRequestMarshaller implements Marshallable, Constants
 {

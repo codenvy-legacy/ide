@@ -33,8 +33,8 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
  * Grid for displaying git files.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 12, 2011 5:05:49 PM anya $
- *
+ * @version $Id: Apr 12, 2011 5:05:49 PM anya $
+ * 
  */
 public class IndexFilesGrid extends ListGrid<IndexFile>
 {
@@ -69,7 +69,7 @@ public class IndexFilesGrid extends ListGrid<IndexFile>
    {
       CellTable<IndexFile> cellTable = getCellTable();
 
-      //Create files column:
+      // Create files column:
       filesColumn = new Column<IndexFile, String>(new TextCell())
       {
          @Override
@@ -79,7 +79,7 @@ public class IndexFilesGrid extends ListGrid<IndexFile>
          }
       };
 
-      //Create column with checkboxes:
+      // Create column with checkboxes:
       checkColumn = new Column<IndexFile, Boolean>(new CheckboxCell(false, true))
       {
 
@@ -91,7 +91,7 @@ public class IndexFilesGrid extends ListGrid<IndexFile>
 
       };
 
-      //Create bean value updater:
+      // Create bean value updater:
       FieldUpdater<IndexFile, Boolean> checkFieldUpdater = new FieldUpdater<IndexFile, Boolean>()
       {
 

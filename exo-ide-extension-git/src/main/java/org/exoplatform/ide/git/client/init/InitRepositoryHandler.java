@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link InitRepositoryEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 23, 2011 5:53:50 PM anya $
- *
+ * @version $Id: Mar 23, 2011 5:53:50 PM anya $
+ * 
  */
 public interface InitRepositoryHandler extends EventHandler
 {

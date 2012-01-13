@@ -21,12 +21,12 @@ package org.exoplatform.ide.git.client;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Messages
 {
 
-   //BUTTONS
+   // BUTTONS
 
    @Key("button.add")
    String buttonAdd();
@@ -76,7 +76,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.merge")
    String buttonMerge();
 
-   //MESSAGES
+   // MESSAGES
    @Key("messages.not_git_repository")
    String notGitRepository();
 
@@ -197,11 +197,11 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("messages.delete_success")
    String deleteGitRepositorySuccess();
 
-   //Unmarshaller Errors
+   // Unmarshaller Errors
    @Key("merge.unmarshal.failed")
    String mergeUnmarshallerFailed();
 
-   //----InitRequestHandler
+   // ----InitRequestHandler
 
    @Key("init.started")
    String initStarted(String repo);
@@ -209,7 +209,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("init.finished")
    String initFinished(String repo);
 
-   //----CloneRequestHandler-------------
+   // ----CloneRequestHandler-------------
 
    @Key("clone.started")
    String cloneStarted(String projectName, String remoteName);
@@ -217,7 +217,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("clone.finished")
    String cloneFinished(String projectName, String remoteUri);
 
-   //----PushRequestHandler
+   // ----PushRequestHandler
 
    @Key("push.started")
    String pushStarted(String projectName, String localBranch, String remoteBranch);
@@ -225,21 +225,21 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("push.finished")
    String pushFinished(String projectName, String localBranch, String remoteBranch);
 
-   //----PullRequestHandler
+   // ----PullRequestHandler
    @Key("pull.started")
    String pullStarted(String projectName, String remoteBranch, String localBrach);
 
    @Key("pull.finished")
    String pullFinished(String projectName, String remoteBranch, String localBrach);
 
-   //----FetchRequestHandler
+   // ----FetchRequestHandler
    @Key("fetch.started")
    String fetchStarted(String projectName, String remoteBranch, String localBrach);
 
    @Key("fetch.finished")
    String fetchFinished(String projectName, String remoteBranch, String localBrach);
 
-   //----AddRequestHandler
+   // ----AddRequestHandler
 
    @Key("add.started")
    String addStarted(String projectName);
@@ -247,7 +247,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("add.finished")
    String addFinished(String projectName);
 
-   //----CommitRequestHandler
+   // ----CommitRequestHandler
 
    @Key("commit.started")
    String commitStarted(String projectName);
@@ -255,9 +255,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("commit.finished")
    String commitFinished(String projectName);
 
-   //----VIEWS------------------------------------------------------------------
+   // ----VIEWS------------------------------------------------------------------
 
-   //Add
+   // Add
    @Key("view.add_to_index.all_changes")
    String addToIndexAllChanges();
 
@@ -273,7 +273,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.add_to_index.title")
    String addToIndexTitle();
 
-   //Branch
+   // Branch
 
    @Key("view.branch.grid.name_column")
    String branchGridNameColumn();
@@ -293,7 +293,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.branch.title")
    String branchTitle();
 
-   //Clone
+   // Clone
    @Key("view.clone.title")
    String cloneTitle();
 
@@ -306,7 +306,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.clone.remote_name_field_title")
    String cloneRemoteNameFieldTitle();
 
-   //Commit
+   // Commit
 
    @Key("view.commit.commit_message")
    String commitMessage(String revision, String time);
@@ -344,7 +344,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.push.remote_branch.field")
    String pushViewRemoteBranchFieldTitle();
 
-   //Reset
+   // Reset
    @Key("view.reset.files.title")
    String resetFilesViewTitle();
 
@@ -369,14 +369,14 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.reset.hard.type.description")
    String resetHardTypeDescription();
 
-   //Remove
+   // Remove
    @Key("view.remove.files.grid.title")
    String removeFilesGridTitle();
 
    @Key("view.remove.files.title")
    String removeFilesViewTitle();
 
-   //Create
+   // Create
 
    @Key("view.create.title")
    String createTitle();
@@ -387,7 +387,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.create.bare.field.title")
    String createBareFieldTitle();
 
-   //Fetch
+   // Fetch
    @Key("view.fetch.title")
    String fetchTitle();
 
@@ -403,7 +403,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.fetch.remove.deleted.refs.title")
    String fetchRemoveDeletedRefsTitle();
 
-   //Remote
+   // Remote
    @Key("view.remotes.title")
    String remotesViewTitle();
 
@@ -419,7 +419,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.remote.grid.location.field")
    String remoteGridLocationField();
 
-   //History
+   // History
    @Key("view.history.diff.index.state")
    String historyDiffIndexState();
 
@@ -456,7 +456,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.history.refresh.button.title")
    String refreshRevisionListButtonTitle();
 
-   //Pull
+   // Pull
    @Key("view.pull.title")
    String pullTitle();
 
@@ -469,7 +469,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.pull.local.branches.title")
    String pullLocalBranches();
 
-   //Merge
+   // Merge
    @Key("view.merge.title")
    String mergeTitle();
 
@@ -482,7 +482,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("merged.conflicts")
    String mergedConflicts(String conflicts);
 
-   /*Controls*/
+   /* Controls */
    @Key("control.add.id")
    String addControlId();
 

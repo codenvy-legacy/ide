@@ -24,13 +24,13 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event is fired, when user tries to view the Git work tree status.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 3:04:41 PM anya $
- *
+ * @version $Id: Mar 28, 2011 3:04:41 PM anya $
+ * 
  */
 public class ShowWorkTreeStatusEvent extends GwtEvent<ShowWorkTreeStatusHandler>
 {
    /**
-    *  Type used to register this event.
+    * Type used to register this event.
     */
    public static final GwtEvent.Type<ShowWorkTreeStatusHandler> TYPE = new GwtEvent.Type<ShowWorkTreeStatusHandler>();
 

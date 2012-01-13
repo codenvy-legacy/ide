@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.reset.ResetToCommitEvent;
  * Control for reseting the branch's head to commit.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 14, 2011 5:58:58 PM anya $
- *
+ * @version $Id: Apr 14, 2011 5:58:58 PM anya $
+ * 
  */
 public class ResetToCommitControl extends GitControl
 {

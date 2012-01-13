@@ -32,8 +32,8 @@ import org.exoplatform.ide.git.shared.AddRequest;
  * Marshaller for add changes to index request.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 5:27:47 PM anya $
- *
+ * @version $Id: Mar 29, 2011 5:27:47 PM anya $
+ * 
  */
 public class AddRequestMarshaller implements Marshallable, Constants
 {

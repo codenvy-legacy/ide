@@ -34,8 +34,8 @@ import java.util.List;
  * 
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 14, 2011 4:10:34 PM anya $
- *
+ * @version $Id: Apr 14, 2011 4:10:34 PM anya $
+ * 
  */
 public class LogResponseUnmarshaller extends JSONUmarshaller
 {
@@ -45,8 +45,7 @@ public class LogResponseUnmarshaller extends JSONUmarshaller
    private LogResponse logResponse;
 
    /**
-    * If <code>true</code> - the response is in text format, 
-    * else - the list of revisions in JSON format is returned.
+    * If <code>true</code> - the response is in text format, else - the list of revisions in JSON format is returned.
     */
    private boolean isText;
 

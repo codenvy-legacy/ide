@@ -36,8 +36,8 @@ import com.google.gwt.http.client.URL;
  * Delete repository command handler, performs deleting Git repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 21, 2011 5:57:30 PM anya $
- *
+ * @version $Id: Jun 21, 2011 5:57:30 PM anya $
+ * 
  */
 public class DeleteRepositoryCommandHandler extends GitPresenter implements DeleteRepositoryHandler
 {
@@ -98,7 +98,7 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
          {
             IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
             String href = URL.decode(projectId);
-            //TODO to fix this with encoding symbol "@"
+            // TODO to fix this with encoding symbol "@"
             href = href.replaceAll("@", "%40");
             IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
          }
@@ -110,7 +110,7 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
       String href = child.endsWith("/") ? child.substring(0, child.lastIndexOf("/")) : child;
       href = href.substring(0, href.lastIndexOf("/") + 1);
       href = URL.encode(href);
-      //TODO to fix this with encoding symbol "@"
+      // TODO to fix this with encoding symbol "@"
       return href.replaceAll("@", "%40");
    }
 }

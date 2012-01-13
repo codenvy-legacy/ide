@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.history.ShowInHistoryEvent;
  * Control for showing the history of commits.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 29, 2011 3:04:01 PM anya $
- *
+ * @version $Id: Apr 29, 2011 3:04:01 PM anya $
+ * 
  */
 public class ShowHistoryControl extends GitControl
 {

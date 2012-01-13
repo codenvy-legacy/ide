@@ -24,13 +24,13 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link PushToRemoteEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 9:33:25 AM anya $
- *
+ * @version $Id: Apr 4, 2011 9:33:25 AM anya $
+ * 
  */
 public interface PushToRemoteHandler extends EventHandler
 {
    /**
-    * Perform actions on push changes from local repository to 
+    * Perform actions on push changes from local repository to
     * 
     * @param event
     */

@@ -23,11 +23,11 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.fetch.FetchEvent;
 
 /**
- * Control for fetching changes from remote repository. 
+ * Control for fetching changes from remote repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 20, 2011 11:31:10 AM anya $
- *
+ * @version $Id: Apr 20, 2011 11:31:10 AM anya $
+ * 
  */
 public class FetchControl extends GitControl
 {

@@ -44,12 +44,11 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
- * Presenter of view for displaying and work with branches.
- * The view must be pointed in Views.gwt.xml file.
+ * Presenter of view for displaying and work with branches. The view must be pointed in Views.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 8, 2011 12:02:49 PM anya $
- *
+ * @version $Id: Apr 8, 2011 12:02:49 PM anya $
+ * 
  */
 public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 {

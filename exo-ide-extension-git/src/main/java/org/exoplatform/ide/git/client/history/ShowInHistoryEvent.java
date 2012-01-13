@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event occurs, when user tries to view the history of commits.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 29, 2011 3:13:45 PM anya $
- *
+ * @version $Id: Apr 29, 2011 3:13:45 PM anya $
+ * 
  */
 public class ShowInHistoryEvent extends GwtEvent<ShowInHistoryHandler>
 {

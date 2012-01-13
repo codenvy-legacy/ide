@@ -32,8 +32,8 @@ import java.util.List;
  * Unmarshaller for list of branches.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 5, 2011 2:14:51 PM anya $
- *
+ * @version $Id: Apr 5, 2011 2:14:51 PM anya $
+ * 
  */
 public class BranchListUnmarshaller extends JSONUmarshaller
 {

@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.init.InitRepositoryEvent;
  * Control for initializing the repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 23, 2011 5:36:00 PM anya $
- *
+ * @version $Id: Mar 23, 2011 5:36:00 PM anya $
+ * 
  */
 public class InitRepositoryControl extends GitControl
 {

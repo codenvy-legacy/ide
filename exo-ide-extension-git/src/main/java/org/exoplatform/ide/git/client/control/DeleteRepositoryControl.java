@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.delete.DeleteRepositoryEvent;
  * Control for deleting Fit repository (only folder ".git" and its contents is deleted).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 21, 2011 5:40:27 PM anya $
- *
+ * @version $Id: Jun 21, 2011 5:40:27 PM anya $
+ * 
  */
 public class DeleteRepositoryControl extends GitControl
 {

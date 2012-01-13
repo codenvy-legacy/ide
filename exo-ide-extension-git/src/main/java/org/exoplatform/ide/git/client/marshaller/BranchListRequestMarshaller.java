@@ -31,8 +31,8 @@ import org.exoplatform.ide.git.shared.BranchListRequest;
  * Marshaller for building branch list request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 5, 2011 1:58:33 PM anya $
- *
+ * @version $Id: Apr 5, 2011 1:58:33 PM anya $
+ * 
  */
 public class BranchListRequestMarshaller implements Marshallable, Constants
 {

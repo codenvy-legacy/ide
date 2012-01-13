@@ -47,13 +47,11 @@ import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
- * Presenter for commit view. 
- * The view must implement {@link CommitPresenter.Display} interface
- * and pointed in Views.gwt.xml file.
+ * Presenter for commit view. The view must implement {@link CommitPresenter.Display} interface and pointed in Views.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 31, 2011 10:02:25 AM anya $
- *
+ * @version $Id: Mar 31, 2011 10:02:25 AM anya $
+ * 
  */
 public class CommitPresenter extends GitPresenter implements CommitHandler
 {
@@ -114,7 +112,7 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
    }
 
    /**
-    * Bind display(view) with presenter. 
+    * Bind display(view) with presenter.
     * 
     * @param d display
     */
@@ -164,7 +162,7 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
          Display d = GWT.create(Display.class);
          IDE.getInstance().openView(d.asView());
          bindDisplay(d);
-         //Commit button is disabled, because message is empty:
+         // Commit button is disabled, because message is empty:
          display.enableCommitButton(false);
          display.focusInMessageField();
       }

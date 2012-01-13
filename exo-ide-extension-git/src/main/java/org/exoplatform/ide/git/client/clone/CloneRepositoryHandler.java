@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link CloneRepositoryEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 22, 2011 4:07:45 PM anya $
- *
+ * @version $Id: Mar 22, 2011 4:07:45 PM anya $
+ * 
  */
 public interface CloneRepositoryHandler extends EventHandler
 {

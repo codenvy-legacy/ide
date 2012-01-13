@@ -21,12 +21,12 @@ package org.exoplatform.ide.git.client.branch;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to view the list of branches.
- * Implement {@link ShowBranchesHandler} handler to process this event.
+ * Event occurs, when user tries to view the list of branches. Implement {@link ShowBranchesHandler} handler to process this
+ * event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 8, 2011 12:12:37 PM anya $
- *
+ * @version $Id: Apr 8, 2011 12:12:37 PM anya $
+ * 
  */
 public class ShowBranchesEvent extends GwtEvent<ShowBranchesHandler>
 {

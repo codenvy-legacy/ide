@@ -22,8 +22,8 @@ package org.exoplatform.ide.git.client.marshaller;
  * The response of the found root of the work tree.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 1:57:46 PM anya $
- *
+ * @version $Id: Mar 29, 2011 1:57:46 PM anya $
+ * 
  */
 public class WorkDirResponse
 {

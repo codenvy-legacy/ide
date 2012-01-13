@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.shared.AddRequest;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 27, 2011 11:49:37 AM anya $
- *
+ * @version $Id: Apr 27, 2011 11:49:37 AM anya $
+ * 
  */
 public class AddRequestMarshallerGwtTest extends BaseGwtTest
 {

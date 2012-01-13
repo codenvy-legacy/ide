@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link ShowWorkTreeStatusEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 3:05:18 PM anya $
- *
+ * @version $Id: Mar 28, 2011 3:05:18 PM anya $
+ * 
  */
 public interface ShowWorkTreeStatusHandler extends EventHandler
 {

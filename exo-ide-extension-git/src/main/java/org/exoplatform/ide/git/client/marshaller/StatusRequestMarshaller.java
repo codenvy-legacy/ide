@@ -27,11 +27,11 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.git.shared.StatusRequest;
 
 /**
- * Marshaller for creation request in JSON format for {@link StatusRequest}. 
+ * Marshaller for creation request in JSON format for {@link StatusRequest}.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 2:32:53 PM anya $
- *
+ * @version $Id: Mar 28, 2011 2:32:53 PM anya $
+ * 
  */
 public class StatusRequestMarshaller implements Marshallable, Constants
 {

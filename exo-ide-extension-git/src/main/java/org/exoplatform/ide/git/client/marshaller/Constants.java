@@ -22,8 +22,8 @@ package org.exoplatform.ide.git.client.marshaller;
  * Used for marshallers and unmarshallers.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 24, 2011 11:57:20 AM anya $
- *
+ * @version $Id: Mar 24, 2011 11:57:20 AM anya $
+ * 
  */
 public interface Constants
 {

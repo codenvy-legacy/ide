@@ -29,8 +29,8 @@ import org.exoplatform.ide.git.shared.Revision;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 31, 2011 11:15:57 AM anya $
- *
+ * @version $Id: Mar 31, 2011 11:15:57 AM anya $
+ * 
  */
 public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants
 {

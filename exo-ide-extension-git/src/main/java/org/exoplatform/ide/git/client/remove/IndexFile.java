@@ -24,8 +24,8 @@ import org.exoplatform.ide.git.shared.GitFile;
  * Git file in index. Used for work with index (remove, reset).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 13, 2011 11:57:38 AM anya $
- *
+ * @version $Id: Apr 13, 2011 11:57:38 AM anya $
+ * 
  */
 public class IndexFile extends GitFile
 {
@@ -36,7 +36,7 @@ public class IndexFile extends GitFile
 
    /**
     * @param file git file
-    * @param indexed if <code>true</code> file is in index 
+    * @param indexed if <code>true</code> file is in index
     */
    public IndexFile(GitFile file, boolean indexed)
    {
@@ -45,7 +45,7 @@ public class IndexFile extends GitFile
    }
 
    /**
-    * @return the indexed  if <code>true</code> file is in index 
+    * @return the indexed if <code>true</code> file is in index
     */
    public boolean isIndexed()
    {
@@ -53,7 +53,7 @@ public class IndexFile extends GitFile
    }
 
    /**
-    * @param indexed the indexed  if <code>true</code> file is in index 
+    * @param indexed the indexed if <code>true</code> file is in index
     */
    public void setIndexed(boolean indexed)
    {

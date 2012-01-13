@@ -24,19 +24,19 @@ import org.exoplatform.ide.git.shared.Status;
  * The bean representing a status of the working tree (changed, untracked files).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 11:02:10 AM anya $
- *
+ * @version $Id: Mar 29, 2011 11:02:10 AM anya $
+ * 
  */
 public class StatusResponse extends Status
 {
    /**
-    * The string notion of the GIT work tree status.
-    * It contains the information of the modified, added, deleted files.
-    * Example for short format:<br>
-    *   <pre>
+    * The string notion of the GIT work tree status. It contains the information of the modified, added, deleted files. Example
+    * for short format:<br>
+    * 
+    * <pre>
     *   M README.txt
     *   A  test/abc/
-    *   </pre>
+    * </pre>
     */
    private String workTreeStatus;
 

@@ -22,8 +22,8 @@ package org.exoplatform.ide.git.client.merge;
  * Git reference bean.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 20, 2011 2:41:39 PM anya $
- *
+ * @version $Id: Jul 20, 2011 2:41:39 PM anya $
+ * 
  */
 public class Reference
 {

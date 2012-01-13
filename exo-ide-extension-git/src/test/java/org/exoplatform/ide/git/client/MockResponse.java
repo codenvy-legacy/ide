@@ -23,8 +23,8 @@ import com.google.gwt.http.client.Response;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 27, 2011 11:42:28 AM anya $
- *
+ * @version $Id: Apr 27, 2011 11:42:28 AM anya $
+ * 
  */
 public class MockResponse extends Response
 {

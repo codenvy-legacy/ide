@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.push.PushToRemoteEvent;
  * Control for pushing changes from local repository to remote one.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 9:27:56 AM anya $
- *
+ * @version $Id: Apr 4, 2011 9:27:56 AM anya $
+ * 
  */
 public class PushToRemoteControl extends GitControl
 {

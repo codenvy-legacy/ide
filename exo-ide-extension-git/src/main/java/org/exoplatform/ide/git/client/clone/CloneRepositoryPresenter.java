@@ -42,8 +42,8 @@ import com.google.gwt.user.client.ui.HasValue;
  * Presenter for Clone Repository View.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 22, 2011 4:31:12 PM anya $
- *
+ * @version $Id: Mar 22, 2011 4:31:12 PM anya $
+ * 
  */
 public class CloneRepositoryPresenter extends GitPresenter implements CloneRepositoryHandler
 {

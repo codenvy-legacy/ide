@@ -26,11 +26,11 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.git.shared.InitRequest;
 
 /**
- * Marshaller for creation request in JSON format for {@link InitRequest}. 
+ * Marshaller for creation request in JSON format for {@link InitRequest}.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 24, 2011 11:48:40 AM anya $
- *
+ * @version $Id: Mar 24, 2011 11:48:40 AM anya $
+ * 
  */
 public class InitRequestMarshaller implements Marshallable, Constants
 {

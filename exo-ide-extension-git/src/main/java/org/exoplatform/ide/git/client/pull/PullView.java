@@ -35,12 +35,11 @@ import org.exoplatform.ide.git.client.GitExtension;
 import java.util.LinkedHashMap;
 
 /**
- * View for pulling changes from remote repository to local one.
- * Point view in Views.gwt.xml.
+ * View for pulling changes from remote repository to local one. Point view in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 20, 2011 4:23:02 PM anya $
- *
+ * @version $Id: Apr 20, 2011 4:23:02 PM anya $
+ * 
  */
 public class PullView extends ViewImpl implements PullPresenter.Display
 {

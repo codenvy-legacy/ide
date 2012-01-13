@@ -31,12 +31,11 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.git.client.GitExtension;
 
 /**
- * View for removing files from working directory and index.
- * Must be added to Views.gwt.xml file.
+ * View for removing files from working directory and index. Must be added to Views.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 12, 2011 5:57:31 PM anya $
- *
+ * @version $Id: Apr 12, 2011 5:57:31 PM anya $
+ * 
  */
 public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Display
 {
@@ -46,13 +45,13 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
 
    public static final String ID = "ideRemoveFilesView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
    private static final String REMOVE_BUTTON_ID = "ideRemoveFilesViewRemoveButton";
 
    private static final String CANCEL_BUTTON_ID = "ideRemoveFilesViewCancelButton";
 
    /**
-    *Save changes button.
+    * Save changes button.
     */
    @UiField
    ImageButton removeButton;

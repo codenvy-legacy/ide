@@ -21,12 +21,12 @@ package org.exoplatform.ide.git.client.reset;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user wants to reset the current branch head to commit.
- * Implement {@link ResetToCommitHandler} handler to process event.
+ * Event occurs, when user wants to reset the current branch head to commit. Implement {@link ResetToCommitHandler} handler to
+ * process event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 15, 2011 9:50:14 AM anya $
- *
+ * @version $Id: Apr 15, 2011 9:50:14 AM anya $
+ * 
  */
 public class ResetToCommitEvent extends GwtEvent<ResetToCommitHandler>
 {

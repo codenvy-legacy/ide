@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
  * Control for showing the status of the Git working tree.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 2:57:35 PM anya $
- *
+ * @version $Id: Mar 28, 2011 2:57:35 PM anya $
+ * 
  */
 public class ShowStatusControl extends GitControl
 {

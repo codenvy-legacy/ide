@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.commit.CommitEvent;
  * Control for performing commit.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 31, 2011 9:21:04 AM anya $
- *
+ * @version $Id: Mar 31, 2011 9:21:04 AM anya $
+ * 
  */
 public class CommitControl extends GitControl
 {

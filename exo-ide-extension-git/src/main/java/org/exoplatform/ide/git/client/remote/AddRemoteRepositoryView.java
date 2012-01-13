@@ -34,8 +34,8 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  * View for adding new remote repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 18, 2011 5:48:04 PM anya $
- *
+ * @version $Id: Apr 18, 2011 5:48:04 PM anya $
+ * 
  */
 public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteRepositoryPresenter.Display
 {
@@ -45,7 +45,7 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
 
    public static final String ID = "ideAddRemoteRepositoryView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
 
    private static final String OK_BUTTON_ID = "ideAddRemoteRepositoryViewOkButton";
 

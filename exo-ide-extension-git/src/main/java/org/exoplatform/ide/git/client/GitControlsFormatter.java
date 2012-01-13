@@ -30,8 +30,8 @@ import java.util.List;
  * Formatter to sort controls from "Git" menu.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 22, 2011 3:47:30 PM anya $
- *
+ * @version $Id: Dec 22, 2011 3:47:30 PM anya $
+ * 
  */
 public class GitControlsFormatter implements ControlsFormatter
 {
@@ -115,7 +115,7 @@ public class GitControlsFormatter implements ControlsFormatter
          Integer index1 = controlIdsOrder.indexOf(control1.getId());
          Integer index2 = controlIdsOrder.indexOf(control2.getId());
 
-         //If item is not found in order list, then put it at the end of the list
+         // If item is not found in order list, then put it at the end of the list
          if (index2 == -1)
             return -1;
          if (index1 == -1)

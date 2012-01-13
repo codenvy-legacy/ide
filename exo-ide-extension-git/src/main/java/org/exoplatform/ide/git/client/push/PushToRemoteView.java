@@ -35,18 +35,17 @@ import org.exoplatform.ide.git.client.GitExtension;
 import java.util.LinkedHashMap;
 
 /**
- * View for pushing changes to remote repository.
- * Must be pointed in View.gwt.xml file.
+ * View for pushing changes to remote repository. Must be pointed in View.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 10:48:28 AM anya $
- *
+ * @version $Id: Apr 4, 2011 10:48:28 AM anya $
+ * 
  */
 public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.Display
 {
    public static final String ID = "idePushToRemoteView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
 
    private static final String PUSH_BUTTON_ID = "idePushToRemoteViewPushButton";
 

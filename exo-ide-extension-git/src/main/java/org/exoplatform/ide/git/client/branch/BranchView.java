@@ -32,12 +32,11 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Branch;
 
 /**
- * View for displaying branches and work with it.
- * Must be pointed in Views.gwt.xml file.
+ * View for displaying branches and work with it. Must be pointed in Views.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 8, 2011 9:50:54 AM anya $
- *
+ * @version $Id: Apr 8, 2011 9:50:54 AM anya $
+ * 
  */
 public class BranchView extends ViewImpl implements BranchPresenter.Display
 {
@@ -47,7 +46,7 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
 
    public static final String ID = "ideBranchView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
 
    private static final String CREATE_BUTTON_ID = "ideBranchViewCreateButton";
 

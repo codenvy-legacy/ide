@@ -31,8 +31,8 @@ import org.exoplatform.ide.git.shared.Branch;
  * Unmarshaller for {@link Branch} in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 11, 2011 12:29:46 PM anya $
- *
+ * @version $Id: Apr 11, 2011 12:29:46 PM anya $
+ * 
  */
 public class BranchUnmarshaller extends JSONUmarshaller
 {

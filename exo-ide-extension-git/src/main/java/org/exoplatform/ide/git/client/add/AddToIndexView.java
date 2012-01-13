@@ -36,8 +36,8 @@ import org.exoplatform.ide.git.client.GitExtension;
  * View for adding changes togit index.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 30, 2011 9:25:02 AM anya $
- *
+ * @version $Id: Mar 30, 2011 9:25:02 AM anya $
+ * 
  */
 public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Display
 {
@@ -55,7 +55,7 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
 
    private static final String MESSAGE_FIELD_ID = "ideAddToIndexViewMessageField";
 
-   /*Elements titles*/
+   /* Elements titles */
    @UiField
    ImageButton addButton;
 

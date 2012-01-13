@@ -32,12 +32,11 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Remote;
 
 /**
- * View for remote repositories list with possibility to add and delete remote repository. 
- * Must be pointed in Views.gwt.xml.
+ * View for remote repositories list with possibility to add and delete remote repository. Must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 18, 2011 12:31:05 PM anya $
- *
+ * @version $Id: Apr 18, 2011 12:31:05 PM anya $
+ * 
  */
 public class RemoteView extends ViewImpl implements RemotePresenter.Display
 {
@@ -47,7 +46,7 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
 
    public static final String ID = "ideRemoteView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
 
    private static final String ADD_BUTTON_ID = "ideRemoteViewAddButton";
 

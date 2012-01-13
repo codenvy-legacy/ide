@@ -34,8 +34,8 @@ import java.util.List;
  * Unmarshaller for the Git work tree status response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 11:11:27 AM anya $
- *
+ * @version $Id: Mar 29, 2011 11:11:27 AM anya $
+ * 
  */
 public class StatusResponseUnmarshaller extends JSONUmarshaller
 {
@@ -87,7 +87,7 @@ public class StatusResponseUnmarshaller extends JSONUmarshaller
    /**
     * Parse JSON object's property of array type to list, by given property name.
     * 
-    * @param key 
+    * @param key
     * @param jsonObject
     * @return {@link List}
     */

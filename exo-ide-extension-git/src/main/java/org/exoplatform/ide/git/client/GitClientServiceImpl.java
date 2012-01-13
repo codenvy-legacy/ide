@@ -101,8 +101,8 @@ import java.util.List;
  * Implementation of the {@link GitClientService}.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 23, 2011 11:52:24 AM anya $
- *
+ * @version $Id: Mar 23, 2011 11:52:24 AM anya $
+ * 
  */
 public class GitClientServiceImpl extends GitClientService
 {
@@ -175,7 +175,7 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, boolean)
     */
    public void init(String vfsId, String projectid, boolean bare,
@@ -192,7 +192,7 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
@@ -200,7 +200,7 @@ public class GitClientServiceImpl extends GitClientService
       org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + CLONE;
-      //      callback.setEventBus(eventBus);
+      // callback.setEventBus(eventBus);
       CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
@@ -213,7 +213,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void statusText(String vfsId, String projectid, boolean shortFormat, String[] fileFilter,
@@ -238,7 +239,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#getWorkDir(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#getWorkDir(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    @Deprecated
@@ -257,8 +259,9 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.git.client.GitClientService#add(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.git.client.GitClientService#add(java.lang.String, boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void add(String vfsId, ProjectModel project, boolean update, String[] filePattern,
@@ -277,8 +280,9 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.git.client.GitClientService#commit(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.git.client.GitClientService#commit(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void commit(String vfsId, ProjectModel project, String message, boolean all,
@@ -344,7 +348,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#branchList(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#branchList(java.lang.String, boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void branchList(String vfsId, String projectid, boolean remote, AsyncRequestCallback<List<Branch>> callback)
@@ -372,7 +377,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void status(String vfsId, String projectid, AsyncRequestCallback<StatusResponse> callback)
@@ -440,7 +446,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#branchCheckout(java.lang.String, java.lang.String, java.lang.String, boolean)
+    * @see org.exoplatform.ide.git.client.GitClientService#branchCheckout(java.lang.String, java.lang.String, java.lang.String,
+    *      boolean)
     */
    @Override
    public void branchCheckout(String vfsId, String projectid, String name, String startPoint, boolean createNew,
@@ -459,7 +466,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#remove(java.lang.String, java.lang.String[], org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#remove(java.lang.String, java.lang.String[],
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void remove(String vfsId, String projectid, String[] files, AsyncRequestCallback<String> callback)
@@ -477,7 +485,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#reset(java.lang.String, java.lang.String[], java.lang.String, org.exoplatform.ide.git.shared.ResetRequest.ResetType, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#reset(java.lang.String, java.lang.String[], java.lang.String,
+    *      org.exoplatform.ide.git.shared.ResetRequest.ResetType, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void reset(String vfsId, String projectid, String[] paths, String commit, ResetType resetType,
@@ -500,7 +509,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#log(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#log(java.lang.String, boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void log(String vfsId, String projectid, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback)
@@ -533,7 +543,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#remoteAdd(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#remoteAdd(java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void remoteAdd(String vfsId, String projectid, String name, String repositoryURL,
@@ -553,7 +564,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#remoteDelete(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#remoteDelete(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void remoteDelete(String vfsId, String projectid, String name, AsyncRequestCallback<String> callback)
@@ -568,7 +580,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#fetch(java.lang.String, java.lang.String, java.lang.String[], boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#fetch(java.lang.String, java.lang.String, java.lang.String[], boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void fetch(String vfsId, ProjectModel project, String remote, String[] refspec, boolean removeDeletedRefs,
@@ -587,7 +600,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#pull(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#pull(java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void pull(String vfsId, ProjectModel project, String refSpec, String remote,
@@ -606,7 +620,9 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String, java.lang.String[], org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, int, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String, java.lang.String[],
+    *      org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, int, java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void diff(String vfsId, String projectid, String[] fileFilter, DiffType type, boolean noRenames,
@@ -617,7 +633,9 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String[], org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, int, java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String[],
+    *      org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, int, java.lang.String, boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void diff(String vfsId, String projectid, String[] fileFilter, DiffType type, boolean noRenames,
@@ -654,7 +672,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#deleteWorkDir(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#deleteWorkDir(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void deleteWorkDir(String vfsId, String projectid, AsyncRequestCallback<String> callback)
@@ -668,7 +687,8 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#merge(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#merge(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void merge(String vfsId, String projectid, String commit, AsyncRequestCallback<MergeResult> callback)

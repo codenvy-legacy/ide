@@ -33,12 +33,11 @@ import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 
 /**
- * View to perform merge operation.
- * Must be pointed in Views.gwt.xml
+ * View to perform merge operation. Must be pointed in Views.gwt.xml
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 20, 2011 3:05:46 PM anya $
- *
+ * @version $Id: Jul 20, 2011 3:05:46 PM anya $
+ * 
  */
 public class MergeView extends ViewImpl implements MergePresenter.Display
 {

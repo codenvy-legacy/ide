@@ -24,8 +24,8 @@ import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 28, 2011 9:55:30 AM anya $
- *
+ * @version $Id: Apr 28, 2011 9:55:30 AM anya $
+ * 
  */
 public class StatusResponseUnmarshallerGwtTest extends BaseGwtTest
 {

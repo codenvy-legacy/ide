@@ -64,8 +64,8 @@ import com.google.gwt.core.client.GWT;
  * Git extension to be added to IDE application.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 22, 2011 12:53:29 PM anya $
- *
+ * @version $Id: Mar 22, 2011 12:53:29 PM anya $
+ * 
  */
 public class GitExtension extends Extension implements InitializeServicesHandler
 {
@@ -80,7 +80,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      //Add controls:
+      // Add controls:
       IDE.getInstance().addControl(new InitRepositoryControl());
       IDE.getInstance().addControl(new CloneRepositoryControl());
       IDE.getInstance().addControl(new DeleteRepositoryControl());
@@ -102,7 +102,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new ShowProjectGitReadOnlyUrl());
       IDE.getInstance().addControlsFormatter(new GitControlsFormatter());
 
-      //Create presenters:
+      // Create presenters:
       new CloneRepositoryPresenter();
       new InitRepositoryPresenter();
       new StatusCommandHandler();

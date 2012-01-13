@@ -31,15 +31,13 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
- * Used as base for the most presenters, which work with Git.
- * Most of the presenters have to store selected item in browser tree
- * and to get the location the working directory. 
- * If the working directory not found - the reaction is common, the actions on success differs,
- * so {@link #onWorkDirReceived()} will have different implementations.  
+ * Used as base for the most presenters, which work with Git. Most of the presenters have to store selected item in browser tree
+ * and to get the location the working directory. If the working directory not found - the reaction is common, the actions on
+ * success differs, so {@link #onWorkDirReceived()} will have different implementations.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 20, 2011 2:08:46 PM anya $
- *
+ * @version $Id: Apr 20, 2011 2:08:46 PM anya $
+ * 
  */
 public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHandler
 {
@@ -82,7 +80,7 @@ public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHa
 
       if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
       {
-         //TODO change message:
+         // TODO change message:
          Dialogs.getInstance().showInfo("Project is not selected.");
          return false;
       }

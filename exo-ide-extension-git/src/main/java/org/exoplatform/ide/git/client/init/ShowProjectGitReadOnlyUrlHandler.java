@@ -26,8 +26,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link ShowRemotesEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 18, 2011 10:24:53 AM anya $
- *
+ * @version $Id: Apr 18, 2011 10:24:53 AM anya $
+ * 
  */
 public interface ShowProjectGitReadOnlyUrlHandler extends EventHandler
 {

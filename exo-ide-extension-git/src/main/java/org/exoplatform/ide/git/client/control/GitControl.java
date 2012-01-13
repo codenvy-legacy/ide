@@ -38,8 +38,8 @@ import java.util.List;
  * The common control for working with Git.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 15, 2011 10:06:58 AM anya $
- *
+ * @version $Id: Apr 15, 2011 10:06:58 AM anya $
+ * 
  */
 public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
    FolderRefreshedHandler
@@ -55,8 +55,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    private VirtualFileSystemInfo workspace;
 
    /**
-    * Variable, which indicated, when control must be enabled:
-    * before initializing the git repository or after.
+    * Variable, which indicated, when control must be enabled: before initializing the git repository or after.
     * 
     * IDE-1252
     */
@@ -134,8 +133,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    }
 
    /**
-    * Set the state, where control must be enabled:
-    * before initializing repository or after.
+    * Set the state, where control must be enabled: before initializing repository or after.
     * <p/>
     * IDE-1252
     * 

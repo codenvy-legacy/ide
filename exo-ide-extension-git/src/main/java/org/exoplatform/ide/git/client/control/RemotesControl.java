@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.remote.ShowRemotesEvent;
  * Control is used to view the list of remote repositories.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 18, 2011 10:21:02 AM anya $
- *
+ * @version $Id: Apr 18, 2011 10:21:02 AM anya $
+ * 
  */
 public class RemotesControl extends GitControl
 {

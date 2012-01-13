@@ -33,12 +33,11 @@ import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.client.remove.IndexFilesGrid;
 
 /**
- * View for reseting files in index.
- * Must be added to Views.gwt.xml file.
+ * View for reseting files in index. Must be added to Views.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 12, 2011 5:57:31 PM anya $
- *
+ * @version $Id: Apr 12, 2011 5:57:31 PM anya $
+ * 
  */
 public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Display
 {
@@ -48,13 +47,13 @@ public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Disp
 
    public static final String ID = "ideResetFilesView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
    private static final String RESET_BUTTON_ID = "ideResetFilesViewResetButton";
 
    private static final String CANCEL_BUTTON_ID = "ideResetFilesViewCancelButton";
 
    /**
-    *Reset files button.
+    * Reset files button.
     */
    @UiField
    ImageButton resetButton;

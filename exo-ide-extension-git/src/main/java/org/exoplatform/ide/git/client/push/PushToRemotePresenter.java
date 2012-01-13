@@ -43,12 +43,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Presenter of view for pushing changes to remote repository.
- * The view is pointed in Views.gwt.xml file.
+ * Presenter of view for pushing changes to remote repository. The view is pointed in Views.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 9:53:07 AM anya $
- *
+ * @version $Id: Apr 4, 2011 9:53:07 AM anya $
+ * 
  */
 public class PushToRemotePresenter extends HasBranchesPresenter implements PushToRemoteHandler
 {
@@ -90,7 +89,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       HasValue<String> getLocalBranchesValue();
 
       /**
-       * Set values of remote repositories. 
+       * Set values of remote repositories.
        * 
        * @param values values to set
        */
@@ -99,14 +98,14 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       String getRemoteDisplayValue();
 
       /**
-       * Set values of remote repository branches. 
+       * Set values of remote repository branches.
        * 
        * @param values values to set
        */
       void setRemoteBranches(String[] values);
 
       /**
-       * Set values of local repository branches. 
+       * Set values of local repository branches.
        * 
        * @param values values to set
        */

@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * Unmarshaller for the response with location of the Git working tree' s root
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 1:59:50 PM anya $
- *
+ * @version $Id: Mar 29, 2011 1:59:50 PM anya $
+ * 
  */
 public class WorkDirResponseUnmarshaller implements Unmarshallable
 {

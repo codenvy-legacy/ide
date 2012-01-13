@@ -27,8 +27,8 @@ import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 5, 2011 5:24:39 PM anya $
- *
+ * @version $Id: May 5, 2011 5:24:39 PM anya $
+ * 
  */
 public class DiffMarshallerGwtTest extends BaseGwtTest
 {

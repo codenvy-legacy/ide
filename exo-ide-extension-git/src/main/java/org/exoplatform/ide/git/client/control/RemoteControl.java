@@ -24,7 +24,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class RemoteControl extends GitControl
 {

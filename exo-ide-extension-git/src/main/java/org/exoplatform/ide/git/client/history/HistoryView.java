@@ -53,12 +53,11 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- * View for displaying the history of commits and it's diff.
- * Must be pointed in Views.gwt.xml.
+ * View for displaying the history of commits and it's diff. Must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 29, 2011 3:00:37 PM anya $
- *
+ * @version $Id: Apr 29, 2011 3:00:37 PM anya $
+ * 
  */
 public class HistoryView extends ViewImpl implements HistoryPresenter.Display
 {
@@ -370,7 +369,8 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.history.HistoryPresenter.Display#displayCompareText(org.exoplatform.ide.git.shared.Revision, java.lang.String)
+    * @see org.exoplatform.ide.git.client.history.HistoryPresenter.Display#displayCompareText(org.exoplatform.ide.git.shared.Revision,
+    *      java.lang.String)
     */
    @Override
    public void displayCompareText(Revision revision, String text)
@@ -395,7 +395,8 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.history.HistoryPresenter.Display#displayCompareVersion(org.exoplatform.ide.git.shared.Revision, org.exoplatform.ide.git.shared.Revision)
+    * @see org.exoplatform.ide.git.client.history.HistoryPresenter.Display#displayCompareVersion(org.exoplatform.ide.git.shared.Revision,
+    *      org.exoplatform.ide.git.shared.Revision)
     */
    @Override
    public void displayCompareVersion(Revision revisionA, Revision revisionB)

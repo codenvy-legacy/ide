@@ -43,18 +43,14 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
- * Presenter for view for reseting files from index.
- * The view must be pointed in Views.gwt.xml file.
+ * Presenter for view for reseting files from index. The view must be pointed in Views.gwt.xml file.
  * 
- * When user tries to reset files from index:
- * 1. Find Git work directory by selected item in browser tree.
- * 2. Get status for found work directory.
- * 3. Display files ready for commit in grid.
- * (Checked items will be reseted from index).
+ * When user tries to reset files from index: 1. Find Git work directory by selected item in browser tree. 2. Get status for found
+ * work directory. 3. Display files ready for commit in grid. (Checked items will be reseted from index).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 13, 2011 4:52:42 PM anya $
- *
+ * @version $Id: Apr 13, 2011 4:52:42 PM anya $
+ * 
  */
 public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandler
 {

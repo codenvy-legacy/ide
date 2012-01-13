@@ -42,32 +42,28 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
- * Presenter for view for removing files from working tree and Git index.
- * The view must be pointed in Views.gwt.xml file.
+ * Presenter for view for removing files from working tree and Git index. The view must be pointed in Views.gwt.xml file.
  * 
- * When user tries to remove files from index:
- * 1. Find Git work directory by selected item in browser tree.
- * 2. Get status for found work directory.
- * 3. Display files ready for commit in grid.
- * (Checked items will be removed from index).
+ * When user tries to remove files from index: 1. Find Git work directory by selected item in browser tree. 2. Get status for
+ * found work directory. 3. Display files ready for commit in grid. (Checked items will be removed from index).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 12, 2011 4:03:44 PM anya $
- *
+ * @version $Id: Apr 12, 2011 4:03:44 PM anya $
+ * 
  */
 public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHandler
 {
    interface Display extends IsView
    {
       /**
-       *Get click handler for remove button.
+       * Get click handler for remove button.
        * 
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getRemoveButton();
 
       /**
-       *Get click handler for cancel button.
+       * Get click handler for cancel button.
        * 
        * @return {@link HasClickHandlers}
        */

@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link PullEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 20, 2011 12:04:05 PM anya $
- *
+ * @version $Id: Apr 20, 2011 12:04:05 PM anya $
+ * 
  */
 public interface PullHandler extends EventHandler
 {

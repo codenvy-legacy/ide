@@ -24,8 +24,8 @@ import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 27, 2011 12:28:59 PM anya $
- *
+ * @version $Id: Apr 27, 2011 12:28:59 PM anya $
+ * 
  */
 public class GwtMarshallerTestSuite extends TestCase
 {

@@ -35,8 +35,8 @@ import org.exoplatform.ide.git.client.GitExtension;
  * UI for cloning repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 22, 2011 4:54:24 PM anya $
- *
+ * @version $Id: Mar 22, 2011 4:54:24 PM anya $
+ * 
  */
 public class CloneRepositoryView extends ViewImpl implements
    org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display

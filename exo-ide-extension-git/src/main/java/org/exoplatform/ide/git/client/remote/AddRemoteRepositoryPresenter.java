@@ -33,8 +33,8 @@ import org.exoplatform.ide.git.shared.Remote;
  * Presenter for add remote repository view.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 19, 2011 11:12:44 AM anya $
- *
+ * @version $Id: Apr 19, 2011 11:12:44 AM anya $
+ * 
  */
 public abstract class AddRemoteRepositoryPresenter
 {

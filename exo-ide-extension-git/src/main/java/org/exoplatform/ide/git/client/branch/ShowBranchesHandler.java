@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link ShowBranchesEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 8, 2011 12:13:12 PM anya $
- *
+ * @version $Id: Apr 8, 2011 12:13:12 PM anya $
+ * 
  */
 public interface ShowBranchesHandler extends EventHandler
 {

@@ -47,8 +47,8 @@ import com.google.gwt.user.client.ui.HasValue;
  * Presenter of the view for fetching changes from remote repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 20, 2011 1:33:17 PM anya $
- *
+ * @version $Id: Apr 20, 2011 1:33:17 PM anya $
+ * 
  */
 public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
 {
@@ -97,14 +97,14 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       HasValue<Boolean> getRemoveDeletedRefs();
 
       /**
-       * Set values of remote repository branches. 
+       * Set values of remote repository branches.
        * 
        * @param values values to set
        */
       void setRemoteBranches(String[] values);
 
       /**
-       * Set values of local repository branches. 
+       * Set values of local repository branches.
        * 
        * @param values values to set
        */
@@ -118,13 +118,14 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       void enableFetchButton(boolean enable);
 
       /**
-       * Set values of remote repositories. 
+       * Set values of remote repositories.
        * 
        * @param values values to set
        */
       void setRemoteValues(LinkedHashMap<String, String> values);
 
-      /** Get remote repository display value.
+      /**
+       * Get remote repository display value.
        * 
        * @return String
        */

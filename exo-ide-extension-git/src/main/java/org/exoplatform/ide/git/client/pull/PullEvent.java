@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event occurs, when user tries to pull changes from remote repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 20, 2011 12:03:56 PM anya $
- *
+ * @version $Id: Apr 20, 2011 12:03:56 PM anya $
+ * 
  */
 public class PullEvent extends GwtEvent<PullHandler>
 {

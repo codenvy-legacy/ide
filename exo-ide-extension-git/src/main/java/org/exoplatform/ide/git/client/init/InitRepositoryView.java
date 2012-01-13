@@ -37,8 +37,8 @@ import org.exoplatform.ide.git.client.GitExtension;
  * UI for initializing the repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 24, 2011 10:35:37 AM anya $
- *
+ * @version $Id: Mar 24, 2011 10:35:37 AM anya $
+ * 
  */
 public class InitRepositoryView extends ViewImpl implements
    org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display
@@ -46,7 +46,7 @@ public class InitRepositoryView extends ViewImpl implements
 
    public static final String ID = "ideInitRepositoryView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
 
    private static final String INIT_BUTTON_ID = "ideInitRepositoryViewInitButton";
 

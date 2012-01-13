@@ -32,8 +32,8 @@ import org.exoplatform.ide.git.shared.MergeResult.MergeStatus;
  * Unmarshaller for merge result in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 20, 2011 12:01:03 PM anya $
- *
+ * @version $Id: Jul 20, 2011 12:01:03 PM anya $
+ * 
  */
 public class MergeUnmarshaller implements Unmarshallable, Constants
 {

@@ -21,12 +21,12 @@ package org.exoplatform.ide.git.client.push;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to push changes from local repository to remote one.
- * Implement {@link PushToRemoteHandler} handler to process the event.
+ * Event occurs, when user tries to push changes from local repository to remote one. Implement {@link PushToRemoteHandler}
+ * handler to process the event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 9:32:53 AM anya $
- *
+ * @version $Id: Apr 4, 2011 9:32:53 AM anya $
+ * 
  */
 public class PushToRemoteEvent extends GwtEvent<PushToRemoteHandler>
 {

@@ -40,8 +40,8 @@ import com.google.gwt.user.client.ui.HasValue;
  * Presenter for Init Repository view.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 24, 2011 9:07:58 AM anya $
- *
+ * @version $Id: Mar 24, 2011 9:07:58 AM anya $
+ * 
  */
 public class InitRepositoryPresenter extends GitPresenter implements InitRepositoryHandler
 {

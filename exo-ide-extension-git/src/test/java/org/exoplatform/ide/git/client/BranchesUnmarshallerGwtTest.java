@@ -27,8 +27,8 @@ import java.util.ArrayList;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 27, 2011 3:32:28 PM anya $
- *
+ * @version $Id: Apr 27, 2011 3:32:28 PM anya $
+ * 
  */
 public class BranchesUnmarshallerGwtTest extends BaseGwtTest
 {
@@ -39,7 +39,8 @@ public class BranchesUnmarshallerGwtTest extends BaseGwtTest
 
    /**
     * Test branch list response unmarshaller.
-    * @throws UnmarshallerException 
+    * 
+    * @throws UnmarshallerException
     */
    public void testBranchListUnmarshaller() throws UnmarshallerException
    {
@@ -61,7 +62,8 @@ public class BranchesUnmarshallerGwtTest extends BaseGwtTest
 
    /**
     * Test branch unmarshaller.
-    * @throws UnmarshallerException 
+    * 
+    * @throws UnmarshallerException
     */
    public void testBranchUnmarshaller() throws UnmarshallerException
    {
@@ -76,7 +78,8 @@ public class BranchesUnmarshallerGwtTest extends BaseGwtTest
 
    /**
     * Test branch unmarshaller.
-    * @throws UnmarshallerException 
+    * 
+    * @throws UnmarshallerException
     */
    public void testBranchListEmptyUnmarshaller() throws UnmarshallerException
    {

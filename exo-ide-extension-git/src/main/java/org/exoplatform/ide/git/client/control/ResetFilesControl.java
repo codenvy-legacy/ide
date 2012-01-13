@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.reset.ResetFilesEvent;
  * Control resets files from index (added by add command).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 13, 2011 4:00:45 PM anya $
- *
+ * @version $Id: Apr 13, 2011 4:00:45 PM anya $
+ * 
  */
 public class ResetFilesControl extends GitControl
 {

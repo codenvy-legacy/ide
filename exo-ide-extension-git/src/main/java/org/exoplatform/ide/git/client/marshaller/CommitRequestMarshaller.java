@@ -30,8 +30,8 @@ import org.exoplatform.ide.git.shared.CommitRequest;
  * Marshaller for forming commit request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 31, 2011 11:11:25 AM anya $
- *
+ * @version $Id: Mar 31, 2011 11:11:25 AM anya $
+ * 
  */
 public class CommitRequestMarshaller implements Marshallable, Constants
 {

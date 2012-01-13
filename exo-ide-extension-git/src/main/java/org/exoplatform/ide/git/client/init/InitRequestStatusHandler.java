@@ -27,8 +27,8 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 16, 2011 evgen $
- *
+ * @version $Id: Sep 16, 2011 evgen $
+ * 
  */
 public class InitRequestStatusHandler implements RequestStatusHandler
 {
@@ -41,7 +41,7 @@ public class InitRequestStatusHandler implements RequestStatusHandler
    public InitRequestStatusHandler(String workDir)
    {
       super();
-      //remove first '/' in workDir
+      // remove first '/' in workDir
       this.workDir = workDir.substring(1);
    }
 

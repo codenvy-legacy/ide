@@ -48,8 +48,8 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
  * Presenter to perform merge reference with current HEAD commit.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 20, 2011 12:38:39 PM anya $
- *
+ * @version $Id: Jul 20, 2011 12:38:39 PM anya $
+ * 
  */
 public class MergePresenter extends GitPresenter implements MergeHandler, ViewClosedHandler
 {

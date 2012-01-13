@@ -26,8 +26,8 @@ import org.exoplatform.ide.git.client.add.AddFilesEvent;
  * Control for adding changes to index (temporary storage).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 4:23:20 PM anya $
- *
+ * @version $Id: Mar 29, 2011 4:23:20 PM anya $
+ * 
  */
 public class AddFilesControl extends GitControl
 {

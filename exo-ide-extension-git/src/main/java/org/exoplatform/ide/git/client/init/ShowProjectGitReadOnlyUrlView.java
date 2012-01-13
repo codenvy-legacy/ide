@@ -35,15 +35,15 @@ import com.google.gwt.user.client.ui.Widget;
  * UI for initializing the repository.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 24, 2011 10:35:37 AM anya $
- *
+ * @version $Id: Mar 24, 2011 10:35:37 AM anya $
+ * 
  */
 public class ShowProjectGitReadOnlyUrlView extends ViewImpl implements ShowProjectGitReadOnlyUrlPresenter.Display
 {
 
    public static final String ID = "ideGitUrlView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
 
    private static final String OK_BUTTON_ID = "ideGitUrlOkButton";
 

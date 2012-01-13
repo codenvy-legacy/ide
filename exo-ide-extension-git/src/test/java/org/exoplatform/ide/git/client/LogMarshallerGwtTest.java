@@ -25,8 +25,8 @@ import org.exoplatform.ide.git.shared.LogRequest;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 28, 2011 9:55:30 AM anya $
- *
+ * @version $Id: Apr 28, 2011 9:55:30 AM anya $
+ * 
  */
 public class LogMarshallerGwtTest extends BaseGwtTest
 {

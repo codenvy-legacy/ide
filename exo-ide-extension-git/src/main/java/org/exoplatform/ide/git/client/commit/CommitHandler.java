@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link CommitEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 31, 2011 9:42:18 AM anya $
- *
+ * @version $Id: Mar 31, 2011 9:42:18 AM anya $
+ * 
  */
 public interface CommitHandler extends EventHandler
 {

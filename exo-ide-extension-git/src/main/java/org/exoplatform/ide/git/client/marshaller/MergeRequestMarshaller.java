@@ -26,11 +26,11 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.git.shared.MergeRequest;
 
 /**
- *The marshaller for merge operation request.
+ * The marshaller for merge operation request.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 20, 2011 11:56:09 AM anya $
- *
+ * @version $Id: Jul 20, 2011 11:56:09 AM anya $
+ * 
  */
 public class MergeRequestMarshaller implements Marshallable, Constants
 {

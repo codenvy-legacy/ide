@@ -21,12 +21,11 @@ package org.exoplatform.ide.git.client.init;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to initialize local repository.
- * Implement {@link InitRepositoryHandler} handler.
+ * Event occurs, when user tries to initialize local repository. Implement {@link InitRepositoryHandler} handler.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 23, 2011 5:53:29 PM anya $
- *
+ * @version $Id: Mar 23, 2011 5:53:29 PM anya $
+ * 
  */
 public class InitRepositoryEvent extends GwtEvent<InitRepositoryHandler>
 {

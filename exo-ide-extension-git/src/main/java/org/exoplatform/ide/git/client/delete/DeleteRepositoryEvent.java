@@ -21,12 +21,11 @@ package org.exoplatform.ide.git.client.delete;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to delete Git repository.
- * Implement {@link DeleteRepositoryHandler} to handle event.
+ * Event occurs, when user tries to delete Git repository. Implement {@link DeleteRepositoryHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 21, 2011 5:46:14 PM anya $
- *
+ * @version $Id: Jun 21, 2011 5:46:14 PM anya $
+ * 
  */
 public class DeleteRepositoryEvent extends GwtEvent<DeleteRepositoryHandler>
 {

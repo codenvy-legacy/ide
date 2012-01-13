@@ -52,8 +52,8 @@ import com.google.gwt.resources.client.ImageResource;
  * Handler to process actions with displaying the status of the Git work tree.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 3:58:20 PM anya $
- *
+ * @version $Id: Mar 28, 2011 3:58:20 PM anya $
+ * 
  */
 public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, FolderRefreshedHandler
 {
@@ -91,14 +91,14 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
       String[] fileFilter = null;
       if (item instanceof Folder)
       {
-         //Remove last "/" from path:
+         // Remove last "/" from path:
          String path =
             item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item.getPath();
          path = URL.decodePathSegment(path);
-         //Check selected item in workspace tree is not the root of the Git repository tree:
+         // Check selected item in workspace tree is not the root of the Git repository tree:
          if (!(item instanceof ProjectModel))
          {
-            //Add filter to display status for the selected folder:
+            // Add filter to display status for the selected folder:
             path = (path.startsWith("/")) ? path.replaceFirst("/", "") : "";
             fileFilter = new String[]{path};
          }
@@ -219,7 +219,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    }
 
    /**
-    * Check whether files from Git status contain the match with pointed pattern. 
+    * Check whether files from Git status contain the match with pointed pattern.
     * 
     * @param files files in status
     * @param pattern pattern to compare

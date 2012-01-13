@@ -40,13 +40,11 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
- * Presenter for add changes to index view.
- * The view must implement  {@link AddToIndexPresenter.Display}.
- * Add view to View.gwt.xml.
+ * Presenter for add changes to index view. The view must implement {@link AddToIndexPresenter.Display}. Add view to View.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 29, 2011 4:35:16 PM anya $
- *
+ * @version $Id: Mar 29, 2011 4:35:16 PM anya $
+ * 
  */
 public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
 {
@@ -76,7 +74,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       /**
        * Get message label value.
        * 
-       *  @return {@link HasValue} 
+       * @return {@link HasValue}
        */
       HasValue<String> getMessage();
    }
@@ -139,8 +137,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
    }
 
    /**
-    * Form the message to display for adding to index, telling the user what 
-    * is gonna to be added.
+    * Form the message to display for adding to index, telling the user what is gonna to be added.
     * 
     * @return {@link String} message to display
     */
@@ -152,7 +149,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       String pattern = selectedItem.getPath().replaceFirst(workdir, "");
       pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
-      //Root of the working tree:
+      // Root of the working tree:
       if (pattern.length() == 0 || "/".equals(pattern))
       {
          return GitExtension.MESSAGES.addToIndexAllChanges();

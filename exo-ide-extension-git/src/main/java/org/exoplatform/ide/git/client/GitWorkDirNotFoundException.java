@@ -22,8 +22,8 @@ package org.exoplatform.ide.git.client;
  * Exception is thrown when the Git work directory is not found (".git" folder).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 28, 2011 11:40:33 AM anya $
- *
+ * @version $Id: Mar 28, 2011 11:40:33 AM anya $
+ * 
  */
 public class GitWorkDirNotFoundException extends Exception
 {

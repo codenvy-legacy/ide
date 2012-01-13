@@ -24,8 +24,8 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 27, 2011 11:42:28 AM anya $
- *
+ * @version $Id: Apr 27, 2011 11:42:28 AM anya $
+ * 
  */
 public class BaseGwtTest extends GWTTestCase
 {
@@ -40,11 +40,11 @@ public class BaseGwtTest extends GWTTestCase
    }
 
    /**
-   * Build {@link JavaScriptObject} from string.
-   * 
-   * @param json string that contains object
-   * @return {@link JavaScriptObject}
-   */
+    * Build {@link JavaScriptObject} from string.
+    * 
+    * @param json string that contains object
+    * @return {@link JavaScriptObject}
+    */
    protected static native JavaScriptObject build(String json) /*-{
                                                                try {
                                                                var object = eval('(' + json + ')');

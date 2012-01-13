@@ -20,8 +20,8 @@ package org.exoplatform.ide.git.client;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 27, 2011 11:35:04 AM anya $
- *
+ * @version $Id: Apr 27, 2011 11:35:04 AM anya $
+ * 
  */
 public class GitTest implements com.google.gwt.core.client.EntryPoint
 {

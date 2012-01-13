@@ -21,12 +21,12 @@ package org.exoplatform.ide.git.client.init;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to view the list of remote repositories.
- * Implement {@link ShowProjectGitReadOnlyUrlHandler} handler to process event.
+ * Event occurs, when user tries to view the list of remote repositories. Implement {@link ShowProjectGitReadOnlyUrlHandler}
+ * handler to process event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 18, 2011 10:24:15 AM anya $
- *
+ * @version $Id: Apr 18, 2011 10:24:15 AM anya $
+ * 
  */
 public class ShowProjectGitReadOnlyUrlEvent extends GwtEvent<ShowProjectGitReadOnlyUrlHandler>
 {

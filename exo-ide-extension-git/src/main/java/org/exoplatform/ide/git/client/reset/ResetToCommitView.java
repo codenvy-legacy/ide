@@ -37,12 +37,11 @@ import org.exoplatform.ide.git.client.commit.RevisionGrid;
 import org.exoplatform.ide.git.shared.Revision;
 
 /**
- * View for reseting head to the commit.
- * Must be pointed in Views.gwt.xml.
+ * View for reseting head to the commit. Must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 15, 2011 12:00:39 PM anya $
- *
+ * @version $Id: Apr 15, 2011 12:00:39 PM anya $
+ * 
  */
 public class ResetToCommitView extends ViewImpl implements ResetToCommitPresenter.Display
 {
@@ -53,14 +52,14 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
 
    public static final String ID = "ideResetToCommitView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
 
    private static final String RESET_BUTTON_ID = "ideRevertToCommitViewRevertButton";
 
    private static final String CANCEL_BUTTON_ID = "ideRevertToCommitViewCancelButton";
 
    /**
-    *Revert button.
+    * Revert button.
     */
    @UiField
    ImageButton resetButton;

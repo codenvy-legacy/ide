@@ -32,8 +32,8 @@ import java.util.List;
  * Unmarshaller for list of remote repositories response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 12:45:37 PM anya $
- *
+ * @version $Id: Apr 4, 2011 12:45:37 PM anya $
+ * 
  */
 public class RemoteListUnmarshaller extends JSONUmarshaller
 {

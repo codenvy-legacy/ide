@@ -27,8 +27,8 @@ import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 28, 2011 9:55:30 AM anya $
- *
+ * @version $Id: Apr 28, 2011 9:55:30 AM anya $
+ * 
  */
 public class ResetMarshallerGwtTest extends BaseGwtTest
 {

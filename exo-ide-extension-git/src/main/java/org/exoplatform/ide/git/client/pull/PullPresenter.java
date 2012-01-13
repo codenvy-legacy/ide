@@ -46,12 +46,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Presenter of the view for pulling changes from remote repository.
- * View must be pointed in Views.gwt.xml.
+ * Presenter of the view for pulling changes from remote repository. View must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 20, 2011 4:20:24 PM anya $
- *
+ * @version $Id: Apr 20, 2011 4:20:24 PM anya $
+ * 
  */
 public class PullPresenter extends HasBranchesPresenter implements PullHandler
 {
@@ -93,14 +92,14 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       HasValue<String> getLocalBranches();
 
       /**
-       * Set values of remote repository branches. 
+       * Set values of remote repository branches.
        * 
        * @param values values to set
        */
       void setRemoteBranches(String[] values);
 
       /**
-       * Set values of local repository branches. 
+       * Set values of local repository branches.
        * 
        * @param values values to set
        */
@@ -114,7 +113,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       void enablePullButton(boolean enable);
 
       /**
-       * Set values of remote repositories. 
+       * Set values of remote repositories.
        * 
        * @param values values to set
        */
@@ -250,8 +249,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
    }
 
    /**
-    * Perform pull from pointed by user remote repository, from pointed remote branch to local one.
-    * Local branch may not be pointed.
+    * Perform pull from pointed by user remote repository, from pointed remote branch to local one. Local branch may not be
+    * pointed.
     */
    public void doPull()
    {
@@ -259,7 +258,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       final String remoteUrl = display.getRemoteName().getValue();
       String localBranch = display.getLocalBranches().getValue();
       String remoteBranch = display.getRemoteBranches().getValue();
-      //Form the refspec. User points only the branch names:
+      // Form the refspec. User points only the branch names:
       String refs =
          (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
             + "refs/remotes/" + remoteName + "/" + remoteBranch;

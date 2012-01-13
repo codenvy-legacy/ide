@@ -32,8 +32,8 @@ import java.util.List;
  * Grid to display remote repositories info.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 18, 2011 12:09:09 PM anya $
- *
+ * @version $Id: Apr 18, 2011 12:09:09 PM anya $
+ * 
  */
 public class RemoteGrid extends ListGrid<Remote>
 {
@@ -43,7 +43,7 @@ public class RemoteGrid extends ListGrid<Remote>
    private static final String ID = "ideRemoteGrid";
 
    /**
-    *Name column.
+    * Name column.
     */
    Column<Remote, String> nameColumn;
 

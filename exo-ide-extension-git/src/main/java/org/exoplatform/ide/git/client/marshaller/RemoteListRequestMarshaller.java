@@ -30,8 +30,8 @@ import org.exoplatform.ide.git.shared.RemoteListRequest;
  * Marshaller for creating remote list request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 4, 2011 1:52:47 PM anya $
- *
+ * @version $Id: Apr 4, 2011 1:52:47 PM anya $
+ * 
  */
 public class RemoteListRequestMarshaller implements Marshallable, Constants
 {
@@ -41,7 +41,7 @@ public class RemoteListRequestMarshaller implements Marshallable, Constants
    private RemoteListRequest remoteListRequest;
 
    /**
-    * @param remoteListRequest 
+    * @param remoteListRequest
     */
    public RemoteListRequestMarshaller(RemoteListRequest remoteListRequest)
    {

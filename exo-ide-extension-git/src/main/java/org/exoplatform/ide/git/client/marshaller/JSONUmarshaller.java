@@ -26,8 +26,8 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * Unmarshaller for responses in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 5, 2011 2:17:19 PM anya $
- *
+ * @version $Id: Apr 5, 2011 2:17:19 PM anya $
+ * 
  */
 public abstract class JSONUmarshaller implements Unmarshallable, Constants
 {

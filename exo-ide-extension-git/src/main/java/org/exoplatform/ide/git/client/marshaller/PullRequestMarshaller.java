@@ -29,8 +29,8 @@ import org.exoplatform.ide.git.shared.PullRequest;
  * Marshaller for pull request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 20, 2011 3:20:49 PM anya $
- *
+ * @version $Id: Apr 20, 2011 3:20:49 PM anya $
+ * 
  */
 public class PullRequestMarshaller implements Marshallable, Constants
 {

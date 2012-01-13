@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * Unmarshaller to get {@link DiffResponse} from response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 4, 2011 11:11:03 AM anya $
- *
+ * @version $Id: May 4, 2011 11:11:03 AM anya $
+ * 
  */
 public class DiffResponseUnmarshaller implements Unmarshallable
 {

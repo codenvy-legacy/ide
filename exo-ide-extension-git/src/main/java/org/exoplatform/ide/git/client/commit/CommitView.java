@@ -33,12 +33,11 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.git.client.GitExtension;
 
 /**
- * View for commiting from index to repository.
- * Must be added to <b>View.gwt.xml file</b>.
+ * View for commiting from index to repository. Must be added to <b>View.gwt.xml file</b>.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Mar 31, 2011 10:38:47 AM anya $
- *
+ * @version $Id: Mar 31, 2011 10:38:47 AM anya $
+ * 
  */
 public class CommitView extends ViewImpl implements CommitPresenter.Display
 {
@@ -48,7 +47,7 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
 
    public static final String ID = "ideCommitView";
 
-   /*Elements IDs*/
+   /* Elements IDs */
 
    private static final String COMMIT_BUTTON_ID = "ideCommitViewCommitButton";
 
@@ -58,7 +57,7 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
 
    private static final String ALL_FIELD_ID = "ideCommitViewAllField";
 
-   /*Elements titles*/
+   /* Elements titles */
 
    @UiField
    ImageButton commitButton;
@@ -87,7 +86,7 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
       allField.setName(ALL_FIELD_ID);
 
       messageField.setName(MESSAGE_FIELD_ID);
-      //,GitExtension.MESSAGES.commitMessageFieldTitle());
+      // ,GitExtension.MESSAGES.commitMessageFieldTitle());
       commitButton.setButtonId(COMMIT_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }

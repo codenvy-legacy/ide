@@ -32,8 +32,8 @@ import org.exoplatform.ide.git.shared.BranchListRequest;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 27, 2011 3:32:28 PM anya $
- *
+ * @version $Id: Apr 27, 2011 3:32:28 PM anya $
+ * 
  */
 public class BranchesMarshallerGwtTest extends BaseGwtTest
 {
