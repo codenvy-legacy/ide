@@ -31,7 +31,7 @@ import org.exoplatform.ide.editor.ruby.client.codeassistant.ui.RubyVariableWidge
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RubyTokenWidgetFactory Apr 28, 2011 5:37:38 PM evgen $
- *
+ * 
  */
 public class RubyTokenWidgetFactory implements TokenWidgetFactory
 {
@@ -65,8 +65,8 @@ public class RubyTokenWidgetFactory implements TokenWidgetFactory
 
          case CLASS_VARIABLE :
             return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyClassVariable());
-            
-         case GLOBAL_VARIABLE:
+
+         case GLOBAL_VARIABLE :
             return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyGlobalVariable());
 
          default :

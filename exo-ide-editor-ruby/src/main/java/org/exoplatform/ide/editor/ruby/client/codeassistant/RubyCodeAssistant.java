@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RubyCodeAssistant Apr 28, 2011 4:46:20 PM evgen $
- *
+ * 
  */
 public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token>
 {
@@ -75,7 +75,8 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
    private int currentLineNumber;
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor,
+    *      java.util.List, int, int, java.lang.String)
     */
    @Override
    public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
@@ -84,7 +85,9 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
    public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, final List<Token> tokenList,
@@ -144,7 +147,8 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Do autocompletion
-    * @param tokenList 
+    * 
+    * @param tokenList
     * @param currentToken
     */
    private void autocompletion(final List<Token> tokenList, final Token currentToken)
@@ -256,6 +260,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Find, recursive, all global variables defined in Ruby script
+    * 
     * @param tokenList List of tokens
     * @param tokens List of tokens where global and local variables will be stored
     */
@@ -279,6 +284,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Find all global and local variables defined on root of Ruby script
+    * 
     * @param tokenList List of tokens, received from editor
     * @param tokens List of tokens where global and local variables will be stored
     */
@@ -295,8 +301,9 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Get all methods and variables (of class and of instance)
+    * 
     * @param classToken Token that describes Ruby class
-    * @param tokens List of tokens 
+    * @param tokens List of tokens
     */
    private void addMethodsAndGlobal(final Token classToken, final String className, final List<Token> tokens)
    {
@@ -320,8 +327,10 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
-    * Add all tokens from methodToken to tokens, also filter local variables defined after {@link RubyCodeAssistant#currentLineNumber}
-    * @param methodToken token that represent Ruby method 
+    * Add all tokens from methodToken to tokens, also filter local variables defined after
+    * {@link RubyCodeAssistant#currentLineNumber}
+    * 
+    * @param methodToken token that represent Ruby method
     * @param tokens List of tokens
     */
    private void addTokenFromMethod(final Token methodToken, final List<Token> tokens)
@@ -342,6 +351,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Get all Ruby constants form token list
+    * 
     * @param tokenList List of tokens received from editor
     * @param tokenConstant List where constants store
     */
@@ -364,7 +374,8 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
-    * Recursive get tokens form all hierarchy  of classes
+    * Recursive get tokens form all hierarchy of classes
+    * 
     * @param metaclass where do search classes
     * @param tokenMap Map that store tokens
     */
@@ -381,6 +392,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Get Classes form token list
+    * 
     * @param tokenList tokens received from editor
     * @return {@link Map} of Defined classes
     */
@@ -399,8 +411,9 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Convert {@link Metaclass} to {@link Token} with type CLASS
-    * @param metaclass 
-    * @return token 
+    * 
+    * @param metaclass
+    * @return token
     */
    protected Token getClassToken(Metaclass metaclass)
    {
@@ -411,6 +424,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Get {@link Token}s from {@link ModuleMetaclass} array
+    * 
     * @param includedModules
     * @return Map of converted tokens
     */
@@ -433,6 +447,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * Convert {@link MethodInfo} array to {@link Token}s and put its to tokens map
+    * 
     * @param container Name of Class
     * @param methods array
     * @param tokens Map that store converted tokens
@@ -448,7 +463,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          m.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(param));
          m.setProperty(TokenProperties.CODE, new StringProperty(method.getName() + param));
 
-         //to avoid overriding methods from Kernel
+         // to avoid overriding methods from Kernel
          if (tokens.containsKey(m.getName() + param)
             && tokens.get(m.getName() + param).getProperty(TokenProperties.DECLARING_CLASS).equals("Kernel"))
             continue;

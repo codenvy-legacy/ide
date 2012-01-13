@@ -29,7 +29,7 @@ import org.exoplatform.ide.editor.ruby.client.RubyClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RubyConstantWidget May 10, 2011 12:06:17 PM evgen $
- *
+ * 
  */
 public class RubyConstantWidget extends RubyBaseWidget
 {
@@ -40,7 +40,7 @@ public class RubyConstantWidget extends RubyBaseWidget
    public RubyConstantWidget(Token token)
    {
       super(token);
-      
+
       grid = new Grid(1, 2);
       grid.setStyleName(RubyClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");

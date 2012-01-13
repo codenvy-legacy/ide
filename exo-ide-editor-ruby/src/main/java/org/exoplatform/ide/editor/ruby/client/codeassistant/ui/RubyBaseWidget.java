@@ -32,13 +32,13 @@ import org.exoplatform.ide.editor.ruby.client.codeassistant.model.Modifiers;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JSBaseWidget Feb 24, 2011 11:56:26 AM evgen $
- *
+ * 
  */
 public abstract class RubyBaseWidget extends TokenWidget
 {
 
    protected Grid grid;
-   
+
    protected int modifieres;
 
    /**
@@ -60,15 +60,15 @@ public abstract class RubyBaseWidget extends TokenWidget
       else
          modifieres = 0;
    }
-   
+
    protected String getModifiers()
    {
 
       String span =
          "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; "
             + "height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">";
-//      span += (ModifierHelper.isAbstract(modifieres)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
-      //      span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
+      // span += (ModifierHelper.isAbstract(modifieres)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
+      // span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
       span += (modifieres == Modifiers.AccStatic) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
       span += "</span>";
       return span;

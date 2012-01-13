@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.ruby.client.RubyClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RubyClassWidget Apr 29, 2011 4:09:20 PM evgen $
- *
+ * 
  */
 public class RubyClassWidget extends RubyBaseWidget
 {

@@ -19,7 +19,6 @@
 
 package org.exoplatform.ide.editor.ruby.client;
 
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -40,16 +39,16 @@ import com.google.gwt.resources.client.TextResource;
 
 /**
  * 
- * Provides a text editing area along with UI for executing text commands on the.<br> 
- * Support syntax coloration for Ruby language (http://www.ruby-lang.org/en/)   
- *
+ * Provides a text editing area along with UI for executing text commands on the.<br>
+ * Support syntax coloration for Ruby language (http://www.ruby-lang.org/en/)
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a> 
+ * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Revision$
  */
 public class RubyEditorExtension extends Extension implements InitializeServicesHandler
 {
-   
+
    interface DefaultContent extends ClientBundle
    {
       @Source("hello.rb")
@@ -62,7 +61,7 @@ public class RubyEditorExtension extends Extension implements InitializeServices
    private final Messages messages = GWT.create(Messages.class);
 
    public final static DefaultContent DEFAULT_CONTENT = GWT.create(DefaultContent.class);
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -73,27 +72,22 @@ public class RubyEditorExtension extends Extension implements InitializeServices
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Ruby File", "Ruby File", "Create Ruby File",
-            RubyClientBundle.INSTANCE.ruby(), RubyClientBundle.INSTANCE.rubyDisabled(),
-            MimeType.APPLICATION_RUBY));
-      
+            RubyClientBundle.INSTANCE.ruby(), RubyClientBundle.INSTANCE.rubyDisabled(), MimeType.APPLICATION_RUBY));
+
       RubyClientBundle.INSTANCE.css().ensureInjected();
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby script editor", "rb", RubyClientBundle.INSTANCE.ruby(), true,
-            new CodeMirrorConfiguration().
-               setGenericParsers("['parseruby.js', 'tokenizeruby.js']").
-               setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']").
-               setParser(new RubyParser()).
-               setCanBeOutlined(true).
-               setAutocompleteHelper(new RubyAutocompleteHelper()).
-               setCodeAssistant(new RubyCodeAssistant())
-         )
-      );
-      
+         new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby script editor", "rb",
+            RubyClientBundle.INSTANCE.ruby(), true, new CodeMirrorConfiguration()
+               .setGenericParsers("['parseruby.js', 'tokenizeruby.js']")
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']")
+               .setParser(new RubyParser()).setCanBeOutlined(true).setAutocompleteHelper(new RubyAutocompleteHelper())
+               .setCodeAssistant(new RubyCodeAssistant())));
+
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_RUBY, new RubyOutlineItemCreator());
    }
-   
+
 }

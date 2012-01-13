@@ -830,8 +830,7 @@ public class RubyParser extends CodeMirrorParserImpl
    /**
     * Recognize GLOBAL_VARIABLE or INSTANCE_VARIABLE variable without assignment like "@h /n"
     * 
-    * @param safe
-    *           nodeStack
+    * @param safe nodeStack
     * @return CodeMirrorTokenImpl with global variable in case like "$a /n"
     */
    private TokenBeenImpl isVariableWithoutAssignment(Stack<Node> nodeStack, TokenBeenImpl currentToken)
@@ -855,8 +854,7 @@ public class RubyParser extends CodeMirrorParserImpl
    /**
     * Return TokenType of variable or constant or null
     * 
-    * @param node
-    *           type
+    * @param node type
     * @return
     */
    public static TokenType isVariable(String nodeType)

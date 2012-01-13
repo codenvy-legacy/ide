@@ -25,16 +25,16 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface RubyClientBundle extends ClientBundle
 {
 
    RubyClientBundle INSTANCE = GWT.create(RubyClientBundle.class);
-   
+
    @Source("org/exoplatform/ide/editor/ruby/client/styles/ruby.css")
    RubyCss css();
-   
+
    @Source("org/exoplatform/ide/editor/ruby/client/images/class.gif")
    ImageResource classItem();
 
@@ -67,11 +67,11 @@ public interface RubyClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/ruby/client/images/module-item.png")
    ImageResource module();
-   
+
    @Source("org/exoplatform/ide/editor/ruby/client/images/ruby-file.png")
    ImageResource ruby();
 
    @Source("org/exoplatform/ide/editor/ruby/client/images/ruby-file-disabled.png")
    ImageResource rubyDisabled();
-   
+
 }

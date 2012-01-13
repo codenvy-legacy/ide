@@ -25,14 +25,13 @@ import org.exoplatform.ide.editor.ruby.client.RubyClientBundle;
 
 import com.google.gwt.resources.client.ImageResource;
 
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class RubyOutlineItemCreator extends OutlineItemCreatorImpl
-{  
+{
    @Override
    public ImageResource getTokenIcon(TokenBeenImpl token)
    {
@@ -55,34 +54,34 @@ public class RubyOutlineItemCreator extends OutlineItemCreatorImpl
 
          case MODULE :
             return RubyClientBundle.INSTANCE.module();
-            
+
          case CLASS :
             return RubyClientBundle.INSTANCE.classItem();
 
          case METHOD :
-            return RubyClientBundle.INSTANCE.publicMethod();       
-            
+            return RubyClientBundle.INSTANCE.publicMethod();
+
          default :
             return null;
       }
    }
-   
+
    @Override
    public String getTokenDisplayTitle(TokenBeenImpl token)
    {
       String label = token.getName();
-      
-      // Add "()" to the end of method's label 
+
+      // Add "()" to the end of method's label
       if (TokenType.METHOD.equals(token.getType()))
       {
-         label += "()"; 
+         label += "()";
       }
-      
+
       if (token.getElementType() != null)
       {
          label += getElementType(token);
       }
-      
+
       return label;
    }
 }

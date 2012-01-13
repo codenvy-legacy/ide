@@ -29,7 +29,7 @@ import org.exoplatform.ide.editor.ruby.client.RubyClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JsKeyWordWidget Feb 24, 2011 11:58:25 AM evgen $
- *
+ * 
  */
 public class RubyKeyWordWidget extends RubyBaseWidget
 {
