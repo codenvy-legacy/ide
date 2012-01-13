@@ -43,14 +43,14 @@ public class DeployNodeTypeView extends ViewImpl implements DeployNodeTypePresen
 {
 
    private static DeployNodeTypeViewUiBinder uiBinder = GWT.create(DeployNodeTypeViewUiBinder.class);
-   
+
    interface DeployNodeTypeViewUiBinder extends UiBinder<Widget, DeployNodeTypeView>
    {
    }
-   
+
    @UiField
    VerticalPanel form;
-   
+
    /**
     * Node type format select field.
     */
@@ -75,14 +75,13 @@ public class DeployNodeTypeView extends ViewImpl implements DeployNodeTypePresen
    @UiField
    ImageButton cancelButton;
 
-
    public static final int WIDTH = 475;
 
    public static final int HEIGHT = 180;
-   
+
    //IDs for Selenium tests
    private static final String ID = "ideDeployNodeTypeView";
-   
+
    private final String CANCEL_BUTTON_ID = "ideDeployNodeTypeViewCancelButton";
 
    private final String DEPLOY_BUTTON_ID = "ideDeployNodeTypeViewDeployButton";
@@ -92,19 +91,20 @@ public class DeployNodeTypeView extends ViewImpl implements DeployNodeTypePresen
    private final String FORMAT_FIELD_ID = "ideDeployNodeTypeViewFormatField";
 
    private final String ALREADY_EXIST_BEHAVIOR_FIELD_ID = "ideDeployNodeTypeViewAlreadyExistBehaviorField";
-   
+
    public DeployNodeTypeView()
    {
-      super(ID, ViewType.MODAL, ChromatticExtension.LOCALIZATION_CONSTANT.deployNodeTypeViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, ChromatticExtension.LOCALIZATION_CONSTANT.deployNodeTypeViewTitle(), null, WIDTH,
+         HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       form.getElement().setId(DYNAMIC_FORM_ID);
-      
+
       formatField.setName(FORMAT_FIELD_ID);
-      
+
       alreadyExistBehaviorField.setName(ALREADY_EXIST_BEHAVIOR_FIELD_ID);
-      
-      deployButton.setButtonId(DEPLOY_BUTTON_ID);     
+
+      deployButton.setButtonId(DEPLOY_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
@@ -165,5 +165,5 @@ public class DeployNodeTypeView extends ViewImpl implements DeployNodeTypePresen
    {
       alreadyExistBehaviorField.setValueMap(values);
    }
-   
+
 }

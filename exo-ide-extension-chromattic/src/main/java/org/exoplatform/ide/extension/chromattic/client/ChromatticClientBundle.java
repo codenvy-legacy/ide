@@ -32,7 +32,7 @@ import com.google.gwt.resources.client.ImageResource;
 public interface ChromatticClientBundle extends ClientBundle
 {
    ChromatticClientBundle INSTANCE = GWT.<ChromatticClientBundle> create(ChromatticClientBundle.class);
-   
+
    /*
     * Buttons
     */
@@ -41,7 +41,7 @@ public interface ChromatticClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/chromattic/images/buttons/ok_Disabled.png")
    ImageResource okButtonDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/chromattic/images/buttons/cancel.png")
    ImageResource cancelButton();
 
@@ -59,8 +59,8 @@ public interface ChromatticClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/chromattic/images/controls/deploy-node-type.png")
    ImageResource deployNodeTypeControl();
- 
+
    @Source("org/exoplatform/ide/extension/chromattic/images/controls/deploy-node-type_Disabled.png")
    ImageResource deployNodeTypeControlDisabled();
-   
+
 }

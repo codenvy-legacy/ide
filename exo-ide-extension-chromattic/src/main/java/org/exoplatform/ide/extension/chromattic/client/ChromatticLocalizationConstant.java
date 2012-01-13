@@ -26,7 +26,7 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface ChromatticLocalizationConstant extends Messages
 {
-   
+
    /*
     * Views and Forms
     */
@@ -38,7 +38,7 @@ public interface ChromatticLocalizationConstant extends Messages
 
    @Key("form.title.generateNodeTypePreview")
    String generateNodeTypePreviewFormTitle();
-   
+
    /*
     * Fields
     */
@@ -47,19 +47,19 @@ public interface ChromatticLocalizationConstant extends Messages
 
    @Key("field.whatToDoIfNodeExists")
    String whatToDoIfNodeExistsField();
-   
+
    /*
     * Buttons
     */
    @Key("button.deploy")
    String deployButton();
-   
+
    @Key("button.cancel")
-   String cancelButton();   
+   String cancelButton();
 
    @Key("button.generate")
    String generateButton();
-   
+
    /*
     * Controls
     */

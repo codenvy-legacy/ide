@@ -45,10 +45,15 @@ import static org.junit.Assert.assertNotNull;
 public abstract class BaseTest
 {
    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
+
    protected final String vfs_id = "ws";
+
    protected VirtualFileSystem virtualFileSystem;
+
    protected Folder testRoot;
+
    protected StandaloneContainer container;
+
    protected ResourceLauncher launcher;
 
    public void setUp() throws Exception
@@ -61,9 +66,9 @@ public abstract class BaseTest
       // May be overridden in methods!
       ConversationState user = new ConversationState(new Identity("root"));
       ConversationState.setCurrent(user);
-//      String loginConfig = getClass().getResource("/login.conf").toString();
-//      if (System.getProperty("java.security.auth.login.config") == null)
-//         System.setProperty("java.security.auth.login.config", loginConfig);
+      //      String loginConfig = getClass().getResource("/login.conf").toString();
+      //      if (System.getProperty("java.security.auth.login.config") == null)
+      //         System.setProperty("java.security.auth.login.config", loginConfig);
 
       VirtualFileSystemRegistry virtualFileSystemRegistry =
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
@@ -71,7 +76,8 @@ public abstract class BaseTest
 
       virtualFileSystem = virtualFileSystemRegistry.getProvider(vfs_id).newInstance(null);
 
-      testRoot = virtualFileSystem.createFolder(virtualFileSystem.getInfo().getRoot().getId(), getClass().getSimpleName());
+      testRoot =
+         virtualFileSystem.createFolder(virtualFileSystem.getInfo().getRoot().getId(), getClass().getSimpleName());
 
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
@@ -124,7 +130,7 @@ public abstract class BaseTest
       public Iterator getPrefixes(String namespaceURI)
       {
          String prefix = getPrefix(namespaceURI);
-         if(prefix.length() > 0)
+         if (prefix.length() > 0)
          {
             return Collections.singletonList(prefix).iterator();
          }

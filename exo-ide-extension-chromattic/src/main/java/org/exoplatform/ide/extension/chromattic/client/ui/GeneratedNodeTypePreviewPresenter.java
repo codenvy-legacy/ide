@@ -155,10 +155,10 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
          isOpened = false;
          removeHandlers();
       }
-//      else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
-//      {
-//         handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();
-//      }
+      //      else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
+      //      {
+      //         handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();
+      //      }
    }
 
    private void removeHandlers()
@@ -272,5 +272,5 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
       handlerRegistrations.put(NodeTypeGenerationResultReceivedEvent.TYPE,
          IDE.addHandler(NodeTypeGenerationResultReceivedEvent.TYPE, this));
    }
-   
+
 }

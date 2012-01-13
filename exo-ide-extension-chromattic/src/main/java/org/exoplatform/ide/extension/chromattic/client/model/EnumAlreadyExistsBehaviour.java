@@ -26,7 +26,8 @@ package org.exoplatform.ide.extension.chromattic.client.model;
  *
  */
 public enum EnumAlreadyExistsBehaviour {
-   IGNORE_IF_EXISTS(0, "ignore if exists"), FAIL_IF_EXISTS(2, "fail if exists"), REPLACE_IF_EXISTS(4, "replace if exists");
+   IGNORE_IF_EXISTS(0, "ignore if exists"), FAIL_IF_EXISTS(2, "fail if exists"), REPLACE_IF_EXISTS(4,
+      "replace if exists");
 
    /**
     * Behavior code.
@@ -79,6 +80,6 @@ public enum EnumAlreadyExistsBehaviour {
             return alreadyExistsBehaviour;
          }
       }
-      throw new IllegalArgumentException(""+code);
+      throw new IllegalArgumentException("" + code);
    }
 }

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.event;
 
-
 import org.exoplatform.ide.vfs.shared.File;
 
 import com.google.gwt.event.shared.GwtEvent;

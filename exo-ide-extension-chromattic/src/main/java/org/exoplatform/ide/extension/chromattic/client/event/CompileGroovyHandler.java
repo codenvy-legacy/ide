@@ -30,8 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface CompileGroovyHandler extends EventHandler
 {
-   
+
    void onCompileGroovy(CompileGroovyEvent event);
 
 }
-

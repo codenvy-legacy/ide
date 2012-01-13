@@ -35,7 +35,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
-
 /**
  * View for preview the generated node type definition.
  * 
@@ -47,7 +46,7 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
 {
 
    static final String ID = "ideGeneratedTypePreviewView";
-   
+
    /**
     * Editor to display the content of node type definition.
     */
@@ -58,7 +57,8 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
     */
    public GeneratedNodeTypePreviewForm()
    {
-      super(ID, "operation", ChromatticExtension.LOCALIZATION_CONSTANT.generateNodeTypePreviewFormTitle(), new Image(ChromatticClientBundle.INSTANCE.previewNodeTypeControl()));
+      super(ID, "operation", ChromatticExtension.LOCALIZATION_CONSTANT.generateNodeTypePreviewFormTitle(), new Image(
+         ChromatticClientBundle.INSTANCE.previewNodeTypeControl()));
       createEditor();
    }
 
@@ -77,7 +77,6 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
       }
       catch (Exception e)
       {
-         e.printStackTrace();
       }
       add(editor);
 
@@ -87,8 +86,7 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
          @Override
          public void run()
          {
-            Element editorWraper =
-               Document.get().getElementById(editor.getEditorId());
+            Element editorWraper = Document.get().getElementById(editor.getEditorId());
 
             NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
             if (iframes != null && iframes.getLength() > 0)
@@ -121,17 +119,17 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
    }
 
    private native void setHandler(Element e)/*-{
-      var type = "mousedown";
-      var instance = this;     
+                                            var type = "mousedown";
+                                            var instance = this;     
 
-      if(typeof e.contentDocument != "undefined")
-      {
-         e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();},false);
-      }
-      else
-      {
-         e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();});
-      }
-   }-*/;
+                                            if(typeof e.contentDocument != "undefined")
+                                            {
+                                            e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();},false);
+                                            }
+                                            else
+                                            {
+                                            e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();});
+                                            }
+                                            }-*/;
 
 }

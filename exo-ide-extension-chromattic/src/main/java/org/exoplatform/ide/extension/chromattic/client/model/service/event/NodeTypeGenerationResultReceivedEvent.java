@@ -44,12 +44,12 @@ public class NodeTypeGenerationResultReceivedEvent extends
     * Error while generating type.
     */
    private Throwable exception;
-   
+
    /**
     * The generated node type result.
     */
    private GenerateNodeTypeResult generateNodeTypeResult;
-   
+
    /**
     * @param generateNodeTypeResult
     */
@@ -57,7 +57,7 @@ public class NodeTypeGenerationResultReceivedEvent extends
    {
       this.generateNodeTypeResult = generateNodeTypeResult;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

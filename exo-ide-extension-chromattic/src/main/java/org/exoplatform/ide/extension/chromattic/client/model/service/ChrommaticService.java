@@ -61,8 +61,9 @@ public abstract class ChrommaticService
     * @param nodeTypeFormat node type format
     * @param callback - callback to handler result from server
     */
-   public abstract void generateNodeType(FileModel file, String vfsid, EnumNodeTypeFormat nodeTypeFormat, AsyncRequestCallback<GenerateNodeTypeResult> callback);
-   
+   public abstract void generateNodeType(FileModel file, String vfsid, EnumNodeTypeFormat nodeTypeFormat,
+      AsyncRequestCallback<GenerateNodeTypeResult> callback);
+
    /**
     * Create (deploy) new node type.
     * 
@@ -71,7 +72,7 @@ public abstract class ChrommaticService
     * @param alreadyExistsBehaviour the behavior if node type already exists
     * @param callback - callback to handler result from server
     */
-   public abstract void createNodeType(String nodeType, EnumNodeTypeFormat nodeTypeFormat, EnumAlreadyExistsBehaviour alreadyExistsBehaviour,
-      AsyncRequestCallback<String> callback);
+   public abstract void createNodeType(String nodeType, EnumNodeTypeFormat nodeTypeFormat,
+      EnumAlreadyExistsBehaviour alreadyExistsBehaviour, AsyncRequestCallback<String> callback);
 
 }

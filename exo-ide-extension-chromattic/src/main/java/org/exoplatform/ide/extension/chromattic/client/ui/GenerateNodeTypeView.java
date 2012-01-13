@@ -1,21 +1,21 @@
- /*
- * Copyright (C) 2010 eXo Platform SAS.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
+/*
+* Copyright (C) 2010 eXo Platform SAS.
+*
+* This is free software; you can redistribute it and/or modify it
+* under the terms of the GNU Lesser General Public License as
+* published by the Free Software Foundation; either version 2.1 of
+* the License, or (at your option) any later version.
+*
+* This software is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this software; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+*/
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -44,14 +44,14 @@ public class GenerateNodeTypeView extends ViewImpl implements GenerateNodeTypePr
 {
 
    private static GenerateNodeTypeViewUiBinder uiBinder = GWT.create(GenerateNodeTypeViewUiBinder.class);
-   
+
    interface GenerateNodeTypeViewUiBinder extends UiBinder<Widget, GenerateNodeTypeView>
    {
    }
-   
+
    @UiField
    VerticalPanel form;
-   
+
    /**
     * Node type format select field.
     */
@@ -69,7 +69,7 @@ public class GenerateNodeTypeView extends ViewImpl implements GenerateNodeTypePr
     */
    @UiField
    ImageButton cancelButton;
-   
+
    public static final int WIDTH = 450;
 
    public static final int HEIGHT = 160;
@@ -77,7 +77,7 @@ public class GenerateNodeTypeView extends ViewImpl implements GenerateNodeTypePr
    //IDs for Selenium tests:
 
    public static final String ID = "ideGenerateNodeTypeView";
-   
+
    private final String CANCEL_BUTTON_ID = "ideGenerateNodeTypeViewCancelButton";
 
    private final String GENERATE_BUTTON_ID = "ideGenerateNodeTypeViewGenerateButton";
@@ -88,14 +88,15 @@ public class GenerateNodeTypeView extends ViewImpl implements GenerateNodeTypePr
 
    public GenerateNodeTypeView()
    {
-      super(ID, ViewType.MODAL, ChromatticExtension.LOCALIZATION_CONSTANT.generateNodeTypeViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, ChromatticExtension.LOCALIZATION_CONSTANT.generateNodeTypeViewTitle(), null, WIDTH,
+         HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       form.getElement().setId(DYNAMIC_FORM_ID);
-      
+
       formatField.setName(FORMAT_FIELD_ID);
-      
-      generateButton.setButtonId(GENERATE_BUTTON_ID);     
+
+      generateButton.setButtonId(GENERATE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 

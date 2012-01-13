@@ -50,12 +50,13 @@ import javax.ws.rs.QueryParam;
 public class RestDataObjectService
 {
    private RepositoryService repositoryService;
+
    private VirtualFileSystemRegistry vfsRegistry;
+
    private IDEGroovyCompiler compiler;
 
-   public RestDataObjectService(RepositoryService repositoryService,
-                                IDEGroovyCompiler compiler,
-                                VirtualFileSystemRegistry vfsRegistry)
+   public RestDataObjectService(RepositoryService repositoryService, IDEGroovyCompiler compiler,
+      VirtualFileSystemRegistry vfsRegistry)
    {
       this.repositoryService = repositoryService;
       this.compiler = compiler;
@@ -76,10 +77,8 @@ public class RestDataObjectService
     */
    @POST
    @Path("/generate-nodetype-definition")
-   public String getNodeTypeDefinition(@QueryParam("id") String id,
-                                       @QueryParam("vfsid") String vfsid,
-                                       @QueryParam("projectid") String projectId,
-                                       @QueryParam("nodeTypeFormat") NodeTypeFormat format)
+   public String getNodeTypeDefinition(@QueryParam("id") String id, @QueryParam("vfsid") String vfsid,
+      @QueryParam("projectid") String projectId, @QueryParam("nodeTypeFormat") NodeTypeFormat format)
       throws VirtualFileSystemException, JsonException, IOException
    {
       if (null == id)
@@ -134,21 +133,20 @@ public class RestDataObjectService
    @POST
    @Path("/register-nodetype/{format}/{alreadyExistsBehaviour}")
    public void registerNodeType(@PathParam("format") NodeTypeFormat format,
-                                @PathParam("alreadyExistsBehaviour") Integer alreadyExistsBehaviour,
-                                InputStream nodeTypeDefinition)
+      @PathParam("alreadyExistsBehaviour") Integer alreadyExistsBehaviour, InputStream nodeTypeDefinition)
       throws RepositoryException
    {
       switch (format)
       {
-         case EXO:
-            getRepository().getNodeTypeManager()
-               .registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_XML);
+         case EXO :
+            getRepository().getNodeTypeManager().registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour,
+               NodeTypeDataManager.TEXT_XML);
             break;
-         case CND:
-            getRepository().getNodeTypeManager()
-               .registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_X_JCR_CND);
+         case CND :
+            getRepository().getNodeTypeManager().registerNodeTypes(nodeTypeDefinition, alreadyExistsBehaviour,
+               NodeTypeDataManager.TEXT_X_JCR_CND);
             break;
-         default:
+         default :
             throw new RepositoryException("Unsupported content type:" + format.name());
       }
    }

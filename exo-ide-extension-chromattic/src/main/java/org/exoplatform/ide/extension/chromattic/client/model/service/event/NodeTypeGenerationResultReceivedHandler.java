@@ -29,10 +29,10 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface NodeTypeGenerationResultReceivedHandler extends EventHandler
 {
-    /**
-    * Perform actions on node type generation result received.
-    *  
-    * @param event
-    */
+   /**
+   * Perform actions on node type generation result received.
+   *  
+   * @param event
+   */
    void onNodeTypeGenerationResultReceived(NodeTypeGenerationResultReceivedEvent event);
 }

@@ -41,8 +41,9 @@ import com.google.gwt.core.client.GWT;
 public class ChromatticExtension extends Extension implements InitializeServicesHandler
 {
 
-   public static final ChromatticLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(ChromatticLocalizationConstant.class);
-   
+   public static final ChromatticLocalizationConstant LOCALIZATION_CONSTANT = GWT
+      .create(ChromatticLocalizationConstant.class);
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */

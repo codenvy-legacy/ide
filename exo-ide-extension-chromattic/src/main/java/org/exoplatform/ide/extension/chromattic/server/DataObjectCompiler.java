@@ -70,10 +70,8 @@ public class DataObjectCompiler
     * @throws DataObjectException anything that would prevent the compilation of data object
     * @throws NullPointerException if any argument is null
     */
-   public DataObjectCompiler(
-      IDEGroovyCompiler compiler,
-      SourceFolder[] srcFolders,
-      SourceFile[] srcFiles) throws NullPointerException, IllegalArgumentException, DataObjectException
+   public DataObjectCompiler(IDEGroovyCompiler compiler, SourceFolder[] srcFolders, SourceFile[] srcFiles)
+      throws NullPointerException, IllegalArgumentException, DataObjectException
    {
       if (compiler == null)
       {
@@ -113,7 +111,8 @@ public class DataObjectCompiler
     * @throws NullPointerException if any argument is null
     * @throws IllegalArgumentException if any data object path is null
     */
-   public String generateSchema(NodeTypeFormat format) throws DataObjectException, NullPointerException, IllegalArgumentException
+   public String generateSchema(NodeTypeFormat format) throws DataObjectException, NullPointerException,
+      IllegalArgumentException
    {
 
       Map<String, NodeType> doNodeTypes = generateSchema();
@@ -122,13 +121,13 @@ public class DataObjectCompiler
       NodeTypeSerializer serializer;
       switch (format)
       {
-         case EXO:
+         case EXO :
             serializer = new XMLNodeTypeSerializer();
             break;
-         case CND:
+         case CND :
             serializer = new CNDNodeTypeSerializer();
             break;
-         default:
+         default :
             throw new AssertionError();
       }
 
@@ -160,7 +159,8 @@ public class DataObjectCompiler
     * @throws NullPointerException if any argument is null
     * @throws IllegalArgumentException if any data object path is null
     */
-   public Map<String, NodeType> generateSchema() throws DataObjectException, NullPointerException, IllegalArgumentException
+   public Map<String, NodeType> generateSchema() throws DataObjectException, NullPointerException,
+      IllegalArgumentException
    {
 
       // Generate classes
@@ -197,7 +197,8 @@ public class DataObjectCompiler
     * @throws NullPointerException if any argument is null
     * @throws IllegalArgumentException if any data object path is null
     */
-   public Map<String, Class<?>> generateClasses() throws DataObjectException, NullPointerException, IllegalArgumentException
+   public Map<String, Class<?>> generateClasses() throws DataObjectException, NullPointerException,
+      IllegalArgumentException
    {
       Class<?>[] classes = generateAllClasses();
       int i = 0;
