@@ -29,9 +29,10 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 /**
  * Ui component that represent PHP variable.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpVariableWidget extends PhpTokenWidgetBase
 {

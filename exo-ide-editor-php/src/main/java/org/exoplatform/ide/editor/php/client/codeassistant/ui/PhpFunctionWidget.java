@@ -29,9 +29,10 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 /**
  * Ui component that represent PHP function or class method.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpFunctionWidget extends PhpTokenWidgetBase
 {
@@ -101,7 +102,7 @@ public class PhpFunctionWidget extends PhpTokenWidgetBase
    @Override
    public String getTokenValue()
    {
-    
+
       return token.getName() + getParameters();
 
    }

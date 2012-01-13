@@ -28,9 +28,10 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 /**
  * Ui component that represent PHP Class.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpClassWidget extends PhpTokenWidgetBase
 {
@@ -63,7 +64,7 @@ public class PhpClassWidget extends PhpTokenWidgetBase
       initWidget(grid);
       setWidth("100%");
    }
-   
+
    /**
     * Image that represent current token type(Class, Interface or Annotation)
     * 
@@ -77,7 +78,7 @@ public class PhpClassWidget extends PhpTokenWidgetBase
          case INTERFACE :
 
             return new Image(PhpClientBundle.INSTANCE.interfaceItem());
-            
+
          case CLASS :
          default :
             return new Image(PhpClientBundle.INSTANCE.classItem());

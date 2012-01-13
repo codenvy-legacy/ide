@@ -23,7 +23,7 @@ import com.google.gwt.resources.client.CssResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface PhpCss extends CssResource
 {
@@ -32,7 +32,7 @@ public interface PhpCss extends CssResource
 
    @ClassName("exo-autocomplete-list-item-selected")
    String selectedItem();
-   
+
    @ClassName("exo-autocomplete-fqn")
    String fqnStyle();
 }

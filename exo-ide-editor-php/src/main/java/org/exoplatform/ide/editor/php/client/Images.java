@@ -25,20 +25,19 @@ import com.google.gwt.resources.client.ClientBundle;
 
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id:$
- *
+ * 
  */
 public interface Images extends ClientBundle
 {
    Images INSTANCE = GWT.create(Images.class);
-   
+
    String IMAGE_URL = UIHelper.getGadgetImagesURL();
-   
+
    String PHP = IMAGE_URL + "php.png";
-   
+
    @Source("org/exoplatform/ide/editor/php/public/images/php.png")
    ImageResource php();
 }

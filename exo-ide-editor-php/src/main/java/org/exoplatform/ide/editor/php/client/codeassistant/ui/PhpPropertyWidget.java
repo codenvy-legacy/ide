@@ -30,9 +30,10 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 /**
  * Ui component that represent PHP Class or Object property.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpPropertyWidget extends PhpTokenWidgetBase
 {
@@ -48,9 +49,9 @@ public class PhpPropertyWidget extends PhpTokenWidgetBase
       Image i = getImage();
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
-      
+
       String name = token.getName();
-      if(token.hasProperty(TokenProperties.ELEMENT_TYPE))
+      if (token.hasProperty(TokenProperties.ELEMENT_TYPE))
       {
          name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
       }
@@ -73,7 +74,7 @@ public class PhpPropertyWidget extends PhpTokenWidgetBase
       initWidget(grid);
       setWidth("100%");
    }
-   
+
    private Image getImage()
    {
       Image i;
@@ -89,7 +90,7 @@ public class PhpPropertyWidget extends PhpTokenWidgetBase
       {
          i = new Image(PhpClientBundle.INSTANCE.publicField());
       }
-      
+
       return i;
    }
 

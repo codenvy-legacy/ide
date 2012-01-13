@@ -30,9 +30,10 @@ import org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpVariableWidget;
 
 /**
  * Factory of {@link TokenWidget}, need to build token UI representation.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpTokenWidgetFactory implements TokenWidgetFactory
 {
@@ -47,25 +48,25 @@ public class PhpTokenWidgetFactory implements TokenWidgetFactory
       {
          case KEYWORD :
             return new PhpTokenKeyWordWidget(token);
-            
-         case FUNCTION:
-         case METHOD:
-            return new  PhpFunctionWidget(token);
-            
-         case PROPERTY:
+
+         case FUNCTION :
+         case METHOD :
+            return new PhpFunctionWidget(token);
+
+         case PROPERTY :
             return new PhpPropertyWidget(token);
-            
-         case CONSTANT:
-         case CLASS_CONSTANT:
+
+         case CONSTANT :
+         case CLASS_CONSTANT :
             return new PhpConstantWidget(token);
-            
-         case PARAMETER:
-         case VARIABLE:
-         case LOCAL_VARIABLE:
+
+         case PARAMETER :
+         case VARIABLE :
+         case LOCAL_VARIABLE :
             return new PhpVariableWidget(token);
-            
-         case CLASS:
-         case INTERFACE:
+
+         case CLASS :
+         case INTERFACE :
             return new PhpClassWidget(token);
 
          default :

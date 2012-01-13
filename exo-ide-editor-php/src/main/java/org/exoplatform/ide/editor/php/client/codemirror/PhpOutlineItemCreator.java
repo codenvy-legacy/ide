@@ -27,37 +27,36 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 import com.google.gwt.resources.client.ImageResource;
 
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class PhpOutlineItemCreator extends OutlineItemCreatorImpl
-{  
+{
    @Override
    public ImageResource getTokenIcon(TokenBeenImpl token)
    {
       switch (token.getType())
       {
-         case PHP_TAG:
+         case PHP_TAG :
             return PhpClientBundle.INSTANCE.phpTag();
-         
+
          case FUNCTION :
             return PhpClientBundle.INSTANCE.phpTag();
-            
+
          case VARIABLE :
             return PhpClientBundle.INSTANCE.variable();
 
          case CONSTANT :
             return PhpClientBundle.INSTANCE.constantItem();
-            
+
          case METHOD :
             if (isPrivate(token))
             {
                return PhpClientBundle.INSTANCE.privateMethod();
             }
-            
+
             else if (isProtected(token))
             {
                return PhpClientBundle.INSTANCE.protectedMethod();
@@ -70,66 +69,66 @@ public class PhpOutlineItemCreator extends OutlineItemCreatorImpl
 
             return PhpClientBundle.INSTANCE.publicMethod();
 
-         case PROPERTY :            
+         case PROPERTY :
             if (isPrivate(token))
             {
                return PhpClientBundle.INSTANCE.privateField();
             }
-            
+
             else if (isProtected(token))
             {
                return PhpClientBundle.INSTANCE.protectedField();
             }
-            
+
             else if (isPublic(token))
             {
                return PhpClientBundle.INSTANCE.publicField();
             }
-           
+
             return PhpClientBundle.INSTANCE.publicField();
-            
+
          case CLASS :
             return PhpClientBundle.INSTANCE.classItem();
 
          case INTERFACE :
-            return PhpClientBundle.INSTANCE.interfaceItem();              
-            
-         case CLASS_CONSTANT:
+            return PhpClientBundle.INSTANCE.interfaceItem();
+
+         case CLASS_CONSTANT :
             return PhpClientBundle.INSTANCE.classConstant();
 
-         case NAMESPACE:
+         case NAMESPACE :
             return PhpClientBundle.INSTANCE.namespace();
-            
+
          default :
             return null;
       }
    }
-   
+
    @Override
    public String getTokenDisplayTitle(TokenBeenImpl token)
    {
       String label = token.getName();
- 
-      label = getModifiersContainer(token) + "<span class='item-name' style='margin-left: 5px;'>" + label + "</span>";            
 
-      // Add parameter list 
-      if (TokenType.FUNCTION.equals(token.getType())
-               || TokenType.METHOD.equals(token.getType()))
+      label = getModifiersContainer(token) + "<span class='item-name' style='margin-left: 5px;'>" + label + "</span>";
+
+      // Add parameter list
+      if (TokenType.FUNCTION.equals(token.getType()) || TokenType.METHOD.equals(token.getType()))
       {
-         label += getParametersList(token); 
+         label += getParametersList(token);
       }
-      
+
       // Add field type or method return type
       if (token.getElementType() != null)
       {
          label += "<span style='color:#644a17;' class='item-type'>" + getElementType(token) + "</span>";
       }
-      
+
       return label;
    }
-   
+
    /**
     * Return parameters list from token.getParameters()
+    * 
     * @param token
     * @return parameters list like ($a, $b), or '()' if there are no parameters
     */
@@ -151,33 +150,31 @@ public class PhpOutlineItemCreator extends OutlineItemCreatorImpl
             }
 
             parametersDescription +=
-                  "<span class='item-parameter'>" + parameter.getName() + getElementType(parameter) + "</span>";               
+               "<span class='item-parameter'>" + parameter.getName() + getElementType(parameter) + "</span>";
          }
       }
 
       return parametersDescription + ")";
    }
-   
+
    /**
-    * @param token {@link TokenBeenImpl} 
+    * @param token {@link TokenBeenImpl}
     * @return html element with modifiers sign
     */
    protected String getModifiersContainer(TokenBeenImpl token)
    {
-      if (isStatic(token)
-          || isFinal(token)
-          || isAbstract(token))
-      {      
+      if (isStatic(token) || isFinal(token) || isAbstract(token))
+      {
          String span =
             "<span style = \"position: relative; top: -5px; margin-left: -3px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; text-align: right;' \">";
          span += (isStatic(token)) ? "<span class='item-modifier' color ='#6d0000'>s</span>" : "";
-         span += (isFinal(token)) ? "<span class='item-modifier' color ='#174c83'>f</span>" : "";      
+         span += (isFinal(token)) ? "<span class='item-modifier' color ='#174c83'>f</span>" : "";
          span += (isAbstract(token)) ? "<span class='item-modifier' color ='#004e00'>a</span>" : "";
          span += "</span>";
-         
+
          return span;
       }
-      
+
       return "";
    }
 }

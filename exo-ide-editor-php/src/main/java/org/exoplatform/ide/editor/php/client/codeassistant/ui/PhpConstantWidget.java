@@ -28,9 +28,10 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 /**
  * Ui component that represent PHP constant (class or script)
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpConstantWidget extends PhpTokenWidgetBase
 {

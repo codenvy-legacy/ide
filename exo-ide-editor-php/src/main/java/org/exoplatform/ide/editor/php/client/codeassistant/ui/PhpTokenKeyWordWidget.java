@@ -29,7 +29,7 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpTokenKeyWordWidget extends PhpTokenWidgetBase
 {
@@ -59,8 +59,8 @@ public class PhpTokenKeyWordWidget extends PhpTokenWidgetBase
    }
 
    /**
-   * @see org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpTokenWidgetBase#getTokenValue()
-   */
+    * @see org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpTokenWidgetBase#getTokenValue()
+    */
    @Override
    public String getTokenValue()
    {

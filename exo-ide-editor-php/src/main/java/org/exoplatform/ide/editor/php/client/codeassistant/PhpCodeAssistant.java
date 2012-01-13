@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
 {
@@ -66,7 +66,8 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
    private int currentLine;
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor,
+    *      java.util.List, int, int, java.lang.String)
     */
    @Override
    public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
@@ -75,11 +76,13 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(final Editor editor, int cursorOffsetX, int cursorOffsetY, final List<Token> tokenList,
-      String lineMimeType, final Token currentToken)
+   public void autocompleteCalled(final Editor editor, int cursorOffsetX, int cursorOffsetY,
+      final List<Token> tokenList, String lineMimeType, final Token currentToken)
    {
       if (MimeType.TEXT_CSS.equals(lineMimeType))
       {
@@ -94,13 +97,14 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
             lineMimeType, currentToken);
          return;
       }
-      
-      if(MimeType.TEXT_HTML.equals(lineMimeType))
+
+      if (MimeType.TEXT_HTML.equals(lineMimeType))
       {
-         new HtmlCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType, currentToken);
+         new HtmlCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType,
+            currentToken);
          return;
       }
-      
+
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
@@ -140,6 +144,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
 
    /**
     * Do autocompletion
+    * 
     * @param lineContent
     * @param cursorPositionX
     * @param tokenList
@@ -152,7 +157,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
          List<Token> tokensFromParser = filterPhpTokens(tokenList);
          List<Token> tokens = new ArrayList<Token>();
          parseTokenLine(lineContent, cursorPositionX);
-         //object
+         // object
          String trimBeforeToken = beforeToken.trim();
 
          if (trimBeforeToken.endsWith("->"))
@@ -167,7 +172,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
                Token type = findTokenForType(varType, tokensFromParser);
                if (type != null)
                {
-                  //in case $this-> reference
+                  // in case $this-> reference
                   if (currentToken.getName().equals("$this"))
                   {
                      addAllNotStaticMethodsAndFields(type, tokens);
@@ -179,7 +184,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
                }
             }
          }
-         //class
+         // class
          else if (trimBeforeToken.endsWith("::"))
          {
             String varType = "";
@@ -191,7 +196,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
             Token type = findTokenForType(varType, tokensFromParser);
             if (type != null)
             {
-               //in case self:: reference
+               // in case self:: reference
                if (currentToken.getName().equals("self"))
                {
                   addAllStaticFieldsAndMethod(type, tokens);
@@ -202,7 +207,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
                }
             }
          }
-         //other
+         // other
          else
          {
             switch (currentToken.getType())
@@ -230,6 +235,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
 
    /**
     * Add root PHP variables and constants
+    * 
     * @param tokensFromParser
     * @param tokens
     */
@@ -244,6 +250,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
 
    /**
     * Add tokens for function or method (parameters and local variables)
+    * 
     * @param functionToken that represent function or method
     * @param tokens
     */
@@ -269,7 +276,8 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
 
    /**
     * Add all static fields and methods declared in PHP class, also add class constants
-    * @param type that represent PHP class 
+    * 
+    * @param type that represent PHP class
     * @param tokens
     */
    @SuppressWarnings("unchecked")
@@ -288,7 +296,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
             continue;
          }
 
-         //add all static fields and methods
+         // add all static fields and methods
          if (t.hasProperty(TokenProperties.MODIFIERS))
          {
             Object object = t.getProperty(TokenProperties.MODIFIERS).isObjectProperty().objectValue();
@@ -308,7 +316,8 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
 
    /**
     * Add all non static method and fields declared in PHP class
-    * @param type that represent PHP class 
+    * 
+    * @param type that represent PHP class
     * @param tokens
     */
    @SuppressWarnings("unchecked")
@@ -326,7 +335,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
             if (mod.contains(Modifier.STATIC))
                continue;
          }
-         //to avoid add constant token
+         // to avoid add constant token
          if (t.getType() == TokenType.METHOD || t.getType() == TokenType.PROPERTY)
          {
             t.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(type.getName()));
@@ -336,8 +345,9 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
    }
 
    /**
-    * Add public static field and methods  
-    * @param type that represent PHP class 
+    * Add public static field and methods
+    * 
+    * @param type that represent PHP class
     * @param tokens
     */
    @SuppressWarnings("unchecked")
@@ -356,7 +366,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
             continue;
          }
 
-         //add only static public fields and methods
+         // add only static public fields and methods
          if (t.hasProperty(TokenProperties.MODIFIERS))
          {
             Object object = t.getProperty(TokenProperties.MODIFIERS).isObjectProperty().objectValue();
@@ -388,7 +398,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
       boolean add = false;
       for (Token t : type.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
       {
-         //add only public fields and methods
+         // add only public fields and methods
          if (t.hasProperty(TokenProperties.MODIFIERS))
          {
             Object object = t.getProperty(TokenProperties.MODIFIERS).isObjectProperty().objectValue();
@@ -438,6 +448,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
 
    /**
     * Parse line received from editor, to separate text part needed for completion
+    * 
     * @param line text line received from editor
     * @param cursorPos position of cursor in line
     */
@@ -505,7 +516,8 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
    }
 
    /**
-    * Filter tokens received from editor, remove non php tokens(html,JavaScript etc); 
+    * Filter tokens received from editor, remove non php tokens(html,JavaScript etc);
+    * 
     * @param tokens received from parser
     * @return list of php tokens
     */
@@ -533,8 +545,8 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
    }
 
    /**
-    * This is debug function
-    * Print debug token tree
+    * This is debug function Print debug token tree
+    * 
     * @param tokens tree of the tokens
     * @param i
     */
@@ -549,10 +561,11 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
       i += 3;
       for (Token t : tokens)
       {
-         if (t.getName() == null) {
-            continue;         
+         if (t.getName() == null)
+         {
+            continue;
          }
-         
+
          if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
             && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
          {

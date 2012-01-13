@@ -31,7 +31,7 @@ import com.google.gwt.resources.client.ClientBundle;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface PhpClientBundle extends ClientBundle
 {
@@ -39,7 +39,7 @@ public interface PhpClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/php/client/styles/php.css")
    PhpCss css();
-   
+
    @Source("org/exoplatform/ide/editor/php/client/images/codeassistant/class.gif")
    ImageResource classItem();
 
@@ -54,10 +54,10 @@ public interface PhpClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/php/client/images/codeassistant/private-method.png")
    ImageResource privateMethod();
-   
+
    @Source("org/exoplatform/ide/editor/php/client/images/codeassistant/protected-method.png")
    ImageResource protectedMethod();
-   
+
    @Source("org/exoplatform/ide/editor/php/client/images/codeassistant/private-field.png")
    ImageResource privateField();
 
@@ -88,11 +88,11 @@ public interface PhpClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/php/client/images/codeassistant/function-item.png")
    ImageResource function();
-   
+
    @Source("org/exoplatform/ide/editor/php/client/images/php.png")
    ImageResource php();
-   
+
    @Source("org/exoplatform/ide/editor/php/client/images/php-disabled.png")
    ImageResource phpDisabled();
-   
+
 }
