@@ -28,9 +28,10 @@ import com.google.gwt.core.client.GWT;
 
 /**
  * IDE Jenkins extension entry point
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class JenkinsExtension extends Extension implements InitializeServicesHandler
 {
@@ -45,7 +46,7 @@ public class JenkinsExtension extends Extension implements InitializeServicesHan
    @Override
    public void initialize()
    {
-      //IDE.getInstance().addControl(new BuildControl(), DockTarget.NONE, false);
+      // IDE.getInstance().addControl(new BuildControl(), DockTarget.NONE, false);
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
    }
 

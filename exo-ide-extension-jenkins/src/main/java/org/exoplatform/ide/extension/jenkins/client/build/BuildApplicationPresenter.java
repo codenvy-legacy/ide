@@ -61,7 +61,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class BuildApplicationPresenter extends GitPresenter implements BuildApplicationHandler,
    UserInfoReceivedHandler, ViewClosedHandler
@@ -91,7 +91,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    private UserInfo userInfo;
 
    /**
-    * Delay in millisecond between job status request  
+    * Delay in millisecond between job status request
     */
    private static final int delay = 10000;
 
@@ -175,8 +175,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    /**
-    * Perform check, that job already exists.
-    * If it doesn't exist, then create job.
+    * Perform check, that job already exists. If it doesn't exist, then create job.
     */
    private void beforeBuild()
    {
@@ -193,15 +192,17 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * Create new Jenkins job.
+    * 
     * @param repository repository URL (public location of local repository)
     */
    private void createJob()
    {
-      //dummy check that user name is e-mail.
-      //Jenkins create git tag on build. Marks user as author of tag.
+      // dummy check that user name is e-mail.
+      // Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
-      String uName = userInfo.getName().split("@")[0];//Jenkins don't alow in job name '@' character
-      JenkinsService.get().createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE), uName, mail, vfs.getId(), project.getId(), new AsyncRequestCallback<Job>()
+      String uName = userInfo.getName().split("@")[0];// Jenkins don't alow in job name '@' character
+      JenkinsService.get().createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE),
+         uName, mail, vfs.getId(), project.getId(), new AsyncRequestCallback<Job>()
          {
             @Override
             protected void onSuccess(Job result)
@@ -213,9 +214,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    /**
-   * Get project name (last URL segment of workDir value)
-   * @return project name
-   */
+    * Get project name (last URL segment of workDir value)
+    * 
+    * @return project name
+    */
    private String getProjectName()
    {
       String projectName = project.getPath();
@@ -229,6 +231,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * Start building application
+    * 
     * @param jobName name of Jenkins job
     */
    private void build(String jobName)

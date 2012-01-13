@@ -53,13 +53,14 @@ import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
 /**
- *  Service provide save javadoc groovydoc in storage.
- *  
+ * Service provide save javadoc groovydoc in storage.
+ * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-//@Path("/ide/doc-storage")
+ */
+// @Path("/ide/doc-storage")
 public class DocStorage implements Startable
 {
    private final RepositoryService repositoryService;
@@ -205,14 +206,14 @@ public class DocStorage implements Startable
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new SaveDocException(400, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new SaveDocException(400, e.getMessage());
       }
    }
@@ -224,7 +225,7 @@ public class DocStorage implements Startable
     * @param doc
     * @param fqn
     * @throws RepositoryException
-    * @throws UnsupportedEncodingException 
+    * @throws UnsupportedEncodingException
     */
    private void putDoc(Session session, GroovyClassDoc doc, String fqn) throws RepositoryException,
       UnsupportedEncodingException
@@ -311,10 +312,10 @@ public class DocStorage implements Startable
          }
          else
          {
-            //TODO: This can occurs if try add doc for method with same name same parametrs like this 
+            // TODO: This can occurs if try add doc for method with same name same parametrs like this
             // 1 : newInstance(Class<?> componentType, int length)
             // 2 : newInstance(Class<?> componentType, int... dimensions)
-            // paramets different int != int... but Groovy doc parser don't resolve this situation 
+            // paramets different int != int... but Groovy doc parser don't resolve this situation
             // in this case method signature was same
             // newInstance(Class, int)
             // newInstance(Class, int)
@@ -352,7 +353,7 @@ public class DocStorage implements Startable
 
    public void addDocsFromSource(String pathToFile) throws SaveDocException
    {
-      //TODO:
+      // TODO:
    }
 
    public String getDocStorageWorkspace()

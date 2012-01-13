@@ -30,9 +30,10 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
 
 /**
  * Unmarshaller for Jenkins ob status request
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class JenkinsJobStatusUnmarshaller implements Unmarshallable
 {
@@ -65,7 +66,7 @@ public class JenkinsJobStatusUnmarshaller implements Unmarshallable
          }
 
          JSONValue artifactUrl = object.get("artifactUrl");
-         if (artifactUrl.isString()!= null)
+         if (artifactUrl.isString() != null)
          {
             jobStatus.setArtifactUrl(artifactUrl.isString().stringValue());
          }

@@ -22,9 +22,10 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * Jenkins extension messages constants.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface JenkinsMessages extends Messages
 {
@@ -37,37 +38,37 @@ public interface JenkinsMessages extends Messages
 
    @Key("control.build.javaApp.prompt")
    String buildJavaAppPrompt();
-   
+
    @Key("view.build.javaApp.title")
    String buildJavaAppViewTitle();
-   
+
    @Key("view.build.javaApp.button.cancel")
    String buildJavaAppButtonCancel();
-   
+
    @Key("view.build.javaApp.button.build")
    String buildJavaAppButtonBuild();
-   
+
    @Key("view.build.javaApp.git.url")
    String buildJavaAppGitRepositoryUrl();
-   
+
    @Key("controller.no.remote.repository")
    String noRemoteRepository();
-   
+
    @Key("controller.no.git.repository")
    String noGitRepository();
-   
+
    @Key("controller.no.git.repository.title")
    String noGitRepositoryTitle();
-   
+
    @Key("controller.start.build")
    String buildStarted(String projectName);
-   
+
    @Key("control.status.start")
    String statusControlStart();
-   
+
    @Key("controller.build.result.title")
    String buildResultTitle();
-   
+
    @Key("controller.build.result.message")
    String buildResultMessage(String projectName, String buildResult);
 }

@@ -30,15 +30,14 @@ import java.util.List;
 
 /**
  * 
- * Extracting meta information from given routine (methods & constructors) to the 
- * bean object that can be transform to JSON
- * {@link MethodInfo}
- * {@link RoutineInfo}  
+ * Extracting meta information from given routine (methods & constructors) to the bean object that can be transform to JSON
+ * {@link MethodInfo} {@link RoutineInfo}
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class MethodInfoExtractor
 {
 
@@ -46,7 +45,7 @@ public class MethodInfoExtractor
     * Get meta info from java.lang.reflect.Constructor
     * 
     * @param constructor the constructor
-    * @return RoutineInfo bean that describe getting constructor and can be transform to JSON 
+    * @return RoutineInfo bean that describe getting constructor and can be transform to JSON
     */
    public static MethodInfo extractConstructorInfo(Constructor<?> constructor)
    {
@@ -63,20 +62,21 @@ public class MethodInfoExtractor
       {
          genericParameterTypes.add(genericType2String(types[j]));
       }
-      return new MethodInfoBean(constructor.getName(),// 
+      return new MethodInfoBean(constructor.getName(),//
          constructor.getModifiers(),//
          genExceptionTypes,//
          genericParameterTypes,//
          Collections.<String> emptyList(),//
          true,//
-         null,// 
+         null,//
          constructor.getDeclaringClass().getCanonicalName());
    }
 
    /**
     * Get meta info from java.lang.reflect.Method
+    * 
     * @param method the Method for getting meta info
-    * @return RoutineInfo bean that describe getting Method and can be transform to JSON 
+    * @return RoutineInfo bean that describe getting Method and can be transform to JSON
     */
    public static MethodInfo extractMethodInfo(Method method)
    {
@@ -105,7 +105,7 @@ public class MethodInfoExtractor
    }
 
    /**
-    * Convert type to human readable String 
+    * Convert type to human readable String
     * 
     * @param type
     * @return

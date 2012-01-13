@@ -32,9 +32,10 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 /**
  * Client service for Jenkins Extension
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class JenkinsService
 {
@@ -71,6 +72,7 @@ public class JenkinsService
 
    /**
     * Create new Jenkins job
+    * 
     * @param name of job
     * @param git Got repository URL
     * @param user User name
@@ -94,6 +96,7 @@ public class JenkinsService
 
    /**
     * Start building job
+    * 
     * @param jobName Name of Job
     * @param callback
     */
@@ -106,6 +109,7 @@ public class JenkinsService
 
    /**
     * Get Job status
+    * 
     * @param jobName Name of Job
     * @param callback
     */
@@ -122,8 +126,8 @@ public class JenkinsService
 
    public void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<String> callback)
    {
-      String url = restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid="
-      + vfsId + "&projectid="+ projectId;
+      String url =
+         restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
       callback.setEventBus(IDE.eventBus());
       callback.setPayload(new StringContentUnmarshaller(callback));
       AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);

@@ -20,10 +20,11 @@ package org.exoplatform.ide.codeassistant.framework.server.impl.storage;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-//TODO need better name
+ */
+// TODO need better name
 public class SaveDocException extends Exception
 {
 

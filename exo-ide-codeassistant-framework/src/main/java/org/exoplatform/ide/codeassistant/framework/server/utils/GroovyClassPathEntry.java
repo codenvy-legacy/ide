@@ -23,7 +23,7 @@ package org.exoplatform.ide.codeassistant.framework.server.utils;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 24, 2010 $
- *
+ * 
  */
 public class GroovyClassPathEntry
 {

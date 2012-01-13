@@ -34,27 +34,28 @@ import org.exoplatform.services.log.Log;
  * 
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 
 public class ClassNamesExtractor
 {
-   
+
    private static final Log LOG = ExoLogger.getLogger(ClassNamesExtractor.class);
 
    /**
     * Extract all class names from jar
     * 
     * @param jarPath the path to jar
-    * @return set of canonical names 
+    * @return set of canonical names
     * @throws IOException
     */
    public static List<String> getCompiledClassesFromJar(String jarPath) throws IOException
    {
-     return getCompiledClassesFromJar(jarPath, null);
+      return getCompiledClassesFromJar(jarPath, null);
    }
-   
+
    /**
     * Extract all class names from jar in given package
     * 
@@ -63,13 +64,13 @@ public class ClassNamesExtractor
     * @return set of canonical names
     * @throws IOException
     */
-   public static List<String> getCompiledClassesFromJar(String jarPath,  String packageName) throws IOException
+   public static List<String> getCompiledClassesFromJar(String jarPath, String packageName) throws IOException
    {
       return extract(jarPath, packageName, ".class");
    }
 
    /**
-    * Extract all information from zip archive of java source 
+    * Extract all information from zip archive of java source
     * 
     * @param javaSrcPath the path to source archive
     * @return set of canonical names
@@ -77,12 +78,12 @@ public class ClassNamesExtractor
     */
    public static List<String> getSourceClassesFromJar(String javaSrcPath) throws IOException
    {
-      
+
       return getSourceClassesFromJar(javaSrcPath, null);
    }
 
    /**
-    *  Extract all information from zip archive of java source in given package 
+    * Extract all information from zip archive of java source in given package
     * 
     * @param javaSrcPath path to source archive
     * @param packageName the package for filtering class names
@@ -94,7 +95,8 @@ public class ClassNamesExtractor
       return extract(javaSrcPath, packageName, ".java");
    }
 
-   private static List<String> extract(String archath, String packageName, String fileExtension) throws FileNotFoundException, IOException
+   private static List<String> extract(String archath, String packageName, String fileExtension)
+      throws FileNotFoundException, IOException
    {
       ArrayList<String> classes = new ArrayList<String>();
       ZipInputStream zipFile = new ZipInputStream(new FileInputStream(archath));
@@ -110,7 +112,8 @@ public class ClassNamesExtractor
          {
             String fqn = zipEntry.getName();
 
-            try {
+            try
+            {
                fqn = fqn.substring(0, fqn.lastIndexOf("."));
                fqn = fqn.replaceAll("/", "\\.");
                if (packageName != null)
@@ -124,15 +127,16 @@ public class ClassNamesExtractor
                {
                   classes.add(fqn);
                }
-               
-            } catch (Exception e) {
+
+            }
+            catch (Exception e)
+            {
                LOG.error("Could not add class " + fqn);
             }
-                        
+
          }
       }
       return classes;
    }
-   
-  
-     }
+
+}

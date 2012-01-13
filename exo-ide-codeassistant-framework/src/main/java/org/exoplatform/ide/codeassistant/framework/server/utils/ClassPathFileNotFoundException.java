@@ -23,7 +23,7 @@ package org.exoplatform.ide.codeassistant.framework.server.utils;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 12, 2011 $
- *
+ * 
  */
 public class ClassPathFileNotFoundException extends Exception
 {
@@ -32,15 +32,14 @@ public class ClassPathFileNotFoundException extends Exception
     * 
     */
    private static final long serialVersionUID = 1L;
-   
-   
+
    /**
     * Default constructor.
     */
    public ClassPathFileNotFoundException()
    {
    }
-   
+
    /**
     * @param errorMessage error message of the exception
     */
@@ -48,5 +47,5 @@ public class ClassPathFileNotFoundException extends Exception
    {
       super(errorMessage);
    }
-   
+
 }

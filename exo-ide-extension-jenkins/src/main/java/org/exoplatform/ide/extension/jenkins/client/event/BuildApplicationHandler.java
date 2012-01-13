@@ -23,11 +23,11 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface BuildApplicationHandler extends EventHandler
 {
 
    void onBuildApplication(BuildApplicationEvent event);
-   
+
 }

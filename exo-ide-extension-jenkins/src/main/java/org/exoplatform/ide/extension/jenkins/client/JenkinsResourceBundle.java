@@ -25,7 +25,7 @@ import com.google.gwt.resources.client.ClientBundle;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface JenkinsResourceBundle extends ClientBundle
 {

@@ -33,13 +33,14 @@ import java.util.List;
 
 /**
  * Extracting meta information from given classes to the bean object that can be transform to JSON
- * org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo  
+ * org.exoplatform.ide.groovy.codeassistant.bean.ClassInfo
  * 
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class TypeInfoExtractor
 {
 
@@ -57,13 +58,13 @@ public class TypeInfoExtractor
    {
       TypeInfo classDescription = new TypeInfoBean();
       Constructor<?>[] constructors = clazz.getConstructors();
-      List<MethodInfo> cds = new ArrayList<MethodInfo>(); 
+      List<MethodInfo> cds = new ArrayList<MethodInfo>();
       for (int i = 0; i < constructors.length; i++)
       {
          cds.add(MethodInfoExtractor.extractConstructorInfo(constructors[i]));
       }
       Method[] methods = clazz.getMethods();
-      List<MethodInfo> mds = new ArrayList<MethodInfo>(); 
+      List<MethodInfo> mds = new ArrayList<MethodInfo>();
       for (int i = 0; i < methods.length; i++)
       {
          mds.add(MethodInfoExtractor.extractMethodInfo(methods[i]));

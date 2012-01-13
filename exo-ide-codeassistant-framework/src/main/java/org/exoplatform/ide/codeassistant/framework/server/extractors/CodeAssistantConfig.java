@@ -23,10 +23,10 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 20, 2010 11:52:57 AM evgen $
- *
+ * 
  */
 public class CodeAssistantConfig
 {

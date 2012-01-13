@@ -50,7 +50,7 @@ import javax.jcr.query.QueryResult;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistantStorageImpl Feb 8, 2011 2:22:22 PM evgen $
- *
+ * 
  */
 public class CodeAssistantJcrImpl implements CodeAssistantStorage
 {
@@ -90,7 +90,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          Query q = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
          QueryResult result = q.execute();
          NodeIterator nodes = result.getNodes();
-         //TODO
+         // TODO
          if (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
@@ -107,14 +107,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (JsonException e)
@@ -127,7 +127,8 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String,
+    *      java.lang.String, java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> getTypesByNamePrefix(String prefix) throws CodeAssistantException
@@ -155,14 +156,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
 
@@ -170,7 +171,8 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String,
+    *      java.lang.String, java.lang.String)
     */
    @Override
    public List<ShortTypeInfo> getTypesByFqnPrefix(String prefix) throws CodeAssistantException
@@ -189,7 +191,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
          {
             Node node = (Node)nodes.next();
             types.add(new ShortTypeInfoBean(node.getProperty("exoide:fqn").getString(),//
-               (int)node.getProperty("exoide:modifieres").getLong(),// 
+               (int)node.getProperty("exoide:modifieres").getLong(),//
                node.getProperty("exoide:type").getString()));
          }
 
@@ -198,14 +200,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
 
@@ -245,14 +247,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
    }
@@ -305,14 +307,14 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO:need fix status code
+         // TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
    }

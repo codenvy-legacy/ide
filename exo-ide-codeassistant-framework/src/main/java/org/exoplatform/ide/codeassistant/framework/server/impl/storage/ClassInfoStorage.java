@@ -57,26 +57,20 @@ import org.picocontainer.Startable;
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 
 /**
- * Service provide save meta information about classes in storage.
- * Information save according to hierarchy  in packet.
- * For exapmle: 
- * for class org.exoplatform.ide.groovy.codeassistant.ClassInfoStorage
- * it will be
- * /org
- *  /org.exoplatform
- *   /org.exoplatform.ide
- *    /org.exoplatform.ide.groovy
- *     /org.exoplatform.ide.groovy.codeassistant
- *      /org.exoplatform.ide.groovy.codeassistant.ClassInfoStorage
+ * Service provide save meta information about classes in storage. Information save according to hierarchy in packet. For exapmle:
+ * for class org.exoplatform.ide.groovy.codeassistant.ClassInfoStorage it will be /org /org.exoplatform /org.exoplatform.ide
+ * /org.exoplatform.ide.groovy /org.exoplatform.ide.groovy.codeassistant
+ * /org.exoplatform.ide.groovy.codeassistant.ClassInfoStorage
  * 
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class ClassInfoStorage implements Startable
 {
 
@@ -220,7 +214,7 @@ public class ClassInfoStorage implements Startable
       {
          if (LOG.isDebugEnabled())
             LOG.error(e);
-         //TODO: need think about status
+         // TODO: need think about status
          throw new SaveClassInfoException(500, e.getMessage());
       }
       catch (IOException e)

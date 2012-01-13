@@ -69,19 +69,19 @@ public class BuildApplicationView extends ViewImpl implements
 
    @Override
    public final native void output(String text) /*-{
-      var pre = $doc.getElementById('ide.jenkins.buildOutput');
-      if (pre == null || pre == undefined) {
-        return;
-      }
-      
-      var curText = pre.textContent;
-      if (curText != null && curText != undefined && curText != "") {
-         pre.textContent += "\r\n";      
-      }
-      pre.innerHTML += text;
-   
-      this.@org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationView::scrollToBottom()();
-   }-*/;
+                                                var pre = $doc.getElementById('ide.jenkins.buildOutput');
+                                                if (pre == null || pre == undefined) {
+                                                return;
+                                                }
+                                                
+                                                var curText = pre.textContent;
+                                                if (curText != null && curText != undefined && curText != "") {
+                                                pre.textContent += "\r\n";      
+                                                }
+                                                pre.innerHTML += text;
+                                                
+                                                this.@org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationView::scrollToBottom()();
+                                                }-*/;
 
    private void scrollToBottom()
    {
@@ -91,20 +91,21 @@ public class BuildApplicationView extends ViewImpl implements
 
    @Override
    public final native void clearOutput() /*-{
-      var pre = $doc.getElementById('ide.jenkins.buildOutput');
-      if (pre == null || pre == undefined) {
-        return;
-      }
-      pre.textContent = ""; 
-   }-*/;
+                                          var pre = $doc.getElementById('ide.jenkins.buildOutput');
+                                          if (pre == null || pre == undefined) {
+                                          return;
+                                          }
+                                          pre.textContent = ""; 
+                                          }-*/;
 
    @Override
    public void startAnimation()
    {
       animationCharIndex = 1;
       Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
-      if (animationElement == null) {
-        return;
+      if (animationElement == null)
+      {
+         return;
       }
       animationElement.getStyle().setDisplay(Display.BLOCK);
       animationTimer.scheduleRepeating(150);
@@ -114,12 +115,13 @@ public class BuildApplicationView extends ViewImpl implements
    public void stopAnimation()
    {
       animationTimer.cancel();
-      
+
       Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
-      if (animationElement == null) {
+      if (animationElement == null)
+      {
          return;
       }
-      
+
       animationElement.getStyle().setDisplay(Display.NONE);
       animationElement.setInnerHTML("");
    }
@@ -152,7 +154,8 @@ public class BuildApplicationView extends ViewImpl implements
          }
 
          Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
-         if (animationElement != null) {
+         if (animationElement != null)
+         {
             animationElement.setInnerHTML(c);
          }
 

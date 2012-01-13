@@ -26,7 +26,7 @@ import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class BuildControl extends SimpleControl implements IDEControl
 {
@@ -50,7 +50,7 @@ public class BuildControl extends SimpleControl implements IDEControl
    public void initialize()
    {
       setVisible(true);
-      //TODO enable only if Java project selected
+      // TODO enable only if Java project selected
       setEnabled(true);
    }
 

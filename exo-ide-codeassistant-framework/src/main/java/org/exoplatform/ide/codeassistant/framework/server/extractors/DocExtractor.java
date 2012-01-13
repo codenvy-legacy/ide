@@ -43,19 +43,20 @@ import java.util.zip.ZipFile;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class DocExtractor
 {
 
    /**
-    * Path to base folder for exctracting source archive curently it System.getProperty("java.io.tmpdir") 
+    * Path to base folder for exctracting source archive curently it System.getProperty("java.io.tmpdir")
     */
    private static String extPath;
 
    /**
-    * Extract GroovyDoc (JavaDoc) for getting archive and filtered by package 
+    * Extract GroovyDoc (JavaDoc) for getting archive and filtered by package
     * 
     * @param javaArchSrcPath
     * @param pkgPath
@@ -74,7 +75,7 @@ public class DocExtractor
             .getProperty("java.io.tmpdir") + fs;
       extPath = tmp + "source" + fs + archName + fs;
       Map<String, GroovyRootDoc> docs = new HashMap<String, GroovyRootDoc>();
-      GroovyDocTool plainTool; //= new GroovyDocTool(new String[]{extPath});
+      GroovyDocTool plainTool; // = new GroovyDocTool(new String[]{extPath});
       if (pkgPath != null)
       {
          pkgPath = pkgPath.replace(".", fs);
@@ -107,8 +108,8 @@ public class DocExtractor
 
    /**
     * @param zipPath
-    * @throws IOException 
-    * @throws FileNotFoundException 
+    * @throws IOException
+    * @throws FileNotFoundException
     */
    private static void unzip(String zipPath) throws FileNotFoundException, IOException
    {
@@ -201,7 +202,7 @@ public class DocExtractor
 
    /**
     * @author vetal
-    *
+    * 
     */
    private static final class PkgFileFilter implements FilenameFilter
    {

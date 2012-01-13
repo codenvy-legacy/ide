@@ -22,12 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data for source files and folders with sources, 
- * which are taken from classpath information.
+ * Data for source files and folders with sources, which are taken from classpath information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 27, 2010 $
- *
+ * 
  */
 public class DependentResources
 {
@@ -50,10 +49,11 @@ public class DependentResources
       folderSources = new ArrayList<String>();
       String pathPrefix = "jcr://" + repositoryName;
 
-      //Separate files and folders:
+      // Separate files and folders:
       for (GroovyClassPathEntry entry : groovyClassPath.getEntries())
       {
-         String path = entry.getPath().startsWith("/") ? pathPrefix + entry.getPath() : pathPrefix +  "/" + entry.getPath();
+         String path =
+            entry.getPath().startsWith("/") ? pathPrefix + entry.getPath() : pathPrefix + "/" + entry.getPath();
          if (entry.getKind().equals("dir"))
          {
             folderSources.add(path);

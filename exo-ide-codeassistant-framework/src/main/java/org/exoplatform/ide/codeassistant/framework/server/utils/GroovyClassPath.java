@@ -19,25 +19,14 @@
 package org.exoplatform.ide.codeassistant.framework.server.utils;
 
 /**
- * Groovy class path data. This bean has the JSON representation, 
- * like in the following example:
+ * Groovy class path data. This bean has the JSON representation, like in the following example:
  * 
- * {
- *    "entries" : [
- *    { "kind' : "dir",
- *       "path" : "jcr://repository/workspace#/groovy-src/" 
- *    },
- *    {
- *       "kind" : "file",
- *       "path" : "jcr://repository/workspace#/groovy-src/org/exo/Test.groovy"
- *    }
- *    ],
- *    "extensions" : []
- * }
+ * { "entries" : [ { "kind' : "dir", "path" : "jcr://repository/workspace#/groovy-src/" }, { "kind" : "file", "path" :
+ * "jcr://repository/workspace#/groovy-src/org/exo/Test.groovy" } ], "extensions" : [] }
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 24, 2010 $
- *
+ * 
  */
 public class GroovyClassPath
 {

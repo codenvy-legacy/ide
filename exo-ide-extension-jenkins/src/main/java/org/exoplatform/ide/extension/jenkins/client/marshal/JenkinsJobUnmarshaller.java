@@ -29,9 +29,10 @@ import org.exoplatform.ide.extension.jenkins.shared.Job;
 
 /**
  * Unmarshaller for creating Jenkins job request
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class JenkinsJobUnmarshaller implements Unmarshallable
 {

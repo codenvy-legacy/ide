@@ -45,8 +45,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 23, 2011 12:20:01 PM evgen $
- *
+ * @version ${Id}: Nov 23, 2011 12:20:01 PM evgen $
+ * 
  */
 public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
 {

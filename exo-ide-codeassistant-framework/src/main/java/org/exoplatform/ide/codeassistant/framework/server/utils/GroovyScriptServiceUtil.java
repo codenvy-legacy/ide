@@ -41,7 +41,7 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 24, 2010 $
- *
+ * 
  */
 public class GroovyScriptServiceUtil
 {
@@ -50,17 +50,17 @@ public class GroovyScriptServiceUtil
    public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
    static final String JAVA_SOURCE_ROOT_PREFIX = "/src/main/java";
-   
+
    /**
     * Unmarshal classpath object in JSON format to Java bean {@link GroovyClassPath}.
     * 
-    * @param stream 
+    * @param stream
     * @return {@link GroovyClassPath}
     * @throws JsonException
     */
    public static GroovyClassPath json2ClassPath(InputStream stream) throws JsonException
    {
-      //TODO check it works:
+      // TODO check it works:
       JsonParser jsonParser = new JsonParser();
       jsonParser.parse(stream);
       JsonValue jsonValue = jsonParser.getJsonObject();
@@ -69,13 +69,12 @@ public class GroovyScriptServiceUtil
    }
 
    /**
-    * Parse JCR path to retrieve repository name, 
-    * workspace name and absolute path in repository.
+    * Parse JCR path to retrieve repository name, workspace name and absolute path in repository.
     * 
     * @param baseUri base URI
     * @param location file's location
-    * @return array of {@link String}, where elements contain repository name, workspace name and 
-    * the path to JCR node that contains file
+    * @return array of {@link String}, where elements contain repository name, workspace name and the path to JCR node that
+    *         contains file
     */
    @Deprecated
    public static String[] parseJcrLocation(String baseUri, String location)
@@ -119,18 +118,18 @@ public class GroovyScriptServiceUtil
    {
       if (node == null)
          return null;
-      //Get all child node that end with ".groovyclasspath"
+      // Get all child node that end with ".groovyclasspath"
       NodeIterator nodeIterator = node.getNodes("*" + GROOVY_CLASSPATH);
       while (nodeIterator.hasNext())
       {
          Node childNode = nodeIterator.nextNode();
-         //The first found groovy class path file will be returned:
+         // The first found groovy class path file will be returned:
          if (GROOVY_CLASSPATH.equals(childNode.getName()))
             return childNode;
       }
       try
       {
-         //Go upper to find class path file:   
+         // Go upper to find class path file:
          Node parentNode = node.getParent();
          return findClassPathNode(parentNode);
       }
@@ -179,18 +178,18 @@ public class GroovyScriptServiceUtil
     */
    public static DependentResources getDependentResource(String scriptLocation, RepositoryService repositoryService)
    {
-      //Get content of groovy class path file:
+      // Get content of groovy class path file:
       InputStream classPathFileContent = getClassPathContent(scriptLocation, repositoryService);
 
       if (classPathFileContent != null)
       {
          try
          {
-            //Unmarshal content in JSON format to  Java object:
+            // Unmarshal content in JSON format to Java object:
             GroovyClassPath groovyClassPath = GroovyScriptServiceUtil.json2ClassPath(classPathFileContent);
             if (groovyClassPath != null)
             {
-               //Get current repository name, if not null or default repository's name.
+               // Get current repository name, if not null or default repository's name.
                String repositoryName =
                   (repositoryService.getCurrentRepository() != null) ? repositoryService.getCurrentRepository()
                      .getConfiguration().getName() : repositoryService.getDefaultRepository().getConfiguration()
@@ -216,6 +215,7 @@ public class GroovyScriptServiceUtil
 
    /**
     * Return word until first point like "ClassName" on file name "ClassName.java"
+    * 
     * @param fileName
     * @return
     */
@@ -223,12 +223,13 @@ public class GroovyScriptServiceUtil
    {
       if (fileName != null)
          return fileName.substring(0, fileName.indexOf("."));
-         
+
       return null;
    }
-   
+
    /**
     * Return possible FQN like "org.exoplatform.example.ClassName" on file path "/org/exoplatform/example/ClassName.java"
+    * 
     * @param fileName
     * @return
     */
@@ -237,36 +238,38 @@ public class GroovyScriptServiceUtil
       if (filePath != null)
       {
          String fqn = filePath;
-         
+
          // remove "[...]" from path like "[3]" from path "org/exoplatform[3]/example/ClassName.java"
          fqn = fqn.replaceAll("\\[.*\\]", "");
-         
-         // looking for java source folder root like "/src/main/java" to remove unnecessary path prefix like "/My Project/src/main/java" in path "/My Project/src/main/java/com/example/"
+
+         // looking for java source folder root like "/src/main/java" to remove unnecessary path prefix like
+         // "/My Project/src/main/java" in path "/My Project/src/main/java/com/example/"
          if (fqn.matches(".*" + JAVA_SOURCE_ROOT_PREFIX + ".*"))
          {
             fqn = fqn.replaceAll(".*" + JAVA_SOURCE_ROOT_PREFIX, "");
          }
-         
+
          // remove file extension from path like ".java" from path "org/exoplatform/example/ClassName.java"
          if (fqn.matches(".*[.][^/]*$"))
             fqn = fqn.substring(0, fqn.lastIndexOf("."));
-         
+
          // remove symbol "/" at the start of string
          if (fqn.indexOf("/") == 0)
             fqn = fqn.substring(1);
-         
+
          // replace "/" on "."
          fqn = fqn.replaceAll("/", ".");
-         
+
          return fqn;
       }
-         
+
       return null;
    }
-   
 
    /**
-    * Return possible file parent folder path like "org/exoplatform/example" on file path "/org/exoplatform/example/ClassName.java", or return file path as it if there is no any "/" in file path. 
+    * Return possible file parent folder path like "org/exoplatform/example" on file path
+    * "/org/exoplatform/example/ClassName.java", or return file path as it if there is no any "/" in file path.
+    * 
     * @param fileRelPath
     * @return
     */
@@ -283,7 +286,7 @@ public class GroovyScriptServiceUtil
             {
                parentFolderPath = parentFolderPath.substring(1);
             }
-            
+
             return parentFolderPath;
          }
          else
@@ -297,6 +300,7 @@ public class GroovyScriptServiceUtil
 
    /**
     * Looking for java source folder root like "/src/main/java" as part of location.
+    * 
     * @param location
     * @return
     */
@@ -304,5 +308,5 @@ public class GroovyScriptServiceUtil
    {
       return location.matches(".*" + JAVA_SOURCE_ROOT_PREFIX + ".*");
    }
-   
+
 }

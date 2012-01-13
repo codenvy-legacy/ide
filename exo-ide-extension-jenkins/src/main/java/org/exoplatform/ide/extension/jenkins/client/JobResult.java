@@ -19,10 +19,11 @@
 package org.exoplatform.ide.extension.jenkins.client;
 
 /**
- * This enum represent Jenkins last build result 
+ * This enum represent Jenkins last build result
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 3, 2011 evgen $
- *
+ * @version $Id: Aug 3, 2011 evgen $
+ * 
  */
 public enum JobResult {
    SUCCESS, UNSTABLE, FAILURE, NOT_BUILT, ABORTED
