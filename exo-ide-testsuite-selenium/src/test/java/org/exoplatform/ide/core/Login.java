@@ -35,13 +35,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Login extends AbstractTestModule
 {
    
-   private static final String LOGOUT_LOCATOR = "//span[text()='Logout']";
+   private static final String LOGOUT_LOCATOR = "//node()[@id='logoutButton']";
    
    private static final String USERNAME = "j_username";
    
    private static final String PASSWORD = "j_password";
    
-   private static final String LOGIN_BUTTON = "//node()[@class='Button']";
+   private static final String LOGIN_BUTTON = "//node()[@id='loginButton']";
    
    @FindBy(xpath = LOGOUT_LOCATOR)
    private WebElement logout;

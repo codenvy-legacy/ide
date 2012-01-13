@@ -113,7 +113,7 @@ function registerNewUser() {
 			</tr>
 
 			<tr>
-				<td align="right"><input type="submit" value="Log In" class="Button"/></td>
+				<td align="right"><input type="submit" value="Log In" id="loginButton"/></td>
 				<td align="left"><input type="reset" value="Reset"></td>
 			</tr>
 
