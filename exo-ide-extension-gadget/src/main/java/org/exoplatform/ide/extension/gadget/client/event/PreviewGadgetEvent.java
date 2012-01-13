@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: PreviewGadgetEvent Feb 17, 2011 11:23:14 AM evgen $
- *
+ * 
  */
 public class PreviewGadgetEvent extends GwtEvent<PreviewGadgetHandler>
 {

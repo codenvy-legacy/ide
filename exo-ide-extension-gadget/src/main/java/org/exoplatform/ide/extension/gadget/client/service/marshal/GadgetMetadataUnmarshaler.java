@@ -29,9 +29,10 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class GadgetMetadataUnmarshaler implements Unmarshallable
 {
 

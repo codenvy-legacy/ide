@@ -32,12 +32,12 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.ws.rs.core.HttpHeaders;
 
 /**
- * This filter adds to the gadget's makeRequest request user's session
- * info, passing the value of "Cookie" header to "headers" query parameter.
+ * This filter adds to the gadget's makeRequest request user's session info, passing the value of "Cookie" header to "headers"
+ * query parameter.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jan 24, 2011 4:29:51 PM anya $
- *
+ * @version $Id: Jan 24, 2011 4:29:51 PM anya $
+ * 
  */
 public class MakeRequestHeaderFilter implements Filter
 {
@@ -59,14 +59,14 @@ public class MakeRequestHeaderFilter implements Filter
       ServletException
    {
       HttpServletRequest httpRequest = (HttpServletRequest)request;
-      //Get user session info from "Cookie" header:
+      // Get user session info from "Cookie" header:
       String cookie = httpRequest.getHeader(HttpHeaders.COOKIE);
       if (cookie == null)
       {
          chain.doFilter(httpRequest, response);
          return;
       }
-      //Set the value of "Cookie" header to "headers" request query paramater:
+      // Set the value of "Cookie" header to "headers" request query paramater:
       String headers = httpRequest.getParameter(HEADERS_PARAMETER);
       String cookieHeader = HttpHeaders.COOKIE + "=" + URLEncoder.encode(cookie, "UTF-8");
       cookieHeader = (headers == null || headers.length() <= 0) ? cookieHeader : "&" + cookieHeader;
@@ -85,13 +85,12 @@ public class MakeRequestHeaderFilter implements Filter
    }
 
    /**
-    * The wrapper for the {@link HttpServletRequest} to override 
-    * the getParameter(String name) method to be able to change the value
-    * of the "headers" parameter. 
+    * The wrapper for the {@link HttpServletRequest} to override the getParameter(String name) method to be able to change the
+    * value of the "headers" parameter.
     * 
     * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
-    * @version $Id:  Jan 25, 2011 12:50:24 PM anya $
-    *
+    * @version $Id: Jan 25, 2011 12:50:24 PM anya $
+    * 
     */
    private class RequestWrapper extends HttpServletRequestWrapper
    {

@@ -32,9 +32,10 @@ import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class GadgetServiceImpl extends GadgetService
 {
 

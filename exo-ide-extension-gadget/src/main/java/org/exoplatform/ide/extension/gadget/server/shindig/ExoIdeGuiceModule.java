@@ -25,9 +25,9 @@ import org.apache.shindig.gadgets.http.HttpFetcher;
 
 /**
  * The goal of the module is to bind the {@link org.apache.shindig.common.ContainerConfig} interface to the
- * {@link org.exoplatform.portal.gadget.core.ExoContainerConfig} implementation instead of the default
- * implementation annotated on the container config interface.
- *
+ * {@link org.exoplatform.portal.gadget.core.ExoContainerConfig} implementation instead of the default implementation annotated on
+ * the container config interface.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Revision$
  */

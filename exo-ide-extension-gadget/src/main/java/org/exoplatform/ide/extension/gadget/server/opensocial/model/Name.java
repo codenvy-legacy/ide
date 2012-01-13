@@ -23,17 +23,18 @@ package org.exoplatform.ide.extension.gadget.server.opensocial.model;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class Name
 {
    /**
-    * The family name of this Person, or "Last Name". 
+    * The family name of this Person, or "Last Name".
     */
    private String familyName;
 
    /**
-    * The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Mr. Joseph Robert Smarr, Esq.).
+    * The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g. Mr. Joseph
+    * Robert Smarr, Esq.).
     */
    private String formatted;
 

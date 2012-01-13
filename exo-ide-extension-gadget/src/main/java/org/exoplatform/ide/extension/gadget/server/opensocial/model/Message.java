@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class Message
 {
@@ -46,7 +46,7 @@ public class Message
    private String bodyId;
 
    /**
-    * Identifies the messages collection IDs this message is contained in. 
+    * Identifies the messages collection IDs this message is contained in.
     */
    private List<String> collectionIds;
 
@@ -81,7 +81,7 @@ public class Message
    private Status status;
 
    /**
-    *  UTC time message was sent.
+    * UTC time message was sent.
     */
    private Date timeSent;
 

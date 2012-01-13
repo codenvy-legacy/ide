@@ -23,7 +23,7 @@ package org.exoplatform.ide.extension.gadget.server.opensocial.model;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class Address
 {
@@ -48,7 +48,7 @@ public class Address
    private String locality;
 
    /**
-    * The longitude of the location on a map. 
+    * The longitude of the location on a map.
     */
    private String longitude;
 

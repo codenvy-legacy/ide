@@ -23,12 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An OpenSocial Activity represents a short summary or 
- * notification of a timestamped event, often with pointers for more information
+ * An OpenSocial Activity represents a short summary or notification of a timestamped event, often with pointers for more
+ * information
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class Activity
 {
@@ -63,12 +63,13 @@ public class Activity
    private ArrayList<MediaItem> mediaItems;
 
    /**
-    * Specifying the time at which this activity took place in milliseconds since the epoch. 
+    * Specifying the time at which this activity took place in milliseconds since the epoch.
     */
    private String postedTime;
 
    /**
-    * A number between 0 and 1 representing the relative priority of this activity in relation to other activities from the same source.
+    * A number between 0 and 1 representing the relative priority of this activity in relation to other activities from the same
+    * source.
     */
    private float priority;
 
@@ -83,7 +84,7 @@ public class Activity
    private String streamSourceUrl;
 
    /**
-    * The title of the stream. 
+    * The title of the stream.
     */
    private String streamTitl;
 
@@ -98,12 +99,12 @@ public class Activity
    private Map<String, Object> templateParams;
 
    /**
-    * The primary text of an activity. 
+    * The primary text of an activity.
     */
    private String title;
 
    /**
-    * URL that represents this activity. 
+    * URL that represents this activity.
     */
    private String URL;
 

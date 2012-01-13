@@ -24,12 +24,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * The goal of Http Fetcher subclass is to overwrite the default timeout in BasicHttpFetcher 
- * which is quite short time to make a conversion if the server is slow.
- * Created by The eXo Platform SAS.
+ * The goal of Http Fetcher subclass is to overwrite the default timeout in BasicHttpFetcher which is quite short time to make a
+ * conversion if the server is slow. Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 @Singleton
 public class ExoIdeHttpFetcher extends BasicHttpFetcher
 {

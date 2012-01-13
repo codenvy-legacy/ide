@@ -35,9 +35,10 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class GadgetPreviewPane extends ViewImpl
 {
 
@@ -102,8 +103,7 @@ public class GadgetPreviewPane extends ViewImpl
                                     }-*/;
 
    /**
-    * Create iframe. 
-    * Gadget will be load here.
+    * Create iframe. Gadget will be load here.
     * 
     */
    public void showGadget()

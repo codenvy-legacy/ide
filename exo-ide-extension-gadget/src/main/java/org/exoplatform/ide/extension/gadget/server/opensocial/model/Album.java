@@ -25,7 +25,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class Album
 {
@@ -70,7 +70,7 @@ public class Album
    private String thumbnailUrl;
 
    /**
-    * The title of the album. 
+    * The title of the album.
     */
    private String title;
 

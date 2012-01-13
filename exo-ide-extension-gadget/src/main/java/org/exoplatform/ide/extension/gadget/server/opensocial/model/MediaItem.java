@@ -21,11 +21,11 @@ package org.exoplatform.ide.extension.gadget.server.opensocial.model;
 import java.util.ArrayList;
 
 /**
- * Represents images, movies, and audio. 
+ * Represents images, movies, and audio.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class MediaItem
 {
@@ -35,7 +35,7 @@ public class MediaItem
    private String album_id;
 
    /**
-    * Creation datetime associated with the media item - assigned by container in UTC. 
+    * Creation datetime associated with the media item - assigned by container in UTC.
     */
    private String created;
 
@@ -45,8 +45,7 @@ public class MediaItem
    private String description;
 
    /**
-    * Playtime length in seconds.
-    * Set to -1/not defined if unknown.
+    * Playtime length in seconds. Set to -1/not defined if unknown.
     */
    private Integer duration;
 
@@ -106,7 +105,7 @@ public class MediaItem
    private String startTime;
 
    /**
-    * Array of string (IDs) of people tagged in the media item. 
+    * Array of string (IDs) of people tagged in the media item.
     */
    private ArrayList<String> taggedPeople;
 
@@ -116,12 +115,12 @@ public class MediaItem
    private ArrayList<String> tags;
 
    /**
-    * URL to a thumbnail image of the media item. 
+    * URL to a thumbnail image of the media item.
     */
    private String thumbnailURL;
 
    /**
-    * Describing the media item. 
+    * Describing the media item.
     */
    private String title;
 
@@ -131,7 +130,7 @@ public class MediaItem
    private String type;
 
    /**
-    *  URL where the media can be found. 
+    * URL where the media can be found.
     */
    private String URL;
 

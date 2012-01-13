@@ -33,8 +33,9 @@ import java.security.SecureRandom;
 
 /**
  * Created by The eXo Platform SAS.
- * @author  <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version  $Id: $
+ * 
+ * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
+ * @version $Id: $
  */
 public class KeyCreator
 {
@@ -85,12 +86,12 @@ public class KeyCreator
 
    public static String getKeyFilePath()
    {
-      //      /*
-      //       * For now uses "gatein.gadgets.securityTokenKeyFile" variable according to IDE-951.
-      //       */
-      //      String keyFilePath = System.getProperty("gatein.gadgets.securityTokenKeyFile");
-      //      log.info("Path to key file > " + keyFilePath);
-      //      return keyFilePath;
+      // /*
+      // * For now uses "gatein.gadgets.securityTokenKeyFile" variable according to IDE-951.
+      // */
+      // String keyFilePath = System.getProperty("gatein.gadgets.securityTokenKeyFile");
+      // log.info("Path to key file > " + keyFilePath);
+      // return keyFilePath;
 
       J2EEServerInfo info = new J2EEServerInfo();
       String confPath = info.getExoConfigurationDirectory();
@@ -114,9 +115,8 @@ public class KeyCreator
    }
 
    /**
-    * Generate a key of 32 bytes encoded in base64. The generation is based on
-    * {@link SecureRandom} seeded with the current time.
-    *
+    * Generate a key of 32 bytes encoded in base64. The generation is based on {@link SecureRandom} seeded with the current time.
+    * 
     * @return the key
     */
    private static String generateKey()

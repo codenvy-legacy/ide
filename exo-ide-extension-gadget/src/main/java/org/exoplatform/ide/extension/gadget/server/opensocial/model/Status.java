@@ -23,7 +23,7 @@ package org.exoplatform.ide.extension.gadget.server.opensocial.model;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public enum Status {
    NEW("new"), DELETED("deleted"), FLAGGED("read");

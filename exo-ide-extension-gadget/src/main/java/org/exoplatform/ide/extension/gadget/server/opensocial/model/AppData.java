@@ -22,16 +22,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * OpenSocial defines a data store 
- * that applications can use to read and write user-specific data.
+ * OpenSocial defines a data store that applications can use to read and write user-specific data.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class AppData
 {
-   //TODO 
+   // TODO
    private Map<String, String> collection;
 
    public Map<String, String> getCollection()

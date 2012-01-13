@@ -25,7 +25,7 @@ import java.util.Date;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class Organization
 {
@@ -65,7 +65,7 @@ public class Organization
    private String name;
 
    /**
-    *The salary the person receieves from the organization.s
+    * The salary the person receieves from the organization.s
     */
    private String salary;
 

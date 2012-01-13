@@ -19,12 +19,11 @@
 package org.exoplatform.ide.extension.gadget.server.opensocial.model;
 
 /**
- * Describes an account held by this Person, 
- * which MAY be on the Service Provider's service, or MAY be on a different service.
+ * Describes an account held by this Person, which MAY be on the Service Provider's service, or MAY be on a different service.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class Account
 {
@@ -39,7 +38,7 @@ public class Account
    private String userName;
 
    /**
-    *A user ID associated with this account. 
+    * A user ID associated with this account.
     */
    private String userId;
 

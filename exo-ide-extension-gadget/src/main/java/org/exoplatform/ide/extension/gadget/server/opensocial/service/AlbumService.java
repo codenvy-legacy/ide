@@ -27,7 +27,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public interface AlbumService
 {
@@ -64,7 +64,7 @@ public interface AlbumService
     * Delete album.
     * 
     * @param userId user ID of the person the Album is associated with
-    * @param id  ID of the Album to delete
+    * @param id ID of the Album to delete
     */
    void deleteAlbum(String userId, String id);
 }

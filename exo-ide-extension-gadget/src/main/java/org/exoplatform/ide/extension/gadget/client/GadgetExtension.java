@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetServiceImpl;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class GadgetExtension extends Extension implements InitializeServicesHandler
 {

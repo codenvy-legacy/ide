@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public class Person
 {
@@ -97,9 +97,8 @@ public class Person
    private List<String> children;
 
    /**
-    * Indicates whether the user and this Person have 
-    * established a bi-directionally asserted connection of 
-    * some kind on the Service Provider's service. 
+    * Indicates whether the user and this Person have established a bi-directionally asserted connection of some kind on the
+    * Service Provider's service.
     */
    private boolean connected;
 
@@ -114,7 +113,7 @@ public class Person
    private String drinker;
 
    /**
-    *  E-mail address for this Person.
+    * E-mail address for this Person.
     */
    private List<String> emails;
 
@@ -124,7 +123,7 @@ public class Person
    private String ethnicity;
 
    /**
-    * Person's thoughts on fashion. 
+    * Person's thoughts on fashion.
     */
    private String fashion;
 
@@ -139,7 +138,7 @@ public class Person
    private Gender gender;
 
    /**
-    *Describes when the person is happiest.
+    * Describes when the person is happiest.
     */
    private String happiestWhen;
 
@@ -184,7 +183,7 @@ public class Person
    private List<String> languagesSpoken;
 
    /**
-    * Description of the person's living arrangement. 
+    * Description of the person's living arrangement.
     */
    private String livingArrangement;
 
@@ -219,7 +218,7 @@ public class Person
    private Enum<NetworkState> networkPresence;
 
    /**
-    *The casual way to address this Person in real life.
+    * The casual way to address this Person in real life.
     */
    private String nickname;
 
@@ -254,7 +253,7 @@ public class Person
    private List<String> politicalViews;
 
    /**
-    * The preferred username of this person on sites that ask for a username. 
+    * The preferred username of this person on sites that ask for a username.
     */
    private String preferredUsername;
 
@@ -284,8 +283,7 @@ public class Person
    private List<String> quotes;
 
    /**
-    * A bi-directionally asserted relationship type 
-    * that was established between the user and this person by the Service Provider. 
+    * A bi-directionally asserted relationship type that was established between the user and this person by the Service Provider.
     */
    private List<String> relationships;
 
@@ -310,12 +308,12 @@ public class Person
    private String scaredOf;
 
    /**
-    * Person's sexual orientation. 
+    * Person's sexual orientation.
     */
    private String sexualOrientation;
 
    /**
-    *Person's smoking status. 
+    * Person's smoking status.
     */
    private String smoker;
 

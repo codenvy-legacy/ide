@@ -22,9 +22,10 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class GadgetPeviewEvent extends GwtEvent<GadgetPeviewHandler>
 {
 

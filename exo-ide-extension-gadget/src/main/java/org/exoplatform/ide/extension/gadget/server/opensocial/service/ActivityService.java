@@ -23,12 +23,11 @@ import org.exoplatform.ide.extension.gadget.server.opensocial.model.Activity;
 import java.util.List;
 
 /**
- * Service to manipulate with OpenSocial Activity data,
- * which represents a short summary or notification of a timestamped event.
+ * Service to manipulate with OpenSocial Activity data, which represents a short summary or notification of a timestamped event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- *
+ * 
  */
 public interface ActivityService
 {
@@ -46,7 +45,7 @@ public interface ActivityService
    /**
     * Retrieve a list of supported Activity fields.
     * 
-    * @return {@link List{@link String}}} activity fields
+    * @return {@link List{@link String} activity fields
     */
    List<String> getActivityFields();
 

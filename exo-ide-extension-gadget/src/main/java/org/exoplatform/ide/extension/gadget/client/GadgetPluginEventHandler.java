@@ -43,7 +43,7 @@ import com.google.gwt.user.client.ui.Image;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler, PreviewGadgetHandler,
    ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler

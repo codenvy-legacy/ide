@@ -37,15 +37,16 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 @Path("/ide/shindig/securitytoken")
 public class RestSecurityTokenGenerator
 {
    /**
-     * Class logger.
-     */
+    * Class logger.
+    */
    private final Log log = ExoLogger.getLogger("rest.RestSecurityTokenGenerator");
 
    @POST
