@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RemoveItemTreeIconEvent Apr 6, 2011 9:50:25 AM evgen $
- *
+ * 
  */
 public class RemoveItemTreeIconEvent extends GwtEvent<RemoveItemTreeIconHandler>
 {

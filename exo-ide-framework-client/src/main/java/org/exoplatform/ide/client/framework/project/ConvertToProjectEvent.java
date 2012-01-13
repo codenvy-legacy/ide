@@ -21,12 +21,11 @@ package org.exoplatform.ide.client.framework.project;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to convert folder to project.
- * Implement {@link ConvertToProjectHandler} to handle event.
+ * Event occurs, when user tries to convert folder to project. Implement {@link ConvertToProjectHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Oct 27, 2011 3:53:03 PM anya $
- *
+ * @version $Id: Oct 27, 2011 3:53:03 PM anya $
+ * 
  */
 public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
 {

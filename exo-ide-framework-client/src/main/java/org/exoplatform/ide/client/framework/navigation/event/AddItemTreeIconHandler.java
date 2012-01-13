@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: AddItemTreeIconHandler Apr 6, 2011 9:40:32 AM evgen $
- *
+ * 
  */
 public interface AddItemTreeIconHandler extends EventHandler
 {

@@ -27,7 +27,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
- *
+ * 
  */
 public class ProjectCreatedEvent extends GwtEvent<ProjectCreatedHandler>
 {

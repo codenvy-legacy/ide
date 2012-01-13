@@ -38,11 +38,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: IDE Feb 4, 2011 11:01:38 AM evgen $
- *
+ * 
  */
 public abstract class IDE
 {
-   //public static final HandlerManager EVENT_BUS = new HandlerManager(null);
+   // public static final HandlerManager EVENT_BUS = new HandlerManager(null);
    private static HandlerManager eventBus = new SafeHandlerManager();
 
    private static List<Extension> extensions = new ArrayList<Extension>();
@@ -94,6 +94,7 @@ public abstract class IDE
 
    /**
     * Add control to main menu/tool bar or status bar
+    * 
     * @param control
     * @param docking where control dock(toolbar/statusbar)
     */
@@ -122,24 +123,28 @@ public abstract class IDE
 
    /**
     * Open {@link View}
+    * 
     * @param view to open
     */
    public abstract void openView(View view);
 
    /**
     * Close view
+    * 
     * @param viewId ID of view
     */
    public abstract void closeView(String viewId);
 
    /**
     * Add new editor extension
+    * 
     * @param editorProducer
     */
    public abstract void addEditor(EditorProducer editorProducer);
 
    /**
     * Get EditorProducer for mimeType
+    * 
     * @param mimeType of file
     * @return {@link EditorProducer} for mimeType
     * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
@@ -148,12 +153,14 @@ public abstract class IDE
 
    /**
     * Add new outline item creator extension
+    * 
     * @param outlineItemCreator
     */
    public abstract void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator);
 
    /**
     * Get OutlineItemCreator for mimeType
+    * 
     * @param mimeType of file
     * @return {@link OutlineItemCreator} for mimeType
     */
@@ -161,12 +168,14 @@ public abstract class IDE
 
    /**
     * Get the list of registered paases.
+    * 
     * @return
     */
    public abstract List<Paas> getPaases();
 
    /**
     * Add new paas.
+    * 
     * @param paas
     */
    public abstract void addPaas(Paas paas);

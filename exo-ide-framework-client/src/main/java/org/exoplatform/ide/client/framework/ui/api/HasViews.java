@@ -32,8 +32,8 @@ public interface HasViews
     * Adds a view.
     * 
     * @param view the view to be added
-    * @throws UnsupportedOperationException if this method is not supported (most
-    *           often this means that a specific overload must be called)
+    * @throws UnsupportedOperationException if this method is not supported (most often this means that a specific overload must
+    *            be called)
     */
    void addView(View view);
 

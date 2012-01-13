@@ -24,15 +24,15 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link FolderRefreshedEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 6, 2011 4:12:09 PM anya $
- *
+ * @version $Id: Apr 6, 2011 4:12:09 PM anya $
+ * 
  */
 public interface FolderRefreshedHandler extends EventHandler
 {
    /**
     * Perform actions when folder's content is updated in browser tree.
     * 
-    * @param event 
+    * @param event
     */
    void onFolderRefreshed(FolderRefreshedEvent event);
 }

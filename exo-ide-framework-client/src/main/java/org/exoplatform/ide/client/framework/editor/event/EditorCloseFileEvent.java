@@ -56,6 +56,7 @@ public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
 
    /**
     * Return file will be closed
+    * 
     * @return
     */
    public FileModel getFile()

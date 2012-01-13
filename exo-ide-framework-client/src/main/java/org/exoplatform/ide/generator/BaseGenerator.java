@@ -31,7 +31,7 @@ import java.io.PrintWriter;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 21, 2010 $
- *
+ * 
  */
 public abstract class BaseGenerator extends Generator
 {
@@ -40,7 +40,8 @@ public abstract class BaseGenerator extends Generator
    protected static final String PACKAGE = "package %s;";
 
    /**
-    * @see com.google.gwt.core.ext.Generator#generate(com.google.gwt.core.ext.TreeLogger, com.google.gwt.core.ext.GeneratorContext, java.lang.String)
+    * @see com.google.gwt.core.ext.Generator#generate(com.google.gwt.core.ext.TreeLogger,
+    *      com.google.gwt.core.ext.GeneratorContext, java.lang.String)
     */
    @Override
    public String generate(TreeLogger logger, GeneratorContext context, String typeName)
@@ -50,13 +51,13 @@ public abstract class BaseGenerator extends Generator
 
       String packageName = interfaceType.getPackage().getName();
 
-      //Create implementation class name
+      // Create implementation class name
       String implName = interfaceType.getName().replace(".", "_") + "Impl";
       PrintWriter printWriter = context.tryCreate(logger, packageName, implName);
       if (printWriter != null)
       {
          ConsolePrintWriter writer = new ConsolePrintWriter(printWriter);
-         //Write package information to generating class
+         // Write package information to generating class
          writer.write(PACKAGE, packageName);
          writer.println();
          // Generate source of the class

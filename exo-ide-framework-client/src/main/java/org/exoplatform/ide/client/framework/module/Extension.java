@@ -24,6 +24,7 @@ import com.google.gwt.core.client.EntryPoint;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -41,9 +42,9 @@ public abstract class Extension implements EntryPoint
    }
 
    /**
-    * This method called after IDE initialized.
-    * In this method you can add controls and views.<br>
-    * To add {@link Control} call {@link IDE#addControl(Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget, boolean)}<br>
+    * This method called after IDE initialized. In this method you can add controls and views.<br>
+    * To add {@link Control} call
+    * {@link IDE#addControl(Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget, boolean)}<br>
     * To add Editor call {@link IDE#addEditor(org.exoplatform.ide.editor.api.EditorProducer)}
     */
    public abstract void initialize();

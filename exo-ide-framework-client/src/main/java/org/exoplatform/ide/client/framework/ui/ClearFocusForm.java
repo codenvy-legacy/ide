@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ClearFocusForm.java Feb 4, 2011 12:16:35 PM vereshchaka $
- *
+ * 
  */
 public class ClearFocusForm
 {

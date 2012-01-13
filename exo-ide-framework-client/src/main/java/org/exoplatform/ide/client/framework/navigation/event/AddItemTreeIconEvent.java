@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: AddItemTreeIcon Apr 6, 2011 9:40:05 AM evgen $
- *
+ * 
  */
 public class AddItemTreeIconEvent extends GwtEvent<AddItemTreeIconHandler>
 {

@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link ConvertToProjectEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Oct 27, 2011 3:53:18 PM anya $
- *
+ * @version $Id: Oct 27, 2011 3:53:18 PM anya $
+ * 
  */
 public interface ConvertToProjectHandler extends EventHandler
 {

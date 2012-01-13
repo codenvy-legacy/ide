@@ -26,8 +26,8 @@ import java.util.List;
  * Impement it to create any formatter for controls order.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jan 19, 2011 5:05:29 PM anya $
- *
+ * @version $Id: Jan 19, 2011 5:05:29 PM anya $
+ * 
  */
 public interface ControlsFormatter
 {

@@ -25,12 +25,12 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
- *
+ * 
  */
 public interface ProjectCreatedHandler extends EventHandler
 {
    /**
-    * Perform actions, when user wants to configure build pah of the project. 
+    * Perform actions, when user wants to configure build pah of the project.
     * 
     * @param event
     */

@@ -21,7 +21,8 @@ package org.exoplatform.ide.client.framework.editor.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS        .
+ * Created by The eXo Platform SAS .
+ * 
  * @version $Id: $
  */
 

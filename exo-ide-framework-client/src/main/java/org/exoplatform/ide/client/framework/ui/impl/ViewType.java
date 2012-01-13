@@ -23,7 +23,7 @@ package org.exoplatform.ide.client.framework.ui.impl;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 8, 2010 $
- *
+ * 
  */
 public interface ViewType
 {

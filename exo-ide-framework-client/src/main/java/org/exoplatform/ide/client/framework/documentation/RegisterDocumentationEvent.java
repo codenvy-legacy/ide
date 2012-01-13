@@ -21,11 +21,11 @@ package org.exoplatform.ide.client.framework.documentation;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Fire this to add documentation for specific media file.
- * <br>
+ * Fire this to add documentation for specific media file. <br>
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RegisterDocumentationEvent Jan 24, 2011 11:11:39 AM evgen $
- *
+ * 
  */
 public class RegisterDocumentationEvent extends GwtEvent<RegisterDocumentationHandler>
 {

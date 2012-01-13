@@ -33,9 +33,10 @@ import java.util.List;
  * Discovery service for REST services.
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class RestDiscoveryService
 {
    /**

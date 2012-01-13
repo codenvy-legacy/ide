@@ -34,9 +34,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * This implementation of interface OutlineItemCreatorImpl which is used to create code outline item widget from OutlineTreeGrid class of exo.ide.client library. 
- * Also consists of some utility functions to select outline item icon and define its display label.
- * Function getOutlineItemWidget(Token token) is extended in the specific {FileType}OutlineItemCreator classes of exo-ide-editor-{FileType} libraries.
+ * This implementation of interface OutlineItemCreatorImpl which is used to create code outline item widget from OutlineTreeGrid
+ * class of exo.ide.client library. Also consists of some utility functions to select outline item icon and define its display
+ * label. Function getOutlineItemWidget(Token token) is extended in the specific {FileType}OutlineItemCreator classes of
+ * exo-ide-editor-{FileType} libraries.
+ * 
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $
  */
@@ -82,6 +84,7 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
 
    /**
     * Return parameters list from token.getParameters()
+    * 
     * @param token
     * @return parameters list like '(String, int)', or '()' if there are no parameters
     */
@@ -112,6 +115,7 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
 
    /**
     * get formatted string with java type from token.getElementType() like " : java.lang.String"
+    * 
     * @param token
     * @return string like " : java.lang.String", or "".
     */
@@ -195,6 +199,7 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
 
    /**
     * Return formatted annotation list from token.getAnnotations()
+    * 
     * @param token
     * @return annotations like '@Path; @PathParam(&#34;name&#34;)' or "", if there are no annotations in the token
     */
@@ -216,7 +221,7 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
    }
 
    /**
-    * @param token {@link TokenBeenImpl} 
+    * @param token {@link TokenBeenImpl}
     * @return html element with modifiers and annotation sign
     */
    protected String getModifiersContainer(TokenBeenImpl token)

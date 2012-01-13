@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This interface describes a visual component that can display views in tabs or in any other form. 
+ * This interface describes a visual component that can display views in tabs or in any other form.
  * 
  * Created by The eXo Platform SAS .
  * 

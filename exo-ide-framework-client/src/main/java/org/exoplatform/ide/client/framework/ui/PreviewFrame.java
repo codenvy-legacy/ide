@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Frame;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: PreviewFrame Feb 17, 2011 3:07:09 PM evgen $
- *
+ * 
  */
 public class PreviewFrame extends Frame implements HasLoadHandlers
 {

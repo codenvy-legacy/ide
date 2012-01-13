@@ -28,14 +28,15 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 21, 2010 $
- *
+ * 
  */
 public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
 {
    public static final String CLASS_NAME = org.exoplatform.gwtframework.ui.client.command.Control.class.getName();
 
    /**
-    * @see org.exoplatform.ide.generator.ClassAnnotationMapGenerator#writeConstructor(com.google.gwt.uibinder.rebind.IndentedWriter, com.google.gwt.core.ext.typeinfo.JClassType, java.lang.String, com.google.gwt.core.ext.GeneratorContext)
+    * @see org.exoplatform.ide.generator.ClassAnnotationMapGenerator#writeConstructor(com.google.gwt.uibinder.rebind.IndentedWriter,
+    *      com.google.gwt.core.ext.typeinfo.JClassType, java.lang.String, com.google.gwt.core.ext.GeneratorContext)
     */
    @Override
    protected void writeConstructor(ConsolePrintWriter writer, JClassType interfaceType, String implName,
@@ -71,7 +72,7 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
       writer.println();
    }
 
-   /** 
+   /**
     * @param className name of the super class
     * @param context generator context
     * @return {@link JClassType[]} sub types of the pointed super class

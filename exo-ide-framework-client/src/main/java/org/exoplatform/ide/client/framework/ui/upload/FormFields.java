@@ -46,8 +46,7 @@ public class FormFields
    public static final String ACTION_UPDATE = "update";
 
    /**
-    * The id of existing file, which will be overrided with
-    * new uploaded file.
+    * The id of existing file, which will be overrided with new uploaded file.
     */
    public static final String FILE_ID = "fileId";
 

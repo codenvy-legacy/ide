@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Composite;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: PaasCallback.java Dec 2, 2011 9:35:24 AM vereshchaka $
- *
+ * 
  */
 public interface PaasCallback
 {

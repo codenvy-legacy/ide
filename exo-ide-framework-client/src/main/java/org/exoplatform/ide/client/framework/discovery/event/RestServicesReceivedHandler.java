@@ -21,12 +21,11 @@ package org.exoplatform.ide.client.framework.discovery.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link RestServicesReceivedEvent} event.
- * Created by The eXo Platform SAS.
- *
+ * Handler for {@link RestServicesReceivedEvent} event. Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 21, 2010 4:55:12 PM evgen $
- *
+ * 
  */
 public interface RestServicesReceivedHandler extends EventHandler
 {

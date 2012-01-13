@@ -24,10 +24,10 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event is fired when results from text find in file is received.
  * 
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class EditorTextFoundEvent extends GwtEvent<EditorTextFoundHandler>
 {

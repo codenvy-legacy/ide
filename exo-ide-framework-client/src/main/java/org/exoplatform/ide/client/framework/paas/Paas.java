@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * Class, where paases store their data, when they are registred in IDE.
  * <p/>
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Paas.java Dec 1, 2011 4:14:16 PM vereshchaka $
  */
@@ -65,6 +66,7 @@ public class Paas
     * Return the list of project types, that can be deployed to current PaaS.
     * <p/>
     * If not project types are supported, than return empty list.
+    * 
     * @return the supportedProjectTypes
     */
    public List<String> getSupportedProjectTypes()

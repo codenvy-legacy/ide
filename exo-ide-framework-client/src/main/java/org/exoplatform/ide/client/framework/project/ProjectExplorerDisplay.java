@@ -31,8 +31,8 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 12, 2011 5:45:42 PM anya $
- *
+ * @version $Id: Dec 12, 2011 5:45:42 PM anya $
+ * 
  */
 public interface ProjectExplorerDisplay extends IsView
 {

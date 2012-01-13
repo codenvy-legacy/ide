@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.framework.util;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
@@ -74,7 +75,8 @@ public class Utils
                                                                                        return (string.match(new RegExp(pattern, modifiers)) !== null);
                                                                                        }-*/;
 
-   // emulate java.net.URLDecoder.decode(string,"UTF-8"): before calling decodeURIComponent we replacing "+" on "%20", and "%2F" on "/".
+   // emulate java.net.URLDecoder.decode(string,"UTF-8"): before calling decodeURIComponent we replacing "+" on "%20", and "%2F"
+   // on "/".
    public static native String urlDecode_decode(String string) /*-{
                                                                string = string.replace(/[+]/g, "%20"); // replace "+" on "%20"
                                                                string = string.replace("%2F", "/"); // replace "%2F" on "/"      

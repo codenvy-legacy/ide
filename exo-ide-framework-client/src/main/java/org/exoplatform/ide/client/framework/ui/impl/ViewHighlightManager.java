@@ -31,10 +31,10 @@ import com.google.gwt.event.shared.HandlerManager;
  * 
  * 
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 3, 2010 $
- *
+ * 
  */
 public class ViewHighlightManager implements ViewClosedHandler
 {

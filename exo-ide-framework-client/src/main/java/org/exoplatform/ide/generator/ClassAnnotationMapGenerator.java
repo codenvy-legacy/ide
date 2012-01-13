@@ -25,12 +25,13 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 21, 2010 $
- *
+ * 
  */
 public abstract class ClassAnnotationMapGenerator extends BaseGenerator
 {
    /**
-    * @see org.exoplatform.ide.generator.BaseGenerator#doGenerate(com.google.gwt.core.ext.typeinfo.JClassType, java.lang.String, com.google.gwt.uibinder.rebind.IndentedWriter, com.google.gwt.core.ext.GeneratorContext)
+    * @see org.exoplatform.ide.generator.BaseGenerator#doGenerate(com.google.gwt.core.ext.typeinfo.JClassType, java.lang.String,
+    *      com.google.gwt.uibinder.rebind.IndentedWriter, com.google.gwt.core.ext.GeneratorContext)
     */
    @Override
    protected void doGenerate(JClassType interfaceType, String implName, ConsolePrintWriter writer,

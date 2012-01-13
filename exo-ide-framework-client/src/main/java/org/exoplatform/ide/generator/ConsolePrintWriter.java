@@ -26,7 +26,7 @@ import java.io.PrintWriter;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 28, 2010 $
- *
+ * 
  */
 public class ConsolePrintWriter extends PrintWriter
 {
@@ -38,7 +38,7 @@ public class ConsolePrintWriter extends PrintWriter
     */
    public ConsolePrintWriter(PrintWriter nativePrintWriter)
    {
-      //super(System.out, true);
+      // super(System.out, true);
       super(new ByteArrayOutputStream(), true);
       this.nativePrintWriter = nativePrintWriter;
    }

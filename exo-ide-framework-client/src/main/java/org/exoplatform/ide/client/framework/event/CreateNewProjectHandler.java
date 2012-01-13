@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CreateNewProjectEvent}
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateNewProjectHandler.java Dec 8, 2011 5:38:28 PM vereshchaka $
  */

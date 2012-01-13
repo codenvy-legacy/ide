@@ -29,8 +29,8 @@ import java.util.Set;
 /**
  * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Oct 24, 2011 evgen $
- *
+ * @version $Id: Oct 24, 2011 evgen $
+ * 
  */
 public class ProjectResolver
 {
@@ -48,17 +48,17 @@ public class ProjectResolver
    public static final String SPRING = "Spring";
 
    /**
-    * eXo Development Framework : Chromattic, Groovy REST 
+    * eXo Development Framework : Chromattic, Groovy REST
     */
    public static final String EXO_APP = "eXo App";
 
    /**
-    * Static Web Project: HTML, JS, CSS 
+    * Static Web Project: HTML, JS, CSS
     */
    public static final String STATIC_WEB = "Static Web";
 
    /**
-    * Servlet and JSP API  based project
+    * Servlet and JSP API based project
     */
    public static final String SERVLET_JSP = "Servlet/JSP";
 

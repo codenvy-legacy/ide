@@ -23,7 +23,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CompositeProvider.java Dec 2, 2011 12:21:09 PM vereshchaka $
- *
+ * 
  */
 public interface PaasComponent
 {

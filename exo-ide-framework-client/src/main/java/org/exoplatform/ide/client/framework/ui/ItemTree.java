@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: IdeTree Mar 14, 2011 4:00:06 PM evgen $
- *
+ * 
  */
 public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item>
 {
@@ -88,11 +88,11 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       Grid grid = new Grid(1, 2);
       grid.setWidth("100%");
 
-      //      Image i = new Image(icon);
+      // Image i = new Image(icon);
       TreeIcon i = new TreeIcon(icon);
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
-      //      Label l = new Label(text, false);
+      // Label l = new Label(text, false);
       HTMLPanel l = new HTMLPanel("div", text);
       l.setStyleName("ide-Tree-label");
       grid.setWidget(0, 1, l);
@@ -101,7 +101,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setWidth(0, 1, "100%");
-      //      grid.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
+      // grid.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
       DOM.setStyleAttribute(grid.getElement(), "display", "block");
       return grid;
    }
@@ -125,8 +125,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    /**
     * Work throught children on tree item and compare with pathSplit.
     * <p/>
-    * If last part of child path (substring after last /) equals to pathSplit,
-    * return tree item.
+    * If last part of child path (substring after last /) equals to pathSplit, return tree item.
+    * 
     * @param parent
     * @param id
     * @return
@@ -194,10 +194,10 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
             continue;
          }
 
-         //         if (item.getName() != null && item.getName().startsWith("."))
-         //         {
-         //            continue;
-         //         }
+         // if (item.getName() != null && item.getName().startsWith("."))
+         // {
+         // continue;
+         // }
 
          TreeItem node = createTreeNode(item);
          parentNode.addItem(node);
@@ -208,7 +208,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          }
       }
 
-      //to avoid send open event (thus extra refresh folder is not done)  
+      // to avoid send open event (thus extra refresh folder is not done)
       parentNode.setState(true, false);
    }
 
@@ -244,7 +244,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
        * will be in future
        */
 
-      //to avoid send open event (thus extra refresh folder is not done)  
+      // to avoid send open event (thus extra refresh folder is not done)
       parentNode.setState(true, false);
    }
 
@@ -302,6 +302,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    /**
     * Select icon for item
+    * 
     * @param item
     * @return {@link ImageResource} of item icon
     */
@@ -358,7 +359,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       }
 
       /*
-       * Create root node if tree has not it. 
+       * Create root node if tree has not it.
        */
       if (tree.getItemCount() == 0)
       {
@@ -431,7 +432,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    /**
     * Get all selected items
-    * @return  List of selected items
+    * 
+    * @return List of selected items
     */
    public List<Item> getSelectedItems()
    {
@@ -463,6 +465,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    /**
     * Set lock token map
+    * 
     * @param locktokens
     */
    public void setLocktokens(Map<String, String> locktokens)
@@ -472,6 +475,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    /**
     * Remove selection by Item path
+    * 
     * @param path Item path
     */
    public void deselectItem(String path)
@@ -494,6 +498,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    /**
     * Add info icons to Item main icon
+    * 
     * @param itemsIcons Map of Item, info icon position and info icon URL
     */
    public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons)
@@ -518,6 +523,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    /**
     * Remove info icon from Item main icon
+    * 
     * @param itemsIcons Map of item and position of info icon
     */
    public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)

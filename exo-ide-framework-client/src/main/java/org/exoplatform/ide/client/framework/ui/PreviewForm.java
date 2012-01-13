@@ -47,7 +47,7 @@ public class PreviewForm extends ViewImpl
    public PreviewForm()
    {
       super(ID, ViewType.OPERATION, ID);
-      //      setHeight100();
+      // setHeight100();
    }
 
    /**
@@ -61,7 +61,7 @@ public class PreviewForm extends ViewImpl
 
    /**
     * @param file
-    * @return 
+    * @return
     */
    public void showPreview(String href)
    {

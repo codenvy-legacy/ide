@@ -23,9 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Open new dialog window for asking new file name.
- * Save new file with new name.
- * Created by The eXo Platform SAS .
+ * Open new dialog window for asking new file name. Save new file with new name. Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -34,8 +32,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
 {
    /**
-    * Enum to configure ask for value dialog window:
-    * two buttons (Yes, Cancel) or three buttons (Yes, No, Cancel).
+    * Enum to configure ask for value dialog window: two buttons (Yes, Cancel) or three buttons (Yes, No, Cancel).
     */
    public enum SaveDialogType {
       YES_CANCEL, EXTENDED
@@ -72,8 +69,8 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
     * @param file - file to save
     * @param type - type of dialog window (two or three buttons)
     * @param eventFiredOnNo - event, which will be fired if No button will be clicked
-    * @param eventFiredOnCancel - event, which will be fired if Cancel button will be clicked 
-    * (if null - window will be closed without any actions)
+    * @param eventFiredOnCancel - event, which will be fired if Cancel button will be clicked (if null - window will be closed
+    *           without any actions)
     */
    public SaveFileAsEvent(FileModel file, SaveDialogType type, GwtEvent<?> eventFiredOnNo,
       GwtEvent<?> eventFiredOnCancel)

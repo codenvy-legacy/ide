@@ -58,7 +58,7 @@ public class ViewVisibilityChangedEvent extends GwtEvent<ViewVisibilityChangedHa
    /**
     * Gets view which visibility was changed.
     * 
-    * @return view instance of view which visibility was changed 
+    * @return view instance of view which visibility was changed
     */
    public View getView()
    {

@@ -23,13 +23,12 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.vfs.shared.Folder;
 
 /**
- * Event occurs when folder content is refreshed in browser tree.
- * It is needed to known when the content in browser tree is updated in extensions.
- * Implement {@link FolderRefreshedHandler} handler to process the event.
+ * Event occurs when folder content is refreshed in browser tree. It is needed to known when the content in browser tree is
+ * updated in extensions. Implement {@link FolderRefreshedHandler} handler to process the event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 6, 2011 4:10:23 PM anya $
- *
+ * @version $Id: Apr 6, 2011 4:10:23 PM anya $
+ * 
  */
 public class FolderRefreshedEvent extends GwtEvent<FolderRefreshedHandler>
 {

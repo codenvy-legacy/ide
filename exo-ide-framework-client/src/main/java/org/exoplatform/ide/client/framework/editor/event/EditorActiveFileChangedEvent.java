@@ -24,10 +24,11 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS        .
+ * Created by The eXo Platform SAS .
+ * 
  * @version $Id: $
  * 
- * Fired when changed active file in editor 
+ *          Fired when changed active file in editor
  * 
  */
 public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChangedHandler>

@@ -216,13 +216,13 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
    {
       viewWidget = w;
       viewBorder.add(viewWidget);
-      //      super.add();
+      // super.add();
       viewBorder.setWidgetTopHeight(w, 0, Unit.PX, 100, Unit.PCT);
-      //      setWidgetBottomHeight(w, 100, Unit.PCT, 100, Unit.PCT);
+      // setWidgetBottomHeight(w, 100, Unit.PCT, 100, Unit.PCT);
    }
 
    /**
-    * Adds ChangeViewIconHandler to this view. 
+    * Adds ChangeViewIconHandler to this view.
     * 
     * @see org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewIconHandler#addChangeViewIconHandler(org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconHandler)
     */
@@ -255,7 +255,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
    }
 
    /**
-    * Returns this view as  {@link View}.
+    * Returns this view as {@link View}.
     * 
     * @see org.exoplatform.ide.client.framework.ui.api.IsView#asView()
     */
@@ -402,10 +402,10 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
    {
       this.activated = activated;
       viewBorder.setBorderColor(activated ? "#B6CCE8" : "transparent");
-      //      getElement().getStyle().setBorderColor(activated ? "#B6CCE8" : "transparent");
+      // getElement().getStyle().setBorderColor(activated ? "#B6CCE8" : "transparent");
 
       /*
-       *  Attribute for Selenium Tests
+       * Attribute for Selenium Tests
        */
       getElement().setAttribute("is-active", "" + activated);
    }

@@ -20,9 +20,10 @@ package org.exoplatform.ide.client.framework.job;
 
 /**
  * Simple been to manage Running async REST Services
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 19, 2011 evgen $
- *
+ * @version $Id: Sep 19, 2011 evgen $
+ * 
  */
 public class Job
 {
