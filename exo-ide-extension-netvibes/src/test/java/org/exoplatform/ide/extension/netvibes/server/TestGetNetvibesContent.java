@@ -55,19 +55,19 @@ import javax.ws.rs.core.MultivaluedMap;
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 21, 2010 $
- *
+ * 
  */
 public class TestGetNetvibesContent extends TestCase
 {
 
    private static Log log = ExoLogger.getLogger(TestGetNetvibesContent.class);
-   
+
    private static String WORKSPACE = "dev-monit";
-   
+
    private StandaloneContainer container;
 
    private ResourceLauncher launcher;
-   
+
    private RepositoryService repositoryService;
 
    private SessionImpl session;
@@ -76,13 +76,11 @@ public class TestGetNetvibesContent extends TestCase
 
    private CredentialsImpl credentials;
 
-   private final String netvibesFileData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+   private final String netvibesFileData =
+      "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
          + "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
          + "<html xmlns=\"http://www.w3.org/1999/xhtml\"\n" + "xmlns:widget=\"http://www.netvibes.com/ns/\">\n"
-         + "  <body>\n"
-         + "<p>Hello world!</p>\n"
-         + "</body>\n"
-         + "</html>";
+         + "  <body>\n" + "<p>Hello world!</p>\n" + "</body>\n" + "</html>";
 
    @Before
    public void setUp() throws Exception
@@ -99,56 +97,57 @@ public class TestGetNetvibesContent extends TestCase
 
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
-      
+
       credentials = new CredentialsImpl("root", "exo".toCharArray());
 
       repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
       repository = (RepositoryImpl)repositoryService.getDefaultRepository();
       session = (SessionImpl)repository.login(credentials, WORKSPACE);
-      
+
       SessionProviderService sessionProviderService =
          (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
       assertNotNull(sessionProviderService);
-      
+
       sessionProviderService
          .setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("admin"))));
-      
+
    }
-   
+
    @Test
    public void testGetNetvibesPreview() throws Exception
    {
-      //create file node (netvibes widget)
+      // create file node (netvibes widget)
       final String filePath = "netvibes.html";
       Node base = session.getRootNode();
-      
+
       base = base.addNode(filePath, "nt:file");
       base = base.addNode("jcr:content", "nt:resource");
       base.setProperty("jcr:data", netvibesFileData);
       base.setProperty("jcr:lastModified", Calendar.getInstance());
       base.setProperty("jcr:mimeType", "application/x-uwa-widget");
-      
+
       session.save();
-      
-      //make request to get netvibes data
+
+      // make request to get netvibes data
 
       EnvironmentContext ctx = new EnvironmentContext();
-      
+
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
 
-      ContainerResponse response = launcher.service("GET", "/ide/netvibes/db1/" + WORKSPACE + "/" + filePath, 
-         "http://localhost", headers, null, null, ctx);
-      
-      //check response
+      ContainerResponse response =
+         launcher.service("GET", "/ide/netvibes/db1/" + WORKSPACE + "/" + filePath, "http://localhost", headers, null,
+            null, ctx);
+
+      // check response
       assertEquals(HTTPStatus.OK, response.getStatus());
-      
+
       assertTrue(response.getEntity() instanceof InputStream);
-      
+
       InputStream inputStream = (InputStream)response.getEntity();
-      
+
       int bytesRead;
       byte[] buf = new byte[1024];
-      
+
       ByteArrayOutputStream outS = new ByteArrayOutputStream();
 
       while ((bytesRead = inputStream.read(buf, 0, 1024)) > -1)
@@ -158,12 +157,12 @@ public class TestGetNetvibesContent extends TestCase
 
       String data = outS.toString();
       outS.close();
-      
+
       assertEquals(netvibesFileData, data);
-      
+
       session.refresh(false);
    }
-   
+
    @After
    protected void tearDown() throws Exception
    {

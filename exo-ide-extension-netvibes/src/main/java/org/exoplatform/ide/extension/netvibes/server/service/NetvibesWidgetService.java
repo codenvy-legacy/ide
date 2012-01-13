@@ -58,10 +58,10 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
  * Service for deploying and extracting content of netvibes widgets.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 @Path("/ide/netvibes")
 public class NetvibesWidgetService

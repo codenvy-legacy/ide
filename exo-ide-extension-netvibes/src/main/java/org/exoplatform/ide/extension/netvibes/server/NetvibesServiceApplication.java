@@ -27,10 +27,10 @@ import org.exoplatform.ide.extension.netvibes.server.service.NetvibesWidgetServi
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 13, 2011 11:54:18 AM evgen $
- *
+ * 
  */
 public class NetvibesServiceApplication extends Application
 {
@@ -42,9 +42,9 @@ public class NetvibesServiceApplication extends Application
    public Set<Class<?>> getClasses()
    {
       Set<Class<?>> classes = new HashSet<Class<?>>();
-      
+
       classes.add(NetvibesWidgetService.class);
-      
+
       return classes;
    }
 

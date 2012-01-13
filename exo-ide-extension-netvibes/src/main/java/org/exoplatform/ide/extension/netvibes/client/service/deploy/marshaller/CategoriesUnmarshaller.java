@@ -36,7 +36,7 @@ import org.exoplatform.ide.extension.netvibes.client.model.Categories;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 30, 2010 $
- *
+ * 
  */
 public class CategoriesUnmarshaller implements Unmarshallable
 {
@@ -62,7 +62,7 @@ public class CategoriesUnmarshaller implements Unmarshallable
    public final static String ID = "id";
 
    /**
-    * @param categories 
+    * @param categories
     */
    public CategoriesUnmarshaller(Categories categories)
    {
@@ -78,7 +78,7 @@ public class CategoriesUnmarshaller implements Unmarshallable
       try
       {
          Document doc = XMLParser.parse(response.getText());
-         //Get all "category" tags:
+         // Get all "category" tags:
          NodeList categoryList = doc.getElementsByTagName(CATEGORY);
          for (int i = 0; i < categoryList.getLength(); i++)
          {

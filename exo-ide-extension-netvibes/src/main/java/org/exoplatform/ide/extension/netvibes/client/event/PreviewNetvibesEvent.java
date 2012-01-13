@@ -23,13 +23,13 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: PreviewNetvibesEvent Feb 17, 2011 3:37:27 PM evgen $
- *
+ * 
  */
 public class PreviewNetvibesEvent extends GwtEvent<PreviewNetvibesHandler>
 {
 
-   public static Type<PreviewNetvibesHandler> TYPE= new Type<PreviewNetvibesHandler>();
-   
+   public static Type<PreviewNetvibesHandler> TYPE = new Type<PreviewNetvibesHandler>();
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

@@ -44,6 +44,7 @@ import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -56,14 +57,14 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
     * IDE application configuration.
     */
    private IDEConfiguration configuration;
-   
+
    /**
     * Current opened file in editor
     */
    private FileModel activeFile;
-   
+
    private boolean previewOpened = false;
-   
+
    private PreviewForm previewForm;
 
    /**
@@ -84,8 +85,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
 
       NetvibesClientBundle.INSTANCE.css().ensureInjected();
 
-      IDE.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET,
-         "http://dev.netvibes.com/doc/uwa/documentation"));
+      IDE.fireEvent(new RegisterDocumentationEvent(MimeType.UWA_WIDGET, "http://dev.netvibes.com/doc/uwa/documentation"));
    }
 
    /**
@@ -104,20 +104,19 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    @Override
    public void onPreviewNetvibes(PreviewNetvibesEvent event)
    {
-      if(activeFile == null)
+      if (activeFile == null)
          return;
-     
-      
+
       String href = activeFile.getLinkByRelation(Link.REL_CONTENT).getHref();
       href = href.replace("jcr", "ide/netvibes");
-      
+
       if (previewForm == null)
       {
          previewForm = new PreviewForm();
          previewForm.setIcon(new Image(NetvibesClientBundle.INSTANCE.preview()));
       }
       previewForm.showPreview(href);
-      
+
       if (previewOpened)
       {
          previewForm.setViewVisible();
@@ -136,7 +135,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      if(previewOpened)
+      if (previewOpened)
       {
          IDE.getInstance().closeView(PreviewForm.ID);
          previewOpened = false;

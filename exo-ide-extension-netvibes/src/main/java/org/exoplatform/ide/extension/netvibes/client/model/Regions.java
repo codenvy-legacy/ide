@@ -21,12 +21,12 @@ package org.exoplatform.ide.extension.netvibes.client.model;
 import java.util.LinkedHashMap;
 
 /**
- * List of available supported regions taken from http://dev.netvibes.com/doc/api/eco/region.
- * Using a non-supported code will result in a submission error.
+ * List of available supported regions taken from http://dev.netvibes.com/doc/api/eco/region. Using a non-supported code will
+ * result in a submission error.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 30, 2010 $
- *
+ * 
  */
 public class Regions
 {
@@ -47,7 +47,7 @@ public class Regions
       regionsMap.put("ch", "Switzerland");
       regionsMap.put("gb", "United Kingdom");
       regionsMap.put("ca", "Canada");
-      
+
       regionsMap.put("us", "United States");
       regionsMap.put("mx", "Mexico");
       regionsMap.put("br", "Brazil");
@@ -58,7 +58,7 @@ public class Regions
       regionsMap.put("il", "Israel");
       regionsMap.put("jp", "Japan");
       regionsMap.put("kr", "South Korea");
-      
+
       regionsMap.put("sg", "Singapore");
       regionsMap.put("tw", "China (Taiwan)");
       regionsMap.put("hk", "China (Hong Kong)");
@@ -69,7 +69,7 @@ public class Regions
       regionsMap.put("nl", "Netherlands");
       regionsMap.put("qc", "Canada (Quebec)");
       regionsMap.put("no", "Norway");
-      
+
       regionsMap.put("tr", "Turkey");
       regionsMap.put("dk", "Denmark");
       regionsMap.put("cz", "Czech Republic");
@@ -80,7 +80,7 @@ public class Regions
       regionsMap.put("pl", "Poland");
       regionsMap.put("lv", "Latvia");
       regionsMap.put("ma", "Morocco");
-      
+
       regionsMap.put("th", "Thailand");
       regionsMap.put("in", "India");
       regionsMap.put("ro", "Romania");
@@ -91,7 +91,7 @@ public class Regions
       regionsMap.put("al", "Albania");
       regionsMap.put("hr", "Croatia");
       regionsMap.put("ph", "Philippines");
-      
+
       regionsMap.put("ba", "Bosnia and Herzegovina");
       regionsMap.put("ko", "Kosovo");
       regionsMap.put("ee", "Estonia");
@@ -102,7 +102,7 @@ public class Regions
       regionsMap.put("sy", "Syria");
       regionsMap.put("si", "Slovenia");
       regionsMap.put("eg", "Egypt");
-      
+
       regionsMap.put("ga", "Spain (Galicia)");
       regionsMap.put("cm", "Cameroon");
       regionsMap.put("pe", "Peru");
@@ -113,7 +113,7 @@ public class Regions
       regionsMap.put("bz", "Belize");
       regionsMap.put("cr", "Costa Rica");
       regionsMap.put("sv", "El Salvador");
-      
+
       regionsMap.put("gt", "Guatemala");
       regionsMap.put("hn", "Honduras");
       regionsMap.put("ni", "Nicaragua");
@@ -124,7 +124,7 @@ public class Regions
       regionsMap.put("fk", "Falkland Islands");
       regionsMap.put("gy", "Guyana");
       regionsMap.put("py", "Paraguay");
-      
+
       regionsMap.put("sr", "Suriname");
       regionsMap.put("uy", "Uruguay");
       regionsMap.put("ve", "Venezuela");
@@ -135,7 +135,7 @@ public class Regions
       regionsMap.put("cy", "Cyprus");
       regionsMap.put("pv", "Basque Country");
       regionsMap.put("zz", "World");
-      
+
       regionsMap.put("bef", "Belgium (french)");
       regionsMap.put("ie", "Ireland");
       regionsMap.put("my", "Malaysia");
@@ -146,7 +146,7 @@ public class Regions
       regionsMap.put("bh", "Bahreïn");
       regionsMap.put("tn", "Tunisia");
       regionsMap.put("ci", "Ivory Coast");
-      
+
       regionsMap.put("ke", "Kenya");
       regionsMap.put("mr", "Mauritania");
       regionsMap.put("sn", "Senegal");
@@ -157,9 +157,9 @@ public class Regions
       regionsMap.put("ly", "Lybia");
       regionsMap.put("is", "Iceland");
       regionsMap.put("gra", "Greece (Attica)");
-      
+
       regionsMap.put("chf", "Switzerland (french)");
-    }
+   }
 
    /**
     * Get map with available regions.

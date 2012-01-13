@@ -22,34 +22,34 @@ import com.google.gwt.resources.client.CssResource;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 23, 2010 3:46:05 PM evgen $
- *
+ * 
  */
 public interface NetvibesCss extends CssResource
 {
-  @ClassName("exo-autocomplete-panel")
-  String panelStyle(); 
-  
-  @ClassName("exo-autocomplete-list-item")
-  String item();
-  
-  @ClassName("exo-autocomplete-list-item-overed")
-  String overedItem();
-  
-  @ClassName("exo-autocomplete-list-item-selected")
-  String selectedItem();
-  
-  @ClassName("exo-autocomplete-description")
-  String description();
-  
-  @ClassName("exo-autocomplete-list")
-  String listStyle();
-  
-  @ClassName("exo-autocomplete-fqn")
-  String fqnStyle();
-  
-  @ClassName("exo-autocomplete-keyword")
-  String keywordStyle();
+   @ClassName("exo-autocomplete-panel")
+   String panelStyle();
+
+   @ClassName("exo-autocomplete-list-item")
+   String item();
+
+   @ClassName("exo-autocomplete-list-item-overed")
+   String overedItem();
+
+   @ClassName("exo-autocomplete-list-item-selected")
+   String selectedItem();
+
+   @ClassName("exo-autocomplete-description")
+   String description();
+
+   @ClassName("exo-autocomplete-list")
+   String listStyle();
+
+   @ClassName("exo-autocomplete-fqn")
+   String fqnStyle();
+
+   @ClassName("exo-autocomplete-keyword")
+   String keywordStyle();
 }

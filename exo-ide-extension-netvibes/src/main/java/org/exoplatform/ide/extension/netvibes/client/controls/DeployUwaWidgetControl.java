@@ -28,11 +28,11 @@ import org.exoplatform.ide.extension.netvibes.client.Images;
 import org.exoplatform.ide.extension.netvibes.client.event.DeployUwaWidgetEvent;
 
 /**
- * Control for deploying UWA widgets to Netvibes Ecosystem. 
+ * Control for deploying UWA widgets to Netvibes Ecosystem.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 29, 2010 $
- *
+ * 
  */
 public class DeployUwaWidgetControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
@@ -85,9 +85,9 @@ public class DeployUwaWidgetControl extends SimpleControl implements IDEControl,
          setVisible(false);
          return;
       }
-      //Visible if file MIME type is "application/x-uwa-widget":
+      // Visible if file MIME type is "application/x-uwa-widget":
       boolean isVisible = MimeType.UWA_WIDGET.equals(event.getFile().getMimeType());
-      //Enabled if file is saved:
+      // Enabled if file is saved:
       boolean isEnabled = (isVisible && event.getFile().isPersisted());
       setVisible(isVisible);
       setEnabled(isEnabled);

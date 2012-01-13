@@ -23,12 +23,11 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Image bundle with resources for autocomplete form 
- * inside javascript tags in netvibes files.
+ * Image bundle with resources for autocomplete form inside javascript tags in netvibes files.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JsAutocompleteImageBundle.java Jan 24, 2011 10:37:28 AM vereshchaka $
- *
+ * 
  */
 public interface NetvibesClientBundle extends ClientBundle
 {

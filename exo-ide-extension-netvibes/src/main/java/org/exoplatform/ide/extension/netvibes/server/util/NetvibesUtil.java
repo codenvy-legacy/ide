@@ -27,19 +27,18 @@ import javax.jcr.Session;
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 20, 2010 $
- *
+ * 
  */
 public class NetvibesUtil
 {
    public static InputStream getContent(Session session, String repoPath) throws RepositoryException
    {
       Node rootNode = session.getRootNode();
-      
+
       Node base = rootNode.getNode(repoPath);
-      
-      InputStream inputStream =
-         base.getNode("jcr:content").getProperty("jcr:data").getStream();
-      
+
+      InputStream inputStream = base.getNode("jcr:content").getProperty("jcr:data").getStream();
+
       return inputStream;
    }
 }

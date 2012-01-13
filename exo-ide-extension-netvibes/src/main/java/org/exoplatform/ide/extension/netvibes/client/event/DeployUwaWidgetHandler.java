@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 29, 2010 $
- *
+ * 
  */
 public interface DeployUwaWidgetHandler extends EventHandler
 {

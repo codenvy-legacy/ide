@@ -23,11 +23,11 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: PreviewNetvibesHandler Feb 17, 2011 3:37:40 PM evgen $
- *
+ * 
  */
 public interface PreviewNetvibesHandler extends EventHandler
 {
 
    void onPreviewNetvibes(PreviewNetvibesEvent event);
-   
+
 }

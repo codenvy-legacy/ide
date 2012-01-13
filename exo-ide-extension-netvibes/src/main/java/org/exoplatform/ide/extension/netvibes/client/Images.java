@@ -23,31 +23,31 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface Images
 {
-   
+
    public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
-   
-   public static final String UWA_WIGET =  IMAGE_URL + "module/netvibes/uwa-widget.png";
-   
+
+   public static final String UWA_WIGET = IMAGE_URL + "module/netvibes/uwa-widget.png";
+
    public interface Controls
    {
 
       public static String DEPLOY_WIDGET = IMAGE_URL + "module/netvibes/controls/deploy-widget.png";
 
    }
-   
+
    public interface Buttons
    {
 
       public static String NEXT_STEP = IMAGE_URL + "module/netvibes/buttons/next-step.png";
-      
+
       public static String PREV_STEP = IMAGE_URL + "module/netvibes/buttons/prev-step.png";
-      
+
       public static String CANCEL = IMAGE_URL + "module/netvibes/buttons/cancel.png";
-      
+
       public static String OK = IMAGE_URL + "module/netvibes/buttons/ok.png";
    }
 }

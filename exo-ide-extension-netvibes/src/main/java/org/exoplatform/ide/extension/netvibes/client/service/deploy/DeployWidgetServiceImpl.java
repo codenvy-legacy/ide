@@ -37,7 +37,7 @@ import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.D
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 30, 2010 $
- *
+ * 
  */
 public class DeployWidgetServiceImpl extends DeployWidgetService
 {
@@ -108,27 +108,30 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
 
       AsyncRequest.build(RequestBuilder.GET, CATEGORIES_URL, loader).send(callback);
    }
-   
+
    /**
-    * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#deploy(org.exoplatform.ide.client.module.netvibes.model.DeployWidget, java.lang.String, java.lang.String, org.exoplatform.ide.client.module.netvibes.service.deploy.callback.WidgetDeployCallback)
+    * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#deploy(org.exoplatform.ide.client.module.netvibes.model.DeployWidget,
+    *      java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.client.module.netvibes.service.deploy.callback.WidgetDeployCallback)
     */
    @Override
    public void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback callback)
    {
       String url = restContext + SERVICE_PATH + DEPLOY;
       String params = PASSWORD + "=" + password + "&";
-      params += LOGIN + "=" + login+"&";
-      params += APIKEY + "=" + deployWidget.getApiKey()+"&";
+      params += LOGIN + "=" + login + "&";
+      params += APIKEY + "=" + deployWidget.getApiKey() + "&";
       params += SECRET_KEY + "=" + deployWidget.getSecretKey();
-      
+
       DeployResult deployResult = new DeployResult();
       callback.setResult(callback.new WidgetDeployData(deployWidget, deployResult));
-      
+
       DeployWidgetMarshaller marshaller = new DeployWidgetMarshaller(deployWidget);
       DeployResultUnmarshaller unmarshaller = new DeployResultUnmarshaller(deployResult);
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.POST, url+"?"+params, loader).header(LOGIN, login).header(PASSWORD, password).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).header(LOGIN, login)
+         .header(PASSWORD, password).data(marshaller).send(callback);
    }
 
 }

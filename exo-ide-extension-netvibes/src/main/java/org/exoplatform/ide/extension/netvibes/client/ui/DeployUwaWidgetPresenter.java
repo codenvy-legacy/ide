@@ -51,12 +51,12 @@ import com.google.gwt.user.client.ui.HasValue;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 29, 2010 $
- *
+ * 
  */
 public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClosedHandler
 {
 
-   public interface Display extends IsView 
+   public interface Display extends IsView
    {
 
       /**
@@ -228,7 +228,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
    private Categories categories;
 
    /**
-    * @param eventBus 
+    * @param eventBus
     */
    public DeployUwaWidgetPresenter()
    {
@@ -237,7 +237,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
    }
 
    /**
-    * @param d 
+    * @param d
     */
    public void bindDisplay()
    {
@@ -393,24 +393,26 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display) {
+      if (event.getView() instanceof Display)
+      {
          display = null;
       }
-   }   
-   
+   }
+
    /**
     * @see org.exoplatform.ide.client.module.netvibes.event.DeployUwaWidgetHandler#onDeployUwaWidget(org.exoplatform.ide.client.module.netvibes.event.DeployUwaWidgetEvent)
     */
    public void onDeployUwaWidget(DeployUwaWidgetEvent event)
    {
-      if (display != null) {
+      if (display != null)
+      {
          return;
       }
-      
+
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
-      
+
       currentStep = 1;
       display.displayMainInfo(true);
       display.updateDeployButtonState(false, false);
@@ -496,7 +498,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
    {
       if (url != null && url.length() > 0)
       {
-         //TODO do URL validation
+         // TODO do URL validation
          return true;
       }
       return false;
@@ -551,8 +553,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
    }
 
    /**
-    * Do deploy operation. 
-    * Fill the data bean for deploy and call service method.
+    * Do deploy operation. Fill the data bean for deploy and call service method.
     */
    private void doDeploy()
    {
@@ -607,7 +608,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
       String language = display.getLanguage().getValue();
       String category = display.getCategory().getValue();
       String region = display.getRegion().getValue();
-      //Check region, language and category values are not null and exist in defined list of values:
+      // Check region, language and category values are not null and exist in defined list of values:
       return (language != null && category != null && region != null
          && Languages.getLanguagesMap().values().contains(language)
          && Regions.getRegionsMap().values().contains(region) && categories.getCategoryMap().values()

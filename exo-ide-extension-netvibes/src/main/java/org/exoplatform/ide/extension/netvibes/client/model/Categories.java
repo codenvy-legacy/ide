@@ -21,11 +21,11 @@ package org.exoplatform.ide.extension.netvibes.client.model;
 import java.util.LinkedHashMap;
 
 /**
- * Available Netvibes widget's categories. 
+ * Available Netvibes widget's categories.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 30, 2010 $
- *
+ * 
  */
 public class Categories
 {

@@ -25,16 +25,15 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 29, 2010 $
- *
+ * 
  */
 public class DeployUwaWidgetEvent extends GwtEvent<DeployUwaWidgetHandler>
 {
    /**
-    * Type class used to register events with the HandlerManager. 
+    * Type class used to register events with the HandlerManager.
     */
    public static final GwtEvent.Type<DeployUwaWidgetHandler> TYPE = new GwtEvent.Type<DeployUwaWidgetHandler>();
-   
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

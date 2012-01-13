@@ -43,7 +43,7 @@ import java.util.LinkedHashMap;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 29, 2010 $
- *
+ * 
  */
 public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPresenter.Display
 {
@@ -60,7 +60,7 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
 
    private static final String TITLE = "Deploy UWA Widget to Netvibes Ecosystem";
 
-   //IDs for Selenium tests:
+   // IDs for Selenium tests:
 
    private final String ID_DEPLOY_WIDGET_BUTTON = "ideDeployUwaWidgetFormDeployWidgetButton";
 
@@ -102,7 +102,7 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
 
    private final String ID_PASSWORD_FIELD = "ideDeployUwaWidgetFormPasswordField";
 
-   //Buttons:
+   // Buttons:
 
    private ImageButton deployWidgetButton;
 
@@ -112,7 +112,7 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
 
    private ImageButton prevStepButton;
 
-   //Main :
+   // Main :
 
    private TextField urlField;
 
@@ -136,7 +136,7 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
 
    private ComboBoxField regionField;
 
-   //Private information
+   // Private information
 
    private PasswordField secretKeyField;
 
@@ -146,7 +146,7 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
 
    private PasswordField passwordField;
 
-   //Layouts
+   // Layouts
 
    private VerticalPanel mainInfoLayout;
 
@@ -157,32 +157,32 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
    private LinkedHashMap<String, String> categories = new LinkedHashMap<String, String>();
 
    /**
-    * @param eventBus 
+    * @param eventBus
     */
    public DeployUwaWidgetView()
    {
       super(ID, "modal", TITLE, new Image(Images.Controls.DEPLOY_WIDGET), WIDTH, HEIGHT);
 
-      //Main layout of the dialog window:
+      // Main layout of the dialog window:
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
-      //Create layout for main information
+      // Create layout for main information
       mainInfoLayout = createMainInfoLayout();
       mainLayout.add(mainInfoLayout);
 
-      //Create layout for detailed information
+      // Create layout for detailed information
       detailsLayout = createDetailsLayout();
       mainLayout.add(detailsLayout);
 
-      //Create layout for private information
+      // Create layout for private information
       privacyLayout = createPrivacyLayout();
       mainLayout.add(privacyLayout);
 
-      //Create and layout with buttons
+      // Create and layout with buttons
       mainLayout.add(createButtonsLayout());
 
       add(mainLayout);
@@ -276,20 +276,22 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
       versionField = createTextField(ID_VERSION_FIELD, "Widget version", "", 150);
       keywordsField = createTextField(ID_KEYWORDS_FIELD, "Descriptive keywords (max 6, space separated)", "", 300);
       thumbnailField = createTextField(ID_TUMBNAIL_FIELD, "Thumbnail URL", "", 300);
-      
+
       com.google.gwt.user.client.ui.Label languageLabel = new com.google.gwt.user.client.ui.Label("Main language*");
       languageField = createCombobox(ID_LANGUAGE_FIELD, 150);
       VerticalPanel languageVp = new VerticalPanel();
       languageVp.add(languageLabel);
       languageVp.add(languageField);
-      
-      com.google.gwt.user.client.ui.Label categoryLabel = new com.google.gwt.user.client.ui.Label("Most appropriate category*");
+
+      com.google.gwt.user.client.ui.Label categoryLabel =
+         new com.google.gwt.user.client.ui.Label("Most appropriate category*");
       categoryField = createCombobox(ID_CATEGORY_FIELD, 150);
       VerticalPanel categoryVp = new VerticalPanel();
       categoryVp.add(categoryLabel);
       categoryVp.add(categoryField);
-      
-      com.google.gwt.user.client.ui.Label regionLabel = new com.google.gwt.user.client.ui.Label("Most appropriate region*");
+
+      com.google.gwt.user.client.ui.Label regionLabel =
+         new com.google.gwt.user.client.ui.Label("Most appropriate region*");
       regionField = createCombobox(ID_REGION_FIELD, 150);
       VerticalPanel regionVp = new VerticalPanel();
       regionVp.add(regionLabel);
@@ -509,7 +511,8 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#updateDeployButtonState(boolean, boolean)
+    * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#updateDeployButtonState(boolean,
+    *      boolean)
     */
    public void updateDeployButtonState(boolean isVisible, boolean isEnabled)
    {

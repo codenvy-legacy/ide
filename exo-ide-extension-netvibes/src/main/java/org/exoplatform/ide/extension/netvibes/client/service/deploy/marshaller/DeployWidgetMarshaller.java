@@ -32,7 +32,7 @@ import org.exoplatform.ide.extension.netvibes.client.model.Regions;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 1, 2010 $
- *
+ * 
  */
 public class DeployWidgetMarshaller implements Marshallable
 {
@@ -201,7 +201,7 @@ public class DeployWidgetMarshaller implements Marshallable
       doc.appendChild(entry);
       String request = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + doc.toString();
 
-      //FF cuts the "xmlns" attribute.
+      // FF cuts the "xmlns" attribute.
       if (request.indexOf("http://www.w3.org/2005/Atom") == -1)
       {
          return request.replaceAll("<entry", "<entry xmlns=\"http://www.w3.org/2005/Atom\"");
@@ -210,7 +210,7 @@ public class DeployWidgetMarshaller implements Marshallable
    }
 
    /**
-    * Appends keyword XML elements to pointed element. 
+    * Appends keyword XML elements to pointed element.
     * 
     * @param keywordStr string with keywords space separated
     * @param element element to append keywords XML elements

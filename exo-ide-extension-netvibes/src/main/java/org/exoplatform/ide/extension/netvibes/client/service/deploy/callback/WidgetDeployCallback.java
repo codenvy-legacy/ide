@@ -30,29 +30,29 @@ import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.Wid
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WidgetCategoryCallback.java Feb 11, 2011 4:50:09 PM vereshchaka $
- *
+ * 
  */
 public abstract class WidgetDeployCallback extends AsyncRequestCallback<WidgetDeployData>
 {
-   
+
    public class WidgetDeployData
    {
       /**
        * Data for deploying widget.
        */
       private DeployWidget deployWidget;
-      
+
       /**
        * The result of the deploy.
        */
       private DeployResult deployResult;
-      
+
       public WidgetDeployData(DeployWidget deployWidget, DeployResult deployResult)
       {
          this.deployWidget = deployWidget;
          this.deployResult = deployResult;
       }
-      
+
       /**
        * @return the deployWidget
        */
@@ -60,7 +60,7 @@ public abstract class WidgetDeployCallback extends AsyncRequestCallback<WidgetDe
       {
          return deployWidget;
       }
-      
+
       /**
        * @return the deployResult
        */

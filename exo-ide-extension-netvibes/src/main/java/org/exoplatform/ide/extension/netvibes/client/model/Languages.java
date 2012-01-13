@@ -21,12 +21,12 @@ package org.exoplatform.ide.extension.netvibes.client.model;
 import java.util.LinkedHashMap;
 
 /**
- * The list of supported languages taken from http://eco.netvibes.com/lang scheme.
- * Usage a non-supported code will result in a submission error.
+ * The list of supported languages taken from http://eco.netvibes.com/lang scheme. Usage a non-supported code will result in a
+ * submission error.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 30, 2010 $
- *
+ * 
  */
 public class Languages
 {

@@ -33,10 +33,10 @@ import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 18, 2010 2:05:14 PM evgen $
- *
+ * 
  */
 public class TestNetvibesDeploy extends TestCase
 {

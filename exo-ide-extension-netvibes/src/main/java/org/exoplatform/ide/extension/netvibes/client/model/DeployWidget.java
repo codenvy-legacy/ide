@@ -23,7 +23,7 @@ package org.exoplatform.ide.extension.netvibes.client.model;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 1, 2010 $
- *
+ * 
  */
 public class DeployWidget
 {

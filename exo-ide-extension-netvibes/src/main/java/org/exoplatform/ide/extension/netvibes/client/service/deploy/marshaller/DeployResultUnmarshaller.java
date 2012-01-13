@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.netvibes.client.model.DeployResult;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 2, 2010 $
- *
+ * 
  */
 public class DeployResultUnmarshaller implements Unmarshallable
 {

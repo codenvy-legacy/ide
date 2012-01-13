@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.Wid
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 30, 2010 $
- *
+ * 
  */
 public abstract class DeployWidgetService
 {
@@ -54,8 +54,8 @@ public abstract class DeployWidgetService
    }
 
    /**
-    * Gets the list of available widget's categories.
-    * The location of the categories must be pointed in the service implementation.
+    * Gets the list of available widget's categories. The location of the categories must be pointed in the service
+    * implementation.
     * 
     * @param callback - the callback code which the user has to implement
     */
