@@ -27,7 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: SshPublicKeyUnmarshaller May 19, 2011 2:28:26 PM evgen $
- *
+ * 
  */
 public class SshPublicKeyUnmarshaller implements Unmarshallable
 {

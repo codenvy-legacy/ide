@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: GenerateKeysMarshaller May 19, 2011 11:02:54 AM evgen $
- *
+ * 
  */
 public class GenerateSshKeysMarshaller implements Marshallable
 {

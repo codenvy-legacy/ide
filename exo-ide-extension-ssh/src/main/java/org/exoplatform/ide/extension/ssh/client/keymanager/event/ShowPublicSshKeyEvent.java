@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: ShowPublicSshKeyEvent May 19, 2011 12:23:55 PM evgen $
- *
+ * 
  */
 public class ShowPublicSshKeyEvent extends GwtEvent<ShowPublicSshKeyHandler>
 {

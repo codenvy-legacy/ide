@@ -27,7 +27,7 @@ import com.google.gwt.resources.client.ClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshClientBundle May 18, 2011 9:23:17 AM evgen $
- *
+ * 
  */
 public interface SshClientBundle extends ClientBundle
 {

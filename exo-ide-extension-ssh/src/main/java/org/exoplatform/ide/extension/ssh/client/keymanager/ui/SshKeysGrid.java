@@ -36,7 +36,7 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeysGrid May 18, 2011 12:20:34 PM evgen $
- *
+ * 
  */
 public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem>
 {
@@ -155,7 +155,8 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
    private class Link extends ClickableTextCell
    {
       /**
-       * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context, com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+       * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context,
+       *      com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
        */
       @Override
       protected void render(com.google.gwt.cell.client.Cell.Context context, final SafeHtml value, SafeHtmlBuilder sb)

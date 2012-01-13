@@ -25,19 +25,19 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 
 /**
- * A widget that implements this interface provides registration for
- * {@link ClickHandler} instances, for two action column in grid component.
- * Need to add buttons click handlers in presenter.
- * <br />
+ * A widget that implements this interface provides registration for {@link ClickHandler} instances, for two action column in grid
+ * component. Need to add buttons click handlers in presenter. <br />
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: HasSshKeyButtonsClickHandler May 18, 2011 3:57:06 PM evgen $
- *
+ * 
  */
 public interface HasSshGrid<T> extends ListGridItem<T>
 {
 
    /**
     * Add handler to View public key button
+    * 
     * @param handler
     * @return {@link HandlerRegistration}
     */
@@ -45,6 +45,7 @@ public interface HasSshGrid<T> extends ListGridItem<T>
 
    /**
     * Add handler to Delete Key button
+    * 
     * @param handler
     * @return {@link HandlerRegistration}
     */

@@ -35,7 +35,7 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
- *
+ * 
  */
 public class SshKeyService
 {
@@ -46,7 +46,7 @@ public class SshKeyService
 
    private final Loader loader;
 
-   //   private final int httpsPort;
+   // private final int httpsPort;
 
    /**
     * 
@@ -55,7 +55,7 @@ public class SshKeyService
    {
       this.restContext = restContext;
       this.loader = loader;
-      //    this.httpsPort = httpsPort;
+      // this.httpsPort = httpsPort;
       instance = this;
    }
 
@@ -66,14 +66,15 @@ public class SshKeyService
 
    /**
     * Receive all ssh key, stored on server
+    * 
     * @param callback
     */
    public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback)
    {
-      //      UrlBuilder builder = new UrlBuilder();
-      //      String url =
-      //         builder.setProtocol("https").setHost(Location.getHost()).setPort(httpsPort)
-      //            .setPath(GWT.getModuleName()+ "/" + sslContext + "/ide/ssh-keys/all").buildString();
+      // UrlBuilder builder = new UrlBuilder();
+      // String url =
+      // builder.setProtocol("https").setHost(Location.getHost()).setPort(httpsPort)
+      // .setPath(GWT.getModuleName()+ "/" + sslContext + "/ide/ssh-keys/all").buildString();
 
       JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
       loader.setMessage("Getting SSH keys....");
@@ -84,6 +85,7 @@ public class SshKeyService
 
    /**
     * Generate new ssh key pare
+    * 
     * @param host for ssh key
     * @param callback
     */
@@ -100,6 +102,7 @@ public class SshKeyService
 
    /**
     * Get public ssh key
+    * 
     * @param keyItem to get public key
     * @param callback
     */
@@ -114,6 +117,7 @@ public class SshKeyService
 
    /**
     * Delete ssh key
+    * 
     * @param keyItem to delete
     * @param callback
     */

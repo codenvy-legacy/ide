@@ -39,7 +39,7 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: SshPublicKeyPresenter May 19, 2011 12:32:14 PM evgen $
- *
+ * 
  */
 public class SshPublicKeyPresenter implements ViewClosedHandler
 {
@@ -50,9 +50,9 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
       HasClickHandlers getCloseButton();
 
       HasValue<String> getKeyField();
-      
+
       void addHostToTitle(String host);
-      
+
    }
 
    private KeyItem keyItem;
@@ -72,9 +72,9 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
       display = GWT.create(Display.class);
 
       bind();
-      
+
       display.addHostToTitle(keyItem.getHost());
-      
+
       IDE.getInstance().openView(display.asView());
 
       showPublicKey();

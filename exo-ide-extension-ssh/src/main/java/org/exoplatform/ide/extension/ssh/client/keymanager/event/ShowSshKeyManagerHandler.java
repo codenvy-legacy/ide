@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowSshKeyManagerHandler May 18, 2011 9:53:01 AM evgen $
- *
+ * 
  */
 public interface ShowSshKeyManagerHandler extends EventHandler
 {

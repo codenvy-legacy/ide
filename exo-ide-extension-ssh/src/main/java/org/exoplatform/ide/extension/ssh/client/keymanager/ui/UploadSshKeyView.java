@@ -39,20 +39,20 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * This view represent upload private ssh key.
- * It's contains two fields:
+ * This view represent upload private ssh key. It's contains two fields:
  * <ul>
- * <li> Host name
- * <li> File name(which fills by "File upload dialog")
+ * <li>Host name
+ * <li>File name(which fills by "File upload dialog")
  * </ul>
  * And two buttons:
  * <ul>
- * <li> Upload
- * <li> Cancel
- * </ul> 
+ * <li>Upload
+ * <li>Cancel
+ * </ul>
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 
 public class UploadSshKeyView extends ViewImpl implements Display
@@ -80,13 +80,13 @@ public class UploadSshKeyView extends ViewImpl implements Display
 
    @UiField
    ImageButton uploadButton;
-   
+
    @UiField
    TextInput fileNameField;
-   
+
    @UiField
    Label messageLabel;
-   
+
    @UiField
    FormPanel formPanel;
 
@@ -98,6 +98,7 @@ public class UploadSshKeyView extends ViewImpl implements Display
 
    /**
     * Factory method, uses for UiBinder
+    * 
     * @return instance of {@link SshLocalizationConstant}
     */
    @UiFactory
@@ -105,7 +106,7 @@ public class UploadSshKeyView extends ViewImpl implements Display
    {
       return SshKeyExtension.CONSTANTS;
    }
-   
+
    /**
     * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getHostField()
     */
@@ -124,14 +125,15 @@ public class UploadSshKeyView extends ViewImpl implements Display
       return cancelButton;
    }
 
-//   /**
-//    * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setFileSelectedHandler(org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler)
-//    */
-//   @Override
-//   public void setFileSelectedHandler(FileSelectedHandler fileSelectedHandler)
-//   {
-//      fileField. setFileSelectedHandler(fileSelectedHandler);
-//   }
+   // /**
+   // * @see
+   // org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setFileSelectedHandler(org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler)
+   // */
+   // @Override
+   // public void setFileSelectedHandler(FileSelectedHandler fileSelectedHandler)
+   // {
+   // fileField. setFileSelectedHandler(fileSelectedHandler);
+   // }
 
    /**
     * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getFileNameField()

@@ -25,20 +25,21 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  * @param <T>
-*/
+ */
 public abstract class JsonpAsyncCallback<T> implements AsyncCallback<T>
 {
-   
+
    private Loader loader;
-   
+
    public void setLoader(Loader loader)
    {
       this.loader = loader;
    }
-   
+
    public Loader getLoader()
    {
       if (loader == null)

@@ -35,11 +35,10 @@ import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.SshLocalizationConstant;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display;
 
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: SshPublicKeyView May 19, 2011 12:40:06 PM evgen $
- *
+ * 
  */
 public class SshPublicKeyView extends ViewImpl implements Display
 {
@@ -53,22 +52,23 @@ public class SshPublicKeyView extends ViewImpl implements Display
    interface SshPublicKeyViewUiBinder extends UiBinder<Widget, SshPublicKeyView>
    {
    }
-   
+
    @UiField
    TextArea publicSshKeyField;
-   
+
    @UiField
    ImageButton closeButton;
 
    public SshPublicKeyView()
    {
       super(ID, ViewType.MODAL, TITLE, null, 400, 300);
-      add(uiBinder.createAndBindUi(this));      
+      add(uiBinder.createAndBindUi(this));
       UIHelper.setAsReadOnly("exoSshPublicKeyField");
    }
 
    /**
     * Factory method, uses for UiBinder
+    * 
     * @return instance of {@link SshLocalizationConstant}
     */
    @UiFactory
@@ -76,7 +76,7 @@ public class SshPublicKeyView extends ViewImpl implements Display
    {
       return SshKeyExtension.CONSTANTS;
    }
-   
+
    /**
     * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#getCloseButton()
     */
@@ -101,7 +101,7 @@ public class SshPublicKeyView extends ViewImpl implements Display
    @Override
    public void addHostToTitle(String host)
    {
-      setTitle(TITLE + host); 
+      setTitle(TITLE + host);
    }
 
 }

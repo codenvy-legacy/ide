@@ -40,8 +40,7 @@ import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.keymanager.ui.UploadSshKeyView;
 
 /**
- * This class is presenter for {@link UploadSshKeyView}. Main appointment of this class is upload private SSH key to the
- * server.
+ * This class is presenter for {@link UploadSshKeyView}. Main appointment of this class is upload private SSH key to the server.
  * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -176,8 +175,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
    }
 
    /**
-    * Validate <b>host</b> parameter and do submit action. If <b>host</b> parameter is null or empty string, show error
-    * message.
+    * Validate <b>host</b> parameter and do submit action. If <b>host</b> parameter is null or empty string, show error message.
     */
    private void upload()
    {

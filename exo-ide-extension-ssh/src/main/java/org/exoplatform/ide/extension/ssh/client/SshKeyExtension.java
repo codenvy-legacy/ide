@@ -33,13 +33,13 @@ import com.google.gwt.core.client.GWT;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
- *
+ * 
  */
 public class SshKeyExtension extends Extension implements InitializeServicesHandler, ShowPublicSshKeyHandler
 {
 
    public static final SshLocalizationConstant CONSTANTS = GWT.create(SshLocalizationConstant.class);
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -58,7 +58,8 @@ public class SshKeyExtension extends Extension implements InitializeServicesHand
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new SshKeyService(event.getApplicationConfiguration().getContext(), event.getApplicationConfiguration().getHttpsPort(), event.getLoader());
+      new SshKeyService(event.getApplicationConfiguration().getContext(), event.getApplicationConfiguration()
+         .getHttpsPort(), event.getLoader());
    }
 
    /**

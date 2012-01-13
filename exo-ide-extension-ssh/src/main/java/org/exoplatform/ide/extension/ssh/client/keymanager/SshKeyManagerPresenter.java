@@ -52,7 +52,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
- *
+ * 
  */
 public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClosedHandler,
    ConfigurationReceivedSuccessfullyHandler
@@ -82,7 +82,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    {
       IDE.addHandler(ShowSshKeyManagerEvent.TYPE, this);
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      //add hendler to handle Upload ssh key form closing, and refresh list of ssh keys
+      // add hendler to handle Upload ssh key form closing, and refresh list of ssh keys
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 

@@ -30,10 +30,10 @@ public class SshKeyManagerView extends ViewImpl implements Display
 
    @UiField
    ImageButton closeButton;
-   
+
    @UiField
    ImageButton generateButton;
-   
+
    @UiField
    ImageButton uploadButton;
 
@@ -43,9 +43,10 @@ public class SshKeyManagerView extends ViewImpl implements Display
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
-   
+
    /**
     * Factory method, uses for UiBinder
+    * 
     * @return instance of {@link SshLocalizationConstant}
     */
    @UiFactory

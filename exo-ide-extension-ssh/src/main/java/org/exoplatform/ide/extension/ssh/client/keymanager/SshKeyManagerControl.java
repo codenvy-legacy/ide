@@ -26,7 +26,7 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManag
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeyManagerControl May 17, 2011 5:22:50 PM evgen $
- *
+ * 
  */
 public class SshKeyManagerControl extends SimpleControl implements IDEControl
 {
