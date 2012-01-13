@@ -34,8 +34,8 @@ import java.util.List;
  * Unmarshaller for application types response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 7, 2011 1:03:13 PM anya $
- *
+ * @version $Id: Jul 7, 2011 1:03:13 PM anya $
+ * 
  */
 public class ApplicationTypesUnmarshaller implements Unmarshallable, Constants
 {

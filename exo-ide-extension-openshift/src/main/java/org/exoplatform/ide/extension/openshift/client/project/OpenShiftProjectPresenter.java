@@ -55,8 +55,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * Presenter for managing project, deployed on OpenShift.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 9:39:29 AM anya $
- *
+ * @version $Id: Dec 8, 2011 9:39:29 AM anya $
+ * 
  */
 public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
    ViewClosedHandler, ManageOpenShiftProjectHandler, LoggedInHandler, ApplicationDeletedHandler

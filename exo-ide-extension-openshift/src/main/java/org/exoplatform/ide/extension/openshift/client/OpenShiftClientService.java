@@ -28,8 +28,8 @@ import java.util.List;
  * OpenShift client service.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 5:49:43 PM anya $
- *
+ * @version $Id: Jun 6, 2011 5:49:43 PM anya $
+ * 
  */
 public abstract class OpenShiftClientService
 {
@@ -61,9 +61,8 @@ public abstract class OpenShiftClientService
    public abstract void login(String login, String password, AsyncRequestCallback<String> callback);
 
    /**
-    * Creates new domain name. A domain name is a requirement for 
-    * each new application that you create in the cloud 
-    * and is part of the application name.
+    * Creates new domain name. A domain name is a requirement for each new application that you create in the cloud and is part of
+    * the application name.
     * 
     * @param name domain's name
     * @param alter alter namespace (will change urls) and/or ssh key
@@ -85,7 +84,7 @@ public abstract class OpenShiftClientService
       AsyncRequestCallback<AppInfo> callback);
 
    /**
-    * Destroys application with pointed name from OpenShift. 
+    * Destroys application with pointed name from OpenShift.
     * 
     * @param name application's name
     * @param vfsId virtual file system's id
@@ -96,8 +95,7 @@ public abstract class OpenShiftClientService
       AsyncRequestCallback<String> callback);
 
    /**
-    * Get user's information. 
-    * You can view the Framework Type, Creation Date, GitURL and PublicURL details for each application.
+    * Get user's information. You can view the Framework Type, Creation Date, GitURL and PublicURL details for each application.
     * 
     * @param appsInfo if <code>true</code>, then list applications
     * @param callback callback

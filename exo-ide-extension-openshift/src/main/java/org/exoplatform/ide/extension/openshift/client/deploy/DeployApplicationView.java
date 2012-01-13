@@ -31,7 +31,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextInput;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationView.java Dec 5, 2011 1:58:14 PM vereshchaka $
- *
+ * 
  */
 public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display
 {

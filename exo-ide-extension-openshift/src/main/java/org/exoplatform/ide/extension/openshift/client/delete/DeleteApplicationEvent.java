@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.openshift.client.delete;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to delete application from OpenShift.
- * Implement {@link DeleteApplicationHandler} to handle event.
+ * Event occurs, when user tries to delete application from OpenShift. Implement {@link DeleteApplicationHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 9, 2011 12:20:25 PM anya $
- *
+ * @version $Id: Jun 9, 2011 12:20:25 PM anya $
+ * 
  */
 public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
 {

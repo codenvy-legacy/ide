@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link ApplicationDeletedEvent} event.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 2:40:12 PM anya $
- *
+ * @version $Id: Dec 8, 2011 2:40:12 PM anya $
+ * 
  */
 public interface ApplicationDeletedHandler extends EventHandler
 {

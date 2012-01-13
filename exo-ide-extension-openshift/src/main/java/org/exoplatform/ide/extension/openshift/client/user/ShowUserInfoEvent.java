@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.openshift.client.user;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to view OpenShift user's information.
- * Implement {@link ShowUserInfoHandler} to handle event.
+ * Event occurs, when user tries to view OpenShift user's information. Implement {@link ShowUserInfoHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 14, 2011 10:57:08 AM anya $
- *
+ * @version $Id: Jun 14, 2011 10:57:08 AM anya $
+ * 
  */
 public class ShowUserInfoEvent extends GwtEvent<ShowUserInfoHandler>
 {

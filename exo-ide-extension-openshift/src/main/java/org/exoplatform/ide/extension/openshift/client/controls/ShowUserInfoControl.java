@@ -28,8 +28,8 @@ import org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent;
  * Control is used for showing OpenShift user's information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 14, 2011 10:47:04 AM anya $
- *
+ * @version $Id: Jun 14, 2011 10:47:04 AM anya $
+ * 
  */
 public class ShowUserInfoControl extends AbstractOpenShiftControl
 {

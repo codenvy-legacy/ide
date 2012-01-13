@@ -46,8 +46,8 @@ import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
  * OpenShift extenstion to be added to IDE.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 2:21:00 PM anya $
- *
+ * @version $Id: Jun 6, 2011 2:21:00 PM anya $
+ * 
  */
 public class OpenShiftExtension extends Extension implements InitializeServicesHandler
 {
@@ -65,7 +65,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      //Add controls:
+      // Add controls:
       IDE.getInstance().addControl(new OpenShiftControlsGroup());
       IDE.getInstance().addControl(new CreateDomainControl());
       IDE.getInstance().addControl(new CreateApplicationControl());
@@ -77,7 +77,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
 
       new OpenShiftExceptionsHandler();
 
-      //Create presenters:
+      // Create presenters:
       new LoginPresenter();
       new CreateDomainPresenter();
       new CreateApplicationPresenter();
@@ -87,7 +87,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new UserInfoPresenter();
       new UpdatePublicKeyCommandHandler();
 
-      //      new DeployApplicationPresenter();
+      // new DeployApplicationPresenter();
       new OpenShiftProjectPresenter();
    }
 

@@ -34,12 +34,12 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 /**
- * Presenter for updating public key on OpenShift.
- * First - get user's information to retrieve domain name, then update public SSH key.
+ * Presenter for updating public key on OpenShift. First - get user's information to retrieve domain name, then update public SSH
+ * key.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 21, 2011 12:36:44 PM anya $
- *
+ * @version $Id: Jun 21, 2011 12:36:44 PM anya $
+ * 
  */
 public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, LoggedInHandler
 {
@@ -120,7 +120,7 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
    }
 
    /**
-    * Perform updating SSH public key on OpenShift. 
+    * Perform updating SSH public key on OpenShift.
     * 
     * @param namespace domain name
     */

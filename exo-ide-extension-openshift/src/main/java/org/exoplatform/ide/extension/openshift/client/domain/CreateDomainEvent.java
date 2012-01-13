@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.openshift.client.domain;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to create new domain.
- * Implement {@link CreateDomainHandler} to handle event.
+ * Event occurs, when user tries to create new domain. Implement {@link CreateDomainHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 2:52:28 PM anya $
- *
+ * @version $Id: Jun 6, 2011 2:52:28 PM anya $
+ * 
  */
 public class CreateDomainEvent extends GwtEvent<CreateDomainHandler>
 {

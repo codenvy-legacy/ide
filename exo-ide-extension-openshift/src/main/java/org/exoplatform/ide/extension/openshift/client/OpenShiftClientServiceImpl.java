@@ -40,8 +40,8 @@ import java.util.List;
  * The implementation of {@link OpenShiftClientService}.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 5:50:11 PM anya $
- *
+ * @version $Id: Jun 6, 2011 5:50:11 PM anya $
+ * 
  */
 public class OpenShiftClientServiceImpl extends OpenShiftClientService
 {
@@ -108,7 +108,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#login(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#login(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void login(String login, String password, AsyncRequestCallback<String> callback)
@@ -123,7 +124,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createDomain(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createDomain(java.lang.String, boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback)
@@ -135,7 +137,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createApplication(java.lang.String,
+    *      java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void createApplication(String name, String vfsId, String projectId, String type,
@@ -153,7 +156,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#destroyApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#destroyApplication(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void destroyApplication(String name, String vfsId, String projectId, AsyncRequestCallback<String> callback)
@@ -166,7 +170,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getUserInfo(boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getUserInfo(boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback)
@@ -183,7 +188,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationInfo(java.lang.String,
+    *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void getApplicationInfo(String applicationName, String vfsId, String projectId,

@@ -26,8 +26,8 @@ import com.google.gwt.resources.client.ImageResource;
  * OpenShift client resources (images).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 10:45:11 AM anya $
- *
+ * @version $Id: May 26, 2011 10:45:11 AM anya $
+ * 
  */
 public interface OpenShiftClientBundle extends ClientBundle
 {

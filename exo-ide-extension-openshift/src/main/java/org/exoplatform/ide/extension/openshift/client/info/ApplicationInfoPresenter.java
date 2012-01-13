@@ -49,12 +49,11 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
 /**
- * Presenter for getting and displaying application's information.
- * The view must be pointed in Views.gwt.xml.
+ * Presenter for getting and displaying application's information. The view must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 11:32:37 AM anya $
- *
+ * @version $Id: Jun 1, 2011 11:32:37 AM anya $
+ * 
  */
 public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler,
    LoggedInHandler

@@ -35,8 +35,8 @@ import java.util.List;
  * Unmarshaller for getting user information from response in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 11:54:18 AM anya $
- *
+ * @version $Id: Jun 7, 2011 11:54:18 AM anya $
+ * 
  */
 public class RHUserInfoUnmarshaller implements Unmarshallable, Constants
 {

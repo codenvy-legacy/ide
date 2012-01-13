@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link ShowUserInfoEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 14, 2011 10:57:18 AM anya $
- *
+ * @version $Id: Jun 14, 2011 10:57:18 AM anya $
+ * 
  */
 public interface ShowUserInfoHandler extends EventHandler
 {

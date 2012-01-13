@@ -32,12 +32,11 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
- * View for creating domain on OpenShift.
- * View must be pointed in Views.gwt.xml.
+ * View for creating domain on OpenShift. View must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 2, 2011 2:26:41 PM anya $
- *
+ * @version $Id: Jun 2, 2011 2:26:41 PM anya $
+ * 
  */
 public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.Display
 {

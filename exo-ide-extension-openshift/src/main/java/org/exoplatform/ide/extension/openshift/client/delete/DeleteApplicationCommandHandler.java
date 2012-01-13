@@ -39,8 +39,7 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
- * Presenter for deleting application.
- * Following steps are done:<br>
+ * Presenter for deleting application. Following steps are done:<br>
  * <ol>
  * <li>Get location of the Git working directory.</li>
  * <li>Get application information by Git working directory.</li>
@@ -49,8 +48,8 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
  * </ol>
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 9, 2011 12:27:01 PM anya $
- *
+ * @version $Id: Jun 9, 2011 12:27:01 PM anya $
+ * 
  */
 public class DeleteApplicationCommandHandler extends GitPresenter implements DeleteApplicationHandler, LoggedInHandler
 {

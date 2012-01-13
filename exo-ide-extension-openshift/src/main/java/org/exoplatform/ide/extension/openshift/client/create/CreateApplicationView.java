@@ -20,8 +20,8 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * View for creation new application on OpenShift.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 30, 2011 3:07:34 PM anya $
- *
+ * @version $Id: May 30, 2011 3:07:34 PM anya $
+ * 
  */
 public class CreateApplicationView extends ViewImpl implements CreateApplicationPresenter.Display
 {

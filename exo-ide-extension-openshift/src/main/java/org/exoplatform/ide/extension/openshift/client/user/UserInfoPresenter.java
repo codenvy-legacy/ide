@@ -60,15 +60,15 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 14, 2011 2:38:17 PM anya $
- *
+ * @version $Id: Jun 14, 2011 2:38:17 PM anya $
+ * 
  */
 public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandler, ViewClosedHandler, LoggedInHandler
 {
    interface Display extends IsView
    {
       /**
-       * Get Ok button click handler. 
+       * Get Ok button click handler.
        * 
        * @return {@link HasClickHandlers} click handler
        */

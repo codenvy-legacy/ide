@@ -35,8 +35,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * Control for managing project, deployed on OpenShift.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 5, 2011 9:55:32 AM anya $
- *
+ * @version $Id: Dec 5, 2011 9:55:32 AM anya $
+ * 
  */
 public class OpenShiftControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
    FolderRefreshedHandler

@@ -24,8 +24,8 @@ import java.util.ArrayList;
  * view for showing user's information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 14, 2011 4:25:33 PM anya $
- *
+ * @version $Id: Jun 14, 2011 4:25:33 PM anya $
+ * 
  */
 public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
 {

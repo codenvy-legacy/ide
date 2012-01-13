@@ -20,8 +20,8 @@ package org.exoplatform.ide.extension.openshift.client.marshaller;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 5:57:36 PM anya $
- *
+ * @version $Id: Jun 6, 2011 5:57:36 PM anya $
+ * 
  */
 public interface Constants
 {
@@ -29,7 +29,7 @@ public interface Constants
 
    String PASSWORD = "password";
 
-   /*Application information*/
+   /* Application information */
 
    String NAME = "name";
 
@@ -41,7 +41,7 @@ public interface Constants
 
    String CREATION_DATE = "creationTime";
 
-   /*User info*/
+   /* User info */
    String DOMAIN = "rhcDomain";
 
    String UUID = "uuid";

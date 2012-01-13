@@ -56,7 +56,7 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
- *
+ * 
  */
 public class DeployApplicationPresenter implements PaasComponent, VfsChangedHandler, LoggedInHandler
 {
@@ -132,7 +132,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
 
    }
 
-   //----Implementation------------------------
+   // ----Implementation------------------------
 
    /**
     * Register {@link LoggedInHandler} handler.

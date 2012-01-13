@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link CreateDomainEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 2:52:41 PM anya $
- *
+ * @version $Id: Jun 6, 2011 2:52:41 PM anya $
+ * 
  */
 public interface CreateDomainHandler extends EventHandler
 {

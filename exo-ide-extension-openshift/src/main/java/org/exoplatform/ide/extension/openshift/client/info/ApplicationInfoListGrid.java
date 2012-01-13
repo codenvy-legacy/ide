@@ -30,8 +30,8 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * Grid for displaying application information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 3:02:57 PM anya $
- *
+ * @version $Id: Jun 1, 2011 3:02:57 PM anya $
+ * 
  */
 public class ApplicationInfoListGrid extends ListGrid<Property>
 {

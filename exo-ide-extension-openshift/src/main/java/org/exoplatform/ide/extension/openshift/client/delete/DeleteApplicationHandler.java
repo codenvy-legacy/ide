@@ -24,15 +24,15 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link DeleteApplicationHandler} handler.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 9, 2011 12:20:40 PM anya $
- *
+ * @version $Id: Jun 9, 2011 12:20:40 PM anya $
+ * 
  */
 public interface DeleteApplicationHandler extends EventHandler
 {
    /**
     * Perform actions when user tries to delete application from OpenShift.
     * 
-   * @param event
-   */
+    * @param event
+    */
    void onDeleteApplication(DeleteApplicationEvent event);
 }

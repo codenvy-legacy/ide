@@ -28,8 +28,8 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
  * Marshaller for login request in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 5:59:09 PM anya $
- *
+ * @version $Id: Jun 6, 2011 5:59:09 PM anya $
+ * 
  */
 public class CredentialsMarshaller implements Marshallable, Constants
 {

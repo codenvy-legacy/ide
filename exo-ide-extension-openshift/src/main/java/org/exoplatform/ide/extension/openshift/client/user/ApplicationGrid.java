@@ -36,8 +36,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 14, 2011 11:11:34 AM anya $
- *
+ * @version $Id: Jun 14, 2011 11:11:34 AM anya $
+ * 
  */
 public class ApplicationGrid extends ListGrid<AppInfo>
 {
@@ -105,7 +105,7 @@ public class ApplicationGrid extends ListGrid<AppInfo>
    }
 
    /**
-    *Implementation of {@link SelectionEvent} event.
+    * Implementation of {@link SelectionEvent} event.
     */
    private class SelectionEventImpl extends SelectionEvent<AppInfo>
    {
@@ -138,7 +138,8 @@ public class ApplicationGrid extends ListGrid<AppInfo>
    private class Link extends ClickableTextCell
    {
       /**
-       * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context, com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+       * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context,
+       *      com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
        */
       @Override
       protected void render(com.google.gwt.cell.client.Cell.Context context, final SafeHtml value, SafeHtmlBuilder sb)

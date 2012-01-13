@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.openshift.client.login;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to log in OpenShift.
- * Implement {@link LoginHandler} to handle event.
+ * Event occurs, when user tries to log in OpenShift. Implement {@link LoginHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 12:32:53 PM anya $
- *
+ * @version $Id: Jun 7, 2011 12:32:53 PM anya $
+ * 
  */
 public class LoginEvent extends GwtEvent<LoginHandler>
 {

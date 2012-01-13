@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.openshift.client.key;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to update SSH public key on OpenShift.
- * Implement {@link UpdatePublicKeyHandler} to handler event.
+ * Event occurs, when user tries to update SSH public key on OpenShift. Implement {@link UpdatePublicKeyHandler} to handler event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 21, 2011 12:28:39 PM anya $
- *
+ * @version $Id: Jun 21, 2011 12:28:39 PM anya $
+ * 
  */
 public class UpdatePublicKeyEvent extends GwtEvent<UpdatePublicKeyHandler>
 {

@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.openshift.client.create;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to create application on OpenShift.
- * Implement {@link CreateApplicationHandler} to handle event.
+ * Event occurs, when user tries to create application on OpenShift. Implement {@link CreateApplicationHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 5:44:19 PM anya $
- *
+ * @version $Id: Jun 7, 2011 5:44:19 PM anya $
+ * 
  */
 public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
 {

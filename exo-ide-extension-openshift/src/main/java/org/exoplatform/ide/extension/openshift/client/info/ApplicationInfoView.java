@@ -34,8 +34,8 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * Application information view.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 2:57:22 PM anya $
- *
+ * @version $Id: Jun 1, 2011 2:57:22 PM anya $
+ * 
  */
 public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPresenter.Display
 {

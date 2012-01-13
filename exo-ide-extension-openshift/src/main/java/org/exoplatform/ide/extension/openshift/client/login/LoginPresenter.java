@@ -41,12 +41,11 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
- * Presenter for login view.
- * The view must be pointed in Views.gwt.xml.
+ * Presenter for login view. The view must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 25, 2011 3:56:55 PM anya $
- *
+ * @version $Id: May 25, 2011 3:56:55 PM anya $
+ * 
  */
 public class LoginPresenter implements LoginHandler, ViewClosedHandler
 {

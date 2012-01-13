@@ -21,12 +21,12 @@ package org.exoplatform.ide.extension.openshift.client.login;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs after user's logged in OpenShift action. 
- * If it ends with fail, then {{@link #isFailed()}} returns <code>true</code>.
+ * Event occurs after user's logged in OpenShift action. If it ends with fail, then {{@link #isFailed()} returns <code>true</code>
+ * .
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 31, 2011 11:15:36 AM anya $
- *
+ * @version $Id: May 31, 2011 11:15:36 AM anya $
+ * 
  */
 public class LoggedInEvent extends GwtEvent<LoggedInHandler>
 {

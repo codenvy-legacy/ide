@@ -27,8 +27,8 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * Group control for OpenShift controls
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 9, 2011 4:58:20 PM anya $
- *
+ * @version $Id: Jun 9, 2011 4:58:20 PM anya $
+ * 
  */
 public class OpenShiftControlsGroup extends SimpleControl implements IDEControl
 {

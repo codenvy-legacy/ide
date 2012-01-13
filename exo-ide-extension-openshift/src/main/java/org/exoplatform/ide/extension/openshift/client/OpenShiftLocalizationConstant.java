@@ -22,12 +22,12 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 11:16:02 AM anya $
- *
+ * @version $Id: Jun 6, 2011 11:16:02 AM anya $
+ * 
  */
 public interface OpenShiftLocalizationConstant extends Messages
 {
-   /*Buttons:*/
+   /* Buttons: */
    @DefaultMessage("Cancel")
    @Key("cancelButton")
    String cancelButton();
@@ -53,7 +53,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("closeButton")
    String closeButton();
 
-   /*Controls:*/
+   /* Controls: */
    @DefaultMessage("PaaS/OpenShift/Create domain...")
    @Key("control.createDomain.id")
    String createDomainControlId();
@@ -183,7 +183,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("loginView.field.password")
    String loginViewPasswordField();
 
-   /*Create domain view*/
+   /* Create domain view */
    @DefaultMessage("Create new domain")
    @Key("createDomainView.title")
    String createDomainViewTitle();
@@ -192,7 +192,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("createDomainView.name.field")
    String createDomainViewNameField();
 
-   //Create application view
+   // Create application view
    @DefaultMessage("Create new OpenShift application")
    @Key("createApplicationView.title")
    String createApplicationViewTitle();
@@ -209,7 +209,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("createApplicationView.type.field")
    String createApplicationViewTypeField();
 
-   /*User info view*/
+   /* User info view */
    @DefaultMessage("User information")
    @Key("userInfoView.title")
    String userInfoViewTitle();
@@ -226,7 +226,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("userInfoView.applications")
    String userInfoViewApplications();
 
-   /*Messages*/
+   /* Messages */
    /**
     * @param domainName domain name
     * @return {@link String}
@@ -281,11 +281,11 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
 
-   /*Error*/
+   /* Error */
    @Key("unmarshal.application.types.failed")
    String applicationTypesUnmarshallerFail();
 
-   /*Application properties*/
+   /* Application properties */
    @DefaultMessage("Name")
    @Key("application.name")
    String applicationName();

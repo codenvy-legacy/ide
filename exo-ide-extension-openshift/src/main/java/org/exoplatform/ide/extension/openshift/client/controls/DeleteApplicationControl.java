@@ -26,8 +26,8 @@ import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationEv
  * Control is used for deleting application from OpenShift.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 9, 2011 12:17:37 PM anya $
- *
+ * @version $Id: Jun 9, 2011 12:17:37 PM anya $
+ * 
  */
 public class DeleteApplicationControl extends AbstractOpenShiftControl
 {

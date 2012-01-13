@@ -29,8 +29,8 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
  * Unmarshaller for application information response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 11:08:05 AM anya $
- *
+ * @version $Id: Jun 7, 2011 11:08:05 AM anya $
+ * 
  */
 public class AppInfoUmarshaller implements org.exoplatform.gwtframework.commons.rest.Unmarshallable, Constants
 {

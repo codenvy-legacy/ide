@@ -28,8 +28,8 @@ import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
  * Control is used for new domain creation.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 2:22:44 PM anya $
- *
+ * @version $Id: Jun 6, 2011 2:22:44 PM anya $
+ * 
  */
 public class CreateDomainControl extends AbstractOpenShiftControl
 {

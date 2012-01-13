@@ -45,8 +45,8 @@ import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 3:49:41 PM anya $
- *
+ * @version $Id: Jun 7, 2011 3:49:41 PM anya $
+ * 
  */
 public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHandler, LoggedInHandler
 {

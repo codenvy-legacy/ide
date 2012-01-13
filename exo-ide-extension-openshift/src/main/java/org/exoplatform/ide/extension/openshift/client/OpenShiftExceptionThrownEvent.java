@@ -21,12 +21,12 @@ package org.exoplatform.ide.extension.openshift.client;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs on exception that concerns actions with OpenShift.
- * Implement {@link OpenShiftExceptionThrownHandler} to handle event.
+ * Event occurs on exception that concerns actions with OpenShift. Implement {@link OpenShiftExceptionThrownHandler} to handle
+ * event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 10, 2011 5:26:52 PM anya $
- *
+ * @version $Id: Jun 10, 2011 5:26:52 PM anya $
+ * 
  */
 public class OpenShiftExceptionThrownEvent extends GwtEvent<OpenShiftExceptionThrownHandler>
 {

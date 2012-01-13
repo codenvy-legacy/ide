@@ -54,8 +54,8 @@ import com.google.gwt.user.client.ui.HasValue;
  * Presenter for creating new OpenShift application.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 5:50:34 PM anya $
- *
+ * @version $Id: Jun 7, 2011 5:50:34 PM anya $
+ * 
  */
 public class CreateApplicationPresenter extends GitPresenter implements CreateApplicationHandler, ViewClosedHandler,
    LoggedInHandler
@@ -65,7 +65,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       /**
        * Get create button's click handler.
        * 
-       * @return {@link HasClickHandlers} click handler  @Override
+       * @return {@link HasClickHandlers} click handler @Override
        */
       HasClickHandlers getCreateButton();
 

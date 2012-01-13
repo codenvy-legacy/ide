@@ -21,11 +21,11 @@ package org.exoplatform.ide.extension.openshift.client.project;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to manage project, deployed to OpenShift. 
+ * Event occurs, when user tries to manage project, deployed to OpenShift.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 5, 2011 12:34:34 PM anya $
- *
+ * @version $Id: Dec 5, 2011 12:34:34 PM anya $
+ * 
  */
 public class ManageOpenShiftProjectEvent extends GwtEvent<ManageOpenShiftProjectHandler>
 {

@@ -23,14 +23,13 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
- * Handler for OpenShift exceptions.
- * Error, handled by {@link OpenShiftExceptionsHandler} is passed with {@link OpenShiftExceptionThrownEvent} event.
- * Checks whether it is {@link ServerException} and contains provided message and Express exit code.
- * Alternative error message also can be passed by {@link OpenShiftExceptionThrownEvent}.
+ * Handler for OpenShift exceptions. Error, handled by {@link OpenShiftExceptionsHandler} is passed with
+ * {@link OpenShiftExceptionThrownEvent} event. Checks whether it is {@link ServerException} and contains provided message and
+ * Express exit code. Alternative error message also can be passed by {@link OpenShiftExceptionThrownEvent}.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 10, 2011 5:08:56 PM anya $
- *
+ * @version $Id: Jun 10, 2011 5:08:56 PM anya $
+ * 
  */
 public class OpenShiftExceptionsHandler implements OpenShiftExceptionThrownHandler
 {

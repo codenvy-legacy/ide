@@ -37,12 +37,11 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
- * View for managing application, deployed on OpenShift.
- * View must be pointed in <b>Views.gwt.xml</b>
+ * View for managing application, deployed on OpenShift. View must be pointed in <b>Views.gwt.xml</b>
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 9:40:02 AM anya $
- *
+ * @version $Id: Dec 8, 2011 9:40:02 AM anya $
+ * 
  */
 public class OpenShiftProjectView extends ViewImpl implements OpenShiftProjectPresenter.Display
 {
