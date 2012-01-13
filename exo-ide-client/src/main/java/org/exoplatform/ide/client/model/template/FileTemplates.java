@@ -38,15 +38,12 @@ public class FileTemplates
    static
    {
       addXMLFileContent();
-      //addHTMLContent();
       addEmptyHTML();
       addGroovyContent();
       addEmptyTXT();
-      //addTXTContent();
       addGadgetContent();
       addGtmplTemplate();
       addUWAWidgetContent();
-      // addClassPathTemplate();
       addRubyTemplate();
       addPhpTemplate();
       addJspTemplate();
@@ -124,33 +121,12 @@ public class FileTemplates
       TEMPLATES.put(MimeType.TEXT_XML, content);
    }
 
-   private static void addClassPathTemplate()
-   {
-      String content = "{\n" + "\"entries\": [\n" + "]\n" + "}";
-
-      //      templates.put(MimeType.APPLICATION_JSON, content);
-   }
-
    private static void addEmptyHTML()
    {
       String content =
          "" + "<html>\r\n"
             + "  <head>\r\n    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\r\n"
             + "    <title></title>\r\n" + "  </head>\r\n" + "  <body>\r\n" + "  </body>\r\n" + "</html>";
-      TEMPLATES.put(MimeType.TEXT_HTML, content);
-   }
-
-   private static void addHTMLContent()
-   {
-      String content =
-         "<html>\n" + "  <head>\n" + "    <title>HTML Example</title>\n" + "    <script type='text/javascript'>\n"
-            + "      function foo(bar, baz) {\n" + "        alert('quux');\n" + "        return bar + baz + 1;\n"
-            + "      }\n" + "    </script>\n" + "    <style type='text/css'>\n" + "      div.border {\n"
-            + "        border: 1px solid black;\n" + "        padding: 3px;\n" + "      }\n" + "      #foo code {\n"
-            + "        font-family: courier, monospace;\n" + "        font-size: 80%;\n" + "        color: #448888;\n"
-            + "      }\n" + "    </style>\n" + "  </head>\n" + "  <body>\n" + "    <p>Hello</p>\n" + "  </body>\n"
-            + "</html>";
-
       TEMPLATES.put(MimeType.TEXT_HTML, content);
    }
 

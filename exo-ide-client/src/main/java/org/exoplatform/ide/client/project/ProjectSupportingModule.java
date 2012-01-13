@@ -19,17 +19,14 @@
 package org.exoplatform.ide.client.project;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
@@ -67,8 +64,6 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
 
       new DeployProjectToPaasPresenter();
 
-      //      new CreateProjectTemplatePresenter();
-
       new ShowProjectsPresenter();
 
       new TinyProjectExplorerPresenter();
@@ -96,8 +91,6 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
             + "/" + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration()
             .getContext());
       }
-      //only for test, will be removed
-      //      saveSomeTemplatesToRegistry();
    }
 
    private void moveTemplatesFromRegistryToPlainText()
@@ -179,43 +172,4 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       this.callback = event.getTemplatesMigratedCallback();
       moveTemplatesFromRegistryToPlainText();
    }
-
-   //----only for test, will be removed.
-   /**
-    * Method, for testing migrating templates from registry to plain text file.
-    */
-   @SuppressWarnings("unused")
-   private void saveSomeTemplatesToRegistry()
-   {
-      FileTemplate ft1 = new FileTemplate(MimeType.APPLICATION_XML, "abc", "hello", "some content", null);
-      final FileTemplate ft2 = new FileTemplate(MimeType.APPLICATION_XML, "bcd", "second", "lalala", null);
-      final ProjectTemplate pt1 = new ProjectTemplate("hh1");
-      pt1.setDescription("sample project");
-      pt1.getChildren().add(new FileTemplate("abc", "hello"));
-      FolderTemplate fot1 = new FolderTemplate("ddd");
-      pt1.getChildren().add(fot1);
-      TemplateService.getInstance().createTemplate(ft1, new TemplateCreatedCallback()
-      {
-         @Override
-         protected void onSuccess(Template result)
-         {
-            TemplateService.getInstance().createTemplate(ft2, new TemplateCreatedCallback()
-            {
-               @Override
-               protected void onSuccess(Template result)
-               {
-                  TemplateService.getInstance().createTemplate(pt1, new TemplateCreatedCallback()
-                  {
-                     @Override
-                     protected void onSuccess(Template result)
-                     {
-                        moveTemplatesFromRegistryToPlainText();
-                     }
-                  });
-               }
-            });
-         }
-      });
-   }
-
 }

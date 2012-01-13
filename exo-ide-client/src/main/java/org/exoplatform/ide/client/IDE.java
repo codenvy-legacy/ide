@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
@@ -181,26 +180,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).
        */
-      //disableTextSelectInternal(RootPanel.get().getElement(), true);
+      //TODO disableTextSelectInternal(RootLayoutPanel.get().getElement(), true);
    }
-
-   /**
-    * Disables selection of HTML on element. 
-    * 
-    * @param e element
-    * @param disable <b>true</b> disables all selection on element, <b>false</b> enables selection
-    */
-   private native static void disableTextSelectInternal(Element e, boolean disable)/*-{
-                                                                                   if (disable) {
-                                                                                   e.ondrag = function () { return false; };
-                                                                                   e.onselectstart = function () { return false; };
-                                                                                   e.style.MozUserSelect="none"
-                                                                                   } else {
-                                                                                   e.ondrag = null;
-                                                                                   e.onselectstart = null;
-                                                                                   e.style.MozUserSelect="text"
-                                                                                   }
-                                                                                   }-*/;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget)

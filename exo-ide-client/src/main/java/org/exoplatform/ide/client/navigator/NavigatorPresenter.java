@@ -435,24 +435,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    }
 
    /**
-    * Removes items for not to be displayed, if they are system ones
-    * (for example, ".groovyclasspath" file).
-    * To known system item or not call {@link Item} method: boolean isSystem().
-    * 
-    * @param items
-    */
-   private void removeSystemItemsFromView(List<Item> items)
-   {
-      List<Item> itemsToRemove = new ArrayList<Item>();
-      for (Item item : items)
-      {
-         if (item.getName().startsWith("."))
-            itemsToRemove.add(item);
-      }
-      items.removeAll(itemsToRemove);
-   }
-
-   /**
     * Comparator for comparing items in received directory.
     */
    private Comparator<Item> comparator = new Comparator<Item>()

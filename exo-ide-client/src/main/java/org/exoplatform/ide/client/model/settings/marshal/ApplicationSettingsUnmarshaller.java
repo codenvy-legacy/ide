@@ -26,7 +26,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.xml.client.Node;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -57,24 +56,6 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
    {
       this.applicationSettings = applicationSettings;
    }
-
-   private Node getChildNode(Node node, String name)
-   {
-      for (int i = 0; i < node.getChildNodes().getLength(); i++)
-      {
-         Node childNode = node.getChildNodes().item(i);
-         if (name.equals(childNode.getNodeName()))
-         {
-            return childNode;
-         }
-      }
-
-      return null;
-   }
-
-   private static native String javaScriptDecodeURIComponent(String text) /*-{
-                                                                          return decodeURIComponent(text);
-                                                                          }-*/;
 
    public void unmarshal(Response response) throws UnmarshallerException
    {

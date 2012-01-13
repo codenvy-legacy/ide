@@ -254,11 +254,6 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
       editPropertyPresenter.editProperty(selectedProperty, currentProject.getProperties(), propertyEditCompleteHandler);
    }
 
-   private void createProperty()
-   {
-      editPropertyPresenter.createProperty(currentProject.getProperties(), propertyEditCompleteHandler);
-   }
-
    private EditCompleteHandler propertyEditCompleteHandler = new EditCompleteHandler()
    {
       @Override

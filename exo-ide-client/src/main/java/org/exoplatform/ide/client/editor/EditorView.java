@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -203,20 +202,6 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    {
       editorArea.setWidgetVisible(editorArea.getWidget(editorType.getPosition()), false);
    }
-
-   private native void setDisplayBlock(JavaScriptObject element) /*-{
-                                                                 if (element)
-                                                                 {
-                                                                 element.style.display = "block";
-                                                                 }
-                                                                 }-*/;
-
-   private native void setDisplayNone(JavaScriptObject element) /*-{
-                                                                if (element)
-                                                                {
-                                                                element.style.display = "none";
-                                                                }   
-                                                                }-*/;
 
    /**
     * @return the editor

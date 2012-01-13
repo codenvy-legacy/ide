@@ -83,22 +83,11 @@ public class IDEConfigurationLoader
       return loaded;
    }
 
-   private void showErrorMessage(String message)
-   {
-      String mes = IDE.IDE_LOCALIZATION_MESSAGES.configurationInvalidConfiguration(message); //$NON-NLS-1$ //$NON-NLS-2$
-      Dialogs.getInstance().showError(INVALID_CONFIGURATION_TITLE, mes);
-   }
-
    private static native String getConfigurationURL()/*-{
                                                      return $wnd.configurationURL;
                                                      }-*/;
 
-   private static native String getRegistryURL() /*-{
-                                                 return $wnd.registryURL;
-                                                 }-*/;
-
    private static native JavaScriptObject getAppConfig() /*-{
                                                          return $wnd.appConfig;
                                                          }-*/;
-
 }
