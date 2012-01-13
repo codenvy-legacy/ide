@@ -31,17 +31,17 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
  * Grid for displaying application information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 3:02:57 PM anya $
- *
+ * @version $Id: Jun 1, 2011 3:02:57 PM anya $
+ * 
  */
 public class ApplicationInfoGrid extends ListGrid<Property>
 {
    private final String ID = "ideApplicationInfoGrid";
-   
+
    private final String NAME = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoGridNameField();
-   
+
    private final String VALUE = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoGridValueField();
-   
+
    public ApplicationInfoGrid()
    {
       super();
@@ -67,7 +67,7 @@ public class ApplicationInfoGrid extends ListGrid<Property>
             return html;
          }
       };
-      
+
       Column<Property, String> valueColumn = new Column<Property, String>(new TextCell())
       {
          @Override

@@ -24,13 +24,13 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link CreateApplicationEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 2:32:23 PM anya $
- *
+ * @version $Id: May 26, 2011 2:32:23 PM anya $
+ * 
  */
 public interface CreateApplicationHandler extends EventHandler
 {
    /**
-    * Perform actions, when user tries to create application on  Heroku.
+    * Perform actions, when user tries to create application on Heroku.
     * 
     * @param event
     */

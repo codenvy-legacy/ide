@@ -22,8 +22,8 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
  * Response of the application's logs.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 19, 2011 2:38:21 PM anya $
- *
+ * @version $Id: Sep 19, 2011 2:38:21 PM anya $
+ * 
  */
 public class LogsResponse
 {

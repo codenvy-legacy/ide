@@ -48,8 +48,8 @@ import java.util.List;
  * Presenter for getting and displaying application's information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 11:32:37 AM anya $
- *
+ * @version $Id: Jun 1, 2011 11:32:37 AM anya $
+ * 
  */
 public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler,
    LoggedInHandler
@@ -80,7 +80,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    }
 
    /**
-    * Properties order comparator. 
+    * Properties order comparator.
     * 
     */
    private class PropertiesComparator implements Comparator<Property>
@@ -181,7 +181,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                      bindDisplay();
                      IDE.getInstance().openView(display.asView());
                   }
-                  //Make first letter of property name to be in upper case.
+                  // Make first letter of property name to be in upper case.
                   for (Property property : properties)
                   {
                      String name =

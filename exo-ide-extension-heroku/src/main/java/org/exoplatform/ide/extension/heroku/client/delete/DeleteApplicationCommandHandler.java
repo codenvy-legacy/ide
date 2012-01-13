@@ -40,16 +40,13 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import java.util.List;
 
 /**
- * Presenter for deleting application from Heroku.
- *  Performs following actions on delete:
- * 1. Gets the Git working directory location.
- * 2. Gets application name (application info) by Git working directory location.
- * 3. Asks user to confirm the deleting of the application.
- * 4. When user confirms - performs deleting the application.
+ * Presenter for deleting application from Heroku. Performs following actions on delete: 1. Gets the Git working directory
+ * location. 2. Gets application name (application info) by Git working directory location. 3. Asks user to confirm the deleting
+ * of the application. 4. When user confirms - performs deleting the application.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 5:24:52 PM anya $
- *
+ * @version $Id: May 26, 2011 5:24:52 PM anya $
+ * 
  */
 public class DeleteApplicationCommandHandler extends GitPresenter implements DeleteApplicationHandler, LoggedInHandler
 {
@@ -135,7 +132,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
 
    /**
     * Perform deleting the application on Heroku.
-    *
+    * 
     */
    protected void doDelete(final ProjectModel project)
    {

@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event occurs, when user tries to manage project, deployed on Heroku.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 9:58:09 AM anya $
- *
+ * @version $Id: Dec 8, 2011 9:58:09 AM anya $
+ * 
  */
 public class ManageHerokuProjectEvent extends GwtEvent<ManageHerokuProjectHandler>
 {

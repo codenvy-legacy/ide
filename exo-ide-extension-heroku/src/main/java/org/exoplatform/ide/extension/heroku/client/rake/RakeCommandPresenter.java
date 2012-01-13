@@ -44,12 +44,11 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
- * Presenter of the view for executing rake command.
- * View must be pointed in Views.gwt.xml.
+ * Presenter of the view for executing rake command. View must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 17, 2011 10:55:15 AM anya $
- *
+ * @version $Id: Jun 17, 2011 10:55:15 AM anya $
+ * 
  */
 public class RakeCommandPresenter extends GitPresenter implements RakeCommandHandler, ViewClosedHandler,
    LoggedInHandler
@@ -181,8 +180,8 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    @Override
    public void onRakeCommand(RakeCommandEvent event)
    {
-      //      if (makeSelectionCheck())
-      //      {
+      // if (makeSelectionCheck())
+      // {
 
       if (display == null)
       {
@@ -192,7 +191,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
          display.enableRunButton(false);
          display.focusInCommandField();
       }
-      //      }
+      // }
    }
 
    /**
@@ -246,16 +245,15 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
-         HerokuClientService.getInstance().help(null, vfs.getId(), projectId,
-            new RakeCommandAsyncRequestCallback(this)
+         HerokuClientService.getInstance().help(null, vfs.getId(), projectId, new RakeCommandAsyncRequestCallback(this)
+         {
+            @Override
+            protected void onSuccess(RakeCommandResult result)
             {
-               @Override
-               protected void onSuccess(RakeCommandResult result)
-               {
-                  String message = formMessage(result.getResult());
-                  IDE.fireEvent(new OutputEvent(message, Type.INFO));
-               }
-            });
+               String message = formMessage(result.getResult());
+               IDE.fireEvent(new OutputEvent(message, Type.INFO));
+            }
+         });
       }
       catch (RequestException e)
       {

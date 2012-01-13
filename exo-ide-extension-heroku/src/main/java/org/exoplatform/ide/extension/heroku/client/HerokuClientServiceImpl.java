@@ -36,8 +36,8 @@ import java.util.HashMap;
  * Implementation of {@link HerokuClientService} service.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 25, 2011 12:23:29 PM anya $
- *
+ * @version $Id: May 25, 2011 12:23:29 PM anya $
+ * 
  */
 public class HerokuClientServiceImpl extends HerokuClientService
 {
@@ -86,7 +86,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#login(java.lang.String, java.lang.String)
     */
    @Override
@@ -98,7 +98,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       credentials.put(Constants.EMAIL, login);
       credentials.put(Constants.PASSWORD, password);
       CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
-      
+
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
@@ -112,8 +112,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplication(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplication(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
@@ -127,12 +128,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).requestStatusHandler(new CreateRequestHandler()).send(callback);
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).requestStatusHandler(new CreateRequestHandler())
+         .send(callback);
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#deleteApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#deleteApplication(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void deleteApplication(String applicationName, String vfsId, String projectid,
@@ -149,7 +152,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#addKey()
     */
    @Override
@@ -160,7 +163,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#clearKeys(org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
@@ -171,8 +174,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getApplicationInfo(java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
    public void getApplicationInfo(String applicationName, String vfsId, String projectid, boolean isRaw,
@@ -189,8 +193,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#renameApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#renameApplication(java.lang.String, java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
    public void renameApplication(String applicationName, String vfsId, String projectid, String newName,
@@ -208,8 +213,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#run(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#run(java.lang.String, java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
    public void run(String applicationName, String vfsId, String projectid, String command,
@@ -226,8 +232,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#help(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#help(java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallback)
     */
    @Override
    public void help(String applicationName, String vfsId, String projectid, RakeCommandAsyncRequestCallback callback)
@@ -244,8 +251,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getStackList(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getStackList(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void getStackList(String applicationName, String vfsId, String projectid,
@@ -262,8 +270,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#migrateStack(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.StackListAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#migrateStack(java.lang.String, java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.heroku.client.StackListAsyncRequestCallback)
     */
    @Override
    public void migrateStack(String applicationName, String vfsId, String projectid, String stack,
@@ -280,8 +289,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#logs(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.LogsAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#logs(java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.heroku.client.LogsAsyncRequestCallback)
     */
    @Override
    public void logs(String applicationName, String vfsId, String projectid, int logLines,

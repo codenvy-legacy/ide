@@ -33,8 +33,8 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.LogsUnmarshaller;
  * Asynchronous request callback for getting application's logs.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 19, 2011 2:44:29 PM anya $
- *
+ * @version $Id: Sep 19, 2011 2:44:29 PM anya $
+ * 
  */
 public abstract class LogsAsyncRequestCallback extends AsyncRequestCallback<LogsResponse>
 {

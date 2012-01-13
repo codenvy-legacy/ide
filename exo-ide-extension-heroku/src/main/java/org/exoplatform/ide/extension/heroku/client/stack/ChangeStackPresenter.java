@@ -50,8 +50,8 @@ import java.util.List;
  * Presenter for changing Heroku application's stack.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 29, 2011 9:41:46 AM anya $
- *
+ * @version $Id: Jul 29, 2011 9:41:46 AM anya $
+ * 
  */
 public class ChangeStackPresenter extends GitPresenter implements ViewClosedHandler, ChangeApplicationStackHandler,
    LoggedInHandler

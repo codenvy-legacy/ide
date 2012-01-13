@@ -34,8 +34,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * Control for user to manage project deployed on Heroku.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 2, 2011 2:17:30 PM anya $
- *
+ * @version $Id: Dec 2, 2011 2:17:30 PM anya $
+ * 
  */
 public class HerokuControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
    FolderRefreshedHandler
@@ -51,8 +51,8 @@ public class HerokuControl extends SimpleControl implements IDEControl, ProjectC
    public static final String TITLE = "Heroku";
 
    /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
+    * Control's prompt, when user hovers the mouse on it.
+    */
    public static final String PROMPT = "Heroku";
 
    public HerokuControl()

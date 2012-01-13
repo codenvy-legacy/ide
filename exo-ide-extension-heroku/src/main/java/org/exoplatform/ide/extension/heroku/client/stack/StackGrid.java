@@ -30,8 +30,8 @@ import com.google.gwt.user.cellview.client.Column;
  * Grid for displaying application's stacks.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 29, 2011 11:33:38 AM anya $
- *
+ * @version $Id: Jul 29, 2011 11:33:38 AM anya $
+ * 
  */
 public class StackGrid extends ListGrid<Stack>
 {
@@ -80,7 +80,7 @@ public class StackGrid extends ListGrid<Stack>
                public String asString()
                {
                   if (stack.isBeta())
-                    return (stack.isCurrent()) ? "<b>beta</b>" : "beta";
+                     return (stack.isCurrent()) ? "<b>beta</b>" : "beta";
                   return "";
                }
             };

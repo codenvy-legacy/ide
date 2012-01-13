@@ -22,8 +22,8 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
  * Aplication's property.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 3:03:14 PM anya $
- *
+ * @version $Id: Jun 1, 2011 3:03:14 PM anya $
+ * 
  */
 public class Property
 {

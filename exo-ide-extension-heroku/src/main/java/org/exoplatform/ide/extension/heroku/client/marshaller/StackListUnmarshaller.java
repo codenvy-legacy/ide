@@ -34,8 +34,8 @@ import java.util.List;
  * Unmarshaller for response with the list of Heroku stacks.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 28, 2011 5:38:08 PM anya $
- *
+ * @version $Id: Jul 28, 2011 5:38:08 PM anya $
+ * 
  */
 public class StackListUnmarshaller implements Unmarshallable<List<Stack>>, Constants
 {

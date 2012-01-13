@@ -17,8 +17,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
  * View for creation new application on Heroku.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 30, 2011 3:07:34 PM anya $
- *
+ * @version $Id: May 30, 2011 3:07:34 PM anya $
+ * 
  */
 public class CreateApplicationView extends ViewImpl implements CreateApplicationPresenter.Display
 {
@@ -33,7 +33,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    private static final String CANCEL_BUTTON_ID = "ideCreateApplicationViewCancelButton";
 
    private static final String NAME_FIELD_ID = "ideCreateApplicationViewNameField";
-   
+
    private static final String REMOTE_NAME_FIELD_ID = "ideCreateApplicationViewRemoteNameField";
 
    private static final String WORK_DIR_FIELD_ID = "ideCreateApplicationViewWorkDirField";
@@ -49,7 +49,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     */
    @UiField
    TextInput nameField;
-   
+
    /**
     * Remote repository name field.
     */
@@ -76,7 +76,8 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    public CreateApplicationView()
    {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH, HEIGHT,false);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH,
+         HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);
@@ -137,7 +138,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    @Override
    public void focusInApplicationNameField()
    {
-      nameField.focus();      
+      nameField.focus();
    }
 
    /**
@@ -148,5 +149,5 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    {
       return remoteField;
    }
-   
+
 }

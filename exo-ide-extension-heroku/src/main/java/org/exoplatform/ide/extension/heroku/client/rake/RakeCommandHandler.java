@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link RakeCommandEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 17, 2011 5:09:53 PM anya $
- *
+ * @version $Id: Jun 17, 2011 5:09:53 PM anya $
+ * 
  */
 public interface RakeCommandHandler extends EventHandler
 {

@@ -28,8 +28,8 @@ import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
  * Control for adding keys on Heroku.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 31, 2011 9:32:28 AM anya $
- *
+ * @version $Id: May 31, 2011 9:32:28 AM anya $
+ * 
  */
 public class AddKeyControl extends AbstractHerokuControl
 {

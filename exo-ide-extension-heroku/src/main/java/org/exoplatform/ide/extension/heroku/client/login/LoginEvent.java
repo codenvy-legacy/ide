@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.heroku.client.login;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to log in Heroku.
- * Implement {@link LoginHandler} to handle the event.
+ * Event occurs, when user tries to log in Heroku. Implement {@link LoginHandler} to handle the event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 25, 2011 3:56:35 PM anya $
- *
+ * @version $Id: May 25, 2011 3:56:35 PM anya $
+ * 
  */
 public class LoginEvent extends GwtEvent<LoginHandler>
 {

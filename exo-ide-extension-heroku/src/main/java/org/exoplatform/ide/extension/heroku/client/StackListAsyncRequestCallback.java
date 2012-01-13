@@ -36,8 +36,8 @@ import java.util.List;
  * Asynchronous callback for stack list response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 29, 2011 10:16:33 AM anya $
- *
+ * @version $Id: Jul 29, 2011 10:16:33 AM anya $
+ * 
  */
 public abstract class StackListAsyncRequestCallback extends AsyncRequestCallback<List<Stack>>
 {

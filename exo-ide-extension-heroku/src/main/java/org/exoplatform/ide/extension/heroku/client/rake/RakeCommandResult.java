@@ -22,8 +22,8 @@ package org.exoplatform.ide.extension.heroku.client.rake;
  * The response of the rake command execution result.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 20, 2011 9:40:09 AM anya $
- *
+ * @version $Id: Jun 20, 2011 9:40:09 AM anya $
+ * 
  */
 public class RakeCommandResult
 {

@@ -22,12 +22,12 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 11:16:02 AM anya $
- *
+ * @version $Id: Jun 6, 2011 11:16:02 AM anya $
+ * 
  */
 public interface HerokuLocalizationConstant extends Messages
 {
-   //Buttons:
+   // Buttons:
    @DefaultMessage("Cancel")
    @Key("cancelButton")
    String cancelButton();
@@ -73,7 +73,7 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("logsButton")
    String logsButton();
 
-   //Controls:
+   // Controls:
    @DefaultMessage("Logged in Heroku successfully.")
    @Key("loginSuccess")
    String loginSuccess();
@@ -201,7 +201,7 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("control.logs.prompt")
    String logsControlPrompt();
 
-   //Create Application view
+   // Create Application view
    @DefaultMessage("Create application on Heroku")
    @Key("createApplicationView.title")
    String createApplicationViewTitle();
@@ -218,7 +218,7 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("createApplicationView.remoteName")
    String createApplicationViewRemoteName();
 
-   //Application information view:
+   // Application information view:
    @DefaultMessage("Heroku application information")
    @Key("applicationInfoView.title")
    String applicationInfoViewTitle();
@@ -231,7 +231,7 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
 
-   /*Messages*/
+   /* Messages */
    @Key("createApplicationSuccess")
    String createApplicationSuccess(String application);
 
@@ -240,28 +240,28 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("stack.list.unmarshal.failed")
    String stackListUnmarshalFailed();
-   
+
    @Key("creatingApplication")
    String creatingApplication();
-   
+
    @Key("applicationCreated")
    String applicationCreated();
-   
-   /*Delete application*/
+
+   /* Delete application */
    @Key("deleteApplication.title")
    String deleteApplicationTitle();
 
    @Key("askForDeleteApplication")
    String deleteApplicationQuestion(String application);
 
-   /*Remove keys*/
+   /* Remove keys */
    @Key("removeKeys.title")
    String removeKeysTitle();
 
    @Key("askRemoveKeys")
    String askRemoveKeys();
 
-   /*Login view*/
+   /* Login view */
    @Key("loginView.title")
    String loginViewTitle();
 
@@ -271,14 +271,14 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("loginView.field.email")
    String loginViewEmailField();
 
-   /*Rename application*/
+   /* Rename application */
    @Key("renameApplicationView.title")
    String renameApplicationViewTitle();
 
    @Key("renameApplicationView.field.name")
    String renameApplicationViewNameField();
 
-   /*Rake command*/
+   /* Rake command */
    @Key("rakeView.title")
    String rakeViewTitle();
 
@@ -288,7 +288,7 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("rakeView.command.example")
    String rakeViewCommandExample();
 
-   /*Change application's stack*/
+   /* Change application's stack */
    @Key("changeStackView.title")
    String changeStackViewTitle();
 
@@ -298,7 +298,7 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("changeStackView.beta.field")
    String changeStackViewBetaField();
 
-   /*Application logs view*/
+   /* Application logs view */
    @Key("logsView.title")
    String logsViewTitle();
 
@@ -308,7 +308,7 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("logsView.getLogs.button")
    String logsViewGetLogsButton();
 
-   /*Manage project view*/
+   /* Manage project view */
    @Key("manage.project.view.title")
    String manageProjectViewTitle();
 

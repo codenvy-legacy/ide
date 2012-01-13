@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.heroku.client.info;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to view application's information.
- * Implement {@link ShowApplicationInfoHandler} to handle event.
+ * Event occurs, when user tries to view application's information. Implement {@link ShowApplicationInfoHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 11:22:18 AM anya $
- *
+ * @version $Id: Jun 1, 2011 11:22:18 AM anya $
+ * 
  */
 public class ShowApplicationInfoEvent extends GwtEvent<ShowApplicationInfoHandler>
 {

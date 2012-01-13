@@ -57,7 +57,7 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
- *
+ * 
  */
 public class DeployApplicationPresenter implements PaasComponent, VfsChangedHandler, LoggedInHandler
 {
@@ -131,7 +131,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
 
    }
 
-   //----Implementation------------------------
+   // ----Implementation------------------------
 
    /**
     * Form the message about application creation to display in output.
@@ -198,7 +198,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
          display = GWT.create(Display.class);
       }
       bindDisplay();
-      //clear values
+      // clear values
       display.getApplicationNameField().setValue("");
       display.getRemoteNameField().setValue("");
       applicationName = null;
@@ -222,7 +222,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    public void deploy(ProjectModel project)
    {
       this.project = project;
-      
+
       checkIsGitRepository(project);
    }
 
@@ -244,7 +244,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       IDE.removeHandler(LoggedInEvent.TYPE, this);
       createApplication();
    }
-   
+
    private void checkIsGitRepository(final ProjectModel project)
    {
       try
@@ -262,7 +262,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                   {
                      if (".git".equals(item.getName()))
                      {
-//                        beforeBuild();
+                        // beforeBuild();
                         createApplication();
                         return;
                      }
@@ -281,7 +281,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       {
       }
    }
-   
+
    /**
     * Initialize Git repository.
     * 
@@ -298,9 +298,9 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                protected void onSuccess(String result)
                {
                   createApplication();
-//                  showBuildMessage(GitExtension.MESSAGES.initSuccess());
-//                  IDE.fireEvent(new RefreshBrowserEvent());
-//                  createJob();
+                  // showBuildMessage(GitExtension.MESSAGES.initSuccess());
+                  // IDE.fireEvent(new RefreshBrowserEvent());
+                  // createJob();
                }
 
                @Override

@@ -34,12 +34,11 @@ import org.exoplatform.ide.extension.heroku.shared.Stack;
 import java.util.List;
 
 /**
- * Change Heroku application's view.
- * Must be pointed in Views.gwt.xml.
+ * Change Heroku application's view. Must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 29, 2011 11:16:03 AM anya $
- *
+ * @version $Id: Jul 29, 2011 11:16:03 AM anya $
+ * 
  */
 public class ChangeStackView extends ViewImpl implements ChangeStackPresenter.Display
 {

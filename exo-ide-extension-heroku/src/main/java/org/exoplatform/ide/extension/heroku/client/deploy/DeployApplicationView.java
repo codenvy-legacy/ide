@@ -30,25 +30,25 @@ import org.exoplatform.gwtframework.ui.client.component.TextInput;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationView.java Dec 5, 2011 1:58:14 PM vereshchaka $
- *
+ * 
  */
 public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display
 {
    interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView>
    {
    }
-   
+
    private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
-   
+
    @UiField
    TextInput nameField;
-   
+
    /**
     * Application URL field.
     */
    @UiField
    TextInput remoteNameField;
-   
+
    public DeployApplicationView()
    {
       super();

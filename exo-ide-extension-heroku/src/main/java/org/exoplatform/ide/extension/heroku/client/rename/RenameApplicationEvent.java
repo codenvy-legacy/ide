@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event occurs, when user tries to rename application on Heroku.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 2, 2011 11:50:31 AM anya $
- *
+ * @version $Id: Jun 2, 2011 11:50:31 AM anya $
+ * 
  */
 public class RenameApplicationEvent extends GwtEvent<RenameApplicationHandler>
 {

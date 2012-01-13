@@ -26,8 +26,8 @@ import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationEvent
  * Control for deleting application on Heroku.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 5:10:21 PM anya $
- *
+ * @version $Id: May 26, 2011 5:10:21 PM anya $
+ * 
  */
 public class DeleteApplicationControl extends AbstractHerokuControl
 {

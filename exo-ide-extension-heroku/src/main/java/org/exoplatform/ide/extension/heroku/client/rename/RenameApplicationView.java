@@ -32,12 +32,11 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
- * View for renaming Heroku application.
- * View must be pointed in Views.gwt.xml.
+ * View for renaming Heroku application. View must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 2, 2011 2:26:41 PM anya $
- *
+ * @version $Id: Jun 2, 2011 2:26:41 PM anya $
+ * 
  */
 public class RenameApplicationView extends ViewImpl implements RenameApplicationPresenter.Display
 {
@@ -79,7 +78,8 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
 
    public RenameApplicationView()
    {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationViewTitle(), null, WIDTH, HEIGHT, false);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationViewTitle(), null, WIDTH,
+         HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);

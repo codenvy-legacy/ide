@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
  * Unmarshaller for stack migration response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 1, 2011 4:07:40 PM anya $
- *
+ * @version $Id: Aug 1, 2011 4:07:40 PM anya $
+ * 
  */
 public class StackMigrationUnmarshaller implements Unmarshallable<StackMigrationResponse>
 {

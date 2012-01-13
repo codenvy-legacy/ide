@@ -25,19 +25,21 @@ import com.google.gwt.i18n.client.Constants;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: HerokuCredentialsConstant.java Jun 20, 2011 12:26:23 PM vereshchaka $
- *
+ * 
  */
 public interface HerokuCredentialsConstant extends Constants
 {
    /**
     * Login for demo account (do not translate).
+    * 
     * @return
     */
    @Key("demoAccount.email")
    String loginDemoAccountEmail();
-   
+
    /**
     * Password for demo account (do not translate).
+    * 
     * @return
     */
    @Key("demoAccount.password")

@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler from {@link RenameApplicationEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 2, 2011 11:50:40 AM anya $
- *
+ * @version $Id: Jun 2, 2011 11:50:40 AM anya $
+ * 
  */
 public interface RenameApplicationHandler extends EventHandler
 {

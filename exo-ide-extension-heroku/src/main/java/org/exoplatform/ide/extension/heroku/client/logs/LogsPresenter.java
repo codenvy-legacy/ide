@@ -43,12 +43,11 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
- * Presenter for application's logs view.
- * View must be pointed in Views.gwt.xml file.
+ * Presenter for application's logs view. View must be pointed in Views.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 19, 2011 2:28:02 PM anya $
- *
+ * @version $Id: Sep 19, 2011 2:28:02 PM anya $
+ * 
  */
 public class LogsPresenter extends GitPresenter implements ShowLogsHandler, LoggedInHandler, ViewClosedHandler
 {

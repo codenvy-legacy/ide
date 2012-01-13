@@ -37,8 +37,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
  * View for log in Heroku.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 10:54:35 AM anya $
- *
+ * @version $Id: May 26, 2011 10:54:35 AM anya $
+ * 
  */
 public class LoginView extends ViewImpl implements LoginPresenter.Display
 {
@@ -49,7 +49,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final int HEIGHT = 190;
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
-   
+
    /**
     * Button for login as user "Demo".
     */
@@ -62,8 +62,8 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
 
    /**
-   * UI binder for this view.
-   */
+    * UI binder for this view.
+    */
    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
    interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
@@ -93,13 +93,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    ImageButton loginDemoButton;
 
    public LoginView()
    {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT,false);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
 
       emailField.setName(EMAIL_FIELD_ID);
@@ -171,5 +171,5 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    {
       return loginDemoButton;
    }
-   
+
 }

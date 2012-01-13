@@ -26,12 +26,12 @@ import org.exoplatform.ide.extension.heroku.client.stack.ChangeApplicationStackE
  * Control for changing stack (deployment environment) of the Heroku application.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 28, 2011 5:58:35 PM anya $
- *
+ * @version $Id: Jul 28, 2011 5:58:35 PM anya $
+ * 
  */
 public class ChangeApplicationStackConrol extends AbstractHerokuControl
 {
-   
+
    public ChangeApplicationStackConrol()
    {
       super(HerokuExtension.LOCALIZATION_CONSTANT.changeStackControlId());

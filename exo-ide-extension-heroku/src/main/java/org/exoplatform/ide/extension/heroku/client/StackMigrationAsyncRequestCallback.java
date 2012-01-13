@@ -33,8 +33,8 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationUnma
  * Asynchronous callback on migrate stack response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 1, 2011 4:10:31 PM anya $
- *
+ * @version $Id: Aug 1, 2011 4:10:31 PM anya $
+ * 
  */
 public abstract class StackMigrationAsyncRequestCallback extends AsyncRequestCallback<StackMigrationResponse>
 {

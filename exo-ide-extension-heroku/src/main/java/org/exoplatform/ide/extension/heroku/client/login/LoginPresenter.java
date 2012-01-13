@@ -41,12 +41,11 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
- * Presenter for login view.
- * The view must be pointed in Views.gwt.xml.
+ * Presenter for login view. The view must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 25, 2011 3:56:55 PM anya $
- *
+ * @version $Id: May 25, 2011 3:56:55 PM anya $
+ * 
  */
 public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAccountHandler
 {

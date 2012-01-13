@@ -29,8 +29,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
  * Handler for Heroku application request.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 12, 2011 12:45:04 PM anya $
- *
+ * @version $Id: Dec 12, 2011 12:45:04 PM anya $
+ * 
  */
 public class CreateRequestHandler extends RequestStatusHandlerBase
 {

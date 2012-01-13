@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
  * Unmarshaller for Heroku application's logs.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 19, 2011 2:40:47 PM anya $
- *
+ * @version $Id: Sep 19, 2011 2:40:47 PM anya $
+ * 
  */
 public class LogsUnmarshaller implements Unmarshallable<LogsResponse>
 {

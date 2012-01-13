@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.heroku.client.create;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to create application on  Heroku.
- * Implement {@link CreateApplicationHandler} to handle event.
+ * Event occurs, when user tries to create application on Heroku. Implement {@link CreateApplicationHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 2:32:15 PM anya $
- *
+ * @version $Id: May 26, 2011 2:32:15 PM anya $
+ * 
  */
 public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
 {

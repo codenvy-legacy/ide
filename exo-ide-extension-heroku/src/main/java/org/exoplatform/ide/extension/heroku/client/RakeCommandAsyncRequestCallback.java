@@ -30,14 +30,12 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.RakeResultUnmarsha
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
 
 /**
- * Asynchronous Heroku request for executing rake commands.
- * The {{@link #onFailure(Throwable)}} method contains the check for 
- * user not authorized exception, in this case - the {@link LoginEvent} is fired.
- * The returned result is {@link RakeCommandResult}.
+ * Asynchronous Heroku request for executing rake commands. The {{@link #onFailure(Throwable)} method contains the check for user
+ * not authorized exception, in this case - the {@link LoginEvent} is fired. The returned result is {@link RakeCommandResult}.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 20, 2011 9:42:51 AM anya $
- *
+ * @version $Id: Jun 20, 2011 9:42:51 AM anya $
+ * 
  */
 public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallback<RakeCommandResult>
 {

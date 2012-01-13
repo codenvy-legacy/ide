@@ -39,8 +39,8 @@ import java.util.List;
  * Presenter for actions with keys (add, clear).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 31, 2011 10:27:33 AM anya $
- *
+ * @version $Id: May 31, 2011 10:27:33 AM anya $
+ * 
  */
 public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInHandler
 {

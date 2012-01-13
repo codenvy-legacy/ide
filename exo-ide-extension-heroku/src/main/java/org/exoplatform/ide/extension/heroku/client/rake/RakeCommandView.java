@@ -32,12 +32,11 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
- * View for executing rake command.
- * Must be pointed in Views.gwt.xml.
+ * View for executing rake command. Must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 17, 2011 10:55:51 AM anya $
- *
+ * @version $Id: Jun 17, 2011 10:55:51 AM anya $
+ * 
  */
 public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Display
 {
@@ -62,19 +61,19 @@ public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Di
    }
 
    /**
-    *Rake command field.
+    * Rake command field.
     */
    @UiField
    TextInput commandField;
 
    /**
-    *Run rake command button.
+    * Run rake command button.
     */
    @UiField
    ImageButton runButton;
 
    /**
-    *Get rake help button.
+    * Get rake help button.
     */
    @UiField
    ImageButton helpButton;
@@ -87,7 +86,7 @@ public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Di
 
    public RakeCommandView()
    {
-      super(ID, ViewType.POPUP, HerokuExtension.LOCALIZATION_CONSTANT.rakeViewTitle(), null, WIDTH, HEIGHT,false);
+      super(ID, ViewType.POPUP, HerokuExtension.LOCALIZATION_CONSTANT.rakeViewTitle(), null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
 
       commandField.setName(COMMAND_FIELD_ID);
@@ -149,5 +148,5 @@ public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Di
    {
       commandField.focus();
    }
-   
+
 }

@@ -28,8 +28,8 @@ import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
  * Unmarshaller for the rake command execution result.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 20, 2011 9:46:43 AM anya $
- *
+ * @version $Id: Jun 20, 2011 9:46:43 AM anya $
+ * 
  */
 public class RakeResultUnmarshaller implements Unmarshallable<RakeCommandResult>
 {

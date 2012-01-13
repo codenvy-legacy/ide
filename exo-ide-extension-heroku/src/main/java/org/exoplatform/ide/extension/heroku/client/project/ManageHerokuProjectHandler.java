@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link ManageHerokuProjectEvent} event.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 9:58:19 AM anya $
- *
+ * @version $Id: Dec 8, 2011 9:58:19 AM anya $
+ * 
  */
 public interface ManageHerokuProjectHandler extends EventHandler
 {

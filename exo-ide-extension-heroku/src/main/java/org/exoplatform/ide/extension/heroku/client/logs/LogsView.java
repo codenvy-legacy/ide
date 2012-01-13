@@ -40,8 +40,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
  * View for displaying application's logs.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 21, 2011 10:09:19 AM anya $
- *
+ * @version $Id: Sep 21, 2011 10:09:19 AM anya $
+ * 
  */
 public class LogsView extends ViewImpl implements LogsPresenter.Display
 {
@@ -83,8 +83,7 @@ public class LogsView extends ViewImpl implements LogsPresenter.Display
       super(ID, ViewType.OPERATION, HerokuExtension.LOCALIZATION_CONSTANT.logsViewTitle(), new Image(
          HerokuClientBundle.INSTANCE.logs()));
       add(uiBinder.createAndBindUi(this));
-      
-      
+
       logLinesField.setName(LOG_LINES_FIELD_ID);
       getLogButton =
          new IconButton(new Image(HerokuClientBundle.INSTANCE.getLogs()), new Image(
@@ -138,5 +137,5 @@ public class LogsView extends ViewImpl implements LogsPresenter.Display
    {
       logLinesField.focus();
    }
-   
+
 }

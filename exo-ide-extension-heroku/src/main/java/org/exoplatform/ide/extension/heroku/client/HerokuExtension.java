@@ -50,8 +50,8 @@ import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
  * Heroku extension to be added to IDE Application.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 25, 2011 11:38:06 AM anya $
- *
+ * @version $Id: May 25, 2011 11:38:06 AM anya $
+ * 
  */
 public class HerokuExtension extends Extension implements InitializeServicesHandler
 {
@@ -77,7 +77,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      //Add controls
+      // Add controls
       IDE.getInstance().addControl(new HerokuControlsGroup());
       IDE.getInstance().addControl(new CreateApplicationControl());
       IDE.getInstance().addControl(new DeleteApplicationControl());
@@ -88,9 +88,9 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new RakeControl());
       IDE.getInstance().addControl(new AddKeyControl());
       IDE.getInstance().addControl(new SwitchAccountControl());
-      //IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
+      // IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
 
-      //Add presenters
+      // Add presenters
       new CreateApplicationPresenter();
       new DeleteApplicationCommandHandler();
       new ApplicationInfoPresenter();

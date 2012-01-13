@@ -26,8 +26,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
  * Control for grouping all Heroku controls.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 31, 2011 3:32:33 PM anya $
- *
+ * @version $Id: May 31, 2011 3:32:33 PM anya $
+ * 
  */
 public class HerokuControlsGroup extends SimpleControl implements IDEControl
 {
@@ -42,8 +42,8 @@ public class HerokuControlsGroup extends SimpleControl implements IDEControl
    public static final String TITLE = "Heroku";
 
    /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
+    * Control's prompt, when user hovers the mouse on it.
+    */
    public static final String PROMPT = "Heroku";
 
    public HerokuControlsGroup()

@@ -36,12 +36,11 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
- * View for managing project, deployed on Heroku.
- * View must be pointed in <b>Views.gwt.xml</b>.
+ * View for managing project, deployed on Heroku. View must be pointed in <b>Views.gwt.xml</b>.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 10:30:18 AM anya $
- *
+ * @version $Id: Dec 8, 2011 10:30:18 AM anya $
+ * 
  */
 public class HerokuProjectView extends ViewImpl implements HerokuProjectPresenter.Display
 {
@@ -112,7 +111,7 @@ public class HerokuProjectView extends ViewImpl implements HerokuProjectPresente
       super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.manageProjectViewTitle(), new Image(
          HerokuClientBundle.INSTANCE.heroku()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      
+
       deleteButton.getElement().setId(DELETE_BUTTON_ID);
       renameButton.getElement().setId(RENAME_BUTTON_ID);
       closeButton.setButtonId(CLOSE_BUTTON_ID);

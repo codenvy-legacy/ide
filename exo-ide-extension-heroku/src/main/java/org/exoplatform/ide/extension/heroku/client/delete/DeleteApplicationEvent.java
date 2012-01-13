@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.heroku.client.delete;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to delete application from Heroku.
- * Implement {@link DeleteApplicationHandler} to handle event.
+ * Event occurs, when user tries to delete application from Heroku. Implement {@link DeleteApplicationHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 5:13:19 PM anya $
- *
+ * @version $Id: May 26, 2011 5:13:19 PM anya $
+ * 
  */
 public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
 {

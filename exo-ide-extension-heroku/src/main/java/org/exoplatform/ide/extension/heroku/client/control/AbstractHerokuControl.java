@@ -43,13 +43,14 @@ import java.util.List;
  * @version $
  */
 
-public class AbstractHerokuControl extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler, ViewVisibilityChangedHandler
+public class AbstractHerokuControl extends SimpleControl implements IDEControl, VfsChangedHandler,
+   ItemsSelectedHandler, ViewVisibilityChangedHandler
 {
 
    protected VirtualFileSystemInfo vfsInfo;
 
    protected List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private boolean isProjectExplorerVisible;
 
    /**

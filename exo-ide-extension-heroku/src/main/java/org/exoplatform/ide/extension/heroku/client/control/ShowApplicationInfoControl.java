@@ -26,8 +26,8 @@ import org.exoplatform.ide.extension.heroku.client.info.ShowApplicationInfoEvent
  * Control for displaying application information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 11:18:56 AM anya $
- *
+ * @version $Id: Jun 1, 2011 11:18:56 AM anya $
+ * 
  */
 public class ShowApplicationInfoControl extends AbstractHerokuControl
 {

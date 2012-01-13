@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link ChangeApplicationStackEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 28, 2011 6:00:27 PM anya $
- *
+ * @version $Id: Jul 28, 2011 6:00:27 PM anya $
+ * 
  */
 public interface ChangeApplicationStackHandler extends EventHandler
 {

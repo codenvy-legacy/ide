@@ -28,30 +28,29 @@ import java.util.List;
  * Event occurs after rename Heroku application operation.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 2:24:25 PM anya $
- *
+ * @version $Id: Dec 8, 2011 2:24:25 PM anya $
+ * 
  */
 public class ApplicationRenamedEvent extends GwtEvent<ApplicationRenamedHandler>
 {
-   
+
    /**
     * Type used to register event.
     */
    public static final GwtEvent.Type<ApplicationRenamedHandler> TYPE = new GwtEvent.Type<ApplicationRenamedHandler>();
-   
-   
+
    /**
     * Application properties after rename.
     */
    private List<Property> properties;
-   
+
    /**
-    * Project's id. 
+    * Project's id.
     */
    private String projectId;
-   
+
    /**
-    * @param projectId  project's id
+    * @param projectId project's id
     * @param properties application properties after rename
     */
    public ApplicationRenamedEvent(String projectId, List<Property> properties)
@@ -59,7 +58,7 @@ public class ApplicationRenamedEvent extends GwtEvent<ApplicationRenamedHandler>
       this.projectId = projectId;
       this.properties = properties;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

@@ -48,17 +48,13 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import java.util.List;
 
 /**
- * Presenter for rename application on Heroku.
- * The view must be pointed in Views.gwt.xml.
- * Performs following actions on rename:
- * 1. Gets the Git working directory location.
- * 2. Gets application name (application info) by Git working directory location.
- * 3. Opens view for rename with pointed old name.
- * 4. When user clicks "Rename" button - performs rename application.
+ * Presenter for rename application on Heroku. The view must be pointed in Views.gwt.xml. Performs following actions on rename: 1.
+ * Gets the Git working directory location. 2. Gets application name (application info) by Git working directory location. 3.
+ * Opens view for rename with pointed old name. 4. When user clicks "Rename" button - performs rename application.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 2, 2011 11:54:59 AM anya $
- *
+ * @version $Id: Jun 2, 2011 11:54:59 AM anya $
+ * 
  */
 public class RenameApplicationPresenter extends GitPresenter implements RenameApplicationHandler, ViewClosedHandler,
    LoggedInHandler

@@ -26,8 +26,8 @@ import org.exoplatform.ide.extension.heroku.client.logs.ShowLogsEvent;
  * Control for showing application's logs.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 19, 2011 12:33:48 PM anya $
- *
+ * @version $Id: Sep 19, 2011 12:33:48 PM anya $
+ * 
  */
 public class ShowLogsControl extends AbstractHerokuControl
 {

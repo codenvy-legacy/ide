@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.heroku.client.key;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to clear(remove) keys from Heroku.
- * Implement {@link ClearKeysHandler} to handle event.
+ * Event occurs, when user tries to clear(remove) keys from Heroku. Implement {@link ClearKeysHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 31, 2011 10:40:16 AM anya $
- *
+ * @version $Id: May 31, 2011 10:40:16 AM anya $
+ * 
  */
 public class ClearKeysEvent extends GwtEvent<ClearKeysHandler>
 {

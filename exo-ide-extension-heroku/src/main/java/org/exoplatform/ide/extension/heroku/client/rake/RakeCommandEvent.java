@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.heroku.client.rake;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to execute rake command.
- * Implement {@link RakeCommandHandler} to handle event.
+ * Event occurs, when user tries to execute rake command. Implement {@link RakeCommandHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 17, 2011 5:09:41 PM anya $
- *
+ * @version $Id: Jun 17, 2011 5:09:41 PM anya $
+ * 
  */
 public class RakeCommandEvent extends GwtEvent<RakeCommandHandler>
 {

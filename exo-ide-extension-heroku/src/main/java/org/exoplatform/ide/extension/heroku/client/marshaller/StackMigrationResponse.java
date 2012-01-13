@@ -22,8 +22,8 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
  * Response of the stack migration operation.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 1, 2011 4:06:44 PM anya $
- *
+ * @version $Id: Aug 1, 2011 4:06:44 PM anya $
+ * 
  */
 public class StackMigrationResponse
 {

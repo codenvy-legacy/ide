@@ -26,8 +26,8 @@ import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent
  * Control for creating new application on Heroku.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 2:27:45 PM anya $
- *
+ * @version $Id: May 26, 2011 2:27:45 PM anya $
+ * 
  */
 public class CreateApplicationControl extends AbstractHerokuControl
 {

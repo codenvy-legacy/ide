@@ -26,8 +26,8 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
  * Heroku client service.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 25, 2011 12:19:59 PM anya $
- *
+ * @version $Id: May 25, 2011 12:19:59 PM anya $
+ * 
  */
 public abstract class HerokuClientService
 {
@@ -56,7 +56,8 @@ public abstract class HerokuClientService
     * @param password user's password
     * @param callback callback
     */
-   public abstract void login(String login, String password, AsyncRequestCallback<String> callback) throws RequestException ;
+   public abstract void login(String login, String password, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Logout from Heroku.
@@ -85,7 +86,8 @@ public abstract class HerokuClientService
     * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void deleteApplication(String applicationName, String vfsId, String projectid, HerokuAsyncRequestCallback callback) throws RequestException;
+   public abstract void deleteApplication(String applicationName, String vfsId, String projectid,
+      HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Adds(deploys) public ssh keys on Heroku.
@@ -107,8 +109,8 @@ public abstract class HerokuClientService
     * @param applicationName application's name
     * @param vfsId virtual file system id
     * @param projectid project's id (root folder of GIT repository)
-    * @param isRaw the format of the response if <code>true</code> then get result as raw Map. If <code>false</code> (default) result
-    *           is Map that contains predefined set of key-value pair
+    * @param isRaw the format of the response if <code>true</code> then get result as raw Map. If <code>false</code> (default)
+    *           result is Map that contains predefined set of key-value pair
     * @param callback callback
     */
    public abstract void getApplicationInfo(String applicationName, String vfsId, String projectid, boolean isRaw,
@@ -147,7 +149,8 @@ public abstract class HerokuClientService
     * @param linesNumber number of log lines
     * @param callback callback
     */
-   public abstract void logs(String applicationName, String vfsId, String projectid, int linesNumber, LogsAsyncRequestCallback callback) throws RequestException;
+   public abstract void logs(String applicationName, String vfsId, String projectid, int linesNumber,
+      LogsAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Get help for rake.
@@ -157,18 +160,19 @@ public abstract class HerokuClientService
     * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void help(String applicationName, String vfsId, String projectid, RakeCommandAsyncRequestCallback callback) throws RequestException;
+   public abstract void help(String applicationName, String vfsId, String projectid,
+      RakeCommandAsyncRequestCallback callback) throws RequestException;
 
    /**
-    * Get the list of Heroku application's available stacks (deployment environment).
-    * The list contains info about current stack.
+    * Get the list of Heroku application's available stacks (deployment environment). The list contains info about current stack.
     * 
     * @param applicationName name of the Heroku application (may be null)
     * @param vfsId virtual file system id
     * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void getStackList(String applicationName, String vfsId, String projectid, StackListAsyncRequestCallback callback) throws RequestException;
+   public abstract void getStackList(String applicationName, String vfsId, String projectid,
+      StackListAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Migrate from one stack to another (change deployment environment)

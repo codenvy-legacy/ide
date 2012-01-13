@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.heroku.client.logs;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is used for showing the logs of the Heroku application.
- * Implement {@link ShowLogsHandler} to handle event.
+ * Event is used for showing the logs of the Heroku application. Implement {@link ShowLogsHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Sep 19, 2011 12:42:56 PM anya $
- *
+ * @version $Id: Sep 19, 2011 12:42:56 PM anya $
+ * 
  */
 public class ShowLogsEvent extends GwtEvent<ShowLogsHandler>
 {

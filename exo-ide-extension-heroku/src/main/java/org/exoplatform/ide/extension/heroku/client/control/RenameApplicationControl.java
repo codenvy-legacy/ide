@@ -24,8 +24,8 @@ import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationEvent
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 2, 2011 11:47:47 AM anya $
- *
+ * @version $Id: Jun 2, 2011 11:47:47 AM anya $
+ * 
  */
 public class RenameApplicationControl extends AbstractHerokuControl
 {

@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link DeleteApplicationEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 5:13:55 PM anya $
- *
+ * @version $Id: May 26, 2011 5:13:55 PM anya $
+ * 
  */
 public interface DeleteApplicationHandler extends EventHandler
 {

@@ -21,21 +21,20 @@ package org.exoplatform.ide.extension.heroku.client.key;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to add(deploy) keys on Heroku.
- * Implement {@link AddKeyHandler} to handle event.
+ * Event occurs, when user tries to add(deploy) keys on Heroku. Implement {@link AddKeyHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 31, 2011 10:14:10 AM anya $
- *
+ * @version $Id: May 31, 2011 10:14:10 AM anya $
+ * 
  */
 public class AddKeyEvent extends GwtEvent<AddKeyHandler>
 {
-   
+
    /**
     * Type used to register this event.
     */
    public static final GwtEvent.Type<AddKeyHandler> TYPE = new GwtEvent.Type<AddKeyHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

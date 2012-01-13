@@ -24,13 +24,13 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event occurs, when user tries to change the stack of Heroku application.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 28, 2011 6:00:14 PM anya $
- *
+ * @version $Id: Jul 28, 2011 6:00:14 PM anya $
+ * 
  */
 public class ChangeApplicationStackEvent extends GwtEvent<ChangeApplicationStackHandler>
 {
    /**
-    * Type used to register the event. 
+    * Type used to register the event.
     */
    public static final GwtEvent.Type<ChangeApplicationStackHandler> TYPE =
       new GwtEvent.Type<ChangeApplicationStackHandler>();

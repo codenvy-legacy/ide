@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.heroku.client.login;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to switch Heroku account.
- * Implement {@link SwitchAccountHandler} to handle the event.
+ * Event occurs, when user tries to switch Heroku account. Implement {@link SwitchAccountHandler} to handle the event.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SwitchAccountEvent.java Jun 17, 2011 5:04:47 PM vereshchaka $
- *
+ * 
  */
 public class SwitchAccountEvent extends GwtEvent<SwitchAccountHandler>
 {

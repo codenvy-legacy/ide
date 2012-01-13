@@ -46,12 +46,11 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import java.util.List;
 
 /**
- * Presenter for created application view.
- * The view must be pointed in Views.gwt.xml.
+ * Presenter for created application view. The view must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 2:37:21 PM anya $
- *
+ * @version $Id: May 26, 2011 2:37:21 PM anya $
+ * 
  */
 public class CreateApplicationPresenter extends GitPresenter implements ViewClosedHandler, CreateApplicationHandler,
    LoggedInHandler

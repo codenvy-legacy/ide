@@ -57,8 +57,8 @@ import java.util.List;
  * Presenter for managing project, deployed on Heroku.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 2, 2011 2:21:04 PM anya $
- *
+ * @version $Id: Dec 2, 2011 2:21:04 PM anya $
+ * 
  */
 public class HerokuProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
    ManageHerokuProjectHandler, ViewClosedHandler, LoggedInHandler, ApplicationRenamedHandler, ApplicationDeletedHandler

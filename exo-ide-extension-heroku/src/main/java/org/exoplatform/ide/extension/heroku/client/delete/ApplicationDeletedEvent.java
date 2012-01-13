@@ -22,8 +22,8 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 2:39:55 PM anya $
- *
+ * @version $Id: Dec 8, 2011 2:39:55 PM anya $
+ * 
  */
 public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
 {
@@ -37,23 +37,22 @@ public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
     * VFS id.
     */
    private String vfsId;
-   
+
    /**
     * Project's id.
     */
    private String projectId;
-   
+
    /**
     * @param vfsId VFS id
     * @param projectId project's id
     */
-   public  ApplicationDeletedEvent(String vfsId, String projectId)
+   public ApplicationDeletedEvent(String vfsId, String projectId)
    {
       this.vfsId = vfsId;
       this.projectId = projectId;
    }
-   
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
@@ -72,7 +71,6 @@ public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
       handler.onApplicationDeleted(this);
    }
 
-
    /**
     * @return the vfsId VFS id
     */
@@ -81,7 +79,7 @@ public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
       return vfsId;
    }
 
-   /** 
+   /**
     * @return the projectId project's id
     */
    public String getProjectId()

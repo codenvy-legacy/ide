@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.heroku.client.login.SwitchAccountEvent;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SwitchAccountControl.java Jun 20, 2011 9:45:44 AM vereshchaka $
- *
+ * 
  */
 public class SwitchAccountControl extends AbstractHerokuControl
 {

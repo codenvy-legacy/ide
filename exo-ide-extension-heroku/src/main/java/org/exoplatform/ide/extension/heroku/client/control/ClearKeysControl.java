@@ -28,8 +28,8 @@ import org.exoplatform.ide.extension.heroku.client.key.ClearKeysEvent;
  * Control for clearing(removing) keys from Heroku.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 31, 2011 9:32:28 AM anya $
- *
+ * @version $Id: May 31, 2011 9:32:28 AM anya $
+ * 
  */
 public class ClearKeysControl extends AbstractHerokuControl
 {
@@ -42,7 +42,7 @@ public class ClearKeysControl extends AbstractHerokuControl
       setImages(HerokuClientBundle.INSTANCE.clearKeys(), HerokuClientBundle.INSTANCE.clearKeysDisabled());
       setEvent(new ClearKeysEvent());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */

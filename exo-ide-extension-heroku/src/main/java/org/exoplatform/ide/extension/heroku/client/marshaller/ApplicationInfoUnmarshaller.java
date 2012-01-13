@@ -32,8 +32,8 @@ import java.util.List;
  * Unmarshaller for application information from JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 30, 2011 11:00:13 AM anya $
- *
+ * @version $Id: May 30, 2011 11:00:13 AM anya $
+ * 
  */
 public class ApplicationInfoUnmarshaller implements Unmarshallable<List<Property>>
 {
