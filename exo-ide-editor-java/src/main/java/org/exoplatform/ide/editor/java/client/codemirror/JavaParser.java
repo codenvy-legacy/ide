@@ -920,15 +920,6 @@ public class JavaParser extends CodeMirrorParserImpl
    }
    
    /**
-    * Recognize double open brackets "<<"
-    * @param node
-    */
-   private boolean isDoubleOpenTriangleBracket(String nodeType, String nodeContent)
-   {
-      return "java-operator".equals(nodeType) && "&lt;&lt;".equals(nodeContent);     
-   }
-   
-   /**
     * Recognize close brackets ">"
     * @param node
     */

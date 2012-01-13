@@ -34,25 +34,26 @@ import com.google.gwt.core.client.JavaScriptObject;
  *
  */
 public class JavaScriptParser extends CodeMirrorParserImpl
-{      
-   
+{
+
    private Stack<Node> nodeStack = new Stack<Node>();
-   
+
    /**
     * Stack of blocks "{... {...} ...}"
     */
    private Stack<TokenType> enclosers = new Stack<TokenType>();
-   
+
    @Override
    public void init()
    {
       super.init();
-      
+
       nodeStack.clear();
    }
-   
+
    @Override
-   public TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken,
+      boolean hasParentParser)
    {
       // interrupt at the end of content
       if (javaScriptNode == null)
@@ -61,21 +62,17 @@ public class JavaScriptParser extends CodeMirrorParserImpl
       }
 
       nodeStack.push(new Node(javaScriptNode));
-            
+
       Stack<Node> cloneNodeStack = null;
       TokenBeenImpl newToken = null;
-     
+
       // recognize ended line break or ";" or "// ....." or whitespace
       if (nodeStack.size() > 1
-            && (nodeStack.lastElement().isLineBreak() 
-                     || isSemicolonNode(nodeStack.lastElement())
-                     || isJsComment(nodeStack.lastElement())
-                     || isWhitespace(nodeStack.lastElement()) 
-                  )
-            )
+         && (nodeStack.lastElement().isLineBreak() || isSemicolonNode(nodeStack.lastElement())
+            || isJsComment(nodeStack.lastElement()) || isWhitespace(nodeStack.lastElement())))
       {
-         cloneNodeStack = (Stack<Node>) nodeStack.clone();
-         cloneNodeStack.setSize(cloneNodeStack.size() - 1);         
+         cloneNodeStack = (Stack<Node>)nodeStack.clone();
+         cloneNodeStack.setSize(cloneNodeStack.size() - 1);
 
          // to recognize "var a/n" or "var a;" or "var a "
          if ((newToken = isVariableWithoutAssignmentStatement(cloneNodeStack)) != null)
@@ -88,45 +85,43 @@ public class JavaScriptParser extends CodeMirrorParserImpl
          {
             addSubToken(lineNumber, currentToken, newToken);
          }
-         
+
          // to recognize variable declaration like "var h = 11;" or "var h = 11 /n"
          else if ((newToken = isVariableWithAtomicValue(cloneNodeStack)) != null)
          {
             addSubToken(lineNumber, currentToken, newToken);
          }
       }
-               
+
       // to recognize function definition like "var a = function() {"
-      else if ((newToken = isVariableWithFunctionAssignmentStatement((Stack<Node>) nodeStack.clone(), lineNumber)) != null)
+      else if ((newToken = isVariableWithFunctionAssignmentStatement((Stack<Node>)nodeStack.clone(), lineNumber)) != null)
       {
          enclosers.push(TokenType.FUNCTION);
          addSubToken(currentToken, newToken);
-         currentToken = currentToken.getLastSubToken();         
+         currentToken = currentToken.getLastSubToken();
       }
 
       // to recognize variable declaration like "var h = ["               
-      else if ((newToken = isVariableWithArrayValue((Stack<Node>) nodeStack.clone())) != null)
+      else if ((newToken = isVariableWithArrayValue((Stack<Node>)nodeStack.clone())) != null)
       {
          addSubToken(lineNumber, currentToken, newToken);
       }
-      
+
       // recognize open bracket "("
-      else if (nodeStack.size() > 4
-                  && isOpenBracket(nodeStack.lastElement())
-                )
+      else if (nodeStack.size() > 4 && isOpenBracket(nodeStack.lastElement()))
       {
-         cloneNodeStack = (Stack<Node>) nodeStack.clone();
+         cloneNodeStack = (Stack<Node>)nodeStack.clone();
          cloneNodeStack.setSize(cloneNodeStack.size() - 1);
 
          // to recognize variable like "var h = window.document.getElementById('test')"         
-         if ((newToken = isVariableWithReferenceValue((Stack<Node>) cloneNodeStack.clone())) != null)
+         if ((newToken = isVariableWithReferenceValue((Stack<Node>)cloneNodeStack.clone())) != null)
          {
             newToken.setInitializationStatement(newToken.getInitializationStatement() + "()");
             addSubToken(lineNumber, currentToken, newToken);
          }
-         
+
          // to recognize object creation like "var a = new UWA.Data()"
-         else if ((newToken = isObjectCreation((Stack<Node>) cloneNodeStack.clone())) != null)
+         else if ((newToken = isObjectCreation((Stack<Node>)cloneNodeStack.clone())) != null)
          {
             addSubToken(lineNumber, currentToken, newToken);
          }
@@ -135,68 +130,66 @@ public class JavaScriptParser extends CodeMirrorParserImpl
       // recognize open brace "{"
       else if (isOpenBrace(nodeStack.lastElement()))
       {
-         if ((newToken = isFunctionStatement((Stack<Node>) nodeStack.clone(), lineNumber)) != null)
+         if ((newToken = isFunctionStatement((Stack<Node>)nodeStack.clone(), lineNumber)) != null)
          {
             enclosers.push(TokenType.FUNCTION);
             addSubToken(currentToken, newToken);
             currentToken = newToken;
          }
-           
+
          // to recognize anonymous function definition like "function() {"
-         else if (isAnonymousFunctionStatement((Stack<Node>) nodeStack.clone()) != -1) 
+         else if (isAnonymousFunctionStatement((Stack<Node>)nodeStack.clone()) != -1)
          {
             enclosers.push(TokenType.FUNCTION);
 
             newToken = new TokenBeenImpl("function", TokenType.FUNCTION, lineNumber, MimeType.APPLICATION_JAVASCRIPT);
             currentToken.addSubToken(newToken);
             currentToken = newToken;
-            
+
             nodeStack.clear();
-         }   
-               
+         }
+
          // to recognize variable declaration like "var i = {"               
-         else if ((newToken = isVariableWithObjectValue((Stack<Node>) nodeStack.clone())) != null)
+         else if ((newToken = isVariableWithObjectValue((Stack<Node>)nodeStack.clone())) != null)
          {
             addSubToken(lineNumber, currentToken, newToken);
             enclosers.push(TokenType.BLOCK);
          }
-         
+
          else
          {
             enclosers.push(TokenType.BLOCK);
          }
       }
-            
+
       // recognize close brace "}"      
-      else if (!nodeStack.isEmpty()
-               && isCloseBrace(nodeStack.lastElement()))
-      {         
-         if (! enclosers.isEmpty())
+      else if (!nodeStack.isEmpty() && isCloseBrace(nodeStack.lastElement()))
+      {
+         if (!enclosers.isEmpty())
          {
             if (TokenType.FUNCTION.equals(enclosers.lastElement()))
             {
                currentToken.setLastLineNumber(lineNumber);
-               
+
                if (currentToken.getParentToken() != null)
-               {         
-                  currentToken = currentToken.getParentToken();                
+               {
+                  currentToken = currentToken.getParentToken();
                }
             }
-            
+
             enclosers.pop();
          }
       }
-      
-      if (hasParentParser 
-               || Node.isLineBreak(javaScriptNode)) 
+
+      if (hasParentParser || Node.isLineBreak(javaScriptNode))
       {
          return currentToken; // return current token to parent parser
-      } 
+      }
       else
       {
          return parseLine(Node.getNext(javaScriptNode), lineNumber, currentToken, false);
       }
-   
+
    }
 
    /**
@@ -230,8 +223,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       newToken.setLineNumber(lineNumber);
       addSubToken(currentToken, newToken);
-   }   
-   
+   }
+
    /**
     * Recognize js property
     * @param nodeType
@@ -248,7 +241,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
     * @return token "a" with elementType like "UWA.Data" in case like "var a = new UWA.Data()"
     */
    private TokenBeenImpl isObjectCreation(Stack<Node> nodeStack)
-   {     
+   {
       if (nodeStack.size() > 4)
       {
          String elementType = "";
@@ -256,9 +249,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
          while (nodeStack.size() > 3)
          {
             Node node = nodeStack.lastElement();
-            if (isPoint(node.getType(), node.getContent())
-                  || isJsVariable(node.getType())
-                  || isJsProperty(node.getType()))
+            if (isPoint(node.getType(), node.getContent()) || isJsVariable(node.getType())
+               || isJsProperty(node.getType()))
             {
                elementType = node.getContent() + elementType;
                nodeStack.pop();
@@ -268,20 +260,17 @@ public class JavaScriptParser extends CodeMirrorParserImpl
                break;
             }
          }
-   
+
          // recognize variable assignment statement like "var a = new"
-         TokenBeenImpl newToken;      
-         if (isNewKeyword(nodeStack.pop())
-                  && nodeStack.size() > 2
-                  && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null 
-                  && isJsCorrectExpression(elementType)
-            ) 
+         TokenBeenImpl newToken;
+         if (isNewKeyword(nodeStack.pop()) && nodeStack.size() > 2
+            && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null && isJsCorrectExpression(elementType))
          {
             newToken.setElementType(elementType);
             return newToken;
          }
       }
-      
+
       return null;
    }
 
@@ -304,7 +293,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return "js-operator".equals(node.getType()) && "=".equals(node.getContent());
    }
-   
+
    /**
     * Recognize ";" node
     * @param node
@@ -314,18 +303,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return isJsPunctuation(node) && ";".equals(node.getContent());
    };
-   
-   
-   /**
-    * Recognize ":" node
-    * @param node
-    * @return
-    */
-   private boolean isColonNode(Node node)
-   {
-      return isJsPunctuation(node) && ":".equals(node.getContent());
-   };
-   
+
    /**
     * Recognize variable out of the function
     * @param nodeType
@@ -334,7 +312,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    public static boolean isJsVariable(String nodeType)
    {
       return "js-variable".equals(nodeType);
-   }   
+   }
 
    /**
     * Recognize local variable definition within the function like "function a() { var b = 1;  }"
@@ -355,7 +333,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return "js-localvariable".equals(nodeType);
    }
-   
+
    /**
     * Recognize "new" keyword
     * @param nodeType
@@ -366,7 +344,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return "js-keyword".equals(node.getType()) && "new".equals(node.getContent());
    };
-   
+
    /**
     * Recognize "." out of the js string
     * @return
@@ -375,7 +353,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return "js-punctuation".equals(nodeType) && ".".equals(nodeContent);
    }
-   
+
    /**
     * Recognize "{"
     * @return true if there is open braces of method definition
@@ -384,7 +362,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return isJsPunctuation(node) && "{".equals(node.getContent());
    }
-   
+
    /**
     * Recognize "}"
     */
@@ -392,7 +370,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return isJsPunctuation(node) && "}".equals(node.getContent());
    }
-   
+
    /**
     * Recognize function definition like function a(...){ and return its name
     * @param lineNumber 
@@ -406,13 +384,14 @@ public class JavaScriptParser extends CodeMirrorParserImpl
          if (isOpenBrace(nodeStack.pop()))
          {
             // pass BR or whitespace between ") ....  {"
-            while (nodeStack.size() > 3) {
+            while (nodeStack.size() > 3)
+            {
                Node node = nodeStack.pop();
                if (isCloseBracket(node))
                {
                   break;
                }
-               
+
                // decrease line number if there is BR node between ") ....  {"
                else if (node.isLineBreak())
                {
@@ -424,26 +403,25 @@ public class JavaScriptParser extends CodeMirrorParserImpl
                   return null;
                }
             }
-            
-            while (nodeStack.size() > 2) {
+
+            while (nodeStack.size() > 2)
+            {
                // test if this is like "function a (" 
                if (isOpenBracket(nodeStack.lastElement()))
                {
-                  if ( (isJsVariable(nodeStack.get(nodeStack.size() - 2).getType())
-                           || isJsLocalVariableDef(nodeStack.get(nodeStack.size() - 2).getType())
-                        )
-                        && isFunctionNode(nodeStack.get(nodeStack.size() - 3))
-                     )
-                  {                     
-                     return new TokenBeenImpl(nodeStack.get(nodeStack.size() - 2).getContent(), TokenType.FUNCTION, lineNumber, MimeType.APPLICATION_JAVASCRIPT);
+                  if ((isJsVariable(nodeStack.get(nodeStack.size() - 2).getType()) || isJsLocalVariableDef(nodeStack
+                     .get(nodeStack.size() - 2).getType())) && isFunctionNode(nodeStack.get(nodeStack.size() - 3)))
+                  {
+                     return new TokenBeenImpl(nodeStack.get(nodeStack.size() - 2).getContent(), TokenType.FUNCTION,
+                        lineNumber, MimeType.APPLICATION_JAVASCRIPT);
                   }
                }
-               
+
                nodeStack.pop();
             }
-         } 
+         }
       }
-      
+
       return null;
    }
 
@@ -455,26 +433,28 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    private int isAnonymousFunctionStatement(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 3)
-      { 
-         Stack<Node> initialNodeStack = (Stack<Node>) nodeStack.clone();
+      {
+         Stack<Node> initialNodeStack = (Stack<Node>)nodeStack.clone();
          if (isOpenBrace(nodeStack.pop()))
          {
             // pass BR or whitespace between ") ....  {"
-            while (nodeStack.size() > 2) {
+            while (nodeStack.size() > 2)
+            {
                Node node = nodeStack.pop();
                if (isCloseBracket(node))
                {
                   break;
                }
-               
+
                // return if there is non-BR or non-whitespace node between ") ....  {"
                else if (!(node.isLineBreak() || isWhitespace(node)))
                {
                   return -1;
                }
             }
-            
-            while (nodeStack.size() > 1) {
+
+            while (nodeStack.size() > 1)
+            {
                // test if this is like "function (" 
                if (isOpenBracket(nodeStack.lastElement()))
                {
@@ -483,12 +463,12 @@ public class JavaScriptParser extends CodeMirrorParserImpl
                      return initialNodeStack.indexOf(nodeStack.get(nodeStack.size() - 2));
                   }
                }
-               
+
                nodeStack.pop();
             }
-         } 
+         }
       }
-      
+
       return -1;
    }
 
@@ -501,17 +481,15 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       if (nodeStack.size() > 1)
       {
-         Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
-         if ((isJsVariable(cloneNodeStack.get(cloneNodeStack.size() - 1).getType()) 
-                 || isJsLocalVariableDef(cloneNodeStack.get(cloneNodeStack.size() - 1).getType())
-             )
-             && isVarNode(nodeStack.get(cloneNodeStack.size() - 2))
-         )
-         {            
-            return new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 1).getContent(), TokenType.VARIABLE, 0, MimeType.APPLICATION_JAVASCRIPT);
+         Stack<Node> cloneNodeStack = (Stack<Node>)nodeStack.clone();
+         if ((isJsVariable(cloneNodeStack.get(cloneNodeStack.size() - 1).getType()) || isJsLocalVariableDef(cloneNodeStack
+            .get(cloneNodeStack.size() - 1).getType())) && isVarNode(nodeStack.get(cloneNodeStack.size() - 2)))
+         {
+            return new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 1).getContent(), TokenType.VARIABLE, 0,
+               MimeType.APPLICATION_JAVASCRIPT);
          }
       }
-      
+
       return null;
    }
 
@@ -523,20 +501,20 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    private TokenBeenImpl isVariableWithAssignmentStatement(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 2)
-      {         
-         Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
-         if ( isEqualNode(cloneNodeStack.get(cloneNodeStack.size() - 1))
-              && (isJsVariable(cloneNodeStack.get(cloneNodeStack.size() - 2).getType()) 
-                    || isJsLocalVariableDef(cloneNodeStack.get(cloneNodeStack.size() - 2).getType()))
-              && isVarNode(cloneNodeStack.get(nodeStack.size() - 3))
-         )
+      {
+         Stack<Node> cloneNodeStack = (Stack<Node>)nodeStack.clone();
+         if (isEqualNode(cloneNodeStack.get(cloneNodeStack.size() - 1))
+            && (isJsVariable(cloneNodeStack.get(cloneNodeStack.size() - 2).getType()) || isJsLocalVariableDef(cloneNodeStack
+               .get(cloneNodeStack.size() - 2).getType())) && isVarNode(cloneNodeStack.get(nodeStack.size() - 3)))
          {
-            TokenBeenImpl newToken = new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(), TokenType.VARIABLE, 0, MimeType.APPLICATION_JAVASCRIPT);
+            TokenBeenImpl newToken =
+               new TokenBeenImpl(cloneNodeStack.get(cloneNodeStack.size() - 2).getContent(), TokenType.VARIABLE, 0,
+                  MimeType.APPLICATION_JAVASCRIPT);
             newToken.setElementType("Object");
             return newToken;
          }
       }
-      
+
       return null;
    }
 
@@ -550,14 +528,14 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       if (nodeStack.size() > 6)
       {
-         Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
+         Stack<Node> cloneNodeStack = (Stack<Node>)nodeStack.clone();
          // get index of function node "function"
          int indexOfFunctionNode = isAnonymousFunctionStatement(nodeStack);
-         
+
          if (indexOfFunctionNode > 2)
          {
             nodeStack.setSize(indexOfFunctionNode);
-            
+
             TokenBeenImpl newToken;
             if ((newToken = isVariableWithAssignmentStatement(nodeStack)) != null)
             {
@@ -569,9 +547,9 @@ public class JavaScriptParser extends CodeMirrorParserImpl
             }
          }
       }
-      
+
       return null;
-   }   
+   }
 
    /**
     * 
@@ -582,18 +560,19 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    private int getFirstLineNumber(int lineNumber, Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 3)
-      { 
-         Stack<Node> initialNodeStack = (Stack<Node>) nodeStack.clone();
+      {
+         Stack<Node> initialNodeStack = (Stack<Node>)nodeStack.clone();
          if (isOpenBrace(nodeStack.pop()))
          {
             // pass BR or whitespace between ") ....  {"
-            while (nodeStack.size() > 2) {
+            while (nodeStack.size() > 2)
+            {
                Node node = nodeStack.pop();
                if (isCloseBracket(node))
                {
                   break;
                }
-               
+
                // return if there is non-BR or non-whitespace node between ") ....  {"
                else if (node.isLineBreak())
                {
@@ -602,7 +581,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
             }
          }
       }
-      
+
       return lineNumber;
    }
 
@@ -615,15 +594,14 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       if (nodeStack.size() > 3)
       {
-         Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
+         Stack<Node> cloneNodeStack = (Stack<Node>)nodeStack.clone();
          // construct initialization statement
          String initializationStatement = "";
          while (cloneNodeStack.size() > 2)
          {
             Node node = cloneNodeStack.lastElement();
-            if (isPoint(node.getType(), node.getContent())
-                  || isJsVariable(node.getType())
-                  || isJsProperty(node.getType()))
+            if (isPoint(node.getType(), node.getContent()) || isJsVariable(node.getType())
+               || isJsProperty(node.getType()))
             {
                initializationStatement = node.getContent() + initializationStatement;
                cloneNodeStack.pop();
@@ -636,9 +614,8 @@ public class JavaScriptParser extends CodeMirrorParserImpl
 
          // recognize variable assignment statement like "var a ="
          TokenBeenImpl newToken;
-         if (cloneNodeStack.size() > 2
-               && (newToken = isVariableWithAssignmentStatement(cloneNodeStack)) != null 
-               && isJsCorrectExpression(initializationStatement)) 
+         if (cloneNodeStack.size() > 2 && (newToken = isVariableWithAssignmentStatement(cloneNodeStack)) != null
+            && isJsCorrectExpression(initializationStatement))
          {
             newToken.setInitializationStatement(initializationStatement);
             return newToken;
@@ -655,10 +632,9 @@ public class JavaScriptParser extends CodeMirrorParserImpl
     */
    private boolean isJsCorrectExpression(String expression)
    {
-      return ! expression.matches("^.*[.]{2,}.*|[.]{1,}.*|.*[.]{1,}$");
+      return !expression.matches("^.*[.]{2,}.*|[.]{1,}.*|.*[.]{1,}$");
    }
 
-   
    /**
     * Recognize variable with atomic value "var h = 11" like "number", "boolean", "string", null 
     * @param nodeStack 
@@ -666,11 +642,11 @@ public class JavaScriptParser extends CodeMirrorParserImpl
     */
    private TokenBeenImpl isVariableWithAtomicValue(Stack<Node> nodeStack)
    {
-//      nodeStack = clearStartedWhitespaces(nodeStack);
+      //      nodeStack = clearStartedWhitespaces(nodeStack);
       if (nodeStack.size() > 3)
       {
          // recognize type of assignment
-         Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
+         Stack<Node> cloneNodeStack = (Stack<Node>)nodeStack.clone();
          String possibleElementType = null;
          Node lastNode = cloneNodeStack.pop();
          // test if this is JavaScript number
@@ -678,37 +654,36 @@ public class JavaScriptParser extends CodeMirrorParserImpl
          {
             possibleElementType = "Number";
          }
-            
+
          // test if this is boolean
          else if (isJsBoolean(lastNode))
          {
             possibleElementType = "Boolean";
-         }            
-          
+         }
+
          // test if this is "null" value
          else if (isJsNull(lastNode))
          {
             possibleElementType = "null";
          }
-         
+
          // test if this is string value
          else if (isJsString(lastNode))
          {
             possibleElementType = "String";
          }
-      
+
          // recognize variable assignment statement like "var a ="
          TokenBeenImpl newToken;
-         if (cloneNodeStack.size() > 2
-                && (newToken = isVariableWithAssignmentStatement(cloneNodeStack)) != null 
-                && possibleElementType != null)
+         if (cloneNodeStack.size() > 2 && (newToken = isVariableWithAssignmentStatement(cloneNodeStack)) != null
+            && possibleElementType != null)
          {
             newToken.setElementType(possibleElementType);
             return newToken;
          }
 
       }
-         
+
       return null;
    }
 
@@ -722,13 +697,11 @@ public class JavaScriptParser extends CodeMirrorParserImpl
       if (nodeStack.size() > 3)
       {
          // recognize variable assignment statement like "var a ="
-         TokenBeenImpl newToken;   
-         if (isOpenSquareBracket(nodeStack.pop())
-                 && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null
-             )
+         TokenBeenImpl newToken;
+         if (isOpenSquareBracket(nodeStack.pop()) && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null)
          {
             newToken.setElementType("Array");
-            return newToken;               
+            return newToken;
          }
       }
 
@@ -746,19 +719,17 @@ public class JavaScriptParser extends CodeMirrorParserImpl
       if (nodeStack.size() > 3)
       {
          // recognize variable assignment statement like "var a ="
-         TokenBeenImpl newToken;   
-         if (isOpenBrace(nodeStack.pop())
-                 && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null
-             )
+         TokenBeenImpl newToken;
+         if (isOpenBrace(nodeStack.pop()) && (newToken = isVariableWithAssignmentStatement(nodeStack)) != null)
          {
             newToken.setElementType("Object");
-            return newToken;               
+            return newToken;
          }
       }
 
       return null;
    }
-   
+
    /**
     * Recognize open brackets "(" 
     * @param node 
@@ -788,7 +759,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return "whitespace".equals(node.getType());
    }
-   
+
    /**
     * Recognize "[" square bracket
     * @param node
@@ -812,31 +783,35 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    /**
     * @return true if this is JavaScript number
     */
-   private boolean isJsNumber(Node node) {
+   private boolean isJsNumber(Node node)
+   {
       return isJsAtomicType(node) && isCorrectJsNumberToken(node.getContent());
    };
-   
+
    /**
     * @return true if this is truly JavaScript number content
     */
-   private boolean isCorrectJsNumberToken(String token) {      
-      try {
-         return ! Double.isNaN(Double.valueOf(token));
+   private boolean isCorrectJsNumberToken(String token)
+   {
+      try
+      {
+         return !Double.isNaN(Double.valueOf(token));
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          return false;
       }
    };
-   
+
    /**
     * @return true if this is truly JavaScript boolean
     */
-   private boolean isJsBoolean(Node node) {
-      return isJsAtomicType(node) 
-               && ("true".equals(node.getContent().toLowerCase()) || "false".equals(node.getContent().toLowerCase()));
+   private boolean isJsBoolean(Node node)
+   {
+      return isJsAtomicType(node)
+         && ("true".equals(node.getContent().toLowerCase()) || "false".equals(node.getContent().toLowerCase()));
    };
-   
+
    /**
     * Recognize "null" node 
     * @param lastElement
@@ -846,7 +821,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return isJsAtomicType(node) && "null".equals(node.getContent());
    }
-   
+
    /**
     * Recognize "js-atom" node type
     * @param node
@@ -866,32 +841,4 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    {
       return "js-string".equals(node.getType());
    }
-   
-   /**
-    * Clear from started "  " whitespaces and line breaks
-    * @param nodeStack
-    * @return
-    */
-   private Stack<Node> clearStartedWhitespaces(Stack<Node> nodeStack)
-   {
-      if (nodeStack == null || nodeStack.isEmpty())
-         return nodeStack;
-   
-      Stack<Node> cloneNodeStack = (Stack<Node>) nodeStack.clone();
-      while (cloneNodeStack.size() > 0)
-      {
-         if (isWhitespace(cloneNodeStack.firstElement())
-                  || cloneNodeStack.firstElement().isLineBreak())
-         {
-            cloneNodeStack.removeElementAt(0);
-         }
-         else
-         {
-            break;
-         }
-      }
-      
-      return cloneNodeStack;
-   }
-   
 }

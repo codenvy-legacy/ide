@@ -1274,16 +1274,6 @@ public class PhpParser extends CodeMirrorParserImpl
    }
    
    /**
-    * Return true, if node has class which contains " syntax-error" keyword
-    * @param nodeType
-    * @return
-    */
-   private boolean isSyntaxError(String nodeType)
-   {
-      return (nodeType != null) && nodeType.endsWith(" syntax-error");
-   }
-   
-   /**
     * Recognize ";" node
     * @param node
     * @return

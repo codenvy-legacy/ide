@@ -24,22 +24,15 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -50,14 +43,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +56,7 @@ import java.util.List;
  *
  */
 public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandler, ItemsSelectedHandler,
-   VfsChangedHandler, GithubStep<ProjectData>
+   GithubStep<ProjectData>
 {
 
    public interface Display extends IsView
@@ -94,8 +80,6 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
 
    List<Item> selectedItems;
 
-   private VirtualFileSystemInfo vfs;
-
    private List<ProjectData> selectedProjects;
 
    private ProjectData selectedProjectData;
@@ -107,7 +91,6 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       IDE.addHandler(ShowSamplesEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    private void bindDisplay()
@@ -131,7 +114,6 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
             }
             nextStep.onOpen(selectedProjectData);
             closeView();
-            //            createEmptyProject();
          }
       });
 
@@ -230,92 +212,6 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       this.selectedItems = event.getSelectedItems();
-   }
-
-   private void createEmptyProject()
-   {
-      FolderModel parent = (FolderModel)vfs.getRoot();
-      ProjectModel model = new ProjectModel();
-      model.setName(selectedProjectData.getName());
-      model.setProjectType(selectedProjectData.getType());
-      model.setParent(parent);
-      try
-      {
-         VirtualFileSystem.getInstance().createProject(
-            parent,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(
-               new ProjectUnmarshaller(model))
-            {
-
-               @Override
-               protected void onSuccess(ProjectModel result)
-               {
-                  cloneRepository(selectedProjectData, result);
-                  closeView();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during creating project"));
-      }
-   }
-
-   private void cloneRepository(ProjectData repo, final ProjectModel project)
-   {
-      String remoteUri = repo.getRepositoryUrl();
-      if (!remoteUri.endsWith(".git"))
-      {
-         remoteUri += ".git";
-      }
-
-      try
-      {
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
-            {
-
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  IDE.fireEvent(new ProjectCreatedEvent(project));
-                  IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         handleError(e);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
-   }
-
-   private void handleError(Throwable t)
-   {
-      String errorMessage =
-         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 
    /**

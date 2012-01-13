@@ -17,14 +17,7 @@
 
 package org.exoplatform.ide.shell.client.cli;
 
-import org.exoplatform.ide.shell.client.cli.CommandLine;
-import org.exoplatform.ide.shell.client.cli.Option;
-import org.exoplatform.ide.shell.client.cli.Options;
-import org.exoplatform.ide.shell.client.cli.ParseException;
-import org.exoplatform.ide.shell.client.cli.PatternOptionBuilder;
-import org.exoplatform.ide.shell.client.cli.Properties;
-import org.exoplatform.ide.shell.client.cli.TypeHandler;
-import org.exoplatform.ide.shell.client.cli.Util;
+import org.exoplatform.gwtframework.commons.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,344 +43,345 @@ import java.util.List;
  */
 public class CommandLine implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = 1L;
 
-    /** the unrecognised options/arguments */
-    private List args = new LinkedList();
+   /** the unrecognised options/arguments */
+   private List args = new LinkedList();
 
-    /** the processed options */
-    private List options = new ArrayList();
+   /** the processed options */
+   private List options = new ArrayList();
 
-    /**
-     * Creates a command line.
-     */
-    CommandLine()
-    {
-        // nothing to do
-    }
+   /**
+    * Creates a command line.
+    */
+   CommandLine()
+   {
+      // nothing to do
+   }
 
-    /** 
-     * Query to see if an option has been set.
-     *
-     * @param opt Short name of the option
-     * @return true if set, false if not
-     */
-    public boolean hasOption(String opt)
-    {
-        return options.contains(resolveOption(opt));
-    }
+   /** 
+    * Query to see if an option has been set.
+    *
+    * @param opt Short name of the option
+    * @return true if set, false if not
+    */
+   public boolean hasOption(String opt)
+   {
+      return options.contains(resolveOption(opt));
+   }
 
-    /** 
-     * Query to see if an option has been set.
-     *
-     * @param opt character name of the option
-     * @return true if set, false if not
-     */
-    public boolean hasOption(char opt)
-    {
-        return hasOption(String.valueOf(opt));
-    }
+   /** 
+    * Query to see if an option has been set.
+    *
+    * @param opt character name of the option
+    * @return true if set, false if not
+    */
+   public boolean hasOption(char opt)
+   {
+      return hasOption(String.valueOf(opt));
+   }
 
-    /**
-     * Return the <code>Object</code> type of this <code>Option</code>.
-     *
-     * @param opt the name of the option
-     * @return the type of this <code>Option</code>
-     * @deprecated due to System.err message. Instead use getParsedOptionValue(String)
-     */
-    public Object getOptionObject(String opt)
-    {
-        try {
-            return getParsedOptionValue(opt);
-        } catch(ParseException pe) {
-            System.err.println("Exception found converting " + opt + " to desired type: " + 
-                pe.getMessage() );
-            return null;
-        }
-    }
+   /**
+    * Return the <code>Object</code> type of this <code>Option</code>.
+    *
+    * @param opt the name of the option
+    * @return the type of this <code>Option</code>
+    * @deprecated due to System.err message. Instead use getParsedOptionValue(String)
+    */
+   public Object getOptionObject(String opt)
+   {
+      try
+      {
+         return getParsedOptionValue(opt);
+      }
+      catch (ParseException pe)
+      {
+         Log.info("Exception found converting " + opt + " to desired type: " + pe.getMessage());
+         return null;
+      }
+   }
 
-    /**
-     * Return a version of this <code>Option</code> converted to a particular type. 
-     *
-     * @param opt the name of the option
-     * @return the value parsed into a particluar object
-     * @throws ParseException if there are problems turning the option value into the desired type
-     * @see PatternOptionBuilder
-     */
-    public Object getParsedOptionValue(String opt)
-    throws ParseException
-    {
-        String res = getOptionValue(opt);
+   /**
+    * Return a version of this <code>Option</code> converted to a particular type. 
+    *
+    * @param opt the name of the option
+    * @return the value parsed into a particluar object
+    * @throws ParseException if there are problems turning the option value into the desired type
+    * @see PatternOptionBuilder
+    */
+   public Object getParsedOptionValue(String opt) throws ParseException
+   {
+      String res = getOptionValue(opt);
 
-        Option option = resolveOption(opt);
-        if (option == null)
-        {
-            return null;
-        }
+      Option option = resolveOption(opt);
+      if (option == null)
+      {
+         return null;
+      }
 
-        Object type = option.getType();
+      Object type = option.getType();
 
-        return (res == null)        ? null : TypeHandler.createValue(res, type);
-    }
+      return (res == null) ? null : TypeHandler.createValue(res, type);
+   }
 
-    /**
-     * Return the <code>Object</code> type of this <code>Option</code>.
-     *
-     * @param opt the name of the option
-     * @return the type of opt
-     */
-    public Object getOptionObject(char opt)
-    {
-        return getOptionObject(String.valueOf(opt));
-    }
+   /**
+    * Return the <code>Object</code> type of this <code>Option</code>.
+    *
+    * @param opt the name of the option
+    * @return the type of opt
+    */
+   public Object getOptionObject(char opt)
+   {
+      return getOptionObject(String.valueOf(opt));
+   }
 
-    /** 
-     * Retrieve the argument, if any, of this option.
-     *
-     * @param opt the name of the option
-     * @return Value of the argument if option is set, and has an argument,
-     * otherwise null.
-     */
-    public String getOptionValue(String opt)
-    {
-        String[] values = getOptionValues(opt);
+   /** 
+    * Retrieve the argument, if any, of this option.
+    *
+    * @param opt the name of the option
+    * @return Value of the argument if option is set, and has an argument,
+    * otherwise null.
+    */
+   public String getOptionValue(String opt)
+   {
+      String[] values = getOptionValues(opt);
 
-        return (values == null) ? null : values[0];
-    }
+      return (values == null) ? null : values[0];
+   }
 
-    /** 
-     * Retrieve the argument, if any, of this option.
-     *
-     * @param opt the character name of the option
-     * @return Value of the argument if option is set, and has an argument,
-     * otherwise null.
-     */
-    public String getOptionValue(char opt)
-    {
-        return getOptionValue(String.valueOf(opt));
-    }
+   /** 
+    * Retrieve the argument, if any, of this option.
+    *
+    * @param opt the character name of the option
+    * @return Value of the argument if option is set, and has an argument,
+    * otherwise null.
+    */
+   public String getOptionValue(char opt)
+   {
+      return getOptionValue(String.valueOf(opt));
+   }
 
-    /** 
-     * Retrieves the array of values, if any, of an option.
-     *
-     * @param opt string name of the option
-     * @return Values of the argument if option is set, and has an argument,
-     * otherwise null.
-     */
-    public String[] getOptionValues(String opt)
-    {
-        List values = new ArrayList();
+   /** 
+    * Retrieves the array of values, if any, of an option.
+    *
+    * @param opt string name of the option
+    * @return Values of the argument if option is set, and has an argument,
+    * otherwise null.
+    */
+   public String[] getOptionValues(String opt)
+   {
+      List values = new ArrayList();
 
-        for (Iterator it = options.iterator(); it.hasNext();)
-        {
-            Option option = (Option) it.next();
-            if (opt.equals(option.getOpt()) || opt.equals(option.getLongOpt()))
+      for (Iterator it = options.iterator(); it.hasNext();)
+      {
+         Option option = (Option)it.next();
+         if (opt.equals(option.getOpt()) || opt.equals(option.getLongOpt()))
+         {
+            values.addAll(option.getValuesList());
+         }
+      }
+
+      return values.isEmpty() ? null : (String[])values.toArray(new String[values.size()]);
+   }
+
+   /**
+    * Retrieves the option object given the long or short option as a String
+    * 
+    * @param opt short or long name of the option
+    * @return Canonicalized option
+    */
+   private Option resolveOption(String opt)
+   {
+      opt = Util.stripLeadingHyphens(opt);
+      for (Iterator it = options.iterator(); it.hasNext();)
+      {
+         Option option = (Option)it.next();
+         if (opt.equals(option.getOpt()))
+         {
+            return option;
+         }
+
+         if (opt.equals(option.getLongOpt()))
+         {
+            return option;
+         }
+
+      }
+      return null;
+   }
+
+   /** 
+    * Retrieves the array of values, if any, of an option.
+    *
+    * @param opt character name of the option
+    * @return Values of the argument if option is set, and has an argument,
+    * otherwise null.
+    */
+   public String[] getOptionValues(char opt)
+   {
+      return getOptionValues(String.valueOf(opt));
+   }
+
+   /** 
+    * Retrieve the argument, if any, of an option.
+    *
+    * @param opt name of the option
+    * @param defaultValue is the default value to be returned if the option
+    * is not specified
+    * @return Value of the argument if option is set, and has an argument,
+    * otherwise <code>defaultValue</code>.
+    */
+   public String getOptionValue(String opt, String defaultValue)
+   {
+      String answer = getOptionValue(opt);
+
+      return (answer != null) ? answer : defaultValue;
+   }
+
+   /** 
+    * Retrieve the argument, if any, of an option.
+    *
+    * @param opt character name of the option
+    * @param defaultValue is the default value to be returned if the option
+    * is not specified
+    * @return Value of the argument if option is set, and has an argument,
+    * otherwise <code>defaultValue</code>.
+    */
+   public String getOptionValue(char opt, String defaultValue)
+   {
+      return getOptionValue(String.valueOf(opt), defaultValue);
+   }
+
+   /**
+    * Retrieve the map of values associated to the option. This is convenient
+    * for options specifying Java properties like <tt>-Dparam1=value1
+    * -Dparam2=value2</tt>. The first argument of the option is the key, and
+    * the 2nd argument is the value. If the option has only one argument
+    * (<tt>-Dfoo</tt>) it is considered as a boolean flag and the value is
+    * <tt>"true"</tt>.
+    *
+    * @param opt name of the option
+    * @return The Properties mapped by the option, never <tt>null</tt>
+    *         even if the option doesn't exists
+    * @since 1.2
+    */
+   public Properties getOptionProperties(String opt)
+   {
+      Properties props = new Properties();
+
+      for (Iterator it = options.iterator(); it.hasNext();)
+      {
+         Option option = (Option)it.next();
+
+         if (opt.equals(option.getOpt()) || opt.equals(option.getLongOpt()))
+         {
+            List values = option.getValuesList();
+            if (values.size() >= 2)
             {
-                values.addAll(option.getValuesList());
+               // use the first 2 arguments as the key/value pair
+               props.put(values.get(0), values.get(1));
             }
-        }
-
-        return values.isEmpty() ? null : (String[]) values.toArray(new String[values.size()]);
-    }
-
-    /**
-     * Retrieves the option object given the long or short option as a String
-     * 
-     * @param opt short or long name of the option
-     * @return Canonicalized option
-     */
-    private Option resolveOption(String opt)
-    {
-        opt = Util.stripLeadingHyphens(opt);
-        for (Iterator it = options.iterator(); it.hasNext();)
-        {
-            Option option = (Option) it.next();
-            if (opt.equals(option.getOpt()))
+            else if (values.size() == 1)
             {
-                return option;
+               // no explicit value, handle it as a boolean
+               props.put(values.get(0), "true");
             }
+         }
+      }
 
-            if (opt.equals(option.getLongOpt()))
-            {
-                return option;
-            }
+      return props;
+   }
 
-        }
-        return null;
-    }
+   /** 
+    * Retrieve any left-over non-recognized options and arguments
+    *
+    * @return remaining items passed in but not parsed as an array
+    */
+   public String[] getArgs()
+   {
+      String[] answer = new String[args.size()];
 
-    /** 
-     * Retrieves the array of values, if any, of an option.
-     *
-     * @param opt character name of the option
-     * @return Values of the argument if option is set, and has an argument,
-     * otherwise null.
-     */
-    public String[] getOptionValues(char opt)
-    {
-        return getOptionValues(String.valueOf(opt));
-    }
+      args.toArray(answer);
 
-    /** 
-     * Retrieve the argument, if any, of an option.
-     *
-     * @param opt name of the option
-     * @param defaultValue is the default value to be returned if the option
-     * is not specified
-     * @return Value of the argument if option is set, and has an argument,
-     * otherwise <code>defaultValue</code>.
-     */
-    public String getOptionValue(String opt, String defaultValue)
-    {
-        String answer = getOptionValue(opt);
+      return answer;
+   }
 
-        return (answer != null) ? answer : defaultValue;
-    }
+   /** 
+    * Retrieve any left-over non-recognized options and arguments
+    *
+    * @return remaining items passed in but not parsed as a <code>List</code>.
+    */
+   public List getArgList()
+   {
+      return args;
+   }
 
-    /** 
-     * Retrieve the argument, if any, of an option.
-     *
-     * @param opt character name of the option
-     * @param defaultValue is the default value to be returned if the option
-     * is not specified
-     * @return Value of the argument if option is set, and has an argument,
-     * otherwise <code>defaultValue</code>.
-     */
-    public String getOptionValue(char opt, String defaultValue)
-    {
-        return getOptionValue(String.valueOf(opt), defaultValue);
-    }
-
-    /**
-     * Retrieve the map of values associated to the option. This is convenient
-     * for options specifying Java properties like <tt>-Dparam1=value1
-     * -Dparam2=value2</tt>. The first argument of the option is the key, and
-     * the 2nd argument is the value. If the option has only one argument
-     * (<tt>-Dfoo</tt>) it is considered as a boolean flag and the value is
-     * <tt>"true"</tt>.
-     *
-     * @param opt name of the option
-     * @return The Properties mapped by the option, never <tt>null</tt>
-     *         even if the option doesn't exists
-     * @since 1.2
-     */
-    public Properties getOptionProperties(String opt)
-    {
-        Properties props = new Properties();
-
-        for (Iterator it = options.iterator(); it.hasNext();)
-        {
-            Option option = (Option) it.next();
-
-            if (opt.equals(option.getOpt()) || opt.equals(option.getLongOpt()))
-            {
-                List values = option.getValuesList();
-                if (values.size() >= 2)
-                {
-                    // use the first 2 arguments as the key/value pair
-                    props.put(values.get(0), values.get(1));
-                }
-                else if (values.size() == 1)
-                {
-                    // no explicit value, handle it as a boolean
-                    props.put(values.get(0), "true");
-                }
-            }
-        }
-
-        return props;
-    }
-
-    /** 
-     * Retrieve any left-over non-recognized options and arguments
-     *
-     * @return remaining items passed in but not parsed as an array
-     */
-    public String[] getArgs()
-    {
-        String[] answer = new String[args.size()];
-
-        args.toArray(answer);
-
-        return answer;
-    }
-
-    /** 
-     * Retrieve any left-over non-recognized options and arguments
-     *
-     * @return remaining items passed in but not parsed as a <code>List</code>.
-     */
-    public List getArgList()
-    {
-        return args;
-    }
-
-    /** 
-     * jkeyes
-     * - commented out until it is implemented properly
-     * <p>Dump state, suitable for debugging.</p>
-     *
-     * @return Stringified form of this object
-     */
-
-    /*
-    public String toString() {
-        StringBuffer buf = new StringBuffer();
-            
-        buf.append("[ CommandLine: [ options: ");
-        buf.append(options.toString());
-        buf.append(" ] [ args: ");
-        buf.append(args.toString());
-        buf.append(" ] ]");
-            
-        return buf.toString();
-    }
+   /** 
+    * jkeyes
+    * - commented out until it is implemented properly
+    * <p>Dump state, suitable for debugging.</p>
+    *
+    * @return Stringified form of this object
     */
 
-    /**
-     * Add left-over unrecognized option/argument.
-     *
-     * @param arg the unrecognised option/argument.
-     */
-    void addArg(String arg)
-    {
-        args.add(arg);
-    }
+   /*
+   public String toString() {
+       StringBuffer buf = new StringBuffer();
+           
+       buf.append("[ CommandLine: [ options: ");
+       buf.append(options.toString());
+       buf.append(" ] [ args: ");
+       buf.append(args.toString());
+       buf.append(" ] ]");
+           
+       return buf.toString();
+   }
+   */
 
-    /**
-     * Add an option to the command line.  The values of the option are stored.
-     *
-     * @param opt the processed option
-     */
-    void addOption(Option opt)
-    {
-        options.add(opt);
-    }
+   /**
+    * Add left-over unrecognized option/argument.
+    *
+    * @param arg the unrecognised option/argument.
+    */
+   void addArg(String arg)
+   {
+      args.add(arg);
+   }
 
-    /**
-     * Returns an iterator over the Option members of CommandLine.
-     *
-     * @return an <code>Iterator</code> over the processed {@link Option}
-     * members of this {@link CommandLine}
-     */
-    public Iterator iterator()
-    {
-        return options.iterator();
-    }
+   /**
+    * Add an option to the command line.  The values of the option are stored.
+    *
+    * @param opt the processed option
+    */
+   void addOption(Option opt)
+   {
+      options.add(opt);
+   }
 
-    /**
-     * Returns an array of the processed {@link Option}s.
-     *
-     * @return an array of the processed {@link Option}s.
-     */
-    public Option[] getOptions()
-    {
-        Collection processed = options;
+   /**
+    * Returns an iterator over the Option members of CommandLine.
+    *
+    * @return an <code>Iterator</code> over the processed {@link Option}
+    * members of this {@link CommandLine}
+    */
+   public Iterator iterator()
+   {
+      return options.iterator();
+   }
 
-        // reinitialise array
-        Option[] optionsArray = new Option[processed.size()];
+   /**
+    * Returns an array of the processed {@link Option}s.
+    *
+    * @return an array of the processed {@link Option}s.
+    */
+   public Option[] getOptions()
+   {
+      Collection processed = options;
 
-        // return the array
-        return (Option[]) processed.toArray(optionsArray);
-    }
+      // reinitialise array
+      Option[] optionsArray = new Option[processed.size()];
+
+      // return the array
+      return (Option[])processed.toArray(optionsArray);
+   }
 }
