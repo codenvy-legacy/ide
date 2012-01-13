@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FileTemplateMarshaller.java Jul 27, 2011 12:40:34 PM vereshchaka $
- *
+ * 
  */
 public class FileTemplateMarshaller implements Marshallable
 {

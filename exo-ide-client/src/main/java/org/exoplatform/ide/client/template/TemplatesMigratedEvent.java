@@ -21,15 +21,14 @@ package org.exoplatform.ide.client.template;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Used to notify all presenters, that are somehow linked with templates,
- * that templates were migrated from registry to plain text file on server.
+ * Used to notify all presenters, that are somehow linked with templates, that templates were migrated from registry to plain text
+ * file on server.
  * <p/>
- * This event called, when all templates are moved from registry
- * to plain text file on server.
+ * This event called, when all templates are moved from registry to plain text file on server.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplatesMigrated.java Aug 1, 2011 12:21:44 PM vereshchaka $
- *
+ * 
  */
 public class TemplatesMigratedEvent extends GwtEvent<TemplatesMigratedHandler>
 {

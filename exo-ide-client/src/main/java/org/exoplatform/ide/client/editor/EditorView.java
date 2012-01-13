@@ -49,7 +49,7 @@ import java.util.Map.Entry;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: EditorView Mar 21, 2011 4:33:38 PM evgen $
- *
+ * 
  */
 public class EditorView extends ViewImpl implements ViewActivatedHandler
 {
@@ -174,7 +174,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       editorSwitcherContainer.setHeight("" + BUTTON_HEIGHT);
 
       editorArea.add(editorSwitcherContainer);
-      //      editorArea.setCellHeight(editorSwitcherContainer, "" + BUTTON_HEIGHT);
+      // editorArea.setCellHeight(editorSwitcherContainer, "" + BUTTON_HEIGHT);
       editorArea.setWidgetBottomHeight(editorSwitcherContainer, 0, Unit.PX, BUTTON_HEIGHT, Unit.PX);
 
       add(editorArea);
@@ -236,6 +236,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    /**
     * Create button with label and icon
+    * 
     * @param label
     * @param iconUrl
     * @param id
@@ -293,6 +294,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    /**
     * Return first editor type key for button value
+    * 
     * @param buttons
     * @param button
     * @return
@@ -311,8 +313,8 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    private static String getFileTitle(FileModel file, boolean isReadOnly)
    {
-      //TODO
-      boolean fileChanged = file.isContentChanged(); //|| file.isPropertiesChanged();
+      // TODO
+      boolean fileChanged = file.isContentChanged(); // || file.isPropertiesChanged();
 
       String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
 
@@ -356,6 +358,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    /**
     * Switch to editor on its index within the supported editors list of opened file
+    * 
     * @param indexOfEditorToShow
     */
    public void switchToEditor(int indexOfEditorToShow)
@@ -367,6 +370,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    /**
     * Switch to editor on its type
+    * 
     * @param nextEditorType
     */
    public void switchToEditor(EditorType nextEditorType)
@@ -395,17 +399,17 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       onViewInnerEditorSwitched(nextEditor);
    }
 
-   //   @Override
-   //   public void resize(int width, int height)
-   //   {
-   //      super.resize(width, height);
+   // @Override
+   // public void resize(int width, int height)
+   // {
+   // super.resize(width, height);
    //
-   //      restoreEditorHeight(currentEditorType);
-   //   }
+   // restoreEditorHeight(currentEditorType);
+   // }
 
    /**
     * restore CKEditor height on resize
-   **/
+    **/
    private void restoreEditorHeight(final EditorType editorType)
    {
       if (editorType == EditorType.DESIGN)

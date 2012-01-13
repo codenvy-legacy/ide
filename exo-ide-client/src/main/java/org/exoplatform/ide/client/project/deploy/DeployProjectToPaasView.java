@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployProjectToPaasView.java Dec 1, 2011 4:45:59 PM vereshchaka $
- *
+ * 
  */
 public class DeployProjectToPaasView extends ViewImpl implements DeployProjectToPaasPresenter.Display
 {

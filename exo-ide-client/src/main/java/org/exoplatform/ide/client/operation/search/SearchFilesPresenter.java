@@ -50,8 +50,8 @@ import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   $
- *
+ * @version $Id: $
+ * 
  */
 public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler,
    ItemsSelectedHandler
@@ -130,7 +130,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
    private void doSearch()
    {
-      //TODO
+      // TODO
       HashMap<String, String> query = new HashMap<String, String>();
       String content = display.getSearchContentItem().getValue();
       String contentType = display.getMimeTypeItem().getValue();

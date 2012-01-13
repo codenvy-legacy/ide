@@ -61,7 +61,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class CustomizeHotKeysPresenter implements HotKeyPressedListener, CustomizeHotKeysHandler, ViewOpenedHandler,
    ViewClosedHandler, ApplicationSettingsReceivedHandler, ControlsUpdatedHandler
@@ -99,9 +99,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    }
 
    /*
-    * Title of group, that contains hotkeys, which used in editor (autocomplete, save etc.).
-    * Will be displayed in hotkeys listgrid.
-    * Other groups will be formed from menu titles: File, Edit and so on.
+    * Title of group, that contains hotkeys, which used in editor (autocomplete, save etc.). Will be displayed in hotkeys
+    * listgrid. Other groups will be formed from menu titles: File, Edit and so on.
     */
    private static final String EDITOR_GROUP = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.hotkeysEditorGroup();
 
@@ -245,12 +244,10 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    /**
     * Fill hotkey list grid with hotkey items.
     * 
-    * Choose only SimpleControls from list of contols,
-    * create hotkey items from them and add to list.
+    * Choose only SimpleControls from list of contols, create hotkey items from them and add to list.
     * 
-    * At the end get the list of editor non-changable controls
-    * (like Save, SaveAs ect), create hotkey items from them
-    * and add to the end on hotkey list.
+    * At the end get the list of editor non-changable controls (like Save, SaveAs ect), create hotkey items from them and add to
+    * the end on hotkey list.
     * 
     * Update value of hotkey list grid.
     */
@@ -376,11 +373,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     * 
     * If key is null or empty return false and show info message.
     * 
-    * If combination of controlKey and key already exists, 
-    * return false and show error message.
+    * If combination of controlKey and key already exists, return false and show error message.
     * 
-    * If combination of hot keys doesn't start with Ctrl or Alt,
-    * return false and show error message.
+    * If combination of hot keys doesn't start with Ctrl or Alt, return false and show error message.
     * 
     * If you try to bind such hotkey return false and show info message
     * 
@@ -403,25 +398,25 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
       final String tryAnotherKey = CONSTANTS.msgTryAnotherHotkey();
 
-      //--- check is control key pressed first ---
+      // --- check is control key pressed first ---
       //
-      //17 - key code of Ctrl
-      //18 - key code of Alt
-      //on Linux, if single Ctrl or Alt key pressed, than isCtrl or isAlt will be false,
-      //but keyCode will contain 17 or 18 key. To check keyCode - is the one way
-      //to know, that Ctrl or Alt single key was pressed on Linux
+      // 17 - key code of Ctrl
+      // 18 - key code of Alt
+      // on Linux, if single Ctrl or Alt key pressed, than isCtrl or isAlt will be false,
+      // but keyCode will contain 17 or 18 key. To check keyCode - is the one way
+      // to know, that Ctrl or Alt single key was pressed on Linux
       if (!isCtrl && !isAlt)
       {
-         //if control is null, but keyCode is Ctrl or Alt,
-         //than Ctrl or Alt is pressed first
+         // if control is null, but keyCode is Ctrl or Alt,
+         // than Ctrl or Alt is pressed first
          if (keyCode == 17 || keyCode == 18)
          {
             display.getHotKeyField().setValue(HotKeyHelper.getKeyName(String.valueOf(keyCode)) + "+");
             display.showError(pressControlKeyThenKey);
             return false;
          }
-         //if keyCode is not Ctrl or Alt
-         //than another key is pressed
+         // if keyCode is not Ctrl or Alt
+         // than another key is pressed
          else
          {
             display.getHotKeyField().setValue("");
@@ -430,7 +425,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       }
 
-      //--- controlKey must be Ctrl or Alt ---
+      // --- controlKey must be Ctrl or Alt ---
       String controlKey = null;
       if (isCtrl)
       {
@@ -441,7 +436,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          controlKey = "Alt";
       }
 
-      //if control key is correct, but keyCode is not pressed yet
+      // if control key is correct, but keyCode is not pressed yet
       if (keyCode == 0 || keyCode == 17 || keyCode == 18)
       {
          display.getHotKeyField().setValue(controlKey + "+");
@@ -449,9 +444,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          return false;
       }
 
-      //control key is correct, keyCode is pressed
+      // control key is correct, keyCode is pressed
       String keyString = HotKeyHelper.getKeyName(String.valueOf(keyCode));
-      //--- check, is keyCode correct (maybe pressed not standard key on keyboard) ---
+      // --- check, is keyCode correct (maybe pressed not standard key on keyboard) ---
       if (keyString == null)
       {
          display.getHotKeyField().setValue(controlKey + "+");
@@ -461,24 +456,24 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
       String stringHotKey = controlKey + "+" + keyString;
 
-      //show hotkey in text field
+      // show hotkey in text field
       display.getHotKeyField().setValue(stringHotKey);
 
-      //--- check, is stringHotKey is reserved by editor ---
+      // --- check, is stringHotKey is reserved by editor ---
       if (ReservedHotKeys.getHotkeys().containsKey(controlKey + "+" + keyCode))
       {
          display.showError(hotkeyIsUsedInCkEditorMsg);
          return false;
       }
 
-      //--- check, if you try to bind the same hotkey ---
+      // --- check, if you try to bind the same hotkey ---
       if (stringHotKey.equals(selectedItem.getHotKey()))
       {
          display.showError(tryToBindTheSameHotKey);
          return false;
       }
 
-      //--- check, is hotkey alread bound to another command ---
+      // --- check, is hotkey alread bound to another command ---
       String controlId = selectedItem.getCommand().getId();
 
       for (HotKeyItem hotKeyIdentifier : hotKeys)
@@ -539,7 +534,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     */
    private void updateState()
    {
-      //      selectedItem = null;
+      // selectedItem = null;
 
       display.setBindButtonEnabled(false);
       if (selectedItem.getHotKey() != null && !"".equals(selectedItem.getHotKey()))

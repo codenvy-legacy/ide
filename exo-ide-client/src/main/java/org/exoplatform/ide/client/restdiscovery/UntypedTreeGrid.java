@@ -31,15 +31,16 @@ import java.util.Set;
  * A widget that implements this interface is untyped(or typed by {@link Object}) tree<br>
  * Used for REST Service Discovery<br>
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 23, 2010 3:48:02 PM evgen $
- *
+ * 
  */
 public interface UntypedTreeGrid extends HasOpenHandlers<Object>, HasSelectionHandlers<Object>, HasClickHandlers
 {
    /**
-    * Set root resources 
+    * Set root resources
+    * 
     * @param item root resource
     * @param restClassPath Paths of class mapping
     */
@@ -47,6 +48,7 @@ public interface UntypedTreeGrid extends HasOpenHandlers<Object>, HasSelectionHa
 
    /**
     * Set paths mapped in root resource
+    * 
     * @param service root resource
     * @param list of methods and resources mapped in root resource
     */

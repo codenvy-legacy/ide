@@ -36,9 +36,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.component.Tree<TokenBeenImpl>
 {
@@ -77,6 +78,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
 
    /**
     * Generate id for token tree item for selenium testing
+    * 
     * @param child token
     * @return String id
     */
@@ -95,7 +97,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    {
       if (parentNode == null || children == null)
          return;
-      //Clear parent node children:
+      // Clear parent node children:
       parentNode.removeItems();
       for (TokenBeenImpl child : children)
       {

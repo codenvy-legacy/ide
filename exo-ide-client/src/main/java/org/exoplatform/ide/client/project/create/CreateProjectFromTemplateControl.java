@@ -91,52 +91,53 @@ public class CreateProjectFromTemplateControl extends SimpleControl implements I
       setEnabled(vfsInfo != null);
    }
 
-   //   /**
-   //    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-   //    */
-   //   public void onItemsSelected(ItemsSelectedEvent event)
-   //   {
-   //      if (event.getSelectedItems().size() != 1)
-   //      {
-   //         folderItemSelected = false;
-   //         updateEnabling();
-   //         return;
-   //      }
+   // /**
+   // * @see
+   // org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+   // */
+   // public void onItemsSelected(ItemsSelectedEvent event)
+   // {
+   // if (event.getSelectedItems().size() != 1)
+   // {
+   // folderItemSelected = false;
+   // updateEnabling();
+   // return;
+   // }
    //
-   //      if(event.getSelectedItems().get(0) instanceof ProjectModel)
-   //      {
-   //         folderItemSelected = false;
-   //         updateEnabling();
-   //         return;
-   //      }
-   //      folderItemSelected = true;
-   //      updateEnabling();
-   //   }
+   // if(event.getSelectedItems().get(0) instanceof ProjectModel)
+   // {
+   // folderItemSelected = false;
+   // updateEnabling();
+   // return;
+   // }
+   // folderItemSelected = true;
+   // updateEnabling();
+   // }
 
-   //   protected void updateEnabling()
-   //   {
-   //      if (entryPoint == null)
-   //      {
-   //         setVisible(false);
-   //         setEnabled(false);
-   //         return;
-   //      }
-   //      
-   //      setVisible(true);
-   //      
-   //      if (!browserSelected)
-   //      {
-   //         setEnabled(false);
-   //         return;
-   //      }
-   //      if (folderItemSelected)
-   //      {
-   //         setEnabled(true);
-   //      }
-   //      else
-   //      {
-   //         setEnabled(false);
-   //      }
-   //   }
+   // protected void updateEnabling()
+   // {
+   // if (entryPoint == null)
+   // {
+   // setVisible(false);
+   // setEnabled(false);
+   // return;
+   // }
+   //
+   // setVisible(true);
+   //
+   // if (!browserSelected)
+   // {
+   // setEnabled(false);
+   // return;
+   // }
+   // if (folderItemSelected)
+   // {
+   // setEnabled(true);
+   // }
+   // else
+   // {
+   // setEnabled(false);
+   // }
+   // }
 
 }

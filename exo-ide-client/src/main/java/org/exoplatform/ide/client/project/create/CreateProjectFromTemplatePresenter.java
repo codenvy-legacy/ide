@@ -84,43 +84,49 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
 {
 
    /**
-    * Display interface, that templates view have to implement. 
+    * Display interface, that templates view have to implement.
     */
    public interface Display extends IsView
    {
 
       /**
        * Get cancel button for registration click handlers.
+       * 
        * @return
        */
       HasClickHandlers getCancelButton();
 
       /**
        * Get create button for registration click handlers.
+       * 
        * @return
        */
       HasClickHandlers getCreateButton();
 
       /**
        * Get delete button for registration click handlers.
+       * 
        * @return
        */
       HasClickHandlers getDeleteButton();
 
       /**
        * Get the value of name field.
+       * 
        * @return
        */
       HasValue<String> getNameField();
 
       /**
        * Get the list of selected templates in list grid.
+       * 
        * @return
        */
       List<ProjectTemplate> getSelectedTemplates();
 
       /**
        * Get the template list grid for registration handlers.
+       * 
        * @return
        */
       ListGridItem<ProjectTemplate> getTemplateListGrid();
@@ -150,7 +156,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       void setNameFieldEnabled(boolean enabled);
    }
 
-   //private FolderModel baseFolder;
+   // private FolderModel baseFolder;
 
    protected Display display;
 
@@ -167,9 +173,8 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    private VirtualFileSystemInfo vfsInfo;
 
    /**
-    * The list of templates to display.
-    * This list must be initialized by subclasses,
-    * because it depends on type of template (file of project).
+    * The list of templates to display. This list must be initialized by subclasses, because it depends on type of template (file
+    * of project).
     */
    protected List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
 
@@ -237,7 +242,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
             IDE.eventBus().fireEvent(
                new DeployProjectToPaasEvent(name, type, display.getSelectedTemplates().get(0).getName()));
             IDE.getInstance().closeView(display.asView().getId());
-            //            doCreateProjectFromTemplate();
+            // doCreateProjectFromTemplate();
          }
       });
 
@@ -248,7 +253,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       {
          public void onDoubleClick(DoubleClickEvent event)
          {
-            //            doCreateProjectFromTemplate();
+            // doCreateProjectFromTemplate();
          }
       });
 
@@ -332,8 +337,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    }
 
    /**
-    * Executes, when delete button pressed.
-    * Show ask dialog.
+    * Executes, when delete button pressed. Show ask dialog.
     */
    protected void deleteTemplate()
    {
@@ -373,8 +377,8 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    }
 
    /**
-    * Call template service to delete template.
-    * If success, call method, that will delete next template from selected list.
+    * Call template service to delete template. If success, call method, that will delete next template from selected list.
+    * 
     * @param template
     */
    protected void deleteTemplate(final ProjectTemplate template)
@@ -392,8 +396,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    }
 
    /**
-    * Call, when create button pressed (or when double clicked on template).
-    * Create new instance of selected template.
+    * Call, when create button pressed (or when double clicked on template). Create new instance of selected template.
     */
    public void doCreateProjectFromTemplate()
    {
@@ -440,12 +443,12 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       }
       else
       {
-         //TODO create project from user template
-         //         folderList.clear();
-         //         projectFolder = new ProjectModel(projectName, baseFolder, selectedTemplate.getType(), null);
-         //         build(selectedTemplate.getChildren(), projectFolder);
-         //         //      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
-         //         createFolder((FolderModel)projectFolder);
+         // TODO create project from user template
+         // folderList.clear();
+         // projectFolder = new ProjectModel(projectName, baseFolder, selectedTemplate.getType(), null);
+         // build(selectedTemplate.getChildren(), projectFolder);
+         // // fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
+         // createFolder((FolderModel)projectFolder);
       }
    }
 
@@ -520,7 +523,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
                {
                   display.selectLastTemplate();
                }
-               //get all file templates to create from them files
+               // get all file templates to create from them files
                TemplateService.getInstance().getFileTemplateList(
                   new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<FileTemplateList>(IDE.eventBus())
                   {
@@ -585,7 +588,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
          display.setNameFieldEnabled(false);
          display.setCreateButtonEnabled(false);
 
-         //check is one of selected templates is default
+         // check is one of selected templates is default
          for (Template template : selectedTemplates)
          {
             if (template.isDefault())

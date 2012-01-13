@@ -22,15 +22,13 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
 
 /**
  * 
- * Callback to return from {@link CreateFileFromTemplateView}, when submit button
- * was clicked.
+ * Callback to return from {@link CreateFileFromTemplateView}, when submit button was clicked.
  * <p/>
- * Used to return from form, when create project template and need to add file template
- * to project.
+ * Used to return from form, when create project template and need to add file template to project.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateFileFromTemplateCallback.java Aug 10, 2011 5:23:30 PM vereshchaka $
- *
+ * 
  */
 public interface CreateFileFromTemplateCallback
 {

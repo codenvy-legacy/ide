@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class CreateProjectTemplateView extends ViewImpl implements CreateProjectTemplatePresenter.Display
 {

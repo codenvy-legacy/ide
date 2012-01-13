@@ -22,9 +22,10 @@ import com.google.gwt.user.client.Event;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public abstract class HotKeyManager
 {

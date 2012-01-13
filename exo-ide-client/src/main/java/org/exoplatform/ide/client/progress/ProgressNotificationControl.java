@@ -31,8 +31,8 @@ import org.exoplatform.ide.client.progress.event.ShowProgressEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 16, 2011 evgen $
- *
+ * @version $Id: Sep 16, 2011 evgen $
+ * 
  */
 @RolesAllowed({"administrators", "developers"})
 public class ProgressNotificationControl extends StatusTextControl implements IDEControl
@@ -95,6 +95,7 @@ public class ProgressNotificationControl extends StatusTextControl implements ID
 
    /**
     * Set massage and icon
+    * 
     * @param message
     * @param icon
     * @return

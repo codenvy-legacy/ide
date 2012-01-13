@@ -35,8 +35,8 @@ import org.exoplatform.ide.client.framework.job.Job;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 19, 2011 evgen $
- *
+ * @version $Id: Sep 19, 2011 evgen $
+ * 
  */
 public class JobWidget extends Composite
 {

@@ -49,7 +49,7 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
 
    private static final String EVEN_BACKGROUND = "#FFFFFF";
 
-   //   private static final String ODD_BACKGROUND = "#ff9999";
+   // private static final String ODD_BACKGROUND = "#ff9999";
    private static final String ODD_BACKGROUND = "#f8f8f8";
 
    private static final String OVER_BACKGROUND = "#D9E8FF";

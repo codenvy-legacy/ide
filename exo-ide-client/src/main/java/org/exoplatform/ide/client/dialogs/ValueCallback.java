@@ -21,8 +21,7 @@ package org.exoplatform.ide.client.dialogs;
 /**
  * Interface for feedback from dialog window (which ask for value).
  * 
- * Used for two simple actions: take value and execute some action or 
- * cancel (when value is null).
+ * Used for two simple actions: take value and execute some action or cancel (when value is null).
  * 
  * Created by The eXo Platform SAS .
  * 

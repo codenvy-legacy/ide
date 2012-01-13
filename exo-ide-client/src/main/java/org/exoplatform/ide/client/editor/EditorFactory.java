@@ -38,7 +38,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: EditorFactory Feb 22, 2011 11:06:05 AM evgen $
- *
+ * 
  */
 public class EditorFactory
 {
@@ -55,7 +55,7 @@ public class EditorFactory
       addEditor(new CodeMirrorProducer("application/x-ruby+html", IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
          IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
 
-      //To initialize client bundle 
+      // To initialize client bundle
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
       CodeMirrorClientBundle.INSTANCE.css().ensureInjected();
    }

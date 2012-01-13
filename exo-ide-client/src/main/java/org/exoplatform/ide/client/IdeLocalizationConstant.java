@@ -22,12 +22,12 @@ import com.google.gwt.i18n.client.Constants;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  * 
  * 
- * Interface to represent the constants contained in resource bundle:
- *      'IdeLocalizationConstant.properties'.
+ *          Interface to represent the constants contained in resource bundle: 'IdeLocalizationConstant.properties'.
  */
 
 public interface IdeLocalizationConstant extends Constants
@@ -535,9 +535,9 @@ public interface IdeLocalizationConstant extends Constants
    String askValueDialogNoButton();
 
    /**************************************************************************
-    *
+    * 
     * Server Disconnected Dialog
-    *    
+    * 
     **************************************************************************/
 
    @DefaultStringValue("Server disconnected.<br>Retry?")
@@ -545,11 +545,10 @@ public interface IdeLocalizationConstant extends Constants
    String serverDisconnected();
 
    /**************************************************************************
-   *
-   * Login Dialog
-   * org.exoplatform.ide.client.dialogs.LoginDialog
-   *    
-   **************************************************************************/
+    * 
+    * Login Dialog org.exoplatform.ide.client.dialogs.LoginDialog
+    * 
+    **************************************************************************/
 
    /*************************************************************************
     * Progress view

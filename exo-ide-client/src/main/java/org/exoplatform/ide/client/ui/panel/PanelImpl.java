@@ -59,8 +59,8 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Oct 7, 2011 evgen $
- *
+ * @version $Id: Oct 7, 2011 evgen $
+ * 
  */
 public class PanelImpl implements Panel, HasViewVisibilityChangedHandler, SetViewVisibleHandler, HasClosingViewHandler,
    HasMaximizePanelHandler, HasRestorePanelHandler, HasShowPanelHandler, HasHidePanelHandler

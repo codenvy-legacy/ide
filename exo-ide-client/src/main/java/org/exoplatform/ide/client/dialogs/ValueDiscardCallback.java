@@ -21,11 +21,9 @@ package org.exoplatform.ide.client.dialogs;
 /**
  * Interface for feedback from dialog window (which ask for value).
  * 
- * Used when ValueCallback is not enough and you need not only 
- * execute or cancel actions. 
+ * Used when ValueCallback is not enough and you need not only execute or cancel actions.
  * 
- * E.g. you need to handle not only "Yes" and "Cancel" buttons click, 
- * but also "No" button click
+ * E.g. you need to handle not only "Yes" and "Cancel" buttons click, but also "No" button click
  * 
  * Created by The eXo Platform SAS .
  * 

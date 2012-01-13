@@ -76,7 +76,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void initialize()
    {
-      //IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      // IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }

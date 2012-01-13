@@ -60,6 +60,7 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -181,7 +182,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * Store Lock Tokens 
+    * Store Lock Tokens
     */
    private void storeLockTokens()
    {
@@ -195,40 +196,40 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    @Override
    public void onItemMoved(ItemMovedEvent event)
    {
-      //TODO
-      //      if (lockTokens.containsKey(event.getSourceHref()))
-      //      {
-      //         String lock = lockTokens.get(event.getSourceHref());
-      //         lockTokens.remove(event.getSourceHref());
-      //         lockTokens.put(event.getItem().getHref(), lock);
-      //         storeLockTokens();
-      //      }
-      //      else if (event.getItem() instanceof Folder)
-      //      {
-      //         String sourceHref = event.getSourceHref();
-      //         List<String> keys = new ArrayList<String>();
-      //         for (String k : lockTokens.keySet())
-      //         {
-      //            keys.add(k);
-      //         }
+      // TODO
+      // if (lockTokens.containsKey(event.getSourceHref()))
+      // {
+      // String lock = lockTokens.get(event.getSourceHref());
+      // lockTokens.remove(event.getSourceHref());
+      // lockTokens.put(event.getItem().getHref(), lock);
+      // storeLockTokens();
+      // }
+      // else if (event.getItem() instanceof Folder)
+      // {
+      // String sourceHref = event.getSourceHref();
+      // List<String> keys = new ArrayList<String>();
+      // for (String k : lockTokens.keySet())
+      // {
+      // keys.add(k);
+      // }
       //
-      //         for (String key : keys)
-      //         {
-      //            if (key.startsWith(sourceHref))
-      //            {
-      //               String lock = lockTokens.get(key);
-      //               String name = key.substring(sourceHref.length());
-      //               String path = event.getItem().getHref();
-      //               if (!path.endsWith("/"))
-      //               {
-      //                  path += "/";
-      //               }
-      //               lockTokens.remove(key);
-      //               lockTokens.put(path + name, lock);
-      //               storeLockTokens();
-      //            }
-      //         }
-      //      }
+      // for (String key : keys)
+      // {
+      // if (key.startsWith(sourceHref))
+      // {
+      // String lock = lockTokens.get(key);
+      // String name = key.substring(sourceHref.length());
+      // String path = event.getItem().getHref();
+      // if (!path.endsWith("/"))
+      // {
+      // path += "/";
+      // }
+      // lockTokens.remove(key);
+      // lockTokens.put(path + name, lock);
+      // storeLockTokens();
+      // }
+      // }
+      // }
    }
 
    /**
@@ -294,57 +295,59 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
             SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
             break;
          default :
-            //TODO
+            // TODO
             break;
       }
    }
 
-   //   /**
-   //    * @see org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent)
-   //    */
-   //   public void onItemDeleted(ItemDeletedEvent event)
-   //   {
+   // /**
+   // * @see
+   // org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent)
+   // */
+   // public void onItemDeleted(ItemDeletedEvent event)
+   // {
 
-   //   }
+   // }
 
-   //   /**
-   //    * @see org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler#onMoveComplete(org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent)
-   //    */
-   //   public void onMoveComplete(MoveCompleteEvent event)
-   //   {
-   //      if (lockTokens.containsKey(event.getSourceHref()))
-   //      {
-   //         String lock = lockTokens.get(event.getSourceHref());
-   //         lockTokens.remove(event.getSourceHref());
-   //         lockTokens.put(event.getItem().getHref(), lock);
-   //         storeLockTokens();
-   //      }
-   //      else if (event.getItem() instanceof Folder)
-   //      {
-   //         String sourceHref = event.getSourceHref();
-   //         List<String> keys = new ArrayList<String>();
-   //         for (String k : lockTokens.keySet())
-   //         {
-   //            keys.add(k);
-   //         }
+   // /**
+   // * @see
+   // org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler#onMoveComplete(org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent)
+   // */
+   // public void onMoveComplete(MoveCompleteEvent event)
+   // {
+   // if (lockTokens.containsKey(event.getSourceHref()))
+   // {
+   // String lock = lockTokens.get(event.getSourceHref());
+   // lockTokens.remove(event.getSourceHref());
+   // lockTokens.put(event.getItem().getHref(), lock);
+   // storeLockTokens();
+   // }
+   // else if (event.getItem() instanceof Folder)
+   // {
+   // String sourceHref = event.getSourceHref();
+   // List<String> keys = new ArrayList<String>();
+   // for (String k : lockTokens.keySet())
+   // {
+   // keys.add(k);
+   // }
    //
-   //         for (String key : keys)
-   //         {
-   //            if (key.startsWith(sourceHref))
-   //            {
-   //               String lock = lockTokens.get(key);
-   //               String name = key.substring(sourceHref.length());
-   //               String path = event.getItem().getHref();
-   //               if (!path.endsWith("/"))
-   //               {
-   //                  path += "/";
-   //               }
-   //               lockTokens.remove(key);
-   //               lockTokens.put(path + name, lock);
-   //               storeLockTokens();
-   //            }
-   //         }
-   //      }
-   //   }
+   // for (String key : keys)
+   // {
+   // if (key.startsWith(sourceHref))
+   // {
+   // String lock = lockTokens.get(key);
+   // String name = key.substring(sourceHref.length());
+   // String path = event.getItem().getHref();
+   // if (!path.endsWith("/"))
+   // {
+   // path += "/";
+   // }
+   // lockTokens.remove(key);
+   // lockTokens.put(path + name, lock);
+   // storeLockTokens();
+   // }
+   // }
+   // }
+   // }
 
 }

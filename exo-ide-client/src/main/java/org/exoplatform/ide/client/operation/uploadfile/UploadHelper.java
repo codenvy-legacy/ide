@@ -19,14 +19,11 @@
 package org.exoplatform.ide.client.operation.uploadfile;
 
 /**
- * Helper to parse response from server, that was got
- * in SubmitCompleteHandler.
+ * Helper to parse response from server, that was got in SubmitCompleteHandler.
  * <p/>
- * Now it is used only for uploading files and zipped folders,
- * but it can be used for other purposes.
+ * Now it is used only for uploading files and zipped folders, but it can be used for other purposes.
  * <p/>
- * If while uploading was exception, than error message
- * will be received in such form:
+ * If while uploading was exception, than error message will be received in such form:
  * <code>&lt;pre&gt;Code: &lt;exit-code&gt; Text: &lt;error message&gt; &lt;/pre&gt;<code>
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -49,8 +46,10 @@ public class UploadHelper
    }
 
    /**
-    * Parse error message in such form: <p/>
+    * Parse error message in such form:
+    * <p/>
     * <code>&lt;pre&gt;Code: &lt;exit-code&gt; Text: &lt;error message&gt; &lt;/pre&gt;<code>.
+    * 
     * @param errorMsg
     * @return
     */

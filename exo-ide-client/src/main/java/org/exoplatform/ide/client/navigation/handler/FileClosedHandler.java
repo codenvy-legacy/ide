@@ -37,7 +37,7 @@ import com.google.gwt.http.client.RequestException;
 /**
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Sep 13, 2010 $
- *
+ * 
  */
 public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {

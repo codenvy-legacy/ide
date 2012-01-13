@@ -34,9 +34,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 @RolesAllowed({"administrators", "developers"})
 public class PasteItemsCommand extends SimpleControl implements IDEControl, ItemsToPasteSelectedHandler,
    PasteItemsCompleteHandler, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler

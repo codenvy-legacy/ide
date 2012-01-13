@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link VersionRestoredEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 12, 2011 2:33:00 PM anya $
- *
+ * @version $Id: May 12, 2011 2:33:00 PM anya $
+ * 
  */
 public interface VersionRestoredHandler extends EventHandler
 {

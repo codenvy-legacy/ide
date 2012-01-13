@@ -26,7 +26,7 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectTemplateList.java Jul 28, 2011 1:06:19 PM vereshchaka $
- *
+ * 
  */
 public class ProjectTemplateList
 {

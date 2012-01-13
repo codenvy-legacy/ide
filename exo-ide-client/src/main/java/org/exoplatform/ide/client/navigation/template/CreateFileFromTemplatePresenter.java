@@ -93,12 +93,14 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    {
       /**
        * Get the template list grid for registration handlers.
+       * 
        * @return
        */
       ListGridItem<FileTemplate> getTemplateListGrid();
 
       /**
        * Get the list of selected templates in list grid.
+       * 
        * @return
        */
       FileTemplate getSelectedTemplate();
@@ -112,24 +114,28 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
       /**
        * Get file name field.
+       * 
        * @return
        */
       HasValue<String> getFileNameField();
 
       /**
        * Get create button for registration click handlers.
+       * 
        * @return
        */
       HasClickHandlers getCreateButton();
 
       /**
        * Get cancel button for registration click handlers.
+       * 
        * @return
        */
       HasClickHandlers getCancelButton();
 
       /**
        * Get delete button for registration click handlers.
+       * 
        * @return
        */
       HasClickHandlers getDeleteButton();
@@ -157,6 +163,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
       /**
        * Set the title of submit button.
+       * 
        * @param title
        */
       void setSubmitButtonTitle(String title);
@@ -167,8 +174,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       .createFileFromTemplateEnterName();
 
    /**
-    * Used to return, when submit button was pressed. Can be null,
-    * then normal behavior will be provided.
+    * Used to return, when submit button was pressed. Can be null, then normal behavior will be provided.
     */
    private CreateFileFromTemplateCallback submitCallback;
 
@@ -499,7 +505,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       try
       {
          String defaultEditorDescription = defaultEditors.get(contentType);
-         //         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
+         // Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
          EditorProducer producer = EditorFactory.getEditorProducer(contentType, defaultEditorDescription);
          IDE.fireEvent(new EditorOpenFileEvent(newFile, producer));
       }
@@ -519,11 +525,10 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    /**
     * Check, is there is the same file name in opened file.
-    * <p> 
+    * <p>
     * If file name is unique, return the same name.
-    * <p> 
-    * If there is file with such name in opened files,
-    * return new file name: old name and index at the end of name.
+    * <p>
+    * If there is file with such name in opened files, return new file name: old name and index at the end of name.
     * 
     * @param href - file href
     * @param proposedName - proposed name for new file
@@ -622,8 +627,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    }
 
    /**
-    * Executes, when delete button pressed.
-    * Show ask dialog.
+    * Executes, when delete button pressed. Show ask dialog.
     */
    protected void deleteTemplate()
    {

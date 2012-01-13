@@ -37,9 +37,7 @@ public abstract class Template
    private String nodeName;
 
    /**
-    * If template is default, than it must be created by server.
-    * If not default (user template), than it must be crated
-    * by client.
+    * If template is default, than it must be created by server. If not default (user template), than it must be crated by client.
     */
    private boolean isDefault;
 

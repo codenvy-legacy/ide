@@ -202,12 +202,12 @@ public class FileTemplates
             + "        UWA.Data.getFeed(widget.getValue('url'), YourWidgetName.display);\n" + "      }\n"
             + "    </script>\n" + "  </head>\n" + "  <body>\n" + "    <p>Hello world!</p>\n" + "  </body>\n"
             + "</html>\n";
-      //      List<String> list = new ArrayList<String>();
-      //      list.add(content);
-      //      list.add(NetvibseWidgetTemplates.FLASH);
-      //      list.add(NetvibseWidgetTemplates.CHART);
-      //      list.add(NetvibseWidgetTemplates.TABVIEW);
-      //      list.add(NetvibseWidgetTemplates.W3C);
+      // List<String> list = new ArrayList<String>();
+      // list.add(content);
+      // list.add(NetvibseWidgetTemplates.FLASH);
+      // list.add(NetvibseWidgetTemplates.CHART);
+      // list.add(NetvibseWidgetTemplates.TABVIEW);
+      // list.add(NetvibseWidgetTemplates.W3C);
       TEMPLATES.put(MimeType.UWA_WIDGET, content);
    }
 

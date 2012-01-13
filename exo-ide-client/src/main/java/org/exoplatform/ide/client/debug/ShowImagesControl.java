@@ -50,7 +50,7 @@ public class ShowImagesControl extends SimpleControl implements IDEControl, View
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      //setImages(IDEImageBundle.INSTANCE., IDEImageBundle.INSTANCE.propertiesDisabled());
+      // setImages(IDEImageBundle.INSTANCE., IDEImageBundle.INSTANCE.propertiesDisabled());
       setEvent(new ShowImagesEvent());
       setVisible(true);
       setEnabled(true);

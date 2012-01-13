@@ -68,7 +68,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
       ListGridItem<Property> getPropertiesListGrid();
 
-      //HasClickHandlers getAddButton();
+      // HasClickHandlers getAddButton();
 
       HasClickHandlers getEditButton();
 
@@ -204,14 +204,14 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
          }
       });
 
-      //      display.getAddButton().addClickHandler(new ClickHandler()
-      //      {
-      //         @Override
-      //         public void onClick(ClickEvent event)
-      //         {
-      //            createProperty();
-      //         }
-      //      });
+      // display.getAddButton().addClickHandler(new ClickHandler()
+      // {
+      // @Override
+      // public void onClick(ClickEvent event)
+      // {
+      // createProperty();
+      // }
+      // });
 
       display.getEditButton().addClickHandler(new ClickHandler()
       {

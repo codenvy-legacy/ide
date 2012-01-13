@@ -36,7 +36,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 @RolesAllowed({"administrators", "developers"})
 public class CursorPositionControl extends StatusTextControl implements IDEControl, EditorCursorActivityHandler,

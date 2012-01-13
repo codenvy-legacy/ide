@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class LockFileEvent extends GwtEvent<LockFileHandler>
 {

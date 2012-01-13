@@ -44,7 +44,7 @@ import com.google.gwt.core.client.GWT;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: DocumentationManager Jan 21, 2011 11:02:22 AM evgen $
- *
+ * 
  */
 public class DocumentationPresenter implements EditorActiveFileChangedHandler, ShowDocumentationHandler,
    ViewOpenedHandler, ViewClosedHandler, RegisterDocumentationHandler, ApplicationSettingsReceivedHandler

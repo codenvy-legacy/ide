@@ -205,7 +205,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    {
       FileModel file = (FileModel)selectedItems.get(0);
 
-      //if name is not set
+      // if name is not set
       final String newName = display.getItemNameField().getValue();
 
       if (newName == null || newName.length() == 0)
@@ -213,7 +213,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
          return false;
       }
 
-      //if mime-type is not set
+      // if mime-type is not set
       final String newMimeType = display.getMimeType().getValue();
 
       if (newMimeType == null || newMimeType.length() == 0)
@@ -221,7 +221,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
          return false;
       }
 
-      //if file name was changed or file mime-type was changed, than return true;
+      // if file name was changed or file mime-type was changed, than return true;
       if (!file.getName().equals(newName) || !file.getMimeType().equals(newMimeType))
       {
          return true;

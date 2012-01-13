@@ -168,7 +168,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
             + title + "</font></b>" + "&nbsp;</td><td></td></tr>" + "</table>";
 
       return divider;
-      //      return "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 20px\">" + title + "</font></b>";
+      // return "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 20px\">" + title + "</font></b>";
    }
 
 }

@@ -126,7 +126,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
          public void onClick(ClickEvent event)
          {
             display.getUploadForm().setAction(getUploadUrl(selectedItems.get(0)));
-            //server handle only hidden overwrite field, but not form check box item "Overwrite"
+            // server handle only hidden overwrite field, but not form check box item "Overwrite"
             display.setOverwriteHiddedField(display.getOverwriteAllField().getValue());
             display.getUploadForm().submit();
          }
@@ -178,7 +178,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {
-         //if response is null or empty - than complete upload
+         // if response is null or empty - than complete upload
          closeView();
          refreshFolder();
          return;

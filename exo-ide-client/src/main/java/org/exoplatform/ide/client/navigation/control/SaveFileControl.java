@@ -143,8 +143,8 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
       }
       else
       {
-         //TODO isContentChanged
-         if (activeFile.isContentChanged() /*|| activeFile.isPropertiesChanged()*/)
+         // TODO isContentChanged
+         if (activeFile.isContentChanged() /* || activeFile.isPropertiesChanged() */)
          {
             setEnabled(true);
          }

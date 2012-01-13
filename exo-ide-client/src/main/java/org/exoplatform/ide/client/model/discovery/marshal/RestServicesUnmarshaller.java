@@ -32,10 +32,10 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 21, 2010 5:24:56 PM evgen $
- *
+ * 
  */
 public class RestServicesUnmarshaller implements Unmarshallable<List<RestService>>
 {
@@ -74,6 +74,7 @@ public class RestServicesUnmarshaller implements Unmarshallable<List<RestService
 
    /**
     * Parse JSON and fill restServices list.
+    * 
     * @param text
     */
    private void parseRestServices(String text)

@@ -98,7 +98,7 @@ public class PropertiesView extends ViewImpl implements
          propertiesGrid.setHTML(row, 0, "<b>" + key + ":&nbsp;&nbsp;</b>");
          propertiesGrid.setHTML(row, 1, value);
 
-         //add id to get access to field's text from Selenium tests 
+         // add id to get access to field's text from Selenium tests
          DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "propertyName", key);
 
          DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "fontFamily",

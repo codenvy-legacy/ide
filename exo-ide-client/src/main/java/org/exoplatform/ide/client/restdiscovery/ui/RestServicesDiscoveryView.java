@@ -113,7 +113,7 @@ public class RestServicesDiscoveryView extends ViewImpl implements
    TextInput responseTypeField;
 
    /**
-    * Border over service parameters table 
+    * Border over service parameters table
     */
    @UiField
    Border parametersListGridContainer;
@@ -163,7 +163,7 @@ public class RestServicesDiscoveryView extends ViewImpl implements
    }
 
    /**
-    * Get text field for displaying path to selected rest service 
+    * Get text field for displaying path to selected rest service
     * 
     * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#getPathField()
     */
@@ -219,7 +219,7 @@ public class RestServicesDiscoveryView extends ViewImpl implements
 
    /**
     * Sets visibility of border over service parameters table
-    *  
+    * 
     * @see org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display#setParametersListGridVisible(boolean)
     */
    @Override

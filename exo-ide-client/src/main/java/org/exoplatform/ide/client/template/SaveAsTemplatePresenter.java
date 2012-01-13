@@ -49,8 +49,8 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * Save file as template.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   $
- *
+ * @version $Id: $
+ * 
  */
 public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewClosedHandler, TemplatesMigratedHandler,
    EditorActiveFileChangedHandler

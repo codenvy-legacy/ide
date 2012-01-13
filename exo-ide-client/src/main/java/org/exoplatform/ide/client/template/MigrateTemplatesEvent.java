@@ -21,9 +21,8 @@ package org.exoplatform.ide.client.template;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * When user try to go to templates at first time,
- * then this event will be called, to move old templates 
- * from registry to plain text file.
+ * When user try to go to templates at first time, then this event will be called, to move old templates from registry to plain
+ * text file.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MigrateTemplateEvent.java Aug 1, 2011 12:16:39 PM vereshchaka $

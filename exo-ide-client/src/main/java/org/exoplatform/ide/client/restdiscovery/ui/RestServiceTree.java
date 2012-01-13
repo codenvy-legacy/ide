@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RestServiceTree Mar 18, 2011 10:11:26 AM evgen $
- *
+ * 
  */
 public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
 {
@@ -50,6 +50,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
 
    /**
     * Set id attribute
+    * 
     * @param id
     */
    public void setTreeId(String id)
@@ -58,7 +59,8 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    }
 
    /**
-    * @see org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid#setRootValue(org.exoplatform.ide.client.framework.discovery.RestService, java.util.Set)
+    * @see org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid#setRootValue(org.exoplatform.ide.client.framework.discovery.RestService,
+    *      java.util.Set)
     */
    @Override
    public void setRootValue(RestService item, Set<String> restClassPath)
@@ -139,8 +141,8 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
       TreeItem node = new TreeItem(createTreeNodeWidget(new Image(icon), rs.getPath()));
       node.setUserObject(rs);
       String path = rs.getFullPath();
-      //note: agreement: to calculate the id of tree item
-      //check, that path doesn't end on /
+      // note: agreement: to calculate the id of tree item
+      // check, that path doesn't end on /
       if (path.endsWith("/"))
       {
          path = path.substring(0, path.length() - 1);
@@ -218,7 +220,8 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    }
 
    /**
-    * @see org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid#setPaths(org.exoplatform.ide.client.framework.discovery.RestService, java.util.List)
+    * @see org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid#setPaths(org.exoplatform.ide.client.framework.discovery.RestService,
+    *      java.util.List)
     */
    @Override
    public void setPaths(RestService service, List<?> resources)
@@ -238,7 +241,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
       node.removeItems();
 
       fillServiceTree(node, resources);
-      //      sort();
+      // sort();
    }
 
    private TreeItem getNode(TreeItem parent, String name)

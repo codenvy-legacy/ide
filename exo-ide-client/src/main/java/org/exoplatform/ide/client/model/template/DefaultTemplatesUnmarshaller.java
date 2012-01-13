@@ -33,7 +33,7 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplateListUnmarshaller , 11.04.2011 17:52:00 vereshchaka $
- *
+ * 
  */
 public class DefaultTemplatesUnmarshaller implements Unmarshallable
 {

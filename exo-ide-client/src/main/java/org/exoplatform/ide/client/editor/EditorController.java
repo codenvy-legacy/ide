@@ -104,7 +104,7 @@ import com.google.gwt.user.client.ui.Image;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: EditorController Mar 21, 2011 5:22:10 PM evgen $
- *
+ * 
  */
 public class EditorController implements EditorContentChangedHandler, EditorSaveContentHandler,
    EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler,
@@ -185,7 +185,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       }
    }
 
-   /* 
+   /*
     * Editor content changed handler
     */
    public void onEditorContentChanged(EditorContentChangedEvent event)
@@ -222,8 +222,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       }
    }
 
-   /* (non-Javadoc)
-    * @see org.exoplatform.gadgets.devtool.client.editor.event.EditorActiveFileChangedHandler#onEditorChangedActiveFile(org.exoplatform.gadgets.devtool.client.editor.event.EditorActiveFileChangedEvent)
+   /*
+    * (non-Javadoc)
+    * @see org.exoplatform.gadgets.devtool.client.editor.event.EditorActiveFileChangedHandler#onEditorChangedActiveFile(org
+    * .exoplatform.gadgets.devtool.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
@@ -310,8 +312,8 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          }
       }
 
-      //TODO 
-      if (!file.isContentChanged() /*&& !file.isPropertiesChanged()*/)
+      // TODO
+      if (!file.isContentChanged() /* && !file.isPropertiesChanged() */)
       {
          closeFile(file);
          return;
@@ -492,7 +494,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          }
          else
          {
-            //closing file Saved "As" ...
+            // closing file Saved "As" ...
             FileModel oldFile = new FileModel(event.getFile());
             oldFile.setId(event.getSourceHref());
             closeFile(oldFile);
@@ -599,12 +601,13 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
             editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
          }
-         //      display.replaceAllText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
+         // display.replaceAllText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(),
+         // event.getPath());
       }
       else
       {
          editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-         //      display.replaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
+         // display.replaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
       }
    }
 
@@ -734,10 +737,11 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    }
 
    /**
-    * Read applicationSettings and return true if there are more than one editors for file with mimeType.   
+    * Read applicationSettings and return true if there are more than one editors for file with mimeType.
+    * 
     * @param mimeType
     * @return
-    * @throws EditorNotFoundException  
+    * @throws EditorNotFoundException
     */
    private List<EditorProducer> getSupportedEditorProducers(String mimeType)
    {
@@ -784,7 +788,9 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    }
 
    /**
-    * Return number from 1 of editor created by editorProducer to show in view among the supported editor producer for some mime type.  
+    * Return number from 1 of editor created by editorProducer to show in view among the supported editor producer for some mime
+    * type.
+    * 
     * @param editorProducer
     * @return
     */
@@ -817,7 +823,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          return;
       }
 
-      // file changing should be finished in time of handling EditorContentChangedEvent 
+      // file changing should be finished in time of handling EditorContentChangedEvent
       ignoreContentChangedList.add(oldVersionFile.getId());
       editor.setText(oldVersionFile.getContent());
    }

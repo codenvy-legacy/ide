@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: DocumentationForm Jan 21, 2011 12:23:13 PM evgen $
- *
+ * 
  */
 public class DocumentationView extends ViewImpl implements DocumentationPresenter.Display
 {

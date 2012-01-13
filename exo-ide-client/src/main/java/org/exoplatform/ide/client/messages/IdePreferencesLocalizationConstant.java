@@ -21,15 +21,13 @@ package org.exoplatform.ide.client.messages;
 import com.google.gwt.i18n.client.Constants;
 
 /**
- * Interface to represent the constants contained in resource bundle:
- *      'IdePreferencesLocalizationConstant.properties'.
+ * Interface to represent the constants contained in resource bundle: 'IdePreferencesLocalizationConstant.properties'.
  * <p/>
- * Localization message for form from preferences group, such as
- * SelectWorkspace, CustomizeToolbar, About and others.
+ * Localization message for form from preferences group, such as SelectWorkspace, CustomizeToolbar, About and others.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
- *
+ * 
  */
 public interface IdePreferencesLocalizationConstant extends Constants
 {

@@ -42,8 +42,8 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Oct 11, 2011 evgen $
- *
+ * @version $Id: Oct 11, 2011 evgen $
+ * 
  */
 public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingViewHandler
 {
@@ -131,7 +131,7 @@ public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingVie
       Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
 
       window.getElement().setAttribute("id", view.getId() + "-window");
-      //window.getElement().getStyle().setProperty("zIndex", "auto");
+      // window.getElement().getStyle().setProperty("zIndex", "auto");
       window.setIcon(view.getIcon());
 
       window.setWidth(view.getDefaultWidth());

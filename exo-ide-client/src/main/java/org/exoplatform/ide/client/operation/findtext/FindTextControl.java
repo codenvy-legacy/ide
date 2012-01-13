@@ -33,16 +33,16 @@ import org.exoplatform.ide.editor.api.EditorCapability;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 @RolesAllowed({"administrators", "developers"})
 public class FindTextControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ViewOpenedHandler, ViewClosedHandler
 {
-   //   public static final String ID = "Edit/Find&#47Replace...";
+   // public static final String ID = "Edit/Find&#47Replace...";
    public static final String ID = "Edit/Find-Replace...";
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.findReplaceControl();
@@ -97,7 +97,7 @@ public class FindTextControl extends SimpleControl implements IDEControl, Editor
       }
 
       boolean canFindReplace = event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE);
-      //boolean isOpened = openedForms.contains(FindTextForm.ID); 
+      // boolean isOpened = openedForms.contains(FindTextForm.ID);
       boolean enableSearch = canFindReplace && !findTextViewOpened;
       setEnabled(enableSearch);
    }

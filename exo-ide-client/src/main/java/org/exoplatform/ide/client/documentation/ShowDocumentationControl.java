@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowDocumentationControl Jan 21, 2011 11:10:08 AM evgen $
- *
+ * 
  */
 @RolesAllowed({"administrators", "developers"})
 public class ShowDocumentationControl extends SimpleControl implements IDEControl

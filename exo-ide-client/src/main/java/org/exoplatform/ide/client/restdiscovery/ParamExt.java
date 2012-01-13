@@ -26,7 +26,7 @@ import org.exoplatform.gwtframework.commons.wadl.Param;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ParamExt.java Mar 23, 2011 10:20:43 AM vereshchaka $
- *
+ * 
  */
 public class ParamExt
 {

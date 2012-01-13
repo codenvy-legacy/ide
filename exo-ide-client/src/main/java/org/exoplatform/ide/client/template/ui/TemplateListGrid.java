@@ -63,11 +63,11 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       getCellTable().getSelectionModel().setSelected(item, true);
    }
 
-   //------- Implementation ------------------
+   // ------- Implementation ------------------
 
    /**
-    * Return URL to icon of template according to type of template:
-    * FileTemplate or ProjectTemplate and according to mime type if FileTemplate.
+    * Return URL to icon of template according to type of template: FileTemplate or ProjectTemplate and according to mime type if
+    * FileTemplate.
     * 
     * @param template
     * @return String
@@ -91,7 +91,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
     */
    protected void initColumns()
    {
-      //--- icon column -----
+      // --- icon column -----
       ImageResourceCell iconCell = new ImageResourceCell();
       Column<T, ImageResource> iconColumn = new Column<T, ImageResource>(iconCell)
       {
@@ -105,7 +105,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
       getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
 
-      //--- name column -----
+      // --- name column -----
       SafeHtmlCell htmlCell = new SafeHtmlCell();
       Column<T, SafeHtml> nameColumn = new Column<T, SafeHtml>(htmlCell)
       {
@@ -139,7 +139,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       getCellTable().addColumn(nameColumn, NAME);
       getCellTable().setColumnWidth(nameColumn, 40, Unit.PCT);
 
-      //--- description column -----
+      // --- description column -----
       SafeHtmlCell descCell = new SafeHtmlCell();
       Column<T, SafeHtml> entryNameColumn = new Column<T, SafeHtml>(descCell)
       {

@@ -27,9 +27,10 @@ import java.util.Map.Entry;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class HotKeyHelper
 {
@@ -38,25 +39,12 @@ public class HotKeyHelper
    static
    {
       /*
-       * Keys, that doesn't present in table
-       * Symbolic       Value(dec)  Mouse or keyboard equivalents
-       * constant name
-       * ---------------------------------
-       * VK_LBUTTON     01          Left mouse button
-       * VK_RBUTTON     02          Right mouse button
-       * VK_CANCEL      03          Control-break processing
-       * VK_MBUTTON     04          Middle mouse button (three-button mouse)
-       * VK_XBUTTON1    05          Windows 2000/XP/2003/Vista/2008/7: X1 mouse button
-       * VK_XBUTTON2    06          Windows 2000/XP/2003/Vista/2008/7: X2 mouse button
-       * -              07          Undefined
-       * -              10-11       Reserved
-       * VK_CLEAR       12          CLEAR key
-       * -              14-15       Undefined
-       * -              58-64       Undefined
-       * -              136-143       Undefined
-       * -              124-135     F13-F14
-       * -              151-153,156   Undefined
-       * -              158-159       Undefined       
+       * Keys, that doesn't present in table Symbolic Value(dec) Mouse or keyboard equivalents constant name
+       * --------------------------------- VK_LBUTTON 01 Left mouse button VK_RBUTTON 02 Right mouse button VK_CANCEL 03
+       * Control-break processing VK_MBUTTON 04 Middle mouse button (three-button mouse) VK_XBUTTON1 05 Windows
+       * 2000/XP/2003/Vista/2008/7: X1 mouse button VK_XBUTTON2 06 Windows 2000/XP/2003/Vista/2008/7: X2 mouse button - 07
+       * Undefined - 10-11 Reserved VK_CLEAR 12 CLEAR key - 14-15 Undefined - 58-64 Undefined - 136-143 Undefined - 124-135
+       * F13-F14 - 151-153,156 Undefined - 158-159 Undefined
        */
       KEY_CODES.put("8", "Backspace");
       KEY_CODES.put("9", "Tab");
@@ -80,7 +68,7 @@ public class HotKeyHelper
       KEY_CODES.put("41", "Select");
       KEY_CODES.put("42", "Print");
       KEY_CODES.put("43", "Execute");
-      KEY_CODES.put("44", "Print screen"); //PRINT SCREEN key for Windows 3.0 and later
+      KEY_CODES.put("44", "Print screen"); // PRINT SCREEN key for Windows 3.0 and later
       KEY_CODES.put("45", "Insert");
       KEY_CODES.put("46", "Delete");
       KEY_CODES.put("47", "Help");
@@ -175,8 +163,7 @@ public class HotKeyHelper
    /**
     * For example, converts from "Ctrl+65" to "Ctrl+A"
     * 
-    * @param codeCombination - combination of hotkey, wich consists of Ctrl or Alt
-    * and of code of key
+    * @param codeCombination - combination of hotkey, wich consists of Ctrl or Alt and of code of key
     * @return {@link String}
     */
    public static String convertToStringCombination(String codeCombination)
@@ -233,8 +220,7 @@ public class HotKeyHelper
    /**
     * For example, converts from "Ctrl+A" to "Ctrl+65".
     * 
-    * @param stringCombination - combination of hotkey, than consists of Ctrl or Alt
-    * and of key name
+    * @param stringCombination - combination of hotkey, than consists of Ctrl or Alt and of key name
     * @return {@link String}
     */
    public static String convertToCodeCombination(String stringCombination)

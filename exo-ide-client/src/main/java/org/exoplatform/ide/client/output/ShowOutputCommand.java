@@ -25,8 +25,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 22, 2011 12:20:39 PM evgen $
- *
+ * @version ${Id}: Dec 22, 2011 12:20:39 PM evgen $
+ * 
  */
 public class ShowOutputCommand extends SimpleControl implements IDEControl
 {

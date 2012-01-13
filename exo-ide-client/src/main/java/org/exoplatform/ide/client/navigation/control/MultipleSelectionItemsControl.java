@@ -34,9 +34,10 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public abstract class MultipleSelectionItemsControl extends SimpleControl implements IDEControl, VfsChangedHandler,
    ViewVisibilityChangedHandler
 {

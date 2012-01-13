@@ -67,8 +67,8 @@ public class ProjectPropertiesView extends ViewImpl implements
    @UiField
    PropertiesListGrid propertiesListGrid;
 
-   //   @UiField
-   //   ImageButton addButton;
+   // @UiField
+   // ImageButton addButton;
 
    @UiField
    ImageButton editButton;
@@ -113,11 +113,11 @@ public class ProjectPropertiesView extends ViewImpl implements
       return propertiesListGrid;
    }
 
-   //   @Override
-   //   public HasClickHandlers getAddButton()
-   //   {
-   //      return addButton;
-   //   }
+   // @Override
+   // public HasClickHandlers getAddButton()
+   // {
+   // return addButton;
+   // }
 
    @Override
    public HasClickHandlers getEditButton()

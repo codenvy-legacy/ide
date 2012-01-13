@@ -32,15 +32,15 @@ import org.exoplatform.ide.client.template.ui.TemplateListGrid;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Oct 25, 2011 evgen $
- *
+ * @version $Id: Oct 25, 2011 evgen $
+ * 
  */
 public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
 {
    @Override
    protected void initColumns()
    {
-      //--- icon column -----
+      // --- icon column -----
       ImageResourceCell iconCell = new ImageResourceCell();
       Column<ProjectTemplate, ImageResource> iconColumn = new Column<ProjectTemplate, ImageResource>(iconCell)
       {
@@ -88,7 +88,7 @@ public class ProjectTemplateListGrid extends TemplateListGrid<ProjectTemplate>
       getCellTable().addColumn(entryTypeColumn, "Type");
       getCellTable().setColumnWidth(entryTypeColumn, 60, Unit.PX);
 
-      //--- description column -----
+      // --- description column -----
       SafeHtmlCell descCell = new SafeHtmlCell();
       Column<ProjectTemplate, SafeHtml> entryNameColumn = new Column<ProjectTemplate, SafeHtml>(descCell)
       {

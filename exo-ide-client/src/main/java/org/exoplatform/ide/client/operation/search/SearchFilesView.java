@@ -35,8 +35,8 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   $
- *
+ * @version $Id: $
+ * 
  */
 public class SearchFilesView extends ViewImpl implements
    org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display

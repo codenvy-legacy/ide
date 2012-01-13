@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectTemplateMarshaller.java Jul 28, 2011 6:45:53 PM vereshchaka $
- *
+ * 
  */
 public class ProjectTemplateMarshaller implements Marshallable
 {

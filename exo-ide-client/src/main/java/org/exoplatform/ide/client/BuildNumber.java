@@ -19,8 +19,8 @@
 package org.exoplatform.ide.client;
 
 /**
- * Interface to represent the messages contained in resource bundle:
- * /home/vetal/eXo/eXoRpojects/exo-int/web-tools/trunk/applications/gwt/devtool/src/main/resources/org/exoplatform/gadgets/devtool/client/BuildNumber.properties'.
+ * Interface to represent the messages contained in resource bundle: /home/vetal/eXo/eXoRpojects/exo-int/web-tools/trunk/
+ * applications/gwt/devtool/src/main/resources/org/exoplatform/gadgets/devtool/client/BuildNumber.properties'.
  */
 public interface BuildNumber extends com.google.gwt.i18n.client.Messages
 {

@@ -74,8 +74,8 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
 
    private boolean outlineAvailable = false;
 
-   //   @UiField
-   //   Border outlineTreeGridPanel;
+   // @UiField
+   // Border outlineTreeGridPanel;
 
    @UiField
    OutlineTreeGrid outlineTreeGrid;
@@ -122,13 +122,13 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
       if (available)
       {
          outlineDisabledPanel.setVisible(false);
-         //outlineTreeGridPanel.setVisible(true);
+         // outlineTreeGridPanel.setVisible(true);
          outlineTreeGrid.setVisible(true);
       }
       else
       {
          outlineTreeGrid.setVisible(false);
-         //outlineTreeGridPanel.setVisible(false);
+         // outlineTreeGridPanel.setVisible(false);
          outlineDisabledPanel.setVisible(true);
       }
    }
@@ -141,6 +141,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
 
    /**
     * Add refrehing outline mark in outline panel title;
+    * 
     * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#setRefreshingMarkInTitle()
     */
    public void setRefreshingMarkInTitle()
@@ -153,6 +154,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
 
    /**
     * Remove refrehing outline mark from outline panel title;
+    * 
     * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#removeRefreshingMarkFromTitle()
     */
    public void removeRefreshingMarkFromTitle()

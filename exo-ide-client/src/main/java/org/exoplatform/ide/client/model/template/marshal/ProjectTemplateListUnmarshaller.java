@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectTemplateListUnmarshaller.java Jul 28, 2011 1:09:44 PM vereshchaka $
- *
+ * 
  */
 public class ProjectTemplateListUnmarshaller implements Unmarshallable
 {
@@ -122,12 +122,12 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
          JSONObject obj = array.get(i).isObject();
          if (obj.get("childType").isString().stringValue().equals("file"))
          {
-            //parse file
+            // parse file
             templates.add(parseFile(obj));
          }
          else
          {
-            //parse folder
+            // parse folder
             templates.add(parseFolder(obj));
          }
       }

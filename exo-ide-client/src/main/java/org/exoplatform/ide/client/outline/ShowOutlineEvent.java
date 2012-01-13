@@ -22,9 +22,10 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class ShowOutlineEvent extends GwtEvent<ShowOutlineHandler>
 {

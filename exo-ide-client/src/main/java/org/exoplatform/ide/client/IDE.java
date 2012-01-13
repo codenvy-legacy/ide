@@ -69,9 +69,10 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
+ * 
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
-*/
+ */
 public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
 
@@ -82,7 +83,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    private IDEPresenter presenter;
 
    /**
-    * Initialize constants  for UI 
+    * Initialize constants for UI
     */
    public static final IdeLocalizationConstant IDE_LOCALIZATION_CONSTANT = GWT.create(IdeLocalizationConstant.class);
 
@@ -121,7 +122,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       /*
        * Create the list of available icons.
-       * 
        */
       IDEIconSet.init();
 
@@ -129,15 +129,14 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new AskForValueDialog();
 
       /*
-       * Initialize SeleniumTestsHelper.
-       * It creates HTML DIV elements and logs to them IDE current application state.
-       * ( opened files, active file, current project, etc. )
+       * Initialize SeleniumTestsHelper. It creates HTML DIV elements and logs to them IDE current application state. ( opened
+       * files, active file, current project, etc. )
        */
       new SeleniumTestsHelper();
 
       new ExceptionThrownEventHandler();
 
-      //new CookieManager(eventBus);
+      // new CookieManager(eventBus);
       // new HistoryManager(eventBus, context); // commented to fix the bug with javascript error in IE8 (WBT-321)
 
       controlsRegistration = new ControlsRegistration();
@@ -170,7 +169,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new PreferencesModule();
 
-      //initialize extensions
+      // initialize extensions
       for (Extension ext : extensions())
       {
          ext.initialize();
@@ -180,11 +179,12 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).
        */
-      //TODO disableTextSelectInternal(RootLayoutPanel.get().getElement(), true);
+      // TODO disableTextSelectInternal(RootLayoutPanel.get().getElement(), true);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget)
+    * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control,
+    *      org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget)
     */
    @Override
    public void addControl(Control<?> control, Docking docking)
@@ -235,7 +235,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#addOutlineItemCreator(java.lang.String, org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator)
+    * @see org.exoplatform.ide.client.framework.module.IDE#addOutlineItemCreator(java.lang.String,
+    *      org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator)
     */
    @Override
    public void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator)

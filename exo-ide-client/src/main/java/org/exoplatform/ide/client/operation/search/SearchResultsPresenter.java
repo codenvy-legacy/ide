@@ -49,9 +49,10 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class SearchResultsPresenter implements ViewVisibilityChangedHandler, ViewClosedHandler,
    SearchResultReceivedHandler
 {
@@ -103,7 +104,7 @@ public class SearchResultsPresenter implements ViewVisibilityChangedHandler, Vie
 
    private void refreshSearchResult()
    {
-      //      searchResult.setIcon(Images.FileTypes.WORKSPACE);
+      // searchResult.setIcon(Images.FileTypes.WORKSPACE);
       if (searchResult.getChildren() != null && !searchResult.getChildren().getItems().isEmpty())
       {
          // sort items in search result list
@@ -189,6 +190,7 @@ public class SearchResultsPresenter implements ViewVisibilityChangedHandler, Vie
    /**
     * 
     * Handling item selected event from panel
+    * 
     * @param item
     */
    protected void onItemSelected()

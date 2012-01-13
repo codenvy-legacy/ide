@@ -35,9 +35,10 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
-*/
+ */
 @RolesAllowed({"administrators", "developers"})
 public class OpenFileByPathControl extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler
 {

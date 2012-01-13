@@ -101,22 +101,22 @@ public class PropertiesPresenter implements EditorActiveFileChangedHandler, Show
       }
    }
 
-   //TODO: need rework according new VFS
-   //   public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
-   //   {
-   //      if (event.getItem() instanceof FileModel)
-   //      {
-   //         refreshProperties((FileModel)event.getItem());
-   //      }
-   //   }
+   // TODO: need rework according new VFS
+   // public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
+   // {
+   // if (event.getItem() instanceof FileModel)
+   // {
+   // refreshProperties((FileModel)event.getItem());
+   // }
+   // }
 
-   //   public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   //   {
-   //      if (event.getItem() instanceof File)
-   //      {
-   //         refreshProperties((File)event.getItem());
-   //      }
-   //   }
+   // public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+   // {
+   // if (event.getItem() instanceof File)
+   // {
+   // refreshProperties((File)event.getItem());
+   // }
+   // }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {

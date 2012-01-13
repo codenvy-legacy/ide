@@ -27,8 +27,8 @@ import org.exoplatform.ide.client.progress.event.ShowProgressEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 20, 2011 evgen $
- *
+ * @version $Id: Sep 20, 2011 evgen $
+ * 
  */
 @RolesAllowed({"administrators", "developers"})
 public class ShowProgressControl extends SimpleControl implements IDEControl

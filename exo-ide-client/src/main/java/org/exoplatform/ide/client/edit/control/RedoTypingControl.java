@@ -72,8 +72,8 @@ public class RedoTypingControl extends SimpleControl implements IDEControl, Edit
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      //TODO version
-      if (event.getFile() == null /*|| (event.getFile() instanceof Version)*/)
+      // TODO version
+      if (event.getFile() == null /* || (event.getFile() instanceof Version) */)
       {
          setVisible(false);
          setEnabled(false);

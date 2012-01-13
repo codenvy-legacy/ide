@@ -28,9 +28,10 @@ import com.google.gwt.user.cellview.client.Column;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class RestServiceParameterListGrid extends ListGrid<ParamExt>
 {
 
@@ -47,7 +48,7 @@ public class RestServiceParameterListGrid extends ListGrid<ParamExt>
 
    private void initColumns()
    {
-      //name column
+      // name column
       Column<ParamExt, SafeHtml> nameColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
       {
 
@@ -75,7 +76,7 @@ public class RestServiceParameterListGrid extends ListGrid<ParamExt>
       };
       getCellTable().addColumn(nameColumn, NAME);
 
-      //type column
+      // type column
       Column<ParamExt, SafeHtml> typeColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
       {
 
@@ -100,7 +101,7 @@ public class RestServiceParameterListGrid extends ListGrid<ParamExt>
       };
       getCellTable().addColumn(typeColumn, TYPE);
 
-      //column By default
+      // column By default
       Column<ParamExt, SafeHtml> defaultColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
       {
 

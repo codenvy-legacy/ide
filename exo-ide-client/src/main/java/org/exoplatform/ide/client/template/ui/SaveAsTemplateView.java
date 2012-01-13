@@ -36,8 +36,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   $
- *
+ * @version $Id: $
+ * 
  */
 public class SaveAsTemplateView extends ViewImpl implements SaveAsTemplatePresenter.Display
 {

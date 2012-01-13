@@ -94,7 +94,7 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
       }
       else
       {
-         //show
+         // show
          setTitle(TITLE_SHOW);
          setPrompt(TITLE_SHOW);
          setImages(IDEImageBundle.INSTANCE.showLineNumbers(), IDEImageBundle.INSTANCE.showLineNumbersDisabled());

@@ -89,7 +89,7 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
          }
          else if (v.isNull() != null)
          {
-            //TODO
+            // TODO
          }
          else if (v.isNumber() != null)
          {
@@ -139,7 +139,7 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
    }
 
    /**
-    * @param key 
+    * @param key
     * @param bool
     */
    private void parseBooleanValue(String key, JSONBoolean bool)
@@ -148,7 +148,7 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
    }
 
    /**
-    * @param key 
+    * @param key
     * @param array
     */
    private void parseListValue(String key, JSONArray array)

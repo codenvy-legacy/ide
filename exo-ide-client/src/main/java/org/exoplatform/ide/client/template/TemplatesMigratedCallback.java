@@ -19,8 +19,7 @@
 package org.exoplatform.ide.client.template;
 
 /**
- * Callback, used to return to point, after migrating templates
- * from registry to plain text file on server.
+ * Callback, used to return to point, after migrating templates from registry to plain text file on server.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplatesMigratedCallback.java Aug 1, 2011 12:34:03 PM vereshchaka $

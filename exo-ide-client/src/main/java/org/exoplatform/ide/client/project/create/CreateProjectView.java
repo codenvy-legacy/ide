@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateProjectView.java Dec 1, 2011 12:51:33 PM vereshchaka $
- *
+ * 
  */
 public class CreateProjectView extends ViewImpl implements CreateProjectFromTemplatePresenter.Display
 {
@@ -157,7 +157,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    @Override
    public void setDeleteButtonEnabled(boolean enabled)
    {
-      //TODO
+      // TODO
    }
 
    /**

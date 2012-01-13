@@ -48,9 +48,10 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCalledHandler, RefreshHotKeysHandler
 {
@@ -110,7 +111,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       }.schedule(1000);
    }
 
-   //This method is not unused but called by the javaScript function : WindowCloseHandlerImpl::Init
+   // This method is not unused but called by the javaScript function : WindowCloseHandlerImpl::Init
    public void onKeyDown(final Event event)
    {
       if (hotKeyPressedListener != null)
@@ -165,18 +166,18 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
    private void initDefaultHotKeys()
    {
-      //      controls.put("Ctrl+90", UndoTypingCommand.ID);  //Ctrl+Z
-      //      controls.put("Ctrl+89", RedoTypingCommand.ID);  //Ctrl+Y
-      //      controls.put("Ctrl+67", CopyItemsCommand.ID);   //Ctrl+C
-      //      controls.put("Ctrl+86", PasteItemsCommand.ID);  //Ctrl+V
+      // controls.put("Ctrl+90", UndoTypingCommand.ID); //Ctrl+Z
+      // controls.put("Ctrl+89", RedoTypingCommand.ID); //Ctrl+Y
+      // controls.put("Ctrl+67", CopyItemsCommand.ID); //Ctrl+C
+      // controls.put("Ctrl+86", PasteItemsCommand.ID); //Ctrl+V
 
       hotKeys.clear();
 
-      hotKeys.put("Ctrl+83", SaveFileControl.ID); //Ctrl+S
-      hotKeys.put("Ctrl+70", FindTextControl.ID); //Ctrl+F
-      hotKeys.put("Ctrl+68", DeleteCurrentLineControl.ID); //Ctrl+D
-      hotKeys.put("Ctrl+76", GoToLineControl.ID); //Ctrl+L
-      hotKeys.put("Ctrl+78", CreateFileFromTemplateControl.ID); //Ctrl+N
+      hotKeys.put("Ctrl+83", SaveFileControl.ID); // Ctrl+S
+      hotKeys.put("Ctrl+70", FindTextControl.ID); // Ctrl+F
+      hotKeys.put("Ctrl+68", DeleteCurrentLineControl.ID); // Ctrl+D
+      hotKeys.put("Ctrl+76", GoToLineControl.ID); // Ctrl+L
+      hotKeys.put("Ctrl+78", CreateFileFromTemplateControl.ID); // Ctrl+N
 
       hotKeys.putAll(hotKeys);
    }

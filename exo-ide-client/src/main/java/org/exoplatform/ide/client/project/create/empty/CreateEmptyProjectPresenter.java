@@ -48,9 +48,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, VfsChangedHandler, ViewClosedHandler
 {
 
@@ -61,7 +62,7 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
       String cantCreateProjectIfMultiselectionParent();
 
       @Key("project.cantCreateProjectIfProjectNameNotSet")
-      //@DefaultStringValue("Project name can't be empty or null")
+      // @DefaultStringValue("Project name can't be empty or null")
       String cantCreateProjectIfProjectNameNotSet();
    }
 
@@ -91,8 +92,8 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
 
    public CreateEmptyProjectPresenter()
    {
-      //      IDE.getInstance().addControl(new NewProjectMenuGroup());
-      //      IDE.getInstance().addControl(new CreateProjectControl());
+      // IDE.getInstance().addControl(new NewProjectMenuGroup());
+      // IDE.getInstance().addControl(new CreateProjectControl());
 
       IDE.addHandler(CreateEmptyProjectEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -126,7 +127,7 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
    {
       if (display.getProjectName().getValue() == null || display.getProjectName().getValue().length() == 0)
       {
-         IDE.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfProjectNameNotSet())); //"Project name can't be empty or null"));
+         IDE.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfProjectNameNotSet())); // "Project name can't be empty or null"));
          return;
       }
 
@@ -174,7 +175,7 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
    }
 
    /**
-    * Replace instance of Error Messages. Technically it need for with pure JUnit.  
+    * Replace instance of Error Messages. Technically it need for with pure JUnit.
     * 
     * @param errorMessage
     */

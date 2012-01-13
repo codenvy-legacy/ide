@@ -67,10 +67,10 @@ import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 22, 2010 9:39:28 AM evgen $
- *
+ * 
  */
 public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler,
    ViewClosedHandler
@@ -206,16 +206,17 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       display.setParametersListGridVisible(false);
       display.setRequestFieldVisible(false);
       display.setResponseFieldVisible(false);
-      //      dispaly.setPathFieldVisible(false);
+      // dispaly.setPathFieldVisible(false);
    }
 
    /**
     * Update method info
+    * 
     * @param method
     */
    private void updateMethodInfo(Method method)
    {
-      //      dispaly.setPathFieldVisible(true);
+      // dispaly.setPathFieldVisible(true);
       display.getPathField().setValue(method.getHref());
 
       if (method.getRequest() != null)
@@ -354,7 +355,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
             public void onResponseReceived(Request request, Response response)
             {
-               //http status 200 IE interprets as 1223 :(
+               // http status 200 IE interprets as 1223 :(
                if (200 == response.getStatusCode() || 1223 == response.getStatusCode())
                {
                   try

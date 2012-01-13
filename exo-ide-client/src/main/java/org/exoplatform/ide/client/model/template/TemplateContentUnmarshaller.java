@@ -27,7 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplateContentUnmarshaller , 12.04.2011 20:47:18 vereshchaka $
- *
+ * 
  */
 public class TemplateContentUnmarshaller implements Unmarshallable
 {

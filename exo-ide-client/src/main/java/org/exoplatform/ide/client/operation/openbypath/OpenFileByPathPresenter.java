@@ -39,6 +39,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */

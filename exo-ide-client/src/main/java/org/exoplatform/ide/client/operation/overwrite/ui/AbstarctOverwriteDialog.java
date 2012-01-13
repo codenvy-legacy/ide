@@ -37,11 +37,9 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.messages.IdeOverwriteLocalizationConstant;
 
 /**
- * Dialog with one text field and three buttons:
- * Rename, Overwrite, Cancel.
+ * Dialog with one text field and three buttons: Rename, Overwrite, Cancel.
  * <p/>
- * Can be used when need to ask user:
- * do you want to overwrite item?
+ * Can be used when need to ask user: do you want to overwrite item?
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OverwriteDialog.java Nov 11, 2011 9:38:33 AM vereshchaka $

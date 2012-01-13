@@ -45,19 +45,18 @@ import org.exoplatform.ide.vfs.shared.Item;
  * 
  * Changes selection status after pressure.
  * 
- * If active file changes, check is file is locked and 
- * also changes selection status.
+ * If active file changes, check is file is locked and also changes selection status.
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 @RolesAllowed({"administrators", "developers"})
 public class LockUnlockFileControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ApplicationSettingsReceivedHandler, ItemUnlockedHandler, ItemLockedHandler
 {
 
-   //Edit/Show \\ Hide Line Numbers
+   // Edit/Show \\ Hide Line Numbers
    public static final String ID = "Edit/Lock \\ Unlock File";
 
    public static final String TITLE_LOCK = IDE.IDE_LOCALIZATION_CONSTANT.lockFileLockControl();
@@ -97,8 +96,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * Handle this event to update status of button
-    * according to status of active file: locked or unlocked.
+    * Handle this event to update status of button according to status of active file: locked or unlocked.
     * 
     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
     */
@@ -151,8 +149,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * Update selection status, prompt and event of button
-    * according to status of active file: locked or unlocked.
+    * Update selection status, prompt and event of button according to status of active file: locked or unlocked.
     */
    private void update()
    {
@@ -187,8 +184,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * Handle ItemunlockEvent to deselect button,
-    * if active file was unlocked.
+    * Handle ItemunlockEvent to deselect button, if active file was unlocked.
     * 
     * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
     */
@@ -202,8 +198,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * Checks, if item is instance of file.
-    * If item is file, checks, is active file equals to item.
+    * Checks, if item is instance of file. If item is file, checks, is active file equals to item.
     * 
     * @param item - item to check is equals to active file
     * @return true - item is active file, false - item is not active file
@@ -225,6 +220,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
 
    /**
     * Handle this event, to select button, if active file was locked.
+    * 
     * @see org.exoplatform.ide.vfs.client.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.vfs.client.event.ItemLockedEvent)
     */
    @Override

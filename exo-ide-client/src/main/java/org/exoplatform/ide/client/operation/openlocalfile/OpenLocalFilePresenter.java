@@ -249,8 +249,8 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          return;
       }
 
-      //FIXME 
-      //      String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
+      // FIXME
+      // String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
       String contentNodeType = "nt:resource";
       display.setHiddenFields("", mimeType, "", contentNodeType);
       display.getUploadForm().submit();
@@ -275,9 +275,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
    }
 
    /**
-    * Check response is Ok.
-    * If response is Ok, return null,
-    * else return error message
+    * Check response is Ok. If response is Ok, return null, else return error message
     * 
     * @param uploadServiceResponse
     * @return
@@ -317,8 +315,8 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
 
    protected void completeUpload(String response)
    {
-      //@param response is checked in parent method, so we sure that it is not null,
-      //* and data is enclose in tag <filecontent></filecontent> (or <FILECONTENT></FILECONTENT>)
+      // @param response is checked in parent method, so we sure that it is not null,
+      // * and data is enclose in tag <filecontent></filecontent> (or <FILECONTENT></FILECONTENT>)
 
       // extract uploaded file content from response
       final String submittedFileContent = extractRecievedContent(response);
@@ -336,8 +334,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
    }
 
    /**
-    * Extract uploaded file content from upload service response.
-    * File content is included in tag <filecontent>
+    * Extract uploaded file content from upload service response. File content is included in tag <filecontent>
     * 
     * @param uploadServiceResponse response from server
     * @return extracted content of submitted file.

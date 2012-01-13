@@ -127,8 +127,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
    }
 
    /**
-    * Handler of ViewClosed event.
-    * Clear display instance if closed view is Preview.
+    * Handler of ViewClosed event. Clear display instance if closed view is Preview.
     * 
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
     */

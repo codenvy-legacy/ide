@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.IDE;
  * @version $
  */
 
-//TODO IDE-1234
+// TODO IDE-1234
 public class GoToFolderCommandHandler
 {
 

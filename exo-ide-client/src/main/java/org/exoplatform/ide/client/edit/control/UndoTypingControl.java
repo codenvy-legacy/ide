@@ -73,8 +73,8 @@ public class UndoTypingControl extends SimpleControl implements IDEControl, Edit
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      //TODO Version
-      if (event.getFile() == null /*|| (event.getFile() instanceof Version)*/)
+      // TODO Version
+      if (event.getFile() == null /* || (event.getFile() instanceof Version) */)
       {
          setVisible(false);
          setEnabled(false);

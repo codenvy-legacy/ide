@@ -100,7 +100,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private Display display;
 
-   //private List<Item> selectedItems = new ArrayList<Item>();
+   // private List<Item> selectedItems = new ArrayList<Item>();
 
    private List<Item> items = new ArrayList<Item>();
 
@@ -191,7 +191,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
    }
 
    /**
-    * Fills values on display and 
+    * Fills values on display and
     */
    public void bindDisplay()
    {
@@ -260,7 +260,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          if (openedFiles.get(item.getId()) != null)
          {
             FileModel file = openedFiles.get(item.getId());
-            //TODO
+            // TODO
             if (file.isContentChanged())
             {
                String msg =
@@ -278,7 +278,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
           */
 
          String path = item.getPath();
-         //HashMap<String, File> openedFiles = context.getOpenedFiles();
+         // HashMap<String, File> openedFiles = context.getOpenedFiles();
 
          HashMap<String, FileModel> copy = new HashMap<String, FileModel>();
          for (String key : openedFiles.keySet())
@@ -366,7 +366,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                }
                else
                {
-                  //find out opened files are been in the removed folder
+                  // find out opened files are been in the removed folder
                   final String path = item.getPath();
 
                   HashMap<String, FileModel> copy = new HashMap<String, FileModel>();

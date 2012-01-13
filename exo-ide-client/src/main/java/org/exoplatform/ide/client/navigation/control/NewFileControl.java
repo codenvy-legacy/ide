@@ -136,11 +136,11 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      //      if (event.getView() instanceof NavigatorPresenter.Display)
-      //      {
-      //         browserSelected = event.getView().isViewVisible();
-      //         updateEnabling();
-      //      }
+      // if (event.getView() instanceof NavigatorPresenter.Display)
+      // {
+      // browserSelected = event.getView().isViewVisible();
+      // updateEnabling();
+      // }
    }
 
    /**

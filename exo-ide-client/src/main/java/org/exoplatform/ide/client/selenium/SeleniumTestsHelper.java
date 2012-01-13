@@ -65,7 +65,7 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
    private Widget editorPreviousActiveFile;
 
    /**
-    * Widget for storing the URL of selected file in Workspace or Search Result views. 
+    * Widget for storing the URL of selected file in Workspace or Search Result views.
     */
    private Widget selectedFile;
 

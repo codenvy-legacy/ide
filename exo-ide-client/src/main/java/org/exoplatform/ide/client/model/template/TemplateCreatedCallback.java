@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.IDE;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplateListReceivedCallback.java Feb 7, 2011 12:56:15 PM vereshchaka $
- *
+ * 
  */
 public abstract class TemplateCreatedCallback extends AsyncRequestCallback<Template>
 {

@@ -23,12 +23,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * Represent template, that received from server.
  * <p/>
- * This template will be converted to {@link Template} for
- * correctly displaying in template list grid.
+ * This template will be converted to {@link Template} for correctly displaying in template list grid.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplateNative , 11.04.2011 17:56:51 vereshchaka $
- *
+ * 
  */
 public class TemplateNative extends JavaScriptObject
 {

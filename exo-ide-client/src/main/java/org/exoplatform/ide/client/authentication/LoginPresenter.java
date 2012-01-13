@@ -60,7 +60,7 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
 /**
  * @author <a href="mailto:foo@bar.org">Foo Bar</a>
  * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z aheritier $
- *
+ * 
  */
 public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler, InitializeServicesHandler,
    UserInfoReceivedHandler
@@ -112,26 +112,18 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
 
       /*
-      // Uncomment this to show Image at the top of IDE to see how the Login Window looks.
-      Image showLoginImage = new Image(IDEImageBundle.INSTANCE.browser());
-      showLoginImage.getElement().getStyle().setZIndex(Integer.MAX_VALUE);
-      RootPanel.get().add(showLoginImage, 300, 0);
-      showLoginImage.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            showLoginDialog(null);
-         }
-      });
-      */
+       * // Uncomment this to show Image at the top of IDE to see how the Login Window looks. Image showLoginImage = new
+       * Image(IDEImageBundle.INSTANCE.browser()); showLoginImage.getElement().getStyle().setZIndex(Integer.MAX_VALUE);
+       * RootPanel.get().add(showLoginImage, 300, 0); showLoginImage.addClickHandler(new ClickHandler() {
+       * @Override public void onClick(ClickEvent event) { showLoginDialog(null); } });
+       */
 
    }
 
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      //Nothing todo
+      // Nothing todo
    }
 
    /**

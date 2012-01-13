@@ -172,7 +172,8 @@ public class TemplateServiceImpl extends TemplateService
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.template.TemplateService#addFileTemplate(org.exoplatform.ide.client.model.template.Template, org.exoplatform.ide.client.model.template.TemplateCreatedCallback)
+    * @see org.exoplatform.ide.client.model.template.TemplateService#addFileTemplate(org.exoplatform.ide.client.model.template.Template,
+    *      org.exoplatform.ide.client.model.template.TemplateCreatedCallback)
     */
    @Override
    public void addFileTemplate(FileTemplate template, AsyncRequestCallback<FileTemplate> callback)
@@ -206,7 +207,8 @@ public class TemplateServiceImpl extends TemplateService
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.template.TemplateService#deleteFileTemplate(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.client.model.template.TemplateService#deleteFileTemplate(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void deleteFileTemplate(String templateName, AsyncRequestCallback<String> callback)
@@ -236,7 +238,8 @@ public class TemplateServiceImpl extends TemplateService
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.template.TemplateService#deleteProjectTemplate(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.client.model.template.TemplateService#deleteProjectTemplate(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void deleteProjectTemplate(String templateName, AsyncRequestCallback<String> callback)
@@ -248,7 +251,8 @@ public class TemplateServiceImpl extends TemplateService
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.template.TemplateService#addProjectTemplate(org.exoplatform.ide.client.model.template.ProjectTemplate, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.client.model.template.TemplateService#addProjectTemplate(org.exoplatform.ide.client.model.template.ProjectTemplate,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void addProjectTemplate(ProjectTemplate projectTemplate, AsyncRequestCallback<String> callback)
@@ -267,7 +271,8 @@ public class TemplateServiceImpl extends TemplateService
     */
 
    /**
-    * @see org.exoplatform.ide.client.model.template.TemplateService#addFileTemplateList(java.util.List, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.client.model.template.TemplateService#addFileTemplateList(java.util.List,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void addFileTemplateList(List<FileTemplate> fileTemplates, AsyncRequestCallback<String> callback)
@@ -282,7 +287,8 @@ public class TemplateServiceImpl extends TemplateService
    }
 
    /**
-    * @see org.exoplatform.ide.client.model.template.TemplateService#addProjectTemplateList(java.util.List, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.client.model.template.TemplateService#addProjectTemplateList(java.util.List,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void addProjectTemplateList(List<ProjectTemplate> projectTemplates, AsyncRequestCallback<String> callback)
@@ -309,7 +315,7 @@ public class TemplateServiceImpl extends TemplateService
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
    }
 
-   //----Implementation-------------------
+   // ----Implementation-------------------
 
    private List<FileTemplate> getDefaultFileTemplates()
    {
@@ -354,34 +360,34 @@ public class TemplateServiceImpl extends TemplateService
          DefaultFileTemplates.NETVIBES_WIDGET_SAMPLE_BLOG_POST_DESCRIPTION, NetvibesSamples.INSTANCE
             .getSampleBlogPostWidgetSource().getText(), true));
 
-      //find file templates in default projects
-      //      ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
-      //      for (Template template : shoppingCardProject.getTemplateList())
-      //      {
-      //         if (template instanceof FileTemplate)
-      //            fileTemplates.add((FileTemplate)template);
-      //      }
+      // find file templates in default projects
+      // ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
+      // for (Template template : shoppingCardProject.getTemplateList())
+      // {
+      // if (template instanceof FileTemplate)
+      // fileTemplates.add((FileTemplate)template);
+      // }
       //
-      //      TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
-      //      for (Template template : twitterTrendsProject.getTemplateList())
-      //      {
-      //         if (template instanceof FileTemplate)
-      //            fileTemplates.add((FileTemplate)template);
-      //      }
+      // TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
+      // for (Template template : twitterTrendsProject.getTemplateList())
+      // {
+      // if (template instanceof FileTemplate)
+      // fileTemplates.add((FileTemplate)template);
+      // }
       //
-      //      LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
-      //      for (Template template : linkedinContactsProject.getTemplateList())
-      //      {
-      //         if (template instanceof FileTemplate)
-      //            fileTemplates.add((FileTemplate)template);
-      //      }
+      // LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
+      // for (Template template : linkedinContactsProject.getTemplateList())
+      // {
+      // if (template instanceof FileTemplate)
+      // fileTemplates.add((FileTemplate)template);
+      // }
       //
-      //      DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
-      //      for (Template template : defaultIdeProject.getTemplateList())
-      //      {
-      //         if (template instanceof FileTemplate)
-      //            fileTemplates.add((FileTemplate)template);
-      //      }
+      // DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
+      // for (Template template : defaultIdeProject.getTemplateList())
+      // {
+      // if (template instanceof FileTemplate)
+      // fileTemplates.add((FileTemplate)template);
+      // }
       return fileTemplates;
    }
 
@@ -389,25 +395,27 @@ public class TemplateServiceImpl extends TemplateService
    {
       List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
 
-      //      ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
-      //      projectTemplates.add(shoppingCardProject.getProjectTemplate());
+      // ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
+      // projectTemplates.add(shoppingCardProject.getProjectTemplate());
       //
-      //      TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
-      //      projectTemplates.add(twitterTrendsProject.getProjectTemplate());
+      // TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
+      // projectTemplates.add(twitterTrendsProject.getProjectTemplate());
       //
-      //      LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
-      //      projectTemplates.add(linkedinContactsProject.getProjectTemplate());
+      // LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
+      // projectTemplates.add(linkedinContactsProject.getProjectTemplate());
       //
-      //      DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
-      //      projectTemplates.add(defaultIdeProject.getProjectTemplate());
+      // DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
+      // projectTemplates.add(defaultIdeProject.getProjectTemplate());
 
-      //      projectTemplates.add(getEmptyProject());
+      // projectTemplates.add(getEmptyProject());
       return projectTemplates;
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.client.model.template.TemplateService#createProjectFromTemplate(java.lang.String, java.lang.String, org.exoplatform.ide.client.model.template.ProjectTemplate, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.client.model.template.TemplateService#createProjectFromTemplate(java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.client.model.template.ProjectTemplate,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,

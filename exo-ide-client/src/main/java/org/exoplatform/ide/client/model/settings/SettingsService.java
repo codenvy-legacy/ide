@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: SettingsService.java Mar 30, 2011 11:06:10 AM vereshchaka $
- *
+ * 
  */
 public abstract class SettingsService
 {
@@ -47,6 +47,7 @@ public abstract class SettingsService
 
    /**
     * Save application settings to registry.
+    * 
     * @param applicationSettings
     * @param callback
     */
@@ -62,6 +63,7 @@ public abstract class SettingsService
 
    /**
     * Restore application settings from cookies.
+    * 
     * @param applicationSettings
     */
    public abstract void restoreFromCookies(ApplicationSettings applicationSettings);

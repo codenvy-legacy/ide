@@ -108,8 +108,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    }
 
    /**
-    * Add handlers
-    * Open Save As Dialog
+    * Add handlers Open Save As Dialog
     * 
     * @see org.exoplatform.ide.client.module.navigation.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent)
     */
@@ -135,14 +134,14 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    }
 
    /**
-    * Open Save As Dialog 
+    * Open Save As Dialog
     * 
     * @param file
     */
    private void askForNewFileName(SaveFileAsEvent.SaveDialogType type)
    {
       final String newFileName = !fileToSave.isPersisted() ? fileToSave.getName() : PREFIX + " " + fileToSave.getName();
-      //      sourceHref = fileToSave.getId();
+      // sourceHref = fileToSave.getId();
 
       if (type.equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL))
       {
@@ -225,32 +224,32 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       }
    }
 
-   //   private void saveFileProperties(FileModel file, String lockToken)
-   //   {
-   //      VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
-   //      {
-   //         @Override
-   //         protected void onSuccess(Item result)
-   //         {
-   //            getProperties(result);
-   //         }
-   //      });
-   //   }
+   // private void saveFileProperties(FileModel file, String lockToken)
+   // {
+   // VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
+   // {
+   // @Override
+   // protected void onSuccess(Item result)
+   // {
+   // getProperties(result);
+   // }
+   // });
+   // }
 
-   //   private void getProperties(Item item)
-   //   {
-   //      VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
-   //      {
-   //         @Override
-   //         protected void onSuccess(Item result)
-   //         {
-   //            File savedFile = (File)result;
-   //            savedFile.setNewFile(false);
-   //            savedFile.setContentChanged(false);
-   //           
-   //         }
-   //      });
-   //   }
+   // private void getProperties(Item item)
+   // {
+   // VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
+   // {
+   // @Override
+   // protected void onSuccess(Item result)
+   // {
+   // File savedFile = (File)result;
+   // savedFile.setNewFile(false);
+   // savedFile.setContentChanged(false);
+   //
+   // }
+   // });
+   // }
 
    public void onItemsSelected(ItemsSelectedEvent event)
    {

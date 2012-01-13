@@ -22,8 +22,8 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 22, 2011 12:30:05 PM evgen $
- *
+ * @version ${Id}: Dec 22, 2011 12:30:05 PM evgen $
+ * 
  */
 public interface ShowOutputHandler extends EventHandler
 {

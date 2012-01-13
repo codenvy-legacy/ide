@@ -112,7 +112,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    };
 
    /**
-    * @param name 
+    * @param name
     * @param title title near input field
     * @param width width
     * @param value value by default
@@ -329,14 +329,14 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
       hPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
-      //Add image
+      // Add image
       Image image = new Image(icon);
       image.setWidth(32 + "px");
       image.setHeight(32 + "px");
       hPanel.add(image);
       hPanel.setCellWidth(image, "42px");
 
-      //Add text:
+      // Add text:
       Label label = new Label();
       label.getElement().setInnerHTML(text);
       hPanel.add(label);

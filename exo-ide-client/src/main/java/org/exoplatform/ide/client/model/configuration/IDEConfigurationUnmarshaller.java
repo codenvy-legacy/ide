@@ -36,7 +36,7 @@ import com.google.gwt.user.client.Window.Location;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: May 25, 2011 evgen $
- *
+ * 
  */
 public class IDEConfigurationUnmarshaller implements Unmarshallable
 {
@@ -53,8 +53,8 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private static final String USER_SETTINGS = "userSettings";
 
-   //   @Deprecated
-   //   private static final String DEFAUTL_ENTRY_POINT = "defaultEntrypoint";
+   // @Deprecated
+   // private static final String DEFAUTL_ENTRY_POINT = "defaultEntrypoint";
 
    private static final String VFS_ID = "vfsId";
 
@@ -66,7 +66,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
 
-   //   private static final String HTTPS_PORT = "httpsPort";
+   // private static final String HTTPS_PORT = "httpsPort";
 
    private IDEInitializationConfiguration initializationConfiguration;
 
@@ -76,7 +76,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    /**
     * @param initializationConfiguration
-    * @param defaultAppConfiguration 
+    * @param defaultAppConfiguration
     */
    public IDEConfigurationUnmarshaller(IDEInitializationConfiguration initializationConfiguration,
       JSONObject defaultAppConfiguration)
@@ -117,11 +117,11 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
                new ApplicationSettingsUnmarshaller(applicationSettings).parseSettings(object.get(USER_SETTINGS));
             }
 
-            //            if (object.containsKey(DEFAUTL_ENTRY_POINT))
-            //            {
-            //               initializationConfiguration.getIdeConfiguration().setDefaultEntryPoint(
-            //                  object.get(DEFAUTL_ENTRY_POINT).isString().stringValue());
-            //            }
+            // if (object.containsKey(DEFAUTL_ENTRY_POINT))
+            // {
+            // initializationConfiguration.getIdeConfiguration().setDefaultEntryPoint(
+            // object.get(DEFAUTL_ENTRY_POINT).isString().stringValue());
+            // }
 
             if (object.containsKey(VFS_BASE_URL))
             {
@@ -178,16 +178,16 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
          return;
       }
 
-      //      if (jsonConfiguration.containsKey(HTTPS_PORT))
-      //         configuration.setHttpsPort((int)jsonConfiguration.get(HTTPS_PORT).isNumber().doubleValue());
-      //      else
-      //      {
-      //         showErrorMessage(HTTPS_PORT);
-      //         return;
-      //      }
+      // if (jsonConfiguration.containsKey(HTTPS_PORT))
+      // configuration.setHttpsPort((int)jsonConfiguration.get(HTTPS_PORT).isNumber().doubleValue());
+      // else
+      // {
+      // showErrorMessage(HTTPS_PORT);
+      // return;
+      // }
 
       if (jsonConfiguration.containsKey(GADGET_SERVER))
-         //TODO: now we can load gadget only from current host
+         // TODO: now we can load gadget only from current host
          configuration.setGadgetServer(Location.getProtocol() + "//" + Location.getHost()
             + jsonConfiguration.get(GADGET_SERVER).isString().stringValue());
       else

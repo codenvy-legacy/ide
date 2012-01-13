@@ -71,7 +71,7 @@ import com.google.gwt.http.client.RequestException;
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    ApplicationSettingsReceivedHandler
 {
@@ -106,7 +106,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
             return;
          }
 
-         //TODO Check opened file!!!
+         // TODO Check opened file!!!
          if (openedFiles.containsKey(file.getId()))
          {
             openFile(file);

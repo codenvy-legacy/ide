@@ -21,7 +21,8 @@ package org.exoplatform.ide.client.preview;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS        .
+ * Created by The eXo Platform SAS .
+ * 
  * @version $Id: $
  */
 

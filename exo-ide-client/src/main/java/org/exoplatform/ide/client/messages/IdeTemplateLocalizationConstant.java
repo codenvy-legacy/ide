@@ -22,11 +22,11 @@ import com.google.gwt.i18n.client.Constants;
 
 /**
  * Interface to represent the constants for template and project forms contained in resource bundle:
- *      'IdeTemplateLocalizationConstant.properties'.
- *      
+ * 'IdeTemplateLocalizationConstant.properties'.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplateConstant.java Jun 2, 2011 2:59:52 PM vereshchaka $
- *
+ * 
  */
 public interface IdeTemplateLocalizationConstant extends Constants
 {
@@ -62,8 +62,7 @@ public interface IdeTemplateLocalizationConstant extends Constants
    String saveAsTemplateDescription();
 
    /*
-    * CreateFileFromTemplateForm
-    * CreateFileFromTemplateView
+    * CreateFileFromTemplateForm CreateFileFromTemplateView
     */
    @Key("createFileFromTemplate.createButton")
    String createFileFromTemplateCreateButton();

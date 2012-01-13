@@ -44,7 +44,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLineHandler, ViewClosedHandler
 {

@@ -23,12 +23,11 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Event occurs, when version is restored.
- * Implement {@link VersionRestoredHandler} to handle event.
+ * Event occurs, when version is restored. Implement {@link VersionRestoredHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 12, 2011 2:32:23 PM anya $
- *
+ * @version $Id: May 12, 2011 2:32:23 PM anya $
+ * 
  */
 public class VersionRestoredEvent extends GwtEvent<VersionRestoredHandler>
 {

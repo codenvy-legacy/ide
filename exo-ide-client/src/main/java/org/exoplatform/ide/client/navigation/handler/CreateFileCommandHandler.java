@@ -52,9 +52,10 @@ import org.exoplatform.ide.vfs.shared.Project;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
    EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
@@ -138,7 +139,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
       try
       {
          String defaultEditorDescription = defaultEditors.get(event.getMimeType());
-         //         Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
+         // Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
          EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription);
          IDE.fireEvent(new EditorOpenFileEvent(newFile, producer));
       }

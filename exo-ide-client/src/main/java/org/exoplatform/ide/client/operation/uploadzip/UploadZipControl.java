@@ -40,7 +40,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 10, 2010 $
- *
+ * 
  */
 @RolesAllowed({"administrators", "developers"})
 public class UploadZipControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,

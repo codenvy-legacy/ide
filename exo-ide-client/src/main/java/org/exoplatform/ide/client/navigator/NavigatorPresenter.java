@@ -96,7 +96,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
-*/
+ */
 public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHandler, ViewVisibilityChangedHandler,
    ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler, ViewClosedHandler,
    AddItemTreeIconHandler, RemoveItemTreeIconHandler, ViewActivatedHandler, ShowNavigatorHandler, VfsChangedHandler
@@ -228,6 +228,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    /**
     * 
     * Handling item selected event from browser
+    * 
     * @param item
     */
    protected void onItemSelected()
@@ -279,8 +280,8 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
     */
    protected void onFolderOpened(Folder openedFolder)
    {
-      //Commented to fix bug with selection of new folder
-      //      itemToSelect = null;
+      // Commented to fix bug with selection of new folder
+      // itemToSelect = null;
       ItemList<Item> children =
          (openedFolder instanceof ProjectModel) ? ((ProjectModel)openedFolder).getChildren()
             : ((FolderModel)openedFolder).getChildren();
@@ -411,11 +412,11 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
    {
       IDE.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
-      //TODO if will be some value - display system items or not, then add check here:
+      // TODO if will be some value - display system items or not, then add check here:
       List<Item> children =
          (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
             .getChildren().getItems();
-      //      removeSystemItemsFromView(children);
+      // removeSystemItemsFromView(children);
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);
@@ -509,7 +510,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      //      applicationSettings = event.getApplicationSettings();
+      // applicationSettings = event.getApplicationSettings();
 
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
       {
@@ -522,7 +523,8 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       }
    }
 
-   // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5 seems because of SmartGWT issues
+   // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5
+   // seems because of SmartGWT issues
    protected void onKeyPressed(int keyCode, boolean isControlKeyDown)
    {
       if (isControlKeyDown)
@@ -533,7 +535,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
             IDE.fireEvent(new CopyItemsEvent());
          }
 
-         // "Ctrl+X" hotkey handling         
+         // "Ctrl+X" hotkey handling
          else if (String.valueOf(keyCode).toUpperCase().equals("X"))
          {
             IDE.fireEvent(new CutItemsEvent());
@@ -552,11 +554,13 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          IDE.fireEvent(new DeleteItemEvent());
       }
 
-      // "Enter" hotkey handling - impossible to handle Enter key pressing event within the TreeGrid and ListGrid in the SmartGWT 2.2 because of bug when Enter keypress is not caugth. http://code.google.com/p/smartgwt/issues/detail?id=430 
-      //      else if (charCode == KeyCodes.KEY_ENTER)
-      //      {
-      //         onBrowserDoubleClicked();
-      //      }
+      // "Enter" hotkey handling - impossible to handle Enter key pressing event within the TreeGrid and ListGrid in the
+      // SmartGWT 2.2 because of bug when Enter keypress is not caugth.
+      // http://code.google.com/p/smartgwt/issues/detail?id=430
+      // else if (charCode == KeyCodes.KEY_ENTER)
+      // {
+      // onBrowserDoubleClicked();
+      // }
    }
 
    /**

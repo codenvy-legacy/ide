@@ -21,14 +21,13 @@ package org.exoplatform.ide.client.messages;
 import com.google.gwt.i18n.client.Messages;
 
 /**
- * Interface to represent the constants contained in resource bundle:
- *      'IdeNavigationLocalizationConstant.properties'.
+ * Interface to represent the constants contained in resource bundle: 'IdeNavigationLocalizationConstant.properties'.
  * <p/>
  * Localization message for form from navigation group.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
- *
+ * 
  */
 public interface IdeNavigationLocalizationConstant extends Messages
 {

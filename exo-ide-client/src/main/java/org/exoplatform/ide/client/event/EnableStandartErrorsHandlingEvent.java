@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 30, 2010 $
- *
+ * 
  */
 public class EnableStandartErrorsHandlingEvent extends GwtEvent<EnableStandartErrorsHandlingHandler>
 {

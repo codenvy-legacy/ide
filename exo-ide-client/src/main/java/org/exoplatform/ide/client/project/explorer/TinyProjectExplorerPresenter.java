@@ -126,7 +126,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private ProjectExplorerDisplay display;
 
-   //private boolean viewOpened = false;
+   // private boolean viewOpened = false;
 
    private String itemToSelect;
 
@@ -239,6 +239,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    /**
     * 
     * Handling item selected event from browser
+    * 
     * @param item
     */
    protected void onItemSelected()
@@ -287,8 +288,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
     */
    protected void onFolderOpened(Folder openedFolder)
    {
-      //Commented to fix bug with selection of new folder
-      //      itemToSelect = null;
+      // Commented to fix bug with selection of new folder
+      // itemToSelect = null;
       ItemList<Item> children =
          (openedFolder instanceof ProjectModel) ? ((ProjectModel)openedFolder).getChildren()
             : ((FolderModel)openedFolder).getChildren();
@@ -467,11 +468,11 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
 
-      //TODO if will be some value - display system items or not, then add check here:
+      // TODO if will be some value - display system items or not, then add check here:
       List<Item> children =
          (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
             .getChildren().getItems();
-      //      removeSystemItems(children);
+      // removeSystemItems(children);
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);
@@ -480,25 +481,25 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       refreshNextFolder();
    }
 
-   //   /**
-   //    * Removes items for not to be displayed, if they are system ones
-   //    * (for example, ".groovyclasspath" file).
-   //    * To known system item or not call {@link Item} method: boolean isSystem().
-   //    * 
-   //    * @param items
-   //    */
-   //   private void removeSystemItems(List<Item> items)
-   //   {
-   //      List<Item> itemsToRemove = new ArrayList<Item>();
-   //      for (Item item : items)
-   //      {
-   //         if (item.getName().startsWith("."))
-   //         {
-   //            itemsToRemove.add(item);
-   //         }
-   //      }
-   //      items.removeAll(itemsToRemove);
-   //   }
+   // /**
+   // * Removes items for not to be displayed, if they are system ones
+   // * (for example, ".groovyclasspath" file).
+   // * To known system item or not call {@link Item} method: boolean isSystem().
+   // *
+   // * @param items
+   // */
+   // private void removeSystemItems(List<Item> items)
+   // {
+   // List<Item> itemsToRemove = new ArrayList<Item>();
+   // for (Item item : items)
+   // {
+   // if (item.getName().startsWith("."))
+   // {
+   // itemsToRemove.add(item);
+   // }
+   // }
+   // items.removeAll(itemsToRemove);
+   // }
 
    /**
     * Comparator for comparing items in received directory.
@@ -580,7 +581,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       ensureProjectExplorerDisplayCreated();
    }
 
-   // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5 seems because of SmartGWT issues
+   // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5
+   // seems because of SmartGWT issues
    protected void onKeyPressed(int keyCode, boolean isControlKeyDown)
    {
       if (isControlKeyDown)
@@ -591,7 +593,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
             IDE.fireEvent(new CopyItemsEvent());
          }
 
-         // "Ctrl+X" hotkey handling         
+         // "Ctrl+X" hotkey handling
          else if (String.valueOf(keyCode).toUpperCase().equals("X"))
          {
             IDE.fireEvent(new CutItemsEvent());
@@ -610,11 +612,13 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          IDE.fireEvent(new DeleteItemEvent());
       }
 
-      // "Enter" hotkey handling - impossible to handle Enter key pressing event within the TreeGrid and ListGrid in the SmartGWT 2.2 because of bug when Enter keypress is not caugth. http://code.google.com/p/smartgwt/issues/detail?id=430 
-      //      else if (charCode == KeyCodes.KEY_ENTER)
-      //      {
-      //         onBrowserDoubleClicked();
-      //      }
+      // "Enter" hotkey handling - impossible to handle Enter key pressing event within the TreeGrid and ListGrid in the
+      // SmartGWT 2.2 because of bug when Enter keypress is not caugth.
+      // http://code.google.com/p/smartgwt/issues/detail?id=430
+      // else if (charCode == KeyCodes.KEY_ENTER)
+      // {
+      // onBrowserDoubleClicked();
+      // }
    }
 
    /**
@@ -703,7 +707,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       navigatorSelectedItems.clear();
       navigatorSelectedItems.add(openedProject);
 
-      //      Folder folder = (Folder)navigatorSelectedItems.get(0);
+      // Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();
       foldersToRefresh.add(openedProject);
       refreshNextFolder();

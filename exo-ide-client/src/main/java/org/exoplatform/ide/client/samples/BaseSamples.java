@@ -24,7 +24,7 @@ import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author vetal
- *
+ * 
  */
 public interface BaseSamples extends ClientBundle
 {

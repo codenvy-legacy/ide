@@ -35,9 +35,10 @@ import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class CreateEmptyProjectForm extends ViewImpl implements
    org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display
 {

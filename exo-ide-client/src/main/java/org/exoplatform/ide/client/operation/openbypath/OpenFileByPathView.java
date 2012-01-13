@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo.
+ * 
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */

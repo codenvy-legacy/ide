@@ -59,7 +59,7 @@ import com.google.gwt.user.client.ui.HasValue;
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class CreateProjectTemplatePresenter implements CreateProjectTemplateHandler, TemplatesMigratedHandler,
    ViewClosedHandler
@@ -130,7 +130,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
 
    public CreateProjectTemplatePresenter()
    {
-      //    IDE.getInstance().addControl(new CreateProjectTemplateControl());            
+      // IDE.getInstance().addControl(new CreateProjectTemplateControl());
 
       IDE.addHandler(CreateProjectTemplateEvent.TYPE, this);
       IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
@@ -224,7 +224,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
    {
       public void onSelection(SelectionEvent<Template> event)
       {
-         //in no selection - disable all buttons
+         // in no selection - disable all buttons
          if (display.getTreeGridSelection() == null || display.getTreeGridSelection().size() != 1)
          {
             display.disableAddFolderButton();
@@ -232,18 +232,18 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
             display.disableDeleteButton();
             return;
          }
-         //if selected one item
+         // if selected one item
          selectedTemplate = display.getTreeGridSelection().get(0);
-         //if root selected
+         // if root selected
          if (selectedTemplate == display.getTemplateTreeGrid().getValue())
          {
-            //can't delete root folder
+            // can't delete root folder
             display.disableDeleteButton();
          }
          else if (selectedTemplate instanceof FileTemplate
             && MimeType.APPLICATION_JSON.equals(((FileTemplate)selectedTemplate).getMimeType()))
          {
-            //can not delete classpath file
+            // can not delete classpath file
             display.disableDeleteButton();
          }
          else
@@ -304,7 +304,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
    {
       FolderTemplate selectedFolder = (FolderTemplate)selectedTemplate;
 
-      //validate
+      // validate
       if (folderName == null || folderName.length() == 0)
       {
          Dialogs.getInstance().showError(IDE.TEMPLATE_CONSTANT.createProjectTemplateValueCantBeEmpty());
@@ -477,7 +477,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
                   protected void onSuccess(FileTemplateList result)
                   {
                      templateList.addAll(result.getFileTemplates());
-                     //                  new CreateProjectTemplateView(eventBus, templates);
+                     // new CreateProjectTemplateView(eventBus, templates);
                      openView();
                   }
                });

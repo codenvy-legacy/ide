@@ -55,7 +55,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: May 25, 2011 evgen $
- *
+ * 
  */
 public class IDEConfigurationInitializer implements ApplicationSettingsReceivedHandler, VfsChangedHandler
 {

@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.api.EditorCapability;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 @RolesAllowed({"administrators", "developers"})
 public class GoToLineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler

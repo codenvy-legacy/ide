@@ -96,7 +96,7 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
 
    private Display display;
 
-   //   private String itemBaseHref;
+   // private String itemBaseHref;
 
    private List<Item> selectedItems;
 
@@ -122,12 +122,12 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
 
       display.enableRenameButton(false);
 
-      //      itemBaseHref = selectedItems.get(0).getHref();
-      //      if (selectedItems.get(0) instanceof FolderModel)
-      //      {
-      //         itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/"));
-      //      }
-      //      itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/") + 1);
+      // itemBaseHref = selectedItems.get(0).getHref();
+      // if (selectedItems.get(0) instanceof FolderModel)
+      // {
+      // itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/"));
+      // }
+      // itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/") + 1);
 
       display.getNameField().setValue(selectedItems.get(0).getName());
 
@@ -201,7 +201,7 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
 
    private void updateOpenedFiles(Folder folder, String sourcePath)
    {
-      //TODO
+      // TODO
       if (openedFiles == null || openedFiles.isEmpty())
          return;
 
@@ -287,7 +287,7 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
    {
       if (selectedItems == null || selectedItems.isEmpty())
       {
-         //throwing an exception is in RenameFilePresenter
+         // throwing an exception is in RenameFilePresenter
          return;
       }
 

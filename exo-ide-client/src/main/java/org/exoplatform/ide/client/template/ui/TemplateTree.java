@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: TemplateTree Mar 21, 2011 11:16:32 AM evgen $
- *
+ * 
  */
 public class TemplateTree extends Tree<Template>
 {
@@ -64,7 +64,7 @@ public class TemplateTree extends Tree<Template>
          if (getValue().getIcon() != null)
          {
             icon = getValue().getIcon();
-            //            rootNode.setAttribute("icon", getValue().getIcon());
+            // rootNode.setAttribute("icon", getValue().getIcon());
          }
          else
             icon = IDEImageBundle.INSTANCE.folder();
@@ -113,9 +113,9 @@ public class TemplateTree extends Tree<Template>
 
          if (newNode == null)
          {
-            //            newNode = new TreeNode(template.getName());
-            //            newNode.setAttribute(getValuePropertyName(), template);
-            //            newNode.setAttribute(ICON, template.getIcon());
+            // newNode = new TreeNode(template.getName());
+            // newNode.setAttribute(getValuePropertyName(), template);
+            // newNode.setAttribute(ICON, template.getIcon());
             String nodeName = template.getName();
             if (template instanceof FileTemplate)
             {
@@ -149,10 +149,10 @@ public class TemplateTree extends Tree<Template>
    {
       List<Template> selectedItems = new ArrayList<Template>();
 
-      //      for (ListGridRecord record : getSelection())
-      //      {
-      //         selectedItems.add((Template)record.getAttributeAsObject(getValuePropertyName()));
-      //      }
+      // for (ListGridRecord record : getSelection())
+      // {
+      // selectedItems.add((Template)record.getAttributeAsObject(getValuePropertyName()));
+      // }
       if (tree.getSelectedItem() != null)
       {
          selectedItems.add((Template)tree.getSelectedItem().getUserObject());
@@ -190,8 +190,8 @@ public class TemplateTree extends Tree<Template>
 
    public void setRootNodeName(String name)
    {
-      //      rootNode.setAttribute(NAME, name);
-      //      redraw();
+      // rootNode.setAttribute(NAME, name);
+      // redraw();
    }
 
    public void updateTree()
@@ -204,7 +204,7 @@ public class TemplateTree extends Tree<Template>
       TreeItem item = getTreeItem(rootNode, template);
       if (item != null)
       {
-         //         item.getP
+         // item.getP
       }
       return null;
    }

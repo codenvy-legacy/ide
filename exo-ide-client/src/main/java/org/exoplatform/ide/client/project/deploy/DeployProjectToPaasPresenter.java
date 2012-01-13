@@ -52,7 +52,7 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployProjectToPaasPresenter.java Dec 1, 2011 4:45:52 PM vereshchaka $
- *
+ * 
  */
 public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler, ViewClosedHandler, VfsChangedHandler
 {
@@ -116,8 +116,8 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          {
             createProject();
          }
-         //if form isn't valid, then do nothing
-         //all validation messages must be shown by paases
+         // if form isn't valid, then do nothing
+         // all validation messages must be shown by paases
       }
 
       @Override
@@ -222,9 +222,9 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
                   loader.hide();
                   if (paas != null)
                   {
-                     //FIXME
-                     //timer for allowing project to create fully
-                     //find better sollution!!!!!!!!!
+                     // FIXME
+                     // timer for allowing project to create fully
+                     // find better sollution!!!!!!!!!
                      new Timer()
                      {
                         @Override

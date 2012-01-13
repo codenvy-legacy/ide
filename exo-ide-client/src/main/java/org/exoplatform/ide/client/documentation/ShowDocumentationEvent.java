@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowDocumentationEvent Jan 21, 2011 11:14:29 AM evgen $
- *
+ * 
  */
 public class ShowDocumentationEvent extends GwtEvent<ShowDocumentationHandler>
 {

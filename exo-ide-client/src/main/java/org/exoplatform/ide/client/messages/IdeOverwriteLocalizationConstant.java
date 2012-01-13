@@ -21,8 +21,7 @@ package org.exoplatform.ide.client.messages;
 import com.google.gwt.i18n.client.Messages;
 
 /**
- * Interface to represent the constants contained in resource bundle:
- *      'IdeOverwriteLocalizationConstant.properties'.
+ * Interface to represent the constants contained in resource bundle: 'IdeOverwriteLocalizationConstant.properties'.
  * <p/>
  * Localization message for overwrite dialog.
  * 

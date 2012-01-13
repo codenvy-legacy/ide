@@ -26,9 +26,10 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class VFSListGrid extends ListGrid<VirtualFileSystemInfo>
 {
    private final String ID = "ideEntryPointListGrid";

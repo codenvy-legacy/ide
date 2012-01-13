@@ -63,6 +63,7 @@ public enum EditorType {
 
    /**
     * Get editor position within editor area started from 0.
+    * 
     * @return
     */
    public int getPosition()

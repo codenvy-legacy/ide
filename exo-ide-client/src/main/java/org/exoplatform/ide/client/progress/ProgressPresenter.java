@@ -39,8 +39,8 @@ import java.util.LinkedHashMap;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 16, 2011 evgen $
- *
+ * @version $Id: Sep 16, 2011 evgen $
+ * 
  */
 public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler, ViewClosedHandler
 {

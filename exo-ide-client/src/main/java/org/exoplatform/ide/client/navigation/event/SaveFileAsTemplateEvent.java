@@ -22,8 +22,8 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   $
- *
+ * @version $Id: $
+ * 
  */
 public class SaveFileAsTemplateEvent extends GwtEvent<SaveFileAsTemplateHandler>
 {

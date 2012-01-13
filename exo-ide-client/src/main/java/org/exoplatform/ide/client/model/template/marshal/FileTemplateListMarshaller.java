@@ -33,7 +33,7 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FileTemplateListMarshaller.java Aug 1, 2011 10:11:31 AM vereshchaka $
- *
+ * 
  */
 public class FileTemplateListMarshaller implements Marshallable
 {

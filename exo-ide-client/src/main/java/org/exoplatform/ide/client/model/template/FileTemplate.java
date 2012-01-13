@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.util.ImageUtil;
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class FileTemplate extends Template
 {

@@ -22,8 +22,8 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 22, 2011 12:29:34 PM evgen $
- *
+ * @version ${Id}: Dec 22, 2011 12:29:34 PM evgen $
+ * 
  */
 public class ShowOutputEvent extends GwtEvent<ShowOutputHandler>
 {

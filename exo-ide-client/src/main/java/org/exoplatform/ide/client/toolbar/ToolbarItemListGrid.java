@@ -52,7 +52,7 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
 
    public final static String COMMAND_ID = "CommandId";
 
-   //public final static String ID = "ideToolbarItemListGrid";
+   // public final static String ID = "ideToolbarItemListGrid";
    public final static String ID = "ide.core.customize-toolbar.toolbar-items-list";
 
    public ToolbarItemListGrid()

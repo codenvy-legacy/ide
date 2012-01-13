@@ -254,8 +254,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    }
 
    /**
-    * Opens selected project.
-    * First, close all opened files.  
+    * Opens selected project. First, close all opened files.
     */
    private void openProject()
    {

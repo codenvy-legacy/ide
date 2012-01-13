@@ -85,9 +85,9 @@ public class NewItemControlsFormatter implements ControlsFormatter
    public void format(List<Control> controls)
    {
       List<Control> newItemControls = sortNewItemsControls(controls);
-      //Remove new items controls:
+      // Remove new items controls:
       controls.removeAll(newItemControls);
-      //Add sorted items controls:
+      // Add sorted items controls:
       controls.addAll(newItemControls);
 
       createNewItemGroup(controls);
@@ -160,7 +160,7 @@ public class NewItemControlsFormatter implements ControlsFormatter
          Integer index1 = controlIdsOrder.indexOf(control1.getId());
          Integer index2 = controlIdsOrder.indexOf(control2.getId());
 
-         //If item is not found in order list, then put it at the end of the list
+         // If item is not found in order list, then put it at the end of the list
          if (index2 == -1)
             return -1;
          if (index1 == -1)

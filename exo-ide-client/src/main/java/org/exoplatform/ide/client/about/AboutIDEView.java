@@ -128,7 +128,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
       Label infoLabel = new Label();
       infoLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      //     infoLabel.setCanSelectText(true);
+      // infoLabel.setCanSelectText(true);
       infoLabel.getElement().setInnerHTML(
          "<h3>" + NAME + "</h3>" + "<b>" + VERSION + "</b>" + "<br>" + YEAR + "&nbsp;" + COMPANY_NAME + "&nbsp;"
             + COPYRIGHT + "<br><br>" + "<b>" + REVISION + "</b>" + "<br>" + "<b>" + BUILD_TIME + "</b>");

@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: 
- *
+ * @version $Id:
+ * 
  */
 public class HotKeyItem
 {
@@ -32,7 +32,7 @@ public class HotKeyItem
 
    private Control command;
 
-   //--- fields for group item
+   // --- fields for group item
    private boolean isGroup = false;
 
    private String title;

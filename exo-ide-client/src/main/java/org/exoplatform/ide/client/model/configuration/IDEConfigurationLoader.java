@@ -31,7 +31,8 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.json.client.JSONObject;
 
 /**
- * Created by The eXo Platform SAS        .
+ * Created by The eXo Platform SAS .
+ * 
  * @version $Id: $
  */
 

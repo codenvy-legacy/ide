@@ -25,7 +25,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 21, 2010 $
- *
+ * 
  */
 public class ProjectTemplate extends FolderTemplate
 {
@@ -35,7 +35,7 @@ public class ProjectTemplate extends FolderTemplate
    private String classPathLocation;
 
    /**
-    * Project type (need to detect is generate classpath for project). 
+    * Project type (need to detect is generate classpath for project).
     */
    private String type;
 

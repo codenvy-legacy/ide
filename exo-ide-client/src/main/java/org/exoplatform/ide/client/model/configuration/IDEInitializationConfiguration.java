@@ -23,10 +23,11 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 
 /**
- * Been used to transport initialization configuration 
+ * Been used to transport initialization configuration
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: May 25, 2011 evgen $
- *
+ * 
  */
 public class IDEInitializationConfiguration
 {

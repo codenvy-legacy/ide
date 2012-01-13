@@ -21,19 +21,17 @@ package org.exoplatform.ide.client.edit.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Class, that implements this handler, will listen 
- * to click on Lock/Unlock button on toolbar.
+ * Class, that implements this handler, will listen to click on Lock/Unlock button on toolbar.
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public interface LockFileHandler extends EventHandler
 {
 
    /**
-    * @param event - LockFileEvent generated after pressing 
-    * on Lock/Unlock button on toolbar
+    * @param event - LockFileEvent generated after pressing on Lock/Unlock button on toolbar
     */
    void onLockFile(LockFileEvent event);
 

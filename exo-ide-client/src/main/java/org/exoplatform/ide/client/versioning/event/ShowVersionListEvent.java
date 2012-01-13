@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 11, 2010 $
- *
+ * 
  */
 public class ShowVersionListEvent extends GwtEvent<ShowVersionListHandler>
 {

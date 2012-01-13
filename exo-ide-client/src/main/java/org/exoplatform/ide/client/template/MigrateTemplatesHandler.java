@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MigrateTemplateHandler.java Aug 1, 2011 12:17:06 PM vereshchaka $
- *
+ * 
  */
 public interface MigrateTemplatesHandler extends EventHandler
 {

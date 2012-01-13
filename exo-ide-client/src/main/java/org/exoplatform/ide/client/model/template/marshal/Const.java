@@ -39,19 +39,19 @@ public interface Const
 
    public static final String TEMPLATES = "templates";
 
-   //common nodes
+   // common nodes
    public static final String NAME = "name";
 
    public static final String DESCRIPTION = "description";
 
    public static final String TEMPLATE_TYPE = "template-type";
 
-   //file template nodes
+   // file template nodes
    public static final String MIME_TYPE = "mime-type";
 
    public static final String CONTENT = "content";
 
-   //project template nodes
+   // project template nodes
    public static final String FILE = "file";
 
    public static final String FOLDER = "folder";

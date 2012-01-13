@@ -240,7 +240,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
 
       final FileModel file = new FileModel();
       file.setName(fileName);
-      //file.setId(fileName);
+      // file.setId(fileName);
 
       AsyncRequestCallback<FileModel> callback = new AsyncRequestCallback<FileModel>()
       {

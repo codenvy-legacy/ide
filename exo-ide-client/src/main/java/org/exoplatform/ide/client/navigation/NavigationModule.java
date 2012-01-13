@@ -63,7 +63,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class NavigationModule implements InitializeServicesHandler
 {
@@ -84,15 +84,15 @@ public class NavigationModule implements InitializeServicesHandler
          new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
             IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN, true));
 
-      //TODO: need rework according with VFS       
-      //      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
-      //      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
-      //      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
-      //      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
-      //      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);      
-      //    new VersionHistoryCommandHandler();
-      //    new RestoreToVersionCommandHandler();
-      //    new VersionsListPresenter();
+      // TODO: need rework according with VFS
+      // IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
+      // IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
+      // IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
+      // IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
+      // IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);
+      // new VersionHistoryCommandHandler();
+      // new RestoreToVersionCommandHandler();
+      // new VersionsListPresenter();
 
       new UploadFilePresenter();
       new UploadZipPresenter();

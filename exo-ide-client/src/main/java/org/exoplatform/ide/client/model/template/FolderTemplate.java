@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class FolderTemplate extends Template
 {

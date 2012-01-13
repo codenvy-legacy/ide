@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FileTemplateListUnmarshaller.java Jul 27, 2011 2:56:00 PM vereshchaka $
- *
+ * 
  */
 public class FileTemplateListUnmarshaller implements Unmarshallable
 {

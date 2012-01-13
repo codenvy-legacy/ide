@@ -111,8 +111,8 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements
    }
 
    /**
-    * Create the horizontal panel with action buttons:
-    * create, delete and cancel.
+    * Create the horizontal panel with action buttons: create, delete and cancel.
+    * 
     * @return {@link HorizontalPanel}
     */
    private HorizontalPanel getButtonsForm()

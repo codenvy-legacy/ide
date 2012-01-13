@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: EditorFactory Feb 22, 2011 11:06:05 AM evgen $
- *
+ * 
  */
 public class OutlineItemCreatorFactory
 {
@@ -34,7 +34,7 @@ public class OutlineItemCreatorFactory
 
    static
    {
-      //      addOutlineItemCreator(MimeType.UWA_WIDGET, new HtmlOutlineItemCreator());
+      // addOutlineItemCreator(MimeType.UWA_WIDGET, new HtmlOutlineItemCreator());
    }
 
    public static void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator)

@@ -56,9 +56,10 @@ import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHandler, SelectWorkspaceHandler,
    ViewClosedHandler, AllFilesClosedHandler
 {
@@ -90,7 +91,8 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
 
       /**
        * 
-       * Selects specified item in 
+       * Selects specified item in
+       * 
        * @param currentEntryPoint
        */
       void setSelectedItem(VirtualFileSystemInfo item);
@@ -150,7 +152,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
    }
 
    /**
-    *Handler of selection of the workspace from the list of workspaces.
+    * Handler of selection of the workspace from the list of workspaces.
     * 
     * @see org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler#onSelectWorkspace(org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent)
     */
@@ -295,8 +297,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
    }
 
    /**
-    * Changing entry point.
-    * Here must be checking for opened files and asking user for saving them.
+    * Changing entry point. Here must be checking for opened files and asking user for saving them.
     */
    private void changeEntryPoint()
    {
@@ -321,7 +322,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
    {
       applicationSettings.setValue("entry-point", selectedWorkspace.getId(), Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-      //Handle of ApplicationSettingsSaved Event and switch current workspace.
+      // Handle of ApplicationSettingsSaved Event and switch current workspace.
       if (display != null)
       {
          workingWorkspace = selectedWorkspace.getId();
@@ -331,8 +332,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
    }
 
    /**
-    * Handler of ViewClosed Event.
-    * Clear the display variable if closed view is implementation of the Display.
+    * Handler of ViewClosed Event. Clear the display variable if closed view is implementation of the Display.
     * 
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
     */

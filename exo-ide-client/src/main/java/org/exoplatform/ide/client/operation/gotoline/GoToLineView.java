@@ -36,7 +36,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class GoToLineView extends ViewImpl implements
    org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display

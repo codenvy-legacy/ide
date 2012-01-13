@@ -30,8 +30,8 @@ import java.util.List;
  * Formatter to sort controls from "View" menu.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 22, 2011 3:47:02 PM anya $
- *
+ * @version $Id: Dec 22, 2011 3:47:02 PM anya $
+ * 
  */
 public class ViewControlsFormatter implements ControlsFormatter
 {
@@ -107,7 +107,7 @@ public class ViewControlsFormatter implements ControlsFormatter
          Integer index1 = controlIdsOrder.indexOf(control1.getId());
          Integer index2 = controlIdsOrder.indexOf(control2.getId());
 
-         //If item is not found in order list, then put it at the end of the list
+         // If item is not found in order list, then put it at the end of the list
          if (index2 == -1)
             return -1;
          if (index1 == -1)

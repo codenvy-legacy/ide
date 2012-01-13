@@ -54,8 +54,8 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Oct 4, 2011 evgen $
- *
+ * @version $Id: Oct 4, 2011 evgen $
+ * 
  */
 public class StandartPerspective extends FlowPanel implements Perspective
 {
@@ -120,7 +120,7 @@ public class StandartPerspective extends FlowPanel implements Perspective
       modalWindowsPanel = new WindowsPanel(true);
       modalWindowsPanel.addClosingViewHandler(closingViewHandler);
 
-      //      new GWTDialogs(modalWindowsPanel);
+      // new GWTDialogs(modalWindowsPanel);
 
    }
 
@@ -212,6 +212,7 @@ public class StandartPerspective extends FlowPanel implements Perspective
    /**
     * Creates and adds a new panel to perspective's layout.<br>
     * <b>Note : add panel with {@link Direction#CENTER} LAST of the all panel!</b>
+    * 
     * @param panelId
     * @param direction
     * @param initialSize
@@ -240,7 +241,7 @@ public class StandartPerspective extends FlowPanel implements Perspective
       }
       else
       {
-         //center 
+         // center
          layoutPanel.add(panel);
       }
       panel.addMaximizePanelHandler(maximizePanelHandler);
@@ -409,14 +410,14 @@ public class StandartPerspective extends FlowPanel implements Perspective
          return;
       }
 
-      //TODO
-      //      if (layoutLayer.isMaximized())
-      //      {
-      //         layoutLayer.restore();
-      //      }
+      // TODO
+      // if (layoutLayer.isMaximized())
+      // {
+      // layoutLayer.restore();
+      // }
 
-      //      Widget viewWidget = view.asWidget();
-      //      viewWidget.removeFromParent();
+      // Widget viewWidget = view.asWidget();
+      // viewWidget.removeFromParent();
 
       viewTarget.removeView(view);
       views.remove(view.getId());

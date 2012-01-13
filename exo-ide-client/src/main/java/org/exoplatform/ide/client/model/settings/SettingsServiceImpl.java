@@ -44,7 +44,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: SettingsServiceImpl.java Mar 30, 2011 11:13:03 AM vereshchaka $
- *
+ * 
  */
 public class SettingsServiceImpl extends SettingsService
 {
@@ -86,9 +86,9 @@ public class SettingsServiceImpl extends SettingsService
 
    private String getURL()
    {
-      //      String url =
-      //         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/"
-      //            + IDEConfigurationLoader.APPLICATION_NAME;
+      // String url =
+      // registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/"
+      // + IDEConfigurationLoader.APPLICATION_NAME;
       return restContext + "/ide/configuration";
    }
 
@@ -116,7 +116,7 @@ public class SettingsServiceImpl extends SettingsService
 
    }
 
-   //------- Implementation --------------
+   // ------- Implementation --------------
 
    private void storeCookies(ApplicationSettings applicationSettings)
    {

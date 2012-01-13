@@ -48,10 +48,10 @@ import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFileChangedHandler,
    EditorFileClosedHandler, ViewClosedHandler, FindTextHandler

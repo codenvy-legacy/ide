@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 30, 2010 $
- *
+ * 
  */
 public interface EnableStandartErrorsHandlingHandler extends EventHandler
 {

@@ -61,12 +61,11 @@ import com.google.gwt.user.client.Timer;
 /**
  * Presenter for Outline Panel.
  * 
- * Handlers editor and outline panel activity 
- * and synchronize cursor position in editor with current token in outline.
+ * Handlers editor and outline panel activity and synchronize cursor position in editor with current token in outline.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
    EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler,
@@ -81,6 +80,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       /**
        * Get outline tree grid
+       * 
        * @return {@link TreeGridItem}
        */
       TreeGridItem<TokenBeenImpl> getOutlineTree();
@@ -295,6 +295,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    /**
     * Set cursor within the Editor Line into the line with lineNumber and then return focus to the Outline Tree Grid
+    * 
     * @param lineNumber
     */
    private void setEditorCursorPosition(int lineNumber)
@@ -366,7 +367,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       else
       {
          tokens = null;
-         //display.getOutlineTree().setValue(new TokenBeenImpl("An Outline is not available.", null));
+         // display.getOutlineTree().setValue(new TokenBeenImpl("An Outline is not available.", null));
          display.setOutlineAvailable(false);
       }
    }
@@ -410,10 +411,10 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    }
 
    /**
-    * Test if current line within the token's area (currentLineNumber >= token.lineNumber) and (currentLineNumber <= token.lastLineNumber)
-    * or current line is before nextToken
-    * or current line is after last token 
-    * @param currentLineNumber 
+    * Test if current line within the token's area (currentLineNumber >= token.lineNumber) and (currentLineNumber <=
+    * token.lastLineNumber) or current line is before nextToken or current line is after last token
+    * 
+    * @param currentLineNumber
     * @param token
     * @return
     */
@@ -440,6 +441,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    /**
     * Test should token be displayed in outline tree.
+    * 
     * @param token
     * @return true only if token should be displayed in outline tree
     */

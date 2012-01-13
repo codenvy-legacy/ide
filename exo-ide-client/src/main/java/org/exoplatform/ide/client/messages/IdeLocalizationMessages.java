@@ -21,12 +21,11 @@ package org.exoplatform.ide.client.messages;
 import com.google.gwt.i18n.client.Messages;
 
 /**
- * Interface to represent the messages contained in resource bundle:
- *      'IdeLocalizationMessages.properties'.
+ * Interface to represent the messages contained in resource bundle: 'IdeLocalizationMessages.properties'.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdeLocalizationMessages.java Jun 8, 2011 2:41:55 PM vereshchaka $
- *
+ * 
  */
 public interface IdeLocalizationMessages extends Messages
 {
@@ -59,8 +58,7 @@ public interface IdeLocalizationMessages extends Messages
    String hotkeysCantFindCodeCombination(String hotkeys);
 
    /*
-    * IDEConfigurationLoader
-    * IDEConfigurationUnmarshaller
+    * IDEConfigurationLoader IDEConfigurationUnmarshaller
     */
    @Key("configuration.invalidConfiguration")
    String configurationInvalidConfiguration(String message);
@@ -111,8 +109,7 @@ public interface IdeLocalizationMessages extends Messages
    String askDeleteTemplateUsedInOtherProjects(String templateName, String projectsNames);
 
    /*
-    * CreateProjectFromTemplatePresenter
-    * AbstractCreateFromTemplatePresenter
+    * CreateProjectFromTemplatePresenter AbstractCreateFromTemplatePresenter
     */
    @Key("createProjectFromTemplate.askDeleteOneTemplate")
    String createFromTemplateAskDeleteOneTemplate(String templateName);

@@ -54,8 +54,8 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
 
    private FileModel activeFile;
 
-   //TODO
-   //   private Map<String, String> lockTokens;
+   // TODO
+   // private Map<String, String> lockTokens;
 
    public SaveFileCommandHandler()
    {
@@ -104,26 +104,26 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
       }
       else
       {
-         //TODO 
-         //         if (file.isPropertiesChanged())
-         //         {
-         //            VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
-         //            {
-         //               @Override
-         //               protected void onSuccess(Item result)
-         //               {
-         //                  eventBus.fireEvent(new FileSavedEvent((FileModel)result, null));
-         //               }
-         //            });
-         //            return;
-         //         }
+         // TODO
+         // if (file.isPropertiesChanged())
+         // {
+         // VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
+         // {
+         // @Override
+         // protected void onSuccess(Item result)
+         // {
+         // eventBus.fireEvent(new FileSavedEvent((FileModel)result, null));
+         // }
+         // });
+         // return;
+         // }
       }
       IDE.fireEvent(new FileSavedEvent(file, null));
    }
 
    private void getProperties(final FileModel file)
    {
-      //TODO
+      // TODO
       try
       {
          VirtualFileSystem.getInstance().getItemById(file.getId(),
@@ -162,8 +162,8 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      //TODO
-      //      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+      // TODO
+      // lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }

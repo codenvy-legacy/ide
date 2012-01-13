@@ -70,8 +70,8 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      //TODO versions
-      if (event.getFile() == null || event.getEditor() == null /*|| (event.getFile() instanceof Version)*/)
+      // TODO versions
+      if (event.getFile() == null || event.getEditor() == null /* || (event.getFile() instanceof Version) */)
       {
          setVisible(false);
          setEnabled(false);

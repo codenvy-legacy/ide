@@ -277,7 +277,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {
-         //if response is null or empty - than complete upload
+         // if response is null or empty - than complete upload
          completeUpload();
          return;
       }
@@ -312,7 +312,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       }
       else
       {
-         //in this case show the error, received from server.
+         // in this case show the error, received from server.
          Dialogs.getInstance().showError(errData.text);
       }
    }
