@@ -24,9 +24,10 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  */
 public class CloudfoundryApplicationResources
 {
-   /** Memory available for application (in MB).*/
+   /** Memory available for application (in MB). */
    private int memory;
-   /** Disk space available for application (in MB).*/
+
+   /** Disk space available for application (in MB). */
    private int disk;
 
    public int getMemory()

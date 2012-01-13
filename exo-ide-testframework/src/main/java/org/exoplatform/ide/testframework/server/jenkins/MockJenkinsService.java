@@ -38,24 +38,24 @@ import javax.ws.rs.core.UriInfo;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MockJenkinsService.java Aug 18, 2011 5:41:57 PM vereshchaka $
- *
+ * 
  */
 @Path("ide/jenkins")
 public class MockJenkinsService
 {
    private static final int NUMBER_OF_BUILDS = 3;
-   
+
    private static int buildCounter;
-   
+
    private static String projectName;
-   
+
    static JobStatus jobStatus;
-   
+
    public MockJenkinsService()
    {
-      
+
    }
-   
+
    @Path("job/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
@@ -75,7 +75,7 @@ public class MockJenkinsService
       created.setStatusUrl(uriInfo.getBaseUri().toString() + "/ide/jenkins/job/status");
       return created;
    }
-   
+
    @Path("job/build")
    @POST
    public void build( //
@@ -151,13 +151,13 @@ public class MockJenkinsService
       InputStream inputStream = new ByteArrayInputStream("Finished: SUCCESS".getBytes("UTF-8"));
       return inputStream;
    }
-   
+
    private String getJobByWorkDir(FSLocation workDir)
    {
-      //TODO
+      // TODO
       return "job";
    }
-   
+
    private String getProjectName(String workDir)
    {
       String name = workDir;

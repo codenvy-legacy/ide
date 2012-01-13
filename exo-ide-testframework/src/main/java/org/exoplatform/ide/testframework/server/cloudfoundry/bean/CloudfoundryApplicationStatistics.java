@@ -26,29 +26,37 @@ public class CloudfoundryApplicationStatistics
 {
    /** Application name. */
    private String name;
+
    /** Application state. */
    private String state;
+
    /** IP address. */
    private String host;
+
    /** Port. */
    private int port = -1;
+
    /** Application URLs. */
    private String[] uris;
 
    /** Application uptime. If format X?d:XXh:XXm:XXs. */
    private String uptime;
+
    /** CPU cores. */
    private int cpuCores = -1;
 
    /** CPU usage in percents. */
    private double cpu = -1;
+
    /** Used memory (in MB). */
    private int mem = -1;
+
    /** Used disk (in MB). */
    private int disk = -1;
 
    /** Memory limit (in MB). */
    private int memLimit = -1;
+
    /** Disk limit (in MB). */
    private int diskLimit = -1;
 

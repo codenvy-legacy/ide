@@ -41,27 +41,25 @@ import javax.ws.rs.core.UriInfo;
  * Mockup of Heroku service.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 6, 2011 11:45:43 AM anya $
- *
+ * @version $Id: Jul 6, 2011 11:45:43 AM anya $
+ * 
  */
 @Path("ide/heroku")
 public class MockHerokuService
 {
    /**
-    * Heroku users.
-    * <b>key</b> - user's login; <br>
+    * Heroku users. <b>key</b> - user's login; <br>
     * <b>value</b> - user's password.
     */
    private static HashMap<String, String> users = new HashMap<String, String>();
 
    /**
     * Current logged in user.
-   */
+    */
    private static String currentUser;
 
    /**
-    * User's applications.
-    * <b>key</b> - user's login; <br>
+    * User's applications. <b>key</b> - user's login; <br>
     * <b>value</b> - user's applications.
     */
    private static HashMap<String, List<HerokuApplication>> applications =
@@ -212,7 +210,7 @@ public class MockHerokuService
    /**
     * Find Heroku application by its Git working directory location through all users' applications.
     * 
-    * @param gitUrl  
+    * @param gitUrl
     * @return {@link HerokuApplication} found application or null
     */
    public HerokuApplication getApplicationByGitUrl(String gitUrl)
@@ -316,7 +314,7 @@ public class MockHerokuService
          throw new HerokuException(200, "Authentication required.\n", "text/plain");
       }
 
-      //Try to find application:
+      // Try to find application:
       HerokuApplication application = null;
       if (name != null)
       {
@@ -333,7 +331,7 @@ public class MockHerokuService
          createErrorResponse("App not found", 404);
       }
 
-      //Check application with new name doesn't exist:
+      // Check application with new name doesn't exist:
       if (newname != null && getApplicationByName(newname) != null)
       {
          createErrorResponse("Name is already taken", 422);

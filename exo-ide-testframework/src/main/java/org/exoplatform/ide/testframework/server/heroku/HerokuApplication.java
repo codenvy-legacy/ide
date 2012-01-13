@@ -24,8 +24,8 @@ import java.util.HashMap;
  * Bean for Heroku application's data.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 6, 2011 4:58:08 PM anya $
- *
+ * @version $Id: Jul 6, 2011 4:58:08 PM anya $
+ * 
  */
 public class HerokuApplication
 {

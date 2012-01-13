@@ -25,8 +25,11 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
 public class ProvisionedService
 {
    private String name;
+
    private String type;
+
    private String vendor;
+
    private String version;
 
    public String getName()

@@ -21,7 +21,6 @@ package org.exoplatform.ide.testframework.server;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -30,9 +29,8 @@ import java.lang.annotation.RetentionPolicy;
  */
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CanHandleRequest
-{
-   
+public @interface CanHandleRequest {
+
    String value();
 
 }

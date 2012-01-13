@@ -57,12 +57,12 @@ import org.exoplatform.ide.testframework.server.cloudfoundry.bean.SystemResource
 @Path("ide/cloudfoundry")
 public class MockCloudfoundryService
 {
-   
+
    private static List<Framework> frameworkList;
-   
+
    private static List<Map<String, String>> logins;
-   
-   static 
+
+   static
    {
       frameworkList = new ArrayList<Framework>();
       frameworkList.add(new Framework("node", "Node", 64, "Node.js Application"));
@@ -70,8 +70,8 @@ public class MockCloudfoundryService
       frameworkList.add(new Framework("grails", "Grails", 512, "Java SpringSource Grails Application"));
       frameworkList.add(new Framework("spring", "Spring", 512, "Java SpringSource Spring Application"));
       frameworkList.add(new Framework("sinatra", "Sinatra", 128, "Sinatra Application"));
-      
-      logins = new ArrayList<Map<String,String>>();
+
+      logins = new ArrayList<Map<String, String>>();
    }
 
    @Path("login")
@@ -81,7 +81,8 @@ public class MockCloudfoundryService
       ParsingResponseException
    {
       Iterator<String> ki = credentials.keySet().iterator();
-      while (ki.hasNext()) {
+      while (ki.hasNext())
+      {
          String k = ki.next();
          String v = credentials.get(k);
       }
@@ -95,10 +96,11 @@ public class MockCloudfoundryService
    {
       logins.clear();
    }
-   
+
    @Path("logoutAll")
    @GET
-   public void logoutAll() {
+   public void logoutAll()
+   {
       logins.clear();
    }
 
@@ -108,29 +110,30 @@ public class MockCloudfoundryService
    public SystemInfo systemInfo(@QueryParam("server") String server) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
-      if (logins.size() == 0) {
+      if (logins.size() == 0)
+      {
          throw new CloudfoundryException(200, "Authentication required.\n", "text/plain");
       }
-      
+
       SystemInfo info = new SystemInfo();
-      
+
       SystemResources systemResources = new SystemResources();
       systemResources.setServices(16);
       systemResources.setApps(20);
       systemResources.setMemory(2048);
       info.setLimits(systemResources);
-      
+
       info.setSupport("http://support.cloudfoundry.com");
       info.setDescription("VMware's Cloud Application Platform");
       info.setName("vcap");
-      
+
       info.setUsage(new SystemResources());
-      
+
       Map<String, String> loginInfo = logins.get(0);
       String email = loginInfo.get("email");
       info.setUser(email);
       info.setVersion("0.999");
-      
+
       return info;
    }
 
@@ -152,36 +155,36 @@ public class MockCloudfoundryService
       @Context UriInfo uriInfo //
    ) throws CloudfoundryException, IOException, ParsingResponseException
    {
-      CloudfoundryApplication application  = new CloudfoundryApplication();
-      
+      CloudfoundryApplication application = new CloudfoundryApplication();
+
       CloudfoundryApplicationResources resources = new CloudfoundryApplicationResources();
       resources.setDisk(2048);
       resources.setMemory(512);
       application.setResources(resources);
-      
+
       application.setServices(new ArrayList<String>());
-      
+
       Staging staging = new Staging();
       staging.setModel("spring");
       staging.setStack("java");
       application.setStaging(staging);
-      
+
       List<String> uris = new ArrayList<String>();
       uris.add("test-spring-project.cloudfoundry.com");
       application.setUris(uris);
-      
+
       application.setRunningInstances(0);
-      
+
       application.setName("test-spring-project");
-      
+
       application.setState("STOPPED");
-      
+
       application.setEnv(new ArrayList<String>());
-      
+
       application.setInstances(1);
-      
+
       application.setVersion("b94b554e2a8a1eae83e220b6beb2dd344a381013-0");
-      
+
       return application;
    }
 
@@ -202,14 +205,14 @@ public class MockCloudfoundryService
    ) throws CloudfoundryException, IOException, ParsingResponseException
    {
       CloudfoundryApplication app1 = new CloudfoundryApplication();
-      
+
       CloudfoundryApplicationResources resources1 = new CloudfoundryApplicationResources();
       resources1.setDisk(512);
       resources1.setMemory(memory);
       app1.setResources(resources1);
-      
+
       app1.setServices(new ArrayList<String>());
-      
+
       Staging staging1 = new Staging();
       staging1.setModel(framework);
       staging1.setStack("java");
@@ -225,7 +228,7 @@ public class MockCloudfoundryService
       app1.setEnv(new ArrayList<String>());
       app1.setInstances(instances);
       app1.setVersion("56966c195707a17a6ff96a0458e9f9798318cc0b-0");
-      
+
       return app1;
    }
 
@@ -387,65 +390,63 @@ public class MockCloudfoundryService
       resources1.setDisk(2048);
       resources1.setMemory(1024);
       app1.setResources(resources1);
-      
+
       app1.setServices(new ArrayList<String>());
-      
+
       Staging staging1 = new Staging();
       staging1.setModel("spring");
       staging1.setStack("java");
       app1.setStaging(staging1);
-      
+
       List<String> uris1 = new ArrayList<String>();
       uris1.add("test-app1.cloudfoundry.com");
       app1.setUris(uris1);
-      
+
       app1.setRunningInstances(0);
-      
+
       app1.setName("test-app1");
-      
+
       app1.setState("STOPPED");
-      
+
       app1.setEnv(new ArrayList<String>());
-      
+
       app1.setInstances(1);
-      
+
       app1.setVersion("56966c195707a17a6ff96a0458e9f9798318cc0b-0");
-      
-      
+
       CloudfoundryApplication app2 = new CloudfoundryApplication();
       CloudfoundryApplicationResources resources2 = new CloudfoundryApplicationResources();
       resources2.setDisk(4096);
       resources2.setMemory(128);
       app2.setResources(resources2);
-      
+
       app2.setServices(new ArrayList<String>());
-      
+
       Staging staging2 = new Staging();
       staging2.setModel("spring");
       staging2.setStack("java");
       app2.setStaging(staging2);
-      
+
       List<String> uris2 = new ArrayList<String>();
       uris2.add("test-app2.cloudfoundry.com");
       app2.setUris(uris2);
-      
+
       app2.setRunningInstances(0);
-      
+
       app2.setName("test-app2");
-      
+
       app2.setState("STOPPED");
-      
+
       app2.setEnv(new ArrayList<String>());
-      
+
       app2.setInstances(1);
-      
+
       app2.setVersion("b94b554e2a8a1eae83e220b6beb2dd344a381013-0");
-      
-      
+
       List<CloudfoundryApplication> apps = new ArrayList<CloudfoundryApplication>();
       apps.add(app1);
       apps.add(app2);
-      return  apps.toArray(new CloudfoundryApplication[2]);
+      return apps.toArray(new CloudfoundryApplication[2]);
    }
 
    @Path("services")
@@ -517,10 +518,11 @@ public class MockCloudfoundryService
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      if (logins.size() == 0) {
-         throw new CloudfoundryException(200, "Authentication required.\n", "text/plain");         
+      if (logins.size() == 0)
+      {
+         throw new CloudfoundryException(200, "Authentication required.\n", "text/plain");
       }
-      
+
       return Response.noContent().build();
    }
 
@@ -545,15 +547,17 @@ public class MockCloudfoundryService
    {
       List<String> targets = new ArrayList<String>();
       targets.add("http://api.cloudfoundry.com");
-      
-      if (logins.size() > 0) {
+
+      if (logins.size() > 0)
+      {
          Map<String, String> loginInfo = logins.get(0);
          String server = loginInfo.get("server");
-         if (!targets.contains(server)) {
-            targets.add(server);            
+         if (!targets.contains(server))
+         {
+            targets.add(server);
          }
       }
-      
+
       return targets;
    }
 

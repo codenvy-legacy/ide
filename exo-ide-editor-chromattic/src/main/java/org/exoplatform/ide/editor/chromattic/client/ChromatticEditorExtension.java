@@ -48,7 +48,7 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssista
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
- *
+ * 
  */
 public class ChromatticEditorExtension extends Extension implements InitializeServicesHandler,
    JavaCodeAssistantErrorHandler, ProjectOpenedHandler
@@ -115,7 +115,8 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
             .append(exception.getStatusText()).append("</i>)");
          if (!exception.getMessage().equals(""))
          {
-            outputContent.append("<br />").append(exception.getMessage().replace("\n", "<br />")); // replace "end of line" symbols on "<br />"
+            outputContent.append("<br />").append(exception.getMessage().replace("\n", "<br />")); // replace "end of line"
+                                                                                                   // symbols on "<br />"
          }
 
          IDE.fireEvent(new OutputEvent(outputContent.toString(), OutputMessage.Type.ERROR));

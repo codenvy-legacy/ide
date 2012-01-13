@@ -25,9 +25,12 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
 public class Framework
 {
    private String displayName;
+
    private String type;
+
    /** Default memory size in megabytes. */
    private int memory;
+
    private String description;
 
    public Framework(String type, String displayName, int memory, String description)

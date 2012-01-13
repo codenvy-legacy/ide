@@ -35,29 +35,30 @@ import org.exoplatform.ide.testframework.server.openshift.MockExpressService;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 6, 2011 11:45:58 AM anya $
- *
+ * @version $Id: Jul 6, 2011 11:45:58 AM anya $
+ * 
  */
 public class MockApplication extends Application
 {
    private Set<Class<?>> classes;
+
    private Set<Object> singletons;
 
    public MockApplication()
    {
       classes = new HashSet<Class<?>>(1);
       classes.add(MockHerokuService.class);
-//    classes.add(MockExpressService.class);
-//    classes.add(MockGitRepoService.class);
+      // classes.add(MockExpressService.class);
+      // classes.add(MockGitRepoService.class);
       classes.add(MockCloudbeesService.class);
       classes.add(MockJenkinsService.class);
-      
+
       classes.add(MockCloudfoundryService.class);
-      
+
       singletons = new HashSet<Object>(1);
       singletons.add(new HerokuExceptionMapper());
       singletons.add(new CloudbeesExceptionMapper());
-      
+
       singletons.add(new CloudfoundryExceptionMapper());
    }
 

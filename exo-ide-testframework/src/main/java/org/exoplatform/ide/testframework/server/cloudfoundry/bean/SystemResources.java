@@ -25,8 +25,10 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
 public class SystemResources
 {
    private int services;
+
    /** Number of application deployed under account. */
    private int apps;
+
    /** Memory available for all applications under account (in MB). */
    private int memory;
 

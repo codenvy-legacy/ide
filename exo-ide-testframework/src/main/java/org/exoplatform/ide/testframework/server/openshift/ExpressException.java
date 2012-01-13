@@ -32,8 +32,7 @@ public class ExpressException extends Exception
    private final String contentType;
 
    /**
-    * Exit code of command execution at openshift express server. May be -1 if cannot get exit code from openshift
-    * response.
+    * Exit code of command execution at openshift express server. May be -1 if cannot get exit code from openshift response.
     */
    private final int exitCode;
 

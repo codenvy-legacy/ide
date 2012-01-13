@@ -25,6 +25,7 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
 public class CloudfoundryServices
 {
    private SystemService[] system;
+
    private ProvisionedService[] provisioned;
 
    public CloudfoundryServices(SystemService[] system, ProvisionedService[] provisioned)

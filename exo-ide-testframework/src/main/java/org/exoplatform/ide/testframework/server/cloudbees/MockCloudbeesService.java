@@ -43,55 +43,51 @@ import javax.ws.rs.core.UriInfo;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MockCloudbeesService.java Aug 16, 2011 12:07:10 PM vereshchaka $
- *
+ * 
  */
 @Path("ide/cloudbees")
 public class MockCloudbeesService
 {
-   
+
    public static final List<String> domains = new ArrayList<String>();
-   
+
    /**
-    * Cloudbees users.
-    * <b>key</b> - user's login; <br>
+    * Cloudbees users. <b>key</b> - user's login; <br>
     * <b>value</b> - user's password.
     */
    private static final HashMap<String, String> users = new HashMap<String, String>();
 
    /**
     * Current logged in user.
-   */
+    */
    private static String currentUser;
-   
+
    /**
-    * User's applications.
-    * <b>key</b> - user's login; <br>
+    * User's applications. <b>key</b> - user's login; <br>
     * <b>value</b> - user's applications.
     */
    private static HashMap<String, List<CloudbeesApplication>> applications =
       new HashMap<String, List<CloudbeesApplication>>();
-   
+
    /**
-    * Registered applications.
-    * <li><b>key</b> - application id; <br></li>
-    * <li><b>value</b> - CloudBees application.</li>
+    * Registered applications. <li><b>key</b> - application id; <br>
+    * </li> <li><b>value</b> - CloudBees application.</li>
     */
    private static final HashMap<String, CloudbeesApplication> apps = new HashMap<String, CloudbeesApplication>();
-   
+
    /**
-    * Applications, that created in work directories
-    * <li><b>key</b> - url of workdir; <br></li>
-    * <li><b>value</b> - CloudBees application id.</li>
+    * Applications, that created in work directories <li><b>key</b> - url of workdir; <br>
+    * </li> <li><b>value</b> - CloudBees application id.</li>
     */
    private static final HashMap<String, String> workDirs = new HashMap<String, String>();
-   
+
    public MockCloudbeesService()
    {
       users.put("exoua.ide@gmail.com", "1234qwer");
-      
+
       domains.add("exoplatform");
    }
-   
+
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
@@ -109,7 +105,7 @@ public class MockCloudbeesService
          currentUser = email;
       }
    }
-   
+
    @Path("logout")
    @POST
    public void logout()
@@ -117,7 +113,7 @@ public class MockCloudbeesService
       currentUser = null;
       applications.clear();
    }
-   
+
    @Path("domains")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
@@ -128,7 +124,7 @@ public class MockCloudbeesService
             "AuthFailure - Server returned HTTP response code: 400 for URL: https://grandcentral.cloudbees.com/api/user/keys");
       return domains;
    }
-   
+
    @Path("apps/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
@@ -145,13 +141,13 @@ public class MockCloudbeesService
          throw new CloudBeesException(
             "AuthFailure - Server returned HTTP response code: 400 for URL: https://grandcentral.cloudbees.com/api/user/keys");
       }
-      
+
       if (war == null)
       {
          Response response = Response.status(500).entity("Location to WAR file required. ").type("text/plain").build();
          throw new WebApplicationException(response);
       }
-      
+
       Map<String, String> properties = new HashMap<String, String>();
       properties.put("id", appId);
       properties.put("title", appId);
@@ -163,14 +159,15 @@ public class MockCloudbeesService
       properties.put("clusterSize", "1");
       String[] parts = appId.split("/");
       properties.put("url", "http://" + parts[1] + "." + parts[0] + ".cloudbees.net");
-      
-      CloudbeesApplication cbApp = new CloudbeesApplication(appId, message, workDir.getURL(), war.getFile(), properties);
+
+      CloudbeesApplication cbApp =
+         new CloudbeesApplication(appId, message, workDir.getURL(), war.getFile(), properties);
       workDirs.put(workDir.getURL(), appId);
       apps.put(appId, cbApp);
-      
+
       return properties;
    }
-   
+
    @Path("apps/info")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
@@ -185,7 +182,7 @@ public class MockCloudbeesService
          throw new CloudBeesException(
             "AuthFailure - Server returned HTTP response code: 400 for URL: https://grandcentral.cloudbees.com/api/user/keys");
       }
-      
+
       if (appId == null || appId.isEmpty())
       {
          appId = workDirs.get(workDir.getURL());
@@ -194,16 +191,16 @@ public class MockCloudbeesService
             throw new CloudBeesException("Not cloudbees application. ");
          }
       }
-      
+
       CloudbeesApplication application = apps.get(appId);
       if (application == null)
       {
          throw new CloudBeesException("Not cloudbees application. ");
       }
-      
+
       return application.getProperties();
    }
-   
+
    @Path("apps/delete")
    @POST
    public void deleteApplication( //
@@ -220,13 +217,13 @@ public class MockCloudbeesService
             throw new CloudBeesException("Not cloudbees application. ");
          }
       }
-      
+
       List<CloudbeesApplication> apps = applications.get(currentUser);
       if (apps == null)
       {
          throw new CloudBeesException("Not cloudbees application. ");
       }
-      
+
       for (CloudbeesApplication app : apps)
       {
          if (appId.equals(app.getId()))
@@ -235,19 +232,19 @@ public class MockCloudbeesService
             return;
          }
       }
-      
+
       throw new CloudBeesException("Not cloudbees application. ");
    }
-   
+
    private String detectApplicationId(FSLocation workDir)
    {
       if (workDir == null)
          return null;
-      
+
       List<CloudbeesApplication> apps = applications.get(currentUser);
       if (apps == null)
          return null;
-      
+
       for (CloudbeesApplication app : apps)
       {
          if (app.getWorkDir().equals(workDir.getURL()))
@@ -257,7 +254,7 @@ public class MockCloudbeesService
       }
       return null;
    }
-   
+
    /**
     * Create response to send with error message.
     * 

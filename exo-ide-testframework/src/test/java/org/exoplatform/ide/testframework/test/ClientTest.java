@@ -29,15 +29,15 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 public abstract class ClientTest extends GWTTestCase
 {
-   
+
    protected static final int SLEEP_TIME = 10000;
-   
+
    @Override
    public String getModuleName()
    {
       return "org.exoplatform.ideall.testframework.IDEallTestFramework";
    }
-   
+
    protected void sleepTest()
    {
       delayTestFinish(SLEEP_TIME);

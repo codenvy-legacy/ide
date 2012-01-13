@@ -25,6 +25,7 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
 public class Staging
 {
    private String model;
+
    private String stack;
 
    public String getModel()

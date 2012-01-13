@@ -32,5 +32,5 @@ public interface MockRequestHandler
 {
 
    void handleRequest(String path, HttpServletRequest request, HttpServletResponse response);
-   
+
 }

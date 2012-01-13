@@ -49,10 +49,10 @@ public class FSLocation
    {
       return getLocalPath();
    }
-   
+
    public String getLocalPath()
    {
-      
+
       String localPath = getRootPath();
       if (localPath == null)
          throw new IllegalStateException("Root path may not be null. ");
@@ -61,7 +61,6 @@ public class FSLocation
       localPath += "repository/dev-monit" + url;
       return localPath;
    }
-
 
    protected String getRootPath()
    {

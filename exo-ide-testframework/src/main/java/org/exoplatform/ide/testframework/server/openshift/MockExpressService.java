@@ -66,9 +66,7 @@ public class MockExpressService
    private static Map<String, AppInfo> applicationsByName = new HashMap<String, AppInfo>();
 
    /**
-    * Working directories
-    *    key - application's name
-    *    value - working directory
+    * Working directories key - application's name value - working directory
     */
    private static Map<String, String> workingDirectories = new HashMap<String, String>();
 
@@ -178,7 +176,7 @@ public class MockExpressService
    {
       Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
          "php-5.3", //
-         //"wsgi-3.2.1", //
+         // "wsgi-3.2.1", //
          "rack-1.1") //
          );
       return APP_TYPES;
@@ -234,10 +232,11 @@ public class MockExpressService
          String v = credentials.get(k);
       }
    }
-   
+
    @POST
    @Path("reset")
-   public void resetMockExpressService() {
+   public void resetMockExpressService()
+   {
       ns = "";
       applicationsByWorkDir = new HashMap<String, AppInfo>();
       applicationsByName = new HashMap<String, AppInfo>();

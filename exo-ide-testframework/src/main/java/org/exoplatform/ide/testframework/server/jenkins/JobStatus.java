@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.testframework.server.jenkins;
 
-
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JobStatus.java Aug 23, 2011 12:19:17 PM vereshchaka $
- *
+ * 
  */
 public class JobStatus
 {

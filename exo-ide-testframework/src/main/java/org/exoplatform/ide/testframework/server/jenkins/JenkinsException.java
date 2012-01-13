@@ -21,7 +21,7 @@ package org.exoplatform.ide.testframework.server.jenkins;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JenkinsException.java Aug 23, 2011 12:18:32 PM vereshchaka $
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class JenkinsException extends Exception

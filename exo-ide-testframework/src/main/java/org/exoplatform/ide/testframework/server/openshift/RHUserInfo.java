@@ -30,9 +30,13 @@ import java.util.List;
 public class RHUserInfo
 {
    private String rhcDomain;
+
    private String uuid;
+
    private String rhlogin;
+
    private String namespace;
+
    private List<AppInfo> apps;
 
    public RHUserInfo(String rhcDomain, String uuid, String rhlogin, String namespace)

@@ -22,26 +22,27 @@ import com.google.gwt.http.client.Header;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class MockHeader extends Header
 {
-   
+
    private String name;
-   
+
    private String value;
-   
+
    public void setName(String name)
    {
       this.name = name;
    }
-   
+
    public void setValue(String value)
    {
       this.value = value;
    }
-   
+
    public MockHeader()
    {
    }
@@ -63,5 +64,5 @@ public class MockHeader extends Header
    {
       return value;
    }
-  
+
 }

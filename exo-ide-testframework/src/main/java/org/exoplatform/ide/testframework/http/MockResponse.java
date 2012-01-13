@@ -23,19 +23,20 @@ import com.google.gwt.http.client.Response;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class MockResponse extends Response
 {
-   
-   /**
-    * Response text.  
-    */
-   private String text =  new String();
 
    /**
-    * Status text. 
+    * Response text.
+    */
+   private String text = new String();
+
+   /**
+    * Status text.
     */
    private String statusText = new String();
 
@@ -49,14 +50,12 @@ public class MockResponse extends Response
     */
    private Header[] headers;
 
-
    /**
     * 
     */
    public MockResponse()
    {
    }
-   
 
    /**
     * @param text
@@ -71,18 +70,17 @@ public class MockResponse extends Response
       this.statusCode = statusCode;
       this.headers = headers;
    }
-   
-   
+
    /**
     * @param text
     * @param statusCode
     */
-   public MockResponse(String text,int statusCode)
+   public MockResponse(String text, int statusCode)
    {
       this.text = text;
       this.statusCode = statusCode;
    }
-   
+
    /**
     * @param text
     */
@@ -90,7 +88,6 @@ public class MockResponse extends Response
    {
       this.text = text;
    }
-
 
    /**
     * @param text the text to set
@@ -171,5 +168,5 @@ public class MockResponse extends Response
    {
       return text;
    }
-   
+
 }

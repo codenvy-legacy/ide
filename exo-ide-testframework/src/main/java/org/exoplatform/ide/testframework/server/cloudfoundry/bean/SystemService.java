@@ -25,8 +25,11 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
 public class SystemService
 {
    private String vendor;
+
    private String type;
+
    private String version;
+
    private String description;
 
    public String getVendor()

@@ -25,15 +25,21 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
 public class SystemInfo
 {
    private SystemResources limits;
+
    private SystemResources usage;
+
    /** Cloud platform description. */
    private String description;
+
    /** User email. */
    private String user;
+
    /** Cloud platform version. */
    private String version;
+
    /** Cloud platform name. */
    private String name;
+
    /** Support email address. */
    private String support;
 

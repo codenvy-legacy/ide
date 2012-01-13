@@ -21,12 +21,14 @@ package org.exoplatform.ide.testframework.server.jenkins;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Job.java Aug 23, 2011 12:18:16 PM vereshchaka $
- *
+ * 
  */
 public class Job
 {
    private String name;
+
    private String buildUrl;
+
    private String statusUrl;
 
    public Job(String name, String buildUrl, String statusUrl)

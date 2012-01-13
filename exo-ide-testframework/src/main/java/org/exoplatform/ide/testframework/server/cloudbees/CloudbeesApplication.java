@@ -25,25 +25,25 @@ import java.util.Map;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudbeesApplication.java Aug 16, 2011 12:25:06 PM vereshchaka $
- *
+ * 
  */
 public class CloudbeesApplication
 {
-   
+
    private String id;
-   
+
    private String message;
-   
+
    private String workDir;
-   
+
    private String war;
-   
+
    private Map<String, String> properties;
-   
+
    public CloudbeesApplication()
    {
    }
-   
+
    /**
     * @param id
     * @param message

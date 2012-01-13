@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.testframework.test;
 
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -28,8 +27,8 @@ package org.exoplatform.ide.testframework.test;
 
 public class GwtTestSimpleFramework extends ClientTest
 {
-   
-   public void testFakeService() 
+
+   public void testFakeService()
    {
    }
 

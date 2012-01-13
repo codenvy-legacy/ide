@@ -25,9 +25,13 @@ package org.exoplatform.ide.testframework.server.openshift;
 public class AppInfo
 {
    private String name;
+
    private String type;
+
    private String gitUrl;
+
    private String publicUrl;
+
    private long creationTime;
 
    public AppInfo(String name, String type, String gitUrl, String publicUrl, long creationTime)

@@ -26,7 +26,7 @@ import javax.ws.rs.ext.Provider;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudbeesExceptionMapper.java Aug 16, 2011 5:06:10 PM vereshchaka $
- *
+ * 
  */
 @Provider
 public class CloudbeesExceptionMapper implements ExceptionMapper<CloudBeesException>
@@ -38,7 +38,6 @@ public class CloudbeesExceptionMapper implements ExceptionMapper<CloudBeesExcept
    public Response toResponse(CloudBeesException bce)
    {
       return Response.status(500).header("JAXRS-Body-Provided", "Error-Message").entity(bce.getMessage())
-      .type(MediaType.TEXT_PLAIN).build();
+         .type(MediaType.TEXT_PLAIN).build();
    }
 }
-
