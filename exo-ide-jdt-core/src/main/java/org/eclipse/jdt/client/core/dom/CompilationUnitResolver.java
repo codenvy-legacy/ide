@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
+import org.eclipse.jdt.client.DummyNameEnvirement;
 import org.eclipse.jdt.client.core.INameEnvironmentWithProgress;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
@@ -696,6 +697,7 @@ class CompilationUnitResolver extends Compiler
       org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit sourceUnit, List classpaths,
       NodeSearcher nodeSearcher, Map options, int flags, IProgressMonitor monitor)
    {
+      System.out.println("CompilationUnitResolver.resolve()");
       CompilationUnitDeclaration unit = null;
       INameEnvironmentWithProgress environment = null;
       CancelableProblemFactory problemFactory = null;
@@ -719,7 +721,7 @@ class CompilationUnitResolver extends Compiler
          boolean ignoreMethodBodies = (flags & IGNORE_METHOD_BODIES) != 0;
          compilerOptions.ignoreMethodBodies = ignoreMethodBodies;
          resolver =
-            new CompilationUnitResolver(environment, getHandlingPolicy(), compilerOptions, getRequestor(),
+            new CompilationUnitResolver(new DummyNameEnvirement(), getHandlingPolicy(), compilerOptions, getRequestor(),
                problemFactory, monitor, false);
          boolean analyzeAndGenerateCode = !ignoreMethodBodies;
          unit = resolver.resolve(null, // no existing compilation unit declaration

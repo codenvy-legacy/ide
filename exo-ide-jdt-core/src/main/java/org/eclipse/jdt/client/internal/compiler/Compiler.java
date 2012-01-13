@@ -16,6 +16,7 @@ import org.eclipse.jdt.client.core.compiler.CompilationProgress;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
 import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
@@ -291,7 +292,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       this.totalUnits = 0;
       this.unitsToProcess = new CompilationUnitDeclaration[maxUnits];
 
-      //      internalBeginToCompile(sourceUnits, maxUnits);
+      internalBeginToCompile(sourceUnits, maxUnits);
    }
 
    /**
@@ -623,60 +624,57 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       this.parser = new Parser(this.problemReporter, this.options.parseLiteralExpressionsAsConstants);
    }
 
-   //   /**
-   //    * Add the initial set of compilation units into the loop
-   //    *  ->  build compilation unit declarations, their bindings and record their results.
-   //    */
-   //   protected void internalBeginToCompile(ICompilationUnit[] sourceUnits, int maxUnits)
-   //   {
-   //      if (!this.useSingleThread && maxUnits >= ReadManager.THRESHOLD)
-   //         this.parser.readManager = new ReadManager(sourceUnits, maxUnits);
-   //
-   //      // Switch the current policy and compilation result for this unit to the requested one.
-   //      for (int i = 0; i < maxUnits; i++)
-   //      {
-   //         try
-   //         {
-   //            // diet parsing for large collection of units
-   //            CompilationUnitDeclaration parsedUnit;
-   //            CompilationResult unitResult =
-   //               new CompilationResult(sourceUnits[i], i, maxUnits, this.options.maxProblemsPerUnit);
-   //            long parseStart = System.currentTimeMillis();
-   //            if (this.totalUnits < this.parseThreshold)
-   //            {
-   //               parsedUnit = this.parser.parse(sourceUnits[i], unitResult);
-   //            }
-   //            else
-   //            {
-   //               parsedUnit = this.parser.dietParse(sourceUnits[i], unitResult);
-   //            }
-   //            long resolveStart = System.currentTimeMillis();
-   //            this.stats.parseTime += resolveStart - parseStart;
-   //            // initial type binding creation
-   //            this.lookupEnvironment.buildTypeBindings(parsedUnit, null /*no access restriction*/);
-   //            this.stats.resolveTime += System.currentTimeMillis() - resolveStart;
-   //            addCompilationUnit(sourceUnits[i], parsedUnit);
-   //            ImportReference currentPackage = parsedUnit.currentPackage;
-   //            if (currentPackage != null)
-   //            {
-   //               unitResult.recordPackageName(currentPackage.tokens);
-   //            }
-   //            //} catch (AbortCompilationUnit e) {
-   //            //	requestor.acceptResult(unitResult.tagAsAccepted());
-   //         }
-   //         finally
-   //         {
-   //            sourceUnits[i] = null; // no longer hold onto the unit
-   //         }
-   //      }
-   //      if (this.parser.readManager != null)
-   //      {
-   ////         this.parser.readManager.shutdown();
-   //         this.parser.readManager = null;
-   //      }
-   //      // binding resolution
-   //      this.lookupEnvironment.completeTypeBindings();
-   //   }
+      /**
+       * Add the initial set of compilation units into the loop
+       *  ->  build compilation unit declarations, their bindings and record their results.
+       */
+      protected void internalBeginToCompile(ICompilationUnit[] sourceUnits, int maxUnits)
+      {
+         // Switch the current policy and compilation result for this unit to the requested one.
+         for (int i = 0; i < maxUnits; i++)
+         {
+            try
+            {
+               // diet parsing for large collection of units
+               CompilationUnitDeclaration parsedUnit;
+               CompilationResult unitResult =
+                  new CompilationResult(sourceUnits[i], i, maxUnits, this.options.maxProblemsPerUnit);
+               long parseStart = System.currentTimeMillis();
+               if (this.totalUnits < this.parseThreshold)
+               {
+                  parsedUnit = this.parser.parse(sourceUnits[i], unitResult);
+               }
+               else
+               {
+                  parsedUnit = this.parser.dietParse(sourceUnits[i], unitResult);
+               }
+               long resolveStart = System.currentTimeMillis();
+               this.stats.parseTime += resolveStart - parseStart;
+               // initial type binding creation
+               this.lookupEnvironment.buildTypeBindings(parsedUnit, null /*no access restriction*/);
+               this.stats.resolveTime += System.currentTimeMillis() - resolveStart;
+               addCompilationUnit(sourceUnits[i], parsedUnit);
+               ImportReference currentPackage = parsedUnit.currentPackage;
+               if (currentPackage != null)
+               {
+                  unitResult.recordPackageName(currentPackage.tokens);
+               }
+               //} catch (AbortCompilationUnit e) {
+               //	requestor.acceptResult(unitResult.tagAsAccepted());
+            }
+            finally
+            {
+               sourceUnits[i] = null; // no longer hold onto the unit
+            }
+         }
+         if (this.parser.readManager != null)
+         {
+   //         this.parser.readManager.shutdown();
+            this.parser.readManager = null;
+         }
+         // binding resolution
+         this.lookupEnvironment.completeTypeBindings();
+      }
 
    /**
     * Process a compilation unit already parsed and build.
