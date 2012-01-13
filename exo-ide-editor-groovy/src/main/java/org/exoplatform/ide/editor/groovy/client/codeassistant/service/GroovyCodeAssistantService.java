@@ -24,12 +24,13 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssista
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyCodeAssistant Apr 6, 2011 2:53:10 PM evgen $
- *
+ * 
  */
 public class GroovyCodeAssistantService extends CodeAssistantService
 {
-   
+
    private static GroovyCodeAssistantService instance;
+
    /**
     * @param eventBus
     * @param restServiceContext
@@ -37,10 +38,9 @@ public class GroovyCodeAssistantService extends CodeAssistantService
     */
    public GroovyCodeAssistantService(String restServiceContext, Loader loader)
    {
-      super(restServiceContext, loader,
-         "/ide/code-assistant/groovy/class-description?fqn=", //GET_CLASS_URL
-         "/ide/code-assistant/groovy/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
-         "/ide/code-assistant/groovy/find-by-type/" //FIND_TYPE
+      super(restServiceContext, loader, "/ide/code-assistant/groovy/class-description?fqn=", // GET_CLASS_URL
+         "/ide/code-assistant/groovy/find-by-prefix/", // FIND_CLASS_BY_PREFIX
+         "/ide/code-assistant/groovy/find-by-type/" // FIND_TYPE
       );
       instance = this;
    }

@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssista
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyCodeAssist Apr 6, 2011 1:56:58 PM evgen $
- *
+ * 
  */
 public class GroovyCodeAssistant extends JavaCodeAssistant
 {
@@ -45,7 +45,7 @@ public class GroovyCodeAssistant extends JavaCodeAssistant
    {
       super(service, factory, errorHandler);
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#parseKeyWords(com.google.gwt.resources.client.TextResource)
     */

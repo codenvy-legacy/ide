@@ -24,14 +24,13 @@ import org.exoplatform.ide.editor.java.client.codemirror.JavaOutlineItemCreator;
 
 import com.google.gwt.resources.client.ImageResource;
 
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class GroovyOutlineItemCreator extends JavaOutlineItemCreator
-{  
+{
 
    @Override
    public ImageResource getTokenIcon(TokenBeenImpl token)
@@ -40,31 +39,31 @@ public class GroovyOutlineItemCreator extends JavaOutlineItemCreator
       {
          case VARIABLE :
             return JavaClientBundle.INSTANCE.variable();
-            
-         case PROPERTY :            
+
+         case PROPERTY :
             if (isPrivate(token))
             {
                return JavaClientBundle.INSTANCE.privateField();
             }
-            
+
             else if (isProtected(token))
             {
                return JavaClientBundle.INSTANCE.protectedField();
             }
-            
+
             else if (isPublic(token))
             {
                return JavaClientBundle.INSTANCE.publicField();
             }
 
             return JavaClientBundle.INSTANCE.publicField();
-            
+
          case METHOD :
             if (isPrivate(token))
             {
                return JavaClientBundle.INSTANCE.privateMethod();
             }
-            
+
             else if (isProtected(token))
             {
                return JavaClientBundle.INSTANCE.protectedMethod();
@@ -76,20 +75,19 @@ public class GroovyOutlineItemCreator extends JavaOutlineItemCreator
             }
 
             return JavaClientBundle.INSTANCE.publicMethod();
-            
-            
+
          case CLASS :
             return JavaClientBundle.INSTANCE.classItem();
 
          case INTERFACE :
-            return JavaClientBundle.INSTANCE.interfaceItem();              
-            
+            return JavaClientBundle.INSTANCE.interfaceItem();
+
          case GROOVY_TAG :
             return JavaClientBundle.INSTANCE.groovyTagItem();
-            
+
          default :
             return null;
       }
    }
-   
+
 }
