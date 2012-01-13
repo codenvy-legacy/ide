@@ -48,15 +48,15 @@ import javax.ws.rs.core.SecurityContext;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Oct 20, 2011 evgen $
- *
+ * @version $Id: Oct 20, 2011 evgen $
+ * 
  */
 public class ProjectTemplateTest extends BaseTest
 {
    private SecurityContext securityContext;
 
    private VirtualFileSystem vfs;
-   
+
    protected final String BASE_URI = "http://localhost";
 
    @Before
@@ -73,13 +73,13 @@ public class ProjectTemplateTest extends BaseTest
       id.setRoles(roles);
       ConversationState s = new ConversationState(id);
       ConversationState.setCurrent(s);
-      
+
       VirtualFileSystemRegistry vfsRegistry =
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
       vfs = vfsRegistry.getProvider("dev-monit").newInstance(null);
-      
+
       ItemList<Item> children = vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, PropertyFilter.ALL_FILTER);
-      for(Item i : children.getItems())
+      for (Item i : children.getItems())
       {
          vfs.delete(i.getId(), null);
       }

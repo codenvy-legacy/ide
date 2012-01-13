@@ -52,6 +52,7 @@ public class Utils
 
    /**
     * Read value param from init params.
+    * 
     * @param initParams
     * @param paramName
     * @return value param or null if value not found.
@@ -126,8 +127,8 @@ public class Utils
     * @param mimeType - media type of file
     * @param fileNodeType - file node type
     * @param contentNodeType - jcr:content node type
-    * @param secret - if <code>true</code> then make newly created file protected by ACL. Only owner of
-    *           <code>session</code> has access to file
+    * @param secret - if <code>true</code> then make newly created file protected by ACL. Only owner of <code>session</code> has
+    *           access to file
     */
    public static void putFile(Session session, String parentPath, String fileName, String data, String mimeType,
       String fileNodeType, String contentNodeType) throws RepositoryException

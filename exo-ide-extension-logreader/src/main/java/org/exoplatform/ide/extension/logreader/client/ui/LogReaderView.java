@@ -39,9 +39,10 @@ import java.util.logging.LogRecord;
 
 /**
  * View for Log reader, contains toolbar, and {@link ScrollPanel} with set of {@link LogRecord}
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class LogReaderView extends ViewImpl implements LogReaderPresenter.Display
 {

@@ -32,22 +32,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Filter provide possibility return back to HTTP from HTTPS and visa versa for security resource.
- * Problem with cookies:
- *  after login on HHTPS resource we get cookie that set to encrypted path only,
- *  then we try switch back to HTTP or cookie became invalid and we get other cookie for not encrypted path,
- *  in this case we MUST login twice. For resolve this problem we rewrite cookie "JSESSIONID" in this filter
- *  we make cookie that we get in HTTPS connection valide for all connections.
- *   sessionCookie.setSecure(false); 
- *   
- *  In initparams need set ports for HHTP & HTTPS and servlet path for SSL (encrypted connections)
- *  by default it "/rest/ssl"  
- *     
+ * Filter provide possibility return back to HTTP from HTTPS and visa versa for security resource. Problem with cookies: after
+ * login on HHTPS resource we get cookie that set to encrypted path only, then we try switch back to HTTP or cookie became invalid
+ * and we get other cookie for not encrypted path, in this case we MUST login twice. For resolve this problem we rewrite cookie
+ * "JSESSIONID" in this filter we make cookie that we get in HTTPS connection valide for all connections.
+ * sessionCookie.setSecure(false);
+ * 
+ * In initparams need set ports for HHTP & HTTPS and servlet path for SSL (encrypted connections) by default it "/rest/ssl"
+ * 
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class RevertFromHttpsToHttpFilter implements Filter
 {
 
@@ -75,8 +73,7 @@ public class RevertFromHttpsToHttpFilter implements Filter
    }
 
    /**
-    * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-    *      javax.servlet.FilterChain)
+    * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
     */
    @Override
    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,

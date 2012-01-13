@@ -20,13 +20,14 @@ package org.exoplatform.ide.extension.logreader.client.model;
 
 /**
  * Class represent log one logical Log file.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class LogEntry
 {
-   
+
    /**
     * Identifier for log file
     */

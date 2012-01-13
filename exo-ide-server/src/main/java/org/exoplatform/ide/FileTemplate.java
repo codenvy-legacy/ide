@@ -27,16 +27,16 @@ package org.exoplatform.ide;
 public class FileTemplate extends Template
 {
    private String mimeType;
-   
+
    private String content;
-   
+
    private String fileName;
-   
+
    public FileTemplate()
    {
       super("file");
    }
-   
+
    /**
     * @return the fileName
     */
@@ -44,7 +44,7 @@ public class FileTemplate extends Template
    {
       return fileName;
    }
-   
+
    /**
     * @param fileName the fileName to set
     */
@@ -84,5 +84,5 @@ public class FileTemplate extends Template
    {
       this.content = content;
    }
-   
+
 }

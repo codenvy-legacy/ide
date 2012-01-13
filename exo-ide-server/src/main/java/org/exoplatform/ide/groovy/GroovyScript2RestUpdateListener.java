@@ -32,8 +32,7 @@ import javax.jcr.observation.EventListener;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: GroovyScript2RestUpdateListener.java 34445 2009-07-24 07:51:18Z
- *          dkatayev $
+ * @version $Id: GroovyScript2RestUpdateListener.java 34445 2009-07-24 07:51:18Z dkatayev $
  */
 @SuppressWarnings("deprecation")
 public class GroovyScript2RestUpdateListener implements EventListener
@@ -106,7 +105,7 @@ public class GroovyScript2RestUpdateListener implements EventListener
 
    /**
     * Load script form supplied node.
-    *
+    * 
     * @param node JCR node
     * @throws Exception if any error occurs
     */
@@ -117,20 +116,21 @@ public class GroovyScript2RestUpdateListener implements EventListener
          groovyScript2RestLoader.groovyPublisher.unpublishResource(key);
       if (resource != null)
       {
-        //TODO check params:
+         // TODO check params:
          groovyScript2RestLoader.groovyPublisher.publishPerRequest(node.getProperty("jcr:data").getStream(), key,
             resource.getObjectModel().getProperties(), null, null);
       }
       else
       {
-         //TODO check params:
-         groovyScript2RestLoader.groovyPublisher.publishPerRequest(node.getProperty("jcr:data").getStream(), key, null, null, null);
+         // TODO check params:
+         groovyScript2RestLoader.groovyPublisher.publishPerRequest(node.getProperty("jcr:data").getStream(), key, null,
+            null, null);
       }
    }
 
    /**
     * Unload script.
-    *
+    * 
     * @param path unified JCR node path
     * @throws Exception if any error occurs
     */

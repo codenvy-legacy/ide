@@ -31,7 +31,7 @@ import javax.servlet.ServletException;
 @SuppressWarnings("serial")
 public class DavMountRestServlet extends EverrestExoServlet
 {
-   
+
    @Override
    protected void afterInit(ServletConfig config) throws ServletException
    {

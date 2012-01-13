@@ -34,15 +34,16 @@ import org.exoplatform.services.security.Identity;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 @Path("/ide/conversation-state")
 public class RestConversationState
 {
    /**
-     * Class logger.
-     */
+    * Class logger.
+    */
    private final Log log = ExoLogger.getLogger("ide.RestConversationState");
 
    @POST
@@ -60,7 +61,8 @@ public class RestConversationState
             log.info("Getting user identity: " + identity.getUserId());
          return user;
       }
-      else throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).build());
+      else
+         throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).build());
    }
 
 }

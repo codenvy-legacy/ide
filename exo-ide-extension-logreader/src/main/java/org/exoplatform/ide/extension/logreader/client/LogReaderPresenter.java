@@ -36,9 +36,10 @@ import org.exoplatform.ide.extension.logreader.client.ui.LogReaderView;
 
 /**
  * Presenter for {@link LogReaderView}
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandler
 {
@@ -135,7 +136,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void refreshLog()
    {
-      if(currentToken == null)
+      if (currentToken == null)
       {
          getLogs();
          return;
@@ -173,6 +174,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
 
    /**
     * Update log navigation control enabling
+    * 
     * @param log
     */
    private void updateButtonState(LogEntry log)

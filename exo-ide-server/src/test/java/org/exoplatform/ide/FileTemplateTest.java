@@ -59,8 +59,8 @@ import javax.ws.rs.core.SecurityContext;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Oct 25, 2011 evgen $
- *
+ * @version $Id: Oct 25, 2011 evgen $
+ * 
  */
 public class FileTemplateTest extends BaseTest
 {

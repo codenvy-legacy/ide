@@ -42,30 +42,31 @@ import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class RestConversationStateTest extends BaseTest
 {
-   
+
    private SecurityContext securityContext;
-   
+
    @Before
    public void setUp() throws Exception
    {
       super.setUp();
-      Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);                                                                                                      
-      String validUser =                                                                                                                                                                                   
-         authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});                                                                                             
-      Identity id = authr.createIdentity(validUser);   
+      Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
+      String validUser =
+         authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
+      Identity id = authr.createIdentity(validUser);
       Set<String> roles = new HashSet<String>();
       roles.add("users");
       roles.add("administrators");
       id.setRoles(roles);
-      ConversationState s = new ConversationState(id);                                                                                                                                                     
+      ConversationState s = new ConversationState(id);
       ConversationState.setCurrent(s);
    }
-   
+
    @Test
    public void testWhoami() throws Exception
    {
@@ -75,8 +76,7 @@ public class RestConversationStateTest extends BaseTest
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      ContainerResponse cres =
-         launcher.service("POST", "/ide/conversation-state/whoami", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/conversation-state/whoami", "", headers, null, null, ctx);
       Assert.assertEquals(200, cres.getStatus());
       Assert.assertNotNull(cres.getEntity());
       Assert.assertTrue(cres.getEntity() instanceof IdeUser);

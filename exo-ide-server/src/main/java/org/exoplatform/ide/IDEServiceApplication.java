@@ -35,10 +35,10 @@ import javax.ws.rs.core.Application;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 12, 2011 5:24:37 PM evgen $
- *
+ * 
  */
 public class IDEServiceApplication extends Application
 {
@@ -47,7 +47,8 @@ public class IDEServiceApplication extends Application
 
    private final Set<Object> objects = new HashSet<Object>();
 
-   public IDEServiceApplication(RepositoryService repositoryService,VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
+   public IDEServiceApplication(RepositoryService repositoryService, VirtualFileSystemRegistry vfsRegistry,
+      InitParams initParams)
    {
       String entryPoint = Utils.readValueParam(initParams, "defaultEntryPoint");
       boolean discoverable = Boolean.parseBoolean(Utils.readValueParam(initParams, "discoverable"));
@@ -55,14 +56,14 @@ public class IDEServiceApplication extends Application
       String config = Utils.readValueParam(initParams, "config");
       String templateConfig = Utils.readValueParam(initParams, "template-config");
 
-      //objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
+      // objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
 
       objects.add(new IDEConfigurationService(repositoryService, entryPoint, discoverable, workspace, config));
       objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry));
 
-      classes.add(LoopbackContentService.class);      
+      classes.add(LoopbackContentService.class);
       classes.add(RequestContextResolver.class);
       classes.add(RestConversationState.class);
    }

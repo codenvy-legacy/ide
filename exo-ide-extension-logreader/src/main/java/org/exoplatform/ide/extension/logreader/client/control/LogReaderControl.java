@@ -25,9 +25,10 @@ import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderEvent;
 
 /**
  * Control to open LogReader View
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class LogReaderControl extends SimpleControl implements IDEControl
 {
@@ -42,8 +43,8 @@ public class LogReaderControl extends SimpleControl implements IDEControl
    public static final String TITLE = "Log";
 
    /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
+    * Control's prompt, when user hovers the mouse on it.
+    */
    public static final String PROMPT = "Show Log form";
 
    public LogReaderControl()

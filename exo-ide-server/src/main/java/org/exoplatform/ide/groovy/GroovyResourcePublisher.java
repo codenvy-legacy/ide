@@ -38,8 +38,8 @@ import java.security.PrivilegedExceptionAction;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 30, 2011 2:49:20 PM anya $
- *
+ * @version $Id: Aug 30, 2011 2:49:20 PM anya $
+ * 
  */
 public class GroovyResourcePublisher extends org.everrest.groovy.GroovyResourcePublisher
 {
@@ -56,27 +56,23 @@ public class GroovyResourcePublisher extends org.everrest.groovy.GroovyResourceP
    }
 
    /**
-    * Validate does stream contain Groovy source code which is conforms with
-    * requirement to JAX-RS resource.
+    * Validate does stream contain Groovy source code which is conforms with requirement to JAX-RS resource.
     * 
     * @param in Groovy source stream
-    * @param name script name. This name will be used by GroovyClassLoader to
-    *           identify script, e.g. specified name will be used in error
-    *           message in compilation of Groovy fails. If this parameter is
-    *           <code>null</code> then GroovyClassLoader will use automatically
-    *           generated name
+    * @param name script name. This name will be used by GroovyClassLoader to identify script, e.g. specified name will be used in
+    *           error message in compilation of Groovy fails. If this parameter is <code>null</code> then GroovyClassLoader will
+    *           use automatically generated name
     * @param src additional path to Groovy sources
     * @param files Groovy source files to be added in build path directly
-    * @throws MalformedScriptException if source has errors or there is no
-    *            required JAX-RS annotation
+    * @throws MalformedScriptException if source has errors or there is no required JAX-RS annotation
     */
    public void validateResource(final InputStream in, final String name, final SourceFolder[] src,
       final SourceFile[] files) throws MalformedScriptException
    {
-      //Class<?> rc;
+      // Class<?> rc;
       try
       {
-         //rc = 
+         // rc =
          AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>()
          {
             public Class<?> run() throws MalformedURLException
@@ -98,31 +94,23 @@ public class GroovyResourcePublisher extends org.everrest.groovy.GroovyResourceP
       {
          throw new MalformedScriptException(e.getMessage());
       }
-      /// XXX : Temporary disable resource class validation. Just try to compile
+      // / XXX : Temporary disable resource class validation. Just try to compile
       // class and assume resource class is OK if compilation is successful.
-      /*try
-      {
-         new AbstractResourceDescriptorImpl(rc).accept(ResourceDescriptorValidator.getInstance());
-      }
-      catch (RuntimeException e)
-      {
-         // FIXME : Need have proper exception for invalid resources in 'exo.ws.rest.core'. 
-         throw new MalformedScriptException(e.getMessage());
-      }*/
+      /*
+       * try { new AbstractResourceDescriptorImpl(rc).accept(ResourceDescriptorValidator.getInstance()); } catch (RuntimeException
+       * e) { // FIXME : Need have proper exception for invalid resources in 'exo.ws.rest.core'. throw new
+       * MalformedScriptException(e.getMessage()); }
+       */
    }
 
    /**
-    * Validate does stream contain Groovy source code which is conforms with
-    * requirement to JAX-RS resource.
+    * Validate does stream contain Groovy source code which is conforms with requirement to JAX-RS resource.
     * 
     * @param in Groovy source stream
-    * @param name script name. This name will be used by GroovyClassLoader to
-    *           identify script, e.g. specified name will be used in error
-    *           message in compilation of Groovy fails. If this parameter is
-    *           <code>null</code> then GroovyClassLoader will use automatically
-    *           generated name
-    * @throws MalformedScriptException if source has errors or there is no
-    *            required JAX-RS annotation
+    * @param name script name. This name will be used by GroovyClassLoader to identify script, e.g. specified name will be used in
+    *           error message in compilation of Groovy fails. If this parameter is <code>null</code> then GroovyClassLoader will
+    *           use automatically generated name
+    * @throws MalformedScriptException if source has errors or there is no required JAX-RS annotation
     */
    public void validateResource(InputStream in, String name) throws MalformedScriptException
    {
@@ -130,21 +118,16 @@ public class GroovyResourcePublisher extends org.everrest.groovy.GroovyResourceP
    }
 
    /**
-    * Validate does <code>source</code> contain Groovy source code which is
-    * conforms with requirement to JAX-RS resource.
+    * Validate does <code>source</code> contain Groovy source code which is conforms with requirement to JAX-RS resource.
     * 
     * @param source Groovy source code as String
-    * @param charset source string charset. May be <code>null</code> than
-    *           default charset will be in use
-    * @param name script name. This name will be used by GroovyClassLoader to
-    *           identify script, e.g. specified name will be used in error
-    *           message in compilation of Groovy fails. If this parameter is
-    *           <code>null</code> then GroovyClassLoader will use automatically
-    *           generated name
+    * @param charset source string charset. May be <code>null</code> than default charset will be in use
+    * @param name script name. This name will be used by GroovyClassLoader to identify script, e.g. specified name will be used in
+    *           error message in compilation of Groovy fails. If this parameter is <code>null</code> then GroovyClassLoader will
+    *           use automatically generated name
     * @param src additional path to Groovy sources
     * @param files Groovy source files to be added in build path directly
-    * @throws MalformedScriptException if source has errors or there is no
-    *            required JAX-RS annotation
+    * @throws MalformedScriptException if source has errors or there is no required JAX-RS annotation
     */
    public final void validateResource(String source, String charset, String name, SourceFolder[] src, SourceFile[] files)
       throws MalformedScriptException
@@ -153,19 +136,15 @@ public class GroovyResourcePublisher extends org.everrest.groovy.GroovyResourceP
    }
 
    /**
-    * Validate does <code>source</code> contain Groovy source code which is
-    * conforms with requirement to JAX-RS resource.
+    * Validate does <code>source</code> contain Groovy source code which is conforms with requirement to JAX-RS resource.
     * 
     * @param source Groovy source code as String
-    * @param name script name. This name will be used by GroovyClassLoader to
-    *           identify script, e.g. specified name will be used in error
-    *           message in compilation of Groovy fails. If this parameter is
-    *           <code>null</code> then GroovyClassLoader will use automatically
-    *           generated name
+    * @param name script name. This name will be used by GroovyClassLoader to identify script, e.g. specified name will be used in
+    *           error message in compilation of Groovy fails. If this parameter is <code>null</code> then GroovyClassLoader will
+    *           use automatically generated name
     * @param src additional path to Groovy sources
     * @param files Groovy source files to be added in build path directly
-    * @throws MalformedScriptException if source has errors or there is no
-    *            required JAX-RS annotation
+    * @throws MalformedScriptException if source has errors or there is no required JAX-RS annotation
     */
    public final void validateResource(String source, String name, SourceFolder[] src, SourceFile[] files)
       throws MalformedScriptException
@@ -174,17 +153,13 @@ public class GroovyResourcePublisher extends org.everrest.groovy.GroovyResourceP
    }
 
    /**
-    * Validate does <code>source</code> contain Groovy source code which is
-    * conforms with requirement to JAX-RS resource.
+    * Validate does <code>source</code> contain Groovy source code which is conforms with requirement to JAX-RS resource.
     * 
     * @param source Groovy source code as String
-    * @param name script name. This name will be used by GroovyClassLoader to
-    *           identify script, e.g. specified name will be used in error
-    *           message in compilation of Groovy fails. If this parameter is
-    *           <code>null</code> then GroovyClassLoader will use automatically
-    *           generated name
-    * @throws MalformedScriptException if source has errors or there is no
-    *            required JAX-RS annotation
+    * @param name script name. This name will be used by GroovyClassLoader to identify script, e.g. specified name will be used in
+    *           error message in compilation of Groovy fails. If this parameter is <code>null</code> then GroovyClassLoader will
+    *           use automatically generated name
+    * @throws MalformedScriptException if source has errors or there is no required JAX-RS annotation
     */
    public final void validateResource(String source, String name) throws MalformedScriptException
    {

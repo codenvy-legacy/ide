@@ -23,7 +23,7 @@ package org.exoplatform.ide;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectTemplate.java Jul 28, 2011 5:26:21 PM vereshchaka $
- *
+ * 
  */
 public class ProjectTemplate extends FolderTemplate
 {

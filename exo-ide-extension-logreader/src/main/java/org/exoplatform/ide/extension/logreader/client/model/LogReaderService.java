@@ -28,9 +28,10 @@ import org.exoplatform.ide.extension.logreader.client.model.marshal.LogReaderUnm
 
 /**
  * This service provides access to information stored in the logs created on current tenant.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class LogReaderService
 {
@@ -60,6 +61,7 @@ public class LogReaderService
 
    /**
     * Get last log file
+    * 
     * @param callback
     */
    public void getLastLog(AsyncRequestCallback<LogEntry> callback)
@@ -70,6 +72,7 @@ public class LogReaderService
 
    /**
     * Get previous log file for current log file
+    * 
     * @param token of current log
     * @param callback
     */
@@ -81,6 +84,7 @@ public class LogReaderService
 
    /**
     * Get next log file for current log
+    * 
     * @param token of current log
     * @param callback
     */
@@ -92,6 +96,7 @@ public class LogReaderService
 
    /**
     * Update log
+    * 
     * @param token of log
     * @param callback
     */

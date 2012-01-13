@@ -41,6 +41,7 @@ public class FakeLoginModuleLab extends TomcatLoginModule
     * The list of users.
     */
    private List<String> users = new ArrayList<String>();
+
    private String _password;
 
    @Override

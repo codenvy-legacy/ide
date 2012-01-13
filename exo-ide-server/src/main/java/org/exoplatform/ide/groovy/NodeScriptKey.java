@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.groovy;
 
-
 import org.everrest.groovy.BaseResourceId;
 
 import javax.jcr.Node;

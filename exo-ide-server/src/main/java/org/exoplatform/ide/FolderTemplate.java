@@ -26,17 +26,17 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FolderTemplate.java Jul 26, 2011 5:38:07 PM vereshchaka $
- *
+ * 
  */
 public class FolderTemplate extends Template
 {
    private List<Template> children;
-   
+
    public FolderTemplate()
    {
       super("folder");
    }
-   
+
    /**
     * @return the children
     */
@@ -46,5 +46,5 @@ public class FolderTemplate extends Template
          children = new ArrayList<Template>();
       return children;
    }
-   
+
 }

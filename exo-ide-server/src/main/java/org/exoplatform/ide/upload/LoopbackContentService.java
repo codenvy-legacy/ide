@@ -46,16 +46,15 @@ import org.exoplatform.services.log.Log;
 @Path("/ide/loopbackcontent")
 public class LoopbackContentService
 {
-   
+
    private static Log log = ExoLogger.getLogger(LoopbackContentService.class);
 
    /**
-    * POST method that gets the request body and returns it wrapped in the
-    * JavaScript.
+    * POST method that gets the request body and returns it wrapped in the JavaScript.
     * 
     * @param items file items form the request body.
     * @return the request body content wrapped with JavaScript.
-    * @throws UploadServiceException 
+    * @throws UploadServiceException
     */
    @POST
    @Consumes({"multipart/*"})

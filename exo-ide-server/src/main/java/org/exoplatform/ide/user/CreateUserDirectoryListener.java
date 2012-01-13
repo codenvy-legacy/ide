@@ -34,43 +34,49 @@ import org.exoplatform.services.organization.User;
 
 public class CreateUserDirectoryListener implements Action
 {
-   
+
    private OrganizationService organizationService;
-   
-   public CreateUserDirectoryListener(OrganizationService organizationService) {
+
+   public CreateUserDirectoryListener(OrganizationService organizationService)
+   {
       this.organizationService = organizationService;
    }
 
    @Override
    public boolean execute(Context context) throws Exception
    {
-      if (organizationService == null) {
+      if (organizationService == null)
+      {
          return false;
       }
 
       NodeImpl node = (NodeImpl)context.get("currentItem");
-      if (!"/".equals(node.getParent().getPath())) {
-         return false;
-      }
-      
-      String userId = node.getName();
-      User user = organizationService.getUserHandler().findUserByName(userId);
-      if (user == null) {
+      if (!"/".equals(node.getParent().getPath()))
+      {
          return false;
       }
 
-      if (!node.isNodeType("exo:owneable")) {
+      String userId = node.getName();
+      User user = organizationService.getUserHandler().findUserByName(userId);
+      if (user == null)
+      {
+         return false;
+      }
+
+      if (!node.isNodeType("exo:owneable"))
+      {
          node.addMixin("exo:owneable");
       }
-      
-      if (!node.isNodeType("exo:privilegeable")) {
+
+      if (!node.isNodeType("exo:privilegeable"))
+      {
          node.addMixin("exo:privilegeable");
       }
-      
+
       node.setPermission(userId, PermissionType.ALL);
       node.setPermission("*:" + Constants.IDE_ADMINISTRATORS_GROUP, PermissionType.ALL);
       node.removePermission("any");
-      
+
       return false;
    }
 

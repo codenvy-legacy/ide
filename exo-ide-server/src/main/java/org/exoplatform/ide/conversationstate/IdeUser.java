@@ -20,24 +20,24 @@ package org.exoplatform.ide.conversationstate;
 
 import java.util.Collection;
 
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class IdeUser
 {
    private String userId;
-   
+
    private Collection<String> groups;
-   
+
    private Collection<String> roles;
-   
+
    public IdeUser()
    {
    }
-   
+
    /**
     * @param userId the userId to set
     * @param groups the groups to set
@@ -49,8 +49,6 @@ public class IdeUser
       this.groups = groups;
       this.roles = roles;
    }
-
-
 
    /**
     * @return the userId
@@ -99,6 +97,5 @@ public class IdeUser
    {
       this.roles = roles;
    }
-   
-   
+
 }

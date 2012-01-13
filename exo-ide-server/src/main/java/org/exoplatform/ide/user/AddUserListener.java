@@ -37,7 +37,7 @@ import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserEventListener;
 
 /**
- * This class handles creation of the user and automatically adds it to the "/ide/users" and "/ide/developers" groups. 
+ * This class handles creation of the user and automatically adds it to the "/ide/users" and "/ide/developers" groups.
  * 
  * Created by The eXo Platform SAS .
  * 
@@ -47,15 +47,13 @@ import org.exoplatform.services.organization.UserEventListener;
 public class AddUserListener extends UserEventListener
 {
 
-
-
    /**
     * ExoLogger instance.
     */
    private static final Log log = ExoLogger.getExoLogger(AddUserListener.class);
 
    /**
-    * Organization Service instance. 
+    * Organization Service instance.
     */
    private OrganizationService organizationService;
 
@@ -106,7 +104,7 @@ public class AddUserListener extends UserEventListener
     * Creates user's directory in workspace "dev-monit".
     * 
     * @param userId user's ID
-    * @throws RepositoryException 
+    * @throws RepositoryException
     */
    private void ensureUserFolderCreated(String userId) throws RepositoryException
    {
@@ -115,7 +113,8 @@ public class AddUserListener extends UserEventListener
       Session session = repository.getSystemSession(Constants.WORKSPACE_NAME);
       Node rootNode = session.getRootNode();
 
-      if (rootNode.hasNode(userId)) {
+      if (rootNode.hasNode(userId))
+      {
          return;
       }
 
@@ -172,7 +171,7 @@ public class AddUserListener extends UserEventListener
 
       try
       {
-         addMember(user.getUserName(), Constants. IDE_DEVELOPERS_GROUP);
+         addMember(user.getUserName(), Constants.IDE_DEVELOPERS_GROUP);
          addMember(user.getUserName(), Constants.IDE_USERS_GROUP);
       }
       catch (Exception e)

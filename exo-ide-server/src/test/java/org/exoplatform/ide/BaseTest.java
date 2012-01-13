@@ -24,10 +24,11 @@ import org.exoplatform.container.StandaloneContainer;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public abstract class BaseTest 
+ */
+public abstract class BaseTest
 {
 
    protected StandaloneContainer container;
@@ -50,6 +51,6 @@ public abstract class BaseTest
 
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
-      
+
    }
 }

@@ -58,10 +58,12 @@ public class FSLocation
    {
       return getLocalPath();
    }
-   
+
    public String getLocalPath()
    {
-      RepositoryService repositoryService = (RepositoryService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+      RepositoryService repositoryService =
+         (RepositoryService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
+            RepositoryService.class);
       String repoName;
       try
       {
@@ -69,7 +71,7 @@ public class FSLocation
       }
       catch (RepositoryException e)
       {
-         repoName="repository";
+         repoName = "repository";
       }
       String localPath = getRootPath();
       if (localPath == null)

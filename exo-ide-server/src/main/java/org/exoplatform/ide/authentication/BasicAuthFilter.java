@@ -121,7 +121,6 @@ public class BasicAuthFilter implements Filter
          ir.register(identity);
          ConversationState.setCurrent(new ConversationState(identity));
 
-
       }
       catch (LoginException e)
       {
@@ -137,7 +136,7 @@ public class BasicAuthFilter implements Filter
          httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
          return;
       }
-      
+
       chain.doFilter(new AuthServletRequest(httpRequest, identity), response);
 
    }

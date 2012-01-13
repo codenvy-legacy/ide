@@ -50,9 +50,10 @@ import javax.ws.rs.core.MultivaluedMap;
  * Test for UploadService class.
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class LoopbackContentServiceTest extends BaseTest
 {
 
@@ -67,7 +68,7 @@ public class LoopbackContentServiceTest extends BaseTest
    private CredentialsImpl credentials;
 
    private RepositoryService repositoryService;
-   
+
    private MultivaluedMap<String, String> headers;
 
    @Before
@@ -81,15 +82,15 @@ public class LoopbackContentServiceTest extends BaseTest
       SessionProviderService sessionProviderService =
          (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
       Assert.assertNotNull(sessionProviderService);
-      
+
       sessionProviderService
          .setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("admin"))));
-      
+
       headers = new MultivaluedMapImpl();
       headers.putSingle("content-type", "multipart/form-data; boundary=-----abcdef");
-      
+
    }
-   
+
    @Test
    public void uploadFile() throws Exception
    {
@@ -97,40 +98,36 @@ public class LoopbackContentServiceTest extends BaseTest
       EnvironmentContext ctx = new EnvironmentContext();
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       PrintWriter w = new PrintWriter(out);
-      
-      String source = "-------abcdef\r\n" 
-         +"Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n"
-         +"Content-Type: text/plain\r\n\r\ntest file content\r\n" 
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"location\"\r\n\r\n"
-         +"http://localhost/jcr/db1/dev-monit/test.txt\r\n"
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"mimeType\"\r\n\r\ntext/plain\r\n" 
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"nodeType\"\r\n\r\n\r\n"
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"jcrContentNodeType\"\r\n\r\nnt:resource\r\n" 
-         +"-------abcdef--\r\n";
-      
+
+      String source =
+         "-------abcdef\r\n" + "Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n"
+            + "Content-Type: text/plain\r\n\r\ntest file content\r\n" + "-------abcdef\r\n"
+            + "Content-Disposition: form-data; name=\"location\"\r\n\r\n"
+            + "http://localhost/jcr/db1/dev-monit/test.txt\r\n" + "-------abcdef\r\n"
+            + "Content-Disposition: form-data; name=\"mimeType\"\r\n\r\ntext/plain\r\n" + "-------abcdef\r\n"
+            + "Content-Disposition: form-data; name=\"nodeType\"\r\n\r\n\r\n" + "-------abcdef\r\n"
+            + "Content-Disposition: form-data; name=\"jcrContentNodeType\"\r\n\r\nnt:resource\r\n"
+            + "-------abcdef--\r\n";
+
       w.write(source);
       w.flush();
-      
+
       byte[] data = out.toByteArray();
-      
+
       HttpServletRequest httpRequest =
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/ide/loopbackcontent", "http://localhost", headers,
-            data, null, ctx);
-      
+      ContainerResponse response =
+         launcher.service("POST", "/ide/loopbackcontent", "http://localhost", headers, data, null, ctx);
+
       Assert.assertEquals(200, response.getStatus());
       Assert.assertTrue(response.getEntity() instanceof String);
       String text = (String)response.getEntity();
       Assert.assertEquals("<filecontent>test+file+content%0A</filecontent>", text);
       session.refresh(false);
    }
-   
+
    @After
    public void tearDown() throws Exception
    {
@@ -164,7 +161,7 @@ public class LoopbackContentServiceTest extends BaseTest
             session.logout();
          }
       }
-      
+
    }
 
 }

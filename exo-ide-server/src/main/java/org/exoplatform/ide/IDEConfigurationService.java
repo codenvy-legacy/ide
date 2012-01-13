@@ -69,7 +69,7 @@ import javax.ws.rs.core.UriInfo;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: May 23, 2011 evgen $
- *
+ * 
  */
 @Path("/ide/configuration")
 public class IDEConfigurationService
@@ -78,7 +78,7 @@ public class IDEConfigurationService
    private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
    private RepositoryService repositoryService;
-   
+
    private String entryPoint;
 
    private boolean discoverable;
@@ -109,8 +109,7 @@ public class IDEConfigurationService
             this.config += "/";
       }
    }
-   
-  
+
    @GET
    @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
@@ -131,7 +130,8 @@ public class IDEConfigurationService
             final Map<String, Object> userSettings = getUserSettings();
             result.put("userSettings", userSettings);
          }
-         String href = uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path(entryPoint).build().toString();
+         String href =
+            uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path(entryPoint).build().toString();
          result.put("defaultEntrypoint", href);
          result.put("discoverable", discoverable);
          result.put("vfsId", entryPoint);
@@ -170,10 +170,11 @@ public class IDEConfigurationService
 
    }
 
-   //------Implementation---------
+   // ------Implementation---------
 
    /**
     * Get user setting as Map.
+    * 
     * @return map of user settings
     * @throws JsonException
     * @throws IOException
@@ -308,7 +309,7 @@ public class IDEConfigurationService
       try
       {
          ManageableRepository repository = repositoryService.getCurrentRepository();
-         // Login with current identity. ConversationState.getCurrent(). 
+         // Login with current identity. ConversationState.getCurrent().
          session = repository.login(workspace);
          String user = session.getUserID();
          String tokenPath = config + user + "/settings/userSettings";
@@ -324,7 +325,7 @@ public class IDEConfigurationService
 
          if (item == null)
          {
-            return "{}";//TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
+            return "{}";// TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
          }
 
          Property property = ((javax.jcr.Node)item).getNode("jcr:content").getProperty("jcr:data");
@@ -332,7 +333,7 @@ public class IDEConfigurationService
          InputStream input = property.getStream();
          if (input == null)
          {
-            return "{}";//TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
+            return "{}";// TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
          }
          Writer writer = new StringWriter();
          char[] buffer = new char[1024];

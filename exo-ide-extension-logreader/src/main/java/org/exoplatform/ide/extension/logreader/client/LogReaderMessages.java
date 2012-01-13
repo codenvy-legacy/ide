@@ -23,7 +23,7 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 
 public interface LogReaderMessages extends Messages
@@ -31,26 +31,26 @@ public interface LogReaderMessages extends Messages
 
    @Key("log.reader.next")
    String getNextLogButton();
-   
+
    @Key("log.reader.prev")
    String getPrevLogButton();
-   
+
    @Key("log.reader.refresh")
    String getRefreshLogButton();
-   
+
    @Key("log.reader.offset")
    String getOffset();
-   
+
    @Key("log.reader.limit")
    String getLimit();
-   
+
    @Key("log.reder.settings.ok")
    String getOkButton();
-   
+
    @Key("log.reder.settings.cancel")
    String getCancelButton();
-   
+
    @Key("log.reder.settings.data")
    String getDate();
-   
+
 }

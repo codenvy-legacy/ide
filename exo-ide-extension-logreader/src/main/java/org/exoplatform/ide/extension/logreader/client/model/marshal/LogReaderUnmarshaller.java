@@ -31,7 +31,7 @@ import org.exoplatform.ide.extension.logreader.client.model.LogEntry;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class LogReaderUnmarshaller implements Unmarshallable
 {

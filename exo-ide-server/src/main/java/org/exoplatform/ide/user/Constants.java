@@ -27,12 +27,12 @@ package org.exoplatform.ide.user;
 
 public interface Constants
 {
-   
+
    /**
     * Name of Workspace in which user's folder will be created.
     */
    String WORKSPACE_NAME = "dev-monit";
-   
+
    /**
     * IDE Developers group.
     */
@@ -46,6 +46,6 @@ public interface Constants
    /**
     * IDE Administrators group.
     */
-   String IDE_ADMINISTRATORS_GROUP = "/ide/administrators";   
+   String IDE_ADMINISTRATORS_GROUP = "/ide/administrators";
 
 }

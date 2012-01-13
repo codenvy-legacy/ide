@@ -80,12 +80,11 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Providers;
 
 /**
- * This REST service is used for getting and storing templates
- * for file and projects. 
+ * This REST service is used for getting and storing templates for file and projects.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplatesRestService.java Apr 4, 2011 3:21:46 PM vereshchaka $
- *
+ * 
  */
 @Path("/ide/templates")
 public class TemplatesRestService
@@ -151,7 +150,7 @@ public class TemplatesRestService
    {
       JsonValue fileTemplateJsonValue = JsonHelper.parseJson(body);
       String newTemplateName = fileTemplateJsonValue.getElement("name").getStringValue();
-      //check if such template already exists
+      // check if such template already exists
       for (FileTemplate fileTemplate : getFileTemplates())
       {
          if (newTemplateName.equals(fileTemplate.getName()))
@@ -160,7 +159,7 @@ public class TemplatesRestService
          }
       }
 
-      //add new file template to existing templates in file
+      // add new file template to existing templates in file
       String templateContent = readTemplates(FILE_TEMPLATE);
       JsonValue templatesJsonValue = JsonHelper.parseJson(templateContent);
       addTemplateToArray(templatesJsonValue, fileTemplateJsonValue);
@@ -170,15 +169,15 @@ public class TemplatesRestService
    }
 
    /**
-    * Add file template list to settings file template file.
-    * This method is used only for templates transfer from registry to plain text file.
-    * In order to avoid data loss, this method doesn't check, is file templates are
-    * existed already. It only adds all file templates to file.
+    * Add file template list to settings file template file. This method is used only for templates transfer from registry to
+    * plain text file. In order to avoid data loss, this method doesn't check, is file templates are existed already. It only adds
+    * all file templates to file.
+    * 
     * @param body
     * @throws IOException
     * @throws URISyntaxException
     * @throws TemplateServiceException
-    * @throws ParsingResponseException 
+    * @throws ParsingResponseException
     */
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
@@ -190,7 +189,7 @@ public class TemplatesRestService
       JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       ArrayValue templatesToAdd = (ArrayValue)newTemplateJsonValue;
 
-      //get array value of existing templates
+      // get array value of existing templates
       String templateContent = readTemplates(FILE_TEMPLATE);
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplateArray = null;
@@ -257,7 +256,7 @@ public class TemplatesRestService
    {
       JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       String newTemplateName = newTemplateJsonValue.getElement("name").getStringValue();
-      //check if such template already exists
+      // check if such template already exists
       for (ProjectTemplate projectTemplate : getProjectTemplateList())
       {
          if (newTemplateName.equals(projectTemplate.getName()))
@@ -266,7 +265,7 @@ public class TemplatesRestService
          }
       }
 
-      //add new file template to existing templates in file
+      // add new file template to existing templates in file
       String templateContent = readTemplates(PROJECT_TEMPLATE);
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       addTemplateToArray(jsonValue, newTemplateJsonValue);
@@ -275,15 +274,15 @@ public class TemplatesRestService
    }
 
    /**
-    * Add project template list to settings project template file.
-    * This method is used only for templates transfer from registry to plain text file.
-    * In order to avoid data loss, this method doesn't check, is file templates are
-    * existed already. It only adds all file templates to file.
+    * Add project template list to settings project template file. This method is used only for templates transfer from registry
+    * to plain text file. In order to avoid data loss, this method doesn't check, is file templates are existed already. It only
+    * adds all file templates to file.
+    * 
     * @param body
     * @throws IOException
     * @throws URISyntaxException
     * @throws TemplateServiceException
-    * @throws ParsingResponseException 
+    * @throws ParsingResponseException
     */
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
@@ -295,7 +294,7 @@ public class TemplatesRestService
       JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       ArrayValue templatesToAdd = (ArrayValue)newTemplateJsonValue;
 
-      //get array value of existing templates
+      // get array value of existing templates
       String templateContent = readTemplates(PROJECT_TEMPLATE);
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplateArray = null;
@@ -322,6 +321,7 @@ public class TemplatesRestService
 
    /**
     * Create new IDE project from predefined template
+    * 
     * @param vfsId id of VFS
     * @param name name of new project
     * @param parentId parent of the project
@@ -334,17 +334,17 @@ public class TemplatesRestService
    @Path("/project/create")
    @Produces(MediaType.APPLICATION_JSON)
    public Project createProjectFromTemplate(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-      @QueryParam("parentId") String parentId, @QueryParam("templateName") String templateName, @Context Providers providers)
-      throws VirtualFileSystemException, IOException
+      @QueryParam("parentId") String parentId, @QueryParam("templateName") String templateName,
+      @Context Providers providers) throws VirtualFileSystemException, IOException
    {
-      
+
       ContextResolver<RequestContext> contextResolver = providers.getContextResolver(RequestContext.class, null);
       RequestContext context = null;
       if (contextResolver != null)
       {
          context = contextResolver.getContext(RequestContext.class);
       }
-      
+
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context);
       Folder projectFolder = vfs.createFolder(parentId, name);
       InputStream templateStream =
@@ -361,7 +361,7 @@ public class TemplatesRestService
          throw new IllegalStateException("Something other than project was created on " + name);
    }
 
-   //--------- Implementation -----------------------
+   // --------- Implementation -----------------------
 
    /**
     * Delete user template, that stored in file.
@@ -370,7 +370,7 @@ public class TemplatesRestService
     * @param fileTemplateName - the name of file (file templates and project templates are stored in different files)
     * @throws IOException
     * @throws IllegalStateException
-    * @throws ParsingResponseException 
+    * @throws ParsingResponseException
     */
    private void deleteTemplate(String templateName, String fileTemplateName) throws IOException, IllegalStateException,
       ParsingResponseException
@@ -380,11 +380,11 @@ public class TemplatesRestService
          throw new IllegalStateException("Template name required. ");
       }
 
-      //get the existing templates
+      // get the existing templates
       String templateContent = readTemplates(fileTemplateName);
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplates = new ArrayValue();
-      //iterate existed templates and copy to new array those, which will not be deleted.
+      // iterate existed templates and copy to new array those, which will not be deleted.
       if (jsonValue.getElement("templates") != null)
       {
          ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
@@ -392,8 +392,8 @@ public class TemplatesRestService
 
          boolean exists = false;
 
-         //iterate throw existing templates, and copy all templates, except those,
-         //which must be deleted to new json array
+         // iterate throw existing templates, and copy all templates, except those,
+         // which must be deleted to new json array
          while (arrIterator.hasNext())
          {
             ObjectValue obj = (ObjectValue)arrIterator.next();
@@ -410,7 +410,7 @@ public class TemplatesRestService
             throw new IllegalStateException("No such template. ");
       }
 
-      //save new templates json array
+      // save new templates json array
       ObjectValue templatesObjValue = new ObjectValue();
       templatesObjValue.addElement("templates", jsonTemplates);
 
@@ -419,13 +419,13 @@ public class TemplatesRestService
 
    private FileTemplate findFileTemplate(String name) throws IOException, ParsingResponseException
    {
-      //get the existing templates
+      // get the existing templates
       String templateContent = getTemplateFileContent(FILE_TEMPLATE_FILE);
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
       Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
 
-      //iterate throw existing templates
+      // iterate throw existing templates
       while (arrIterator.hasNext())
       {
          ObjectValue obj = (ObjectValue)arrIterator.next();
@@ -440,19 +440,19 @@ public class TemplatesRestService
    private List<ProjectTemplate> getProjectTemplates() throws URISyntaxException, IOException, ParsingResponseException
    {
       List<ProjectTemplate> projectTemplateList = new ArrayList<ProjectTemplate>();
-      //      String templateContent = readTemplates(PROJECT_TEMPLATE);
-      //      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
-      //      if (jsonValue.getElement("templates") != null)
-      //      {
-      //         ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
-      //         Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
+      // String templateContent = readTemplates(PROJECT_TEMPLATE);
+      // JsonValue jsonValue = JsonHelper.parseJson(templateContent);
+      // if (jsonValue.getElement("templates") != null)
+      // {
+      // ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+      // Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
       //
-      //         while (arrIterator.hasNext())
-      //         {
-      //            ObjectValue obj = (ObjectValue)arrIterator.next();
-      //            projectTemplateList.add(parseProjectTemplateObject(obj));
-      //         }
-      //      }
+      // while (arrIterator.hasNext())
+      // {
+      // ObjectValue obj = (ObjectValue)arrIterator.next();
+      // projectTemplateList.add(parseProjectTemplateObject(obj));
+      // }
+      // }
 
       URL url = Thread.currentThread().getContextClassLoader().getResource("projects");
       if (url != null)
@@ -463,7 +463,7 @@ public class TemplatesRestService
          {
             ZipFile zip = new ZipFile(f);
             ZipArchiveEntry entry = zip.getEntry(".project");
-            //if zip not contains ".project" file then search in next archive
+            // if zip not contains ".project" file then search in next archive
             if (entry == null)
                continue;
             JsonParser jp = new JsonParser();
@@ -529,26 +529,26 @@ public class TemplatesRestService
       return fileTemplateList;
    }
 
-   //   private ProjectTemplate parseProjectTemplateObject(ObjectValue obj)
-   //   {
-   //      ProjectTemplate projectTemplate = new ProjectTemplate();
-   //      projectTemplate.setName(obj.getElement("name").getStringValue());
-   //      projectTemplate.setDefault(obj.getElement("isDefault").getBooleanValue());
-   //      if (obj.getElement("description") != null)
-   //      {
-   //         projectTemplate.setDescription(obj.getElement("description").getStringValue());
-   //      }
-   //      if (obj.getElement("type") != null)
-   //      {
-   //         projectTemplate.setType(obj.getElement("type").getStringValue());
-   //      }
-   //      if (obj.getElement("children") != null)
-   //      {
-   //         ArrayValue childrenArray = (ArrayValue)obj.getElement("children");
-   //         projectTemplate.getChildren().addAll(parseChildrenArrayJsonObject(childrenArray));
-   //      }
-   //      return projectTemplate;
-   //   }
+   // private ProjectTemplate parseProjectTemplateObject(ObjectValue obj)
+   // {
+   // ProjectTemplate projectTemplate = new ProjectTemplate();
+   // projectTemplate.setName(obj.getElement("name").getStringValue());
+   // projectTemplate.setDefault(obj.getElement("isDefault").getBooleanValue());
+   // if (obj.getElement("description") != null)
+   // {
+   // projectTemplate.setDescription(obj.getElement("description").getStringValue());
+   // }
+   // if (obj.getElement("type") != null)
+   // {
+   // projectTemplate.setType(obj.getElement("type").getStringValue());
+   // }
+   // if (obj.getElement("children") != null)
+   // {
+   // ArrayValue childrenArray = (ArrayValue)obj.getElement("children");
+   // projectTemplate.getChildren().addAll(parseChildrenArrayJsonObject(childrenArray));
+   // }
+   // return projectTemplate;
+   // }
 
    private List<Template> parseChildrenArrayJsonObject(ArrayValue childrenArray)
    {
@@ -575,6 +575,7 @@ public class TemplatesRestService
 
    /**
     * Parse folder template json object, when get the list of project templates.
+    * 
     * @param obj
     * @return
     */
@@ -592,6 +593,7 @@ public class TemplatesRestService
 
    /**
     * Parse file template json object, when get the list of file templates.
+    * 
     * @param obj
     * @return
     */
@@ -630,7 +632,7 @@ public class TemplatesRestService
       return userConf;
    }
 
-   //----------read and write templates----------------
+   // ----------read and write templates----------------
 
    protected void writeTemplates(String templateType, String data) throws IOException
    {
@@ -662,19 +664,19 @@ public class TemplatesRestService
    }
 
    /**
-    * Check is user configuration folder exists.
-    * If doesn't exist, than create it.
-    * @param vfs2 
+    * Check is user configuration folder exists. If doesn't exist, than create it.
+    * 
+    * @param vfs2
     * @throws RepositoryException
-    * @throws VirtualFileSystemException 
+    * @throws VirtualFileSystemException
     */
    private void checkConfigNode(VirtualFileSystem vfs) throws VirtualFileSystemException
    {
-//      String _workspace = workspace;
-      //      if (_workspace == null)
-      //      {
-      //         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
-      //      }
+      // String _workspace = workspace;
+      // if (_workspace == null)
+      // {
+      // _workspace = repository.getConfiguration().getDefaultWorkspaceName();
+      // }
 
       try
       {
@@ -682,24 +684,24 @@ public class TemplatesRestService
       }
       catch (ItemAlreadyExistException e)
       {
-         //skip exception handling
+         // skip exception handling
       }
-      //      Session sys = null;
-      //      try
-      //      {
-      //         // Create node for users configuration under system session.
-      //         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
-      //         if (!(sys.itemExists(config)))
-      //         {
-      //            org.exoplatform.ide.Utils.putFolders(sys, config);
-      //            sys.save();
-      //         }
-      //      }
-      //      finally
-      //      {
-      //         if (sys != null)
-      //            sys.logout();
-      //      }
+      // Session sys = null;
+      // try
+      // {
+      // // Create node for users configuration under system session.
+      // sys = ((ManageableRepository)repository).getSystemSession(_workspace);
+      // if (!(sys.itemExists(config)))
+      // {
+      // org.exoplatform.ide.Utils.putFolders(sys, config);
+      // sys.save();
+      // }
+      // }
+      // finally
+      // {
+      // if (sys != null)
+      // sys.logout();
+      // }
    }
 
    /**
@@ -721,13 +723,13 @@ public class TemplatesRestService
          }
          catch (ItemNotFoundException e)
          {
-            return "{}";//TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
+            return "{}";// TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
          }
 
          InputStream input = contentStream.getStream();
          if (input == null)
          {
-            return "{}";//TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
+            return "{}";// TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
          }
          Writer writer = new StringWriter();
          char[] buffer = new char[1024];
@@ -758,6 +760,7 @@ public class TemplatesRestService
     * Add template to "templates" element of <code>templatesJsonValue</code>.
     * <p/>
     * If <code>templatesJsonValue</code> doesn't contain "templates" element, than create it.
+    * 
     * @param templatesJsonValue
     * @param template
     */

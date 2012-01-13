@@ -34,8 +34,8 @@ import java.util.List;
 public class ExoConfigurationHelper
 {
    /**
-    * Get 'value-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not
-    * contains requested 'value-param' this method return <code>null</code>.
+    * Get 'value-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not contains
+    * requested 'value-param' this method return <code>null</code>.
     * 
     * @param initParams the InitParams
     * @param name the name of 'value-param'
@@ -47,8 +47,8 @@ public class ExoConfigurationHelper
    }
 
    /**
-    * Get 'value-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not
-    * contains requested 'value-param' this method return <code>defaultValue</code>.
+    * Get 'value-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not contains
+    * requested 'value-param' this method return <code>defaultValue</code>.
     * 
     * @param initParams the InitParams
     * @param name the name of 'value-param'
@@ -69,9 +69,8 @@ public class ExoConfigurationHelper
    }
 
    /**
-    * Get 'values-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not
-    * contains requested 'values-param' this method return empty List never <code>null</code>. The returned List is
-    * unmodifiable.
+    * Get 'values-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not contains
+    * requested 'values-param' this method return empty List never <code>null</code>. The returned List is unmodifiable.
     * <p>
     * If part of configuration looks like:
     * 

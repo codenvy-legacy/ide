@@ -23,35 +23,34 @@ package org.exoplatform.ide;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: AbstractTemplate.java Jul 26, 2011 5:37:26 PM vereshchaka $
- *
+ * 
  */
 public abstract class Template
 {
    private String name;
-   
+
    private String description;
-   
+
    /**
-    * Flag, is template default.
-    * If template is default, it can't be deleted,
-    * unlike user's template
+    * Flag, is template default. If template is default, it can't be deleted, unlike user's template
     */
    private boolean defaultTemplate;
-   
+
    /**
-    * Auxiliary field.
-    * It is necessary for client, that while
-    * parsing json it will be able to detect the type of child (folder or file).
+    * Auxiliary field. It is necessary for client, that while parsing json it will be able to detect the type of child (folder or
+    * file).
     */
    private String childType;
-   
-   public Template(){}
-   
+
+   public Template()
+   {
+   }
+
    protected Template(String type)
    {
       this.childType = type;
    };
-   
+
    /**
     * @return the defaultTemplate
     */
@@ -59,7 +58,7 @@ public abstract class Template
    {
       return defaultTemplate;
    }
-   
+
    /**
     * @param defaultTemplate the defaultTemplate to set
     */
@@ -67,7 +66,7 @@ public abstract class Template
    {
       this.defaultTemplate = defaultTemplate;
    }
-   
+
    /**
     * @return the type
     */
@@ -75,7 +74,7 @@ public abstract class Template
    {
       return childType;
    }
-   
+
    /**
     * @return the name
     */

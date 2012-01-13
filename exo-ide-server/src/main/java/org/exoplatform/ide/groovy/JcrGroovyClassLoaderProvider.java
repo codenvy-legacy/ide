@@ -48,8 +48,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: JcrGroovyClassLoaderProvider.java 3702 2010-12-22 10:24:13Z
- *          aparfonov $
+ * @version $Id: JcrGroovyClassLoaderProvider.java 3702 2010-12-22 10:24:13Z aparfonov $
  */
 public class JcrGroovyClassLoaderProvider extends GroovyClassLoaderProvider
 {
@@ -96,20 +95,21 @@ public class JcrGroovyClassLoaderProvider extends GroovyClassLoaderProvider
 
          final HierarchicalResourceLoader loader =
             new HierarchicalResourceLoader(actualLoader, JcrGroovyClassLoader.this.getResourceLoader());
-         
+
          CompilationUnit cunit =
             new JcrCompilationUnit(config, cs, new JcrGroovyClassLoader(
-               JcrGroovyClassLoaderProvider.class.getClassLoader()) {
+               JcrGroovyClassLoaderProvider.class.getClassLoader())
+            {
                public GroovyResourceLoader getResourceLoader()
                {
                   return loader;
                }
             });
-         
+
          for (int i = 0; i < files.length; i++)
             cunit.addSource(files[i].getPath());
          cunit.compile(phase);
-         
+
          List classNodes = cunit.getAST().getClasses();
          List<URL> dependencies = new ArrayList<URL>(classNodes.size());
          for (Iterator iter = classNodes.iterator(); iter.hasNext();)
@@ -123,7 +123,7 @@ public class JcrGroovyClassLoaderProvider extends GroovyClassLoaderProvider
                   dependencies.add(((JcrSourceUnit)currentSunit).getUrl());
             }
          }
-         
+
          return dependencies.toArray(new URL[dependencies.size()]);
       }
    }
@@ -191,8 +191,9 @@ public class JcrGroovyClassLoaderProvider extends GroovyClassLoaderProvider
 
       public JcrSourceUnit(URL source, CompilerConfiguration configuration, GroovyClassLoader loader, ErrorCollector er)
       {
-         /* jCR path is in fragment of URL:
-          * jcr://repository/workspace#/path */
+         /*
+          * jCR path is in fragment of URL: jcr://repository/workspace#/path
+          */
          super("jcr".equals(source.getProtocol()) ? source.getRef() : source.getPath(), new URLReaderSource(source,
             configuration), configuration, loader, er);
          this.url = source;
@@ -207,15 +208,15 @@ public class JcrGroovyClassLoaderProvider extends GroovyClassLoaderProvider
    private static class HierarchicalResourceLoader implements GroovyResourceLoader
    {
       private final GroovyResourceLoader actual;
+
       private final GroovyResourceLoader parent;
-   
-      HierarchicalResourceLoader(GroovyResourceLoader actual, GroovyResourceLoader parent)
-         throws MalformedURLException
+
+      HierarchicalResourceLoader(GroovyResourceLoader actual, GroovyResourceLoader parent) throws MalformedURLException
       {
          this.actual = actual;
          this.parent = parent;
       }
-   
+
       public URL loadGroovySource(String filename) throws MalformedURLException
       {
          URL resource = null;
@@ -227,11 +228,12 @@ public class JcrGroovyClassLoaderProvider extends GroovyClassLoaderProvider
       }
    }
 
-   /* ========================================================================== */ 
-   
+   /* ========================================================================== */
+
    public JcrGroovyClassLoaderProvider()
    {
-      super(SecurityHelper.doPrivilegedAction(new PrivilegedAction<JcrGroovyClassLoader>() {
+      super(SecurityHelper.doPrivilegedAction(new PrivilegedAction<JcrGroovyClassLoader>()
+      {
          public JcrGroovyClassLoader run()
          {
             return new JcrGroovyClassLoader(JcrGroovyClassLoaderProvider.class.getClassLoader());
@@ -252,7 +254,8 @@ public class JcrGroovyClassLoaderProvider extends GroovyClassLoaderProvider
          roots[i] = sources[i].getPath();
 
       final GroovyClassLoader parent = getGroovyClassLoader();
-      JcrGroovyClassLoader classLoader = SecurityHelper.doPrivilegedAction(new PrivilegedAction<JcrGroovyClassLoader>() {
+      JcrGroovyClassLoader classLoader = SecurityHelper.doPrivilegedAction(new PrivilegedAction<JcrGroovyClassLoader>()
+      {
          public JcrGroovyClassLoader run()
          {
             return new JcrGroovyClassLoader(parent);

@@ -42,7 +42,7 @@ public class DavFSMounter
          p1.waitFor();
          final String stdout = new String(ByteStreams.toByteArray(p1.getInputStream()));
          final String stderror = new String(ByteStreams.toByteArray(p1.getErrorStream()));
-         //if(!)
+         // if(!)
          final boolean davFsInstalled = stdout.contains("Usage");
          if (!davFsInstalled)
          {
@@ -63,7 +63,7 @@ public class DavFSMounter
    {
 
       String os = System.getProperty("os.name").toLowerCase();
-      //windows
+      // windows
       return os.indexOf("win") >= 0;
 
    }
@@ -119,7 +119,7 @@ public class DavFSMounter
             for (String element : cmd)
             {
                result.append(element);
-               //result.append( optional separator );
+               // result.append( optional separator );
             }
             LOG.info("Execute" + result.toString());
             Process p1 = Runtime.getRuntime().exec(cmd);

@@ -95,8 +95,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: GroovyScript2RestLoader.java 34445 2009-07-24 07:51:18Z
- *          dkatayev $
+ * @version $Id: GroovyScript2RestLoader.java 34445 2009-07-24 07:51:18Z dkatayev $
  */
 @SuppressWarnings("deprecation")
 @Path("script/groovy")
@@ -106,7 +105,7 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    {
       public InnerGroovyJaxrsPublisher(ResourceBinder binder, GroovyClassLoaderProvider classLoaderProvider)
       {
-         //TODO DependencySupplier
+         // TODO DependencySupplier
          super(binder, classLoaderProvider, null);
       }
    }
@@ -140,7 +139,7 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    /** Keeps configuration for observation listener. */
    private ObservationListenerConfiguration observationListenerConfiguration;
 
-   //protected GroovyJaxrsPublisher groovyPublisher;
+   // protected GroovyJaxrsPublisher groovyPublisher;
 
    protected List<GroovyScript2RestLoaderPlugin> loadPlugins;
 
@@ -166,8 +165,7 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
       InitParams params)
    {
       this(binder, groovyScriptInstantiator, repositoryService, sessionProviderService, configurationManager, null,
-         new InnerGroovyJaxrsPublisher(binder, new JcrGroovyClassLoaderProvider()),
-         jcrUrlHandler, params);
+         new InnerGroovyJaxrsPublisher(binder, new JcrGroovyClassLoaderProvider()), jcrUrlHandler, params);
    }
 
    /**
@@ -185,13 +183,15 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
       org.exoplatform.services.jcr.ext.resource.jcr.Handler jcrUrlHandler, InitParams params)
    {
       this(binder, groovyScriptInstantiator, repositoryService, sessionProviderService, configurationManager,
-         registryService, new InnerGroovyJaxrsPublisher(binder, new JcrGroovyClassLoaderProvider()), jcrUrlHandler, params);
+         registryService, new InnerGroovyJaxrsPublisher(binder, new JcrGroovyClassLoaderProvider()), jcrUrlHandler,
+         params);
    }
 
    public GroovyScript2RestLoader(ResourceBinder binder, GroovyScriptInstantiator groovyScriptInstantiator,
       RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService,
-      ConfigurationManager configurationManager, RegistryService registryService, GroovyResourcePublisher groovyPublisher,
-      org.exoplatform.services.jcr.ext.resource.jcr.Handler jcrUrlHandler, InitParams params)
+      ConfigurationManager configurationManager, RegistryService registryService,
+      GroovyResourcePublisher groovyPublisher, org.exoplatform.services.jcr.ext.resource.jcr.Handler jcrUrlHandler,
+      InitParams params)
    {
       super(groovyPublisher);
       this.binder = binder;
@@ -204,8 +204,7 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * Get node type for store scripts, may throw {@link IllegalStateException}
-    * if <tt>nodeType</tt> not initialized yet.
+    * Get node type for store scripts, may throw {@link IllegalStateException} if <tt>nodeType</tt> not initialized yet.
     * 
     * @return return node type
     */
@@ -300,10 +299,12 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
                   delayedWorkspacePublishing.add(workspaceName);
                }
 
-               session.getWorkspace().getObservationManager().addEventListener(
-                  new GroovyScript2RestUpdateListener(repositoryName, workspaceName, this, session),
-                  Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, "/", true, null,
-                  new String[]{getNodeType()}, false);
+               session
+                  .getWorkspace()
+                  .getObservationManager()
+                  .addEventListener(new GroovyScript2RestUpdateListener(repositoryName, workspaceName, this, session),
+                     Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, "/", true, null,
+                     new String[]{getNodeType()}, false);
             }
             if (!delayedWorkspacePublishing.isEmpty())
             {
@@ -333,7 +334,7 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
                            }
                            catch (IndexOfflineRepositoryException e)
                            {
-                              //it's okay. Retrying;
+                              // it's okay. Retrying;
                            }
                            catch (Exception e)
                            {
@@ -389,7 +390,7 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
 
          try
          {
-            //TODO check params:
+            // TODO check params:
             groovyPublisher.publishPerRequest(node.getProperty("jcr:data").getStream(), new NodeScriptKey(
                repositoryName, workspaceName, node), null, null, null);
          }
@@ -695,12 +696,11 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
       }
    }
 
-   ////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////
 
    /**
-    * This method is useful for clients that can send script in request body
-    * without form-data. At required to set specific Content-type header
-    * 'script/groovy'.
+    * This method is useful for clients that can send script in request body without form-data. At required to set specific
+    * Content-type header 'script/groovy'.
     * 
     * @param stream the stream that contains groovy source code
     * @param uriInfo see {@link UriInfo}
@@ -749,12 +749,10 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * This method is useful for clients that send scripts as file in
-    * 'multipart/*' request body. <br/>
-    * NOTE even we use iterator item should be only one, rule one address - one
-    * script. This method is created just for comfort loading script from HTML
-    * form. NOT use this script for uploading few files in body of
-    * 'multipart/form-data' or other type of multipart.
+    * This method is useful for clients that send scripts as file in 'multipart/*' request body. <br/>
+    * NOTE even we use iterator item should be only one, rule one address - one script. This method is created just for comfort
+    * loading script from HTML form. NOT use this script for uploading few files in body of 'multipart/form-data' or other type of
+    * multipart.
     * 
     * @param items iterator {@link FileItem}
     * @param uriInfo see {@link UriInfo}
@@ -820,29 +818,22 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * Check is specified source <code>script</code> contains valid Groovy source
-    * code.
+    * Check is specified source <code>script</code> contains valid Groovy source code.
     * 
-    * @param name script name. This name will be used by GroovyClassLoader to
-    *           identify script, e.g. specified name will be used in error
-    *           message in compilation of Groovy fails. If this parameter is
-    *           <code>null</code> then GroovyClassLoader will use automatically
-    *           generated name
+    * @param name script name. This name will be used by GroovyClassLoader to identify script, e.g. specified name will be used in
+    *           error message in compilation of Groovy fails. If this parameter is <code>null</code> then GroovyClassLoader will
+    *           use automatically generated name
     * @param script Groovy source stream
-    * @param sources locations (string representation of URL) of source folders
-    *           that should be add in class path when compile Groovy script.
-    *           <b>NOTE</b> To be able load Groovy source files from specified
-    *           folders the following rules must be observed:
+    * @param sources locations (string representation of URL) of source folders that should be add in class path when compile
+    *           Groovy script. <b>NOTE</b> To be able load Groovy source files from specified folders the following rules must be
+    *           observed:
     *           <ul>
-    *           <li>Groovy source files must be located in folder with respect
-    *           to package structure</li>
-    *           <li>Name of Groovy source files must be the same as name of
-    *           class located in file</li>
+    *           <li>Groovy source files must be located in folder with respect to package structure</li>
+    *           <li>Name of Groovy source files must be the same as name of class located in file</li>
     *           <li>Groovy source file must have extension '.groovy'</li>
     *           </ul>
     * <br/>
-    *           Example: If source stream that we want validate contains the
-    *           following code:
+    *           Example: If source stream that we want validate contains the following code:
     * 
     *           <pre>
     *           package c.b.a
@@ -854,15 +845,12 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
     *           }
     * </pre>
     * 
-    *           Assume we store dependencies in JCR then URL of folder with
-    *           Groovy sources may be like this:
-    *           <code>jcr://repository/workspace#/groovy-library</code>. Then
-    *           absolute path to JCR node that contains Groovy source must be as
-    *           following: <code>/groovy-library/a/b/c/A.groovy</code>
-    * @param files locations (string representation of URL) of source files that
-    *           should be add in class path when compile Groovy script. Each
-    *           location must point directly to file that contains Groovy
-    *           source. Source file can have any name and extension
+    *           Assume we store dependencies in JCR then URL of folder with Groovy sources may be like this:
+    *           <code>jcr://repository/workspace#/groovy-library</code>. Then absolute path to JCR node that contains Groovy
+    *           source must be as following: <code>/groovy-library/a/b/c/A.groovy</code>
+    * @param files locations (string representation of URL) of source files that should be add in class path when compile Groovy
+    *           script. Each location must point directly to file that contains Groovy source. Source file can have any name and
+    *           extension
     * @return Response with corresponded status. 200 if source code is valid
     */
    @POST
@@ -889,34 +877,24 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * Check is specified source <code>script</code> contains valid Groovy source
-    * code.
+    * Check is specified source <code>script</code> contains valid Groovy source code.
     * 
-    * @param name script name. This name will be used by GroovyClassLoader to
-    *           identify script, e.g. specified name will be used in error
-    *           message in compilation of Groovy fails. If this parameter is
-    *           <code>null</code> then GroovyClassLoader will use automatically
-    *           generated name
+    * @param name script name. This name will be used by GroovyClassLoader to identify script, e.g. specified name will be used in
+    *           error message in compilation of Groovy fails. If this parameter is <code>null</code> then GroovyClassLoader will
+    *           use automatically generated name
     * @param script Groovy source stream
-    * @param src set of folders that contains Groovy source files that should be
-    *           add in class-path when validate <code>script</code>, see
-    *           {@link SourceFolder#getPath()}. <b>NOTE</b> To be able load
-    *           Groovy source files from specified folders the following rules
-    *           must be observed:
+    * @param src set of folders that contains Groovy source files that should be add in class-path when validate
+    *           <code>script</code>, see {@link SourceFolder#getPath()}. <b>NOTE</b> To be able load Groovy source files from
+    *           specified folders the following rules must be observed:
     *           <ul>
-    *           <li>Groovy source files must be located in folder with respect
-    *           to package structure</li>
-    *           <li>Name of Groovy source files must be the same as name of
-    *           class located in file</li>
+    *           <li>Groovy source files must be located in folder with respect to package structure</li>
+    *           <li>Name of Groovy source files must be the same as name of class located in file</li>
     *           <li>Groovy source file must have extension '.groovy'</li>
     *           </ul>
-    * @param files set of groovy source files that should be add in class-path
-    *           when validate <code>script</code>. Each item must point directly
-    *           to file that contains Groovy source, see
-    *           {@link SourceFile#getPath()} . Source file can have any name and
-    *           extension
-    * @throws MalformedScriptException if <code>script</code> contains not valid
-    *            source code
+    * @param files set of groovy source files that should be add in class-path when validate <code>script</code>. Each item must
+    *           point directly to file that contains Groovy source, see {@link SourceFile#getPath()} . Source file can have any
+    *           name and extension
+    * @throws MalformedScriptException if <code>script</code> contains not valid source code
     */
    public void validateScript(String name, InputStream script, SourceFolder[] src, SourceFile[] files)
       throws MalformedScriptException
@@ -929,9 +907,8 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * This method is useful for clients that can send script in request body
-    * without form-data. At required to set specific Content-type header
-    * 'script/groovy'.
+    * This method is useful for clients that can send script in request body without form-data. At required to set specific
+    * Content-type header 'script/groovy'.
     * 
     * @param stream the stream that contains groovy source code
     * @param uriInfo see {@link UriInfo}
@@ -981,12 +958,10 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * This method is useful for clients that send scripts as file in
-    * 'multipart/*' request body. <br/>
-    * NOTE even we use iterator item should be only one, rule one address - one
-    * script. This method is created just for comfort loading script from HTML
-    * form. NOT use this script for uploading few files in body of
-    * 'multipart/form-data' or other type of multipart.
+    * This method is useful for clients that send scripts as file in 'multipart/*' request body. <br/>
+    * NOTE even we use iterator item should be only one, rule one address - one script. This method is created just for comfort
+    * loading script from HTML form. NOT use this script for uploading few files in body of 'multipart/form-data' or other type of
+    * multipart.
     * 
     * @param items iterator {@link FileItem}
     * @param uriInfo see {@link UriInfo}
@@ -1042,32 +1017,25 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * Deploy groovy script as REST service. If this property set to 'true' then
-    * script will be deployed as REST service if 'false' the script will be
-    * undeployed. NOTE is script already deployed and <tt>state</tt> is
-    * <tt>true</tt> script will be re-deployed.
+    * Deploy groovy script as REST service. If this property set to 'true' then script will be deployed as REST service if 'false'
+    * the script will be undeployed. NOTE is script already deployed and <tt>state</tt> is <tt>true</tt> script will be
+    * re-deployed.
     * 
     * @param repository repository name
     * @param workspace workspace name
-    * @param path the path to JCR node that contains groovy script to be
-    *           deployed
-    * @param state <code>true</code> if resource should be loaded and
-    *           <code>false</code> otherwise. If this attribute is not present
-    *           in HTTP request then it will be considered as <code>true</code>
-    * @param sources locations (string representation of URL) of source folders
-    *           that should be add in class path when compile Groovy script.
-    *           <b>NOTE</b> To be able load Groovy source files from specified
-    *           folders the following rules must be observed:
+    * @param path the path to JCR node that contains groovy script to be deployed
+    * @param state <code>true</code> if resource should be loaded and <code>false</code> otherwise. If this attribute is not
+    *           present in HTTP request then it will be considered as <code>true</code>
+    * @param sources locations (string representation of URL) of source folders that should be add in class path when compile
+    *           Groovy script. <b>NOTE</b> To be able load Groovy source files from specified folders the following rules must be
+    *           observed:
     *           <ul>
-    *           <li>Groovy source files must be located in folder with respect
-    *           to package structure</li>
-    *           <li>Name of Groovy source files must be the same as name of
-    *           class located in file</li>
+    *           <li>Groovy source files must be located in folder with respect to package structure</li>
+    *           <li>Name of Groovy source files must be the same as name of class located in file</li>
     *           <li>Groovy source file must have extension '.groovy'</li>
     *           </ul>
     * <br/>
-    *           Example: If source stream that we want validate contains the
-    *           following code:
+    *           Example: If source stream that we want validate contains the following code:
     * 
     *           <pre>
     *           package c.b.a
@@ -1079,17 +1047,13 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
     *           }
     * </pre>
     * 
-    *           Assume we store dependencies in JCR then URL of folder with
-    *           Groovy sources may be like this:
-    *           <code>jcr://repository/workspace#/groovy-library</code>. Then
-    *           absolute path to JCR node that contains Groovy source must be as
-    *           following: <code>/groovy-library/a/b/c/A.groovy</code>
-    * @param files locations (string representation of URL) of source files that
-    *           should be add in class path when compile Groovy script. Each
-    *           location must point directly to file that contains Groovy
-    *           source. Source file can have any name and extension
-    * @param properties optional properties to be applied to loaded resource.
-    *           Ignored if <code>state</code> parameter is false
+    *           Assume we store dependencies in JCR then URL of folder with Groovy sources may be like this:
+    *           <code>jcr://repository/workspace#/groovy-library</code>. Then absolute path to JCR node that contains Groovy
+    *           source must be as following: <code>/groovy-library/a/b/c/A.groovy</code>
+    * @param files locations (string representation of URL) of source files that should be add in class path when compile Groovy
+    *           script. Each location must point directly to file that contains Groovy source. Source file can have any name and
+    *           extension
+    * @param properties optional properties to be applied to loaded resource. Ignored if <code>state</code> parameter is false
     */
    @POST
    @Path("load/{repository}/{workspace}/{path:.*}")
@@ -1112,36 +1076,27 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * Deploy groovy script as REST service. If this property set to 'true' then
-    * script will be deployed as REST service if 'false' the script will be
-    * undeployed. NOTE is script already deployed and <tt>state</tt> is
-    * <tt>true</tt> script will be re-deployed.
+    * Deploy groovy script as REST service. If this property set to 'true' then script will be deployed as REST service if 'false'
+    * the script will be undeployed. NOTE is script already deployed and <tt>state</tt> is <tt>true</tt> script will be
+    * re-deployed.
     * 
     * @param repository repository name
     * @param workspace workspace name
-    * @param path the path to JCR node that contains groovy script to be
-    *           deployed
-    * @param state <code>true</code> if resource should be loaded and
-    *           <code>false</code> otherwise. If this attribute is not present
-    *           in HTTP request then it will be considered as <code>true</code>
-    * @param properties optional properties to be applied to loaded resource.
-    *           Ignored if <code>state</code> parameter is false
-    * @param src set of folders that contains Groovy source files that should be
-    *           add in class-path when compile file located at <code>path</code>
-    *           . <b>NOTE</b> To be able load Groovy source files from specified
-    *           folders the following rules must be observed:
+    * @param path the path to JCR node that contains groovy script to be deployed
+    * @param state <code>true</code> if resource should be loaded and <code>false</code> otherwise. If this attribute is not
+    *           present in HTTP request then it will be considered as <code>true</code>
+    * @param properties optional properties to be applied to loaded resource. Ignored if <code>state</code> parameter is false
+    * @param src set of folders that contains Groovy source files that should be add in class-path when compile file located at
+    *           <code>path</code> . <b>NOTE</b> To be able load Groovy source files from specified folders the following rules
+    *           must be observed:
     *           <ul>
-    *           <li>Groovy source files must be located in folder with respect
-    *           to package structure</li>
-    *           <li>Name of Groovy source files must be the same as name of
-    *           class located in file</li>
+    *           <li>Groovy source files must be located in folder with respect to package structure</li>
+    *           <li>Name of Groovy source files must be the same as name of class located in file</li>
     *           <li>Groovy source file must have extension '.groovy'</li>
     *           </ul>
-    * @param files set of groovy source files that should be add in class-path
-    *           when compile file located at <code>path</code>. Each item must
-    *           point directly to file that contains Groovy source, see
-    *           {@link SourceFile#getPath()} . Source file can have any name and
-    *           extension
+    * @param files set of groovy source files that should be add in class-path when compile file located at <code>path</code>.
+    *           Each item must point directly to file that contains Groovy source, see {@link SourceFile#getPath()} . Source file
+    *           can have any name and extension
     */
    public Response load(String repository, String workspace, String path, boolean state,
       MultivaluedMap<String, String> properties, SourceFolder[] src, SourceFile[] files)
@@ -1163,9 +1118,9 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
          {
             if (null == groovyPublisher.unpublishResource(key))
             {
-               return Response.status(Response.Status.BAD_REQUEST).entity(
-                  "Can't unbind script " + path + ", not bound or has wrong mapping to the resource class ").type(
-                  MediaType.TEXT_PLAIN).build();
+               return Response.status(Response.Status.BAD_REQUEST)
+                  .entity("Can't unbind script " + path + ", not bound or has wrong mapping to the resource class ")
+                  .type(MediaType.TEXT_PLAIN).build();
             }
          }
          return Response.status(Response.Status.NO_CONTENT).build();
@@ -1243,17 +1198,14 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
    }
 
    /**
-    * Change exo:autoload property. If this property is 'true' script will be
-    * deployed automatically when JCR repository startup and automatically
-    * re-deployed when script source code changed.
+    * Change exo:autoload property. If this property is 'true' script will be deployed automatically when JCR repository startup
+    * and automatically re-deployed when script source code changed.
     * 
     * @param repository repository name
     * @param workspace workspace name
     * @param path JCR path to node that contains script
-    * @param state value for property exo:autoload, if it is not specified then
-    *           'true' will be used as default. <br />
-    *           Example: .../scripts/groovy/test1.groovy/load is the same to
-    *           .../scripts/groovy/test1.groovy/load?state=true
+    * @param state value for property exo:autoload, if it is not specified then 'true' will be used as default. <br />
+    *           Example: .../scripts/groovy/test1.groovy/load is the same to .../scripts/groovy/test1.groovy/load?state=true
     */
    @POST
    @Path("autoload/{repository}/{workspace}/{path:.*}")
@@ -1313,8 +1265,9 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
             sessionProviderService.getSessionProvider(null).getSession(workspace,
                repositoryService.getRepository(repository));
          Node scriptFile = (Node)ses.getItem("/" + path);
-         return Response.status(Response.Status.OK).entity(
-            scriptFile.getNode("jcr:content").getProperty("jcr:data").getStream()).type("script/groovy").build();
+         return Response.status(Response.Status.OK)
+            .entity(scriptFile.getNode("jcr:content").getProperty("jcr:data").getStream()).type("script/groovy")
+            .build();
       }
       catch (PathNotFoundException e)
       {
@@ -1392,9 +1345,8 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
     * 
     * @param repository repository name
     * @param workspace workspace name
-    * @param name additional search parameter. If not empty method returns the
-    *           list of script names matching wildcard else returns all the
-    *           scripts found in workspace.
+    * @param name additional search parameter. If not empty method returns the list of script names matching wildcard else returns
+    *           all the scripts found in workspace.
     * @return list of groovy services
     */
    @POST

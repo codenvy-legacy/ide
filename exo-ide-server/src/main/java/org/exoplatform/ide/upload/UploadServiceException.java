@@ -19,14 +19,13 @@
 package org.exoplatform.ide.upload;
 
 /**
- * Checked exception that gives possibility to set response status that may be
- * passed to client if this type of exception occurs.
+ * Checked exception that gives possibility to set response status that may be passed to client if this type of exception occurs.
  * 
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 13, 2011 10:36:39 AM evgen $
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class UploadServiceException extends Exception
@@ -52,9 +51,8 @@ public class UploadServiceException extends Exception
    }
 
    /**
-    * @param status the HTTP status that should be used in response if any
-    *           {@link javax.ws.rs.ext.ExceptionMapper} available for this
-    *           exception
+    * @param status the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
+    *           this exception
     * @param message the detail message about exception
     * @param cause the cause
     */
@@ -65,9 +63,8 @@ public class UploadServiceException extends Exception
    }
 
    /**
-    * @param status the HTTP status that should be used in response if any
-    *           {@link javax.ws.rs.ext.ExceptionMapper} available for this
-    *           exception
+    * @param status the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
+    *           this exception
     * @param message the detail message about exception
     */
    public UploadServiceException(int status, String message)
@@ -77,8 +74,7 @@ public class UploadServiceException extends Exception
    }
 
    /**
-    * @return the HTTP status that should be used in response if any
-    *         {@link javax.ws.rs.ext.ExceptionMapper} available for this
+    * @return the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for this
     *         exception
     */
    public int getStatus()

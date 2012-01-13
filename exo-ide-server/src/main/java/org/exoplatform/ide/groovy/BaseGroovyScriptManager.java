@@ -33,8 +33,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: BaseGroovyScriptManager.java 3720 2010-12-23 15:06:33Z
- *          aparfonov $
+ * @version $Id: BaseGroovyScriptManager.java 3720 2010-12-23 15:06:33Z aparfonov $
  * @deprecated
  */
 // Contains all method what we do not need any more in GroovyScript2RestLoader
@@ -81,7 +80,7 @@ public abstract class BaseGroovyScriptManager
    {
       try
       {
-         //TODO check params
+         // TODO check params
          groovyPublisher.publishPerRequest(stream, key, null, null, null);
          return true;
       }
@@ -106,7 +105,7 @@ public abstract class BaseGroovyScriptManager
       ResourceId key = new BaseResourceId(url.toString());
       try
       {
-         //TODO check params
+         // TODO check params
          groovyPublisher.publishPerRequest(new BufferedInputStream(url.openStream()), key, null, null, null);
          return true;
       }

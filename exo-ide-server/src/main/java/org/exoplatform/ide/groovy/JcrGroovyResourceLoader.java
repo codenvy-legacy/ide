@@ -35,6 +35,7 @@ public class JcrGroovyResourceLoader extends DefaultGroovyResourceLoader
 {
    // TODO : need to have configurable ??
    private static final String[] IDE_SOURCE_FILE_EXTENSIONS = new String[]{".groovy", ".cmtc", ".grs"};
+
    private static final Log LOG = ExoLogger.getLogger(JcrGroovyResourceLoader.class);
 
    private static URL[] normalizeJcrURL(URL[] src) throws MalformedURLException

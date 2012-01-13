@@ -29,14 +29,16 @@ import com.google.gwt.core.client.GWT;
 
 /**
  * IDE Extension for log reader feature.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class LogReaderExtension extends Extension implements InitializeServicesHandler
 {
 
    public static LogReaderMessages MESSAGES = GWT.create(LogReaderMessages.class);
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -47,6 +49,7 @@ public class LogReaderExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(new LogReaderControl());
       new LogReaderPresenter();
    }
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */

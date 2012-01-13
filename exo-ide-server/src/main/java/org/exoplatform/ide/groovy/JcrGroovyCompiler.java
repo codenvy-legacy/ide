@@ -44,8 +44,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * JcrGroovyCompiler can load source code of groovy script from JCR and parse it
- * via GroovyClassLoader.
+ * JcrGroovyCompiler can load source code of groovy script from JCR and parse it via GroovyClassLoader.
  * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: JcrGroovyCompiler.java 4455 2011-05-31 06:54:06Z dkuleshov $
@@ -70,9 +69,8 @@ public class JcrGroovyCompiler implements Startable
    }
 
    /**
-    * Compile Groovy source that located in <code>sourceReferences</code>.
-    * Compiled sources can be dependent to each other and dependent to Groovy
-    * sources that are accessible for this compiler.
+    * Compile Groovy source that located in <code>sourceReferences</code>. Compiled sources can be dependent to each other and
+    * dependent to Groovy sources that are accessible for this compiler.
     * 
     * @param sourceReferences references to Groovy sources to be compiled
     * @return result of compilation
@@ -84,21 +82,16 @@ public class JcrGroovyCompiler implements Startable
    }
 
    /**
-    * Compile Groovy source that located in <code>sourceReferences</code>.
-    * Compiled sources can be dependent to each other and dependent to Groovy
-    * sources that are accessible for this compiler and with additional Groovy
-    * sources <code>src</code>. <b>NOTE</b> To be able load Groovy source files
-    * from specified folders the following rules must be observed:
+    * Compile Groovy source that located in <code>sourceReferences</code>. Compiled sources can be dependent to each other and
+    * dependent to Groovy sources that are accessible for this compiler and with additional Groovy sources <code>src</code>.
+    * <b>NOTE</b> To be able load Groovy source files from specified folders the following rules must be observed:
     * <ul>
-    * <li>Groovy source files must be located in folder with respect to package
-    * structure</li>
-    * <li>Name of Groovy source files must be the same as name of class located
-    * in file</li>
+    * <li>Groovy source files must be located in folder with respect to package structure</li>
+    * <li>Name of Groovy source files must be the same as name of class located in file</li>
     * <li>Groovy source file must have extension '.groovy'</li>
     * </ul>
     * <br/>
-    * Example: If source stream that we want compile contains the following
-    * code:
+    * Example: If source stream that we want compile contains the following code:
     * 
     * <pre>
     *           package c.b.a
@@ -110,13 +103,11 @@ public class JcrGroovyCompiler implements Startable
     *           }
     * </pre>
     * 
-    * Assume we store dependencies in JCR then URL of folder with Groovy sources
-    * may be like this: <code>jcr://repository/workspace#/groovy-library</code>.
-    * Then absolute path to JCR node that contains Groovy source must be as
-    * following: <code>/groovy-library/a/b/c/A.groovy</code>
+    * Assume we store dependencies in JCR then URL of folder with Groovy sources may be like this:
+    * <code>jcr://repository/workspace#/groovy-library</code>. Then absolute path to JCR node that contains Groovy source must be
+    * as following: <code>/groovy-library/a/b/c/A.groovy</code>
     * 
-    * @param src additional Groovy source location that should be added in
-    *           class-path when compile <code>sourceReferences</code>
+    * @param src additional Groovy source location that should be added in class-path when compile <code>sourceReferences</code>
     * @param sourceReferences references to Groovy sources to be compiled
     * @return result of compilation
     * @throws IOException if any i/o errors occurs
@@ -130,21 +121,16 @@ public class JcrGroovyCompiler implements Startable
    }
 
    /**
-    * Compile Groovy source that located in <code>files</code>. Compiled sources
-    * can be dependent to each other and dependent to Groovy sources that are
-    * accessible for this compiler and with additional Groovy sources
-    * <code>src</code>. <b>NOTE</b> To be able load Groovy source files from
-    * specified folders the following rules must be observed:
+    * Compile Groovy source that located in <code>files</code>. Compiled sources can be dependent to each other and dependent to
+    * Groovy sources that are accessible for this compiler and with additional Groovy sources <code>src</code>. <b>NOTE</b> To be
+    * able load Groovy source files from specified folders the following rules must be observed:
     * <ul>
-    * <li>Groovy source files must be located in folder with respect to package
-    * structure</li>
-    * <li>Name of Groovy source files must be the same as name of class located
-    * in file</li>
+    * <li>Groovy source files must be located in folder with respect to package structure</li>
+    * <li>Name of Groovy source files must be the same as name of class located in file</li>
     * <li>Groovy source file must have extension '.groovy'</li>
     * </ul>
     * 
-    * @param src additional Groovy source location that should be added in
-    *           class-path when compile <code>files</code>
+    * @param src additional Groovy source location that should be added in class-path when compile <code>files</code>
     * @param files Groovy sources to be compiled
     * @return result of compilation
     * @throws IOException if any i/o errors occurs
@@ -155,9 +141,8 @@ public class JcrGroovyCompiler implements Startable
    }
 
    /**
-    * Compile Groovy source that located in <code>files</code>. Compiled sources
-    * can be dependent to each other and dependent to Groovy sources that are
-    * accessible for this compiler.
+    * Compile Groovy source that located in <code>files</code>. Compiled sources can be dependent to each other and dependent to
+    * Groovy sources that are accessible for this compiler.
     * 
     * @param files Groovy sources to be compiled
     * @return result of compilation
@@ -171,7 +156,8 @@ public class JcrGroovyCompiler implements Startable
    @SuppressWarnings("rawtypes")
    private Class<?>[] doCompile(final JcrGroovyClassLoader cl, final SourceFile[] files) throws IOException
    {
-      Class[] classes = SecurityHelper.doPrivilegedAction(new PrivilegedAction<Class[]>() {
+      Class[] classes = SecurityHelper.doPrivilegedAction(new PrivilegedAction<Class[]>()
+      {
          public Class[] run()
          {
             return cl.parseClasses(files);
@@ -181,12 +167,10 @@ public class JcrGroovyCompiler implements Startable
    }
 
    /**
-    * Get URLs of classes (stored in JCR only) required to compile sources
-    * <code>files</code>. Result array includes URLs of <code>files</code> plus
-    * URLs of other required sources if they can be found in class-path.
+    * Get URLs of classes (stored in JCR only) required to compile sources <code>files</code>. Result array includes URLs of
+    * <code>files</code> plus URLs of other required sources if they can be found in class-path.
     * 
-    * @param sources additional Groovy source location that should be added in
-    *           class-path when analyze <code>files</code>
+    * @param sources additional Groovy source location that should be added in class-path when analyze <code>files</code>
     * @param files set of sources for analyzing
     * @return URLs
     * @throws IOException if any i/o errors occurs
@@ -195,7 +179,8 @@ public class JcrGroovyCompiler implements Startable
    {
       try
       {
-         return SecurityHelper.doPrivilegedExceptionAction(new PrivilegedExceptionAction<URL[]>() {
+         return SecurityHelper.doPrivilegedExceptionAction(new PrivilegedExceptionAction<URL[]>()
+         {
             public URL[] run() throws IOException
             {
                return ((JcrGroovyClassLoader)classLoaderProvider.getGroovyClassLoader()).findDependencies(sources,
@@ -232,9 +217,8 @@ public class JcrGroovyCompiler implements Startable
    }
 
    /**
-    * Create {@link GroovyCodeSource} from given stream and name. Code base
-    * 'file:/groovy/script' (default code base used for all Groovy classes) will
-    * be used.
+    * Create {@link GroovyCodeSource} from given stream and name. Code base 'file:/groovy/script' (default code base used for all
+    * Groovy classes) will be used.
     * 
     * @param in groovy source code stream
     * @param name code source name
@@ -244,7 +228,8 @@ public class JcrGroovyCompiler implements Startable
    @Deprecated
    protected GroovyCodeSource createCodeSource(final InputStream in, final String name)
    {
-      GroovyCodeSource gcs = SecurityHelper.doPrivilegedAction(new PrivilegedAction<GroovyCodeSource>() {
+      GroovyCodeSource gcs = SecurityHelper.doPrivilegedAction(new PrivilegedAction<GroovyCodeSource>()
+      {
          public GroovyCodeSource run()
          {
             return new GroovyCodeSource(in, name, "/groovy/script");
