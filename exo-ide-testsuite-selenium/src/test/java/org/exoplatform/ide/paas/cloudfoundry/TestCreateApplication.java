@@ -113,7 +113,7 @@ public class TestCreateApplication extends CloudFoundryTest
       assertEquals("[INFO] Application cloudfoundry-test-ror-project successfully created.", IDE.OUTPUT.getOutputMessage(successMessageIndex));
    }
 
-   @Test
+  // @Test
    public void testCreateApplication() throws Exception
    {
       if (IDE.OUTPUT.isOpened()) {

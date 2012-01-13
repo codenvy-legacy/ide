@@ -71,7 +71,7 @@ public class RenameApplicationTest extends BaseTest
       }
    }
    
-   @Test
+   //@Test
    public void testRenameApplication() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

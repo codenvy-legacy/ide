@@ -69,7 +69,7 @@ public class ApplicationInfoTest extends BaseTest
       }
    }
    
-   @Test
+  // @Test
    public void testApplicationInfo() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

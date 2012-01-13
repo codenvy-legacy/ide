@@ -69,7 +69,7 @@ private static final String TEST_FOLDER = DeployPublicKeyTest.class.getSimpleNam
       }
    }
    
-   @Test
+   //@Test
    public void testDeployPublicKey() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

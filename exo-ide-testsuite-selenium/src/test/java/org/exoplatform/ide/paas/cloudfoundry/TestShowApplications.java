@@ -36,7 +36,7 @@ import org.junit.Test;
 public class TestShowApplications extends CloudFoundryTest
 {
    
-   @Test
+  // @Test
    public void testShowApplications() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

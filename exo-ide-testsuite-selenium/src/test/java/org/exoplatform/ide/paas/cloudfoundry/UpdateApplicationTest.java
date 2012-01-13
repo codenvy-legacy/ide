@@ -70,7 +70,7 @@ public class UpdateApplicationTest extends CloudFoundryTest
       }
    }
 
-   @Test
+   //@Test
    public void testUpdateApplication() throws Exception
    {
       if (IDE.OUTPUT.isOpened()) {

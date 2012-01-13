@@ -27,9 +27,9 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version $Id: $
  *
  */
-@RunWith(Suite.class)
+/*@RunWith(Suite.class)
 @SuiteClasses({HerokuLoginTest.class, CreateApplicationTest.class, DeleteApplicationTest.class,
-   RenameApplicationTest.class, DeployPublicKeyTest.class, RakeConsoleTest.class})
+   RenameApplicationTest.class, DeployPublicKeyTest.class, RakeConsoleTest.class})*/
 public class HerokuSuite
 {
 

@@ -68,7 +68,7 @@ public class CreateApplicationTest extends BaseTest {
 	 * @throws Exception
 	 */
 	@Ignore
-	@Test
+	//@Test
 	public void testCreateApplication() throws Exception {
 		/*
 		 * Wait while IDE has been successfully initialized.

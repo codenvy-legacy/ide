@@ -64,7 +64,7 @@ public class DeleteApplicationTest extends BaseTest
       }
    }
 
-   @Test
+  // @Test
    public void testDeleteApplication() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

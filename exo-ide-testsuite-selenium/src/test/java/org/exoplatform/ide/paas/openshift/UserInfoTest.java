@@ -112,7 +112,7 @@ public class UserInfoTest extends BaseTest
     * @throws Exception
     */
    @Ignore
-   @Test
+   //@Test
    public void testShowUserInfo() throws Exception
    {
       resetServices();

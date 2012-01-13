@@ -66,7 +66,7 @@ public class HerokuLoginTest extends BaseTest
       }
    }
    
-   @Test
+   //@Test
    public void testLogin() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

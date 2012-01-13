@@ -29,12 +29,12 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version $
  */
 
-@RunWith(Suite.class)
+/*@RunWith(Suite.class)
 @SuiteClasses({
    CreateDomainTest.class,
    CreateApplicationTest.class,
    ApplicationInfoTest.class
-   })
+   })*/
 public class OpenShiftTestSuite
 {
 

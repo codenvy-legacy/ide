@@ -69,7 +69,7 @@ public class ApplicationInfoTest extends BaseTest
     * @throws Exception
     */
    @Ignore
-   @Test
+ //  @Test
    public void testCreateApplicationAndGetItInfo() throws Exception
    {
       /*

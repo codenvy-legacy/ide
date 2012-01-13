@@ -69,7 +69,7 @@ public class UpdateMemoryTest extends CloudFoundryTest
       }
    }
 
-   @Test
+  // @Test
    public void testUpdateMemory() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

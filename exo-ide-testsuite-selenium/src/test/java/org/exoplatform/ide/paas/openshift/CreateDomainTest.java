@@ -41,7 +41,7 @@ public class CreateDomainTest extends BaseTest {
 	 * @throws Exception
 	 */
 	@Ignore
-	@Test
+	//@Test
 	public void testCreateDomain() throws Exception {
 		/*
 		 * Wait while IDE has been successfully initialized.

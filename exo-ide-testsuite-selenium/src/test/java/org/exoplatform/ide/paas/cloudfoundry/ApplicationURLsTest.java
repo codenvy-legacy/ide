@@ -68,7 +68,7 @@ public class ApplicationURLsTest extends CloudFoundryTest
       }
    }
 
-   @Test
+  // @Test
    public void testApplicationURLs() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

@@ -31,7 +31,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version $
  */
 
-@RunWith(Suite.class)
+/*@RunWith(Suite.class)
 @SuiteClasses({
    TestCreateApplication.class,
    ApplicationInfoTest.class,
@@ -40,7 +40,7 @@ import org.junit.runners.Suite.SuiteClasses;
    UpdateInstancesTest.class,
    TestShowApplications.class,
    UpdateApplicationTest.class
-   })
+   })*/
    public class CloudFoundrySuite
 {
    

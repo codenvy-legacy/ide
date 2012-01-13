@@ -66,7 +66,7 @@ public class CreateApplicationTest extends BaseTest
       }
    }
 
-   @Test
+   //@Test
    public void testCreateApplication() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

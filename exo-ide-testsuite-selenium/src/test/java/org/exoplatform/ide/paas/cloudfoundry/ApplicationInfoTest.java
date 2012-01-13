@@ -67,7 +67,7 @@ public class ApplicationInfoTest extends CloudFoundryTest
       }
    }
 
-   @Test
+  // @Test
    public void testApplicationInfo() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

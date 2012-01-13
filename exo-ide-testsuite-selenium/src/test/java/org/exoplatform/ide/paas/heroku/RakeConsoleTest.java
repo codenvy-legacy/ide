@@ -70,7 +70,7 @@ public class RakeConsoleTest extends BaseTest
       }
    }
    
-   @Test
+   //@Test
    public void testRakeConsole() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();

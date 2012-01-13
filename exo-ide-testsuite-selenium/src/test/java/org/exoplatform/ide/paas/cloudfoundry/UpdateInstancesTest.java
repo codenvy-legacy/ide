@@ -69,7 +69,7 @@ public class UpdateInstancesTest extends CloudFoundryTest
       }
    }
 
-   @Test
+   //@Test
    public void testUpdateInstances() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
