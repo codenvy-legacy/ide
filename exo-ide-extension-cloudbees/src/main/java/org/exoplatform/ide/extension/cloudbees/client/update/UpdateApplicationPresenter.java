@@ -164,8 +164,8 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
             @Override
             protected void onSuccess(Map<String, String> result)
             {
-               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
-                  .applicationUpdatedMsg(appTitle), Type.INFO));
+               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationUpdatedMsg(appTitle),
+                  Type.INFO));
             }
          });
    }

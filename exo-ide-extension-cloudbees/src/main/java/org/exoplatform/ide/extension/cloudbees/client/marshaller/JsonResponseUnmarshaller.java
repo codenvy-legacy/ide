@@ -32,19 +32,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Unmarshaller for response from server, when json is returned.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateJavaProjectUnmarshaller.java Jun 22, 2011 5:06:40 PM vereshchaka $
- *
+ * 
  */
 public class JsonResponseUnmarshaller implements Unmarshallable
 {
-   
+
    private Map<String, Object> responseValues;
-   
+
    public JsonResponseUnmarshaller(Map<String, Object> values)
    {
       this.responseValues = values;
@@ -65,7 +64,7 @@ public class JsonResponseUnmarshaller implements Unmarshallable
 
       parseObject(jsonObject, responseValues);
    }
-   
+
    private void parseObject(JSONObject jsonObject, Map<String, Object> objectsMap)
    {
       for (String key : jsonObject.keySet())
@@ -93,7 +92,7 @@ public class JsonResponseUnmarshaller implements Unmarshallable
          }
       }
    }
-   
+
    /**
     * @param key
     * @param object
@@ -106,7 +105,7 @@ public class JsonResponseUnmarshaller implements Unmarshallable
    }
 
    /**
-    * @param key 
+    * @param key
     * @param array
     */
    private void parseListValue(String key, JSONArray array)
@@ -118,7 +117,7 @@ public class JsonResponseUnmarshaller implements Unmarshallable
       }
       responseValues.put(key, list);
    }
-   
+
    /**
     * Build {@link JavaScriptObject} from string.
     * 
@@ -126,12 +125,12 @@ public class JsonResponseUnmarshaller implements Unmarshallable
     * @return {@link JavaScriptObject}
     */
    protected static native JavaScriptObject build(String json) /*-{
-      try {
-         var object = eval('(' + json + ')');
-         return object;
-      } catch (e) {
-         return null;
-      }
-   }-*/;
+                                                               try {
+                                                               var object = eval('(' + json + ')');
+                                                               return object;
+                                                               } catch (e) {
+                                                               return null;
+                                                               }
+                                                               }-*/;
 
 }

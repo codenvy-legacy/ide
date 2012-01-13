@@ -36,8 +36,8 @@ import java.util.Map.Entry;
  * Application information view.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 2:57:22 PM anya $
- *
+ * @version $Id: Jun 1, 2011 2:57:22 PM anya $
+ * 
  */
 public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPresenter.Display
 {
@@ -54,7 +54,7 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
     */
    @UiField
    ImageButton okButton;
-   
+
    /**
     * Application's information grid.
     */

@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event occurs, when CloudBees application is deleted.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 8, 2011 2:39:55 PM anya $
- *
+ * @version $Id: Dec 8, 2011 2:39:55 PM anya $
+ * 
  */
 public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
 {

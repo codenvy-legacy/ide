@@ -26,7 +26,7 @@ package org.exoplatform.ide.extension.cloudbees.client.login;
  */
 public interface LoginCanceledHandler
 {
-   
+
    void onLoginCanceled();
 
 }

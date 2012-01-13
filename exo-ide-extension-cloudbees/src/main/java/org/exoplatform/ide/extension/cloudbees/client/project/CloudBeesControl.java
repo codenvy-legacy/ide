@@ -35,8 +35,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * Control for user to manage project, deployed on CloudBees.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 2, 2011 6:00:15 PM anya $
- *
+ * @version $Id: Dec 2, 2011 6:00:15 PM anya $
+ * 
  */
 public class CloudBeesControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
    FolderRefreshedHandler

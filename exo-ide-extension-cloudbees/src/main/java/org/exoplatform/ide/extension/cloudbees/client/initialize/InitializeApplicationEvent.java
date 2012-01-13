@@ -31,7 +31,8 @@ public class InitializeApplicationEvent extends GwtEvent<InitializeApplicationHa
    /**
     * Type used to register this event.
     */
-   public static final GwtEvent.Type<InitializeApplicationHandler> TYPE = new GwtEvent.Type<InitializeApplicationHandler>();
+   public static final GwtEvent.Type<InitializeApplicationHandler> TYPE =
+      new GwtEvent.Type<InitializeApplicationHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()

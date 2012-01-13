@@ -25,13 +25,13 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeleteApplicationEvent.java Jul 1, 2011 12:56:44 PM vereshchaka $
- *
+ * 
  */
 public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
 {
 
    private String appId;
-   
+
    private String appTitle;
 
    /**
@@ -90,7 +90,5 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
    {
       return appTitle;
    }
-   
-   
 
 }

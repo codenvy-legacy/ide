@@ -34,15 +34,13 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import java.util.Map;
 
 /**
- * Presenter for deleting application from CloudBees.
- * Performs following actions on delete:
- * 1. Gets application id (application info) by work dir (location on file system).
- * 2. Asks user to confirm the deleting of the application.
- * 3. When user confirms - performs deleting the application.
+ * Presenter for deleting application from CloudBees. Performs following actions on delete: 1. Gets application id (application
+ * info) by work dir (location on file system). 2. Asks user to confirm the deleting of the application. 3. When user confirms -
+ * performs deleting the application.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeleteApplicationPresenter.java Jul 1, 2011 12:59:52 PM vereshchaka $
- *
+ * 
  */
 public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler
 {
@@ -60,8 +58,8 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      //application id and application title can be received from event
-      //e.g.when, delete from application manager form
+      // application id and application title can be received from event
+      // e.g.when, delete from application manager form
       if (event.getAppId() != null && event.getAppTitle() != null)
       {
          String appId = event.getAppId();

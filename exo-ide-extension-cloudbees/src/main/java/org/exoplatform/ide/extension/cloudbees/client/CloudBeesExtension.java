@@ -44,12 +44,13 @@ import com.google.gwt.core.client.GWT;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudBeesExtension.java Jun 23, 2011 10:11:59 AM vereshchaka $
- *
+ * 
  */
 public class CloudBeesExtension extends Extension implements InitializeServicesHandler
 {
-   
-   public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(CloudBeesLocalizationConstant.class);
+
+   public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT
+      .create(CloudBeesLocalizationConstant.class);
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
@@ -57,7 +58,8 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new CloudBeesClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
+      new CloudBeesClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(),
+         event.getLoader());
    }
 
    /**
@@ -67,14 +69,14 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      
+
       IDE.getInstance().addControl(new CloudBeesControl());
       IDE.getInstance().addControl(new InitializeApplicationControl());
       IDE.getInstance().addControl(new ApplicationInfoControl());
       IDE.getInstance().addControl(new UpdateApplicationControl());
       IDE.getInstance().addControl(new DeleteApplicationControl());
       IDE.getInstance().addControl(new ApplicationListControl());
-      
+
       new InitializeApplicationPresenter();
       new LoginPresenter();
       new ApplicationInfoPresenter();

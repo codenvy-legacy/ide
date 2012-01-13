@@ -37,8 +37,8 @@ import org.exoplatform.ide.extension.cloudbees.client.list.HasApplicationListAct
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 21, 2011 evgen $
- *
+ * @version $Id: Sep 21, 2011 evgen $
+ * 
  */
 public class ApplicationListView extends ViewImpl implements Display
 {
@@ -48,10 +48,10 @@ public class ApplicationListView extends ViewImpl implements Display
    interface ApplicationListViewUiBinder extends UiBinder<Widget, ApplicationListView>
    {
    }
-   
+
    @UiField
    ImageButton okButton;
-   
+
    @UiField
    ApplicationListGrid applicationGrid;
 

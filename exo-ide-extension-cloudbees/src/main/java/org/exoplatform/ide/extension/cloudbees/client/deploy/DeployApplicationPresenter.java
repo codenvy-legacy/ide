@@ -56,7 +56,7 @@ import java.util.Map.Entry;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
- *
+ * 
  */
 public class DeployApplicationPresenter implements ApplicationBuiltHandler, PaasComponent, VfsChangedHandler
 {
@@ -90,7 +90,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
    private String name;
 
    /**
-    * Public url to war file of application. 
+    * Public url to war file of application.
     */
    private String warUrl;
 
@@ -147,7 +147,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
       }
    }
 
-   //----Implementation------------------------
+   // ----Implementation------------------------
 
    private void buildApplication()
    {

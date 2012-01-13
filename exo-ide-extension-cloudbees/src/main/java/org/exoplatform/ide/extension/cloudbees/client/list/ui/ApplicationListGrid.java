@@ -36,8 +36,8 @@ import org.exoplatform.ide.extension.cloudbees.client.list.HasApplicationListAct
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 22, 2011 evgen $
- *
+ * @version $Id: Sep 22, 2011 evgen $
+ * 
  */
 public class ApplicationListGrid extends ListGrid<ApplicationInfo> implements HasApplicationListActions
 {

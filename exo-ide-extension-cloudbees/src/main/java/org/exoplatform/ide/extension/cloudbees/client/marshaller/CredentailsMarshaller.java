@@ -30,8 +30,8 @@ import java.util.HashMap;
  * Marshaller for creation login request with credentials in JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 30, 2011 9:26:36 AM anya $
- *
+ * @version $Id: May 30, 2011 9:26:36 AM anya $
+ * 
  */
 public class CredentailsMarshaller implements Marshallable
 {

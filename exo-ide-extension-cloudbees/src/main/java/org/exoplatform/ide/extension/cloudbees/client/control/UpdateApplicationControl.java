@@ -42,7 +42,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UpdateApplicationControl.java Oct 10, 2011 4:59:30 PM vereshchaka $
- *
+ * 
  */
 public class UpdateApplicationControl extends SimpleControl implements IDEControl, VfsChangedHandler,
    ItemsSelectedHandler, ViewVisibilityChangedHandler
@@ -57,7 +57,7 @@ public class UpdateApplicationControl extends SimpleControl implements IDEContro
    private VirtualFileSystemInfo vfsInfo;
 
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private boolean isProjectExplorerVisible;
 
    public UpdateApplicationControl()
@@ -79,7 +79,7 @@ public class UpdateApplicationControl extends SimpleControl implements IDEContro
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      
+
       setVisible(true);
    }
 

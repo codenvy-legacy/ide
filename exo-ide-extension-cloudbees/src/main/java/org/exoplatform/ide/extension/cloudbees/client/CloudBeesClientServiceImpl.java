@@ -41,7 +41,7 @@ import java.util.Map;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudBeesServiceImpl.java Jun 23, 2011 10:11:33 AM vereshchaka $
- *
+ * 
  */
 public class CloudBeesClientServiceImpl extends CloudBeesClientService
 {
@@ -89,7 +89,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deployWar(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deployWar(java.lang.String, java.lang.String,
+    *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void deployWar(String appId, String warFile, String message,
@@ -165,7 +166,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getApplicationInfo(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void getApplicationInfo(String appId, String vfsId, String projectId,
@@ -189,7 +191,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deleteApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deleteApplication(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void deleteApplication(String appId, String vfsId, String projectId,
@@ -230,7 +233,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#initializeApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#initializeApplication(java.lang.String,
+    *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void initializeApplication(String appId, String vfsId, String projectId, String warFile, String message,
@@ -272,7 +276,9 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#updateApplication(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#updateApplication(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void updateApplication(String appId, String vfsId, String projectId, String warFile, String message,

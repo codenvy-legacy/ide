@@ -29,7 +29,7 @@ import java.util.Map;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudBessService.java Jun 23, 2011 10:11:13 AM vereshchaka $
- *
+ * 
  */
 public abstract class CloudBeesClientService
 {
@@ -103,7 +103,7 @@ public abstract class CloudBeesClientService
     */
    public abstract void deleteApplication(String appId, String vfsId, String projectId,
       CloudBeesAsyncRequestCallback<String> callback);
-   
+
    /**
     * Update application on CloudBees.
     * 
@@ -114,8 +114,8 @@ public abstract class CloudBeesClientService
     * @param message initialization message
     * @param callback callback
     */
-   public abstract void updateApplication(String appId, String vfsId, String projectId, String warFile,
-      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+   public abstract void updateApplication(String appId, String vfsId, String projectId, String warFile, String message,
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback);
 
    /**
     * Deploy war with the application.

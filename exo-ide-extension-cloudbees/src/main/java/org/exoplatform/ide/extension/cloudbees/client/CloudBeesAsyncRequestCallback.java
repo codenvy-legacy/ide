@@ -28,13 +28,12 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginEvent;
 
 /**
- * Asynchronous CloudBees request.
- * The {{@link #onFailure(Throwable)}} method contains the check for 
- * user not authorized exception, in this case - the {@link LoginEvent} is fired.
+ * Asynchronous CloudBees request. The {{@link #onFailure(Throwable)} method contains the check for user not authorized exception,
+ * in this case - the {@link LoginEvent} is fired.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: HerokuAsyncRequestCallback.java Jun 24, 2011 2:27:50 PM vereshchaka $
- *
+ * 
  */
 public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
@@ -42,12 +41,13 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
     * Events handler.
     */
    private HandlerManager eventbus;
-   
+
    private LoggedInHandler loggedIn;
-   
+
    private LoginCanceledHandler loginCanceled;
 
-   public CloudBeesAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
+   public CloudBeesAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn,
+      LoginCanceledHandler loginCanceled)
    {
       this.eventbus = eventBus;
       this.loggedIn = loggedIn;
@@ -64,12 +64,12 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
       if (exception instanceof ServerException)
       {
          ServerException serverException = (ServerException)exception;
-         //because of CloudBees returned not 401 status, but 500 status
-         //and explanation, that user not autherised in text message,
-         //that's why we must parse text message
+         // because of CloudBees returned not 401 status, but 500 status
+         // and explanation, that user not autherised in text message,
+         // that's why we must parse text message
          final String exceptionMsg = serverException.getMessage();
-         if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()  && serverException.getMessage() != null
-                  && exceptionMsg.contains("AuthFailure"))
+         if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
+            && exceptionMsg.contains("AuthFailure"))
          {
             eventbus.fireEvent(new LoginEvent(loggedIn, loginCanceled));
             return;

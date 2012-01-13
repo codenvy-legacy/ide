@@ -51,11 +51,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- *  Presenter for managing project, deployed on CloudBeess.
+ * Presenter for managing project, deployed on CloudBeess.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 5, 2011 9:42:32 AM anya $
- *
+ * @version $Id: Dec 5, 2011 9:42:32 AM anya $
+ * 
  */
 public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOpenedHandler,
    ManageCloudBeesProjectHandler, ViewClosedHandler, ProjectClosedHandler, ApplicationDeletedHandler

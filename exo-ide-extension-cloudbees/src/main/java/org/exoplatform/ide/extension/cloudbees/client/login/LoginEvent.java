@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.cloudbees.client.login;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to log in OpenShift.
- * Implement {@link LoginHandler} to handle event.
+ * Event occurs, when user tries to log in OpenShift. Implement {@link LoginHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 12:32:53 PM anya $
- *
+ * @version $Id: Jun 7, 2011 12:32:53 PM anya $
+ * 
  */
 public class LoginEvent extends GwtEvent<LoginHandler>
 {
@@ -34,22 +33,22 @@ public class LoginEvent extends GwtEvent<LoginHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<LoginHandler> TYPE = new GwtEvent.Type<LoginHandler>();
-   
+
    private LoggedInHandler loggedIn;
-   
+
    private LoginCanceledHandler loginCanceled;
-   
+
    public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
    {
       this.loggedIn = loggedIn;
       this.loginCanceled = loginCanceled;
    }
-   
+
    public LoggedInHandler getLoggedIn()
    {
       return loggedIn;
    }
-   
+
    /**
     * @return the loginCanceled
     */

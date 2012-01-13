@@ -19,7 +19,7 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ApplicationNameView.java Jun 27, 2011 12:03:57 PM vereshchaka $
- *
+ * 
  */
 public class InitializeApplicationView extends ViewImpl implements InitializeApplicationPresenter.Display
 {

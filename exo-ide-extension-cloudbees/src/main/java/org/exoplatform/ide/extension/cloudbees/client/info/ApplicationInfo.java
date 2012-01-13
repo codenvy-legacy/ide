@@ -25,8 +25,8 @@ import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 21, 2011 evgen $
- *
+ * @version $Id: Sep 21, 2011 evgen $
+ * 
  */
 public class ApplicationInfo
 {
@@ -221,7 +221,7 @@ public class ApplicationInfo
 
       for (String key : init.keySet())
       {
-         //all fields has id JSONString values 
+         // all fields has id JSONString values
          map.put(key, init.get(key).isString().stringValue());
       }
 

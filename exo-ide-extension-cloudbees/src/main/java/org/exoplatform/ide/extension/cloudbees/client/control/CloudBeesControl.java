@@ -28,15 +28,15 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 11:01:19 AM vereshchaka $
- *
+ * 
  */
 public class CloudBeesControl extends SimpleControl implements IDEControl
 {
-   
+
    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlId();
-   
+
    private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlTitle();
-   
+
    private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlPrompt();
 
    /**

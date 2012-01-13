@@ -52,7 +52,7 @@ import java.util.Map.Entry;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationPresenter.java Jun 23, 2011 12:49:09 PM vereshchaka $
- *
+ * 
  */
 public class InitializeApplicationPresenter extends GitPresenter implements ViewClosedHandler,
    InitializeApplicationHandler, ApplicationBuiltHandler
@@ -232,8 +232,7 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
    }
 
    /**
-    * Set the application id, which has the next form:
-    * "domain/aplicationName".
+    * Set the application id, which has the next form: "domain/aplicationName".
     */
    private void setApplicationId()
    {

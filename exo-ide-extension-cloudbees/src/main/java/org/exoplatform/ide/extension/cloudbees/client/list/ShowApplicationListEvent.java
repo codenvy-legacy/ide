@@ -22,8 +22,8 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 21, 2011 evgen $
- *
+ * @version $Id: Sep 21, 2011 evgen $
+ * 
  */
 public class ShowApplicationListEvent extends GwtEvent<ShowApplicationListHandler>
 {

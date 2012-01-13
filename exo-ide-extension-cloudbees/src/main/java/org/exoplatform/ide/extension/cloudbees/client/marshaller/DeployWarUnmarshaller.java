@@ -28,19 +28,18 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 import java.util.Map;
 
-
 /**
  * Unmarshaller for response from server, when deploy war application.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateJavaProjectUnmarshaller.java Jun 22, 2011 5:06:40 PM vereshchaka $
- *
+ * 
  */
 public class DeployWarUnmarshaller implements Unmarshallable
 {
-   
+
    private Map<String, String> responseValues;
-   
+
    public DeployWarUnmarshaller(Map<String, String> values)
    {
       this.responseValues = values;
@@ -61,7 +60,7 @@ public class DeployWarUnmarshaller implements Unmarshallable
 
       parseObject(jsonObject, responseValues);
    }
-   
+
    private void parseObject(JSONObject jsonObject, Map<String, String> objectsMap)
    {
       for (String key : jsonObject.keySet())
@@ -73,7 +72,7 @@ public class DeployWarUnmarshaller implements Unmarshallable
          }
       }
    }
-   
+
    /**
     * Build {@link JavaScriptObject} from string.
     * 
@@ -81,12 +80,12 @@ public class DeployWarUnmarshaller implements Unmarshallable
     * @return {@link JavaScriptObject}
     */
    protected static native JavaScriptObject build(String json) /*-{
-      try {
-         var object = eval('(' + json + ')');
-         return object;
-      } catch (e) {
-         return null;
-      }
-   }-*/;
+                                                               try {
+                                                               var object = eval('(' + json + ')');
+                                                               return object;
+                                                               } catch (e) {
+                                                               return null;
+                                                               }
+                                                               }-*/;
 
 }

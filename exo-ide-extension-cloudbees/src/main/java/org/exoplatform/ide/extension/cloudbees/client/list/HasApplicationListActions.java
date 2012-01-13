@@ -25,8 +25,8 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Sep 22, 2011 evgen $
- *
+ * @version $Id: Sep 22, 2011 evgen $
+ * 
  */
 public interface HasApplicationListActions extends ListGridItem<ApplicationInfo>
 {
