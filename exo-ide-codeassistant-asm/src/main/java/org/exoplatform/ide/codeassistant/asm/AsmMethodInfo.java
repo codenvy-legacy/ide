@@ -116,7 +116,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
          {
             // remove first ( and last ) from string
             methodParams = methodParams.substring(1, methodParams.length() - 1);
-            ArrayList<String> params = new ArrayList<String>();
+            List<String> params = new ArrayList<String>();
             int genericDepth = 0;
             int paramBeginsFrom = 0;
             for (int index = 0; index < methodParams.length(); index++)
