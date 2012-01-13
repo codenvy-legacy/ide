@@ -31,7 +31,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class UploadFileEvent extends GwtEvent<UploadFileHandler>
 {
-   
+
    public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
 
    @Override

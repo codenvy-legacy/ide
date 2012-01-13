@@ -26,12 +26,11 @@ import com.google.gwt.junit.client.GWTTestCase;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
 public abstract class AbstractGwtTest extends GWTTestCase
 {
    @Override
    public String getModuleName()
    {
       return "org.exoplatform.ideall.IDEGwtTest";
-   }   
+   }
 }

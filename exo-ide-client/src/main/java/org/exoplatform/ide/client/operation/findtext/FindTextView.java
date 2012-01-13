@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 /**
  * Created by The eXo Platform SAS.
- *	
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:   ${date} ${time}
  *

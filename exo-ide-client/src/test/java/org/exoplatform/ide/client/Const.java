@@ -26,7 +26,7 @@ package org.exoplatform.ide.client;
 
 public class Const
 {
-   
+
    public static final String REST_SERVICE_CONTEXT = "/rest";
 
 }

@@ -343,11 +343,11 @@ public class SettingsServiceImpl extends SettingsService
    }
 
    private static native String javaScriptDecodeURIComponent(String text) /*-{
-		return decodeURIComponent(text);
-   }-*/;
+                                                                          return decodeURIComponent(text);
+                                                                          }-*/;
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-		return encodeURIComponent(text);
-   }-*/;
+                                                                          return encodeURIComponent(text);
+                                                                          }-*/;
 
 }
