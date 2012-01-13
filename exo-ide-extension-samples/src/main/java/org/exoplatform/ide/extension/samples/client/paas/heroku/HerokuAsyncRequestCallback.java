@@ -37,16 +37,16 @@ public abstract class HerokuAsyncRequestCallback<T> extends AsyncRequestCallback
     * Events handler.
     */
    private HandlerManager eventbus;
-   
+
    private LoggedInHandler loggedIn;
-   
+
    public HerokuAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
    {
       this.eventbus = eventBus;
       this.loggedIn = loggedIn;
       setEventBus(eventBus);
    }
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */

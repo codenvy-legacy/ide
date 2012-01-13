@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.samples.client.paas.login;
 /**
  * Can be called if Cancel button was clicked in login dialog.
  * <p/>
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: LoginCanceledHandler.java Nov 24, 2011 11:29:08 AM vereshchaka $
  */

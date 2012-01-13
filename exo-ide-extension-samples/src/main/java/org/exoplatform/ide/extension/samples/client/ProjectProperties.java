@@ -24,8 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Storage for project properties.
- * TODO: Remove this class, when project notion on client will be created.
+ * Storage for project properties. TODO: Remove this class, when project notion on client will be created.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectProperties.java Sep 8, 2011 6:17:11 PM vereshchaka $
@@ -35,34 +34,33 @@ public class ProjectProperties
    public interface ProjectType
    {
       public static final String SERVLET_JSP = "Servlet/JSP";
-      
+
       public static final String SPRING = "Spring";
    }
-   
+
    public interface Paas
    {
       public static final String NONE = "None";
-      
+
       public static final String CLOUDFOUNDRY = "CloudFoundry";
-      
+
       public static final String CLOUDBEES = "CloudBees";
-      
+
       public static final String HEROKU = "Heroku";
-      
+
       public static final String OPENSHIFT = "OpenShift";
    }
-   
+
    private String name;
-   
+
    private String type;
-   
+
    private String paas;
-   
+
    private FolderModel parenFolder;
-   
+
    /**
-    * Can contain variable properties:
-    * If project will be deploy to CloudFoundry, than:
+    * Can contain variable properties: If project will be deploy to CloudFoundry, than:
     * <ul>
     * <li><code>name</code> - the name to deploy to CloudFoundry</li>
     * <li><code>url</code> - the url to deploy to CloudFoundry</li>
@@ -76,16 +74,16 @@ public class ProjectProperties
     * </ul>
     */
    private Map<String, String> properties = new HashMap<String, String>();
-   
+
    public ProjectProperties()
    {
    }
-   
+
    public ProjectProperties(String name)
    {
       this.name = name;
    }
-   
+
    /**
     * @return the name
     */
@@ -93,7 +91,7 @@ public class ProjectProperties
    {
       return name;
    }
-   
+
    /**
     * @param name the name to set
     */
@@ -133,7 +131,7 @@ public class ProjectProperties
    {
       this.paas = paas;
    }
-   
+
    /**
     * @param parenFolder the parenFolder to set
     */
@@ -141,7 +139,7 @@ public class ProjectProperties
    {
       this.parenFolder = parenFolder;
    }
-   
+
    /**
     * @return the parenFolder
     */
@@ -149,10 +147,9 @@ public class ProjectProperties
    {
       return parenFolder;
    }
-   
+
    /**
-    * Contains variable properties:
-    * If project will be deploy to CloudFoundry, than:
+    * Contains variable properties: If project will be deploy to CloudFoundry, than:
     * <ul>
     * <li><code>cf-name</code> - the name to deploy to CloudFoundry</li>
     * <li><code>url</code> - the url to deploy to CloudFoundry</li>
@@ -163,6 +160,7 @@ public class ProjectProperties
     * <li><code>domain</code> - the domain</li>
     * <li><code>cb-name</code> - the name of application</li>
     * </ul>
+    * 
     * @return the properties
     */
    public Map<String, String> getProperties()

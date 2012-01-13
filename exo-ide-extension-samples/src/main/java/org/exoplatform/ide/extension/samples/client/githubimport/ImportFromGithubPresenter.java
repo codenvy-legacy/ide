@@ -69,7 +69,7 @@ import java.util.Set;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
- *
+ * 
  */
 public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, ViewClosedHandler, VfsChangedHandler,
    GithubStep<ProjectData>, ApplicationSettingsReceivedHandler
@@ -103,12 +103,12 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
 
    private Display display;
 
-//   private String gitUrl;
-//
-//   private String projectType;
-//
-//   private String projectName;
-//
+   // private String gitUrl;
+   //
+   // private String projectType;
+   //
+   // private String projectName;
+   //
    private VirtualFileSystemInfo vfs;
 
    private GithubStep<ProjectData> nextStep;
@@ -178,7 +178,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
             closeView();
          }
       });
-      
+
       final Set<String> types = ProjectResolver.getProjectsTypes();
       display.setProjectTypeValues(types.toArray(new String[types.size()]));
 
@@ -212,110 +212,110 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          });
    }
 
-//   /**
-//    * For public repos, the URL can be a read-only URL like 
-//    * <code>git://github.com/user/repo.git</code> or an HTTP read-only URL like 
-//    * <code>http://github.com/user/repo.git</code>.
-//    * <p/>
-//    * 
-//    * For private repos, you must use a private ssh url like 
-//    * <code>git@github.com:user/repo.git</code>.
-//    * <p/>
-//    * 
-//    * From here http://help.github.com/remotes/
-//    * 
-//    * @param gitUrl
-//    * @return
-//    */
-//   private boolean isPublicUrl(String gitUrl)
-//   {
-//      if (gitUrl == null || gitUrl.isEmpty())
-//         return false;
-//
-//      if (gitUrl.startsWith("git@"))
-//         return false;
-//
-//      if ((gitUrl.startsWith("git:") || gitUrl.startsWith("https:")) && gitUrl.endsWith(".git"))
-//         return true;
-//
-//      return false;
-//   }
+   // /**
+   // * For public repos, the URL can be a read-only URL like
+   // * <code>git://github.com/user/repo.git</code> or an HTTP read-only URL like
+   // * <code>http://github.com/user/repo.git</code>.
+   // * <p/>
+   // *
+   // * For private repos, you must use a private ssh url like
+   // * <code>git@github.com:user/repo.git</code>.
+   // * <p/>
+   // *
+   // * From here http://help.github.com/remotes/
+   // *
+   // * @param gitUrl
+   // * @return
+   // */
+   // private boolean isPublicUrl(String gitUrl)
+   // {
+   // if (gitUrl == null || gitUrl.isEmpty())
+   // return false;
+   //
+   // if (gitUrl.startsWith("git@"))
+   // return false;
+   //
+   // if ((gitUrl.startsWith("git:") || gitUrl.startsWith("https:")) && gitUrl.endsWith(".git"))
+   // return true;
+   //
+   // return false;
+   // }
 
-//   private void createProject()
-//   {
-//      FolderModel parent = (FolderModel)vfs.getRoot();
-//      ProjectModel model = new ProjectModel();
-//      model.setName(projectName);
-//      model.setProjectType(projectType);
-//      model.setParent(parent);
-//      try
-//      {
-//         VirtualFileSystem.getInstance().createProject(
-//            parent,
-//            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(
-//               new ProjectUnmarshaller(model))
-//            {
-//
-//               @Override
-//               protected void onSuccess(ProjectModel result)
-//               {
-//                  cloneRepository(result);
-//               }
-//
-//               @Override
-//               protected void onFailure(Throwable exception)
-//               {
-//                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
-//               }
-//            });
-//      }
-//      catch (RequestException e)
-//      {
-//         IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
-//      }
-//   }
+   // private void createProject()
+   // {
+   // FolderModel parent = (FolderModel)vfs.getRoot();
+   // ProjectModel model = new ProjectModel();
+   // model.setName(projectName);
+   // model.setProjectType(projectType);
+   // model.setParent(parent);
+   // try
+   // {
+   // VirtualFileSystem.getInstance().createProject(
+   // parent,
+   // new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(
+   // new ProjectUnmarshaller(model))
+   // {
+   //
+   // @Override
+   // protected void onSuccess(ProjectModel result)
+   // {
+   // cloneRepository(result);
+   // }
+   //
+   // @Override
+   // protected void onFailure(Throwable exception)
+   // {
+   // IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
+   // }
+   // });
+   // }
+   // catch (RequestException e)
+   // {
+   // IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
+   // }
+   // }
 
-//   private void cloneRepository(final ProjectModel project)
-//   {
-//      try
-//      {
-//         GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitUrl, null,
-//            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
-//            {
-//
-//               @Override
-//               protected void onSuccess(String result)
-//               {
-//                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-//                  IDE.fireEvent(new ProjectCreatedEvent(project));
-//                  IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
-//               }
-//
-//               @Override
-//               protected void onFailure(Throwable exception)
-//               {
-//                  handleError(exception);
-//               }
-//            });
-//      }
-//      catch (RequestException e)
-//      {
-//         handleError(e);
-//      }
-//   }
+   // private void cloneRepository(final ProjectModel project)
+   // {
+   // try
+   // {
+   // GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitUrl, null,
+   // new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+   // {
+   //
+   // @Override
+   // protected void onSuccess(String result)
+   // {
+   // IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+   // IDE.fireEvent(new ProjectCreatedEvent(project));
+   // IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
+   // }
+   //
+   // @Override
+   // protected void onFailure(Throwable exception)
+   // {
+   // handleError(exception);
+   // }
+   // });
+   // }
+   // catch (RequestException e)
+   // {
+   // handleError(e);
+   // }
+   // }
 
-//   private String getRepoNameByUrl(String gitUrl)
-//   {
-//      String name = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf("."));
-//      return name;
-//   }
+   // private String getRepoNameByUrl(String gitUrl)
+   // {
+   // String name = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf("."));
+   // return name;
+   // }
 
-//   private void handleError(Throwable t)
-//   {
-//      String errorMessage =
-//         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
-//      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-//   }
+   // private void handleError(Throwable t)
+   // {
+   // String errorMessage =
+   // (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
+   // IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+   // }
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
@@ -352,7 +352,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       IDE.getInstance().openView((View)display);
       bindDisplay();
 
-      //      display.enableImportButton(false);
+      // display.enableImportButton(false);
    }
 
    private void closeView()

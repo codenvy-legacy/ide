@@ -30,8 +30,9 @@ import javax.ws.rs.core.Application;
 public class GithubServiceApplication extends Application
 {
    private Set<Class<?>> classes;
+
    private Set<Object> singletons;
-   
+
    public GithubServiceApplication()
    {
       classes = new HashSet<Class<?>>(1);
@@ -48,7 +49,7 @@ public class GithubServiceApplication extends Application
    {
       return classes;
    }
-   
+
    /**
     * @see javax.ws.rs.core.Application#getSingletons()
     */

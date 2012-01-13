@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OpenShiftAsyncRequestCallback.java Nov 24, 2011 3:48:28 PM vereshchaka $
- *
+ * 
  * @param <T>
  */
 public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallback<T>
@@ -39,16 +39,16 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
     * Events handler.
     */
    private HandlerManager eventbus;
-   
+
    private LoggedInHandler loggedIn;
-   
+
    public OpenShiftAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
    {
       this.eventbus = eventBus;
       this.loggedIn = loggedIn;
       setEventBus(eventBus);
    }
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */

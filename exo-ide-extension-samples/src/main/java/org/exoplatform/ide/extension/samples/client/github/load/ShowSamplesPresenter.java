@@ -53,7 +53,7 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesPresenter.java Aug 30, 2011 12:12:39 PM vereshchaka $
- *
+ * 
  */
 public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandler, ItemsSelectedHandler,
    GithubStep<ProjectData>
@@ -219,8 +219,8 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
     * <p/>
     * <code>Type: &lt;project type&gt; Desc: &lt;project description&gt;</code>
     * <p/>
-    * Return an array with 2 elements, where element[0] is the type of project
-    * and element[1] is the description
+    * Return an array with 2 elements, where element[0] is the type of project and element[1] is the description
+    * 
     * @param text
     * @return
     */
@@ -250,7 +250,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    @Override
    public void onOpen(ProjectData value)
    {
-      //it is the first step
+      // it is the first step
    }
 
    /**
@@ -292,7 +292,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    @Override
    public void setPreviousStep(GithubStep<ProjectData> step)
    {
-      //has no prev step
+      // has no prev step
    }
 
 }

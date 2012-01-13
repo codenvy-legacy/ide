@@ -77,6 +77,7 @@ import java.util.Map.Entry;
 /**
  * Presenter for deploying samples imported from GitHub.
  * <p/>
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeploySamplesPresenter.java Nov 22, 2011 10:35:16 AM vereshchaka $
  */
@@ -98,7 +99,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
       void enableFinishButton(boolean enable);
 
-      //CloudBees
+      // CloudBees
       HasValue<String> getSelectCloudBeesDomainField();
 
       HasValue<String> getCloudBeesNameField();
@@ -109,7 +110,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
       void setCloudBeesDomainsValueMap(String[] values);
 
-      //CloudFoundry
+      // CloudFoundry
       HasValue<String> getCloudFoundryNameField();
 
       HasValue<String> getCloudFoundryUrlField();
@@ -120,14 +121,14 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
       void setCloudFoundryAvailableTargets(String[] targets);
 
-      //Heroku
+      // Heroku
       void setVisibleHerokuPanel(boolean visible);
 
       HasValue<String> getHerokuApplicationNameField();
 
       HasValue<String> getHerokuRepositoryNameField();
 
-      //OpenShift
+      // OpenShift
       void setVisibleOpenShiftPanel(boolean visible);
 
       HasValue<String> getOpenShiftNameField();
@@ -161,25 +162,25 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private String warUrl;
 
-   //variables to store paas parameters
-   //TODO: more convenience store for this params
+   // variables to store paas parameters
+   // TODO: more convenience store for this params
 
-   //heroku
+   // heroku
    private String herokuAppName;
 
    private String herokuRemoveService;
 
-   //openShift
+   // openShift
    private String openShiftName;
 
    private String openShitfType;
 
-   //cloudBees
+   // cloudBees
    private String cloudBeesName;
 
    private String cloudBeesDomain;
 
-   //cloudFoudnry
+   // cloudFoudnry
    private String cloudFoundryName;
 
    private String cloudFoundryTarget;
@@ -208,8 +209,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onClick(ClickEvent event)
          {
-            //if one of field are changed, the new value must be saved in projectProperties.
-            //That's why, when Next button is clicked, the actual state are send to next step.
+            // if one of field are changed, the new value must be saved in projectProperties.
+            // That's why, when Next button is clicked, the actual state are send to next step.
             if (selectedPaaS.equals(ProjectProperties.Paas.CLOUDFOUNDRY))
             {
                validateCloudFoundryParams();
@@ -256,10 +257,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                display.setVisibleHerokuPanel(true);
                display.enableFinishButton(true);
             }
-            //            else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-            //            {
-            //               getOpenShiftTypes();
-            //            }
+            // else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
+            // {
+            // getOpenShiftTypes();
+            // }
             else
             {
                display.setVisibleCloudFoundryPanel(false);
@@ -423,7 +424,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    @Override
    public void onReturn()
    {
-      //the last step
+      // the last step
    }
 
    /**
@@ -432,7 +433,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    @Override
    public void setNextStep(GithubStep<ProjectData> step)
    {
-      //has no step, it is the last step.
+      // has no step, it is the last step.
    }
 
    /**
@@ -482,8 +483,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    }
 
    /**
-    * Fill cloudfoundry fields by values stored in project properties variable
-    * or by default values.
+    * Fill cloudfoundry fields by values stored in project properties variable or by default values.
     */
    private void fillCloudFoundryFields()
    {
@@ -542,8 +542,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       @Override
       public void onCancelLogin()
       {
-         //if while receiving domains from cloudbees was clicked Cancel button in login dialog
-         //than select in paas field NONE and hide all paases.
+         // if while receiving domains from cloudbees was clicked Cancel button in login dialog
+         // than select in paas field NONE and hide all paases.
          display.setVisibleCloudFoundryPanel(false);
          display.setVisibleHerokuPanel(false);
          display.setVisibleOpenShiftPanel(false);
@@ -562,11 +562,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    };
 
    /**
-    * Fill cloudbees name and domain fields with values, that user
-    * entered before (they are stored in Map in projectProperties variable).
+    * Fill cloudbees name and domain fields with values, that user entered before (they are stored in Map in projectProperties
+    * variable).
     * <p/>
-    * If no values are stored, than get the deploy name from the name of project
-    * and do nothing with domain field.
+    * If no values are stored, than get the deploy name from the name of project and do nothing with domain field.
     */
    private void fillCloudBeesFields()
    {
@@ -579,7 +578,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       display.enableFinishButton(deployName != null && !deployName.isEmpty());
    }
 
-   //---------------projects creation------------------------
+   // ---------------projects creation------------------------
 
    private void createEmptyProject()
    {
@@ -676,10 +675,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   {
                      deployToHeroku();
                   }
-                  //                  else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-                  //                  {
-                  //                     deployToOpenShift();
-                  //                  }
+                  // else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
+                  // {
+                  // deployToOpenShift();
+                  // }
                   else
                   {
                      checkIsMavenProject(project);
@@ -936,7 +935,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
       if (!appUris.isEmpty())
       {
-         //crop unnecessary symbols
+         // crop unnecessary symbols
          appUris = appUris.substring(2);
       }
       return appUris;
@@ -946,27 +945,27 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    {
       List<String> paas = new ArrayList<String>();
       paas.add(ProjectProperties.Paas.NONE);
-      //can be deployed to CloudBees
+      // can be deployed to CloudBees
       if ("Java Web".equals(type) || "Servlet/JSP".equals(type))
       {
          paas.add(ProjectProperties.Paas.CLOUDBEES);
       }
-      //can be deployed to CloudFoundry
+      // can be deployed to CloudFoundry
       if ("Rails".equals(type) || "Spring".equals(type) || "Java Web".equals(type) || "Servlet/JSP".equals(type))
       {
          paas.add(ProjectProperties.Paas.CLOUDFOUNDRY);
       }
-      //can be deployed to Heroku
+      // can be deployed to Heroku
       if ("Rails".equals(type))
       {
          paas.add(ProjectProperties.Paas.HEROKU);
       }
 
-      //      //can be deployed to OpenShift
-      //      if ("Rails".equals(type))
-      //      {
-      //         paas.add(ProjectProperties.Paas.OPENSHIFT);
-      //      }
+      // //can be deployed to OpenShift
+      // if ("Rails".equals(type))
+      // {
+      // paas.add(ProjectProperties.Paas.OPENSHIFT);
+      // }
       return paas.toArray(new String[paas.size()]);
    }
 

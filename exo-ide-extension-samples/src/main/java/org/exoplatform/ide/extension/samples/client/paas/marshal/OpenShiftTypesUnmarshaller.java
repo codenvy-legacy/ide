@@ -31,6 +31,7 @@ import java.util.List;
 /**
  * Unmarshaller for type of application on OpenShift.
  * <p/>
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OpenShiftTypesUnmarshaller.java Nov 23, 2011 3:30:08 PM vereshchaka $
  */
@@ -40,7 +41,7 @@ public class OpenShiftTypesUnmarshaller implements Unmarshallable
     * List of application types.
     */
    private List<String> applicationTypes;
-   
+
    public OpenShiftTypesUnmarshaller(List<String> applicationTypes)
    {
       this.applicationTypes = applicationTypes;

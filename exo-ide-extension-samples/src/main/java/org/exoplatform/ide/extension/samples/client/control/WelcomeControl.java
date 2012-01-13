@@ -37,11 +37,13 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 /**
  * Control to show welcome page.
  * <p/>
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubControl.java Nov 18, 2011 5:06:02 PM vereshchaka $
  */
 @RolesAllowed({"administrators", "developers"})
-public class WelcomeControl extends SimpleControl implements IDEControl, VfsChangedHandler, ViewClosedHandler, WelcomePageOpenedHandler
+public class WelcomeControl extends SimpleControl implements IDEControl, VfsChangedHandler, ViewClosedHandler,
+   WelcomePageOpenedHandler
 {
 
    private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.welcomeControlId();
@@ -51,7 +53,7 @@ public class WelcomeControl extends SimpleControl implements IDEControl, VfsChan
    private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.welcomeControlPrompt();
 
    private VirtualFileSystemInfo vfsInfo;
-   
+
    private boolean opened;
 
    /**
@@ -62,8 +64,7 @@ public class WelcomeControl extends SimpleControl implements IDEControl, VfsChan
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.welcome(),
-         SamplesClientBundle.INSTANCE.welcomeDisabled());
+      setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());
       setEvent(new OpenStartPageEvent());
    }
 

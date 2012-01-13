@@ -33,7 +33,7 @@ import java.util.Map;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesClientService.java Sep 2, 2011 12:34:16 PM vereshchaka $
- *
+ * 
  */
 public abstract class SamplesClientService
 {
@@ -54,16 +54,15 @@ public abstract class SamplesClientService
    }
 
    /**
-    * Get the list of available public repositories from GitHub
-    * with sample applications.
+    * Get the list of available public repositories from GitHub with sample applications.
     * 
     * @param callback the callback client has to implement
     */
    public abstract void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback);
-   
-   
+
    /**
     * Get the list of available public repositories from GitHub user.
+    * 
     * @param userName Name of GitHub User
     * @param callback the callback client has to implement
     */
@@ -93,6 +92,7 @@ public abstract class SamplesClientService
 
    /**
     * Login to paas.
+    * 
     * @param paas <code>cloudbees</code> or <code>cloudfoundry</code> - where to login
     * @param email email to login
     * @param password password
@@ -102,16 +102,18 @@ public abstract class SamplesClientService
 
    /**
     * Validates <code>create</code> CloudFoundry action before building project.
+    * 
     * @param server server
     * @param appName the name of application (if create - than required, if update - <code>null</code>)
     * @param workDir the work dir of application
     * @param callback callback, that client has to implement to handle response from server.
     */
-   public abstract void validateCloudfoundryAction(String server, String appName,
-      String workDir, CloudFoundryAsyncRequestCallback<String> callback);
+   public abstract void validateCloudfoundryAction(String server, String appName, String workDir,
+      CloudFoundryAsyncRequestCallback<String> callback);
 
    /**
     * Create application on CloudFoundry.
+    * 
     * @param server server
     * @param name - application name. This parameter is mandatory.
     * @param url - application URL.
@@ -119,25 +121,27 @@ public abstract class SamplesClientService
     * @param war - URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void createCloudFoundryApplication(String vfsId, String server, String name, String url, String workDir,
-      String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
-   
+   public abstract void createCloudFoundryApplication(String vfsId, String server, String name, String url,
+      String workDir, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+
    /**
     * Get the list of CloudFoundry targets.
+    * 
     * @param callback
     */
    public abstract void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback);
-   
+
    /**
     * Get the types of application on OpenShift.
+    * 
     * @param callback
     */
    public abstract void getOpenShiftTypes(AsyncRequestCallback<List<String>> callback);
-   
+
    public abstract void createOpenShitfApplication(String name, String vfsId, String projectId, String type,
       AsyncRequestCallback<String> callback);
-   
-   public abstract void createHerokuApplication(String applicationName, String vfsId, String projectid, String remoteName,
-      HerokuAsyncRequestCallback<String> callback);
+
+   public abstract void createHerokuApplication(String applicationName, String vfsId, String projectid,
+      String remoteName, HerokuAsyncRequestCallback<String> callback);
 
 }

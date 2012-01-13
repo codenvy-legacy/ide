@@ -37,8 +37,8 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
  * View for log in OpenShift.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 10:54:35 AM anya $
- *
+ * @version $Id: May 26, 2011 10:54:35 AM anya $
+ * 
  */
 public class LoginView extends ViewImpl implements LoginPresenter.Display
 {
@@ -55,12 +55,12 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
 
    private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
-   
+
    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.loginViewTitle();
 
    /**
-   * UI binder for this view.
-   */
+    * UI binder for this view.
+    */
    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
    interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
@@ -90,10 +90,10 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    Label loginLabel;
-   
+
    public LoginView()
    {
       super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT);

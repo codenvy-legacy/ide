@@ -42,26 +42,26 @@ import org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromG
  */
 public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandler
 {
-   
+
    public interface Display extends IsView
    {
       HasClickHandlers getSamplesLink();
-      
+
       HasClickHandlers getProjectLink();
-      
+
       HasClickHandlers getConvertLink();
-      
+
       HasClickHandlers getImportLink();
    }
-   
+
    private Display display;
-   
+
    public StartPagePresenter()
    {
       IDE.addHandler(OpenStartPageEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
+
    private void bindDisplay()
    {
       display.getSamplesLink().addClickHandler(new ClickHandler()
@@ -72,7 +72,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             IDE.fireEvent(new ShowSamplesEvent());
          }
       });
-      
+
       display.getProjectLink().addClickHandler(new ClickHandler()
       {
          @Override
@@ -81,20 +81,20 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             IDE.fireEvent(new CreateNewProjectEvent());
          }
       });
-      
+
       display.getConvertLink().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
             IDE.fireEvent(new ConvertToProjectEvent());
          }
       });
-      
+
       display.getImportLink().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {

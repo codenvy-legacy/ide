@@ -33,7 +33,7 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DomainsUnmarshaller.java Jun 27, 2011 11:21:02 AM vereshchaka $
- *
+ * 
  */
 public class DomainsUnmarshaller implements Unmarshallable
 {

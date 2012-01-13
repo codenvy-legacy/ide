@@ -23,12 +23,11 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to log in OpenShift.
- * Implement {@link LoginHandler} to handle event.
+ * Event occurs, when user tries to log in OpenShift. Implement {@link LoginHandler} to handle event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 12:32:53 PM anya $
- *
+ * @version $Id: Jun 7, 2011 12:32:53 PM anya $
+ * 
  */
 public class LoginEvent extends GwtEvent<LoginHandler>
 {
@@ -36,33 +35,33 @@ public class LoginEvent extends GwtEvent<LoginHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<LoginHandler> TYPE = new GwtEvent.Type<LoginHandler>();
-   
+
    private LoggedInHandler loggedIn;
-   
+
    private LoginCanceledHandler loginCanceled;
-   
+
    /**
     * Paas you want to login.
     */
    private SamplesClientService.Paas paas;
-   
+
    public LoginEvent(SamplesClientService.Paas paas, LoggedInHandler loggedIn)
    {
       this(paas, loggedIn, null);
    }
-   
+
    public LoginEvent(SamplesClientService.Paas paas, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
    {
       this.loggedIn = loggedIn;
       this.paas = paas;
       this.loginCanceled = loginCanceled;
    }
-   
+
    public LoggedInHandler getLoggedIn()
    {
       return loggedIn;
    }
-   
+
    /**
     * @return the loginCanceled
     */
@@ -70,7 +69,7 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    {
       return loginCanceled;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
@@ -88,7 +87,7 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    {
       handler.onLogin(this);
    }
-   
+
    /**
     * @return the paas
     */

@@ -21,14 +21,13 @@ package org.exoplatform.ide.extension.samples.client;
 import com.google.gwt.i18n.client.Messages;
 
 /**
- * Interface to represent the constants contained in resource bundle:
- *      'IdeSamplesLocalizationConstant.properties'.
+ * Interface to represent the constants contained in resource bundle: 'IdeSamplesLocalizationConstant.properties'.
  * <p/>
  * Localization message for forms from start page view.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdeSamplesLocalizationConstant.java Aug 25, 2011 5:57:11 PM vereshchaka $
- *
+ * 
  */
 public interface SamplesLocalizationConstant extends Messages
 {

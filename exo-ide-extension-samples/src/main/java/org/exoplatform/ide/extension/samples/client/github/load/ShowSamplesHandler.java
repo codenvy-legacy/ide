@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesShowHandler.java Aug 30, 2011 12:07:21 PM vereshchaka $
- *
+ * 
  */
 public interface ShowSamplesHandler extends EventHandler
 {

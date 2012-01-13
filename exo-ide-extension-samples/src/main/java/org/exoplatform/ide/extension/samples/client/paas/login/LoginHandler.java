@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link LoginEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 12:33:06 PM anya $
- *
+ * @version $Id: Jun 7, 2011 12:33:06 PM anya $
+ * 
  */
 public interface LoginHandler extends EventHandler
 {

@@ -38,43 +38,43 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesView.java Aug 30, 2011 12:13:08 PM vereshchaka $
- *
+ * 
  */
 public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Display
 {
-   
+
    private static final String ID = "GithubSamplesView";
-   
+
    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importLoadDialogTitle();
-   
+
    private static final int HEIGHT = 345;
 
    private static final int WIDTH = 550;
-   
+
    /**
     * 
     */
    interface GithubSamplesViewUiBinder extends UiBinder<Widget, ShowSamplesView>
    {
    }
-   
+
    /**
     * UIBinder instance
     */
    private static GithubSamplesViewUiBinder uiBinder = GWT.create(GithubSamplesViewUiBinder.class);
-   
+
    @UiField
    SamplesListGrid samplesListGrid;
-   
+
    @UiField
    ImageButton nextButton;
-   
+
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    TextInput loadProjectName;
-   
+
    public ShowSamplesView()
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);

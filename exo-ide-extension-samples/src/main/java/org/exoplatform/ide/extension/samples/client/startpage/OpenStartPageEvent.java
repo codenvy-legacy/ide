@@ -23,12 +23,12 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomeViewOpen.java Aug 25, 2011 1:11:16 PM vereshchaka $
- *
+ * 
  */
 public class OpenStartPageEvent extends GwtEvent<OpenStartPageHandler>
 {
    public static final GwtEvent.Type<OpenStartPageHandler> TYPE = new GwtEvent.Type<OpenStartPageHandler>();
-   
+
    @Override
    protected void dispatch(OpenStartPageHandler handler)
    {
@@ -43,5 +43,5 @@ public class OpenStartPageEvent extends GwtEvent<OpenStartPageHandler>
    {
       return TYPE;
    }
-   
+
 }

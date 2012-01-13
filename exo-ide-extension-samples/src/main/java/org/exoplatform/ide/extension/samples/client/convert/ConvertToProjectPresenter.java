@@ -68,13 +68,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
-* Presenter for converting folders to projects.
-* 
-* After this operation project must be in the root folder.
+ * Presenter for converting folders to projects.
+ * 
+ * After this operation project must be in the root folder.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Oct 27, 2011 4:26:33 PM anya $
- *
+ * @version $Id: Oct 27, 2011 4:26:33 PM anya $
+ * 
  */
 public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewClosedHandler,
    ConfigurationReceivedSuccessfullyHandler, VfsChangedHandler
@@ -84,28 +84,28 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       /**
        * Get convert button click handler.
        * 
-       * @return {@link HasClickHandlers} 
+       * @return {@link HasClickHandlers}
        */
       HasClickHandlers getConvertButton();
-      
+
       /**
        * Get cancel button click handler.
        * 
-       * @return {@link HasClickHandlers} 
+       * @return {@link HasClickHandlers}
        */
       HasClickHandlers getCancelButton();
-      
+
       /**
        * Get next button click handler.
        * 
-       * @return {@link HasClickHandlers} 
+       * @return {@link HasClickHandlers}
        */
       HasClickHandlers getNextButton();
-      
+
       /**
        * Get back button click handler.
        * 
-       * @return {@link HasClickHandlers} 
+       * @return {@link HasClickHandlers}
        */
       HasClickHandlers getBackButton();
 
@@ -115,7 +115,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
        * @param enable if <code>true</code> then enabled
        */
       void enableNextButton(boolean enable);
-      
+
       /**
        * Change enable state of back button.
        * 
@@ -136,7 +136,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
        * @return {@link HasValue}
        */
       HasValue<String> getProjectType();
-      
+
       /**
        * Get project's name field.
        * 
@@ -176,7 +176,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
        * Display step one.
        */
       void stepOne();
-      
+
       /**
        * Display step two.
        */
@@ -338,10 +338,10 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
       final Item item = selectedItems.get(0);
 
-      //Check item in root of workspace (parent is root VFS root folder):
+      // Check item in root of workspace (parent is root VFS root folder):
       if (item.getParentId().equals(vfs.getRoot().getId()))
       {
-         //Check have to rename
+         // Check have to rename
          if (projectName.equals(item.getName()))
          {
             convert(item);
@@ -608,7 +608,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
    /**
     * Perform actions when folder's content is received.
     * 
-    * @param folder 
+    * @param folder
     * @param itemToSelect
     */
    private void folderContentReceived(Folder folder, String itemToSelect)
@@ -653,8 +653,8 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       try
       {
          String workspace = (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + vfs.getId() : vfsBaseUrl + "/" + vfs.getId();
-         new VirtualFileSystem(workspace, new GWTLoader()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(
-            new VirtualFileSystemInfo()))
+         new VirtualFileSystem(workspace, new GWTLoader()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+            new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
 
             @Override

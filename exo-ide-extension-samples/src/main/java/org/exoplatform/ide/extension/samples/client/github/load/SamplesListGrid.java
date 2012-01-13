@@ -33,25 +33,26 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesListGrid.java Aug 30, 2011 11:43:59 AM vereshchaka $
- *
+ * 
  */
 public class SamplesListGrid extends ListGrid<ProjectData>
 {
    private static final String ID = "ideGithubSamplesGrid";
-   
+
    private static final String REPOSITORY_HEADER = SamplesExtension.LOCALIZATION_CONSTANT.samplesListRepositoryColumn();
-   
-   private static final String DESCRIPTION_HEADER = SamplesExtension.LOCALIZATION_CONSTANT.samplesListDescriptionColumn();
-   
+
+   private static final String DESCRIPTION_HEADER = SamplesExtension.LOCALIZATION_CONSTANT
+      .samplesListDescriptionColumn();
+
    private static final String TYPE_HEADER = SamplesExtension.LOCALIZATION_CONSTANT.samplesListTypeColumn();
-   
+
    public SamplesListGrid()
    {
       super();
 
       setID(ID);
-      
-      //Image column
+
+      // Image column
       Column<ProjectData, ImageResource> iconColumn = new Column<ProjectData, ImageResource>(new ImageResourceCell())
       {
          @Override
@@ -60,7 +61,7 @@ public class SamplesListGrid extends ListGrid<ProjectData>
             return ProjectResolver.getImageForProject(item.getType());
          }
       };
-      
+
       Column<ProjectData, SafeHtml> repositoryColumn = new Column<ProjectData, SafeHtml>(new SafeHtmlCell())
       {
          @Override
@@ -78,7 +79,7 @@ public class SamplesListGrid extends ListGrid<ProjectData>
             return html;
          }
       };
-      
+
       Column<ProjectData, SafeHtml> descriptionColumn = new Column<ProjectData, SafeHtml>(new SafeHtmlCell())
       {
          @Override
@@ -96,7 +97,7 @@ public class SamplesListGrid extends ListGrid<ProjectData>
             return html;
          }
       };
-      
+
       Column<ProjectData, SafeHtml> typeColumn = new Column<ProjectData, SafeHtml>(new SafeHtmlCell())
       {
          @Override
@@ -116,10 +117,10 @@ public class SamplesListGrid extends ListGrid<ProjectData>
       };
       getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
       getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
-      
+
       getCellTable().addColumn(repositoryColumn, REPOSITORY_HEADER);
       getCellTable().addColumn(descriptionColumn, DESCRIPTION_HEADER);
       getCellTable().addColumn(typeColumn, TYPE_HEADER);
    }
-   
+
 }

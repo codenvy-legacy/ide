@@ -42,7 +42,7 @@ import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesExtension.java Sep 2, 2011 12:34:36 PM vereshchaka $
- *
+ * 
  */
 public class SamplesExtension extends Extension implements InitializeServicesHandler
 {
@@ -75,7 +75,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new StartPagePresenter();
       new ConvertToProjectPresenter();
 
-      //Import from GitHub
+      // Import from GitHub
       GithubStep<ProjectData> firstStep = new ShowSamplesPresenter();
       GithubStep<ProjectData> secondStep = new DeploySamplesPresenter();
       firstStep.setNextStep(secondStep);

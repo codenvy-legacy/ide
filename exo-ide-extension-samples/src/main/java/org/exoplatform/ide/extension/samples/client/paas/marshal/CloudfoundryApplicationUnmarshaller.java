@@ -31,13 +31,12 @@ import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.Cloudfound
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Unmarshaller for response from server, when {@link CloudfoundryApplication} is returned.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudfoundryApplicationUnmarshaller Jun 22, 2011 5:06:40 PM vereshchaka $
- *
+ * 
  */
 public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
 {
@@ -45,54 +44,53 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
    {
       /* String */
       public static final String NAME = "name";
-      
+
       /* List */
       public static final String URIS = "uris";
-      
+
       /* int */
       public static final String INSTANCES = "instances";
-      
+
       /* int */
       public static final String RUNNING_INSTANCES = "runningInstances";
-      
+
       /* String */
       public static final String STATE = "state";
-      
+
       /* List */
       public static final String SERVICES = "services";
-      
+
       /* String */
       public static final String VERSION = "version";
-      
+
       /* List */
       public static final String ENV = "env";
-      
+
       /* {@link CloudfoundryApplicationResources} */
       public static final String RESOURCES = "resources";
-      
+
       /* {@link Staging} */
       public static final String STAGING = "staging";
-      
-      //CloudfoundryApplicationResource
+
+      // CloudfoundryApplicationResource
       /* int */
       public static final String MEMORY = "memory";
-      
+
       /* int */
       public static final String DISK = "dist";
-      
-      //Staging
+
+      // Staging
       public static final String MODEL = "model";
-      
+
       public static final String STACK = "stack";
    }
 
    private CloudfoundryApplication cloudfoundryApplication;
-   
+
    public CloudfoundryApplicationUnmarshaller(CloudfoundryApplication application)
    {
       cloudfoundryApplication = application;
    }
-
 
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
@@ -109,7 +107,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
 
       parseObject(jsonObject);
    }
-   
+
    private void parseArray(JSONArray jsonArray, List<String> list)
    {
       for (int i = 0; i < jsonArray.size(); i++)
@@ -118,7 +116,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
          list.add(value.isString().stringValue());
       }
    }
-   
+
    void parseObject(JSONObject jsonObject)
    {
       for (String key : jsonObject.keySet())
@@ -130,7 +128,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
             {
                cloudfoundryApplication.setName(jsonValue.isString().stringValue());
             }
-            
+
          }
          else if (key.equals(Constants.URIS))
          {
@@ -146,16 +144,16 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
          else if (key.equals(Constants.INSTANCES))
          {
             if (jsonValue.isNumber() != null)
-             {
-                cloudfoundryApplication.setInstances((int)jsonValue.isNumber().doubleValue());
-             }
+            {
+               cloudfoundryApplication.setInstances((int)jsonValue.isNumber().doubleValue());
+            }
          }
          else if (key.equals(Constants.RUNNING_INSTANCES))
          {
             if (jsonValue.isNumber() != null)
-             {
-                cloudfoundryApplication.setRunningInstances((int)jsonValue.isNumber().doubleValue());
-             }
+            {
+               cloudfoundryApplication.setRunningInstances((int)jsonValue.isNumber().doubleValue());
+            }
          }
          else if (key.equals(Constants.STATE))
          {
@@ -197,15 +195,14 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
          }
          else if (key.equals(Constants.RESOURCES))
          {
-            //there is no need in resources in this extension
+            // there is no need in resources in this extension
          }
          else if (key.equals(Constants.STAGING))
          {
-            //there is no need in stagins in this extension
+            // there is no need in stagins in this extension
          }
       }
    }
-   
 
    /**
     * Build {@link JavaScriptObject} from string.
@@ -214,12 +211,12 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
     * @return {@link JavaScriptObject}
     */
    protected static native JavaScriptObject build(String json) /*-{
-      try {
-         var object = eval('(' + json + ')');
-         return object;
-      } catch (e) {
-         return null;
-      }
-   }-*/;
+                                                               try {
+                                                               var object = eval('(' + json + ')');
+                                                               return object;
+                                                               } catch (e) {
+                                                               return null;
+                                                               }
+                                                               }-*/;
 
 }

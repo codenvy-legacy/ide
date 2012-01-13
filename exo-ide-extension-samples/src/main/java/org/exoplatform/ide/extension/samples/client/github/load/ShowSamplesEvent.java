@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ShowSamplesEvent extends GwtEvent<ShowSamplesHandler>
 {
    public static final GwtEvent.Type<ShowSamplesHandler> TYPE = new GwtEvent.Type<ShowSamplesHandler>();
-   
+
    public ShowSamplesEvent()
    {
    }

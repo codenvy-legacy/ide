@@ -28,43 +28,43 @@ import java.util.Date;
  */
 public class Repository
 {
-   
+
    private String name;
-   
+
    private String description;
-   
+
    private boolean isPrivate;
-   
+
    private String url;
-   
+
    private String owner;
-   
+
    private String homepage;
-   
+
    private boolean hasWiki;
-   
+
    private int openIssues;
-   
+
    private boolean hasIssues;
-   
+
    private Date pushed;
-   
+
    private Date created;
-   
+
    private int watchers;
-   
+
    private int forks;
-   
+
    private boolean fork;
-   
+
    private int size;
-   
+
    private boolean hasDownloads;
-   
+
    public Repository()
    {
    }
-   
+
    public Repository(String name, String description, String url)
    {
       this.name = name;

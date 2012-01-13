@@ -35,12 +35,12 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RepositoriesUnmarshaller.java Aug 29, 2011 4:56:02 PM vereshchaka $
- *
+ * 
  */
 public class RepositoriesUnmarshaller implements Unmarshallable
 {
    private List<Repository> repos;
-   
+
    public RepositoriesUnmarshaller(List<Repository> repositories)
    {
       repos = repositories;
@@ -58,7 +58,7 @@ public class RepositoriesUnmarshaller implements Unmarshallable
       for (int i = 0; i < jsonArray.size(); i++)
       {
          JSONValue value = jsonArray.get(i);
-         
+
          Repository repository;
          try
          {
@@ -71,7 +71,7 @@ public class RepositoriesUnmarshaller implements Unmarshallable
          }
       }
    }
-   
+
    private Repository parseObject(JSONObject jsonObject) throws ParseException
    {
       DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy/MM/dd HH:mm:ss Z");
@@ -146,9 +146,9 @@ public class RepositoriesUnmarshaller implements Unmarshallable
       }
       return repo;
    }
-   
+
    public static native JavaScriptObject build(String json) /*-{
-   return eval('(' + json + ')');      
-   }-*/;
+                                                            return eval('(' + json + ')');      
+                                                            }-*/;
 
 }

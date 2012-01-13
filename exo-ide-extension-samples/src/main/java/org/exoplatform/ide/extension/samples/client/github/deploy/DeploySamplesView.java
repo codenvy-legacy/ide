@@ -95,24 +95,24 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
 
    @UiField
    TextInput cloudBeesIdField;
-   
-   //heroku
+
+   // heroku
    @UiField
    FlowPanel herokuPanel;
-   
+
    @UiField
    TextInput herokuNameField;
-   
+
    @UiField
    TextInput herokuRepositoryNameField;
-   
-   //openShift
+
+   // openShift
    @UiField
    FlowPanel openShiftPanel;
-   
+
    @UiField
    TextInput openShiftNameField;
-   
+
    @UiField
    SelectItem openShiftTypeField;
 
@@ -159,7 +159,8 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaasValueMap(java.lang.String[], java.lang.String)
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaasValueMap(java.lang.String[],
+    *      java.lang.String)
     */
    @Override
    public void setPaasValueMap(String[] values, String selected)

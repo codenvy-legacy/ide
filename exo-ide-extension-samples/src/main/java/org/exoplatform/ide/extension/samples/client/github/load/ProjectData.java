@@ -46,6 +46,7 @@ public class ProjectData
 
    /**
     * Get the url to clone from GitHub.
+    * 
     * @return the repositoryUrl
     */
    public String getRepositoryUrl()

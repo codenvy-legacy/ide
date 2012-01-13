@@ -42,17 +42,17 @@ import java.net.URL;
 public class Github
 {
    private String userName;
-   
+
    public Github(InitParams initParams)
    {
       this(readValueParam(initParams, "github-user"));
    }
-   
+
    public Github(String userName)
    {
       this.userName = userName;
    }
-   
+
    private static String readValueParam(InitParams initParams, String paramName)
    {
       if (initParams != null)
@@ -63,9 +63,10 @@ public class Github
       }
       return null;
    }
-   
+
    /**
     * Get the list of repositories.
+    * 
     * @return an array of repositories.
     * @throws IOException if any i/o errors occurs
     * @throws GithubException if github server return unexpected or error status for request
@@ -75,10 +76,11 @@ public class Github
    {
       return listRepositories(this.userName);
    }
-   
+
    /**
     * Get the list of repositories for User Name.
-    * @param userName name of user 
+    * 
+    * @param userName name of user
     * @return an array of repositories.
     * @throws IOException if any i/o errors occurs
     * @throws GithubException if github server return unexpected or error status for request
@@ -105,16 +107,17 @@ public class Github
       }
 
    }
-   
- //---------Implementation-----------------
+
+   // ---------Implementation-----------------
 
    /**
     * Do json request (without authorization!)
+    * 
     * @param url the request url
     * @param method the request method
     * @param body body of request
     * @param success expected success code of request
-    * @return response 
+    * @return response
     * @throws IOException
     * @throws GithubException
     */
@@ -172,7 +175,7 @@ public class Github
       try
       {
          int responseCode = http.getResponseCode();
-         //System.err.println("fault : " + responseCode);
+         // System.err.println("fault : " + responseCode);
          errorStream = http.getErrorStream();
          if (errorStream == null)
             return new GithubException(responseCode, null, null);

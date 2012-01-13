@@ -34,8 +34,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
- * REST service to get the list of repositories from GitHub
- * (where sample projects are located).
+ * REST service to get the list of repositories from GitHub (where sample projects are located).
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
@@ -49,10 +48,10 @@ public class GithubService
    public GithubService()
    {
    }
-   
+
    protected GithubService(Github github)
    {
-      //Use this constructor when deploy CloudBeesService as singleton resource.
+      // Use this constructor when deploy CloudBeesService as singleton resource.
       this.github = github;
    }
 
@@ -63,18 +62,17 @@ public class GithubService
    {
       return github.listRepositories();
    }
-   
+
    @Path("list/user")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Repository[] listRepositories(@QueryParam("username") String userName) throws IOException, GithubException, ParsingResponseException, InvalidArgumentException
+   public Repository[] listRepositories(@QueryParam("username") String userName) throws IOException, GithubException,
+      ParsingResponseException, InvalidArgumentException
    {
-      if(userName == null)
+      if (userName == null)
          throw new InvalidArgumentException("'username' parameter is null");
-      
+
       return github.listRepositories(userName);
    }
-
-   
 
 }

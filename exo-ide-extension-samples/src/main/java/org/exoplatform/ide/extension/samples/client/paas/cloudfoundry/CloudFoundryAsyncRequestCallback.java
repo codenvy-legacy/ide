@@ -32,9 +32,8 @@ import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
 
 /**
- * Asynchronous CloudFoundry request.
- * The {{@link #onFailure(Throwable)}} method contains the check for 
- * user not authorized exception, in this case - the {@link LoginEvent} is fired.
+ * Asynchronous CloudFoundry request. The {{@link #onFailure(Throwable)} method contains the check for user not authorized
+ * exception, in this case - the {@link LoginEvent} is fired.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryAsyncRequestCallback.java Jul 8, 2011 3:36:01 PM vereshchaka $
@@ -45,9 +44,9 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
     * Events handler.
     */
    private HandlerManager eventbus;
-   
+
    private LoggedInHandler loggedIn;
-   
+
    public CloudFoundryAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
    {
       this.eventbus = eventBus;
@@ -65,7 +64,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
       {
          ServerException serverException = (ServerException)exception;
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
-                  && serverException.getMessage().contains("Authentication required."))
+            && serverException.getMessage().contains("Authentication required."))
          {
             eventbus.fireEvent(new LoginEvent(SamplesClientService.Paas.CLOUDFOUNDRY, loggedIn));
             return;
@@ -92,7 +91,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
       }
       super.onFailure(exception);
    }
-   
+
    private static String fromJson(String jsonMsg)
    {
       JavaScriptObject json = build(jsonMsg);
@@ -101,7 +100,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
       JSONObject jsonObject = new JSONObject(json).isObject();
       if (jsonObject == null)
          return jsonMsg;
-      
+
       String result = "";
 
       for (String key : jsonObject.keySet())
@@ -116,10 +115,10 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             result += key + " : " + (int)jsonValue.isNumber().doubleValue() + "<br>";
          }
       }
-      
+
       return result;
    }
-   
+
    /**
     * Build {@link JavaScriptObject} from string.
     * 
@@ -127,12 +126,12 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
     * @return {@link JavaScriptObject}
     */
    protected static native JavaScriptObject build(String json) /*-{
-      try {
-         var object = eval('(' + json + ')');
-         return object;
-      } catch (e) {
-         return null;
-      }
-   }-*/;
+                                                               try {
+                                                               var object = eval('(' + json + ')');
+                                                               return object;
+                                                               } catch (e) {
+                                                               return null;
+                                                               }
+                                                               }-*/;
 
 }

@@ -37,7 +37,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomeView.java Aug 25, 2011 12:33:32 PM vereshchaka $
- *
+ * 
  */
 public class StartPageView extends ViewImpl implements StartPagePresenter.Display
 {

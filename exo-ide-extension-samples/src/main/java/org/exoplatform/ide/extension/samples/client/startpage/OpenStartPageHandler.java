@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomeOpenHandler.java Aug 25, 2011 1:11:38 PM vereshchaka $
- *
+ * 
  */
 public interface OpenStartPageHandler extends EventHandler
 {

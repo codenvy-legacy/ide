@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class WelcomePageOpenedEvent extends GwtEvent<WelcomePageOpenedHandler>
 {
-   
+
    public static final GwtEvent.Type<WelcomePageOpenedHandler> TYPE = new GwtEvent.Type<WelcomePageOpenedHandler>();
 
    /**

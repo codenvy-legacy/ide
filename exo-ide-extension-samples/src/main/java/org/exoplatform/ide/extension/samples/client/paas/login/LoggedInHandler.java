@@ -21,9 +21,10 @@ package org.exoplatform.ide.extension.samples.client.paas.login;
 /**
  * Can be called after success login.
  * <p/>
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: LoggedInInterface.java Jun 27, 2011 3:08:16 PM vereshchaka $
- *
+ * 
  */
 public interface LoggedInHandler
 {

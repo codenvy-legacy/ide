@@ -28,7 +28,8 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class ShowImportFromGithubEvent extends GwtEvent<ShowImportFromGithubHandler>
 {
-   public static final GwtEvent.Type<ShowImportFromGithubHandler> TYPE = new GwtEvent.Type<ShowImportFromGithubHandler>();
+   public static final GwtEvent.Type<ShowImportFromGithubHandler> TYPE =
+      new GwtEvent.Type<ShowImportFromGithubHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()

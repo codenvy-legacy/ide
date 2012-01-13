@@ -50,48 +50,47 @@ import java.util.Map;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesClientServiceImpl.java Sep 2, 2011 12:34:27 PM vereshchaka $
- *
+ * 
  */
 public class SamplesClientServiceImpl extends SamplesClientService
 {
    private static final String BASE_URL = "/ide/github";
 
    private static final String LIST = BASE_URL + "/list";
-   
+
    private static final String LIST_USER = BASE_URL + "/list/user";
-   
+
    /** CloudBees **/
-   
+
    private static final String CLOUDBEES_DOMAINS = "/ide/cloudbees/domains";
-   
+
    private static final String CLOUDBEES_CREATE = "/ide/cloudbees/apps/create";
-   
+
    private static final String CLOUDBEES_LOGIN = "/ide/cloudbees/login";
-   
+
    /** CloudFoundry **/
-   
+
    private static final String CLOUDFOUNDRY_LOGIN = "/ide/cloudfoundry/login";
-   
+
    private static final String VALIDATE_ACTION = "/ide/cloudfoundry/apps/validate-action";
-   
+
    private static final String CLOUDFOUNDRY_CREATE = "/ide/cloudfoundry/apps/create";
-   
+
    private static final String CF_TARGETS = "/ide/cloudfoundry/target/all";
-   
+
    /** OpenShift **/
-   
+
    private static final String OPENSHIFT_TYPES = "/ide/openshift/express/apps/type";
-   
+
    private static final String OPENSHIFT_CREATE = "/ide/openshift/express/apps/create";
-   
+
    private static final String OPENSHIFT_LOGIN = "/ide/openshift/express/login";
-   
+
    /** Heroku **/
    private static final String HEROKU_CREATE = "/ide/heroku/apps/create";
-   
+
    private static final String HEROKU_LOGIN = "/ide/heroku/login";
 
-   
    /**
     * Events handler.
     */
@@ -129,9 +128,10 @@ public class SamplesClientServiceImpl extends SamplesClientService
       callback.setResult(repos);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
-   
+
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback)
@@ -145,7 +145,9 @@ public class SamplesClientServiceImpl extends SamplesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudBeesApplication(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudBeesApplication(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void createCloudBeesApplication(String appId, String vfsId, String projectId, String warFile, String message,
@@ -158,7 +160,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
       params += "&vfsid=" + vfsId + "&projectid=" + projectId;
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
-      
+
       Map<String, String> responseMap = new HashMap<String, String>();
       callback.setResult(responseMap);
       callback.setEventBus(eventBus);
@@ -190,7 +192,8 @@ public class SamplesClientServiceImpl extends SamplesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#loginToCloudBees(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#loginToCloudBees(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void loginToCloudBees(String email, String password, AsyncRequestCallback<String> callback)
@@ -210,13 +213,14 @@ public class SamplesClientServiceImpl extends SamplesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#login(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#login(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void login(Paas paas, String email, String password, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext;
-      
+
       if (Paas.CLOUDBEES == paas)
       {
          url += CLOUDBEES_LOGIN;
@@ -238,7 +242,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
          eventBus.fireEvent(new ExceptionThrownEvent("Unknown PaaS: " + paas + ". Can't login."));
          return;
       }
-      
+
       HashMap<String, String> credentials = new HashMap<String, String>();
       if (Paas.OPENSHIFT == paas)
       {
@@ -260,11 +264,13 @@ public class SamplesClientServiceImpl extends SamplesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#validateCloudfoundryAction(java.lang.String, java.lang.String, boolean, org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#validateCloudfoundryAction(java.lang.String,
+    *      java.lang.String, boolean,
+    *      org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void validateCloudfoundryAction(String server, String appName, 
-      String workDir, CloudFoundryAsyncRequestCallback<String> callback)
+   public void validateCloudfoundryAction(String server, String appName, String workDir,
+      CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
 
@@ -279,7 +285,9 @@ public class SamplesClientServiceImpl extends SamplesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudFoundryApplication(String, java.lang.String, boolean, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudFoundryApplication(String,
+    *      java.lang.String, boolean, java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void createCloudFoundryApplication(String vfsId, String server, String name, String url, String workDir,
@@ -321,9 +329,9 @@ public class SamplesClientServiceImpl extends SamplesClientService
       callback.setResult(targes);
       TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(targes);
       callback.setPayload(unmarshaller);
-      
+
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-      .send(callback);
+         .send(callback);
    }
 
    /**
@@ -344,7 +352,8 @@ public class SamplesClientServiceImpl extends SamplesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createOpenShitfApplication(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createOpenShitfApplication(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void createOpenShitfApplication(String name, String vfsId, String projectId, String type,
@@ -359,7 +368,9 @@ public class SamplesClientServiceImpl extends SamplesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createHerokuApplication(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createHerokuApplication(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback)
     */
    @Override
    public void createHerokuApplication(String applicationName, String vfsId, String projectid, String remoteName,
@@ -368,7 +379,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
       String url = restServiceContext + HEROKU_CREATE;
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
       callback.setResult(applicationName);

@@ -20,19 +20,20 @@ package org.exoplatform.ide.extension.samples.server;
 
 /**
  * If GitHub returns unexpected or error status for request.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubException.java Aug 29, 2011 11:36:57 AM vereshchaka $
  */
 @SuppressWarnings("serial")
 public class GithubException extends Exception
 {
-   /** 
-    * HTTP status of response from GitHub server. 
+   /**
+    * HTTP status of response from GitHub server.
     */
    private final int responseStatus;
 
-   /** 
-    * Content type of response from GitHub server. 
+   /**
+    * Content type of response from GitHub server.
     */
    private final String contentType;
 

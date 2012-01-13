@@ -61,7 +61,7 @@ public class TargetsUnmarshaller implements Unmarshallable
          }
       }
    }
-   
+
    public static native JavaScriptObject build(String json) /*-{
                                                             return eval('(' + json + ')');      
                                                             }-*/;

@@ -27,12 +27,19 @@ import java.util.List;
 public class CloudfoundryApplication
 {
    private String name;
+
    private List<String> uris;
+
    private int instances;
+
    private int runningInstances;
+
    private String state;
+
    private List<String> services;
+
    private String version;
+
    private List<String> env;
 
    public String getName()

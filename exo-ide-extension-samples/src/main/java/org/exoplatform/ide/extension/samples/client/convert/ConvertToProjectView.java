@@ -28,15 +28,15 @@ import java.util.Set;
  * Convert folder to project view.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Nov 1, 2011 12:33:44 PM anya $
- *
+ * @version $Id: Nov 1, 2011 12:33:44 PM anya $
+ * 
  */
 public class ConvertToProjectView extends ViewImpl implements ConvertToProjectPresenter.Display
 {
    private static final int WIDTH = 550;
 
    private static final int HEIGHT = 380;
-   
+
    private static final String ID = ConvertToProjectView.class.getName();
 
    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.convertTitle();
@@ -46,7 +46,7 @@ public class ConvertToProjectView extends ViewImpl implements ConvertToProjectPr
     */
    @UiField
    TextInput projectName;
-   
+
    /**
     * Project's type field.
     */
@@ -58,13 +58,13 @@ public class ConvertToProjectView extends ViewImpl implements ConvertToProjectPr
     */
    @UiField
    ImageButton convertButton;
-   
+
    /**
     * Next step button.
     */
    @UiField
    ImageButton nextButton;
-   
+
    /**
     * Back to previous step button.
     */
@@ -76,37 +76,37 @@ public class ConvertToProjectView extends ViewImpl implements ConvertToProjectPr
     */
    @UiField
    ImageButton cancelButton;
-   
+
    /**
     * Browser tree.
     */
    @UiField
    ItemTree browserTree;
-   
+
    /**
     * Layout of the first step.
     */
    @UiField
    Border step1Layout;
-   
+
    /**
     * Layout of the second step.
     */
    @UiField
    FlowPanel step2Layout;
-   
+
    /**
     * Title of the step.
     */
    @UiField
    Label stepTitle;
-   
+
    /**
     * Description of the step.
     */
    @UiField
    Label stepDescription;
-   
+
    private static ConvertToProjectViewUiBinder uiBinder = GWT.create(ConvertToProjectViewUiBinder.class);
 
    interface ConvertToProjectViewUiBinder extends UiBinder<Widget, ConvertToProjectView>
@@ -235,10 +235,10 @@ public class ConvertToProjectView extends ViewImpl implements ConvertToProjectPr
    {
       stepTitle.setText(SamplesExtension.LOCALIZATION_CONSTANT.convertLocationTitle());
       stepDescription.setText(SamplesExtension.LOCALIZATION_CONSTANT.convertLocationText());
-      
+
       step1Layout.setVisible(true);
       nextButton.setVisible(true);
-      
+
       step2Layout.setVisible(false);
       backButton.setVisible(false);
       convertButton.setVisible(false);
@@ -252,11 +252,11 @@ public class ConvertToProjectView extends ViewImpl implements ConvertToProjectPr
    {
       stepTitle.setText(SamplesExtension.LOCALIZATION_CONSTANT.convertPropertiesTitle());
       stepDescription.setText(SamplesExtension.LOCALIZATION_CONSTANT.convertPropertiesText());
-      
+
       step2Layout.setVisible(true);
       backButton.setVisible(true);
       convertButton.setVisible(true);
-      
+
       step1Layout.setVisible(false);
       nextButton.setVisible(false);
    }
