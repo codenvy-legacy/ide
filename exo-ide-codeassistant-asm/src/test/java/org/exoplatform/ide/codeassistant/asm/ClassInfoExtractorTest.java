@@ -19,9 +19,9 @@
 package org.exoplatform.ide.codeassistant.asm;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertArrayEquals;
 
+import junit.framework.Assert;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
@@ -30,14 +30,12 @@ import org.exoplatform.ide.codeassistant.asm.test.B;
 import org.exoplatform.ide.codeassistant.asm.test.E;
 import org.exoplatform.ide.codeassistant.asm.test.Foo;
 import org.exoplatform.ide.codeassistant.asm.test.I;
-import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -118,19 +116,6 @@ public class ClassInfoExtractorTest
       }
    }
 
-   private FieldInfo getFieldInfo(List<FieldInfo> fds, Field field)
-   {
-
-      for (FieldInfo fd : fds)
-      {
-         if (fd.getName().equals(field.getName()))
-         {
-            return fd;
-         }
-      }
-      return null;
-   }
-
    @Test
    public void testExtractMethod() throws IOException
    {
@@ -140,10 +125,7 @@ public class ClassInfoExtractorTest
       for (Method method : methods)
       {
          MethodInfo md = getMethodInfo(mds, method);
-         if (md == null)
-         {
-            fail();
-         }
+         Assert.assertNotNull("Method " + method.getName() + " not found.", md);
          assertEquals(method.getModifiers(), md.getModifiers());
          assertEquals(typeToString(method.getGenericReturnType()), md.getReturnType());
       }
@@ -200,7 +182,8 @@ public class ClassInfoExtractorTest
       {
          return type.toString();
       }
-      return null;
+      Assert.fail("This implementation of java.lang.Type not supported!");
+      throw new UnsupportedOperationException("This implementation of java.lang.Type not supported!");
    }
 
 }

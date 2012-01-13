@@ -26,7 +26,6 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.util.TraceSignatureVisitor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -115,9 +114,31 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
          String methodParams = declaration.substring(declaration.indexOf('('), declaration.length());
          if (methodParams.length() > 2)
          {
-            //(java.lang.String, java.lang.Integer, java.util.List<java.lang.String>)
-            // cut braces, and split on ', '
-            return Arrays.asList(methodParams.substring(1, methodParams.length() - 1).split(", "));
+            // remove first ( and last ) from string
+            methodParams = methodParams.substring(1, methodParams.length() - 1);
+            ArrayList<String> params = new ArrayList<String>();
+            int genericDepth = 0;
+            int paramBeginsFrom = 0;
+            for (int index = 0; index < methodParams.length(); index++)
+            {
+               char current = methodParams.charAt(index);
+               if (current == '<')
+               {
+                  genericDepth++;
+               }
+               if (current == '>')
+               {
+                  genericDepth--;
+               }
+               if (current == ',' && genericDepth == 0)
+               {
+                  params.add(methodParams.substring(paramBeginsFrom, index).trim());
+                  paramBeginsFrom = index + 1;
+               }
+            }
+            // add last param
+            params.add(methodParams.substring(paramBeginsFrom, methodParams.length()).trim());
+            return params;
          }
          else
          {
