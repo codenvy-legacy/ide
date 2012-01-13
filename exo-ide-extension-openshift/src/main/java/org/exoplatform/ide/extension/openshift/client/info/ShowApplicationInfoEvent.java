@@ -34,7 +34,7 @@ public class ShowApplicationInfoEvent extends GwtEvent<ShowApplicationInfoHandle
     * Type used to register this event.
     */
    public static final GwtEvent.Type<ShowApplicationInfoHandler> TYPE = new GwtEvent.Type<ShowApplicationInfoHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

@@ -39,23 +39,22 @@ public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
     * VFS id.
     */
    private String vfsId;
-   
+
    /**
     * Project's id.
     */
    private String projectId;
-   
+
    /**
     * @param vfsId VFS id
     * @param projectId project's id
     */
-   public  ApplicationDeletedEvent(String vfsId, String projectId)
+   public ApplicationDeletedEvent(String vfsId, String projectId)
    {
       this.vfsId = vfsId;
       this.projectId = projectId;
    }
-   
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
@@ -73,7 +72,6 @@ public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
    {
       handler.onApplicationDeleted(this);
    }
-
 
    /**
     * @return the vfsId VFS id

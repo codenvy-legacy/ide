@@ -36,11 +36,11 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 public class ApplicationInfoListGrid extends ListGrid<Property>
 {
    private final String ID = "ide.OpenShift.ApplicationInfo.ListGrid";
-   
+
    private final String NAME = OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoGridNameField();
-   
+
    private final String VALUE = OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoGridValueField();
-   
+
    public ApplicationInfoListGrid()
    {
       super();
@@ -66,7 +66,7 @@ public class ApplicationInfoListGrid extends ListGrid<Property>
             return html;
          }
       };
-      
+
       Column<Property, String> valueColumn = new Column<Property, String>(new TextCell())
       {
          @Override

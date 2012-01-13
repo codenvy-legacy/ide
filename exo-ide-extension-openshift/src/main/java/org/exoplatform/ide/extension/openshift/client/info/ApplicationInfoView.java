@@ -52,7 +52,7 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
     */
    @UiField
    ImageButton okButton;
-   
+
    /**
     * Application's information grid.
     */
@@ -65,7 +65,8 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
 
    public ApplicationInfoView()
    {
-      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoViewTitle(), null, WIDTH,
+         HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

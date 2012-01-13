@@ -87,7 +87,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new UserInfoPresenter();
       new UpdatePublicKeyCommandHandler();
 
-//      new DeployApplicationPresenter();
+      //      new DeployApplicationPresenter();
       new OpenShiftProjectPresenter();
    }
 

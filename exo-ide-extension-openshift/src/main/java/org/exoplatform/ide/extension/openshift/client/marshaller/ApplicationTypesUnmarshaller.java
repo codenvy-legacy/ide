@@ -75,7 +75,6 @@ public class ApplicationTypesUnmarshaller implements Unmarshallable, Constants
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          throw new UnmarshallerException(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationTypesUnmarshallerFail());
       }
    }

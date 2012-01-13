@@ -31,7 +31,7 @@ import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEv
  */
 public class CreateApplicationControl extends AbstractOpenShiftControl
 {
-   
+
    public CreateApplicationControl()
    {
       super(OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationControlId());

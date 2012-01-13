@@ -92,7 +92,8 @@ public abstract class OpenShiftClientService
     * @param projectId project's id
     * @param callback callback
     */
-   public abstract void destroyApplication(String name, String vfsId, String projectId, AsyncRequestCallback<String> callback);
+   public abstract void destroyApplication(String name, String vfsId, String projectId,
+      AsyncRequestCallback<String> callback);
 
    /**
     * Get user's information. 
@@ -111,7 +112,8 @@ public abstract class OpenShiftClientService
     * @param projectId project's id
     * @param callback callback
     */
-   public abstract void getApplicationInfo(String applicationName, String vfsId, String projectId, AsyncRequestCallback<AppInfo> callback);
+   public abstract void getApplicationInfo(String applicationName, String vfsId, String projectId,
+      AsyncRequestCallback<AppInfo> callback);
 
    /**
     * Get types of allowed applications.

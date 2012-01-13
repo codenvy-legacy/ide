@@ -33,18 +33,19 @@ public class OpenShiftExceptionThrownEvent extends GwtEvent<OpenShiftExceptionTh
    /**
     * Type used to register event,
     */
-   public static final GwtEvent.Type<OpenShiftExceptionThrownHandler> TYPE = new GwtEvent.Type<OpenShiftExceptionThrownHandler>();
-   
+   public static final GwtEvent.Type<OpenShiftExceptionThrownHandler> TYPE =
+      new GwtEvent.Type<OpenShiftExceptionThrownHandler>();
+
    /**
     * Exception, that occurred.
     */
    private Throwable exception;
-   
+
    /**
     * Error message.
     */
    private String errorMessage;
-   
+
    /**
     * @param exception occurred exception
     * @param errorMessage error message
@@ -54,7 +55,7 @@ public class OpenShiftExceptionThrownEvent extends GwtEvent<OpenShiftExceptionTh
       this.exception = exception;
       this.errorMessage = errorMessage;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

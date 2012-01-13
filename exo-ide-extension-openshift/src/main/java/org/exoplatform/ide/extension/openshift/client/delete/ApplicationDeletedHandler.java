@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.openshift.client.delete;
 
 import com.google.gwt.event.shared.EventHandler;
 
-
 /**
  * Handler for {@link ApplicationDeletedEvent} event.
  * 

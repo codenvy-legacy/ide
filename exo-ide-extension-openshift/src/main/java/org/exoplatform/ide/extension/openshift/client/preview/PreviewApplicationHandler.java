@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface PreviewApplicationHandler extends EventHandler
 {
-   
+
    void onPreviewApplication(PreviewApplicationEvent event);
 
 }

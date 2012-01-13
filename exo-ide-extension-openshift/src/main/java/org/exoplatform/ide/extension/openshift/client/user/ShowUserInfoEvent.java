@@ -34,7 +34,7 @@ public class ShowUserInfoEvent extends GwtEvent<ShowUserInfoHandler>
     * Type used to register event.
     */
    public static final GwtEvent.Type<ShowUserInfoHandler> TYPE = new GwtEvent.Type<ShowUserInfoHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

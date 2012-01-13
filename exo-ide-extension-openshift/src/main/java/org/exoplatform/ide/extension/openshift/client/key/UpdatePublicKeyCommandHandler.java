@@ -85,7 +85,7 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
             {
                ServerException serverException = (ServerException)exception;
                if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                  && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
                   IDE.fireEvent(new LoginEvent());
@@ -132,8 +132,7 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
          @Override
          protected void onSuccess(String result)
          {
-            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(),
-               Type.INFO));
+            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(), Type.INFO));
          }
 
          /**
@@ -146,7 +145,7 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
             {
                ServerException serverException = (ServerException)exception;
                if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                  && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
                   IDE.fireEvent(new LoginEvent());

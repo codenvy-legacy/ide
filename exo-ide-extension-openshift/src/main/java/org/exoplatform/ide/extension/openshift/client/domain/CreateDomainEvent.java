@@ -34,7 +34,7 @@ public class CreateDomainEvent extends GwtEvent<CreateDomainHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<CreateDomainHandler> TYPE = new GwtEvent.Type<CreateDomainHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

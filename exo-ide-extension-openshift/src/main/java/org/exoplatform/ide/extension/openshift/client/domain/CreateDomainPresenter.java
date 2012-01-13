@@ -175,8 +175,8 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
          @Override
          protected void onSuccess(String result)
          {
-            IDE.fireEvent(new OutputEvent(
-               OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName), Type.INFO));
+            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName),
+               Type.INFO));
             IDE.getInstance().closeView(display.asView().getId());
          }
 
@@ -190,21 +190,22 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
             {
                ServerException serverException = (ServerException)exception;
                if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                  && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
                   IDE.fireEvent(new LoginEvent());
                   return;
                }
             }
-            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainFail(domainName)));
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               .createDomainFail(domainName)));
          }
       });
    }
 
    /**
     * Register {@link LoggedInHandler} handler.
-    */   
+    */
    protected void addLoggedInHandler()
    {
       IDE.addHandler(LoggedInEvent.TYPE, this);

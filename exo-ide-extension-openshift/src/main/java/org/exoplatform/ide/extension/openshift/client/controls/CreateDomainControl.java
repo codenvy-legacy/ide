@@ -33,13 +33,14 @@ import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
  */
 public class CreateDomainControl extends AbstractOpenShiftControl
 {
-   
+
    public CreateDomainControl()
    {
       super(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlId());
       setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlTitle());
       setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.createDomainControl(), OpenShiftClientBundle.INSTANCE.createDomainControlDisabled());
+      setImages(OpenShiftClientBundle.INSTANCE.createDomainControl(),
+         OpenShiftClientBundle.INSTANCE.createDomainControlDisabled());
       setEvent(new CreateDomainEvent());
    }
 
@@ -61,5 +62,5 @@ public class CreateDomainControl extends AbstractOpenShiftControl
    {
       setEnabled(vfsInfo != null);
    }
-   
+
 }

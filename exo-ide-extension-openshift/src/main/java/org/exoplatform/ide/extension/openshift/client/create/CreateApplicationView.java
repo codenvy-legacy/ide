@@ -79,7 +79,8 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    public CreateApplicationView()
    {
-      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH,
+         HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);

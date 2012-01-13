@@ -59,7 +59,7 @@ import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler,
    LoggedInHandler
 {
-   
+
    interface Display extends IsView
    {
       HasClickHandlers getOkButton();

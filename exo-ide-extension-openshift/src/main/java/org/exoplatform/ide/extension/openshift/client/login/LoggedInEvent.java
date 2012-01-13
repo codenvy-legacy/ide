@@ -34,12 +34,12 @@ public class LoggedInEvent extends GwtEvent<LoggedInHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<LoggedInHandler> TYPE = new GwtEvent.Type<LoggedInHandler>();
-   
+
    /**
     * If <code>true</code> log in failed.
     */
    private boolean isFailed;
-   
+
    /**
     * @param isFailed if <code>true</code> log in failed
     */
@@ -47,7 +47,7 @@ public class LoggedInEvent extends GwtEvent<LoggedInHandler>
    {
       this.isFailed = isFailed;
    }
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

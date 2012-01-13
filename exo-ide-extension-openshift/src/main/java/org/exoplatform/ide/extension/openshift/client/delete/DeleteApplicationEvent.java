@@ -34,7 +34,7 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<DeleteApplicationHandler> TYPE = new GwtEvent.Type<DeleteApplicationHandler>();
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

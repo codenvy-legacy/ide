@@ -88,7 +88,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    ImageButton cancelButton;
-   
+
    public LoginView()
    {
       super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT);
@@ -155,5 +155,5 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    {
       emailField.focus();
    }
-   
+
 }

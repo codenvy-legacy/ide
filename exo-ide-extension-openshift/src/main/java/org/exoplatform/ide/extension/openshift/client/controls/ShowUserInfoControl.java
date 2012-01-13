@@ -44,7 +44,7 @@ public class ShowUserInfoControl extends AbstractOpenShiftControl
       setEvent(new ShowUserInfoEvent());
       setDelimiterBefore(true);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */

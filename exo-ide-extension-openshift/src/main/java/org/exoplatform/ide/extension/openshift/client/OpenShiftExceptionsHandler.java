@@ -53,8 +53,9 @@ public class OpenShiftExceptionsHandler implements OpenShiftExceptionThrownHandl
       if (error instanceof ServerException)
       {
          ServerException serverException = (ServerException)error;
-         String exitCode =  serverException.getHeader("Express-Exit-Code");
-         String expressExitCodeMessage = (exitCode != null) ? "<br>" + OpenShiftExtension.LOCALIZATION_CONSTANT.expressExitCode(exitCode) : "";
+         String exitCode = serverException.getHeader("Express-Exit-Code");
+         String expressExitCodeMessage =
+            (exitCode != null) ? "<br>" + OpenShiftExtension.LOCALIZATION_CONSTANT.expressExitCode(exitCode) : "";
 
          if (serverException.isErrorMessageProvided())
          {

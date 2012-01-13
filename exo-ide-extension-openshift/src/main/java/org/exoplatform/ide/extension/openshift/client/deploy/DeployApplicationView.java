@@ -38,15 +38,15 @@ public class DeployApplicationView extends Composite implements DeployApplicatio
    interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView>
    {
    }
-   
+
    private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
-   
+
    @UiField
    TextInput nameField;
-   
+
    @UiField
    SelectItem typeField;
-   
+
    public DeployApplicationView()
    {
       super();
