@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeRes
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
 public class GenerateNodeTypeResultUnmarshaller implements Unmarshallable
 {

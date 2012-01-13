@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
 public class GenerateNodeTypeControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ViewVisibilityChangedHandler

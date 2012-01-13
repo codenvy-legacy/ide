@@ -33,10 +33,10 @@ import com.google.gwt.core.client.GWT;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Sep 28, 2010 $
- *
+ * 
  */
 public class ChromatticExtension extends Extension implements InitializeServicesHandler
 {

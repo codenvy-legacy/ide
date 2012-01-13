@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class DeployNodeTypeView extends ViewImpl implements DeployNodeTypePresenter.Display
 {
@@ -79,7 +79,7 @@ public class DeployNodeTypeView extends ViewImpl implements DeployNodeTypePresen
 
    public static final int HEIGHT = 180;
 
-   //IDs for Selenium tests
+   // IDs for Selenium tests
    private static final String ID = "ideDeployNodeTypeView";
 
    private final String CANCEL_BUTTON_ID = "ideDeployNodeTypeViewCancelButton";

@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
 public class GenerateNodeTypeEvent extends GwtEvent<GenerateNodeTypeHandler>
 {

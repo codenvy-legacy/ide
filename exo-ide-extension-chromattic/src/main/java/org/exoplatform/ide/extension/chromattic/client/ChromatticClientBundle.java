@@ -26,8 +26,8 @@ import com.google.gwt.resources.client.ImageResource;
  * CloudFoundry client resources (images).
  * 
  * @author <a href="dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
- * @version $Id: 
- *
+ * @version $Id:
+ * 
  */
 public interface ChromatticClientBundle extends ClientBundle
 {

@@ -44,7 +44,7 @@ import java.util.Map;
 
 /**
  * The data object compiler.
- *
+ * 
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
@@ -63,7 +63,7 @@ public class DataObjectCompiler
 
    /**
     * Create a new do compiler with the provided Groovy compiler.
-    *
+    * 
     * @param compiler the compiler to use
     * @param srcFolders the folders that contains groovy source files
     * @param srcFiles the source files
@@ -90,7 +90,7 @@ public class DataObjectCompiler
 
    /**
     * Create a new do compiler.
-    *
+    * 
     * @param srcFolders the folders that contains groovy source files
     * @param srcFiles the compilation source
     * @throws DataObjectException anything that would prevent the compilation of data object
@@ -102,9 +102,9 @@ public class DataObjectCompiler
    }
 
    /**
-    * Generates the node types for the specified data object paths. This operation returns the schema source
-    * in the specified format.
-    *
+    * Generates the node types for the specified data object paths. This operation returns the schema source in the specified
+    * format.
+    * 
     * @param format the schema output format
     * @return the data object paths
     * @throws org.chromattic.dataobject.DataObjectException anything that would prevent data object compilation
@@ -151,9 +151,9 @@ public class DataObjectCompiler
    }
 
    /**
-    * Generates the node types for the specified data object paths. This operations returns a map
-    * with the data object path as keys and the related node type as values.
-    *
+    * Generates the node types for the specified data object paths. This operations returns a map with the data object path as
+    * keys and the related node type as values.
+    * 
     * @return the data object paths
     * @throws org.chromattic.dataobject.DataObjectException anything that would prevent data object compilation
     * @throws NullPointerException if any argument is null
@@ -189,9 +189,9 @@ public class DataObjectCompiler
    }
 
    /**
-    * Compiles the specified classes and returns a map with a data object path as key and
-    * the corresponding compiled data object class.
-    *
+    * Compiles the specified classes and returns a map with a data object path as key and the corresponding compiled data object
+    * class.
+    * 
     * @return the compiled data object classes
     * @throws org.chromattic.dataobject.DataObjectException anything that would prevent data object compilation
     * @throws NullPointerException if any argument is null
@@ -214,10 +214,10 @@ public class DataObjectCompiler
    }
 
    /**
-    * Compiles the specified classes and returns an array containing all the classes generated during
-    * the compilation. Note that the number of returned class can be greater than the number of provided
-    * paths (classes can be generated for specific groovy needs, such as closure).
-    *
+    * Compiles the specified classes and returns an array containing all the classes generated during the compilation. Note that
+    * the number of returned class can be greater than the number of provided paths (classes can be generated for specific groovy
+    * needs, such as closure).
+    * 
     * @return the compiled data object classes
     * @throws org.chromattic.dataobject.DataObjectException anything that would prevent data object compilation
     * @throws NullPointerException if any argument is null

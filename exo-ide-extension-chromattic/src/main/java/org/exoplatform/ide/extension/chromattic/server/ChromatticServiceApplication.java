@@ -25,7 +25,7 @@ import javax.ws.rs.core.Application;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 12, 2011 5:03:02 PM evgen $
  */

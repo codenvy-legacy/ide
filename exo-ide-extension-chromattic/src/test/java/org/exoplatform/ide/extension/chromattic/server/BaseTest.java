@@ -38,7 +38,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -66,9 +66,9 @@ public abstract class BaseTest
       // May be overridden in methods!
       ConversationState user = new ConversationState(new Identity("root"));
       ConversationState.setCurrent(user);
-      //      String loginConfig = getClass().getResource("/login.conf").toString();
-      //      if (System.getProperty("java.security.auth.login.config") == null)
-      //         System.setProperty("java.security.auth.login.config", loginConfig);
+      // String loginConfig = getClass().getResource("/login.conf").toString();
+      // if (System.getProperty("java.security.auth.login.config") == null)
+      // System.setProperty("java.security.auth.login.config", loginConfig);
 
       VirtualFileSystemRegistry virtualFileSystemRegistry =
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);

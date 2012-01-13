@@ -65,7 +65,7 @@ public class RestDataObjectService
 
    /**
     * Compile Data Object Service and return Node Type definition.
-    *
+    * 
     * @param id ID of groovy source that contains node type description
     * @param vfsid ID of virtual file system
     * @param projectId ID of IDE project

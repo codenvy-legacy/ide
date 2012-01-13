@@ -23,7 +23,7 @@ package org.exoplatform.ide.extension.chromattic.client.model;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
 public class GenerateNodeTypeResult
 {

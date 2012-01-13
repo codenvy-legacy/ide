@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
 public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, EditorActiveFileChangedHandler,
    ViewClosedHandler

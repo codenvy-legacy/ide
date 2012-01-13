@@ -25,13 +25,13 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
 public interface GenerateNodeTypeHandler extends EventHandler
 {
    /**
-    * Perform actions on  preview node type.
-    *  
+    * Perform actions on preview node type.
+    * 
     * @param event
     */
    void onGenerateNodeType(GenerateNodeTypeEvent event);

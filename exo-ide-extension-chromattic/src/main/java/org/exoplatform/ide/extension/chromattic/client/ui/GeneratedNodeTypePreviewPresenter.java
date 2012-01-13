@@ -52,7 +52,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 8, 2010 $
- *
+ * 
  */
 public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandler, EditorActiveFileChangedHandler,
    ViewClosedHandler, NodeTypeGenerationResultReceivedHandler, ViewOpenedHandler, GenerateNodeTypeHandler
@@ -61,7 +61,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    interface Display extends IsView
    {
       /**
-       * Set content to be displayed in editor. 
+       * Set content to be displayed in editor.
        * 
        * @param content
        */
@@ -155,10 +155,10 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
          isOpened = false;
          removeHandlers();
       }
-      //      else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
-      //      {
-      //         handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();
-      //      }
+      // else if (GenerateNodeTypeForm.ID.equals(event.getViewId()))
+      // {
+      // handlerRegistrations.get(NodeTypeGenerationResultReceivedEvent.TYPE).removeHandler();
+      // }
    }
 
    private void removeHandlers()
@@ -210,12 +210,11 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    }
 
    /**
-   * Forms the error message to be displayed 
-   * for user.
-   * 
-   * @param exception exception
-   * @return {@link String} formed message to display
-   */
+    * Forms the error message to be displayed for user.
+    * 
+    * @param exception exception
+    * @return {@link String} formed message to display
+    */
    private String getErrorMessage(Throwable exception)
    {
       if (exception instanceof ServerException)

@@ -23,7 +23,7 @@ package org.exoplatform.ide.extension.chromattic.client.model;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
 public enum EnumAlreadyExistsBehaviour {
    IGNORE_IF_EXISTS(0, "ignore if exists"), FAIL_IF_EXISTS(2, "fail if exists"), REPLACE_IF_EXISTS(4,

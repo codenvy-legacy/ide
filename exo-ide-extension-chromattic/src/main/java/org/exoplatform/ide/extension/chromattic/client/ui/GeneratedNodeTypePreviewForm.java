@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.Image;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 17, 2010 $
- *
+ * 
  */
 public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedNodeTypePreviewPresenter.Display
 {

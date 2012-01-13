@@ -52,7 +52,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 9, 2010 $
- *
+ * 
  */
 public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorActiveFileChangedHandler,
    ViewClosedHandler
@@ -96,8 +96,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       void setNodeTypeFormatValues(String[] values);
 
       /**
-       * Set values to the field with
-       * available behavior if node exists.
+       * Set values to the field with available behavior if node exists.
        * 
        * @param values
        */
@@ -252,8 +251,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
    }
 
    /**
-    * Forms the error message to be displayed 
-    * for user.
+    * Forms the error message to be displayed for user.
     * 
     * @param exception exception
     * @return {@link String} formed message to display
