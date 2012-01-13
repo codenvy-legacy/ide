@@ -20,9 +20,9 @@ package org.exoplatform.ide.codeassitant.framework;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 23, 2011 3:59:17 PM evgen $
- *
+ * @version ${Id}: Nov 23, 2011 3:59:17 PM evgen $
+ * 
  */
 public enum E {
-  ONE, TWO, THREE
+   ONE, TWO, THREE
 }

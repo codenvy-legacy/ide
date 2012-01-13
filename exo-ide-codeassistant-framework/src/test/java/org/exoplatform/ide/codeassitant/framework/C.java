@@ -20,10 +20,10 @@ package org.exoplatform.ide.codeassitant.framework;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 15, 2010 4:03:21 PM evgen $
- *
+ * 
  */
 public @interface C {
    String value();

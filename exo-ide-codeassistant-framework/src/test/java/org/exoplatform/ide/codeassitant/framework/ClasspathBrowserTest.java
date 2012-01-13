@@ -27,35 +27,33 @@ import org.exoplatform.ide.codeassistant.framework.server.extractors.ClassNamesE
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class ClasspathBrowserTest extends TestCase
 {
    private String javaHome;
-   
-   
+
    @Override
    protected void setUp() throws Exception
    {
       javaHome = System.getProperty("java.src");
    }
-   
+
    public void testgetClassesNamesFromJavaSrc() throws IOException
    {
       List<String> classes = ClassNamesExtractor.getSourceClassesFromJar(javaHome);
       assertTrue(classes.contains("org.w3c.dom.Document"));
       assertTrue(classes.contains("java.lang.String"));
    }
-   
+
    public void testgetClassesNamesFromJavaSrcPkg() throws IOException
    {
-      List<String> classes = ClassNamesExtractor.getSourceClassesFromJar(javaHome,"java.lang");
+      List<String> classes = ClassNamesExtractor.getSourceClassesFromJar(javaHome, "java.lang");
       assertTrue(classes.contains("java.lang.String"));
       assertTrue(classes.contains("java.lang.Boolean"));
-      
+
    }
-   
- 
 
 }

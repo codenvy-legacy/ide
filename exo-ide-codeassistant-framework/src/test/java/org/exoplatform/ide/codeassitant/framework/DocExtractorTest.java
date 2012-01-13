@@ -33,9 +33,10 @@ import org.exoplatform.ide.codeassistant.framework.server.extractors.DocExtracto
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class DocExtractorTest extends TestCase
 {
 
