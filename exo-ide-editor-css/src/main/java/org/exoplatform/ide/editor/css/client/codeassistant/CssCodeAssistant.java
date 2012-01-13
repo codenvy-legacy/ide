@@ -38,7 +38,7 @@ import com.google.gwt.resources.client.TextResource;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CssCodeAssistant Feb 22, 2011 2:15:17 PM evgen $
- *
+ * 
  */
 public class CssCodeAssistant extends CodeAssistant
 {
@@ -52,7 +52,8 @@ public class CssCodeAssistant extends CodeAssistant
    private static List<Token> cssProperty;
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor,
+    *      java.util.List, int, int, java.lang.String)
     */
    public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
       String fileMimeType)
@@ -60,7 +61,9 @@ public class CssCodeAssistant extends CodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    public void autocompleteCalled(final Editor editor, final int cursorOffsetX, final int cursorOffsetY,
       List<Token> tokenList, String lineMimeType, Token currentToken)

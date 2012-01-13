@@ -34,7 +34,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id
- *
+ * 
  */
 public class HtmlAutocompleteHelper extends AutocompleteHelper
 {
@@ -42,21 +42,24 @@ public class HtmlAutocompleteHelper extends AutocompleteHelper
    List<? extends Token> javaScriptCode;
 
    JavaScriptAutocompleteHelper javaScriptAutocompleteHelper = new JavaScriptAutocompleteHelper();
-   
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
-   {          
+
+   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
+      List<? extends Token> tokenList, String currentLineMimeType)
+   {
       if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
       {
-         javaScriptCode = CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVASCRIPT);
+         javaScriptCode =
+            CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(),
+               MimeType.APPLICATION_JAVASCRIPT);
 
-         return javaScriptAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode, currentLineMimeType);
+         return javaScriptAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode,
+            currentLineMimeType);
 
       }
-      
-      return null;      
+
+      return null;
    }
 
-   
    public boolean isVariable(String nodeType)
    {
       return false;

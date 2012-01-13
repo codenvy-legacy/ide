@@ -33,7 +33,7 @@ import org.exoplatform.ide.editor.html.client.HtmlEditorExtension;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: HtmlTokenWidget Feb 23, 2011 1:12:49 PM evgen $
- *
+ * 
  */
 public class HtmlTokenWidget extends TokenWidget
 {

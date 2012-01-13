@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.HandlerManager;
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
- *
+ * 
  */
 public class CssParser extends CodeMirrorParserImpl
 {
@@ -39,5 +39,5 @@ public class CssParser extends CodeMirrorParserImpl
    {
       return new ArrayList<TokenBeenImpl>();
    }
-   
+
 }

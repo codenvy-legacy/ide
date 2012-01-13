@@ -24,14 +24,13 @@ import org.exoplatform.ide.editor.css.client.CssEditorExtension;
 
 import com.google.gwt.resources.client.ImageResource;
 
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- *
+ * 
  */
 public class CssOutlineItemCreator extends OutlineItemCreatorImpl
-{  
+{
    @Override
    public ImageResource getTokenIcon(TokenBeenImpl token)
    {
@@ -39,12 +38,12 @@ public class CssOutlineItemCreator extends OutlineItemCreatorImpl
       {
          case TAG :
             return CssEditorExtension.RESOURCES.tag();
-            
+
          default :
             return null;
       }
    }
-   
+
    @Override
    public String getTokenDisplayTitle(TokenBeenImpl token)
    {

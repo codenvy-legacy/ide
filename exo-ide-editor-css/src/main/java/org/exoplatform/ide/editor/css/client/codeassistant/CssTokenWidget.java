@@ -33,7 +33,7 @@ import org.exoplatform.ide.editor.css.client.CssEditorExtension;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CssTokenWidget Feb 22, 2011 5:01:38 PM evgen $
- *
+ * 
  */
 public class CssTokenWidget extends TokenWidget
 {
@@ -60,7 +60,7 @@ public class CssTokenWidget extends TokenWidget
 
       grid.setWidget(0, 1, nameLabel);
       String pack = "";
-      
+
       Label l = new Label(pack, false);
       l.setStyleName(CssEditorExtension.RESOURCES.css().fqn());
       grid.setWidget(0, 2, l);
@@ -93,7 +93,7 @@ public class CssTokenWidget extends TokenWidget
    @Override
    public Widget getTokenDecription()
    {
-      if(token.hasProperty(TokenProperties.FULL_TEXT))
+      if (token.hasProperty(TokenProperties.FULL_TEXT))
       {
          Widget w = new SimplePanel();
          w.getElement().setInnerHTML(token.getProperty(TokenProperties.FULL_TEXT).isStringProperty().stringValue());

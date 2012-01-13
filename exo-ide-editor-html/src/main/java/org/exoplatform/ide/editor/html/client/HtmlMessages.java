@@ -23,20 +23,20 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface HtmlMessages extends Messages
 {
    @Key("codeMirror.htmlEditor")
    String codeMirrorHtmlEditor();
-   
+
    @Key("ckEditor.htmlEditor")
    String ckEditorHtmlEditor();
-   
+
    @Key("control.new.html.title")
    String controlNewHtmlTitle();
 
    @Key("control.new.html.prompt")
-   String controlNewHtmlPrompt();   
-   
+   String controlNewHtmlPrompt();
+
 }

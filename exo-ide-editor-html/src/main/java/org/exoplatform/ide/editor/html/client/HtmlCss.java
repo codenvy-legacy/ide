@@ -23,7 +23,7 @@ import com.google.gwt.resources.client.CssResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface HtmlCss extends CssResource
 {

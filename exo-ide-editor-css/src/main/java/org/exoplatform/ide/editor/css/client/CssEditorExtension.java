@@ -34,17 +34,17 @@ import com.google.gwt.core.client.GWT;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class CssEditorExtension extends Extension
 {
 
    private static final String CSS_ICON = UIHelper.getGadgetImagesURL() + "css/css.png";
-   
+
    public static final CssMessages MESSAGES = GWT.create(CssMessages.class);
-   
-   public static final CssBundle RESOURCES = GWT.create(CssBundle.class); 
-   
+
+   public static final CssBundle RESOURCES = GWT.create(CssBundle.class);
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -52,23 +52,17 @@ public class CssEditorExtension extends Extension
    public void initialize()
    {
       RESOURCES.css().ensureInjected();
-      
-      IDE.getInstance().addControl(new NewItemControl(
-         "File/New/New CSS",
-         MESSAGES.controlNewCssTitle(),
-         MESSAGES.controlNewCssPrompt(),
-         CSS_ICON,
-         MimeType.TEXT_CSS));
 
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css",
-         RESOURCES.cssImage(), true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsecss.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
-            setParser(new CssParser()).
-            setCodeAssistant(new CssCodeAssistant())         
-      ));
-      
+      IDE.getInstance().addControl(
+         new NewItemControl("File/New/New CSS", MESSAGES.controlNewCssTitle(), MESSAGES.controlNewCssPrompt(),
+            CSS_ICON, MimeType.TEXT_CSS));
+
+      IDE.getInstance().addEditor(
+         new CodeMirrorProducer(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css", RESOURCES.cssImage(), true,
+            new CodeMirrorConfiguration().setGenericParsers("['parsecss.js']")
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
+               .setParser(new CssParser()).setCodeAssistant(new CssCodeAssistant())));
+
       IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_CSS, new CssOutlineItemCreator());
    }
 

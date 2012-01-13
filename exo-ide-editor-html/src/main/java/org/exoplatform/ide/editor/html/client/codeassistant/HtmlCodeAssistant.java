@@ -51,7 +51,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: HtmlCodeAssistant Feb 22, 2011 2:36:49 PM evgen $
- *
+ * 
  */
 public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFactory, Comparator<Token>
 {
@@ -116,7 +116,8 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
    private boolean isTag = false;
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor,
+    *      java.util.List, int, int, java.lang.String)
     */
    @Override
    public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
@@ -125,7 +126,9 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+    *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
    public void autocompleteCalled(Editor editor, final int cursorOffsetX, final int cursorOffsetY,
@@ -167,6 +170,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    /**
     * Receive and parse tokens
+    * 
     * @param lineContent
     * @param cursorPositionX
     * @throws ResourceException
@@ -199,6 +203,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    /**
     * Do autocompletion
+    * 
     * @param lineContent
     * @param cursorPositionX
     */
@@ -215,7 +220,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
       if (tokenToComplete.endsWith(" ") || tokenToComplete.endsWith("\""))
       {
-         //add attributes
+         // add attributes
          String tag = "";
 
          tag = tokenToComplete.substring(0, tokenToComplete.indexOf(" "));
@@ -278,6 +283,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    /**
     * Parse string line received from editor
+    * 
     * @param line current line where autocompletion called
     */
    private void parseTokenLine(String line, int cursorPos)

@@ -23,18 +23,18 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface XmlConstant extends Messages
 {
 
    @Key("xmlEditor")
    String xmlEditor();
-   
+
    @Key("control.new.xml.title")
    String controlNewXmlTitle();
 
    @Key("control.new.xml.prompt")
-   String controlNewXmlPrompt();   
-   
+   String controlNewXmlPrompt();
+
 }

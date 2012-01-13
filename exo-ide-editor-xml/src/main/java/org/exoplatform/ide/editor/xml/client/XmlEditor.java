@@ -34,16 +34,15 @@ import com.google.gwt.core.client.GWT;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class XmlEditor extends Extension
 {
 
-   
    public final static XmlConstant CONSTANT = GWT.create(XmlConstant.class);
-   
+
    public static final XmlClientBundle RESOURCES = GWT.create(XmlClientBundle.class);
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -51,35 +50,24 @@ public class XmlEditor extends Extension
    public void initialize()
    {
       RESOURCES.css().ensureInjected();
-      
-      IDE.getInstance().addControl(new NewItemControl(
-         "File/New/New XML",
-         CONSTANT.controlNewXmlTitle(),
-         CONSTANT.controlNewXmlPrompt(),
-         Images.XML,
-         MimeType.TEXT_XML));      
-      
-      CodeAssistant xmlAssistant = new XmlCodeAssistant();
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, CONSTANT.xmlEditor(), "xml",
-         RESOURCES.xml(), true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsexml.js', 'tokenize.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").
-            setParser(new XmlParser()).
-            setCanBeOutlined(true).
-            setCodeAssistant(xmlAssistant)
-      ));
 
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_XML, CONSTANT.xmlEditor(), "xml",
-         RESOURCES.xml(), true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsexml.js', 'tokenize.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").
-            setParser(new XmlParser()).
-            setCanBeOutlined(true).
-            setCodeAssistant(xmlAssistant)
-      ));
-      
+      IDE.getInstance().addControl(
+         new NewItemControl("File/New/New XML", CONSTANT.controlNewXmlTitle(), CONSTANT.controlNewXmlPrompt(),
+            Images.XML, MimeType.TEXT_XML));
+
+      CodeAssistant xmlAssistant = new XmlCodeAssistant();
+      IDE.getInstance().addEditor(
+         new CodeMirrorProducer(MimeType.APPLICATION_XML, CONSTANT.xmlEditor(), "xml", RESOURCES.xml(), true,
+            new CodeMirrorConfiguration().setGenericParsers("['parsexml.js', 'tokenize.js']")
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']")
+               .setParser(new XmlParser()).setCanBeOutlined(true).setCodeAssistant(xmlAssistant)));
+
+      IDE.getInstance().addEditor(
+         new CodeMirrorProducer(MimeType.TEXT_XML, CONSTANT.xmlEditor(), "xml", RESOURCES.xml(), true,
+            new CodeMirrorConfiguration().setGenericParsers("['parsexml.js', 'tokenize.js']")
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']")
+               .setParser(new XmlParser()).setCanBeOutlined(true).setCodeAssistant(xmlAssistant)));
+
       IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_XML, new XmlOutlineItemCreator());
    }
 

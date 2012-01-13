@@ -26,7 +26,7 @@ import com.google.gwt.resources.client.ClientBundle.Source;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public interface CssBundle extends ClientBundle
 {
@@ -42,8 +42,8 @@ public interface CssBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/css/client/images/tag.png")
    ImageResource tag();
-   
+
    @Source("org/exoplatform/ide/editor/css/public/images/css/css.png")
    ImageResource cssImage();
-   
+
 }

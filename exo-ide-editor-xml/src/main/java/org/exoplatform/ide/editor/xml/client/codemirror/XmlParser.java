@@ -33,11 +33,12 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class XmlParser extends CodeMirrorParserImpl
 {
    private String lastNodeContent;
-   
+
    private String lastNodeType;
-   
+
    @Override
-   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken,
+      boolean hasParentParser)
    {
       // interrupt at the end of the line or content
       if ((node == null) || Node.getName(node).equals("BR"))
@@ -83,7 +84,7 @@ public class XmlParser extends CodeMirrorParserImpl
          }
       }
 
-      // recognize close tag starting with "/>" out of 
+      // recognize close tag starting with "/>" out of
       else if (isCloseFinishTagNode(nodeType, nodeContent))
       {
          currentToken = closeTag(lineNumber, currentToken);
@@ -99,31 +100,34 @@ public class XmlParser extends CodeMirrorParserImpl
 
       return parseLine(Node.getNext(node), lineNumber, currentToken, false);
    }
- 
-   
+
    /**
     * recognize "</" node
+    * 
     * @param nodeType
     * @param nodeContent
     * @return
     */
    public static boolean isCloseStartTagNode(String nodeType, String nodeContent)
    {
-      return (nodeType != null) && (nodeContent != null) && (nodeType.equals("xml-punctuation") && nodeContent.equals("&lt;/"));
+      return (nodeType != null) && (nodeContent != null)
+         && (nodeType.equals("xml-punctuation") && nodeContent.equals("&lt;/"));
    }
 
    /**
     * recognize "/>" node
+    * 
     * @param nodeType
     * @param nodeContent
     * @return
     */
    public static boolean isCloseFinishTagNode(String nodeType, String nodeContent)
    {
-      return (nodeType != null) && (nodeContent != null) && (nodeType.equals("xml-punctuation") && nodeContent.equals("/&gt;"));
+      return (nodeType != null) && (nodeContent != null)
+         && (nodeType.equals("xml-punctuation") && nodeContent.equals("/&gt;"));
    }
-   
-   /**
+
+/**
     * recognize "<" node
     * @param nodeType
     * @param nodeContent
@@ -131,10 +135,11 @@ public class XmlParser extends CodeMirrorParserImpl
     */
    public static boolean isOpenTagNode(String nodeType, String nodeContent)
    {
-      return (nodeType != null) && (nodeContent != null) && nodeType.equals("xml-punctuation") && nodeContent.equals("&lt;");
+      return (nodeType != null) && (nodeContent != null) && nodeType.equals("xml-punctuation")
+         && nodeContent.equals("&lt;");
    };
 
-   /**
+/**
     * recognize "<" node
     * @param nodeType
     * @return
@@ -143,16 +148,16 @@ public class XmlParser extends CodeMirrorParserImpl
    {
       return (nodeType != null) && nodeType.equals("xml-tagname");
    };
-   
+
    public static boolean isCDATAOpenNode(String nodeContent)
    {
       return nodeContent.matches("&lt;!\\[CDATA\\[.*(\\n)*.*");
    };
-   
+
    public static boolean isCDATACloseNode(String nodeContent)
    {
       return nodeContent.matches("\\]\\]&gt;.*");
-   };   
+   };
 
    public static TokenBeenImpl addTag(TokenBeenImpl currentToken, String tagName, int lineNumber, String contentMimeType)
    {
@@ -163,21 +168,21 @@ public class XmlParser extends CodeMirrorParserImpl
       }
 
       return newToken;
-   }   
-   
+   }
+
    // close tag
    public static TokenBeenImpl closeTag(int lineNumber, TokenBeenImpl currentToken)
    {
-      if (currentToken != null) 
+      if (currentToken != null)
       {
          currentToken.setLastLineNumber(lineNumber);
-      } 
-      
+      }
+
       if (currentToken.getParentToken() != null)
       {
-        return currentToken.getParentToken();         
+         return currentToken.getParentToken();
       }
-      
+
       return currentToken;
-   }     
+   }
 }
