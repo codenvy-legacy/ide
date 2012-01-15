@@ -32,7 +32,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-
 import java.io.IOException;
 
 /**
@@ -108,7 +107,6 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
    @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
-
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -117,11 +115,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //step 1 create new hotkey for create html file (Ctrl+H) and file from template (Alt+N)
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.maxClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("New HTML");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "h");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Create File From Template...");
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template..");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.ALT.toString() + "n");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
@@ -136,22 +135,24 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.EDITOR.waitTabPresent(2);
       IDE.EDITOR.selectTab(1);
       IDE.EDITOR.typeTextIntoEditor(1, Keys.ALT.toString() + "n");
-      IDE.TEMPLATES.waitOpened();
-      IDE.TEMPLATES.clickCancelButton();
-      IDE.TEMPLATES.waitClosed();
+      IDE.SAVE_AS_TEMPLATE.waitOpened();
+      IDE.SAVE_AS_TEMPLATE.clickCancelButton();
+      IDE.SAVE_AS_TEMPLATE.waitClosed();
       IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
-      IDE.EDITOR.waitTabPresent(3);
+      //TODO TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
       IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
+      IDE.selectMainFrame();
+      IDE.EDITOR.selectTab(2);
       IDE.EDITOR.closeTabIgnoringChanges(3);
       IDE.EDITOR.waitTabNotPresent(3);
 
       //repeat all actions in gadget tab
       IDE.EDITOR.selectTab(2);
-      IDE.EDITOR.typeTextIntoEditor(1, Keys.ALT.toString() + "n");
-      IDE.TEMPLATES.waitOpened();
-      IDE.TEMPLATES.clickCancelButton();
-      IDE.TEMPLATES.waitClosed();
-      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
+      IDE.EDITOR.typeTextIntoEditor(2, Keys.ALT.toString() + "n");
+      IDE.SAVE_AS_TEMPLATE.waitOpened();
+      IDE.SAVE_AS_TEMPLATE.clickCancelButton();
+      IDE.SAVE_AS_TEMPLATE.waitClosed();
+      IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
       IDE.EDITOR.waitTabPresent(3);
       IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
       IDE.EDITOR.closeTabIgnoringChanges(3);
@@ -165,53 +166,48 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
    @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
-
       //step 1 restore default values for HTML file and Create File From Template... commands 
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.New.HTML_FILE);
       IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
-
-      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Create File From Template...");
-      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "n");
-      IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template..");
+      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
-//      //step 2 opening 2 files and checking restore commands in 2 tabs after refresh
-//      //driver.navigate().refresh();
-//
-//
-//      //      IDE.PROJECT.EXPLORER.waitOpened();
-//      //      IDE.PROJECT.OPEN.openProject(PROJECT);
-//      //      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-//      //      IDE.PROJECT.EXPLORER.openItem(PROJECT);
-//
-//      
-//      
-//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-//      IDE.EDITOR.waitTabPresent(1);
-//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-//      IDE.EDITOR.waitTabPresent(2);
-//
-//      //  driver.navigate().refresh();
-//      IDE.EDITOR.waitTabPresent(2);
-//      IDE.EDITOR.selectTab(1);
-//
-//      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
-//      IDE.TEMPLATES.waitOpened();
-//      IDE.TEMPLATES.clickCancelButton();
-//      IDE.TEMPLATES.waitClosed();
-//
-//      // driver.navigate().refresh();
-//      IDE.EDITOR.waitTabPresent(1);
-//      IDE.EDITOR.selectTab(2);
-//      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "n");
-//      IDE.TEMPLATES.waitOpened();
-//      IDE.TEMPLATES.clickCancelButton();
-//      IDE.TEMPLATES.waitClosed();
+
+      //step 2 opening 2 files and checking restore commands in 2 tabs after refresh. 
+      //Me be Maybe this problem switch between iframes
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.EDITOR.waitTabPresent(2);
+
+      //  driver.navigate().refresh();
+      IDE.EDITOR.waitTabPresent(2);
+      IDE.EDITOR.selectTab(1);
+
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
+      IDE.TEMPLATES.waitOpened();
+      IDE.TEMPLATES.clickCancelButton();
+      IDE.TEMPLATES.waitClosed();
+
+      // driver.navigate().refresh();
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "n");
+      IDE.TEMPLATES.waitOpened();
+      IDE.TEMPLATES.clickCancelButton();
+      IDE.TEMPLATES.waitClosed();
 
    }
 
