@@ -126,6 +126,7 @@ public class ClassInfoExtractorTest
       {
          if (method.getName().equals("methodWithMap"))
          {
+            method.getParameterTypes();
             Assert.assertEquals(method.getDeclaringClass(), "org.exoplatform.ide.codeassistant.asm.test.B");
             Assert.assertEquals(method.getModifiers(), 1);
             Assert.assertEquals(method.getReturnType(), "T");
@@ -133,7 +134,10 @@ public class ClassInfoExtractorTest
             Assert.assertEquals(method.getParameterNames().size(), 1);
             Assert.assertEquals(method.getParameterNames().get(0), "map");
             Assert.assertEquals(method.getParameterTypes().size(), 1);
-            Assert.assertEquals(method.getParameterTypes().get(0), "java.util.Map<K, V>");
+            //System.out.println(method.getParameterTypes().get(0));
+            Assert.assertEquals(method.getParameterTypes().get(0),
+               "java.util.Map<java.util.Map<java.util.Map<K, ? extends "
+                  + "java.util.Map<? super java.util.List<java.lang.Number>, V>>, java.lang.Number>, V>");
             isFound = true;
             break;
          }

@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
+import org.exoplatform.ide.codeassistant.asm.visitors.MethodSignatureVisitor;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.signature.SignatureReader;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.util.TraceSignatureVisitor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,42 +108,9 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
       if (methodNode.signature != null)
       {
          SignatureReader reader = new SignatureReader(methodNode.signature);
-         TraceSignatureVisitor v = new TraceSignatureVisitor(methodNode.access);
+         MethodSignatureVisitor v = new MethodSignatureVisitor();
          reader.accept(v);
-         String declaration = v.getDeclaration();
-         String methodParams = declaration.substring(declaration.indexOf('('), declaration.length());
-         if (methodParams.length() > 2)
-         {
-            // remove first ( and last ) from string
-            methodParams = methodParams.substring(1, methodParams.length() - 1);
-            List<String> params = new ArrayList<String>();
-            int genericDepth = 0;
-            int paramBeginsFrom = 0;
-            for (int index = 0; index < methodParams.length(); index++)
-            {
-               char current = methodParams.charAt(index);
-               if (current == '<')
-               {
-                  genericDepth++;
-               }
-               if (current == '>')
-               {
-                  genericDepth--;
-               }
-               if (current == ',' && genericDepth == 0)
-               {
-                  params.add(methodParams.substring(paramBeginsFrom, index).trim());
-                  paramBeginsFrom = index + 1;
-               }
-            }
-            // add last param
-            params.add(methodParams.substring(paramBeginsFrom, methodParams.length()).trim());
-            return params;
-         }
-         else
-         {
-            return Collections.emptyList();
-         }
+         return v.getParameters();
       }
       else
       {
@@ -166,7 +133,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
       if (methodNode.signature != null)
       {
          SignatureReader reader = new SignatureReader(methodNode.signature);
-         TraceSignatureVisitor v = new TraceSignatureVisitor(methodNode.access);
+         MethodSignatureVisitor v = new MethodSignatureVisitor();
          reader.accept(v);
          return v.getReturnType();
       }

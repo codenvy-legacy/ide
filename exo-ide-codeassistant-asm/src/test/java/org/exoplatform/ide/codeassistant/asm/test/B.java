@@ -79,8 +79,9 @@ public class B extends A implements I
    }
 
    public <T extends Number, InputStream, K extends Number, V extends List<? extends Object>> T methodWithMap(
-      Map<K, V> map)
+      Map<Map<Map<K, ? extends Map<? super List<Number>, V>>, Number>, V> map)
    {
       return null;
    }
+
 }
