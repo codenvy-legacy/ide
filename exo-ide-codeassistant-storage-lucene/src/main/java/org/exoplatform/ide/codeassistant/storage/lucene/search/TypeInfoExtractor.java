@@ -31,7 +31,10 @@ import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStora
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Create TypeInfo from lucene document.
@@ -108,15 +111,65 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
       if (ancestor != null)
       {
          ArrayList<FieldInfo> fields = new ArrayList<FieldInfo>();
-         fields.addAll(recipient.getFields());
-         fields.addAll(ancestor.getFields());
+         Set<String> existedFields = new HashSet<String>();
+         for (FieldInfo field : recipient.getFields())
+         {
+            if (Modifier.isPublic(field.getModifiers()))
+            {
+               existedFields.add(field.getName());
+               fields.add(field);
+            }
+         }
+         for (FieldInfo field : ancestor.getFields())
+         {
+            if (Modifier.isPublic(field.getModifiers()) && !existedFields.contains(field.getName()))
+            {
+               existedFields.add(field.getName());
+               fields.add(field);
+            }
+         }
          recipient.setFields(fields);
 
          ArrayList<MethodInfo> methods = new ArrayList<MethodInfo>();
-         methods.addAll(recipient.getMethods());
-
-         methods.addAll(ancestor.getMethods());
+         Set<String> existedMethods = new HashSet<String>();
+         for (MethodInfo method : recipient.getMethods())
+         {
+            if (Modifier.isPublic(method.getModifiers()))
+            {
+               existedMethods.add(getMethodDeclaration(method));
+               methods.add(method);
+            }
+         }
+         for (MethodInfo method : ancestor.getMethods())
+         {
+            if (Modifier.isPublic(method.getModifiers()) && !existedMethods.contains(getMethodDeclaration(method))
+               && !method.isConstructor())
+            {
+               existedMethods.add(getMethodDeclaration(method));
+               methods.add(method);
+            }
+         }
          recipient.setMethods(methods);
       }
    }
+
+   private String getMethodDeclaration(MethodInfo method)
+   {
+      StringBuilder builder = new StringBuilder();
+      builder.append(method.getName());
+      builder.append("(");
+      boolean isFirst = true;
+      for (String parameter : method.getParameterTypes())
+      {
+         if (!isFirst)
+         {
+            builder.append(", ");
+         }
+         builder.append(parameter);
+         isFirst = false;
+      }
+      builder.append(")");
+      return builder.toString();
+   }
+
 }

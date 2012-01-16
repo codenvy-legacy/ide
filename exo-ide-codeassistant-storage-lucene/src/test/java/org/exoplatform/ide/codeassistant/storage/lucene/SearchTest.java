@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-import static org.exoplatform.ide.codeassistant.asm.ClassParser.OBJECT_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -26,6 +25,7 @@ import test.ClassManager;
 
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
@@ -146,10 +146,34 @@ public class SearchTest
       TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass");
 
       assertEquals("test.classes.ATestClass", typeInfo.getName());
-      assertEquals(3, typeInfo.getFields().size());
-      //3 methods + constructor
-      assertEquals(4 + OBJECT_TYPE.getMethods().size(), typeInfo.getMethods().size());
+      assertEquals(1, typeInfo.getFields().size());
+
+      assertEquals(12, typeInfo.getMethods().size());
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
+   }
+
+   @Test
+   public void testRemoveDuplicatedAndOverdrivedMethodsFromTypeInfo() throws CodeAssistantException
+   {
+      TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass2");
+
+      assertEquals("test.classes.ATestClass2", typeInfo.getName());
+      assertEquals(1, typeInfo.getFields().size());
+      assertEquals("FIELD_1", typeInfo.getFields().get(0).getName());
+
+      assertEquals(12, typeInfo.getMethods().size());
+      assertEquals("test.classes.ATestClass", typeInfo.getSuperClass());
+      for (MethodInfo method : typeInfo.getMethods())
+      {
+         if (method.getName().equals("method1"))
+         {
+            assertEquals("test.classes.ATestClass2", method.getDeclaringClass());
+         }
+         if (method.getName().equals("method2"))
+         {
+            assertEquals("test.classes.ATestClass", method.getDeclaringClass());
+         }
+      }
    }
 
    @Test
