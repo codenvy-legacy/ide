@@ -161,7 +161,8 @@ public class ParameterSignatureVisitor implements SignatureVisitor
    @Override
    public void visitInnerClassType(String name)
    {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      currentParameter.append("$");
+      currentParameter.append(name);
    }
 
    @Override

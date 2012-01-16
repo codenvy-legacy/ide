@@ -24,7 +24,7 @@ import java.util.List;
 
 enum Stage {
 
-   FORMAL, PARAMETERS, RETURN
+   FORMAL, PARAMETERS, RETURN, EXCEPTIONS
 
 }
 
@@ -39,12 +39,15 @@ public class MethodSignatureVisitor implements SignatureVisitor
 
    private ParameterSignatureVisitor parameters;
 
+   private ParameterSignatureVisitor exceptions;
+
    private Stage stage;
 
    public MethodSignatureVisitor()
    {
       this.returnType = new ParameterSignatureVisitor();
       this.parameters = new ParameterSignatureVisitor();
+      this.exceptions = new ParameterSignatureVisitor();
    }
 
    @Override
@@ -94,25 +97,48 @@ public class MethodSignatureVisitor implements SignatureVisitor
    @Override
    public SignatureVisitor visitExceptionType()
    {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      stage.equals(Stage.EXCEPTIONS);
+      return exceptions;
    }
 
    @Override
    public void visitBaseType(char descriptor)
    {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      if (stage.equals(Stage.FORMAL))
+      {
+         // skip
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      }
    }
 
    @Override
    public void visitTypeVariable(String name)
    {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      if (stage.equals(Stage.FORMAL))
+      {
+         // skip
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      }
    }
 
    @Override
    public SignatureVisitor visitArrayType()
    {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      if (stage.equals(Stage.FORMAL))
+      {
+         // skip
+         return this;
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      }
    }
 
    @Override
@@ -131,13 +157,27 @@ public class MethodSignatureVisitor implements SignatureVisitor
    @Override
    public void visitInnerClassType(String name)
    {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      if (stage.equals(Stage.FORMAL))
+      {
+         // skip
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      }
    }
 
    @Override
    public void visitTypeArgument()
    {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      if (stage.equals(Stage.FORMAL))
+      {
+         // skip
+      }
+      else
+      {
+         throw new UnsupportedOperationException("Event not supported by parameter visitor");
+      }
    }
 
    @Override

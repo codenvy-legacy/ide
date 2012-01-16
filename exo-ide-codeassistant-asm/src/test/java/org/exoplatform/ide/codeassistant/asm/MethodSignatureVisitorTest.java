@@ -102,4 +102,46 @@ public class MethodSignatureVisitorTest
       Assert.assertEquals("java.util.Map<T, java.util.Comparable<? extends T>>", v.getReturnType());
    }
 
+   @Test
+   public void testMethodWithInnerClass()
+   {
+      final String signature =
+         "(Ljava/lang/Class<+Lorg/exoplatform/ide/codeassistant/asm/test/Q$U;>;)Lorg/exoplatform/ide/codeassistant/asm/test/Q$U;";
+      SignatureReader reader = new SignatureReader(signature);
+      MethodSignatureVisitor v = new MethodSignatureVisitor();
+      reader.accept(v);
+      Assert.assertEquals(1, v.getParameters().size());
+      Assert.assertEquals("java.lang.Class<? extends org.exoplatform.ide.codeassistant.asm.test.Q$U>", v
+         .getParameters().get(0));
+
+      Assert.assertEquals("org.exoplatform.ide.codeassistant.asm.test.Q$U", v.getReturnType());
+   }
+
+   @Test
+   public void testMethodWithExceptions()
+   {
+      final String signature = "(Ljava/lang/Class<*>;)V";
+      SignatureReader reader = new SignatureReader(signature);
+      MethodSignatureVisitor v = new MethodSignatureVisitor();
+      reader.accept(v);
+      Assert.assertEquals(1, v.getParameters().size());
+      Assert.assertEquals("java.lang.Class<?>", v.getParameters().get(0));
+
+      Assert.assertEquals("void", v.getReturnType());
+   }
+
+   @Test
+   public void testMethodWithExceptionAsParam()
+   {
+      final String signature =
+         "<T:Ljava/util/ConcurrentModificationException;>(Ljava/util/ConcurrentModificationException;)TT;";
+      SignatureReader reader = new SignatureReader(signature);
+      MethodSignatureVisitor v = new MethodSignatureVisitor();
+      reader.accept(v);
+      Assert.assertEquals(1, v.getParameters().size());
+      Assert.assertEquals("java.util.ConcurrentModificationException", v.getParameters().get(0));
+
+      Assert.assertEquals("T", v.getReturnType());
+   }
+
 }
