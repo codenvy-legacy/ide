@@ -19,19 +19,15 @@
 package org.exoplatform.ide.core;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.exoplatform.ide.VirtualFileSystemUtils;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: RESTService May 11, 2011 2:29:11 PM evgen $
- *FIXME
+ * @version $Id: RESTService May 11, 2011 2:29:11 PM evgen $ FIXME
  */
 public class CustomizeHotkeys extends AbstractTestModule
 {
@@ -70,11 +66,11 @@ public class CustomizeHotkeys extends AbstractTestModule
 
       String INPUT_FIELD2 = "//div[@view-id=\"ideCustomizeHotKeysView\"]";
 
-      //TODO After isuue IDE-; should be change 
+      // TODO After isuue IDE-; should be change
       String INPUT_FIELD = "div[view-id=ideCustomizeHotKeysView] input[type=text]";
    }
 
-   // The basic webelements for customize 
+   // The basic webelements for customize
    @FindBy(id = Locators.CUSTOMIZE_HOTKEYS_FORM)
    private WebElement customizeHotkeyForm;
 
@@ -113,8 +109,8 @@ public class CustomizeHotkeys extends AbstractTestModule
 
    /**
     * Wait appearance Customize Hotkeys Form
-   * 
-   */
+    * 
+    */
    public void waitOpened() throws InterruptedException
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
@@ -129,9 +125,9 @@ public class CustomizeHotkeys extends AbstractTestModule
    }
 
    /**
-    * Waiting while button bind will enabled 
-    *  
-   */
+    * Waiting while button bind will enabled
+    * 
+    */
    public void waitBindEnabled() throws InterruptedException
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
@@ -146,9 +142,9 @@ public class CustomizeHotkeys extends AbstractTestModule
    }
 
    /**
-    * Waiting while button unbind will enabled 
-    *  
-   */
+    * Waiting while button unbind will enabled
+    * 
+    */
    public void waitUnBindEnabled() throws InterruptedException
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
@@ -163,9 +159,9 @@ public class CustomizeHotkeys extends AbstractTestModule
    }
 
    /**
-    * Waiting while button ok will enabled 
-    *  
-   */
+    * Waiting while button ok will enabled
+    * 
+    */
    public void waitOkEnabled() throws InterruptedException
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
@@ -181,8 +177,9 @@ public class CustomizeHotkeys extends AbstractTestModule
 
    /**
     * Wait disappearance Customize Hotkeys Form
-   *  @throws InterruptedException
-   */
+    * 
+    * @throws InterruptedException
+    */
    public void waitClosed() throws InterruptedException
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
@@ -286,7 +283,7 @@ public class CustomizeHotkeys extends AbstractTestModule
 
    /**
     * @return true if button disabled
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void typeKeys(String text) throws InterruptedException
    {
@@ -295,6 +292,7 @@ public class CustomizeHotkeys extends AbstractTestModule
 
    /**
     * Selects an item on the commandlist by name
+    * 
     * @param name
     */
    public void selectElementOnCommandlistbarByName(String name)
@@ -303,20 +301,24 @@ public class CustomizeHotkeys extends AbstractTestModule
       rowByName.click();
    }
 
-   //   /**
-   //    * @return false if REST service form is closed
-   //    * return true if REST service form is open
-   //    */
-   //   public boolean isFormOpened()
-   //   {
+   // /**
+   // * @return false if REST service form is closed
+   // * return true if REST service form is open
+   // */
+   // public boolean isFormOpened()
+   // {
    //
-   //      //      return (restServiceForm != null && restServiceForm.isDisplayed() && restServicePath != null
-   //      //         && restServicePath.isDisplayed() && restServiceMethod != null && restServiceMethod.isDisplayed()
-   //      //         && restServiceRequestMediaType != null && restServiceRequestMediaType.isDisplayed()
-   //      //         && restServiceResponseMediaType != null && restServiceResponseMediaType.isDisplayed() && queryTable != null
-   //      //         && getUrlButton != null && getUrlButton.isDisplayed() && sendButton != null && sendButton.isDisplayed()
-   //      //         && cancelButton != null && cancelButton.isDisplayed());
+   // // return (restServiceForm != null && restServiceForm.isDisplayed() && restServicePath != null
+   // // && restServicePath.isDisplayed() && restServiceMethod != null && restServiceMethod.isDisplayed()
+   // // && restServiceRequestMediaType != null && restServiceRequestMediaType.isDisplayed()
+   // // && restServiceResponseMediaType != null && restServiceResponseMediaType.isDisplayed() && queryTable != null
+   // // && getUrlButton != null && getUrlButton.isDisplayed() && sendButton != null && sendButton.isDisplayed()
+   // // && cancelButton != null && cancelButton.isDisplayed());
    //
-   //   }
+   // }
 
+   public void maxClick()
+   {
+      // TODO
+   }
 }
