@@ -64,8 +64,10 @@ public class CustomizeHotkeys extends AbstractTestModule
 
       String CUSTOMIZE_ROWS = "//table[@id='" + LIST_GRID_FORM + "']" + "/tbody//tr/td/div/span[contains(.,'%s')]";
 
-      String INPUT_FIELD2 = "//div[@view-id=\"ideCustomizeHotKeysView\"]";
+      String MAXIMIZE = "img[title=Maximize]";
 
+
+      
       // TODO After isuue IDE-; should be change
       String INPUT_FIELD = "div[view-id=ideCustomizeHotKeysView] input[type=text]";
    }
@@ -106,7 +108,10 @@ public class CustomizeHotkeys extends AbstractTestModule
 
    @FindBy(css = Locators.INPUT_FIELD)
    private WebElement keyField;
-
+   
+   @FindBy(css = Locators.MAXIMIZE)
+   private WebElement max;
+  
    /**
     * Wait appearance Customize Hotkeys Form
     * 
@@ -281,6 +286,11 @@ public class CustomizeHotkeys extends AbstractTestModule
       okButton.click();
    }
 
+   public void maximizeClick()
+   {
+      max.click();
+   }
+   
    /**
     * @return true if button disabled
     * @throws InterruptedException
@@ -297,10 +307,16 @@ public class CustomizeHotkeys extends AbstractTestModule
     */
    public void selectElementOnCommandlistbarByName(String name)
    {
+      
+      
       WebElement rowByName = driver().findElement(By.xpath(String.format(Locators.CUSTOMIZE_ROWS, name)));
       rowByName.click();
    }
-
+   
+   
+   
+   
+   
    // /**
    // * @return false if REST service form is closed
    // * return true if REST service form is open
