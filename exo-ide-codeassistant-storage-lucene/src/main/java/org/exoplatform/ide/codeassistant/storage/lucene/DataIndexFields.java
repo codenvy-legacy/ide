@@ -25,10 +25,8 @@ public final class DataIndexFields
 {
    public static final String MODIFIERS = "modifiers";
 
-   //TODO check usage
    public static final String CLASS_NAME = "class-name";
 
-   //TODO check usage
    public static final String FQN = "fqn";
 
    public static final String ENTITY_TYPE = "entity-type";
@@ -38,6 +36,6 @@ public final class DataIndexFields
    public static final String INTERFACES = "interfaces";
 
    public static final String TYPE_INFO = "type-info";
-   
+
    public static final String JAVA_DOC = "doc";
 }
