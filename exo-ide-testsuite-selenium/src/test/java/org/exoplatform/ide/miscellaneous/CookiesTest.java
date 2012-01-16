@@ -47,8 +47,7 @@ public class CookiesTest extends BaseTest
 
    private final static String TEST_FOLDER = "Test";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
+   private final static String COOKIE_PREFIX = "domain=" + IDE_HOST + ", eXo-IDE-" + USER_NAME.replace("@", "%40");
 
    @BeforeClass
    public static void setUp()
@@ -74,15 +73,10 @@ public class CookiesTest extends BaseTest
 
       //goto ide, open project, folder in project and test-file
       IDE.PROJECT.EXPLORER.waitOpened();
-
       IDE.PROJECT.OPEN.openProject(PROJECT);
-
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER);
-
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
 
       //get all cookies and split string. Add substrins in string array
@@ -95,12 +89,11 @@ public class CookiesTest extends BaseTest
       List<Boolean> listUserCookies = new ArrayList<Boolean>();
       for (int i = 0; i < cookies.length; i++)
       {
-         if (cookies[i].startsWith("domain=" + SELENIUM_HOST + ", eXo-IDE-" + USER_NAME))
+         if (cookies[i].startsWith(COOKIE_PREFIX))
          {
             listUserCookies.add(true);
          }
       }
-
       assertTrue(listUserCookies.size() >= 4);
    }
 
