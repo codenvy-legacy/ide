@@ -47,18 +47,6 @@
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>org.easytesting</groupId>
-         <artifactId>fest-assert</artifactId>
-         <version>1.4</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>com.carrotsearch</groupId>
-         <artifactId>junit-benchmarks</artifactId>
-         <version>0.3.0</version>
-         <scope>test</scope>
-      </dependency>
 
    </dependencies>
    <build>
