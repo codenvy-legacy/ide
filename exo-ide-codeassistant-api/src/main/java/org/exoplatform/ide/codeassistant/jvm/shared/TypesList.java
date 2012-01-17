@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,14 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.client.model;
+package org.exoplatform.ide.codeassistant.jvm.shared;
+
+import java.util.List;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}: Dec 2, 2011 4:52:03 PM evgen $
- * 
- */
-public interface TypeSelectedCallback
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+public interface TypesList
 {
-   void typeSelected(org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo type);
+   void setTypes(List<ShortTypeInfo> types);
+   
+   List<ShortTypeInfo> getTypes();
+
 }

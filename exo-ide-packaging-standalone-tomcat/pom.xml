@@ -146,26 +146,76 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-gadget</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-groovy</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-java</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-jenkins</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-netvibes</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -176,37 +226,105 @@
                <groupId>org.hsqldb</groupId>
                <artifactId>hsqldb</artifactId>
             </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-git</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-ssh</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-heroku</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-openshift</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudbees</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudfoundry</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -219,8 +337,16 @@
          <artifactId>exo-ide-extension-samples</artifactId>
          <exclusions>
             <exclusion>
-               <groupId>com.google.gwt</groupId>
-               <artifactId>gwt-dev</artifactId>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-framework-client</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -228,6 +354,16 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -238,8 +374,28 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-ruby</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-codeassistant-asm</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
 
       <!--GIT Server -->
       <dependency>
@@ -368,6 +524,12 @@
       <dependency>
          <groupId>org.hsqldb</groupId>
          <artifactId>hsqldb</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide.codeassistant</groupId>
+         <artifactId>codeassistant-lucene-index</artifactId>
+         <type>zip</type>
       </dependency>
 
    </dependencies>
@@ -603,6 +765,26 @@
                      <outputDirectory>${project.build.directory}/tomcat-ide/lib-docs</outputDirectory>
                   </configuration>
                </execution>
+
+               <execution>
+                  <id>copy-lucene-autocomplite-index</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                     <stripVersion>true</stripVersion>
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>org.exoplatform.ide.codeassistant</groupId>
+                           <artifactId>codeassistant-lucene-index</artifactId>
+                           <version>${ide.codeassistant.lucene.index.version}</version>
+                           <type>zip</type>
+                        </artifactItem>
+                     </artifactItems>
+                     <outputDirectory>${project.build.directory}</outputDirectory>
+                  </configuration>
+               </execution>
             </executions>
          </plugin>
          <plugin>
@@ -677,6 +859,7 @@
                               <exclude name="**/*.jar" />
                            </patternset>
                         </unwar>
+                        <unzip src="${project.build.directory}/codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
                         <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
                            <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                               <exclude name="**/conf/*-mysql.xml" />

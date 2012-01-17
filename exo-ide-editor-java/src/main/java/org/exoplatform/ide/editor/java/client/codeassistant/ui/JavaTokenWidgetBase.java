@@ -98,6 +98,7 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
       return i;
    }
 
+   
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenName()
     */

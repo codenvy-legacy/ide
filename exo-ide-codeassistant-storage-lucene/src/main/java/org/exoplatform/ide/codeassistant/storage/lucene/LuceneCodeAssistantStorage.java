@@ -128,8 +128,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    {
 
       List<TypeInfo> searchResult =
-         queryExecutor
-            .executeQuery(new TypeInfoExtractor(this), IndexType.JAVA, eq(DataIndexFields.FQN, fqn), 1, 0);
+         queryExecutor.executeQuery(new TypeInfoExtractor(this), IndexType.JAVA, eq(DataIndexFields.FQN, fqn), 1, 0);
       return searchResult.size() == 1 ? searchResult.get(0) : null;
 
    }

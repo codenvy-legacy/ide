@@ -55,8 +55,9 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      String name =
-         token.getName() + token.getProperty(TokenProperties.PARAMETER_TYPES).isStringProperty().stringValue();
+      
+      
+      String name = token.getName() + token.getProperty(TokenProperties.PARAMETER_TYPES).isStringProperty().stringValue();
       if (token.hasProperty(TokenProperties.RETURN_TYPE))
          name += ":" + token.getProperty(TokenProperties.RETURN_TYPE).isStringProperty().stringValue();
       else
@@ -80,6 +81,8 @@ public class JavaMethodWidget extends JavaTokenWidgetBase
       initWidget(grid);
       setWidth("100%");
    }
+   
+                            
 
    private Image getImage()
    {

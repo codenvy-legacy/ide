@@ -18,29 +18,24 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services;
 
-import com.google.gwt.http.client.RequestBuilder;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
-import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.TypesUnmarshaller;
-import org.exoplatform.ide.editor.java.client.model.ShortTypeInfo;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 /**
- * Implementation of {@link CodeAssistantService} <br>
+ * Implementation of {@link CodeAssistantService}
+ * <br>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 4:44:53 PM evgen $
- * 
+ *
  */
 public class JavaCodeAssistantService extends CodeAssistantService
 {
@@ -51,8 +46,8 @@ public class JavaCodeAssistantService extends CodeAssistantService
 
    public JavaCodeAssistantService(String restServiceContext, Loader loader)
    {
-      super(restServiceContext, loader, "/ide/code-assistant/java/class-description?fqn=", // GET_CLASS_URL
-         "/ide/code-assistant/java/find-by-prefix/", // FIND_CLASS_BY_PREFIX
+      super(restServiceContext, loader, "/ide/code-assistant/java/class-description?fqn=", //GET_CLASS_URL
+         "/ide/code-assistant/java/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
          "/ide/code-assistant/java/find-by-type/");
       instance = this;
    }
@@ -64,11 +59,11 @@ public class JavaCodeAssistantService extends CodeAssistantService
 
    /**
     * Find all classes from project with file.
-    * 
+    *   
     * @param fileRelPath for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<List<Token>> callback)
+   public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<TypesList> callback)
    {
       if (fileId != null)
       {
@@ -76,19 +71,19 @@ public class JavaCodeAssistantService extends CodeAssistantService
          url +=
             "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
                + VirtualFileSystem.getInstance().getInfo().getId();
-         List<Token> classes = new ArrayList<Token>();
-         callback.setResult(classes);
-
-         FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
-
-         callback.setEventBus(IDE.eventBus());
-         callback.setPayload(unmarshaller);
-         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+         try
+         {
+            AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+         }
       }
    }
 
    public void findTypeByPrefix(String prefix, Types type, String projectId,
-      AsyncRequestCallback<List<ShortTypeInfo>> callback)
+      AsyncRequestCallback<TypesList> callback)
    {
       String url = restServiceContext + FIND_TYPE + type.toString();
       url += "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
@@ -96,13 +91,14 @@ public class JavaCodeAssistantService extends CodeAssistantService
       {
          url += "&prefix=" + prefix;
       }
-
-      List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-      TypesUnmarshaller unmarshaller = new TypesUnmarshaller(types);
-      callback.setResult(types);
-      callback.setEventBus(IDE.eventBus());
-      callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      try
+      {
+         AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
 }

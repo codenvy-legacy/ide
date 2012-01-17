@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -159,10 +158,10 @@
          </properties>
 
          <dependencies>
-         
+
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-         		<artifactId>exo-ide-vfs-jcr</artifactId>
+               <artifactId>exo-ide-vfs-jcr</artifactId>
             </dependency>
 
             <dependency>
@@ -326,6 +325,17 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-samples</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>org.exoplatform.ide</groupId>
+                     <artifactId>exo-ide-codeassistant-asm</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
 
             <dependency>
@@ -542,9 +552,36 @@
                <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
+            
+            
          </dependencies>
          <build>
             <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <executions>
+                    <execution>
+                        <id>copy-lucene-autocomplite-index</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                           <stripVersion>true</stripVersion>
+                           <artifactItems>
+                              <artifactItem>
+                                 <groupId>org.exoplatform.ide.codeassistant</groupId>
+                                 <artifactId>codeassistant-lucene-index</artifactId>
+                                 <version>${ide.codeassistant.lucene.index.version}</version>
+                                 <type>zip</type>
+                              </artifactItem>
+                           </artifactItems>
+                           <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                     </execution>
+                     </executions>
+                </plugin>
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-resources-plugin</artifactId>
@@ -563,29 +600,30 @@
                                  <filtering>true</filtering>
                               </resource>
                            </resources>
-                            <nonFilteredFileExtensions>
-                               <nonFilteredFileExtension>zip</nonFilteredFileExtension>
-                            </nonFilteredFileExtensions>
+                           <nonFilteredFileExtensions>
+                              <nonFilteredFileExtension>zip</nonFilteredFileExtension>
+                           </nonFilteredFileExtensions>
                         </configuration>
                      </execution>
                   </executions>
                </plugin>
                <plugin>
-                 <artifactId>maven-antrun-plugin</artifactId>
-                 <executions>
-                   <execution>
-                     <id>create-git-folders</id>
-                     <phase>compile</phase>
-                     <goals>
-                       <goal>run</goal>
-                     </goals>
-                     <configuration>
-                       <tasks>
-                        <mkdir dir="target/git/repository/dev-monit" />
-                       </tasks>
-                     </configuration>
-                   </execution>
-                 </executions>                 
+                  <artifactId>maven-antrun-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>create-git-folders</id>
+                        <phase>compile</phase>
+                        <goals>
+                           <goal>run</goal>
+                        </goals>
+                        <configuration>
+                           <tasks>
+                              <mkdir dir="target/git/repository/dev-monit" />
+                              <unzip src="${project.build.directory}/codeassistant-lucene-index.zip" dest="${project.build.directory}" />
+                           </tasks>
+                        </configuration>
+                     </execution>
+                  </executions>
                </plugin>
 
                <plugin>
@@ -594,17 +632,13 @@
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
-                     <!-- 
-                     <logLevel>INFO</logLevel>
-                      -->
+                     <!-- <logLevel>INFO</logLevel> -->
                      <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
-                     <!-- 
-                     <port>${gwt.port}</port>
-                     -->
+                     <!-- <port>${gwt.port}</port> -->
                      <bindAddress>0.0.0.0</bindAddress>
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git  -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
                   </configuration>
                </plugin>
 

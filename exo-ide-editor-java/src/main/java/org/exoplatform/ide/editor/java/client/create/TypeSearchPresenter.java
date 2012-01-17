@@ -28,16 +28,21 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
+import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
-import org.exoplatform.ide.editor.java.client.model.ShortTypeInfo;
 import org.exoplatform.ide.editor.java.client.model.TypeSelectedCallback;
 import org.exoplatform.ide.editor.java.client.model.Types;
 
@@ -166,17 +171,19 @@ public class TypeSearchPresenter implements ViewClosedHandler
    private void doSearch()
    {
       String namePrefix = display.getSearchInput().getValue();
+      AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
+      AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
       if (namePrefix != null && !namePrefix.isEmpty())
       {
          JavaCodeAssistantService.get().findTypeByPrefix(namePrefix, type, projectId,
-            new AsyncRequestCallback<List<ShortTypeInfo>>()
+            new AsyncRequestCallback<TypesList>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(List<ShortTypeInfo> result)
+               protected void onSuccess(TypesList result)
                {
                   List<ShortTypeInfo> nonFinalType = new ArrayList<ShortTypeInfo>();
-                  for (ShortTypeInfo info : result)
+                  for (ShortTypeInfo info : result.getTypes())
                   {
                      if (!ModifierHelper.isFinal(info.getModifiers()))
                      {
@@ -184,6 +191,12 @@ public class TypeSearchPresenter implements ViewClosedHandler
                      }
                   }
                   display.getTypesList().setValue(nonFinalType);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.getInstance().fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }

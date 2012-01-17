@@ -18,15 +18,10 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ExternalTextResource;
-import com.google.gwt.resources.client.ResourceCallback;
-import com.google.gwt.resources.client.ResourceException;
-import com.google.gwt.resources.client.TextResource;
-
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AutoBeanUnmarshaller;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
@@ -38,6 +33,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
+import org.exoplatform.ide.editor.java.client.JavaCodeAssistantUtils;
+import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
 import org.exoplatform.ide.editor.java.client.model.Types;
@@ -47,6 +44,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -141,14 +147,18 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       this.editor = editor;
       try
       {
+         AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
+         AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
          service.findClassesByPrefix(codeErrorList.get(0).getLineContent(), projectId,
-            new AsyncRequestCallback<List<Token>>()
+            new AsyncRequestCallback<TypesList>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(List<Token> result)
+               protected void onSuccess(TypesList result)
                {
-                  openImportForm(markOffsetY, markOffsetX, result, factory, JavaCodeAssistant.this);
+                  openImportForm(markOffsetY, markOffsetX,// 
+                     JavaCodeAssistantUtils.types2tokens(result), factory,//
+                     JavaCodeAssistant.this);
                }
 
                @Override
@@ -232,13 +242,15 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                action = Action.ANNOTATION;
                beforeToken += "@";
                tokenToComplete = tokenToComplete.substring(1);
-               service.findType(Types.ANNOTATION, tokenToComplete, projectId, new AsyncRequestCallback<List<Token>>()
+               AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
+               AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
+               service.findType(Types.ANNOTATION, tokenToComplete, projectId, new AsyncRequestCallback<TypesList>(unmarshaller)
                {
 
                   @Override
-                  protected void onSuccess(List<Token> result)
+                  protected void onSuccess(TypesList result)
                   {
-                     filterTokens(result);
+                     filterTokens(JavaCodeAssistantUtils.types2tokens(result));
                   }
 
                   @Override
@@ -249,14 +261,16 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                });
                return;
             }
-
-            service.findClassesByPrefix(tokenToComplete, projectId, new AsyncRequestCallback<List<Token>>()
+            
+            AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
+            AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
+            service.findClassesByPrefix(tokenToComplete, projectId, new AsyncRequestCallback<TypesList>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(List<Token> result)
+               protected void onSuccess(TypesList result)
                {
-                  filterTokens(result);
+                  filterTokens(JavaCodeAssistantUtils.types2tokens(result));
                }
 
                @Override
@@ -316,18 +330,21 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
     */
    protected void getClassDescription()
    {
-      service.getClassDescription(curentFqn, projectId, new AsyncRequestCallback<JavaClass>()
+      AutoBean<TypeInfo> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.typeInfo();
+      AutoBeanUnmarshaller<TypeInfo> unmarshaller = new AutoBeanUnmarshaller<TypeInfo>(autoBean);
+      service.getClassDescription(curentFqn, projectId, new AsyncRequestCallback<TypeInfo>(unmarshaller)
       {
 
          @Override
-         protected void onSuccess(JavaClass result)
+         protected void onSuccess(TypeInfo result)
          {
-            classDescriptionReceived(result);
+            classDescriptionReceived(JavaCodeAssistantUtils.type2javaClass(result));
          }
 
          @Override
          protected void onFailure(Throwable exception)
          {
+            exception.printStackTrace();
             errorHandler.handleError(exception);
          }
       });
@@ -485,7 +502,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
          }
 
-         token.addAll(classNames);
+         token.addAll(classNames); //TODO
          if (!tokenToComplete.isEmpty())
          {
             if (keywords == null)

@@ -19,17 +19,16 @@
 package org.exoplatform.ide.extension.java.server;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.bean.TypesListBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
-import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
@@ -102,7 +101,7 @@ public class RestCodeAssistantJava
    @GET
    @Path("/find-by-prefix/{prefix}")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findFQNsByPrefix(@Context UriInfo uriInfo, @PathParam("prefix") String prefix,
+   public TypesList findFQNsByPrefix(@Context UriInfo uriInfo, @PathParam("prefix") String prefix,
       @QueryParam("where") String where, @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
@@ -111,10 +110,10 @@ public class RestCodeAssistantJava
 
       if ("className".equalsIgnoreCase(where))
       {
-         return codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId);
+         return new TypesListBean(codeAssistant.getTypesByNamePrefix(prefix, projectId, vfsId));
       }
 
-      return codeAssistant.getTypesByFqnPrefix(prefix, projectId, vfsId);
+      return new TypesListBean(codeAssistant.getTypesByFqnPrefix(prefix, projectId, vfsId));
 
    }
 
@@ -130,13 +129,13 @@ public class RestCodeAssistantJava
    @GET
    @Path("/find-by-type/{type}")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
+   public TypesList findByType(@PathParam("type") String type, @QueryParam("prefix") String prefix,
       @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
       if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
-      return codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId);
+      return new TypesListBean(codeAssistant.getByType(JavaType.valueOf(type.toUpperCase()), prefix, projectId, vfsId));
    }
 
    @GET
@@ -171,13 +170,13 @@ public class RestCodeAssistantJava
    @GET
    @Path("/find-in-package")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<ShortTypeInfo> findClassesInPackage(@QueryParam("fileid") String fileId,
+   public TypesList findClassesInPackage(@QueryParam("fileid") String fileId,
       @QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId) throws CodeAssistantException,
       VirtualFileSystemException
    {
       if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
-      return codeAssistant.getClassesFromProject(fileId, projectId, vfsId);
+      return new TypesListBean(codeAssistant.getClassesFromProject(fileId, projectId, vfsId));
    }
 
 }

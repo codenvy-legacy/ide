@@ -27,34 +27,35 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
-import org.exoplatform.ide.editor.java.client.model.ShortTypeInfo;
 import org.exoplatform.ide.editor.java.client.model.Types;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}: Dec 2, 2011 12:42:31 PM evgen $
- * 
+ * @version ${Id}:  Dec 2, 2011 12:42:31 PM evgen $
+ *
  */
 public class TypeList extends ListGrid<ShortTypeInfo>
 {
+   
+   
 
    /**
     * @param cell
     */
    public TypeList()
    {
-      // Image column
-      Column<ShortTypeInfo, ImageResource> iconColumn =
-         new Column<ShortTypeInfo, ImageResource>(new ImageResourceCell())
+      //Image column
+      Column<ShortTypeInfo, ImageResource> iconColumn = new Column<ShortTypeInfo, ImageResource>(new ImageResourceCell())
+      {
+         @Override
+         public ImageResource getValue(ShortTypeInfo item)
          {
-            @Override
-            public ImageResource getValue(ShortTypeInfo item)
-            {
-               return getImageForType(item.getType());
-            }
-         };
-
+            return getImageForType(item.getType());
+         }
+      };
+      
       Column<ShortTypeInfo, SafeHtml> repositoryColumn = new Column<ShortTypeInfo, SafeHtml>(new SafeHtmlCell())
       {
          @Override
@@ -66,23 +67,22 @@ public class TypeList extends ListGrid<ShortTypeInfo>
 
                public String asString()
                {
-                  return item.getName() + " - "
-                     + item.getQualifiedName().substring(0, item.getQualifiedName().lastIndexOf('.'));
+                  return item.getName() + " - " + item.getName().substring(0, item.getName().lastIndexOf('.'));
                }
             };
             return html;
          }
       };
-
+      
       getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
       getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
-
+      
       getCellTable().addColumn(repositoryColumn);
    }
 
-   private ImageResource getImageForType(Types type)
+   private ImageResource getImageForType(String type)
    {
-      switch (type)
+      switch (Types.valueOf(type))
       {
          case CLASS :
             return JavaClientBundle.INSTANCE.classItem();
@@ -92,5 +92,6 @@ public class TypeList extends ListGrid<ShortTypeInfo>
             return JavaClientBundle.INSTANCE.classItem();
       }
    }
+   
 
 }

@@ -25,5 +25,4 @@
   <import>cf-configuration.xml</import>
   <import>organization-configuration.xml</import>
   <import>ide-configuration.xml</import>
-  <import>ide-codeassist-configuration.xml</import>
 </configuration>

@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -34,7 +33,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
@@ -49,7 +48,8 @@ import org.exoplatform.ide.editor.java.client.codemirror.JavaParser;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
 import org.exoplatform.ide.editor.java.client.create.NewJavaClassControl;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -61,6 +61,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 {
 
    public static final JavaConstants MESSAGES = GWT.create(JavaConstants.class);
+   
+   public static final JavaCodeAssistantAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(JavaCodeAssistantAutoBeanFactory.class);
 
    private JavaCodeAssistant javaCodeAssistant;
 
@@ -152,12 +154,14 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    {
       if (event.getFile() != null && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
-         service.findClassesByProject(event.getFile().getId(), projectId, new AsyncRequestCallback<List<Token>>()
+         AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
+         AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
+         service.findClassesByProject(event.getFile().getId(), projectId, new AsyncRequestCallback<TypesList>(unmarshaller)
          {
             @Override
-            protected void onSuccess(List<Token> result)
+            protected void onSuccess(TypesList result)
             {
-               javaCodeValidator.setClassesFromProject(result);
+               javaCodeValidator.setClassesFromProject(JavaCodeAssistantUtils.types2tokens(result)); 
                ((CodeMirror)event.getEditor()).validateCode();
             }
 

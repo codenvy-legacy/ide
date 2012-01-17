@@ -18,22 +18,18 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services;
 
-import com.google.gwt.http.client.RequestBuilder;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.ClassDescriptionUnmarshaller;
-import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
 import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * This service for auto-complete feature. Service need for retrieve information about Groovy classes. <br>
@@ -74,20 +70,21 @@ public abstract class CodeAssistantService
     * @param fileHref for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public void getClassDescription(String fqn, String projectId, AsyncRequestCallback<JavaClass> callback)
+   public void getClassDescription(String fqn, String projectId, AsyncRequestCallback<TypeInfo> callback)
    {
       String url =
          restServiceContext + GET_CLASS_URL + fqn + "&projectid=" + projectId + "&vfsid="
             + VirtualFileSystem.getInstance().getInfo().getId();
-
-      JavaClass classInfo = new JavaClass();
-      callback.setResult(classInfo);
-      ClassDescriptionUnmarshaller unmarshaller = new ClassDescriptionUnmarshaller(classInfo);
       int status[] = {HTTPStatus.NO_CONTENT, HTTPStatus.OK};
-      callback.setEventBus(IDE.eventBus());
-      callback.setPayload(unmarshaller);
       callback.setSuccessCodes(status);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      try
+      {
+         AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -97,19 +94,19 @@ public abstract class CodeAssistantService
     * @param projectId for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
-   public void findClassesByPrefix(String prefix, String projectId, AsyncRequestCallback<List<Token>> callback)
+   public void findClassesByPrefix(String prefix, String projectId, AsyncRequestCallback<TypesList> callback)
    {
       String url =
          restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId
             + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
-
-      List<Token> tokens = new ArrayList<Token>();
-      callback.setResult(tokens);
-      FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
-
-      callback.setEventBus(IDE.eventBus());
-      callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      try
+      {
+         AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -119,7 +116,7 @@ public abstract class CodeAssistantService
     * @param prefix the prefix with type name starts (can be null)
     * @param callback - the callback which client has to implement
     */
-   public void findType(Types type, String prefix, String projectId, AsyncRequestCallback<List<Token>> callback)
+   public void findType(Types type, String prefix, String projectId, AsyncRequestCallback<TypesList> callback)
    {
       String url = restServiceContext + FIND_TYPE + type.toString();
       url += "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
@@ -127,13 +124,14 @@ public abstract class CodeAssistantService
       {
          url += "&prefix=" + prefix;
       }
-      List<Token> tokens = new ArrayList<Token>();
-      callback.setResult(tokens);
-      FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
-
-      callback.setEventBus(IDE.eventBus());
-      callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      try
+      {
+         AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
 }

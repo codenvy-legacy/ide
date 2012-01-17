@@ -26,6 +26,7 @@ import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -68,8 +69,9 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
             + project.getId() + "&vfsid=ws", "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       // assertTrue(cres.getEntity().getClass().isArray());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
-      assertEquals(10, types.size());
+      TypesList types = (TypesList)cres.getEntity();
+      assertNotNull(types);
+      assertEquals(10, types.getTypes().size());
    }
 
    @Test
@@ -82,8 +84,9 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
             + "&projectid=" + project.getId() + "&vfsid=ws", "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       // assertTrue(cres.getEntity().getClass().isArray());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
-      assertEquals(6, types.size());
+      TypesList types = (TypesList)cres.getEntity();
+      assertNotNull(types);
+      assertEquals(6, types.getTypes().size());
    }
 
    @Test
@@ -95,8 +98,9 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
          launcher.service("GET", "/ide/code-assistant/java/find-by-type/" + type + "?projectid=" + project.getId()
             + "&vfsid=ws", "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)cres.getEntity();
-      assertEquals(21, types.size());
+      TypesList types = (TypesList)cres.getEntity();
+      assertNotNull(types);
+      assertEquals(21, types.getTypes().size());
    }
 
    @Test
@@ -126,9 +130,10 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
          launcher.service("GET", "/ide/code-assistant/java/find-in-package?fileid=" + file.getId() + "&projectid="
             + folder.getId() + "&vfsid=ws", "", null, null, null, null);
       assertEquals(HTTPStatus.OK, cres.getStatus());
-      List<ShortTypeInfo> res = (List<ShortTypeInfo>)cres.getEntity();
-      assertEquals(1, res.size());
-      assertEquals("Product", res.get(0).getName());
+      TypesList types = (TypesList)cres.getEntity();
+      assertNotNull(types);
+      assertEquals(1, types.getTypes().size());
+      assertEquals("Product", types.getTypes().get(0).getName());
    }
 
 }

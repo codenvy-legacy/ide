@@ -27,9 +27,11 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
@@ -47,15 +49,17 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 import org.exoplatform.ide.editor.java.client.CreateJavaClassEvent;
 import org.exoplatform.ide.editor.java.client.CreateJavaClassHandler;
+import org.exoplatform.ide.editor.java.client.JavaCodeAssistantUtils;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
-import org.exoplatform.ide.editor.java.client.model.ShortTypeInfo;
 import org.exoplatform.ide.editor.java.client.model.TypeSelectedCallback;
 import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -332,7 +336,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
                   if (type == null)
                      return;
 
-                  display.getSuperClassText().setValue(type.getQualifiedName());
+                  display.getSuperClassText().setValue(type.getName());
                }
             });
          }
@@ -558,7 +562,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          {
             ShortTypeInfo type = iterator.next();
             content.append(type.getName());
-            insetImport(content, packageDeclaration, type.getQualifiedName());
+            insetImport(content, packageDeclaration, type.getName());
             if (iterator.hasNext())
                content.append(", ");
          }
@@ -577,21 +581,24 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    private void loadSuperClassInfo(String superFqn, final String className, final String packageDeclaration,
       final StringBuilder content)
    {
+      AutoBean<TypeInfo> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.typeInfo();
+      AutoBeanUnmarshaller<TypeInfo> unmarshaller = new AutoBeanUnmarshaller<TypeInfo>(autoBean);
       JavaCodeAssistantService.get().getClassDescription(superFqn, currentProject.getId(),
-         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<JavaClass>()
+         new AsyncRequestCallback<TypeInfo>(unmarshaller)
          {
 
             @Override
-            protected void onSuccess(JavaClass result)
+            protected void onSuccess(TypeInfo result)
             {
+               JavaClass javaClass = JavaCodeAssistantUtils.type2javaClass(result);
                if (display.getConstructors().getValue())
                {
-                  generateConstructors(className, packageDeclaration, content, result);
+                  generateConstructors(className, packageDeclaration, content, javaClass);
                }
 
                if (display.getMethods().getValue())
                {
-                  generateAbstractMethods(packageDeclaration, content, result);
+                  generateAbstractMethods(packageDeclaration, content, javaClass);
                   if (display.getInterfaceList().getValue() != null && !display.getInterfaceList().getValue().isEmpty())
                   {
                      interfaces = display.getInterfaceList().getValue();
@@ -629,16 +636,23 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       }
 
       final ShortTypeInfo info = interfaces.iterator().next();
-      JavaCodeAssistantService.get().getClassDescription(info.getQualifiedName(), currentProject.getId(),
-         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<JavaClass>()
+      AutoBean<TypeInfo> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.typeInfo();
+      AutoBeanUnmarshaller<TypeInfo> unmarshaller = new AutoBeanUnmarshaller<TypeInfo>(autoBean);
+      JavaCodeAssistantService.get().getClassDescription(info.getName(), currentProject.getId(),
+         new AsyncRequestCallback<TypeInfo>(unmarshaller)
          {
 
             @Override
-            protected void onSuccess(JavaClass result)
+            protected void onSuccess(TypeInfo result)
             {
-               generateAbstractMethods(packageDeclaration, content, result);
+               generateAbstractMethods(packageDeclaration, content, JavaCodeAssistantUtils.type2javaClass(result));
                interfaces.remove(info);
                loadInterfacesDescription(packageDeclaration, content);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
             }
          });
    }

@@ -228,4 +228,23 @@
          </values-param>
       </init-params>
    </component>
+   
+   <component>                                                                                                                                                                                                 
+     <type>org.exoplatform.ide.codeassistant.storage.lucene.ExoFsLuceneInfoStorage</type>                                                                                                                      
+     <init-params>                                                                                                                                                                                             
+       <value-param>                                                                                                                                                                                           
+            <name>storage-path</name>                                                                                                                                                                          
+            <value>target/code-assistant-index</value>                                                                                                                                                             
+         </value-param>                                                                                                                                                                                        
+     </init-params>                                                                                                                                                                                            
+   </component>                                                                                                                                                                                                
+                                                                                                                                                                                                               
+   <component>                                                                                                                                                                                                 
+     <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>                                                                                                                                     
+     <type>org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage</type>                                                                                                                  
+   </component>                                                                                                                                                                                                
+                                                                                                                                                                                                               
+    <component>                                                                                                                                                                                                
+      <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>                                                                                                                                 
+   </component>   
 </configuration>

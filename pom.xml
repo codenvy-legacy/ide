@@ -26,6 +26,8 @@
       <org.exoplatform.core.version>2.4.4-GA</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.4-GA</org.exoplatform.ws.version>
       <org.exoplatform.gwtframework.version>1.2.0-M5-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <!-- CodeAssistant DataBase -->
+       <ide.codeassistant.lucene.index.version>20120116</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
       <gwt.version>2.4.0</gwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
@@ -392,6 +394,18 @@
             <artifactId>exo-ide-vfs-webdav-client</artifactId>
             <version>${project.version}</version>
          </dependency>
+         <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+           <version>${project.version}</version>
+         </dependency>
+        <dependency>
+          <groupId>org.exoplatform.ide.codeassistant</groupId>
+          <artifactId>codeassistant-lucene-index</artifactId>
+          <version>${ide.codeassistant.lucene.index.version}</version>
+          <type>zip</type>
+        </dependency>
+      
 	 		<dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven-webapp-archetype</artifactId>

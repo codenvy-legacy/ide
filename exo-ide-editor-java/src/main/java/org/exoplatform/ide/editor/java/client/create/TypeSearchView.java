@@ -32,10 +32,10 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.editor.java.client.JavaConstants;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.create.TypeSearchPresenter.Display;
-import org.exoplatform.ide.editor.java.client.model.ShortTypeInfo;
 import org.exoplatform.ide.editor.java.client.ui.TypeList;
 
 /**
@@ -62,7 +62,7 @@ public class TypeSearchView extends ViewImpl implements Display
    ImageButton searchButton;
 
    @UiField
-   TypeList typeList;
+   ListGridItem<ShortTypeInfo> typeList;
 
    @UiField
    ImageButton cancelButton;

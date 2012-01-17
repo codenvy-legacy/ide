@@ -47,13 +47,13 @@ public class JavaCodeValidator extends CodeValidator
 
    List<Token> classesFromProject;
 
-   JavaCodeAssistantService service;
+//   JavaCodeAssistantService service;
 
    JavaCodeAssistantErrorHandler errorHandler;
 
    public JavaCodeValidator(JavaCodeAssistantService service, JavaCodeAssistantErrorHandler errorHandler)
    {
-      this.service = service;
+//      this.service = service;
       this.errorHandler = errorHandler;
    }
 
