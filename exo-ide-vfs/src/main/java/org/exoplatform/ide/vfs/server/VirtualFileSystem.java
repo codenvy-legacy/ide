@@ -439,7 +439,7 @@ public interface VirtualFileSystem
     * @throws LockException if item already locked
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
-    * @see VirtualFileSystemInfo#getLockCapability()
+    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo#isLockSupported()
     */
    @POST
    @Path("lock")
@@ -720,7 +720,7 @@ public interface VirtualFileSystem
     */
    @GET
    @Path("downloadzip")
-   @Consumes({"application/zip"})
+   @Produces({"application/zip"})
    Response downloadZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, IOException, VirtualFileSystemException;
 
