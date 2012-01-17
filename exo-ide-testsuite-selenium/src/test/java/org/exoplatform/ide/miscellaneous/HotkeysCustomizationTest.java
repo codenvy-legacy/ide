@@ -46,7 +46,7 @@ import java.io.IOException;
  */
 public class HotkeysCustomizationTest extends AbstractHotkeysTest
 {
-   private final static String PROJECT = CursorPositionStatusBarTest.class.getSimpleName();
+   private final static String PROJECT = HotkeysCustomizationTest.class.getSimpleName();
 
    @Before
    public void setUp() throws Exception
@@ -87,10 +87,9 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.openItem(PROJECT);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.New.NEW);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
-      //driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "h");
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
       IDE.TEMPLATES.waitOpened();
       IDE.TEMPLATES.clickCancelButton();
@@ -104,24 +103,21 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
-   @Test
+  @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.openItem(PROJECT);
-
       //step 1 create new hotkey for create html file (Ctrl+H) and file from template (Alt+N)
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
-      IDE.CUSTOMIZE_HOTKEYS.maxClick();
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("New HTML");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "h");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template..");
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template...");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.ALT.toString() + "n");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
@@ -139,55 +135,57 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.SAVE_AS_TEMPLATE.waitOpened();
       IDE.SAVE_AS_TEMPLATE.clickCancelButton();
       IDE.SAVE_AS_TEMPLATE.waitClosed();
-      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
-      //TODO TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
-      IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
-      IDE.selectMainFrame();
-      IDE.EDITOR.selectTab(2);
-      IDE.EDITOR.closeTabIgnoringChanges(3);
-      IDE.EDITOR.waitTabNotPresent(3);
 
-      //repeat all actions in gadget tab
-      IDE.EDITOR.selectTab(2);
-      IDE.EDITOR.typeTextIntoEditor(2, Keys.ALT.toString() + "n");
-      IDE.SAVE_AS_TEMPLATE.waitOpened();
-      IDE.SAVE_AS_TEMPLATE.clickCancelButton();
-      IDE.SAVE_AS_TEMPLATE.waitClosed();
-      IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
-      IDE.EDITOR.waitTabPresent(3);
-      IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
-      IDE.EDITOR.closeTabIgnoringChanges(3);
-      IDE.EDITOR.waitTabNotPresent(3);
+      //A temporary solution for problem switching between tabs in FF 4.0 and higher
+      if ("CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad"))
+         || "GOOGLE_CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad")))
+      {
+         IDE.EDITOR.closeTabIgnoringChanges(2);
+         IDE.EDITOR.closeTabIgnoringChanges(1);
+         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      }
+      else
+      {
+         IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
 
-      IDE.EDITOR.closeTabIgnoringChanges(2);
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+         // TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
+         //Maybe this problem switch between iframes with WebDriver. Maybe this problem will resolved after 
+         //refresh browser and fix issue IDE-1392
+
+         IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
+         IDE.selectMainFrame();
+         IDE.EDITOR.selectTab(2);
+         IDE.EDITOR.closeTabIgnoringChanges(3);
+         IDE.EDITOR.waitTabNotPresent(3);
+
+         //repeat all actions in gadget tab
+         IDE.EDITOR.selectTab(2);
+         IDE.EDITOR.typeTextIntoEditor(2, Keys.ALT.toString() + "n");
+         IDE.SAVE_AS_TEMPLATE.waitOpened();
+         IDE.SAVE_AS_TEMPLATE.clickCancelButton();
+         IDE.SAVE_AS_TEMPLATE.waitClosed();
+         IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
+         IDE.EDITOR.waitTabPresent(3);
+         IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
+         IDE.EDITOR.closeTabIgnoringChanges(3);
+         IDE.EDITOR.waitTabNotPresent(3);
+
+         IDE.EDITOR.closeTabIgnoringChanges(2);
+         IDE.EDITOR.closeTabIgnoringChanges(1);
+         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      }
    }
 
    //TODO after fix issue IDE-1392 should be uncomment
-   @Test
+    @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
-      //step 1 restore default values for HTML file and Create File From Template... commands 
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.New.HTML_FILE);
-      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template..");
-      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.MENU.waitPopUpMenuBar(MenuCommands.Project.PROJECT);
 
-      //step 2 opening 2 files and checking restore commands in 2 tabs after refresh. 
-      //Me be Maybe this problem switch between iframes
+      //step 1 opening 2 files and checking restore commands in 2 tabs after refresh. 
       driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.openItem(PROJECT);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.New.NEW);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
@@ -210,6 +208,18 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.TEMPLATES.clickCancelButton();
       IDE.TEMPLATES.waitClosed();
 
+      //last step restore default values for HTML file and Create File From Template... commands 
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.New.HTML_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template...");
+      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
    }
 
 }
