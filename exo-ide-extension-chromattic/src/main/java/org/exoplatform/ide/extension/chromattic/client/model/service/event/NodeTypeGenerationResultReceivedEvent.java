@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.chromattic.client.model.service.event;
 
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
-import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -48,12 +47,12 @@ public class NodeTypeGenerationResultReceivedEvent extends
    /**
     * The generated node type result.
     */
-   private GenerateNodeTypeResult generateNodeTypeResult;
+   private StringBuilder generateNodeTypeResult;
 
    /**
     * @param generateNodeTypeResult
     */
-   public NodeTypeGenerationResultReceivedEvent(GenerateNodeTypeResult generateNodeTypeResult)
+   public NodeTypeGenerationResultReceivedEvent(StringBuilder generateNodeTypeResult)
    {
       this.generateNodeTypeResult = generateNodeTypeResult;
    }
@@ -96,7 +95,7 @@ public class NodeTypeGenerationResultReceivedEvent extends
    /**
     * @return the generateNodeTypeResult
     */
-   public GenerateNodeTypeResult getGenerateNodeTypeResult()
+   public StringBuilder getGenerateNodeTypeResult()
    {
       return generateNodeTypeResult;
    }

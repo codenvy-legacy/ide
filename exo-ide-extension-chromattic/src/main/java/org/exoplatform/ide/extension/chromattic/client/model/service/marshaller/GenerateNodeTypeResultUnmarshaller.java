@@ -20,9 +20,8 @@ package org.exoplatform.ide.extension.chromattic.client.model.service.marshaller
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
 /**
  * Unmarshaller for the generation node type result.
@@ -31,28 +30,37 @@ import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeRes
  * @version $Id: Dec 6, 2010 $
  * 
  */
-public class GenerateNodeTypeResultUnmarshaller implements Unmarshallable
+public class GenerateNodeTypeResultUnmarshaller implements Unmarshallable<StringBuilder>
 {
    /**
     * The result of generating node type.
     */
-   private GenerateNodeTypeResult generateNodeTypeResult;
+   private StringBuilder generateNodeTypeResult;
 
    /**
     * @param generateNodeTypeResult
     */
-   public GenerateNodeTypeResultUnmarshaller(GenerateNodeTypeResult generateNodeTypeResult)
+   public GenerateNodeTypeResultUnmarshaller(StringBuilder generateNodeTypeResult)
    {
       this.generateNodeTypeResult = generateNodeTypeResult;
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      generateNodeTypeResult.setNodeTypeDefinition(response.getText());
+      generateNodeTypeResult.append(response.getText());
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public StringBuilder getPayload()
+   {
+      return generateNodeTypeResult;
    }
 
 }

@@ -64,7 +64,7 @@ public class ChromatticExtension extends Extension implements InitializeServices
     */
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new ChrommaticServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
+      new ChrommaticServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
 }

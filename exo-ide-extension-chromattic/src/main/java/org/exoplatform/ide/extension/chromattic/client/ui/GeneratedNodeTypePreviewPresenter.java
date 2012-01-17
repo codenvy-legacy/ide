@@ -191,7 +191,7 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
          }
 
       }
-      generatedNodeType = event.getGenerateNodeTypeResult().getNodeTypeDefinition();
+      generatedNodeType = event.getGenerateNodeTypeResult().toString();
       if (isOpened)
       {
          display.setContent(generatedNodeType);

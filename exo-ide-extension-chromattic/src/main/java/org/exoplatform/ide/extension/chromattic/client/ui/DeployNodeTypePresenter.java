@@ -18,10 +18,16 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import java.util.LinkedHashMap;
+import com.google.gwt.http.client.RequestException;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -35,17 +41,13 @@ import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeEvent
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
-import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
+import org.exoplatform.ide.extension.chromattic.client.model.service.marshaller.GenerateNodeTypeResultUnmarshaller;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
 
 /**
  * Presenter for deploy node type view.
@@ -190,24 +192,32 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
       EnumAlreadyExistsBehaviour alreadyExistsBehaviour =
          EnumAlreadyExistsBehaviour.fromCode(Integer.valueOf(display.getActionIfExist().getValue()));
-      ChrommaticService.getInstance().createNodeType(generatedNodeType, nodeTypeFormat, alreadyExistsBehaviour,
-         new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         ChrommaticService.getInstance().createNodeType(generatedNodeType, nodeTypeFormat, alreadyExistsBehaviour,
+            new AsyncRequestCallback<String>()
             {
-               closeView();
-               Dialogs.getInstance().showInfo("Node type successfully deployed.");
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               closeView();
-               Dialogs.getInstance().showError(getErrorMessage(exception));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  closeView();
+                  Dialogs.getInstance().showInfo("Node type successfully deployed.");
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  closeView();
+                  Dialogs.getInstance().showError(getErrorMessage(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         closeView();
+         Dialogs.getInstance().showError(getErrorMessage(e));
+      }
    }
 
    /**
@@ -218,36 +228,48 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       if (activeFile == null)
          return;
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile, VirtualFileSystem.getInstance().getInfo().getId(),
-         nodeTypeFormat, new AsyncRequestCallback<GenerateNodeTypeResult>()
-         {
-            @Override
-            protected void onSuccess(GenerateNodeTypeResult result)
+      try
+      {
+         ChrommaticService.getInstance().generateNodeType(activeFile,
+            VirtualFileSystem.getInstance().getInfo().getId(), nodeTypeFormat,
+            new AsyncRequestCallback<StringBuilder>(new GenerateNodeTypeResultUnmarshaller(new StringBuilder()))
             {
-               IDE.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
-               String generatedNodeType = result.getNodeTypeDefinition();
-               doDeploy(generatedNodeType);
-            }
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  IDE.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
+                  String generatedNodeType = result.toString();
+                  doDeploy(generatedNodeType);
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               NodeTypeGenerationResultReceivedEvent event =
-                  new NodeTypeGenerationResultReceivedEvent(this.getResult());
-               event.setException(exception);
-               IDE.fireEvent(event);
-               if (exception.getMessage() != null && exception.getMessage().startsWith("startup failed"))
+               @Override
+               protected void onFailure(Throwable exception)
                {
-                  showErrorInOutput(exception.getMessage());
-                  return;
+                  processError(exception);
                }
-               else
-               {
-                  Dialogs.getInstance().showError(getErrorMessage(exception));
-                  return;
-               }
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         processError(e);
+      }
+   }
+
+   private void processError(Throwable e)
+   {
+      NodeTypeGenerationResultReceivedEvent event = new NodeTypeGenerationResultReceivedEvent(null);
+      event.setException(e);
+      IDE.fireEvent(event);
+      if (e.getMessage() != null && e.getMessage().startsWith("startup failed"))
+      {
+         showErrorInOutput(e.getMessage());
+         return;
+      }
+      else
+      {
+         Dialogs.getInstance().showError(getErrorMessage(e));
+         return;
+      }
    }
 
    /**

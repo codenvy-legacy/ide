@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.model.service;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
-import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
@@ -62,7 +63,7 @@ public abstract class ChrommaticService
     * @param callback - callback to handler result from server
     */
    public abstract void generateNodeType(FileModel file, String vfsid, EnumNodeTypeFormat nodeTypeFormat,
-      AsyncRequestCallback<GenerateNodeTypeResult> callback);
+      AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
    /**
     * Create (deploy) new node type.
@@ -73,6 +74,6 @@ public abstract class ChrommaticService
     * @param callback - callback to handler result from server
     */
    public abstract void createNodeType(String nodeType, EnumNodeTypeFormat nodeTypeFormat,
-      EnumAlreadyExistsBehaviour alreadyExistsBehaviour, AsyncRequestCallback<String> callback);
+      EnumAlreadyExistsBehaviour alreadyExistsBehaviour, AsyncRequestCallback<String> callback) throws RequestException;
 
 }

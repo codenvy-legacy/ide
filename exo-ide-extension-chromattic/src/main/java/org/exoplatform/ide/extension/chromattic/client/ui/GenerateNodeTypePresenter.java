@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -28,9 +30,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
-import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
+import org.exoplatform.ide.extension.chromattic.client.model.service.marshaller.GenerateNodeTypeResultUnmarshaller;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
@@ -160,26 +162,37 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
       if (activeFile == null)
          return;
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile, VirtualFileSystem.getInstance().getInfo().getId(),
-         nodeTypeFormat, new AsyncRequestCallback<GenerateNodeTypeResult>()
-         {
-            @Override
-            protected void onSuccess(GenerateNodeTypeResult result)
+      try
+      {
+         ChrommaticService.getInstance().generateNodeType(activeFile,
+            VirtualFileSystem.getInstance().getInfo().getId(), nodeTypeFormat,
+            new AsyncRequestCallback<StringBuilder>(new GenerateNodeTypeResultUnmarshaller(new StringBuilder()))
             {
-               IDE.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
-               closeView();
-            }
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  IDE.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
+                  closeView();
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               NodeTypeGenerationResultReceivedEvent event =
-                  new NodeTypeGenerationResultReceivedEvent(this.getResult());
-               event.setException(exception);
-               IDE.fireEvent(event);
-               closeView();
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  NodeTypeGenerationResultReceivedEvent event =
+                     new NodeTypeGenerationResultReceivedEvent(this.getPayload());
+                  event.setException(exception);
+                  IDE.fireEvent(event);
+                  closeView();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         NodeTypeGenerationResultReceivedEvent event = new NodeTypeGenerationResultReceivedEvent(null);
+         event.setException(e);
+         IDE.fireEvent(event);
+         closeView();
+      }
    }
 
    /**

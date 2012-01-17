@@ -18,17 +18,15 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.model.service;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
-import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
-import org.exoplatform.ide.extension.chromattic.client.model.service.marshaller.GenerateNodeTypeResultUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * The concrete implementation of {@link ChrommaticService}.
@@ -48,8 +46,6 @@ public class ChrommaticServiceImpl extends ChrommaticService
 
    public static final String COMPILE_METHOD_CONTEXT = "/ide/chromattic/compile";
 
-   private HandlerManager eventBus;
-
    /**
     * REST service context.
     */
@@ -61,39 +57,32 @@ public class ChrommaticServiceImpl extends ChrommaticService
    private Loader loader;
 
    /**
-    * @param eventBus handler manager
     * @param restServiceContext REST service context
     * @param loader loader
     */
-   public ChrommaticServiceImpl(HandlerManager eventBus, String restServiceContext, Loader loader)
+   public ChrommaticServiceImpl(String restServiceContext, Loader loader)
    {
-      this.eventBus = eventBus;
       this.restServiceContext = restServiceContext;
       this.loader = loader;
    }
 
    @Override
    public void generateNodeType(FileModel file, String vfsid, EnumNodeTypeFormat nodeTypeFormat,
-      AsyncRequestCallback<GenerateNodeTypeResult> callback)
+      AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url = restServiceContext + GENERATE_NODE_TYPE_METHOD_CONTEXT;
-      GenerateNodeTypeResult result = new GenerateNodeTypeResult();
-      callback.setResult(result);
 
-      GenerateNodeTypeResultUnmarshaller unmarshaller = new GenerateNodeTypeResultUnmarshaller(result);
       StringBuffer params = new StringBuffer();
       params.append("vfsid=").append(vfsid).append("&").append("nodeTypeFormat=").append(nodeTypeFormat.value())
          .append("&").append("id=").append(file.getId());
       if (file.getProject() != null)
          params.append("&").append("projectid=").append(file.getProject().getId());
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).send(callback);
    }
 
    @Override
    public void createNodeType(String nodeType, EnumNodeTypeFormat nodeTypeFormat,
-      EnumAlreadyExistsBehaviour alreadyExistsBehaviour, AsyncRequestCallback<String> callback)
+      EnumAlreadyExistsBehaviour alreadyExistsBehaviour, AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + DEPLOY_NODE_TYPE_METHOD_CONTEXT;
       String path = (nodeTypeFormat == null) ? EnumNodeTypeFormat.EXO.value() : nodeTypeFormat.value();
@@ -102,8 +91,6 @@ public class ChrommaticServiceImpl extends ChrommaticService
          (alreadyExistsBehaviour == null) ? EnumAlreadyExistsBehaviour.FAIL_IF_EXISTS.getCode()
             : alreadyExistsBehaviour.getCode();
 
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url + path, loader).data(nodeType).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + path).loader(loader).data(nodeType).send(callback);
    }
-
 }
