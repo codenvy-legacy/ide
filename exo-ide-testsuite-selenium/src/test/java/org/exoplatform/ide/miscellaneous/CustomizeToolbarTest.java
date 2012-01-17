@@ -24,7 +24,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
@@ -120,14 +128,15 @@ public class CustomizeToolbarTest extends BaseTest
       //      IDE.CUSTOMIZE_TOOLBAR.okClick();
       //      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
 
-      //step 7 (reopen customize toolbar and set default values. Check default elements on commandlist and tllbar)
+      //step 7 (reopen customize toolbar and set default values. Check default elements on commandlist and toolbar)
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       IDE.CUSTOMIZE_TOOLBAR.defaultClick();
       IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.isDefaultCommandlbarList();
       IDE.CUSTOMIZE_TOOLBAR.isDefaultToolbarList();
-
+      IDE.CUSTOMIZE_TOOLBAR.okClick();
+      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
    }
 
 }
