@@ -19,7 +19,6 @@
 package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.AddCommand;
-import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.FetchCommand;
@@ -49,7 +48,6 @@ import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
-import org.eclipse.jgit.dircache.DirCacheCheckout;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.CorruptObjectException;
@@ -95,6 +93,8 @@ import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.server.StatusPage;
+import org.exoplatform.ide.git.server.jgit.jgit_copy.CheckoutCommand_Copy;
+import org.exoplatform.ide.git.server.jgit.jgit_copy.DirCacheCheckout_Copy;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
@@ -154,8 +154,8 @@ public class JGitConnection implements GitConnection
    private final GitUser user;
 
    /**
-    * @param repository
-    * @param user
+    * @param repository the JGit repository
+    * @param user the user
     */
    JGitConnection(Repository repository, GitUser user)
    {
@@ -193,7 +193,8 @@ public class JGitConnection implements GitConnection
    @Override
    public void branchCheckout(BranchCheckoutRequest request) throws GitException
    {
-      CheckoutCommand checkoutCommand = new Git(repository).checkout().setName(request.getName());
+      //CheckoutCommand checkoutCommand = new Git(repository).checkout().setName(request.getName());
+      CheckoutCommand_Copy checkoutCommand = new CheckoutCommand_Copy(repository).setName(request.getName());
       String startPoint = request.getStartPoint();
       if (startPoint != null)
          checkoutCommand.setStartPoint(startPoint);
@@ -430,7 +431,8 @@ public class JGitConnection implements GitConnection
          try
          {
             dirCache = repository.lockDirCache();
-            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
+//            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
+            DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, commit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
             dirCacheCheckout.checkout();
          }
@@ -1226,7 +1228,8 @@ public class JGitConnection implements GitConnection
          }
          else if (resetType == ResetType.HARD)
          {
-            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, revCommit.getTree());
+            //DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, revCommit.getTree());
+            DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, revCommit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
             dirCacheCheckout.checkout();
          }
