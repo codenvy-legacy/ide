@@ -571,8 +571,8 @@
                            <stripVersion>true</stripVersion>
                            <artifactItems>
                               <artifactItem>
-                                 <groupId>org.exoplatform.ide.codeassistant</groupId>
-                                 <artifactId>codeassistant-lucene-index</artifactId>
+                                 <groupId>org.exoplatform.ide</groupId>
+                                 <artifactId>ide-codeassistant-lucene-index</artifactId>
                                  <version>${ide.codeassistant.lucene.index.version}</version>
                                  <type>zip</type>
                               </artifactItem>
@@ -619,7 +619,7 @@
                         <configuration>
                            <tasks>
                               <mkdir dir="target/git/repository/dev-monit" />
-                              <unzip src="${project.build.directory}/codeassistant-lucene-index.zip" dest="${project.build.directory}" />
+                              <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}" />
                            </tasks>
                         </configuration>
                      </execution>
