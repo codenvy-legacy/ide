@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.editor.api.event;
+package org.exoplatform.ide.editor.api;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -28,9 +28,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version @version $Id: $
  */
 
-public interface EditorInitializedHandler extends EventHandler
+public interface EditorContentChangedHandler extends EventHandler
 {
 
-   void onEditorInitialized(EditorInitializedEvent event);
+   void onEditorContentChanged(EditorContentChangedEvent event);
 
 }

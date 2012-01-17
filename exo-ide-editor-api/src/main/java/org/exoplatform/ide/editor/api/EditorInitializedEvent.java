@@ -17,38 +17,27 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.editor.api.event;
+package org.exoplatform.ide.editor.api;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Fires just after some key or mouse event have been happened in editor.
+ * Fires just after editor has initialized (loaded and displayed).
  * Created by The eXo Platform SAS .
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class EditorCursorActivityEvent extends GwtEvent<EditorCursorActivityHandler>
+public class EditorInitializedEvent extends GwtEvent<EditorInitializedHandler>
 {
 
-   public static final GwtEvent.Type<EditorCursorActivityHandler> TYPE = new GwtEvent.Type<EditorCursorActivityHandler>();
+   public static final GwtEvent.Type<EditorInitializedHandler> TYPE = new GwtEvent.Type<EditorInitializedHandler>();
 
    private String editorId;
    
-   private int row = 0;  
-   
-   private int column = 0;
-
-   public EditorCursorActivityEvent(String editorId)
+   public EditorInitializedEvent(String editorId)
    {
       this.editorId = editorId;
-   }
-
-   public EditorCursorActivityEvent(String editorId, int row, int column)
-   {
-      this.editorId = editorId;
-      this.row = row;
-      this.column = column;
    }
 
    public String getEditorId()
@@ -56,24 +45,14 @@ public class EditorCursorActivityEvent extends GwtEvent<EditorCursorActivityHand
       return editorId;
    }
 
-   public int getColumn()
-   {
-      return column;
-   }
-   
-   public int getRow()
-   {
-      return row;
-   }
-   
    @Override
-   protected void dispatch(EditorCursorActivityHandler handler)
+   protected void dispatch(EditorInitializedHandler handler)
    {
-      handler.onEditorCursorActivity(this);
+      handler.onEditorInitialized(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorCursorActivityHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorInitializedHandler> getAssociatedType()
    {
       return TYPE;
    }

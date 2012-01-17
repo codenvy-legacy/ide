@@ -17,48 +17,20 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.editor.api.event;
+package org.exoplatform.ide.editor.api;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class EditorFocusReceivedEvent extends GwtEvent<EditorFocusReceivedHandler>
+public interface EditorInitializedHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<EditorFocusReceivedHandler> TYPE = new GwtEvent.Type<EditorFocusReceivedHandler>();
-
-   private String editorId;
-
-   /**
-    * 
-    * @param editorId
-    */
-   public EditorFocusReceivedEvent(String editorId)
-   {
-      this.editorId = editorId;
-   }
-
-   public String getEditorId()
-   {
-      return this.editorId;
-   }
-
-   @Override
-   protected void dispatch(EditorFocusReceivedHandler handler)
-   {
-      handler.onEditorFocusReceived(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorFocusReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onEditorInitialized(EditorInitializedEvent event);
 
 }

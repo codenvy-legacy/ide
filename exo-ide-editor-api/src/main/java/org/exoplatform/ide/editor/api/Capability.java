@@ -28,12 +28,17 @@ public enum Capability {
    /**
     *  you can use method goToPosition() to set cursor in the any position in the current editor
     */
-   SET_CURSOR_POSITION,
+   SET_CURSOR_POSITION,   
    
    /**
-    * Editor can delete current line
+    * Editor can delete specified line.
     */
-   DELETE_CURRENT_LINE,
+   DELETE_LINE,
+   
+   /**
+    * Editor can insert line.
+    */
+   INSERT_LINE,
    
    /**
     * Editor supports line numbering that is displaying line numbers at the left field of code
@@ -48,21 +53,6 @@ public enum Capability {
    /**
     * Editor support find and replace feature
     */
-   FIND_AND_REPLACE,
-
-   /**
-    * Editor and opened file type support autocompletion feature
-    */
-   AUTOCOMPLETE,
-
-   /**
-    * Editor and opened file type support outline feature
-    */
-   OUTLINE,
-   
-   /**
-    * Editor and opened file type support validation feature
-    */
-   VALIDATE
+   FIND_AND_REPLACE
    
 }

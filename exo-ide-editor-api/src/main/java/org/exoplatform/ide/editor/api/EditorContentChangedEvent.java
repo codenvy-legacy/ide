@@ -17,20 +17,45 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.editor.api.event;
+package org.exoplatform.ide.editor.api;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Fires just after opened in editor content had been changed.
  * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public interface EditorCursorActivityHandler extends EventHandler
+public class EditorContentChangedEvent extends GwtEvent<EditorContentChangedHandler>
 {
 
-   void onEditorCursorActivity(EditorCursorActivityEvent event);
+   public static final GwtEvent.Type<EditorContentChangedHandler> TYPE =
+      new GwtEvent.Type<EditorContentChangedHandler>();
+
+   private String editorId;
+
+   public EditorContentChangedEvent(String editorId)
+   {
+      this.editorId = editorId;
+   }
+
+   public String getEditorId()
+   {
+      return editorId;
+   }
+
+   @Override
+   protected void dispatch(EditorContentChangedHandler handler)
+   {
+      handler.onEditorContentChanged(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorContentChangedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
 }

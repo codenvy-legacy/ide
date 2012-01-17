@@ -119,11 +119,21 @@ public interface Editor extends IsWidget
     * @param column column number, starts at 1
     */
    void setCursorPosition(int row, int column);
+
+   /**
+    * Deletes specified line.
+    * 
+    * @param lineNumber
+    */
+   void deleteLine(int lineNumber);
    
    /**
-    * Delete line at cursor.
+    * Inserts new line at specified position.
+    * 
+    * @param lineNumber
+    * @param text
     */
-   void deleteCurrentLine();
+   void insetLine(int lineNumber, String text);
    
    /**
     * Shows or hides line numbers.
@@ -162,6 +172,8 @@ public interface Editor extends IsWidget
    String getLineText(int line);
    
    /**
+    * Sets new text into specified line.
+    * 
     * @param line
     * @param text
     */
