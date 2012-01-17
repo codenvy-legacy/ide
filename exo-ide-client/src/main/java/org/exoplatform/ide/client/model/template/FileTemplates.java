@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 
 import java.util.HashMap;
 import java.util.Map;

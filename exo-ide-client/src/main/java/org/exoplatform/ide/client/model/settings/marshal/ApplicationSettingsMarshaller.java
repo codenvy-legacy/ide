@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.client.model.settings.marshal;
 
-import com.google.gwt.core.client.JsonUtils;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -45,13 +49,9 @@ public class ApplicationSettingsMarshaller implements Marshallable
       this.applicationSettings = applicationSettings;
    }
 
-   private static native String javaScriptEncodeURIComponent(String text) /*-{
-                                                                          return encodeURIComponent(text);
-                                                                          }-*/;
-
    public String marshal()
    {
-      String xml = "{";
+      JSONObject settings = new JSONObject();
       Map<String, Object> valueMap = applicationSettings.getValues();
       Iterator<String> keyIter = valueMap.keySet().iterator();
       while (keyIter.hasNext())
@@ -64,85 +64,56 @@ public class ApplicationSettingsMarshaller implements Marshallable
          }
 
          Object value = valueMap.get(key);
-
          if (value instanceof String)
          {
-            xml += getStringNode(key, value);
+            settings.put(key, new JSONString((String)value));
          }
          else if (value instanceof Integer)
          {
-            xml += getIntegerNode(key, value);
+            settings.put(key, new JSONNumber((Double)value));
          }
          else if (value instanceof Boolean)
          {
-            xml += getBooleanNode(key, value);
+            settings.put(key, JSONBoolean.getInstance((Boolean)value));
          }
          else if (value instanceof List)
          {
-            xml += getListNode(key, value);
+            settings.put(key, getListNode(value));
          }
          else if (value instanceof Map)
          {
-            xml += getMapNode(key, value);
+            settings.put(key, getMapNode(value));
          }
       }
-      if (xml.endsWith(","))
-         xml = xml.substring(0, xml.length() - 1);
-      xml += "}";
-      return xml;
-   }
-
-   private String getStringNode(String key, Object value)
-   {
-      return "\"" + key + "\":\"" + value + "\",";
-   }
-
-   private String getIntegerNode(String key, Object value)
-   {
-      return "\"" + key + "\":" + value + ",";
-   }
-
-   private String getBooleanNode(String key, Object value)
-   {
-      return "\"" + key + "\":" + value + ",";
+      return settings.toString();
    }
 
    @SuppressWarnings("unchecked")
-   private String getListNode(String key, Object value)
+   private JSONArray getListNode(Object value)
    {
-      StringBuffer xml = new StringBuffer();
-      xml.append("\"").append(key).append("\":[");
+      JSONArray array = new JSONArray();
       List<String> values = (List<String>)value;
+      int index = 0;
       for (String v : values)
       {
-         xml.append(JsonUtils.escapeValue(v)).append(",");
+         array.set(index, new JSONString(v));
+         index++;
       }
-
-      if (xml.lastIndexOf(",") != -1)
-         xml = xml.deleteCharAt(xml.lastIndexOf(","));
-      xml.append("],");
-      return xml.toString();
+      return array;
    }
 
    @SuppressWarnings("unchecked")
-   private String getMapNode(String key, Object value)
+   private JSONObject getMapNode(Object value)
    {
-      String xml = "\"" + key + "\":{";
-
+      JSONObject map = new JSONObject();
       Map<String, String> values = (Map<String, String>)value;
       Iterator<String> keyIter = values.keySet().iterator();
       while (keyIter.hasNext())
       {
          String k = keyIter.next();
          String v = values.get(k);
-         xml += JsonUtils.escapeValue(k) + ":" + JsonUtils.escapeValue(v) + ",";
+         map.put(k, new JSONString(v));
       }
-
-      if (xml.endsWith(","))
-         xml = xml.substring(0, xml.length() - 1);
-      xml += "},";
-
-      return xml;
+      return map;
    }
-
 }

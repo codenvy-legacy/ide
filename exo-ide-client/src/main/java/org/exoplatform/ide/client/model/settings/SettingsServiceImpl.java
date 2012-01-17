@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.client.model.settings;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Cookies;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
@@ -86,9 +88,6 @@ public class SettingsServiceImpl extends SettingsService
 
    private String getURL()
    {
-      // String url =
-      // registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/"
-      // + IDEConfigurationLoader.APPLICATION_NAME;
       return restContext + "/ide/configuration";
    }
 
@@ -103,16 +102,14 @@ public class SettingsServiceImpl extends SettingsService
 
    @Override
    public void saveSettingsToServer(ApplicationSettings applicationSettings,
-      AsyncRequestCallback<ApplicationSettings> callback)
+      AsyncRequestCallback<ApplicationSettings> callback) throws RequestException
    {
       String url = getURL();
 
       ApplicationSettingsMarshaller marshaller = new ApplicationSettingsMarshaller(applicationSettings);
 
-      callback.setResult(applicationSettings);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller.marshal()).send(callback);
 
    }
 

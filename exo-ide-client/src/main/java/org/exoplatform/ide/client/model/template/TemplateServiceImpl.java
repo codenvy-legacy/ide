@@ -18,26 +18,23 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Random;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.model.template.marshal.FileTemplateListMarshaller;
-import org.exoplatform.ide.client.model.template.marshal.FileTemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.template.marshal.FileTemplateMarshaller;
 import org.exoplatform.ide.client.model.template.marshal.ProjectTemplateListMarshaller;
-import org.exoplatform.ide.client.model.template.marshal.ProjectTemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.template.marshal.ProjectTemplateMarshaller;
-import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
 import org.exoplatform.ide.client.samples.NetvibesSamples;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -120,55 +117,42 @@ public class TemplateServiceImpl extends TemplateService
 
    private String restContext;
 
-   private HandlerManager eventBus;
-
    private Loader loader;
 
-   public TemplateServiceImpl(HandlerManager eventBus, Loader loader, String registryContext, String restContext)
+   public TemplateServiceImpl(Loader loader, String registryContext, String restContext)
    {
-      this.eventBus = eventBus;
       this.loader = loader;
       this.registryContext = registryContext;
       this.restContext = restContext;
    }
 
    @Override
-   public void createTemplate(Template template, TemplateCreatedCallback callback)
+   public void createTemplate(Template template, TemplateCreatedCallback callback) throws RequestException
    {
       String url = registryContext + CONTEXT + "/" + TEMPLATE + System.currentTimeMillis() + "/?createIfNotExist=true";
       TemplateMarshaller marshaller = new TemplateMarshaller(template);
 
-      callback.setResult(template);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller.marshal()).send(callback);
    }
 
    @Override
-   public void deleteTemplate(Template template, TemplateDeletedCallback callback)
+   public void deleteTemplate(Template template, TemplateDeletedCallback callback) throws RequestException
    {
       String url = registryContext + CONTEXT + "/" + template.getNodeName();
 
-      callback.setResult(template);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE")
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
    }
 
    @Override
-   public void getTemplates(AsyncRequestCallback<TemplateList> callback)
+   public void getTemplates(AsyncRequestCallback<List<Template>> callback) throws RequestException
    {
       String url = registryContext + CONTEXT + "/?noCache=" + Random.nextInt();
-      final TemplateList templateList = new TemplateList();
-
-      TemplateListUnmarshaller unmarshaller = new TemplateListUnmarshaller(eventBus, templateList);
       int[] acceptStatus = new int[]{HTTPStatus.OK, HTTPStatus.NOT_FOUND};
-
-      callback.setResult(templateList);
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaller);
       callback.setSuccessCodes(acceptStatus);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    /**
@@ -177,33 +161,27 @@ public class TemplateServiceImpl extends TemplateService
     */
    @Override
    public void addFileTemplate(FileTemplate template, AsyncRequestCallback<FileTemplate> callback)
+      throws RequestException
    {
       String url = restContext + "/ide/templates/file/add";
       FileTemplateMarshaller marshaller = new FileTemplateMarshaller(template);
 
-      callback.setResult(template);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller.marshal()).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.client.model.template.TemplateService#getFileTemplateList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getFileTemplateList(AsyncRequestCallback<FileTemplateList> callback)
+   public void getFileTemplateList(AsyncRequestCallback<List<FileTemplate>> callback) throws RequestException
    {
       String url = restContext + "/ide/templates/file/list";
-      FileTemplateList fileTemplateList = new FileTemplateList();
-      fileTemplateList.setFileTemplates(getDefaultFileTemplates());
-      FileTemplateListUnmarshaller unmarshaller = new FileTemplateListUnmarshaller(fileTemplateList);
+      callback.getPayload().addAll(getDefaultFileTemplates());
 
-      callback.setResult(fileTemplateList);
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
@@ -211,30 +189,23 @@ public class TemplateServiceImpl extends TemplateService
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void deleteFileTemplate(String templateName, AsyncRequestCallback<String> callback)
+   public void deleteFileTemplate(String templateName, AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restContext + "/ide/templates/file/delete";
       String param = "name=" + URL.encodePathSegment(templateName);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + param, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + param).loader(loader).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.client.model.template.TemplateService#getProjectTemplateList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getProjectTemplateList(AsyncRequestCallback<ProjectTemplateList> callback)
+   public void getProjectTemplateList(AsyncRequestCallback<List<ProjectTemplate>> callback) throws RequestException
    {
       String url = restContext + "/ide/templates/project/list";
-      ProjectTemplateList projectTemplateList = new ProjectTemplateList();
-      projectTemplateList.setProjectTemplates(getDefaultProjectTemplates());
-      ProjectTemplateListUnmarshaller unmarshaller = new ProjectTemplateListUnmarshaller(projectTemplateList);
 
-      callback.setResult(projectTemplateList);
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
@@ -243,11 +214,11 @@ public class TemplateServiceImpl extends TemplateService
     */
    @Override
    public void deleteProjectTemplate(String templateName, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restContext + "/ide/templates/project/delete";
       String param = "name=" + URL.encodePathSegment(templateName);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + param, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + param).loader(loader).send(callback);
    }
 
    /**
@@ -256,19 +227,15 @@ public class TemplateServiceImpl extends TemplateService
     */
    @Override
    public void addProjectTemplate(ProjectTemplate projectTemplate, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restContext + "/ide/templates/project/add";
       ProjectTemplateMarshaller marshaller = new ProjectTemplateMarshaller(projectTemplate);
 
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller.marshal()).send(callback);
    }
-
-   /*
-    * Methods, used for templates transfer from registry to settings file.
-    */
 
    /**
     * @see org.exoplatform.ide.client.model.template.TemplateService#addFileTemplateList(java.util.List,
@@ -276,14 +243,14 @@ public class TemplateServiceImpl extends TemplateService
     */
    @Override
    public void addFileTemplateList(List<FileTemplate> fileTemplates, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restContext + "/ide/templates/file/add/list";
       FileTemplateListMarshaller marshaller = new FileTemplateListMarshaller(fileTemplates);
 
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller.marshal()).send(callback);
    }
 
    /**
@@ -292,26 +259,25 @@ public class TemplateServiceImpl extends TemplateService
     */
    @Override
    public void addProjectTemplateList(List<ProjectTemplate> projectTemplates, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restContext + "/ide/templates/project/add/list";
       ProjectTemplateListMarshaller marshaller = new ProjectTemplateListMarshaller(projectTemplates);
 
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller.marshal()).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.client.model.template.TemplateService#deleteTemplatesFromRegistry(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void deleteTemplatesFromRegistry(AsyncRequestCallback<String> callback)
+   public void deleteTemplatesFromRegistry(AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = registryContext + CONTEXT;
 
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE")
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "DELETE")
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).send(callback);
    }
 
@@ -360,55 +326,7 @@ public class TemplateServiceImpl extends TemplateService
          DefaultFileTemplates.NETVIBES_WIDGET_SAMPLE_BLOG_POST_DESCRIPTION, NetvibesSamples.INSTANCE
             .getSampleBlogPostWidgetSource().getText(), true));
 
-      // find file templates in default projects
-      // ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
-      // for (Template template : shoppingCardProject.getTemplateList())
-      // {
-      // if (template instanceof FileTemplate)
-      // fileTemplates.add((FileTemplate)template);
-      // }
-      //
-      // TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
-      // for (Template template : twitterTrendsProject.getTemplateList())
-      // {
-      // if (template instanceof FileTemplate)
-      // fileTemplates.add((FileTemplate)template);
-      // }
-      //
-      // LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
-      // for (Template template : linkedinContactsProject.getTemplateList())
-      // {
-      // if (template instanceof FileTemplate)
-      // fileTemplates.add((FileTemplate)template);
-      // }
-      //
-      // DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
-      // for (Template template : defaultIdeProject.getTemplateList())
-      // {
-      // if (template instanceof FileTemplate)
-      // fileTemplates.add((FileTemplate)template);
-      // }
       return fileTemplates;
-   }
-
-   private List<ProjectTemplate> getDefaultProjectTemplates()
-   {
-      List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
-
-      // ShoppingCardProject shoppingCardProject = new ShoppingCardProject();
-      // projectTemplates.add(shoppingCardProject.getProjectTemplate());
-      //
-      // TwitterTrendsProject twitterTrendsProject = new TwitterTrendsProject();
-      // projectTemplates.add(twitterTrendsProject.getProjectTemplate());
-      //
-      // LinkedinContactsProject linkedinContactsProject = new LinkedinContactsProject();
-      // projectTemplates.add(linkedinContactsProject.getProjectTemplate());
-      //
-      // DefaultIdeProject defaultIdeProject = new DefaultIdeProject();
-      // projectTemplates.add(defaultIdeProject.getProjectTemplate());
-
-      // projectTemplates.add(getEmptyProject());
-      return projectTemplates;
    }
 
    /**
@@ -428,7 +346,7 @@ public class TemplateServiceImpl extends TemplateService
       url += "&parentId=" + parentId;
       url += "&templateName=" + templateName;
       url = URL.encode(url);
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
 }

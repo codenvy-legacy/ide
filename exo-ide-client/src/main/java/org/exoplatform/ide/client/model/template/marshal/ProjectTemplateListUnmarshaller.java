@@ -18,18 +18,17 @@
  */
 package org.exoplatform.ide.client.model.template.marshal;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.model.template.FolderTemplate;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
 
 import java.util.ArrayList;
@@ -40,14 +39,13 @@ import java.util.List;
  * @version $Id: ProjectTemplateListUnmarshaller.java Jul 28, 2011 1:09:44 PM vereshchaka $
  * 
  */
-public class ProjectTemplateListUnmarshaller implements Unmarshallable
+public class ProjectTemplateListUnmarshaller implements Unmarshallable<List<ProjectTemplate>>
 {
+   private List<ProjectTemplate> projectTemplates;
 
-   private ProjectTemplateList projectTemplateList;
-
-   public ProjectTemplateListUnmarshaller(ProjectTemplateList projectTemplateList)
+   public ProjectTemplateListUnmarshaller(List<ProjectTemplate> projectTemplates)
    {
-      this.projectTemplateList = projectTemplateList;
+      this.projectTemplates = projectTemplates;
    }
 
    /**
@@ -56,12 +54,11 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      List<ProjectTemplate> projectTemplates =
-         (projectTemplateList.getProjectTemplates() == null) ? new ArrayList<ProjectTemplate>() : projectTemplateList
-            .getProjectTemplates();
-
-      JavaScriptObject json = build(response.getText());
-      JSONArray jsonArray = new JSONArray(json);
+      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+      if (jsonArray == null)
+      {
+         return;
+      }
 
       for (int i = 0; i < jsonArray.size(); i++)
       {
@@ -173,8 +170,12 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
       return folderTemplate;
    }
 
-   public static native JavaScriptObject build(String json) /*-{
-                                                            return eval('(' + json + ')');      
-                                                            }-*/;
-
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<ProjectTemplate> getPayload()
+   {
+      return projectTemplates;
+   }
 }

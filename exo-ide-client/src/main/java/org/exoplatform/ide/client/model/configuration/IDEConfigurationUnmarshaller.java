@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -38,9 +38,8 @@ import com.google.gwt.user.client.Window.Location;
  * @version $Id: May 25, 2011 evgen $
  * 
  */
-public class IDEConfigurationUnmarshaller implements Unmarshallable
+public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializationConfiguration>
 {
-
    private final static String CONTEXT = "context";
 
    private final static String GADGET_SERVER = "gadgetServer";
@@ -53,9 +52,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private static final String USER_SETTINGS = "userSettings";
 
-   // @Deprecated
-   // private static final String DEFAUTL_ENTRY_POINT = "defaultEntrypoint";
-
    private static final String VFS_ID = "vfsId";
 
    private static final String VFS_BASE_URL = "vfsBaseUrl";
@@ -65,8 +61,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
    private static final String USER = "user";
 
    private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
-
-   // private static final String HTTPS_PORT = "httpsPort";
 
    private IDEInitializationConfiguration initializationConfiguration;
 
@@ -90,7 +84,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
@@ -116,12 +110,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
             {
                new ApplicationSettingsUnmarshaller(applicationSettings).parseSettings(object.get(USER_SETTINGS));
             }
-
-            // if (object.containsKey(DEFAUTL_ENTRY_POINT))
-            // {
-            // initializationConfiguration.getIdeConfiguration().setDefaultEntryPoint(
-            // object.get(DEFAUTL_ENTRY_POINT).isString().stringValue());
-            // }
 
             if (object.containsKey(VFS_BASE_URL))
             {
@@ -178,14 +166,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
          return;
       }
 
-      // if (jsonConfiguration.containsKey(HTTPS_PORT))
-      // configuration.setHttpsPort((int)jsonConfiguration.get(HTTPS_PORT).isNumber().doubleValue());
-      // else
-      // {
-      // showErrorMessage(HTTPS_PORT);
-      // return;
-      // }
-
       if (jsonConfiguration.containsKey(GADGET_SERVER))
          // TODO: now we can load gadget only from current host
          configuration.setGadgetServer(Location.getProtocol() + "//" + Location.getHost()
@@ -211,5 +191,14 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
    private static native String getHiddenFiles() /*-{
                                                  return $wnd.hiddenFiles;
                                                  }-*/;
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public IDEInitializationConfiguration getPayload()
+   {
+      return initializationConfiguration;
+   }
 
 }

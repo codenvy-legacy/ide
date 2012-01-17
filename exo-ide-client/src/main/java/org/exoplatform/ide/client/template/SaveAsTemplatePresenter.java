@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.template;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,7 +29,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -164,16 +166,29 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
 
       templateToCreate = new FileTemplate(activeFile.getMimeType(), name, description, activeFile.getContent(), null);
 
-      TemplateServiceImpl.getInstance().addFileTemplate((FileTemplate)templateToCreate,
-         new AsyncRequestCallback<FileTemplate>(IDE.eventBus())
-         {
-            @Override
-            protected void onSuccess(FileTemplate result)
+      try
+      {
+         TemplateServiceImpl.getInstance().addFileTemplate((FileTemplate)templateToCreate,
+            new AsyncRequestCallback<FileTemplate>()
             {
-               closeView();
-               Dialogs.getInstance().showInfo(TEMPLATE_CREATED);
-            }
-         });
+               @Override
+               protected void onSuccess(FileTemplate result)
+               {
+                  closeView();
+                  Dialogs.getInstance().showInfo(TEMPLATE_CREATED);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void closeView()

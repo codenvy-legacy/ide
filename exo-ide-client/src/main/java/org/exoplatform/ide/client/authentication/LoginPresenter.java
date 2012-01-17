@@ -30,14 +30,14 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -147,7 +147,6 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    {
       if (display != null)
       {
-         Window.alert("Another Login Dialog is opened!");
          return;
       }
 
@@ -302,7 +301,14 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
                IDE.getInstance().closeView(display.asView().getId());
                if (asyncRequest != null)
                {
-                  asyncRequest.sendRequest();
+                  try
+                  {
+                     asyncRequest.send(asyncRequest.getCallback());
+                  }
+                  catch (RequestException e)
+                  {
+                     Dialogs.getInstance().showError("Can not log in!");
+                  }
                }
             }
 
@@ -325,11 +331,10 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    public void onError(ExceptionThrownEvent event)
    {
       Throwable exception = event.getException();
-
       if (exception instanceof UnauthorizedException)
       {
          UnauthorizedException unauthorizedException = (UnauthorizedException)exception;
-         AsyncRequest asyncRequest = unauthorizedException.getAsyncRequest();
+         AsyncRequest asyncRequest = unauthorizedException.getRequest();
          showLoginDialog(asyncRequest);
          return;
       }

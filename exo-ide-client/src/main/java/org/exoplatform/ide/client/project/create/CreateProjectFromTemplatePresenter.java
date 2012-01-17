@@ -49,11 +49,11 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FileTemplateList;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.marshal.FileTemplateListUnmarshaller;
+import org.exoplatform.ide.client.model.template.marshal.ProjectTemplateListUnmarshaller;
 import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
@@ -383,8 +383,9 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
     */
    protected void deleteTemplate(final ProjectTemplate template)
    {
-      TemplateService.getInstance().deleteProjectTemplate(template.getName(),
-         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<String>(IDE.eventBus())
+      try
+      {
+         TemplateService.getInstance().deleteProjectTemplate(template.getName(), new AsyncRequestCallback<String>()
          {
             @Override
             protected void onSuccess(String result)
@@ -392,7 +393,18 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
                selectedTemplates.remove(template);
                deleteNextTemplate();
             }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
          });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -416,7 +428,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
                parentId,
                projectName,
                selectedTemplate.getName(),
-               new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(
+               new AsyncRequestCallback<ProjectModel>(
                   new ProjectUnmarshaller(new ProjectModel()))
                {
                   @Override
@@ -511,30 +523,66 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
     */
    private void refreshTemplateList()
    {
-      TemplateService.getInstance().getProjectTemplateList(
-         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<ProjectTemplateList>(IDE.eventBus())
-         {
-            @Override
-            protected void onSuccess(ProjectTemplateList result)
+      try
+      {
+         TemplateService.getInstance().getProjectTemplateList(
+            new AsyncRequestCallback<List<ProjectTemplate>>(new ProjectTemplateListUnmarshaller(
+               new ArrayList<ProjectTemplate>()))
             {
-               projectTemplates = result.getProjectTemplates();
-               display.getTemplateListGrid().setValue(projectTemplates);
-               if (projectTemplates != null && projectTemplates.size() > 0)
+
+               @Override
+               protected void onSuccess(List<ProjectTemplate> result)
                {
-                  display.selectLastTemplate();
-               }
-               // get all file templates to create from them files
-               TemplateService.getInstance().getFileTemplateList(
-                  new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<FileTemplateList>(IDE.eventBus())
+                  projectTemplates = result;
+                  display.getTemplateListGrid().setValue(projectTemplates);
+                  if (projectTemplates != null && projectTemplates.size() > 0)
                   {
-                     @Override
-                     protected void onSuccess(FileTemplateList result)
-                     {
-                        fileTemplates = result.getFileTemplates();
-                     }
-                  });
-            }
-         });
+                     display.selectLastTemplate();
+                  }
+                  // get all file templates to create from them files
+                  getFileTemaplatesList();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   protected void getFileTemaplatesList()
+   {
+      try
+      {
+         TemplateService.getInstance().getFileTemplateList(
+            new AsyncRequestCallback<List<FileTemplate>>(
+               new FileTemplateListUnmarshaller(new ArrayList<FileTemplate>()))
+            {
+
+               @Override
+               protected void onSuccess(List<FileTemplate> result)
+               {
+                  fileTemplates = result;
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void saveFileContent(FileModel file)

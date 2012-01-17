@@ -27,8 +27,8 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -45,7 +45,7 @@ import java.util.Map;
  * @version $
  */
 
-public class ApplicationSettingsUnmarshaller implements Unmarshallable
+public class ApplicationSettingsUnmarshaller implements Unmarshallable<ApplicationSettings>
 {
 
    private ApplicationSettings applicationSettings;
@@ -159,6 +159,15 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
          list.add(array.get(i).isString().stringValue());
       }
       applicationSettings.setValue(key, list, Store.SERVER);
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public ApplicationSettings getPayload()
+   {
+      return applicationSettings;
    }
 
 }

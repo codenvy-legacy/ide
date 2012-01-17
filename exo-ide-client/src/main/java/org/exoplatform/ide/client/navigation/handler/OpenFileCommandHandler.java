@@ -35,8 +35,7 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -57,14 +56,12 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Link;
 
-import com.google.gwt.http.client.RequestException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handlers events for opening files.

@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.openbyurl;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.http.client.Response;
@@ -32,7 +32,7 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class FileContentUnmarshaller implements Unmarshallable
+public class FileContentUnmarshaller implements Unmarshallable<FileModel>
 {
 
    /**
@@ -51,7 +51,7 @@ public class FileContentUnmarshaller implements Unmarshallable
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
@@ -65,4 +65,12 @@ public class FileContentUnmarshaller implements Unmarshallable
       file.setContent(response.getText());
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public FileModel getPayload()
+   {
+      return file;
+   }
 }

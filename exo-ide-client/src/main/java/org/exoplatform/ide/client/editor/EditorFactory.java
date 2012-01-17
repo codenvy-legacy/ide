@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;

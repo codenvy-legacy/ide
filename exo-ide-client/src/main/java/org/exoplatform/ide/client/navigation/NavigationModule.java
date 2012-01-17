@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;

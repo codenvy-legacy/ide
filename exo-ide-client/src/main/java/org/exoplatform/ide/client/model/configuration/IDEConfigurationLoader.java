@@ -18,17 +18,15 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDE;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.json.client.JSONObject;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 
 /**
  * Created by The eXo Platform SAS .
@@ -64,14 +62,8 @@ public class IDEConfigurationLoader
    {
       try
       {
-         IDEInitializationConfiguration conf = new IDEInitializationConfiguration();
          String url = getConfigurationURL();
-         IDEConfigurationUnmarshaller unmarshaller =
-            new IDEConfigurationUnmarshaller(conf, new JSONObject(getAppConfig()));
-         callback.setPayload(unmarshaller);
-         callback.setResult(conf);
-         callback.setEventBus(eventBus);
-         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
       }
       catch (Exception e)
       {
@@ -88,7 +80,7 @@ public class IDEConfigurationLoader
                                                      return $wnd.configurationURL;
                                                      }-*/;
 
-   private static native JavaScriptObject getAppConfig() /*-{
+   public static native JavaScriptObject getAppConfig() /*-{
                                                          return $wnd.appConfig;
                                                          }-*/;
 }

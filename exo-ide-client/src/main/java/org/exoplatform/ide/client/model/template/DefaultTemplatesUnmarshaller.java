@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ import java.util.List;
  * @version $Id: TemplateListUnmarshaller , 11.04.2011 17:52:00 vereshchaka $
  * 
  */
-public class DefaultTemplatesUnmarshaller implements Unmarshallable
+public class DefaultTemplatesUnmarshaller implements Unmarshallable<List<TemplateNative>>
 {
 
    private List<TemplateNative> templateList;
@@ -47,8 +47,11 @@ public class DefaultTemplatesUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      JSONArray jsonArray = new JSONArray(json);
+      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+      if (jsonArray == null)
+      {
+         return;
+      }
 
       for (int i = 0; i < jsonArray.size(); i++)
       {
@@ -57,8 +60,13 @@ public class DefaultTemplatesUnmarshaller implements Unmarshallable
       }
    }
 
-   public static native JavaScriptObject build(String json) /*-{
-                                                            return eval('(' + json + ')');      
-                                                            }-*/;
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<TemplateNative> getPayload()
+   {
+      return templateList;
+   }
 
 }

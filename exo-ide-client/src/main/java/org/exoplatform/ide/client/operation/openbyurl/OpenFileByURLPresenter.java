@@ -19,8 +19,6 @@
 
 package org.exoplatform.ide.client.operation.openbyurl;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,12 +29,14 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -242,7 +242,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
       file.setName(fileName);
       // file.setId(fileName);
 
-      AsyncRequestCallback<FileModel> callback = new AsyncRequestCallback<FileModel>()
+      AsyncRequestCallback<FileModel> callback = new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file))
       {
          @Override
          protected void onSuccess(FileModel result)
@@ -260,16 +260,19 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
             }
             else
             {
-               super.onFailure(exception);
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
          }
       };
 
-      callback.setResult(file);
-
-      Unmarshallable unmarshaller = new FileContentUnmarshaller(file);
-      callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      try
+      {
+         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

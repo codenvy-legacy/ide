@@ -27,7 +27,6 @@ import com.google.gwt.user.client.Timer;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;

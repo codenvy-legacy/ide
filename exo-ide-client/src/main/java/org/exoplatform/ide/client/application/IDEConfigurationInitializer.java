@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.json.client.JSONObject;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -42,6 +44,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
+import org.exoplatform.ide.client.model.configuration.IDEConfigurationUnmarshaller;
 import org.exoplatform.ide.client.model.configuration.IDEInitializationConfiguration;
 import org.exoplatform.ide.client.model.settings.Settings;
 import org.exoplatform.ide.client.model.settings.SettingsService;
@@ -79,7 +82,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
    public void loadConfiguration()
    {
       new IDEConfigurationLoader(IDE.eventBus(), IDELoader.getInstance())
-         .loadConfiguration(new AsyncRequestCallback<IDEInitializationConfiguration>()
+         .loadConfiguration(new AsyncRequestCallback<IDEInitializationConfiguration>(new IDEConfigurationUnmarshaller(
+            new IDEInitializationConfiguration(), new JSONObject(IDEConfigurationLoader.getAppConfig())))
          {
             @Override
             protected void onSuccess(IDEInitializationConfiguration result)
@@ -115,6 +119,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                {
                   IDE.fireEvent(new ExceptionThrownEvent(e));
                }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
          });
    }

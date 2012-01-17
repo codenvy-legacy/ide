@@ -18,8 +18,16 @@
  */
 package org.exoplatform.ide.client.toolbar;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
@@ -44,13 +52,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -571,22 +572,29 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
          }
       }
 
-      SettingsService.getInstance().saveSettingsToServer(applicationSettings,
-         new AsyncRequestCallback<ApplicationSettings>()
-         {
-            @Override
-            protected void onSuccess(ApplicationSettings result)
+      try
+      {
+         SettingsService.getInstance().saveSettingsToServer(applicationSettings,
+            new AsyncRequestCallback<ApplicationSettings>()
             {
-               IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
-               IDE.getInstance().closeView(display.asView().getId());
-            }
+               @Override
+               protected void onSuccess(ApplicationSettings result)
+               {
+                  IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
+      }
    }
 
    private void restoreDefaults()

@@ -18,18 +18,16 @@
  */
 package org.exoplatform.ide.client.model.template.marshal;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FileTemplateList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,14 +35,13 @@ import java.util.List;
  * @version $Id: FileTemplateListUnmarshaller.java Jul 27, 2011 2:56:00 PM vereshchaka $
  * 
  */
-public class FileTemplateListUnmarshaller implements Unmarshallable
+public class FileTemplateListUnmarshaller implements Unmarshallable<List<FileTemplate>>
 {
+   private List<FileTemplate> fileTemplates;
 
-   private FileTemplateList fileTemplateList;
-
-   public FileTemplateListUnmarshaller(FileTemplateList fileTemplates)
+   public FileTemplateListUnmarshaller(List<FileTemplate> fileTemplates)
    {
-      this.fileTemplateList = fileTemplates;
+      this.fileTemplates = fileTemplates;
    }
 
    /**
@@ -53,12 +50,11 @@ public class FileTemplateListUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      List<FileTemplate> fileTemplates =
-         (fileTemplateList.getFileTemplates() == null) ? new ArrayList<FileTemplate>() : fileTemplateList
-            .getFileTemplates();
-
-      JavaScriptObject json = build(response.getText());
-      JSONArray jsonArray = new JSONArray(json);
+      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+      if (jsonArray == null)
+      {
+         return;
+      }
 
       for (int i = 0; i < jsonArray.size(); i++)
       {
@@ -114,8 +110,13 @@ public class FileTemplateListUnmarshaller implements Unmarshallable
       return new FileTemplate(mimeType, name, description, content, isDefault);
    }
 
-   public static native JavaScriptObject build(String json) /*-{
-                                                            return eval('(' + json + ')');      
-                                                            }-*/;
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<FileTemplate> getPayload()
+   {
+      return fileTemplates;
+   }
 
 }

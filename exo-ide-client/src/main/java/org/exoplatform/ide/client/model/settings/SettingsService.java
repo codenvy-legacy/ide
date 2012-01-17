@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.model.settings;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 
 /**
@@ -52,7 +54,7 @@ public abstract class SettingsService
     * @param callback
     */
    public abstract void saveSettingsToServer(ApplicationSettings applicationSettings,
-      AsyncRequestCallback<ApplicationSettings> callback);
+      AsyncRequestCallback<ApplicationSettings> callback) throws RequestException;
 
    /**
     * Save application settings to cookies.

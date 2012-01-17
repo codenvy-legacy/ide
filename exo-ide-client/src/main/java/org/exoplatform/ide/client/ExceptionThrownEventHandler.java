@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerDisconnectedException;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -143,7 +144,7 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
       });
    }
 
-   private void sendAgain(org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest request)
+   private void sendAgain(AsyncRequest request)
    {
       try
       {

@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -221,7 +222,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
             query,
             -1,
             0,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+            new AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
                @Override

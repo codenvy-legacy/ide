@@ -18,22 +18,20 @@
  */
 package org.exoplatform.ide.client.model.template.marshal;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,16 +43,13 @@ import java.util.List;
  * @version $
  */
 
-public class TemplateListUnmarshaller implements Unmarshallable, Const
+public class TemplateListUnmarshaller implements Unmarshallable<List<Template>>, Const
 {
+   private List<Template> templates;
 
-   private static final String CANT_PARSE_TEMPLATE = IDE.ERRORS_CONSTANT.templateCantParseTemplate();
-
-   private TemplateList templateList;
-
-   public TemplateListUnmarshaller(HandlerManager eventBus, TemplateList templateList)
+   public TemplateListUnmarshaller(List<Template> templates)
    {
-      this.templateList = templateList;
+      this.templates = templates;
    }
 
    public static native String javaScriptDecodeURIComponent(String text) /*-{
@@ -80,7 +75,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       }
       catch (Exception exc)
       {
-         throw new UnmarshallerException(CANT_PARSE_TEMPLATE);
+         throw new UnmarshallerException(IDE.ERRORS_CONSTANT.templateCantParseTemplate());
       }
 
    }
@@ -127,7 +122,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       String content = javaScriptDecodeURIComponent(getNodeText(contentNode));
 
       Template template = new FileTemplate(mimeType, name, description, content, nodeName);
-      templateList.getTemplates().add(template);
+      templates.add(template);
    }
 
    private void parseProjectTemplate(Node templateNode)
@@ -157,7 +152,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
 
       appendProjectChildren(template, getChildNode(node, ITEMS));
 
-      templateList.getTemplates().add(template);
+      templates.add(template);
    }
 
    private void appendProjectChildren(FolderTemplate container, Node itemsNode)
@@ -223,5 +218,14 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       for (Node node = xmlNode.getFirstChild(); node != null; node = node.getNextSibling())
          result.append(node.getNodeValue());
       return result.toString();
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Template> getPayload()
+   {
+      return templates;
    }
 }

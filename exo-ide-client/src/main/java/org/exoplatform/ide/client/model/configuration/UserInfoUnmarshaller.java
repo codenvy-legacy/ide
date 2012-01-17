@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 
 import com.google.gwt.http.client.Response;
@@ -33,7 +33,7 @@ import com.google.gwt.json.client.JSONParser;
  * @version $
  */
 
-public class UserInfoUnmarshaller implements Unmarshallable
+public class UserInfoUnmarshaller implements Unmarshallable<UserInfo>
 {
 
    public static final String USER_ID = "userId";
@@ -82,4 +82,12 @@ public class UserInfoUnmarshaller implements Unmarshallable
       }
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public UserInfo getPayload()
+   {
+      return userInfo;
+   }
 }

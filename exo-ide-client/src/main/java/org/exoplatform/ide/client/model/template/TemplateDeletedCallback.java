@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.model.template;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 
 /**
@@ -27,16 +27,11 @@ import org.exoplatform.ide.client.IDE;
  * @version $Id: TemplateListReceivedCallback.java Feb 7, 2011 12:56:15 PM vereshchaka $
  * 
  */
-public abstract class TemplateDeletedCallback extends AsyncRequestCallback<Template>
+public abstract class TemplateDeletedCallback extends AsyncRequestCallback<Object>
 {
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-    */
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent(exception, IDE.ERRORS_CONSTANT.templateDeleteFailure()));
+      IDE.fireEvent(new ExceptionThrownEvent(exception, IDE.ERRORS_CONSTANT.templateDeleteFailure()));
    }
-
 }

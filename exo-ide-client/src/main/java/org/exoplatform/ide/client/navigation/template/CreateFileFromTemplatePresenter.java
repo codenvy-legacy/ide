@@ -28,10 +28,11 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -52,11 +53,11 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FileTemplateList;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.marshal.FileTemplateListUnmarshaller;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
@@ -391,17 +392,34 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          IDE.fireEvent(new ExceptionThrownEvent("Display " + display.asView().getId() + " is not null"));
       }
 
-      TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(IDE.eventBus())
+      try
       {
-         @Override
-         protected void onSuccess(FileTemplateList result)
-         {
-            fileTemplates = result.getFileTemplates();
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay(formTitle, submitButtonTitle);
-         }
-      });
+         TemplateService.getInstance().getFileTemplateList(
+            new AsyncRequestCallback<List<FileTemplate>>(
+               new FileTemplateListUnmarshaller(new ArrayList<FileTemplate>()))
+            {
+               @Override
+               protected void onSuccess(List<FileTemplate> result)
+               {
+                  fileTemplates = result;
+                  display = GWT.create(Display.class);
+                  IDE.getInstance().openView(display.asView());
+                  bindDisplay(formTitle, submitButtonTitle);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  // TODO Auto-generated method stub
+
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
 
    }
 
@@ -604,26 +622,35 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     */
    private void refreshTemplateList()
    {
-      TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(IDE.eventBus())
+      try
       {
-         @Override
-         protected void onSuccess(FileTemplateList result)
-         {
-            fileTemplates = result.getFileTemplates();
-            selectedTemplate = null;
-            display.getTemplateListGrid().setValue(fileTemplates);
-            if (!fileTemplates.isEmpty())
+         TemplateService.getInstance().getFileTemplateList(
+            new AsyncRequestCallback<List<FileTemplate>>(
+               new FileTemplateListUnmarshaller(new ArrayList<FileTemplate>()))
             {
-               display.selectTemplate(fileTemplates.get(0));
-            }
-         }
+               @Override
+               protected void onSuccess(List<FileTemplate> result)
+               {
+                  fileTemplates = result;
+                  selectedTemplate = null;
+                  display.getTemplateListGrid().setValue(fileTemplates);
+                  if (!fileTemplates.isEmpty())
+                  {
+                     display.selectTemplate(fileTemplates.get(0));
+                  }
+               }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -672,17 +699,30 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
       if (usedProjectTemplates.isEmpty())
       {
-         TemplateService.getInstance().deleteFileTemplate(selectedTemplate.getName(),
-            new AsyncRequestCallback<String>(IDE.eventBus())
-            {
-
-               @Override
-               protected void onSuccess(String result)
+         try
+         {
+            TemplateService.getInstance().deleteFileTemplate(selectedTemplate.getName(),
+               new AsyncRequestCallback<String>()
                {
-                  selectedTemplate = null;
-                  refreshTemplateList();
-               }
-            });
+
+                  @Override
+                  protected void onSuccess(String result)
+                  {
+                     selectedTemplate = null;
+                     refreshTemplateList();
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
          return;
       }
 
@@ -708,17 +748,29 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
                if (value)
                {
-                  TemplateService.getInstance().deleteFileTemplate(selectedTemplate.getName(),
-                     new AsyncRequestCallback<String>(IDE.eventBus())
-                     {
-
-                        @Override
-                        protected void onSuccess(String result)
+                  try
+                  {
+                     TemplateService.getInstance().deleteFileTemplate(selectedTemplate.getName(),
+                        new AsyncRequestCallback<String>()
                         {
-                           selectedTemplate = null;
-                           refreshTemplateList();
-                        }
-                     });
+                           @Override
+                           protected void onSuccess(String result)
+                           {
+                              selectedTemplate = null;
+                              refreshTemplateList();
+                           }
+
+                           @Override
+                           protected void onFailure(Throwable exception)
+                           {
+                              IDE.fireEvent(new ExceptionThrownEvent(exception));
+                           }
+                        });
+                  }
+                  catch (RequestException e)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(e));
+                  }
                }
             }
          });

@@ -18,8 +18,17 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -47,14 +56,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for customize hotkeys form.
@@ -511,22 +512,29 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       }
 
-      SettingsService.getInstance().saveSettingsToServer(applicationSettings,
-         new AsyncRequestCallback<ApplicationSettings>()
-         {
-            @Override
-            protected void onSuccess(ApplicationSettings result)
+      try
+      {
+         SettingsService.getInstance().saveSettingsToServer(applicationSettings,
+            new AsyncRequestCallback<ApplicationSettings>()
             {
-               IDE.getInstance().closeView(display.asView().getId());
-               IDE.fireEvent(new RefreshHotKeysEvent(keys));
-            }
+               @Override
+               protected void onSuccess(ApplicationSettings result)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+                  IDE.fireEvent(new RefreshHotKeysEvent(keys));
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(CANT_SAVE_HOTKEYS));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(CANT_SAVE_HOTKEYS));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(CANT_SAVE_HOTKEYS));
+      }
    }
 
    /**
