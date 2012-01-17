@@ -527,8 +527,8 @@
       </dependency>
 
       <dependency>
-         <groupId>org.exoplatform.ide.codeassistant</groupId>
-         <artifactId>codeassistant-lucene-index</artifactId>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>ide-codeassistant-lucene-index</artifactId>
          <type>zip</type>
       </dependency>
 
@@ -776,8 +776,8 @@
                      <stripVersion>true</stripVersion>
                      <artifactItems>
                         <artifactItem>
-                           <groupId>org.exoplatform.ide.codeassistant</groupId>
-                           <artifactId>codeassistant-lucene-index</artifactId>
+                           <groupId>org.exoplatform.ide</groupId>
+                           <artifactId>ide-codeassistant-lucene-index</artifactId>
                            <version>${ide.codeassistant.lucene.index.version}</version>
                            <type>zip</type>
                         </artifactItem>
@@ -859,7 +859,7 @@
                               <exclude name="**/*.jar" />
                            </patternset>
                         </unwar>
-                        <unzip src="${project.build.directory}/codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
+                        <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
                         <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
                            <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                               <exclude name="**/conf/*-mysql.xml" />
