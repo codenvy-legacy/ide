@@ -180,8 +180,6 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
     @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
-      IDE.MENU.waitPopUpMenuBar(MenuCommands.Project.PROJECT);
-
       //step 1 opening 2 files and checking restore commands in 2 tabs after refresh. 
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
